@@ -44,7 +44,7 @@ class Game_Map
 
   def setup(map_id)
     @map_id = map_id
-    @map = load_data(sprintf("Data/Map%03d.rxdata", map_id))
+    @map = load_data(pbMapFile(map_id, Supplementals::COMPRESS_MAPS))
     tileset = $data_tilesets[@map.tileset_id]
     updateTileset
     @fog_ox               = 0

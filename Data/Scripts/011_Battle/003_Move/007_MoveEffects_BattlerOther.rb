@@ -167,6 +167,10 @@ class Battle::Move::ParalyzeTargetIfNotTypeImmune < Battle::Move::ParalyzeTarget
     end
     return super
   end
+
+  def pbOverrideSuccessCheckPerHit(user, target)
+    return (Settings::PARALYZE_TYPE_EFFECT && statusMove? && user.pbHasType?(:ELECTRIC))
+  end
 end
 
 #===============================================================================
@@ -223,6 +227,10 @@ class Battle::Move::BurnTarget < Battle::Move
   def pbAdditionalEffect(user, target)
     return if target.damageState.substitute
     target.pbBurn(user) if target.pbCanBurn?(user, false, self)
+  end
+
+  def pbOverrideSuccessCheckPerHit(user, target)
+    return (Settings::BURN_TYPE_EFFECT && statusMove? && user.pbHasType?(:FIRE))
   end
 end
 
@@ -706,6 +714,8 @@ class Battle::Move::SetUserTypesBasedOnEnvironment < Battle::Move
         @newType = :DRAGON
       when :UltraSpace
         @newType = :PSYCHIC
+      when :DistortionWorld
+        @newType = :GHOST
       end
     end
     @newType = :NORMAL if !GameData::Type.exists?(@newType)

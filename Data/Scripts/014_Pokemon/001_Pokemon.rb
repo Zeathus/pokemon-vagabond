@@ -244,7 +244,7 @@ class Pokemon
   # Sets the Pokémon's health.
   # @param value [Integer] new HP value
   def hp=(value)
-    @hp = value.clamp(0, @totalhp)
+    @hp = Supplementals::ALLOW_HP_LAYERS ? [0, value].max : value.clamp(0, @totalhp)
     heal_status if @hp == 0
     @ready_to_evolve = false if @hp == 0
   end
@@ -1203,7 +1203,7 @@ class Pokemon
     @obtain_text      = nil
     @obtain_level     = level
     @hatched_map      = 0
-    @timeReceived     = pbGetTimeNow.to_i
+    @timeReceived     = Time.now.to_i
     @timeEggHatched   = nil
     @fused            = nil
     @personalID       = rand(2**16) | (rand(2**16) << 16)

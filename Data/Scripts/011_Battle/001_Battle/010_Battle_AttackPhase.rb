@@ -63,6 +63,7 @@ class Battle
       end
       pbRecallAndReplace(b.index, idxNewPkmn)
       pbOnBattlerEnteringBattle(b.index, true)
+      pbBoss.checkTriggers(self, :Switch)
     end
   end
 
@@ -84,6 +85,7 @@ class Battle
       else
         next
       end
+      pbBoss.checkTriggers(self, :Item)
       return if @decision > 0
     end
     pbCalculatePriority if Settings::RECALCULATE_TURN_ORDER_AFTER_SPEED_CHANGES
@@ -197,6 +199,7 @@ class Battle
     pbAttackPhaseItems
     return if @decision > 0
     pbAttackPhaseMegaEvolution
+    pbBoss.checkTriggers(self, :StartOfTurn)
     pbAttackPhaseMoves
   end
 end

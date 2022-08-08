@@ -397,6 +397,7 @@ class Battle::Scene
     shadowSprite.setPokemonBitmap(pkmn)
     # Set visibility of battler's shadow
     shadowSprite.visible = pkmn.species_data.shows_shadow? if shadowSprite && !back
+    shadowSprite.visible = true if Supplementals::ALWAYS_SHOW_BATTLER_SHADOW
   end
 
   def pbResetMoveIndex(idxBattler)

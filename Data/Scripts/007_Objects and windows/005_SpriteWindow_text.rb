@@ -101,7 +101,7 @@ class Window_UnformattedTextPokemon < SpriteWindow_Base
     self.contents = pbDoEnsureBitmap(self.contents, self.width - self.borderX,
                                      self.height - self.borderY)
     self.contents.clear
-    drawTextEx(self.contents, 0, -2, self.contents.width, 0,   # TEXT OFFSET
+    drawTextEx(self.contents, 0, Supplementals::USE_HARD_CODED_FONT ? 0 : -2, self.contents.width, 0,   # TEXT OFFSET
                @text.gsub(/\r/, ""), @baseColor, @shadowColor)
   end
 end
@@ -118,14 +118,14 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
   attr_accessor :letterbyletter
   attr_reader   :waitcount
 
-  def initialize(text = "")
+  def initialize(text = "", font = 0)
     @cursorMode       = MessageConfig::CURSOR_POSITION
     @endOfText        = nil
     @scrollstate      = 0
     @realframes       = 0
     @scrollY          = 0
     @nodraw           = false
-    @lineHeight       = 32
+    @lineHeight       = [32, 24, 24, 32][font]
     @linesdrawn       = 0
     @bufferbitmap     = nil
     @letterbyletter   = false
@@ -135,11 +135,22 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     @fmtchars         = []
     @frameskipChanged = false
     @frameskip        = MessageConfig.pbGetTextSpeed
+    @frameskip        = (@frameskip * 1.5).floor if Supplementals::FRAME_RATE_60
     super(0, 0, 33, 33)
     @pausesprite      = nil
     @text             = ""
+    @font             = font
     self.contents = Bitmap.new(1, 1)
-    pbSetSystemFont(self.contents)
+    case @font
+    when 0
+      pbSetSystemFont(self.contents)
+    when 1
+      pbSetSmallFont(self.contents)
+    when 2
+      pbSetSmallestFont(self.contents)
+    when 3
+      pbSetNarrowFont(self.contents)
+    end
     self.resizeToFit(text, Graphics.width)
     colors = getDefaultTextColors(self.windowskin)
     @baseColor        = colors[0]
@@ -196,6 +207,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
   end
 
   def textspeed=(value)
+    value = (value * 1.5).floor if Supplementals::FRAME_RATE_60
     @frameskipChanged = true if @frameskip != value
     @frameskip = value
   end
@@ -299,7 +311,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     width  = 1
     height = 1
     numlines = 0
-    visiblelines = (self.height - self.borderY) / 32
+    visiblelines = (self.height - self.borderY) / @lineHeight
     if value.length == 0
       @fmtchars     = []
       @bitmapwidth  = width
@@ -310,7 +322,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
         @fmtchars = []
         fmt = getFormattedText(self.contents, 0, 0,
                                self.width - self.borderX - SpriteWindow_Base::TEXTPADDING, -1,
-                               shadowctag(@baseColor, @shadowColor) + value, 32, true)
+                               shadowctag(@baseColor, @shadowColor) + value, @lineHeight, true)
         @oldfont = self.contents.font.clone
         fmt.each do |ch|
           chx = ch[1] + ch[3]
@@ -337,7 +349,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
       else
         @fmtchars = getFormattedText(self.contents, 0, 0,
                                      self.width - self.borderX - SpriteWindow_Base::TEXTPADDING, -1,
-                                     shadowctag(@baseColor, @shadowColor) + value, 32, true)
+                                     shadowctag(@baseColor, @shadowColor) + value, @lineHeight, true)
         @oldfont = self.contents.font.clone
         @fmtchars.each do |ch|
           chx = ch[1] + ch[3]

@@ -107,6 +107,7 @@ class Battle::Battler
   def pbMoveImmunityStatRaisingAbility(user, move, moveType, immuneType, stat, increment, show_message)
     return false if user.index == @index
     return false if moveType != immuneType
+    return true if @battle.predictingDamage
     # NOTE: If show_message is false (Dragon Darts only), the stat will not be
     #       raised. This is not how the official games work, but I'm considering
     #       that a bug because Dragon Darts won't be fired at self in the first
@@ -134,6 +135,7 @@ class Battle::Battler
   def pbMoveImmunityHealingAbility(user, move, moveType, immuneType, show_message)
     return false if user.index == @index
     return false if moveType != immuneType
+    return true if @battle.predictingDamage
     # NOTE: If show_message is false (Dragon Darts only), HP will not be healed.
     #       This is not how the official games work, but I'm considering that a
     #       bug because Dragon Darts won't be fired at self in the first place
@@ -451,6 +453,7 @@ class Battle::Battler
       mults[:final_damage_multiplier] /= 2
       ripening = true
     end
+    return if @battle.predictingDamage
     @battle.pbCommonAnimation("EatBerry", self)
     @battle.pbHideAbilitySplash(self) if ripening
   end
@@ -458,7 +461,7 @@ class Battle::Battler
   def pbMoveTypePoweringUpGem(gem_type, move, move_type, mults)
     return if move.is_a?(Battle::Move::PledgeMove)   # Pledge moves never consume Gems
     return if move_type != gem_type
-    @effects[PBEffects::GemConsumed] = @item_id
+    @effects[PBEffects::GemConsumed] = @item_id if !@battle.predictingDamage
     if Settings::MECHANICS_GENERATION >= 6
       mults[:base_damage_multiplier] *= 1.3
     else

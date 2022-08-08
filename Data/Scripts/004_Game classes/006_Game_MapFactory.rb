@@ -452,7 +452,7 @@ module MapFactoryHelper
     # Add map to cache if can't be found
     if !@@MapDims[id]
       begin
-        map = load_data(sprintf("Data/Map%03d.rxdata", id))
+        map = load_data(pbMapFile(id, Supplementals::COMPRESS_MAPS))
         @@MapDims[id] = [map.width, map.height]
       rescue
         @@MapDims[id] = [0, 0]

@@ -565,6 +565,7 @@ class Battle::Move::MultiTurnAttackBideThenReturnDoubleDamage < Battle::Move::Fi
   end
 
   def pbMoveFailed?(user, targets)
+    return false if @battle.predictingDamage
     return false if user.effects[PBEffects::Bide] != 1   # Not the attack turn
     if user.effects[PBEffects::BideDamage] == 0
       @battle.pbDisplay(_INTL("But it failed!"))

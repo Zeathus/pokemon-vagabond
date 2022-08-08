@@ -213,11 +213,13 @@ class Game_Character
     ybehind = @y + (@direction == 8 ? 1 : @direction == 2 ? -1 : 0)
     this_map = (self.map.valid?(@x, @y)) ? [self.map, @x, @y] : $map_factory&.getNewMap(@x, @y, self.map.map_id)
     behind_map = (self.map.valid?(xbehind, ybehind)) ? [self.map, xbehind, ybehind] : $map_factory&.getNewMap(xbehind, ybehind, self.map.map_id)
-    if this_map && this_map[0].deepBush?(this_map[1], this_map[2]) &&
+    if this_map && this_map[0].swamp?(this_map[1], this_map[2])
+      @bush_depth = Supplementals::SWAMP_DEPTH
+    elsif this_map && this_map[0].deepBush?(this_map[1], this_map[2]) &&
        (!behind_map || behind_map[0].deepBush?(behind_map[1], behind_map[2]))
       @bush_depth = Game_Map::TILE_HEIGHT
     elsif this_map && this_map[0].bush?(this_map[1], this_map[2]) && !moving?
-      @bush_depth = 12
+      @bush_depth = Supplementals::BUSH_DEPTH
     else
       @bush_depth = 0
     end
@@ -330,6 +332,10 @@ class Game_Character
       end
       ret += @jump_peak * ((4 * (jump_fraction**2)) - 1)
     end
+    this_map = (self.map.valid?(@x, @y)) ? [self.map, @x, @y] : $MapFactory.getNewMap(@x, @y)
+    if this_map[0].swamp?(this_map[1], this_map[2])
+      ret += 6
+    end
     ret += self.y_offset
     return ret
   end
@@ -344,6 +350,7 @@ class Game_Character
         raise "Event's graphic is an out-of-range tile (event #{@id}, map #{self.map.map_id})"
       end
     end
+    z += 1 if self == $game_player
     # Add z if height exceeds 32
     return z + ((height > Game_Map::TILE_HEIGHT) ? Game_Map::TILE_HEIGHT - 1 : 0)
   end
@@ -966,6 +973,7 @@ class Game_Character
     real_speed = (jumping?) ? jump_speed_real : move_speed_real
     frames_per_pattern = Game_Map::REAL_RES_X / (real_speed * 2.0)
     frames_per_pattern *= 2 if move_speed >= 5   # Cycling speed or faster
+    frames_per_pattern *= 2 if move_speed == 4 && self == $game_player && Supplementals::SLOWER_RUNNING_ANIMATION
     return if @anime_count < frames_per_pattern
     # Advance to the next animation frame
     @pattern = (@pattern + 1) % 4

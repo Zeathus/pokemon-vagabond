@@ -64,6 +64,7 @@ class Battle::Battler
     if abilityActive?
       Battle::AbilityEffects.triggerOnStatGain(self.ability, self, stat, user)
     end
+    pbBoss.checkTriggers(@battle, :StatChange, self)
     return true
   end
 
@@ -95,6 +96,7 @@ class Battle::Battler
     if abilityActive?
       Battle::AbilityEffects.triggerOnStatGain(self.ability, self, stat, user)
     end
+    pbBoss.checkTriggers(@battle, :StatChange, self)
     return true
   end
 
@@ -234,6 +236,7 @@ class Battle::Battler
     if abilityActive?
       Battle::AbilityEffects.triggerOnStatLoss(self.ability, self, stat, user)
     end
+    pbBoss.checkTriggers(@battle, :StatChange, self)
     return true
   end
 
@@ -282,6 +285,7 @@ class Battle::Battler
     if abilityActive?
       Battle::AbilityEffects.triggerOnStatLoss(self.ability, self, stat, user)
     end
+    pbBoss.checkTriggers(@battle, :StatChange, self)
     return true
   end
 

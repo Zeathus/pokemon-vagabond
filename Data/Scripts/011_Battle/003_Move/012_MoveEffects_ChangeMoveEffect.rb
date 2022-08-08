@@ -239,6 +239,8 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
         @secretPower = 13   # Swift, flinch
       when :UltraSpace
         @secretPower = 14   # Psywave, lower Defense by 1
+      when :DistortionWorld
+        @secretPower = 15   # Night Shade, increase Speed by 1
       end
     end
   end
@@ -283,6 +285,10 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
       end
     when 7, 11, 13
       target.pbFlinch(user)
+    when 15
+      if target.pbCanRaiseStatStage?(:SPEED, user, self)
+        target.pbRaiseStatStage(:SPEED, 1, user)
+      end
     end
   end
 
@@ -805,6 +811,7 @@ class Battle::Move::UseMoveTargetIsAboutToUse < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
+    return false if !@battle.predictingDamage
     return true if pbMoveFailedTargetAlreadyMoved?(target, show_message)
     oppMove = @battle.choices[target.index][2]
     if !oppMove || oppMove.statusMove? || @moveBlacklist.include?(oppMove.function)
@@ -873,6 +880,8 @@ class Battle::Move::UseMoveDependingOnEnvironment < Battle::Move
         try_move = :DRACOMETEOR
       when :UltraSpace
         try_move = :PSYSHOCK
+      when :DistortionWorld
+        try_move = :SHADOWBALL
       end
       @npMove = try_move if GameData::Move.exists?(try_move)
     end
@@ -1206,6 +1215,7 @@ class Battle::Move::ReplaceMoveThisBattleWithTargetLastMoveUsed < Battle::Move
   end
 
   def pbMoveFailed?(user, targets)
+    return false if @battle.predictingDamage
     if user.effects[PBEffects::Transform] || !user.pbHasMove?(@id)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
@@ -1253,6 +1263,7 @@ class Battle::Move::ReplaceMoveWithTargetLastMoveUsed < Battle::Move
   end
 
   def pbMoveFailed?(user, targets)
+    return false if @battle.predictingDamage
     if user.effects[PBEffects::Transform] || !user.pbHasMove?(@id)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true

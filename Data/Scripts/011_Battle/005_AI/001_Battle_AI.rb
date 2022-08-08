@@ -60,6 +60,9 @@ class Battle::AI
   # Choose an action
   #=============================================================================
   def pbDefaultChooseEnemyCommand(idxBattler)
+    if Supplementals::USE_NEW_BATTLE_AI && idxBattler.is_a?(Array)
+      return @battle.pbChooseMovesNew(idxBattler)
+    end
     return if pbEnemyShouldUseItem?(idxBattler)
     return if pbEnemyShouldWithdraw?(idxBattler)
     return if @battle.pbAutoFightMenu(idxBattler)

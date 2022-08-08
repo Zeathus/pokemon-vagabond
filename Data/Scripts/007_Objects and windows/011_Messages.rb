@@ -400,6 +400,8 @@ def pbCreateMessageWindow(viewport = nil, skin = nil)
   $game_temp.message_window_showing = true if $game_temp
   skin = MessageConfig.pbGetSpeechFrame if !skin
   msgwindow.setSkin(skin)
+  msgwindow.width = Supplementals::MESSAGE_WINDOW_WIDTH
+  msgwindow.x = (Graphics.width - Supplementals::MESSAGE_WINDOW_WIDTH) / 2
   return msgwindow
 end
 
@@ -654,7 +656,8 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
       msgwindow.resume if msgwindow.busy?
       break if !msgwindow.busy?
     end
-    if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK)
+    if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK) ||
+       (Supplementals::TEXT_SKIP_WITH_CANCEL && Input.press?(Input::BACK))
       if msgwindow.busy?
         pbPlayDecisionSE if msgwindow.pausing?
         msgwindow.resume
@@ -664,6 +667,7 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
     end
     pbUpdateSceneMap
     msgwindow.update
+    msgwindow.updateEffect
     yield if block_given?
     break if (!letterbyletter || commandProc || commands) && !msgwindow.busy?
   end

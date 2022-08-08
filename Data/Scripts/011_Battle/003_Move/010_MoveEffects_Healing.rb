@@ -436,6 +436,10 @@ class Battle::Move::StartLeechSeedTarget < Battle::Move
     target.effects[PBEffects::LeechSeed] = user.index
     @battle.pbDisplay(_INTL("{1} was seeded!", target.pbThis))
   end
+
+  def pbOverrideSuccessCheckPerHit(user, target)
+    return (Settings::LEECH_SEED_TYPE_EFFECT && statusMove? && user.pbHasType?(:GRASS))
+  end
 end
 
 #===============================================================================
@@ -641,6 +645,10 @@ class Battle::Move::StartPerishCountsForAllBattlers < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
+    if target.hp > target.totalhp
+      @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
+      return true
+    end
     return target.effects[PBEffects::PerishSong] > 0   # Heard it before
   end
 

@@ -183,10 +183,12 @@ def getFormattedTextFast(bitmap, xDst, yDst, widthDst, heightDst, text, lineheig
   italic = bitmap.font.italic
   colorclone = bitmap.font.color
   defaultfontname = bitmap.font.name
-  if defaultfontname.is_a?(Array)
-    defaultfontname = defaultfontname.find { |i| Font.exist?(i) } || "Arial"
-  elsif !Font.exist?(defaultfontname)
-    defaultfontname = "Arial"
+  if !Supplementals::USE_HARD_CODED_FONT
+    if defaultfontname.is_a?(Array)
+      defaultfontname = defaultfontname.find { |i| Font.exist?(i) } || "Arial"
+    elsif !Font.exist?(defaultfontname)
+      defaultfontname = "Arial"
+    end
   end
   defaultfontname = defaultfontname.clone
   havenl = false
@@ -450,10 +452,12 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
   fontnamestack = []
   fontsizestack = []
   defaultcolors = [oldfont.color.clone, nil]
-  if defaultfontname.is_a?(Array)
-    defaultfontname = defaultfontname.find { |i| Font.exist?(i) } || "Arial"
-  elsif !Font.exist?(defaultfontname)
-    defaultfontname = "Arial"
+  if !Supplementals::USE_HARD_CODED_FONT
+    if defaultfontname.is_a?(Array)
+      defaultfontname = defaultfontname.find { |i| Font.exist?(i) } || "Arial"
+    elsif !Font.exist?(defaultfontname)
+      defaultfontname = "Arial"
+    end
   end
   defaultfontname = defaultfontname.clone
   fontname = defaultfontname
@@ -607,7 +611,8 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
       xStart = 0   # 4
       yStart = [(lineheight / 2) - (graphicHeight / 2), 0].max
       yStart += 4   # TEXT OFFSET
-      graphicRect = Rect.new(graphicX, graphicY, graphicWidth, graphicHeight)
+      unown = graphic[/unown/]
+      graphicRect = Rect.new(graphicX, unown ? (graphicY - 4) : graphicY, graphicWidth, graphicHeight)
     else
       xStart = 0
       yStart = 0
@@ -1079,6 +1084,7 @@ end
 
 def drawTextEx(bitmap, x, y, width, numlines, text, baseColor, shadowColor)
   normtext = getLineBrokenChunks(bitmap, text, width, nil, true)
+  y += 4 if Supplementals::USE_HARD_CODED_FONT
   renderLineBrokenChunksWithShadow(bitmap, x, y, normtext, numlines * 32,
                                    baseColor, shadowColor)
 end

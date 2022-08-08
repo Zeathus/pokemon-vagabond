@@ -240,5 +240,6 @@ module GameData
     Metadata.load
     PlayerMetadata.load
     MapMetadata.load
+    Quest.load
   end
 end

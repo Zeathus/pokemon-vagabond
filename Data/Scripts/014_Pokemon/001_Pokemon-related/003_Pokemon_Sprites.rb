@@ -99,6 +99,7 @@ class PokemonIconSprite < Sprite
     @logical_y    = 0   # Actual y coordinate
     @adjusted_x   = 0   # Offset due to "jumping" animation in party screen
     @adjusted_y   = 0   # Offset due to "jumping" animation in party screen
+    @species      = nil
   end
 
   def dispose
@@ -124,11 +125,13 @@ class PokemonIconSprite < Sprite
     @animBitmap&.dispose
     @animBitmap = nil
     if !@pokemon
+      @species = nil
       self.bitmap = nil
       @currentFrame = 0
       @counter = 0
       return
     end
+    @species = @pokemon.species
     @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(value))
     self.bitmap = @animBitmap.bitmap
     self.src_rect.width  = @animBitmap.height
@@ -183,6 +186,9 @@ class PokemonIconSprite < Sprite
   end
 
   def update
+    if @pokemon && @pokemon.species != @species
+      self.pokemon = @pokemon
+    end
     return if !@animBitmap
     super
     @animBitmap.update

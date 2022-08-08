@@ -82,6 +82,9 @@ class Game_Player < Game_Character
     when :ice_sliding
       self.move_speed = 4
       new_charset = pbGetPlayerCharset(meta.walk_charset)
+    when :stair_up
+      self.move_speed = 2
+      new_charset = pbGetPlayerCharset(meta.walk_charset)
     else   # :walking, :jumping, :walking_stopped
       self.move_speed = 3
       new_charset = pbGetPlayerCharset(meta.walk_charset)
@@ -115,9 +118,10 @@ class Game_Player < Game_Character
   def move_generic(dir, turn_enabled = true)
     turn_generic(dir, true) if turn_enabled
     if !$game_temp.encounter_triggered
+      x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
+      y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
+      return if pbStairs(x_offset, y_offset)
       if can_move_in_direction?(dir)
-        x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
-        y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
         return if pbLedge(x_offset, y_offset)
         return if pbEndSurf(x_offset, y_offset)
         turn_generic(dir, true)
@@ -135,6 +139,7 @@ class Game_Player < Game_Character
           increase_steps
         end
       elsif !check_event_trigger_touch(dir)
+        return if $PokemonSystem.auto_surf == 0 && pbStartSurf(false)
         bump_into_object
       end
     end
@@ -478,6 +483,8 @@ class Game_Player < Game_Character
           set_movement_type((faster) ? :surfing_fast : :surfing)
         elsif $PokemonGlobal&.bicycle
           set_movement_type((faster) ? :cycling_fast : :cycling)
+        elsif $game_player.pbTerrainTag.stair_up
+          set_movement_type((faster) ? :stair_up : :stair_up)
         else
           set_movement_type((faster) ? :running : :walking)
         end

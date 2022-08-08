@@ -42,7 +42,11 @@ class Battle::Battler
         Battle::ItemEffects.triggerOnBeingHit(target.item, user, target, move, @battle)
         user.pbItemHPHealCheck if user.hp < oldHP
       end
+      # Boss Battle - Has Damage
+      pbBoss.checkTriggers(@battle, :Damaged, target)
     end
+    # Boss Battle
+    pbBoss.checkTriggers(@battle, :Hit, target)
     if target.opposes?(user)
       # Rage
       if target.effects[PBEffects::Rage] && !target.fainted? &&

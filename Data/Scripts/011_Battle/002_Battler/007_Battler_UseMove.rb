@@ -51,6 +51,7 @@ class Battle::Battler
     PBDebug.logonerr {
       pbUseMove(choice, choice[2] == @battle.struggle)
     }
+    pbBoss.checkTriggers(@battle, :MoveUsed, nil)
     @battle.pbJudge
     # Update priority order
     @battle.pbCalculatePriority if Settings::RECALCULATE_TURN_ORDER_AFTER_SPEED_CHANGES
@@ -192,6 +193,7 @@ class Battle::Battler
     end
     move = choice[2]   # In case disobedience changed the move to be used
     return if !move   # if move was not chosen somehow
+    pbRegisterKnownMove(move.id) if !specialUsage
     # Subtract PP
     if !specialUsage && !pbReducePP(move)
       @battle.pbDisplay(_INTL("{1} used {2}!", pbThis, move.name))
@@ -633,6 +635,15 @@ class Battle::Battler
         move.pbCalcDamage(user, b, targets.length)   # Stored in damageState.calcDamage
         # Lessen damage dealt because of False Swipe/Endure/etc.
         move.pbReduceDamage(user, b)   # Stored in damageState.hpLost
+      end
+    end
+    # Show a critical hit animation if applicable
+    if Supplementals::CRITICAL_ANIMATION
+      targets.each do |b|
+        if b.damageState.critical
+          @battle.scene.pbCriticalAnimation(user)
+          break
+        end
       end
     end
     # Show move animation (for this hit)

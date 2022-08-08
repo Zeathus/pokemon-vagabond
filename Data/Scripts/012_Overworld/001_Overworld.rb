@@ -198,6 +198,7 @@ EventHandlers.add(:on_player_change_direction, :trigger_encounter,
 )
 
 def pbBattleOnStepTaken(repel_active)
+  return if Supplementals::OVERWORLD_POKEMON
   return if $player.able_pokemon_count == 0
   return if !$PokemonEncounters.encounter_possible_here?
   encounter_type = $PokemonEncounters.encounter_type
@@ -422,6 +423,17 @@ end
 # Audio playing
 #===============================================================================
 def pbCueBGM(bgm, seconds, volume = nil, pitch = nil)
+  if $game_system.bgm_override
+    if $game_system.bgm_override.is_a?(Array)
+      bgm = $game_system.bgm_override
+      volume = ($game_system.bgm_override.length >= 2) ? $game_system.bgm_override[1] : 100
+      pitch = ($game_system.bgm_override.length >= 3) ? $game_system.bgm_override[2] : 100
+    else
+      bgm = $game_system.bgm_override
+      volume = 100
+      pitch = 100
+    end
+  end
   return if !bgm
   bgm        = pbResolveAudioFile(bgm, volume, pitch)
   playingBGM = $game_system.playing_bgm
@@ -637,14 +649,14 @@ def pbMoveTowardPlayer(event)
   $PokemonMap&.addMovedEvent(event.id)
 end
 
-def pbJumpToward(dist = 1, playSound = false, cancelSurf = false)
+def pbJumpToward(dist = 1, playSound = false, cancelSurf = false, dist2 = 0)
   x = $game_player.x
   y = $game_player.y
   case $game_player.direction
-  when 2 then $game_player.jump(0, dist)    # down
-  when 4 then $game_player.jump(-dist, 0)   # left
-  when 6 then $game_player.jump(dist, 0)    # right
-  when 8 then $game_player.jump(0, -dist)   # up
+  when 2 then $game_player.jump(dist2, dist)    # down
+  when 4 then $game_player.jump(-dist, dist2)   # left
+  when 6 then $game_player.jump(dist, dist2)    # right
+  when 8 then $game_player.jump(dist2, -dist)   # up
   end
   if $game_player.x != x || $game_player.y != y
     pbSEPlay("Player jump") if playSound

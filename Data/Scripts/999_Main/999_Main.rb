@@ -27,6 +27,7 @@ def mainFunctionDebug
     MessageTypes.loadMessageFile("Data/messages.dat") if safeExists?("Data/messages.dat")
     PluginManager.runPlugins
     Compiler.main
+    Compiler.pbLoadMarkerComments(true)
     Game.initialize
     Game.set_up_system
     Graphics.update

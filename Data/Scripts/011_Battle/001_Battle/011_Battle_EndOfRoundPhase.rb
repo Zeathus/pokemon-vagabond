@@ -156,6 +156,8 @@ class Battle
     # Grassy Terrain (healing)
     if @field.terrain == :Grassy && battler.affectedByTerrain? && battler.canHeal?
       PBDebug.log("[Lingering effect] Grassy Terrain heals #{battler.pbThis(true)}")
+      hpGain = battler.totalhp / 16
+      hpGain = battler.totalhp / 8 if Supplementals::GRASS_PELT_BUFF && battler.hasActiveAbility?(:GRASSPELT)
       battler.pbRecoverHP(battler.totalhp / 16)
       pbDisplay(_INTL("{1}'s HP was restored.", battler.pbThis))
     end
@@ -697,6 +699,11 @@ class Battle
     end
     pbGainExp
     return if @decision > 0
+    # BOSS BATTLE
+    priority.each { |battler|
+      next if battler.fainted?
+      pbBoss.checkTriggers(self, :EndOfTurn, battler)
+    }
     # Form checks
     priority.each { |battler| battler.pbCheckForm(true) }
     # Switch Pokémon in if possible

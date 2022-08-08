@@ -294,7 +294,7 @@ module Compiler
     end
 
     def mapFilename(mapID)
-      return sprintf("Data/map%03d.rxdata", mapID)
+      return pbMapFile(mapID, Supplementals::COMPRESS_MAPS)
     end
 
     def getMap(mapID)
@@ -748,6 +748,7 @@ module Compiler
   # player passes through.
   #=============================================================================
   def update_door_event(event, mapData)
+    return if !Supplementals::REWRITE_DOOR_EVENTS
     changed = false
     return false if event.is_a?(RPG::CommonEvent)
     # Check if event has 2+ pages and the last page meets all of these criteria:

@@ -775,6 +775,7 @@ module Compiler
     compile_trainer_lists     # Depends on TrainerType
     compile_metadata          # Depends on TrainerType
     compile_map_metadata
+    compile_quests            # Depends on Item
   end
 
   def compile_all(mustCompile)
@@ -799,6 +800,29 @@ module Compiler
   def main
     return if !$DEBUG
     begin
+      if Supplementals::COMPRESS_MAPS
+        mapIDs = []
+        for i in 0...1000
+          filename = pbMapFile(i, false)
+          if safeExists?(filename)
+            mapIDs.push(i)
+          end
+        end
+        compressMaps = []
+        for m in mapIDs
+          if !safeExists?(pbMapFile(m, true))
+            compressMaps.push(m)
+          end
+        end
+        if compressMaps.length > 0
+          $data_tilesets = load_data('Data/Tilesets.rxdata')
+          for m in compressMaps
+            msg = sprintf("Compressing Map %03d", m)
+            pbSetWindowText(msg); echoln(msg)
+            pbCompressMap(m)
+          end
+        end
+      end
       dataFiles = [
         "abilities.dat",
         "berry_plants.dat",
@@ -819,7 +843,9 @@ module Compiler
         "trainer_lists.dat",
         "trainer_types.dat",
         "trainers.dat",
-        "types.dat"
+        "types.dat",
+        "quests.dat",
+        "dialog.dat"
       ]
       textFiles = [
         "abilities.txt",
@@ -841,7 +867,8 @@ module Compiler
         "town_map.txt",
         "trainer_types.txt",
         "trainers.txt",
-        "types.txt"
+        "types.txt",
+        "quests.txt"
       ]
       latestDataTime = 0
       latestTextTime = 0
@@ -895,6 +922,25 @@ module Compiler
       end
       # Recompile all data
       compile_all(mustCompile)
+      # Recompile dialog data
+      if !mustCompile
+        latestTextTime = 0
+        dialogFiles = []
+        for file in DIALOG_FILES
+          dialogFiles.push("Dialog/" + file + ".dlg")
+        end
+        dialogFiles.each do |filename|
+          next if !safeExists?("PBS/" + filename)
+          begin
+            File.open("PBS/#{filename}") { |file|
+              latestTextTime = [latestTextTime, file.mtime.to_i].max
+            }
+          rescue SystemCallError
+          end
+        end
+      end
+      mustCompile |= (latestTextTime >= latestDataTime)
+      compile_dialog if mustCompile
     rescue Exception
       e = $!
       raise e if e.class.to_s == "Reset" || e.is_a?(Reset) || e.is_a?(SystemExit)

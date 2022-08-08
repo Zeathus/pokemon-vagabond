@@ -74,10 +74,10 @@ module Compiler
       record.push(csvInt!(thisline, lineno))
       record.push(csvEnumFieldOrInt!(thisline, hashenum, "", sprintf("(line %d)", lineno)))
       record.push(csvInt!(thisline, lineno))
-      if !pbRgssExists?(sprintf("Data/Map%03d.rxdata", record[0]))
+      if !pbRgssExists?(pbMapFile(record[0], Supplementals::COMPRESS_MAPS))
         print _INTL("Warning: Map {1}, as mentioned in the map connection data, was not found.\r\n{2}", record[0], FileLineData.linereport)
       end
-      if !pbRgssExists?(sprintf("Data/Map%03d.rxdata", record[3]))
+      if !pbRgssExists?(pbMapFile(record[3], Supplementals::COMPRESS_MAPS))
         print _INTL("Warning: Map {1}, as mentioned in the map connection data, was not found.\r\n{2}", record[3], FileLineData.linereport)
       end
       case record[1]
@@ -670,6 +670,9 @@ module Compiler
         types = contents["Types"] || [contents["Type1"], contents["Type2"]]
         types = [types] if !types.is_a?(Array)
         types = types.uniq.compact
+        extra_types = contents["ExtraTypes"] || [contents["Type3"], contents["Type4"]]
+        extra_types = [extra_types] if !extra_types.is_a?(Array)
+        extra_types = extra_types.uniq.compact
         species_hash = {
           :id                 => contents["InternalName"].to_sym,
           :name               => contents["Name"],
@@ -677,6 +680,7 @@ module Compiler
           :category           => contents["Category"] || contents["Kind"],
           :pokedex_entry      => contents["Pokedex"],
           :types              => types,
+          :extra_types        => extra_types,
           :base_stats         => contents["BaseStats"],
           :evs                => contents["EVs"] || contents["EffortPoints"],
           :base_exp           => contents["BaseExp"] || contents["BaseEXP"],
@@ -898,6 +902,7 @@ module Compiler
           :pokedex_entry      => contents["Pokedex"] || base_data.real_pokedex_entry,
           :pokedex_form       => contents["PokedexForm"],
           :types              => types,
+          :extra_types        => contents["ExtraTypes"],
           :base_stats         => contents["BaseStats"] || base_data.base_stats,
           :evs                => contents["EVs"] || contents["EffortPoints"] || base_data.evs,
           :base_exp           => contents["BaseExp"] || contents["BaseEXP"] || base_data.base_exp,

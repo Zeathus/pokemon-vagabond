@@ -532,6 +532,7 @@ class Battle::Battler
     return false if inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderground",
                                      "TwoTurnAttackInvulnerableUnderwater")
     return false if hasActiveAbility?([:OVERCOAT, :SANDFORCE, :SANDRUSH, :SANDVEIL])
+    return false if hasActiveAbility?(:FORECAST) && Supplementals::FORECAST_BLOCKS_WEATHER_DAMAGE
     return false if hasActiveItem?(:SAFETYGOGGLES)
     return true
   end
@@ -542,6 +543,7 @@ class Battle::Battler
     return false if inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderground",
                                      "TwoTurnAttackInvulnerableUnderwater")
     return false if hasActiveAbility?([:OVERCOAT, :ICEBODY, :SNOWCLOAK])
+    return false if hasActiveAbility?(:FORECAST) && Supplementals::FORECAST_BLOCKS_WEATHER_DAMAGE
     return false if hasActiveItem?(:SAFETYGOGGLES)
     return true
   end

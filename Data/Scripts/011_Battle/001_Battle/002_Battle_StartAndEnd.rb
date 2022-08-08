@@ -276,6 +276,31 @@ class Battle
   end
 
   def pbStartBattleCore
+    # Start writing log
+    if Supplementals::WRITE_BATTLE_LOGS
+      Dir.mkdir("Logs") if !safeExists?("Logs/")
+      if wildBattle? && @smartWildBattle && pbParty(1).length < 3
+        party_str = pbParty(1)[0].species.to_s
+        party_str += pbParty(1)[0].form.to_s if pbParty(1)[0].form != 0
+        for i in 1..2
+          if pbParty(1)[i]
+            party_str += " "
+            party_str += pbParty(1)[i].species.to_s
+            party_str += pbParty(1)[i].form.to_s if pbParty(1)[i].form != 0
+          end
+        end
+        fname = _INTL("Logs/wild_{1}.txt", party_str)
+        @battle_log = File.open(fname,"w")
+      elsif trainerBattle? && @opponent.length < 3
+        fname = _INTL("Logs/trainer_{1}_{2}_{3}.txt",
+                      @opponent[0].trainer_type.to_s,
+                      @opponent[0].name.to_s,
+                      @opponent[0].id.to_s)
+        fname.gsub!("???", "QMARKS")
+        fname.gsub!("?", "Q")
+        @battle_log = File.open(fname,"w")
+      end
+    end
     # Set up the battlers on each side
     sendOuts = pbSetUpSides
     # Create all the sprites and play the battle intro animation
@@ -312,6 +337,7 @@ class Battle
     pbOnAllBattlersEnteringBattle
     # Main battle loop
     pbBattleLoop
+    @battle_log&.close
   end
 
   #=============================================================================

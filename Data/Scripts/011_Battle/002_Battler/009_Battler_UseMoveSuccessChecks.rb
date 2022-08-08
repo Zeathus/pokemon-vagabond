@@ -558,6 +558,7 @@ class Battle::Battler
       # Accuracy check
       return true if move.pbAccuracyCheck(user, target)   # Includes Counter/Mirror Coat
     end
+    pbBoss.checkTriggers(@battle, :Miss, target)
     # Missed
     PBDebug.log("[Move failed] Failed pbAccuracyCheck or target is semi-invulnerable")
     return false

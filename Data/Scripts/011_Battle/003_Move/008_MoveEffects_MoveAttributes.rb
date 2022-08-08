@@ -23,6 +23,14 @@ class Battle::Move::FixedDamageHalfTargetHP < Battle::Move::FixedDamageMove
   def pbFixedDamage(user, target)
     return (target.hp / 2.0).round
   end
+
+  def pbFailsAgainstTarget?(user,target)
+    if target.hp > target.totalhp
+      @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
+      return true
+    end
+    return false
+  end
 end
 
 #===============================================================================
@@ -52,6 +60,9 @@ class Battle::Move::LowerTargetHPToUserHP < Battle::Move::FixedDamageMove
   def pbFailsAgainstTarget?(user, target, show_message)
     if user.hp >= target.hp
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    elsif target.hp > target.totalhp
+      @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
       return true
     end
     return false
@@ -918,6 +929,7 @@ class Battle::Move::ProtectUserSideFromDamagingMovesIfUserFirstTurn < Battle::Mo
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
+    return false if @battle.predictingDamage
     return true if pbMoveFailedLastInRound?(user)
     return false
   end
@@ -937,6 +949,7 @@ class Battle::Move::ProtectUserSideFromStatusMoves < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
+    return false if @battle.predictingDamage
     return true if pbMoveFailedLastInRound?(user)
     return false
   end
@@ -1640,6 +1653,7 @@ class Battle::Move::NormalMovesBecomeElectric < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
+    return false if @battle.predictingDamage
     return true if pbMoveFailedLastInRound?(user)
     return false
   end

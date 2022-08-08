@@ -431,6 +431,7 @@ class Battle::Move::ProtectMove < Battle::Move
   end
 
   def pbMoveFailed?(user, targets)
+    return false if !@battle.predictingDamage
     if @sidedEffect
       if user.pbOwnSide.effects[@effect]
         user.effects[PBEffects::ProtectRate] = 1

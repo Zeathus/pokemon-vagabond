@@ -253,7 +253,7 @@ class Battle::Scene
     # Set up animations
     damageAnims = []
     targets.each do |t|
-      anim = Animation::BattlerDamage.new(@sprites, @viewport, t[0].index, t[2])
+      anim = Animation::BattlerDamage.new(@sprites, @viewport, t[0].index, t[2], t[3], t[4])
       damageAnims.push(anim)
       @sprites["dataBox_#{t[0].index}"].animateHP(t[1], t[0].hp, t[0].totalhp)
     end

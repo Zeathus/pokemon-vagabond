@@ -49,7 +49,7 @@ class Scene_Map
     playingBGM = $game_system.playing_bgm
     playingBGS = $game_system.playing_bgs
     return if !playingBGM && !playingBGS
-    map = load_data(sprintf("Data/Map%03d.rxdata", mapid))
+    map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS))
     if playingBGM && map.autoplay_bgm
       if (PBDayNight.isNight? && FileTest.audio_exist?("Audio/BGM/" + map.bgm.name + "_n") &&
          playingBGM.name != map.bgm.name + "_n") || playingBGM.name != map.bgm.name
@@ -94,6 +94,7 @@ class Scene_Map
   end
 
   def call_menu
+    return pbDebugSelfSwitches if $DEBUG && Input.press?(Input::CTRL)
     $game_temp.menu_calling = false
     $game_temp.in_menu = true
     $game_player.straighten
@@ -152,6 +153,7 @@ class Scene_Map
     pbDayNightTint(@map_renderer)
     @map_renderer.refresh if refresh
     @map_renderer.update
+    updateToasts
     EventHandlers.trigger(:on_frame_update)
   end
 
@@ -162,6 +164,7 @@ class Scene_Map
       updateMaps
       $game_system.update
       $game_screen.update
+      pbUpdateTextBubbles
       break unless $game_temp.player_transferring
       transfer_player(false)
       break if $game_temp.transition_processing
@@ -195,7 +198,17 @@ class Scene_Map
           $game_temp.ready_menu_calling = true
         end
       elsif Input.press?(Input::F9)
-        $game_temp.debug_calling = true if $DEBUG
+        if Input.press?(Input::LEFT) && Input.press?(Input::RIGHT) &&
+           Input.press?(Input::DOWN) && Input.press?(Input::UP)
+          $DEBUG = !$DEBUG
+          if $DEBUG
+            pbMessage("DEBUG MODE ENABLED")
+          else
+            pbMessage("debug mode disabled")
+          end
+        elsif $DEBUG
+          $game_temp.debug_calling = true
+        end
       end
     end
     unless $game_player.moving?

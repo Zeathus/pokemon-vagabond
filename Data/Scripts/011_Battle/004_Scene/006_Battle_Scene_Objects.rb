@@ -33,9 +33,14 @@ class Battle::Scene::PokemonDataBox < Sprite
     @showExp      = false   # Specifically, show the Exp bar
     @animatingExp = false
     @expFlash     = 0
+    @sideSize     = sideSize
     initializeDataBoxGraphic(sideSize)
     initializeOtherGraphics(viewport)
     refresh
+  end
+
+  def onPlayerSide
+    return (@battler.index % 2 == 0)
   end
 
   def initializeDataBoxGraphic(sideSize)
@@ -65,6 +70,18 @@ class Battle::Scene::PokemonDataBox < Sprite
       @spriteBaseX = 16
     end
     case sideSize
+    when 1
+      if @battler.index == 1
+        offset = 0
+        for gauge in pbBoss.gauges
+          if gauge.type == PBGauge::Half
+            offset += 6
+          else
+            offset += 12
+          end
+        end
+        @spriteY -= [offset, 40].min
+      end
     when 2
       @spriteX += [-12,  12,  0,  0][@battler.index]
       @spriteY += [-20, -34, 34, 20][@battler.index]
@@ -79,6 +96,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @numbersBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers")
     @hpBarBitmap   = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_hp")
     @expBarBitmap  = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_exp")
+    @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers_white")
     # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124, 16, viewport)
 #    pbSetSmallFont(@hpNumbers.bitmap)
@@ -93,7 +111,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
     # Create sprite wrapper that displays everything except the above
-    @contents = BitmapWrapper.new(@databoxBitmap.width, @databoxBitmap.height)
+    @contents = BitmapWrapper.new(@databoxBitmap.width, @databoxBitmap.height + 256)
     self.bitmap  = @contents
     self.visible = false
     self.z       = 150 + ((@battler.index / 2) * 5)
@@ -114,14 +132,14 @@ class Battle::Scene::PokemonDataBox < Sprite
     super
     @hpBar.x     = value + @spriteBaseX + 102
     @expBar.x    = value + @spriteBaseX + 6
-    @hpNumbers.x = value + @spriteBaseX + 80
+    @hpNumbers.x = value + @spriteBaseX + (@showHP ? 80 : 98)
   end
 
   def y=(value)
     super
     @hpBar.y     = value + 40
     @expBar.y    = value + 74
-    @hpNumbers.y = value + 52
+    @hpNumbers.y = value + (@showHP ? 52 : 34)
   end
 
   def z=(value)
@@ -193,14 +211,16 @@ class Battle::Scene::PokemonDataBox < Sprite
     pbSEPlay("Pkmn exp gain") if @showExp
   end
 
-  def pbDrawNumber(number, btmp, startX, startY, align = 0)
+  def pbDrawNumber(number, btmp, startX, startY, align = 0, white = false)
     # -1 means draw the / character
     n = (number == -1) ? [10] : number.to_i.digits.reverse
-    charWidth  = @numbersBitmap.width / 11
+    n.push(11) if number.to_s.include?("%")
+    charWidth  = @numbersBitmap.width / 12
     charHeight = @numbersBitmap.height
     startX -= charWidth * n.length if align == 1
+    startX -= (charWidth * n.length) / 2 if align == 2
     n.each do |i|
-      btmp.blt(startX, startY, @numbersBitmap.bitmap, Rect.new(i * charWidth, 0, charWidth, charHeight))
+      btmp.blt(startX, startY, white ? @numbersWhiteBitmap.bitmap : @numbersBitmap.bitmap, Rect.new(i * charWidth, 0, charWidth, charHeight))
       startX += charWidth
     end
   end
@@ -298,6 +318,11 @@ class Battle::Scene::PokemonDataBox < Sprite
       pbDrawNumber(self.hp, @hpNumbers.bitmap, 54, 2, 1)
       pbDrawNumber(-1, @hpNumbers.bitmap, 54, 2)   # / char
       pbDrawNumber(@battler.totalhp, @hpNumbers.bitmap, 70, 2)
+    elsif Supplementals::SHOW_OPPOSING_HP_PERCENT
+      hpPercent = [(self.hp * 100.0 / @battler.totalhp), 0.1].max
+      hpPercent = 0.1 if self.hp == 1
+      hpText = self.hp >= @battler.totalhp ? sprintf("%d%%", hpPercent.round) : sprintf("%.1f%%", hpPercent)
+      pbDrawNumber(hpText, @hpNumbers.bitmap, 54, 2, 2, true)
     end
     # Resize HP bar
     w = 0
@@ -373,6 +398,79 @@ class Battle::Scene::PokemonDataBox < Sprite
       pbSEStop
       # Exp bar has finished filling, end animation
       @animatingExp = false
+    end
+  end
+
+  def refreshBossGauges
+    return if @battler.index != 1 || @sideSize > 1
+
+    x_offset = @spriteBaseX
+    y_offset = 48
+
+    base = Color.new(248,248,248)
+    shadow = Color.new(15,15,15)
+
+    for gauge in pbBoss.gauges
+      next if !gauge.enabled
+
+      imagepos = []
+      textpos = []
+
+      case gauge.type
+      when PBGauge::Full
+        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
+        textpos.push([gauge.name,x_offset + 90,y_offset - 12,2,base,shadow])
+      when PBGauge::Half
+        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,24,92,24])
+        textpos.push([gauge.name,x_offset + 45,y_offset - 12,2,base,shadow])
+      when PBGauge::Long
+        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,48,180,16])
+        textpos.push([gauge.name,x_offset + 8,y_offset - 12,0,base,shadow])
+      end
+      pbDrawImagePositions(self.bitmap,imagepos)
+      pbSetSmallestFont(self.bitmap)
+      pbDrawTextPositions(self.bitmap,textpos)
+
+      colors = gauge.get_colors
+
+      case gauge.type
+      when PBGauge::Full
+        self.bitmap.fill_rect(
+          x_offset+4,y_offset+16,
+          172 * gauge.value / gauge.max, 6, colors[1])
+        self.bitmap.fill_rect(
+          x_offset+4,y_offset+18,
+          172 * gauge.value / gauge.max, 2, colors[0])
+        y_offset += 24
+      when PBGauge::Half
+        self.bitmap.fill_rect(
+          x_offset+4,y_offset+16,
+          84 * gauge.value / gauge.max, 6, colors[1])
+        self.bitmap.fill_rect(
+          x_offset+4,y_offset+18,
+          84 * gauge.value / gauge.max, 2, colors[0])
+        x_offset += 88
+        if x_offset > @spriteBaseX + 88
+          x_offset = @spriteBaseX
+          y_offset += 24
+        end
+      when PBGauge::Long
+        x_start = 12 + self.bitmap.text_size(gauge.name).width
+        self.bitmap.fill_rect(x_offset+x_start,y_offset+2,178-x_start,12,shadow)
+        self.bitmap.fill_rect(
+          x_start+x_offset+2,y_offset+4,
+          174-x_start, 8, Color.new(71,58,58))
+        self.bitmap.fill_rect(
+          x_start+x_offset+2,y_offset+6,
+          174-x_start, 4, Color.new(61,50,50))
+        self.bitmap.fill_rect(
+          x_start+x_offset+2,y_offset+4,
+          (174-x_start) * gauge.value / gauge.max, 8, colors[1])
+        self.bitmap.fill_rect(
+          x_start+x_offset+2,y_offset+6,
+          (174-x_start) * gauge.value / gauge.max, 4, colors[0])
+        y_offset += 14
+      end
     end
   end
 
@@ -563,6 +661,9 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
 
   def pbSetPosition
     return if !@_iconBitmap
+    zoom = ((@index & 1  == 0) ? 1.5 : 1.0)
+    self.zoom_x = zoom
+    self.zoom_y = zoom
     pbSetOrigin
     if @index.even?
       self.z = 50 + (5 * @index / 2)

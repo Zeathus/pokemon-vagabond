@@ -147,7 +147,7 @@ end
 #
 #===============================================================================
 def createMinimap(mapid)
-  map = load_data(sprintf("Data/Map%03d.rxdata", mapid)) rescue nil
+  map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS)) rescue nil
   return BitmapWrapper.new(32, 32) if !map
   bitmap = BitmapWrapper.new(map.width * 4, map.height * 4)
   black = Color.new(0, 0, 0)
@@ -194,7 +194,7 @@ end
 
 # Unused
 def getPassabilityMinimap(mapid)
-  map = load_data(sprintf("Data/Map%03d.rxdata", mapid))
+  map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS))
   tileset = $data_tilesets[map.tileset_id]
   minimap = AnimatedBitmap.new("Graphics/Pictures/minimap_tiles")
   ret = Bitmap.new(map.width * 6, map.height * 6)

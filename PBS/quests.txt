@@ -1,0 +1,10 @@
+[SICKZAGOON]
+Name = Sickzagoon
+Type = Basic
+Exp = 100
+Description = A sick Zigzagoon is blocking the path ahead. Find a doctor to help cure it.
+Location = Crosswoods
+FullLocation = near the Crosswoods
+Step1 = Tell the doctor in the Crosswoods about the sick Zigzagoon.
+Done = The doctor fixed up the sick Zigzagoon. Hooray!
+ShowAvailable = true

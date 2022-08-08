@@ -338,7 +338,8 @@ class Battle::AI
             :Graveyard   => :GHOST,
             :Sky         => :FLYING,
             :Space       => :DRAGON,
-            :UltraSpace  => :PSYCHIC
+            :UltraSpace  => :PSYCHIC,
+            :DistortionWorld => :GHOST
           }
           new_type = envtypes[@battle.environment]
           new_type = nil if !GameData::Type.exists?(new_type)

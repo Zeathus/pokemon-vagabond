@@ -106,7 +106,7 @@ def pbStartOver(gameover = false)
   else
     homedata = GameData::PlayerMetadata.get($player.character_ID)&.home
     homedata = GameData::Metadata.get.home if !homedata
-    if homedata && !pbRgssExists?(sprintf("Data/Map%03d.rxdata", homedata[0]))
+    if homedata && !pbRgssExists?(pbMapFile(homedata[0], Supplementals::COMPRESS_MAPS))
       if $DEBUG
         pbMessage(_ISPRINTF("Can't find the map 'Map{1:03d}' in the Data folder. The game will resume at the player's position.", homedata[0]))
       end

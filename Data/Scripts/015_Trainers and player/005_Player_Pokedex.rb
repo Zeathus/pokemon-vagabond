@@ -48,6 +48,7 @@ class Player < Trainer
     # @param species [Symbol, GameData::Species] species to check
     # @return [Boolean] whether the species is seen
     def seen?(species)
+      return true if $DEBUG && Input.press?(Input::CTRL)
       species_id = GameData::Species.try_get(species)&.species
       return false if species_id.nil?
       return @seen[species_id] == true
@@ -163,6 +164,7 @@ class Player < Trainer
     # @param species [Symbol, GameData::Species] species to check
     # @return [Boolean] whether the species is owned
     def owned?(species)
+      return true if $DEBUG && Input.press?(Input::CTRL)
       species_id = GameData::Species.try_get(species)&.species
       return false if species_id.nil?
       return @owned[species_id] == true

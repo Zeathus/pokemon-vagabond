@@ -55,6 +55,11 @@ class Game_Temp
     when "base"                   then rules["base"]                = var
     when "outcome", "outcomevar"  then rules["outcomeVar"]          = var
     when "nopartner"              then rules["noPartner"]           = true
+    when "smartwildbattle"        then rules["smartWildBattle"]     = true
+    when "playeruseai"            then rules["playerUseAI"]         = true
+    when "startover"              then rules["startOver"]           = var
+    when "scalelevel"             then rules["scaleLevel"]          = var
+    when "levelmod"               then rules["levelMod"]            = var
     else
       raise _INTL("Battle rule \"{1}\" does not exist.", rule)
     end
@@ -72,7 +77,7 @@ def setBattleRule(*args)
     else
       case arg.downcase
       when "terrain", "weather", "environment", "environ", "backdrop",
-           "battleback", "base", "outcome", "outcomevar"
+           "battleback", "base", "outcome", "outcomevar", "startover"
         r = arg
         next
       end
@@ -157,6 +162,7 @@ module BattleCreationHelperMethods
     $PokemonGlobal.nextBattleVictoryBGM = nil
     $PokemonGlobal.nextBattleCaptureME  = nil
     $PokemonGlobal.nextBattleBack       = nil
+    $game_variables[Supplementals::BOSS_BATTLE] = 0
     $PokemonEncounters.reset_step_count
     outcome = 1   # Win
     outcome = 0 if trainer_battle && $player.able_pokemon_count == 0   # Undecided
@@ -226,6 +232,9 @@ module BattleCreationHelperMethods
     # Whether battle animations are shown
     battle.showAnims = ($PokemonSystem.battlescene == 0)
     battle.showAnims = battleRules["battleAnims"] if !battleRules["battleAnims"].nil?
+    # Whether a wild Pokémon should use the trainer AI
+    battle.smartWildBattle = battleRules["smartWildBattle"] if !battleRules["smartWildBattle"].nil?
+    battle.playerUseAI = battleRules["smartWildBattle"] if !battleRules["smartWildBattle"].nil?
     # Terrain
     if battleRules["defaultTerrain"].nil? && Settings::OVERWORLD_WEATHER_SETS_BATTLE_TERRAIN
       case $game_screen.weather_type
@@ -294,7 +303,7 @@ module BattleCreationHelperMethods
     end
   end
 
-  def after_battle(outcome, can_lose)
+  def after_battle(outcome, can_lose, start_over = false)
     $player.party.each do |pkmn|
       pkmn.statusCount = 0 if pkmn.status == :POISON   # Bad poison becomes regular
       pkmn.makeUnmega
@@ -308,9 +317,21 @@ module BattleCreationHelperMethods
         pkmn.makeUnprimal
       end
     end
-    if [2, 5].include?(outcome) && can_lose   # if loss or draw
+    if [2, 5].include?(outcome) && (can_lose || start_over)   # if loss or draw
       $player.party.each { |pkmn| pkmn.heal }
       (Graphics.frame_rate / 4).times { Graphics.update }
+      if start_over
+        pbMessage("Do you want to retry the battle?\\ch[1,0,Retry the battle,Return to Pokémon Center]")
+        if pbGet(1)==0
+          canLose = true
+          pbCancelVehicles
+          $game_temp.player_new_map_id = startOver[0]
+          $game_temp.player_new_x = startOver[1]
+          $game_temp.player_new_y = startOver[2]
+          $game_temp.player_new_direction = (startOver.length > 3) ? startOver[3] : 8
+          $scene.transfer_player
+        end
+      end
     end
     EventHandlers.trigger(:on_end_battle, outcome, can_lose)
     $game_player.straighten
@@ -363,6 +384,9 @@ class WildBattle
   def self.start_core(*args)
     outcome_variable = $game_temp.battle_rules["outcomeVar"] || 1
     can_lose         = $game_temp.battle_rules["canLose"] || false
+    start_over       = $game_temp.battle_rules["startOver"] || false
+    scale_level      = $game_temp.battle_rules["scaleLevel"] || false
+    level_mod        = $game_temp.battle_rules["levelMod"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable)
@@ -372,6 +396,20 @@ class WildBattle
     EventHandlers.trigger(:on_start_battle)
     # Generate array of foes
     foe_party = WildBattle.generate_foes(*args)
+    if scale_level
+      foe_party.each { |pokemon|
+        Scaling.wild(pokemon)
+      }
+    end
+    if level_mod
+      foe_party.each { |pokemon|
+        pokemon.level += level_mod
+        pokemon.calc_stats
+      }
+    end
+    foe_party.each { |pokemon|
+      pbWildModify(pokemon) if $game_variables[Supplementals::WILD_MODIFIER] != 0
+    }
     # Generate information for the player and partner trainer(s)
     player_trainers, ally_items, player_party, player_party_starts = BattleCreationHelperMethods.set_up_player_trainers(foe_party)
     # Create the battle scene (the visual side of it)
@@ -381,16 +419,21 @@ class WildBattle
     battle.party1starts = player_party_starts
     battle.ally_items   = ally_items
     # Set various other properties in the battle class
-    setBattleRule("#{foe_party.length}v#{foe_party.length}") if $game_temp.battle_rules["size"].nil?
+    if Supplementals::DEFAULT_DOUBLE_BATTLE
+      setBattleRule("2v2") if $game_temp.battle_rules["size"].nil?
+    else
+      setBattleRule("#{foe_party.length}v#{foe_party.length}") if $game_temp.battle_rules["size"].nil?
+    end
     BattleCreationHelperMethods.prepare_battle(battle)
     $game_temp.clear_battle_rules
     # Perform the battle itself
     outcome = 0
     pbBattleAnimation(pbGetWildBattleBGM(foe_party), (foe_party.length == 1) ? 0 : 2, foe_party) {
+      $scene.spriteset.despawnPokemon if Supplementals::OVERWORLD_POKEMON
       pbSceneStandby {
         outcome = battle.pbStartBattle
       }
-      BattleCreationHelperMethods.after_battle(outcome, can_lose)
+      BattleCreationHelperMethods.after_battle(outcome, can_lose, start_over)
     }
     Input.update
     # Save the result of the battle in a Game Variable (1 by default)
@@ -483,40 +526,71 @@ class TrainerBattle
   def self.start_core(*args)
     outcome_variable = $game_temp.battle_rules["outcomeVar"] || 1
     can_lose         = $game_temp.battle_rules["canLose"] || false
+    start_over       = $game_temp.battle_rules["startOver"] || false
+    scale_level      = $game_temp.battle_rules["scaleLevel"] || false
+    level_mod        = $game_temp.battle_rules["levelMod"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable, true)
     end
-    # Record information about party Pokémon to be used at the end of battle (e.g.
-    # comparing levels for an evolution check)
-    EventHandlers.trigger(:on_start_battle)
-    # Generate information for the foes
-    foe_trainers, foe_items, foe_party, foe_party_starts = TrainerBattle.generate_foes(*args)
-    # Generate information for the player and partner trainer(s)
-    player_trainers, ally_items, player_party, player_party_starts = BattleCreationHelperMethods.set_up_player_trainers(foe_party)
-    # Create the battle scene (the visual side of it)
-    scene = BattleCreationHelperMethods.create_battle_scene
-    # Create the battle class (the mechanics side of it)
-    battle = Battle.new(scene, player_party, foe_party, player_trainers, foe_trainers)
-    battle.party1starts = player_party_starts
-    battle.party2starts = foe_party_starts
-    battle.ally_items   = ally_items
-    battle.items        = foe_items
-    # Set various other properties in the battle class
-    setBattleRule("#{foe_trainers.length}v#{foe_trainers.length}") if $game_temp.battle_rules["size"].nil?
-    BattleCreationHelperMethods.prepare_battle(battle)
-    $game_temp.clear_battle_rules
-    # Perform the battle itself
-    outcome = 0
-    pbBattleAnimation(pbGetTrainerBattleBGM(foe_trainers), (battle.singleBattle?) ? 1 : 3, foe_trainers) {
-      pbSceneStandby {
-        outcome = battle.pbStartBattle
+    loop do
+      # Record information about party Pokémon to be used at the end of battle (e.g.
+      # comparing levels for an evolution check)
+      EventHandlers.trigger(:on_start_battle)
+      # Generate information for the foes
+      foe_trainers, foe_items, foe_party, foe_party_starts = TrainerBattle.generate_foes(*args)
+      if scale_level
+        foe_trainers.each { |trainer|
+          Scaling.trainer(trainer)
+        }
+      end
+      if level_mod
+        foe_party.each { |pokemon|
+          pokemon.level += level_mod
+          pokemon.calc_stats
+          pokemon.hp = pokemon.total_hp
+        }
+      end
+      foe_party.each { |pokemon|
+        Scaling.difficulty(pokemon)
       }
-      BattleCreationHelperMethods.after_battle(outcome, can_lose)
-    }
+      # Generate information for the player and partner trainer(s)
+      player_trainers, ally_items, player_party, player_party_starts = BattleCreationHelperMethods.set_up_player_trainers(foe_party)
+      # Create the battle scene (the visual side of it)
+      scene = BattleCreationHelperMethods.create_battle_scene
+      # Create the battle class (the mechanics side of it)
+      battle = Battle.new(scene, player_party, foe_party, player_trainers, foe_trainers)
+      battle.party1starts = player_party_starts
+      battle.party2starts = foe_party_starts
+      battle.ally_items   = ally_items
+      battle.items        = foe_items
+      # Set various other properties in the battle class
+      if Supplementals::DEFAULT_DOUBLE_BATTLE
+        setBattleRule("2v2") if $game_temp.battle_rules["size"].nil?
+      else
+        setBattleRule("#{foe_party.length}v#{foe_party.length}") if $game_temp.battle_rules["size"].nil?
+      end
+      BattleCreationHelperMethods.prepare_battle(battle)
+      $game_temp.clear_battle_rules
+      # Perform the battle itself
+      outcome = 0
+      pbBattleAnimation(pbGetTrainerBattleBGM(foe_trainers), (battle.singleBattle?) ? 1 : 3, foe_trainers) {
+        pbSceneStandby {
+          outcome = battle.pbStartBattle
+        }
+        BattleCreationHelperMethods.after_battle(outcome, can_lose, start_over)
+      }
+      break if outcome != -1 # Do-over
+    end
     Input.update
     # Save the result of the battle in a Game Variable (1 by default)
     BattleCreationHelperMethods.set_outcome(outcome, outcome_variable, true)
+    if outcome == 1
+      foe_party.each { |pokemon|
+        Scaling.reset_difficulty(pokemon)
+      }
+      Scaling.update(trainer)
+    end
     return outcome
   end
 

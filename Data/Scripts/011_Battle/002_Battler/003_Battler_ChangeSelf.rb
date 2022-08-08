@@ -10,7 +10,7 @@ class Battle::Battler
     self.hp -= amt
     PBDebug.log("[HP change] #{pbThis} lost #{amt} HP (#{oldHP}=>#{@hp})") if amt > 0
     raise _INTL("HP less than 0") if @hp < 0
-    raise _INTL("HP greater than total HP") if @hp > @totalhp
+    raise _INTL("HP greater than total HP") if @hp > @totalhp && !Supplementals::ALLOW_HP_LAYERS
     @battle.scene.pbHPChanged(self, oldHP, anim) if anyAnim && amt > 0
     if amt > 0 && registerDamage
       @droppedBelowHalfHP = true if @hp < @totalhp / 2 && @hp + amt >= @totalhp / 2
@@ -27,7 +27,7 @@ class Battle::Battler
     self.hp += amt
     PBDebug.log("[HP change] #{pbThis} gained #{amt} HP (#{oldHP}=>#{@hp})") if amt > 0
     raise _INTL("HP less than 0") if @hp < 0
-    raise _INTL("HP greater than total HP") if @hp > @totalhp
+    raise _INTL("HP greater than total HP") if @hp > @totalhp && !Supplementals::ALLOW_HP_LAYERS
     @battle.scene.pbHPChanged(self, oldHP, anim) if anyAnim && amt > 0
     @droppedBelowHalfHP = false if @hp >= @totalhp / 2
     return amt
@@ -95,6 +95,7 @@ class Battle::Battler
     pbAbilitiesOnFainting
     # Check for end of primordial weather
     @battle.pbEndPrimordialWeather
+    pbBoss.checkTriggers(@battle, :Faint, self)
   end
 
   #=============================================================================

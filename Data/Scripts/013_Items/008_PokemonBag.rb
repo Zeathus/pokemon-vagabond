@@ -21,6 +21,25 @@ class PokemonBag
     reset_last_selections
     @registered_items     = []
     @ready_menu_selection = [0, 0, 1]   # Used by the Ready Menu to remember cursor positions
+    @favorites            = []
+  end
+
+  def add_favorite(item)
+    @favorites.push(item) if !@favorites.include?(item)
+  end
+
+  def remove_favorite(item)
+    @favorites -= [item] if @favorites.include?(item)
+  end
+
+  def favorites_pocket
+    ret=[]
+    for i in [1,2,3,4,6,7,8,9]
+      for j in pockets[i]
+        ret.push(j) if favorites.include?(j[0])
+      end
+    end
+    return ret
   end
 
   def reset_last_selections

@@ -968,6 +968,8 @@ Battle::ItemEffects::DamageCalcFromUser.add(:PIXIEPLATE,
   }
 )
 
+Battle::ItemEffects::DamageCalcFromUser.copy(:PIXIEPLATE, :PIXIEDUST)
+
 Battle::ItemEffects::DamageCalcFromUser.add(:POISONBARB,
   proc { |item, user, target, move, mults, baseDmg, type|
     mults[:base_damage_multiplier] *= 1.2 if type == :POISON
@@ -1754,25 +1756,25 @@ Battle::ItemEffects::EVGainModifier.add(:POWERWEIGHT,
 
 Battle::ItemEffects::WeatherExtender.add(:DAMPROCK,
   proc { |item, weather, duration, battler, battle|
-    next 8 if weather == :Rain
+    next duration + 3 if weather == :Rain
   }
 )
 
 Battle::ItemEffects::WeatherExtender.add(:HEATROCK,
   proc { |item, weather, duration, battler, battle|
-    next 8 if weather == :Sun
+    next duration + 3 if weather == :Sun
   }
 )
 
 Battle::ItemEffects::WeatherExtender.add(:ICYROCK,
   proc { |item, weather, duration, battler, battle|
-    next 8 if weather == :Hail
+    next duration + 3 if weather == :Hail
   }
 )
 
 Battle::ItemEffects::WeatherExtender.add(:SMOOTHROCK,
   proc { |item, weather, duration, battler, battle|
-    next 8 if weather == :Sandstorm
+    next duration + 3 if weather == :Sandstorm
   }
 )
 
@@ -1782,7 +1784,7 @@ Battle::ItemEffects::WeatherExtender.add(:SMOOTHROCK,
 
 Battle::ItemEffects::TerrainExtender.add(:TERRAINEXTENDER,
   proc { |item, terrain, duration, battler, battle|
-    next 8
+    next duration + 3
   }
 )
 

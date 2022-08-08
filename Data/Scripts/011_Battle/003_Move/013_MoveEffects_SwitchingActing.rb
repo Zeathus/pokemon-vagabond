@@ -175,11 +175,11 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
-    if @battle.wildBattle? && target.level > user.level
+    if @battle.wildBattle? && target.level > user.level && !@battle.smartWildBattle
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
-    if @battle.trainerBattle?
+    if @battle.trainerBattle? || @battle.smartWildBattle
       canSwitch = false
       @battle.eachInTeamFromBattlerIndex(target.index) do |_pkmn, i|
         next if !@battle.pbCanSwitchLax?(target.index, i)
@@ -195,11 +195,11 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
   end
 
   def pbEffectGeneral(user)
-    @battle.decision = 3 if @battle.wildBattle?   # Escaped from battle
+    @battle.decision = 3 if @battle.wildBattle? && !@battle.smartWildBattle  # Escaped from battle
   end
 
   def pbSwitchOutTargetEffect(user, targets, numHits, switched_battlers)
-    return if @battle.wildBattle? || !switched_battlers.empty?
+    return if (@battle.wildBattle? || !switched_battlers.empty?) && !@battle.smartWildBattle
     return if user.fainted? || numHits == 0
     targets.each do |b|
       next if b.fainted? || b.damageState.unaffected
@@ -471,6 +471,7 @@ class Battle::Move::TargetActsNext < Battle::Move
   def ignoresSubstitute?(user); return true; end
 
   def pbFailsAgainstTarget?(user, target, show_message)
+    return false if @battle.predictingDamage
     # Target has already moved this round
     return true if pbMoveFailedTargetAlreadyMoved?(target, show_message)
     # Target was going to move next anyway (somehow)
@@ -499,6 +500,7 @@ end
 #===============================================================================
 class Battle::Move::TargetActsLast < Battle::Move
   def pbFailsAgainstTarget?(user, target, show_message)
+    return false if @battle.predictingDamage
     return true if pbMoveFailedTargetAlreadyMoved?(target, show_message)
     # Target isn't going to use a move
     oppMove = @battle.choices[target.index][2]

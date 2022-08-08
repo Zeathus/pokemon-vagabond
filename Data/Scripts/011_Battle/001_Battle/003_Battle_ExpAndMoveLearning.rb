@@ -122,6 +122,7 @@ class Battle
     return if exp <= 0
     # Pokémon gain more Exp from trainer battles
     exp = (exp * 1.5).floor if trainerBattle?
+    exp = (exp * 1.5).floor if @smartWildBattle
     # Scale the gained Exp based on the gainer's level (or not)
     if Settings::SCALED_EXP_FORMULA
       exp /= 5

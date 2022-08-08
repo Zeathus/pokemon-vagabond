@@ -262,6 +262,10 @@ HiddenMoveHandlers::CanUseMove.add(:DIG, proc { |move, pkmn, showmsg|
     pbMessage(_INTL("It can't be used when you have someone with you.")) if showmsg
     next false
   end
+  if $game_map.metadata&.has_flag?("DisableFastTravel")
+    pbMessage(_INTL("You can't use that here.")) if showmsg
+    next false
+  end
   next true
 })
 
@@ -512,6 +516,10 @@ def pbCanFly?(pkmn = nil, show_messages = false)
     pbMessage(_INTL("You can't use that here.")) if show_messages
     return false
   end
+  if $game_map.metadata&.has_flag?("DisableFastTravel")
+    pbMessage(_INTL("You can't use that here.")) if showmsg
+    return false
+  end
   return true
 end
 
@@ -734,7 +742,7 @@ HiddenMoveHandlers::UseMove.add(:STRENGTH, proc { |move, pokemon|
 #===============================================================================
 # Surf
 #===============================================================================
-def pbSurf
+def pbSurf(confirm = true, edge = false, down = false)
   return false if $game_player.pbFacingEvent
   return false if !$game_player.can_ride_vehicle_with_follower?
   move = :SURF
@@ -742,27 +750,27 @@ def pbSurf
   if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_SURF, false) || (!$DEBUG && !movefinder)
     return false
   end
-  if pbConfirmMessage(_INTL("The water is a deep blue color... Would you like to use Surf on it?"))
+  if !confirm || pbConfirmMessage(_INTL("The water is a deep blue color... Would you like to use Surf on it?"))
     speciesname = (movefinder) ? movefinder.name : $player.name
-    pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name))
+    pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name)) if confirm
     pbCancelVehicles
-    pbHiddenMoveAnimation(movefinder)
+    pbHiddenMoveAnimation(movefinder) if confirm
     surfbgm = GameData::Metadata.get.surf_BGM
     pbCueBGM(surfbgm, 0.5) if surfbgm
-    pbStartSurfing
+    pbStartSurfing(edge, down)
     return true
   end
   return false
 end
 
-def pbStartSurfing
+def pbStartSurfing(edge = false, down = false)
   pbCancelVehicles
   $PokemonEncounters.reset_step_count
   $PokemonGlobal.surfing = true
   $stats.surf_count += 1
   pbUpdateVehicle
   $game_temp.surf_base_coords = $map_factory.getFacingCoords($game_player.x, $game_player.y, $game_player.direction)
-  pbJumpToward
+  pbJumpToward(edge ? 2 : 1, false, false, down ? 1 : 0)
   $game_temp.surf_base_coords = nil
   $game_player.check_event_trigger_here([1, 2])
 end
@@ -771,16 +779,96 @@ def pbEndSurf(_xOffset, _yOffset)
   return false if !$PokemonGlobal.surfing
   x = $game_player.x
   y = $game_player.y
-  if $game_map.terrain_tag(x, y).can_surf && !$game_player.pbFacingTerrainTag.can_surf
-    $game_temp.surf_base_coords = [x, y]
-    if pbJumpToward(1, false, true)
-      $game_map.autoplayAsCue
-      $game_player.increase_steps
-      result = $game_player.check_event_trigger_here([1, 2])
-      pbOnStepTaken(result)
+  if $game_map.terrain_tag(x, y).can_surf
+    if $game_player.pbFacingTerrainTag.water_edge
+      up = false
+      if Supplementals::HIGH_WATER_EDGES
+        if $game_player.direction == 4
+          up = !$game_map.terrain_tag(x-2,y-1).can_surf
+        elsif $game_player.direction == 6
+          up = !$game_map.terrain_tag(x+2,y-1).can_surf
+        end
+      end
+      if (up && pbJumpToward(2,false,true,-1)) ||
+         (!$game_player.pbFacingSecondTerrainTag.can_surf && pbJumpToward(2,false,true))
+        $game_map.autoplayAsCue
+        $game_player.increase_steps
+        result=$game_player.check_event_trigger_here([1,2])
+        pbOnStepTaken(result)
+      end
+    else
+      $game_temp.surf_base_coords = [x, y]
+      up = false
+      if Supplementals::HIGH_WATER_EDGES
+        if $game_player.direction == 4
+          up = !$game_map.terrain_tag(x-1,y-1).can_surf
+        elsif $game_player.direction == 6
+          up = !$game_map.terrain_tag(x+1,y-1).can_surf
+        end
+      end
+      $game_player.direction_fix = true
+      if (up && pbJumpToward(1, false, true, -1)) ||
+         (!$game_player.pbFacingTerrainTag.can_surf && pbJumpToward(1, false, true))
+        $game_map.autoplayAsCue
+        $game_player.increase_steps
+        result = $game_player.check_event_trigger_here([1, 2])
+        pbOnStepTaken(result)
+      end
+      $game_temp.surf_base_coords = nil
+      $game_player.direction_fix = false
+      return true
     end
-    $game_temp.surf_base_coords = nil
-    return true
+  end
+  return false
+end
+
+def pbStartSurf(confirm = true)
+  return false if $PokemonGlobal.surfing
+  terrain = $game_player.pbFacingTerrainTag
+  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction)
+  if terrain.can_surf && !$PokemonGlobal.surfing && notCliff
+    if terrain.water_edge
+      down = false
+      if Supplementals::HIGH_WATER_EDGES
+        if $game_player.direction == 4
+          terrain2 = $game_map.terrain_tag($game_player.x - 2, $game_player.y + 1)
+          down = terrain2.can_surf && !terrain2.water_edge
+        elsif $game_player.direction == 6
+          terrain2 = $game_map.terrain_tag($game_player.x + 2, $game_player.y + 1)
+          down = terrain2.can_surf && !terrain2.water_edge
+        end
+      end
+      if down
+        pbSurf(confirm, true, true)
+        return true
+      else
+        terrain2 = $game_player.pbFacingSecondTerrainTag
+        if terrain2.can_surf && !terrain2.water_edge
+          pbSurf(confirm, true)
+          return true
+        end
+      end
+    else
+      down = false
+      if Supplementals::HIGH_WATER_EDGES
+        if $game_player.direction == 4
+          terrain2 = $game_map.terrain_tag($game_player.x - 1, $game_player.y + 1)
+          down = terrain2.can_surf && !terrain2.water_edge
+        elsif $game_player.direction == 6
+          terrain2 = $game_map.terrain_tag($game_player.x + 1, $game_player.y + 1)
+          down = terrain2.can_surf && !terrain2.water_edge
+        end
+      end
+      if down
+        $game_player.direction_fix = true
+        pbSurf(confirm, false, true)
+        $game_player.direction_fix = false
+        return true
+      else
+        pbSurf(confirm)
+        return true
+      end
+    end
   end
   return false
 end
@@ -805,7 +893,7 @@ EventHandlers.add(:on_player_interact, :start_surfing,
     next if $game_map.metadata&.always_bicycle
     next if !$game_player.pbFacingTerrainTag.can_surf_freely
     next if !$game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-    pbSurf
+    pbStartSurf(true)
   }
 )
 
@@ -913,6 +1001,10 @@ HiddenMoveHandlers::CanUseMove.add(:TELEPORT, proc { |move, pkmn, showmsg|
   end
   if !$game_player.can_map_transfer_with_follower?
     pbMessage(_INTL("It can't be used when you have someone with you.")) if showmsg
+    next false
+  end
+  if $game_map.metadata&.has_flag?("DisableFastTravel")
+    pbMessage(_INTL("You can't use that here.")) if showmsg
     next false
   end
   next true

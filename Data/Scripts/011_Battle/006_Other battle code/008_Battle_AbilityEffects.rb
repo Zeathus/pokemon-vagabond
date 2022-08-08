@@ -813,7 +813,7 @@ Battle::AbilityEffects::OnStatLoss.add(:DEFIANT,
 
 Battle::AbilityEffects::PriorityChange.add(:GALEWINGS,
   proc { |ability, battler, move, pri|
-    next pri + 1 if (Settings::MECHANICS_GENERATION <= 6 || battler.hp == battler.totalhp) &&
+    next pri + 1 if (Settings::MECHANICS_GENERATION <= 6 || battler.hp >= battler.totalhp) &&
                     move.type == :FLYING
   }
 )
@@ -915,6 +915,7 @@ Battle::AbilityEffects::MoveImmunity.add(:FLASHFIRE,
   proc { |ability, user, target, move, type, battle, show_message|
     next false if user.index == target.index
     next false if type != :FIRE
+    return true if battle.predictingDamage
     if show_message
       battle.pbShowAbilitySplash(target)
       if !target.effects[PBEffects::FlashFire]

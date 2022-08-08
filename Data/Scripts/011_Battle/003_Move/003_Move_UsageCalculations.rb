@@ -215,6 +215,7 @@ class Battle::Move
     c = ratios.length - 1 if c >= ratios.length
     # Calculation
     return true if ratios[c] == 1
+    return false if @battle.predictingDamage && c < ratios.length - 1
     r = @battle.pbRandom(ratios[c])
     return true if r == 0
     if r == 1 && Settings::AFFECTION_EFFECTS && @battle.internalBattle &&
@@ -438,6 +439,7 @@ class Battle::Move
     # Random variance
     if !self.is_a?(Battle::Move::Confusion)
       random = 85 + @battle.pbRandom(16)
+      random = 85 if @battle.predictingDamage
       multipliers[:final_damage_multiplier] *= random / 100.0
     end
     # STAB

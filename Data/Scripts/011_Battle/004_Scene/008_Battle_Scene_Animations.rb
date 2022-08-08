@@ -600,9 +600,11 @@ end
 # Shows a Pokémon flashing after taking damage
 #===============================================================================
 class Battle::Scene::Animation::BattlerDamage < Battle::Scene::Animation
-  def initialize(sprites, viewport, idxBattler, effectiveness)
+  def initialize(sprites, viewport, idxBattler, effectiveness, critical = false, move = nil)
     @idxBattler    = idxBattler
     @effectiveness = effectiveness
+    @critical      = critical
+    @move          = move
     super(sprites, viewport)
   end
 

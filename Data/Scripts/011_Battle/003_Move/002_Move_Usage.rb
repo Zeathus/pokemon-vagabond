@@ -114,6 +114,7 @@ class Battle::Move
   end
 
   def pbMoveFailedTargetAlreadyMoved?(target, showMessage = true)
+    return false if @battle.predictingDamage
     if (@battle.choices[target.index][0] != :UseMove &&
        @battle.choices[target.index][0] != :Shift) || target.movedThisRound?
       @battle.pbDisplay(_INTL("But it failed!")) if showMessage
@@ -189,6 +190,9 @@ class Battle::Move
     end
     # Disguise/Ice Face takes the damage
     return if target.damageState.disguise || target.damageState.iceFace
+    # Boss Sturdy (can be at any HP)
+    sturdy_damage = pbBoss.sturdy?(target, damage)
+    damage = sturdy_damage if sturdy_damage
     # Target takes the damage
     if damage >= target.hp
       damage = target.hp
@@ -202,7 +206,7 @@ class Battle::Move
         if target.hasActiveAbility?(:STURDY) && !@battle.moldBreaker
           target.damageState.sturdy = true
           damage -= 1
-        elsif target.hasActiveItem?(:FOCUSSASH) && target.hp == target.totalhp
+        elsif target.hasActiveItem?(:FOCUSSASH) && target.hp >= target.totalhp
           target.damageState.focusSash = true
           damage -= 1
         elsif target.hasActiveItem?(:FOCUSBAND) && @battle.pbRandom(100) < 10
@@ -259,7 +263,7 @@ class Battle::Move
         elsif Effectiveness.super_effective?(b.damageState.typeMod)
           effectiveness = 2
         end
-        animArray.push([b, oldHP, effectiveness])
+        animArray.push([b, oldHP, effectiveness, b.damageState.critical, user.lastMoveUsed])
       end
       if animArray.length > 0
         @battle.scene.pbHitAndHPLossAnimation(animArray)
@@ -274,12 +278,14 @@ class Battle::Move
   def pbEffectivenessMessage(user, target, numTargets = 1)
     return if target.damageState.disguise || target.damageState.iceFace
     if Effectiveness.super_effective?(target.damageState.typeMod)
+      return if !Supplementals::SHOW_WEAKNESS_MESSAGE
       if numTargets > 1
         @battle.pbDisplay(_INTL("It's super effective on {1}!", target.pbThis(true)))
       else
         @battle.pbDisplay(_INTL("It's super effective!"))
       end
     elsif Effectiveness.not_very_effective?(target.damageState.typeMod)
+      return if !Supplementals::SHOW_RESISTED_MESSAGE
       if numTargets > 1
         @battle.pbDisplay(_INTL("It's not very effective on {1}...", target.pbThis(true)))
       else
@@ -299,17 +305,19 @@ class Battle::Move
          user.pbOwnedByPlayer?
         $game_temp.party_critical_hits_dealt[user.pokemonIndex] += 1
       end
-      if target.damageState.affection_critical
-        if numTargets > 1
-          @battle.pbDisplay(_INTL("{1} landed a critical hit on {2}, wishing to be praised!",
-                                  user.pbThis, target.pbThis(true)))
+      if Supplementals::SHOW_CRITICAL_MESSAGE
+        if target.damageState.affection_critical
+          if numTargets > 1
+            @battle.pbDisplay(_INTL("{1} landed a critical hit on {2}, wishing to be praised!",
+                                    user.pbThis, target.pbThis(true)))
+          else
+            @battle.pbDisplay(_INTL("{1} landed a critical hit, wishing to be praised!", user.pbThis))
+          end
+        elsif numTargets > 1
+          @battle.pbDisplay(_INTL("A critical hit on {1}!", target.pbThis(true)))
         else
-          @battle.pbDisplay(_INTL("{1} landed a critical hit, wishing to be praised!", user.pbThis))
+          @battle.pbDisplay(_INTL("A critical hit!"))
         end
-      elsif numTargets > 1
-        @battle.pbDisplay(_INTL("A critical hit on {1}!", target.pbThis(true)))
-      else
-        @battle.pbDisplay(_INTL("A critical hit!"))
       end
     end
     # Effectiveness message, for moves with 1 hit

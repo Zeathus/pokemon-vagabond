@@ -116,6 +116,10 @@ end
 #
 #===============================================================================
 def pbSaveScreen
+  if $game_temp.no_saving
+    pbMessage("You cannot save right now.")
+    return false
+  end
   scene = PokemonSave_Scene.new
   screen = PokemonSaveScreen.new(scene)
   ret = screen.pbSaveScreen

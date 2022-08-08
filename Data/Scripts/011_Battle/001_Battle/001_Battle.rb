@@ -87,6 +87,8 @@ class Battle
   attr_reader   :endOfRound       # True during the end of round
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
+  attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
+  attr_accessor :predictingDamage
 
   def pbRandom(x); return rand(x); end
 
@@ -107,7 +109,7 @@ class Battle
                           ActiveSide.new]   # Foe's side
     @positions         = []                 # Battler positions
     @battlers          = []
-    @sideSizes         = [1, 1]   # Single battle, 1v1
+    @sideSizes         = Supplementals::DEFAULT_DOUBLE_BATTLE ? [2, 2] : [1, 1]   # Single battle, 1v1
     @backdrop          = ""
     @backdropBase      = nil
     @time              = 0
@@ -171,6 +173,9 @@ class Battle
     end
     @mega_rings = []
     GameData::Item.each { |item| @mega_rings.push(item.id) if item.has_flag?("MegaRing") }
+    @smartWildBattle   = false
+    @playerUseAI       = false
+    @predictingDamage  = false
   end
 
   #=============================================================================
@@ -281,6 +286,7 @@ class Battle
   end
 
   def pbOwnedByPlayer?(idxBattler)
+    return false if @playerUseAI
     return false if opposes?(idxBattler)
     return pbGetOwnerIndexFromBattlerIndex(idxBattler) == 0
   end
@@ -704,10 +710,10 @@ class Battle
   end
 
   # Used for causing weather by a move or by an ability.
-  def pbStartWeather(user, newWeather, fixedDuration = false, showAnim = true)
+  def pbStartWeather(user, newWeather, fixedDuration = false, showAnim = true, duration = 5)
     return if @field.weather == newWeather
     @field.weather = newWeather
-    duration = (fixedDuration) ? 5 : -1
+    duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
       duration = Battle::ItemEffects.triggerWeatherExtender(user.item, @field.weather,
                                                             duration, user, self)
@@ -729,6 +735,7 @@ class Battle
     # Check for end of primordial weather, and weather-triggered form changes
     allBattlers.each { |b| b.pbCheckFormOnWeatherChange }
     pbEndPrimordialWeather
+    pbBoss.checkTriggers(self, :Weather)
   end
 
   def pbEndPrimordialWeather
@@ -782,10 +789,10 @@ class Battle
     @field.terrainDuration = -1
   end
 
-  def pbStartTerrain(user, newTerrain, fixedDuration = true)
+  def pbStartTerrain(user, newTerrain, fixedDuration = true, duration = 5)
     return if @field.terrain == newTerrain
     @field.terrain = newTerrain
-    duration = (fixedDuration) ? 5 : -1
+    duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
       duration = Battle::ItemEffects.triggerTerrainExtender(user.item, newTerrain,
                                                             duration, user, self)
@@ -807,42 +814,51 @@ class Battle
     # Check for abilities/items that trigger upon the terrain changing
     allBattlers.each { |b| b.pbAbilityOnTerrainChange }
     allBattlers.each { |b| b.pbItemTerrainStatBoostCheck }
+    pbBoss.checkTriggers(self, :Terrain)
   end
 
   #=============================================================================
   # Messages and animations
   #=============================================================================
   def pbDisplay(msg, &block)
+    return if @predictingDamage
     @scene.pbDisplayMessage(msg, &block)
   end
 
   def pbDisplayBrief(msg)
+    return if @predictingDamage
     @scene.pbDisplayMessage(msg, true)
   end
 
   def pbDisplayPaused(msg, &block)
+    return if @predictingDamage
     @scene.pbDisplayPausedMessage(msg, &block)
   end
 
   def pbDisplayConfirm(msg)
+    return if @predictingDamage
     return @scene.pbDisplayConfirmMessage(msg)
   end
 
   # defaultValue of -1 means "can't cancel". If it's 0 or greater, returns that
   # value when pressing the "Back" button.
   def pbShowCommands(msg, commands, defaultValue = -1)
+    return if @predictingDamage
     return @scene.pbShowCommands(msg, commands, defaultValue)
   end
 
   def pbAnimation(move, user, targets, hitNum = 0)
+    return if @predictingDamage
     @scene.pbAnimation(move, user, targets, hitNum) if @showAnims
   end
 
   def pbCommonAnimation(name, user = nil, targets = nil)
+    return if @predictingDamage
     @scene.pbCommonAnimation(name, user, targets) if @showAnims
   end
 
   def pbShowAbilitySplash(battler, delay = false, logTrigger = true)
+    return if @predictingDamage
     PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}") if logTrigger
     return if !Scene::USE_ABILITY_SPLASH
     @scene.pbShowAbilitySplash(battler)
@@ -852,11 +868,13 @@ class Battle
   end
 
   def pbHideAbilitySplash(battler)
+    return if @predictingDamage
     return if !Scene::USE_ABILITY_SPLASH
     @scene.pbHideAbilitySplash(battler)
   end
 
   def pbReplaceAbilitySplash(battler)
+    return if @predictingDamage
     return if !Scene::USE_ABILITY_SPLASH
     @scene.pbReplaceAbilitySplash(battler)
   end

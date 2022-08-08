@@ -1,0 +1,63 @@
+[POKECENTER_NURSE,0]
+/speaker Nurse
+> Hello and welcome to the Pokémon Center.
+?> Would you like to rest your Pokémon?
+    /choice Yes
+        > OK,WT I will take your Pokémon for a few seconds.
+        /return true
+    /cancelchoice No
+        > Come visit us anytime!
+        /return false
+?/>
+
+[POKECENTER_NURSE,1]
+/speaker Nurse
+> Thank you for waiting.WT<br>We have restored your Pokémon to full health.
+
+[POKECENTER_NURSE,2]
+/speaker Nurse
+> We hope you excel!
+
+[POKECENTER_POKERUS]
+/speaker Nurse
+> Your Pokémon may be infected with PokéRus.
+> Little is known about the PokéRus except that they are microscopic life-forms that attach to Pokémon.
+> While infected, Pokémon are said to grow exceptionally well.
+
+[EMOTE_TEST]
+/event set Test 5
+/event Test emote heart
+/event Test emote sweat
+/event Test emote angry
+/event Test emote sad
+/event Test emote dots
+/event Test emote annoyed
+/event Test emote smile
+/event Test emote frown
+/event Test emote idea
+
+[PORTRAIT_TEST]
+/namepos center
+/speaker Amethyst
+> Hello 1.
+/speaker Kira
+> Hello 2.
+/portrait_left Amethyst
+> Hello 3.
+/speaker Amethyst
+> Hello 4.
+/portrait_right Kira
+> Hello 5.
+/speaker Kira
+> Hello 6.
+/expression angry
+> Hello 7.
+/expression_left confused
+> Hello 8.
+/portrait_left Kira
+/portrait_right Amethyst
+/expression_right confused
+/expression_left annoyed
+> Hello 9.
+/reset
+> Hello 10.

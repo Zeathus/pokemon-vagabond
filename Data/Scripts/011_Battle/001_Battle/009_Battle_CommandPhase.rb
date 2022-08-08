@@ -195,6 +195,8 @@ class Battle
     #       your actions in a round.
     actioned = []
     idxBattler = -1
+    idxOpposingToUseAI = []
+    idxAlliedToUseAI = []
     loop do
       break if @decision != 0   # Battle ended, stop choosing actions
       idxBattler += 1
@@ -204,7 +206,8 @@ class Battle
       next if !pbCanShowCommands?(idxBattler)   # Action is forced, can't choose one
       # AI controls this battler
       if @controlPlayer || !pbOwnedByPlayer?(idxBattler)
-        @battleAI.pbDefaultChooseEnemyCommand(idxBattler)
+        idxOpposingToUseAI.push(idxBattler) if idxBattler % 2 == 1
+        idxAlliedToUseAI.push(idxBattler) if idxBattler % 2 == 0
         next
       end
       # Player chooses an action
@@ -252,6 +255,17 @@ class Battle
         pbCancelChoice(idxBattler)
       end
       break if commandsEnd
+    end
+    if Supplementals::USE_NEW_BATTLE_AI
+      @battleAI.pbDefaultChooseEnemyCommand(idxOpposingToUseAI) if idxOpposingToUseAI.length > 0
+      @battleAI.pbDefaultChooseEnemyCommand(idxAlliedToUseAI) if idxAlliedToUseAI.length > 0
+    else
+      idxOpposingToUseAI.each do |i|
+        @battleAI.pbDefaultChooseEnemyCommand(i)
+      end
+      idxAlliedToUseAI.each do |i|
+        @battleAI.pbDefaultChooseEnemyCommand(i)
+      end
     end
   end
 end
