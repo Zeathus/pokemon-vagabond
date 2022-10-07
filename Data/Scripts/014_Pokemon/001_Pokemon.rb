@@ -92,7 +92,7 @@ class Pokemon
   # Max EVs that a single stat can have
   EV_STAT_LIMIT = 252
   # Maximum length a Pokémon's nickname can be
-  MAX_NAME_SIZE = 10
+  MAX_NAME_SIZE = 12
   # Maximum number of moves a Pokémon can know at once
   MAX_MOVES     = 4
 
@@ -311,6 +311,7 @@ class Pokemon
 
   # @return [Array<Symbol>] an array of this Pokémon's types
   def types
+    return [pbCustomPokemon.type] if @species == :SILVALLY
     return species_data.types.clone
   end
 
@@ -324,6 +325,20 @@ class Pokemon
   def type2
     Deprecation.warn_method("type2", "v21", "pkmn.types")
     return types[1] || types[0]
+  end
+
+  def affinities
+    return [pbCustomPokemon.affinity] if @species == :SILVALLY
+    return species_data.extra_types
+  end
+
+  def affinity
+    return self.affinities[0]
+  end
+
+  def hasAffinity?(type)
+    type = GameData::Type.get(type).id
+    return self.affinities.include?(type)
   end
 
   # @param type [Symbol, String, GameData::Type] type to check
@@ -707,7 +722,11 @@ class Pokemon
   # @return [Boolean] whether the Pokémon is compatible with the given move
   def compatible_with_move?(move_id)
     move_data = GameData::Move.try_get(move_id)
-    return move_data && species_data.tutor_moves.include?(move_data.id)
+    if move_data
+      return true if species_data.tutor_moves.include?(move_data.id)
+      return true if species_data.egg_moves.include?(move_data.id)
+    end
+    return false
   end
 
   def can_relearn_move?
@@ -893,11 +912,13 @@ class Pokemon
 
   # @return [Integer] the height of this Pokémon in decimetres (0.1 metres)
   def height
+    return pbCustomPokemon.height if @species == :SILVALLY
     return species_data.height
   end
 
   # @return [Integer] the weight of this Pokémon in hectograms (0.1 kilograms)
   def weight
+    return pbCustomPokemon.weight if @species == :SILVALLY
     return species_data.weight
   end
 
@@ -950,6 +971,8 @@ class Pokemon
       gain = [-10, -10, -15][happiness_range]
     when "revivalherb"
       gain = [-15, -15, -20][happiness_range]
+    when "honeyedberry"
+      gain = [50, 30, 20][happiness_range]
     else
       raise _INTL("Unknown happiness-changing method: {1}", method.to_s)
     end
@@ -961,6 +984,7 @@ class Pokemon
         gain = gain.clamp(0, 179 - @happiness)
       end
     end
+    gain *= 2 if pbActiveDrink == "happiness" && gain > 0
     @happiness = (@happiness + gain).clamp(0, 255)
   end
 
@@ -1060,7 +1084,7 @@ class Pokemon
 
   # @return [Hash<Integer>] this Pokémon's base stats, a hash with six key/value pairs
   def baseStats
-    this_base_stats = species_data.base_stats
+    this_base_stats = (@species == :SILVALLY) ? pbCustomPokemon.base_stats : species_data.base_stats
     ret = {}
     GameData::Stat.each_main { |s| ret[s.id] = this_base_stats[s.id] }
     return ret

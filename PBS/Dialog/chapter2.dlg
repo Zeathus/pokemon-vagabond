@@ -1,0 +1,29 @@
+[CH2_MORNING]
+/speaker Amethyst
+?> Good morning!WT Did you sleep well?
+    /choice Like a rock!
+        > The guest bed is pretty comfy,WT right?
+        > Let's go check on the girl we found yesterday.
+        /return false
+    /choice I heard voices
+        > Voices?WT Someone named Eliana?
+        > We can discuss that in a bit.WT<br>Let's go check on the girl we found yesterday.
+        /return true
+    /choice I had a weird dream
+        > A weird dream?WT Someone named Eliana?
+        > We can discuss that in a bit.WT<br>Let's go check on the girl we found yesterday.
+        /return true
+?/>
+
+[CH2_PRE_KIRA]
+/speaker Kira
+> I know Amethyst has taken a liking to you already,WT but I'll be keeping an eye on you.
+
+[CH2_NEKANE,0]
+/event set Nurse 3
+/event set Amethyst 5
+/speaker Amethyst
+> Have you had a good look into her condition?
+/speaker Nurse
+> 
+/event Amethyst emote heart

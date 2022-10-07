@@ -21,7 +21,7 @@ end
 #===============================================================================
 class Battle::Move::FixedDamageHalfTargetHP < Battle::Move::FixedDamageMove
   def pbFixedDamage(user, target)
-    return (target.hp / 2.0).round
+    return (target.pbActiveHP / 2.0).round
   end
 
   def pbFailsAgainstTarget?(user,target)
@@ -58,10 +58,10 @@ end
 #===============================================================================
 class Battle::Move::LowerTargetHPToUserHP < Battle::Move::FixedDamageMove
   def pbFailsAgainstTarget?(user, target, show_message)
-    if user.hp >= target.hp
+    if user.pbActiveHP >= target.hp
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
-    elsif target.hp > target.totalhp
+    elsif target.pbActiveHP > target.totalhp
       @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
       return true
     end
@@ -71,7 +71,7 @@ class Battle::Move::LowerTargetHPToUserHP < Battle::Move::FixedDamageMove
   def pbNumHits(user, targets); return 1; end
 
   def pbFixedDamage(user, target)
-    return target.hp - user.hp
+    return target.hp - user.pbActiveHP
   end
 end
 
@@ -177,7 +177,7 @@ end
 #===============================================================================
 class Battle::Move::PowerHigherWithUserHP < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
-    return [150 * user.hp / user.totalhp, 1].max
+    return [[150 * user.pbActiveHP / user.totalhp, 1].max, 150].min
   end
 end
 
@@ -187,7 +187,7 @@ end
 class Battle::Move::PowerLowerWithUserHP < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
     ret = 20
-    n = 48 * user.hp / user.totalhp
+    n = 48 * user.pbActiveHP / user.totalhp
     if n < 2
       ret = 200
     elsif n < 5
@@ -208,7 +208,7 @@ end
 #===============================================================================
 class Battle::Move::PowerHigherWithTargetHP < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
-    return [120 * target.hp / target.totalhp, 1].max
+    return [[120 * target.pbActiveHP / target.totalhp, 1].max, 120].min
   end
 end
 
@@ -413,7 +413,7 @@ end
 #===============================================================================
 class Battle::Move::DoublePowerIfTargetHPLessThanHalf < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
-    baseDmg *= 2 if target.hp <= target.totalhp / 2
+    baseDmg *= 2 if target.pbActiveHP <= target.totalhp / 2
     return baseDmg
   end
 end
@@ -1574,6 +1574,8 @@ class Battle::Move::TypeAndPowerDependOnWeather < Battle::Move
       ret = :ROCK if GameData::Type.exists?(:ROCK)
     when :Hail
       ret = :ICE if GameData::Type.exists?(:ICE)
+    when :Winds
+      ret = :FLYING if GameData::Type.exists?(:FLYING)
     end
     return ret
   end
@@ -1584,6 +1586,7 @@ class Battle::Move::TypeAndPowerDependOnWeather < Battle::Move
     hitNum = 2 if t == :WATER
     hitNum = 3 if t == :ROCK
     hitNum = 4 if t == :ICE
+    hitNum = 5 if t == :FLYING
     super
   end
 end

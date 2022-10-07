@@ -743,29 +743,22 @@ end
 #===============================================================================
 # Picking up an item found on the ground
 #===============================================================================
-def pbItemBall(item, quantity = 1)
+def pbItemBall(item, quantity = 1, switch = "A")
   item = GameData::Item.get(item)
   return false if !item || quantity < 1
   itemname = (quantity > 1) ? item.name_plural : item.name
   pocket = item.pocket
   move = item.move
   if $bag.add(item, quantity)   # If item can be picked up
-    meName = (item.is_key_item?) ? "Key item get" : "Item get"
-    if item == :LEFTOVERS
-      pbMessage(_INTL("\\me[{1}]You found some \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-    elsif item == :DNASPLICERS
-      pbMessage(_INTL("\\me[{1}]You found \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-    elsif item.is_machine?   # TM or HM
-      pbMessage(_INTL("\\me[{1}]You found \\c[1]{2} {3}\\c[0]!\\wtnp[30]", meName, itemname, GameData::Move.get(move).name))
-    elsif quantity > 1
-      pbMessage(_INTL("\\me[{1}]You found {2} \\c[1]{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
-    elsif itemname.starts_with_vowel?
-      pbMessage(_INTL("\\me[{1}]You found an \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-    else
-      pbMessage(_INTL("\\me[{1}]You found a \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
+    event_id = nil
+    event_id = @event_id if $game_map.events[@event_id].character_name == "Object ball"
+    if event_id
+      pbSEPlay("Battle recall", 100)
+      $game_self_switches[[$game_map.map_id, event_id, switch]] = true
+      $game_map.need_refresh = true
+      pbUpdateSceneMap
     end
-    pbMessage(_INTL("You put the {1} in\\nyour Bag's <icon=bagPocket{2}>\\c[1]{3}\\c[0] pocket.",
-                    itemname, pocket, PokemonBag.pocket_names[pocket - 1]))
+    pbItemPickupAnimation(item, quantity)
     return true
   end
   # Can't add the item
@@ -792,26 +785,8 @@ end
 def pbReceiveItem(item, quantity = 1)
   item = GameData::Item.get(item)
   return false if !item || quantity < 1
-  itemname = (quantity > 1) ? item.name_plural : item.name
-  pocket = item.pocket
-  move = item.move
-  meName = (item.is_key_item?) ? "Key item get" : "Item get"
-  if item == :LEFTOVERS
-    pbMessage(_INTL("\\me[{1}]You obtained some \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-  elsif item == :DNASPLICERS
-    pbMessage(_INTL("\\me[{1}]You obtained \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-  elsif item.is_machine?   # TM or HM
-    pbMessage(_INTL("\\me[{1}]You obtained \\c[1]{2} {3}\\c[0]!\\wtnp[30]", meName, itemname, GameData::Move.get(move).name))
-  elsif quantity > 1
-    pbMessage(_INTL("\\me[{1}]You obtained {2} \\c[1]{3}\\c[0]!\\wtnp[30]", meName, quantity, itemname))
-  elsif itemname.starts_with_vowel?
-    pbMessage(_INTL("\\me[{1}]You obtained an \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-  else
-    pbMessage(_INTL("\\me[{1}]You obtained a \\c[1]{2}\\c[0]!\\wtnp[30]", meName, itemname))
-  end
   if $bag.add(item, quantity)   # If item can be added
-    pbMessage(_INTL("You put the {1} in\\nyour Bag's <icon=bagPocket{2}>\\c[1]{3}\\c[0] pocket.",
-                    itemname, pocket, PokemonBag.pocket_names[pocket - 1]))
+    pbItemPickupAnimation(item, quantity)
     return true
   end
   return false   # Can't add the item

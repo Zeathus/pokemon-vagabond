@@ -1,0 +1,245 @@
+[FELDSPAR_FIREPLACE]
+> The fireplace radiates a scorching warmth.
+
+[PEGMA_GYM_LOCKED]
+> The door is locked.WT<br>Perhaps you should help the Gym Leader first.
+
+[PEGMA_CITY_GYM,0]
+/speaker Raphael
+/hidename 1
+> Oh shoot!WT I'm so sorry!
+> Wait.WT.WT.WT Are you here to challenge the gym?
+> Yet again I'm sorry, as I have an issue to address first.
+> If you want it to be resolved quicker, you are free to join me to a meeting with my brother, the blacksmith.
+
+[PEGMA_CITY_GYM,1]
+/speaker Raphael
+/hidename 1
+> Allon,WT I'll head to the quarry to inspect the situation myself.
+/speaker Allon
+> That's a good move I think.WT Just try not to start any fights Raphael.
+/speaker Raphael
+> Yeah, yeah.WT I'll keep my head cool.WT<br>I'll call on you if need be.
+
+[PEGMA_CITY_GYM,2]
+/speaker Raphael
+> I'm off to the quarry.WT<br>If you want to join me, you need to head through the cave to the east.
+> That cave connects the Feldspar District and Mica District of Pegma City.
+
+[PEGMA_CITY_GYM,3]
+/speaker Allon
+> Excuse my brother.WT He's always in a rush.
+> It is simply because he really cares about his work though, don't forget that.
+
+[PEGMA_CITY_GYM,4]
+/speaker Raphael
+> Alister,WT we need to fix this ore shortage ASAP.
+> This issue affects our entire supply chain, it is of utmost importance!
+/speaker Alister
+> I know, I know.WT But I am not responsible for these shipments.
+> You need to-WTNP
+/speaker Raphael
+> You are the supervisor here,WT should this not go through you?
+> Do you know how many people rely on the metals I process from the ore you provide?
+> There's ongoing construction work in Lapis Lazuli City as we speak, and they have no material!
+/speaker Alister
+> I have not heard a report from Steve yet, he's-WTNP
+/speaker Raphael
+> Then you should have made sure you got it!WT<br>I swear,WT you are all to lax around here.
+/speaker Alister
+> This is hopeless...
+
+[PEGMA_CITY_GYM,5]
+/speaker Raphael
+> Please excuse me,WT I am trying to talk Alister into managing his employees properly.
+
+[PEGMA_CITY_GYM,6]
+/speaker Allon
+> Hello again.WT<br>I figured I should head on down because I had a vague idea how it would go.
+> Raphael can get a bit TOO passionate about his work at times.WT He also has a somewhat complicated history with Alister.
+> Our best bet is to try and solve the problem while he's busy.
+> We are looking for someone called Steve.WT<br>He's responsible for exports of ore.
+
+[PEGMA_CITY_GYM,7]
+/speaker Allon
+> Do you know anything of where Steve might be?
+/speaker Trevor
+> No,WT I haven't heard from him in a good while.
+
+[PEGMA_CITY_GYM,8]
+/speaker Steve
+> Hey!WT You there!
+> This Graveler has got me trapped inside here for a long time!
+> I have a very important shipment to take care of,WT and it has gotten delayed for way too long!
+/speaker 0
+?> Are you ready to battle?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[PEGMA_CITY_GYM,9]
+/speaker Steve
+> Thank you SO much for rescuing me!
+> I would love to stay here and have a nice chat, but I'm afraid I have a very urgent task.
+> See you outside!
+
+[PEGMA_CITY_GYM,10]
+/speaker Raphael
+> Steve is back now,WT but that doesn't change that you need to keep your employees safe!
+
+[PEGMA_CITY_GYM,11]
+/speaker Raphael
+> Imagine what would have happened if PLAYER had not came to their rescue?
+
+[PEGMA_CITY_GYM,12]
+/speaker Raphael
+> Steve might have never come back!WT<br>There are lives on the line!
+
+[PEGMA_CITY_GYM,13]
+/speaker Raphael
+> .WT.WT.WT
+
+[PEGMA_CITY_GYM,14]
+/speaker Raphael
+> Now why did you do that?
+/speaker Allon
+> You were getting really heated.WT<br>I figured you needed to cool down.
+/speaker Raphael
+> .WT.WT.WTNot in the literal sense.
+/speaker Allon
+> Did it work?
+/speaker Raphael
+> .WT.WT.WTYes.
+/speaker Allon
+> That's what I thought.WT<br>We have fixed the problem.WT Now please excuse yourself to Alister so we may take our leave.
+/speaker Raphael
+> Fine.WT.WT.WT
+
+[PEGMA_CITY_GYM,15]
+/speaker Raphael
+> I'm sorry for lashing out on you like that.WT<br>I was.WT.WT.WT more irritated than necessary.
+/speaker Alister
+> I would say I am used to it by now, but this time it's also my fault.
+> You are correct that I need to watch out for my employees to avoid issues like this.
+> I will make sure it doesn't happen again.
+/speaker Raphael
+> Thank you.WT I appreciate it very much.WT<br>Until we meet again, Alister.
+
+[PEGMA_CITY_GYM,16]
+/speaker Allon
+> See?WT That wasn't so difficult.
+/speaker Raphael
+> Yeah, yeah.WT I know.WT.WT.WT<br>Thank you for cooling me down.
+> Now I need to head back to dry myself.
+
+[PEGMA_CITY_GYM,17]
+/speaker Raphael
+> Thank you for your help PLAYER.WT<br>I will wait for you back at the Gym.
+/speaker Allon
+> Feel free to visit my blacksmith.WT<br>I'm sure I can make you some useful items.
+
+[FELDSPAR_ALLON,0]
+/speaker Allon
+/hidename 1
+> Are you here to request some metalwork?
+> I'm sorry to let you down, but I don't have any metal to work with right now.
+> I'm having a meeting soon with my brother, the Gym Leader, to resolve the issue.
+
+[FELDSPAR_ALLON,1]
+/speaker Allon
+> Raphael is already headed for the quarry.WT<br>It's in the Mica District, which is through the cave to the east.
+> Don't you think you should join him?
+
+[FELDSPAR_ALLON,2]
+/speaker Allon
+> Now that I have material to work with, would you like to craft something?
+> You'll have to provide some of the materials yourself.
+
+[FELDSPAR_ALLON,3]
+/speaker Allon
+?> Welcome back.WT<br>Would you like to craft something?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[PEGMA_GYM_ED,0]
+/speaker Ed
+> Are you ready to make some bronze?WT<br>'Cause that's what this puzzle's about!
+
+[PEGMA_GYM_ED,1]
+/speaker Ed
+> This floor's puzzle is quite simple.WT<br>It's basically a tutorial.
+> The goal is to get one piece of copper and one piece of tin in a furnace to make bronze.
+
+[PEGMA_GYM_MITCH,0]
+/speaker Mitch
+> Did you get the gist of it?WT<br>Now comes the real puzzle!
+
+[PEGMA_GYM_MITCH,1]
+/speaker Mitch
+> Let's see if you can figure this one out.WT<br>Unless you just want to try all 16 combinations like a boring person.
+
+[PEGMA_GYM_PETER,0]
+/speaker Peter
+> To reach Raphael's floor, you'll have to beat me first!
+
+[PEGMA_GYM_PETER,1]
+/speaker Peter
+> Have you solved the puzzle yet?WT<br>If so, good luck against Raphael!
+
+[PEGMA_GYM_RAPHAEL,0]
+/speaker Raphael
+> Welcome to my combined gym and ore refinery!
+> You'll have to excuse my behavior at the quarry,WT but thank you for helping out.
+?> Out battle has been long overdue.WT<br>Are you ready?
+    /choice Yes
+        > Let's get heated!
+        /return true
+    /cancelchoice No
+        /dialog PEGMA_GYM_RAPHAEL 2
+        /return false
+?/>
+
+[PEGMA_GYM_RAPHAEL,1]
+/speaker Raphael
+?> Out battle has been long overdue.WT<br>Are you ready?
+    /choice Yes
+        > Let's get heated!
+        /return true
+    /cancelchoice No
+        /dialog PEGMA_GYM_RAPHAEL 2
+        /return false
+?/>
+
+[PEGMA_GYM_RAPHAEL,2]
+/speaker Raphael
+> I kept you waiting,WT so you may keep me waiting as long as need be.
+
+[PEGMA_GYM_RAPHAEL,3]
+/speaker Raphael
+> I now see how you were able to fend of that Graveler.WT Your skills are impressive.
+> To honor your skills,WT I present to you the [R]Alloy Badge[/]!
+
+[PEGMA_GYM_RAPHAEL,4]
+> \ts[5]PLAYER got the [R]Alloy Badge[/]!WTWTWTNP
+/speaker Raphael
+> You deserve this too.
+
+[PEGMA_GYM_RAPHAEL,5]
+/speaker Raphael
+> That's the TM for Fire Pledge.WT If you gather Water Pledge or Grass Pledge from other Gyms, you'll surely find it useful.
+/if $quests[:UNKNOWNDESTINATION].complete?
+    > By the way, I'm pretty sure Alister would like some assistance at the quarry.
+    > You should give him a visit when you have the time.
+/else
+    > From what I gathered, you have somewhere you need to go right now.
+    > Once you are done with that, you should go visit Alister at the quarry.WT<br>I'm sure he could use your help.
+/end
+
+[PEGMA_GYM_RAPHAEL,6]
+/speaker Raphael
+> Just wait for our next match.WT<br>I'll make you build up quite the sweat!

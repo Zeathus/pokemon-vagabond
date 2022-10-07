@@ -8,50 +8,45 @@ class Battle
     return if !@internalBattle || !@expGain
     # Go through each battler in turn to find the Pokémon that participated in
     # battle against it, and award those Pokémon Exp/EVs
-    expAll = $player.has_exp_all || $bag.has?(:EXPALL)
-    p1 = pbParty(0)
     @battlers.each do |b|
-      next unless b&.opposes?   # Can only gain Exp from fainted foes
-      next if b.participants.length == 0
+      next unless b && b.opposes?
+      next if b.participants.length==0
       next unless b.fainted? || b.captured
       # Count the number of participants
+      p1 = pbParty(0)
       numPartic = 0
+      expshare = false
       b.participants.each do |partic|
-        next unless p1[partic]&.able? && pbIsOwner?(0, partic)
+        next unless p1[partic] && p1[partic].able? && pbIsOwner?(0,partic)
         numPartic += 1
+        next if !p1[partic].hasItem?(:EXPSHARE) && GameData::Item.try_get(@initialItems[0][partic]) != :EXPSHARE
+        expshare = true
       end
-      # Find which Pokémon have an Exp Share
-      expShare = []
-      if !expAll
-        eachInTeam(0, 0) do |pkmn, i|
-          next if !pkmn.able?
-          next if !pkmn.hasItem?(:EXPSHARE) && GameData::Item.try_get(@initialItems[0][i]) != :EXPSHARE
-          expShare.push(i)
-        end
+      # Add EXP to final pools
+      exp = (b.level * b.pokemon.base_exp).floor
+      next if exp <= 0
+
+      exp = (exp*1.5).floor if trainerBattle?
+      exp = (exp*1.5).floor if @smartWildBattle
+      exp = (exp*3/2).floor if pbActiveDrink == "exp"
+
+      totalexp = (exp * 0.20).floor
+
+      if expshare
+        @sharedExpGained += totalexp
+      else
+        @expGained += totalexp
       end
+
       # Calculate EV and Exp gains for the participants
-      if numPartic > 0 || expShare.length > 0 || expAll
+      if numPartic>0
         # Gain EVs and Exp for participants
-        eachInTeam(0, 0) do |pkmn, i|
+        eachInTeam(0,0) do |pkmn,i|
           next if !pkmn.able?
-          next unless b.participants.include?(i) || expShare.include?(i)
-          pbGainEVsOne(i, b)
-          pbGainExpOne(i, b, numPartic, expShare, expAll, !pkmn.shadowPokemon?)
-        end
-        # Gain EVs and Exp for all other Pokémon because of Exp All
-        if expAll
-          showMessage = true
-          eachInTeam(0, 0) do |pkmn, i|
-            next if !pkmn.able?
-            next if b.participants.include?(i) || expShare.include?(i)
-            pbDisplayPaused(_INTL("Your other Pokémon also gained Exp. Points!")) if showMessage
-            showMessage = false
-            pbGainEVsOne(i, b)
-            pbGainExpOne(i, b, numPartic, expShare, expAll, false)
-          end
+          next unless b.participants.include?(i)
+          pbGainEVsOne(i,b)
         end
       end
-      # Clear the participants array
       b.participants = []
     end
   end
@@ -223,14 +218,14 @@ class Battle
                        oldSpAtk, oldSpDef, oldSpeed)
       # Learn all moves learned at this level
       moveList = pkmn.getMoveList
-      moveList.each { |m| pbLearnMove(idxParty, m[1]) if m[0] == curLevel }
+      moveList.each { |m| pbLearnMoveBattle(idxParty, m[1]) if m[0] == curLevel }
     end
   end
 
   #=============================================================================
   # Learning a move
   #=============================================================================
-  def pbLearnMove(idxParty, newMove)
+  def pbLearnMoveBattle(idxParty, newMove)
     pkmn = pbParty(0)[idxParty]
     return if !pkmn
     pkmnName = pkmn.name
@@ -248,6 +243,8 @@ class Battle
       end
       return
     end
+    pbDisplay(_INTL("{2} was added to {1}'s move list!", pkmnName, moveName)) { pbSEPlay("Pkmn move learnt") }
+    return
     # Pokémon already knows the maximum number of moves; try to forget one to learn the new move
     pbDisplayPaused(_INTL("{1} wants to learn {2}, but it already knows {3} moves.",
                           pkmnName, moveName, pkmn.numMoves.to_word))

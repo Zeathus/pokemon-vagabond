@@ -1070,3 +1070,79 @@ Description = Combines Unnerve and Chilling Neigh Abilities.
 [ASONEGRIMNEIGH]
 Name = As One
 Description = Combines Unnerve and Grim Neigh Abilities.
+#-------------------------------
+[TIMESKIP]
+Name = Time Skip
+Description = Speeds up time reliant moves to make them hit immediately. For example Solar Beam or Future Sight.
+#-------------------------------
+[ZEPHYR]
+Name = Zephyr
+Description = The Pokémon creates winds when it enters battle.
+#-------------------------------
+[HASTE]
+Name = Haste
+Description = The first move after entering battle gets +1 priority.
+#-------------------------------
+[EVERLASTING]
+Name = Everlasting
+Description = After fainting, it is revived with a new form. It reverts to its original form after 1 turn.
+#-------------------------------
+[OVERSHADOW]
+Name = Overshadow
+Description = Halves damage from Fairy-type moves against all Pokémon on the field.
+#-------------------------------
+[ECLIPSE]
+Name = Eclipse
+Description = Changes to Fire/Psychic or Fairy/Psychic-type when it uses a Fire or Fairy-type move.
+#-------------------------------
+[TWILIGHT]
+Name = Twilight
+Description = Changes between its two forms each turn.
+#-------------------------------
+[LUNARPOWER]
+Name = Lunar Power
+Description = In Misty Terrain, Defense and Sp.Def is boosted by 50%.
+#-------------------------------
+[DIMLIGHT]
+Name = Dim Light
+Description = This Pokémon is immune to Dark and Fairy-type moves. This ability is ineffective during Sunny Day.
+#-------------------------------
+[MENDINGBOND]
+Name = Mending Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, the Affinity Boosted Pokémon recovers 1/8 their max HP.
+#-------------------------------
+[FIERCEBOND]
+Name = Fierce Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, raises the Affinity Boosted Pokémon's Attack.
+#-------------------------------
+[GUARDINGBOND]
+Name = Guarding Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, raises the Affinity Boosted Pokémon's Defense.
+#-------------------------------
+[RADIANTBOND]
+Name = Radiant Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, raises the Affinity Boosted Pokémon's Sp.Atk.
+#-------------------------------
+[SPIRITUALBOND]
+Name = Spiritual Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, raises the Affinity Boosted Pokémon's Sp.Def.
+#-------------------------------
+[LIVELYBOND]
+Name = Lively Bond
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, raises the Affinity Boosted Pokémon's Speed.
+#-------------------------------
+[AQUAVORTEX]
+Name = Aqua Vortex
+Description = Affinity boosted Water-type moves deal 60% more damage rather than 30%.
+#-------------------------------
+[FLORAVORTEX]
+Name = Flora Vortex
+Description = Affinity boosted Grass-type moves deal 60% more damage rather than 30%.
+#-------------------------------
+[FLAMEVORTEX]
+Name = Flame Vortex
+Description = Affinity boosted Fire-type moves deal 60% more damage rather than 30%.
+#-------------------------------
+[MAINFRAME]
+Name = Mainframe
+Description = The Pokémon can be heavily customized.

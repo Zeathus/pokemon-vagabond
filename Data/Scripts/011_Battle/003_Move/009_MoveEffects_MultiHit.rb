@@ -204,9 +204,31 @@ class Battle::Move::AttackAndSkipNextTurn < Battle::Move
 end
 
 #===============================================================================
-# Two turn attack. Skips first turn, attacks second turn. (Razor Wind)
+# Two turn attack. Skips first turn, attacks second turn.
 #===============================================================================
 class Battle::Move::TwoTurnAttack < Battle::Move::TwoTurnMove
+  def pbChargingTurnMessage(user, targets)
+    @battle.pbDisplay(_INTL("{1} whipped up a whirlwind!", user.pbThis))
+  end
+end
+
+#===============================================================================
+# Two turn attack. Skips first turn, attacks second turn. (Razor Wind)
+#===============================================================================
+class Battle::Move::TwoTurnAttackOneTurnInWinds < Battle::Move::TwoTurnMove
+  def pbIsChargingTurn?(user)
+    ret = super
+    if !user.effects[PBEffects::TwoTurnAttack]
+      if [:Winds, :StrongWinds].include?(@battle.pbWeather)
+        @powerHerb = false
+        @chargingTurn = true
+        @damagingTurn = true
+        return false
+      end
+    end
+    return ret
+  end
+  
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} whipped up a whirlwind!", user.pbThis))
   end
@@ -234,7 +256,7 @@ class Battle::Move::TwoTurnAttackOneTurnInSun < Battle::Move::TwoTurnMove
   end
 
   def pbBaseDamageMultiplier(damageMult, user, target)
-    damageMult /= 2 if ![:None, :Sun, :HarshSun].include?(user.effectiveWeather)
+    damageMult /= 2 if ![:None, :Sun, :HarshSun, :Winds].include?(user.effectiveWeather)
     return damageMult
   end
 end
@@ -374,7 +396,7 @@ end
 # Two turn attack. Skips first turn, attacks second turn. (Fly)
 # (Handled in Battler's pbSuccessCheckPerHit): Is semi-invulnerable during use.
 #===============================================================================
-class Battle::Move::TwoTurnAttackInvulnerableInSky < Battle::Move::TwoTurnMove
+class Battle::Move::TwoTurnAttackInvulnerableInSky < Battle::Move::TwoTurnAttackOneTurnInWinds
   def unusableInGravity?; return true; end
 
   def pbChargingTurnMessage(user, targets)
@@ -610,7 +632,13 @@ class Battle::Move::MultiTurnAttackBideThenReturnDoubleDamage < Battle::Move::Fi
       user.effects[PBEffects::BideTarget] = -1
       user.currentMove = @id
     end
-    user.effects[PBEffects::Bide] -= 1
+    if user.hasActiveAbility?(:TIMESKIP)
+      @battle.pbCommonAnimation("TimeSkip",user,nil)
+      @battle.pbDisplayBrief(_INTL("{1} activated {2}!",user.pbThis,"Time Skip"))
+      user.effects[PBEffects::Bide] -= 2
+    else
+      user.effects[PBEffects::Bide] -= 1
+    end
   end
 
   def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)

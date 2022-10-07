@@ -201,6 +201,7 @@ module GameData
 
     # @return [String] the translated Pokédex category of this species
     def category
+      return pbCustomPokemon.category if @species == :SILVALLY
       return pbGetMessageFromHash(MessageTypes::Kinds, @real_category)
     end
 

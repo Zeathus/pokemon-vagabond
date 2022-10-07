@@ -161,6 +161,16 @@ class Trainer
   # Fully heal all Pokémon in the party.
   def heal_party
     @party.each { |pkmn| pkmn.heal }
+    members = $game_variables[PARTY_POKEMON]
+    if members.is_a?(Array)
+      members.each { |party|
+        if party.is_a?(Array)
+          party.each { |pkmn|
+            pkmn.heal
+          }
+        end
+      }
+    end
   end
 
   #=============================================================================

@@ -1,0 +1,338 @@
+[CH1_CRATER_AMETHYST,0]
+/speaker Amethyst
+/hidename 1
+> Oh, hello.WT Do you have any business here?
+/speaker Duke
+> (Perfectly timed...)WTNP
+> Indeed we do!
+> My friend here happens to long for the woods just across the lake,WT and I daresay you might need to take them along with you.
+/speaker Amethyst
+/hidename 1
+> You want to get to the [B]Evergone Mangrove[/]?
+> Ehm, I don't think that's a good idea.
+> We got an anonymous report that told of someone being lost,WT maybe even unconcious,WT deep in the woods.
+> The Evergone Mangrove is home to many wild Pokémon.WT It can be very dangerous.
+> That's why I'm here on a solo mission,WT to more easily avoid being spotted by the wild Pokémon.
+/speaker Duke
+> It is definitely dangerous,WT<br>without a shred of doubt.
+/speaker Amethyst
+/hidename 1
+> How would you...
+> Oh, are you a Psychic?
+/speaker Duke
+> Of course I am!WT<br>Perhaps even the greatest Psychic!
+> That is precisely why I am here before you,WT presenting you with this prime opportunity.
+> PLAYER here has already proven their strength as can be shown from their gym badge.
+> I foresee a terrible fate upon you if you do not bring PLAYER along, and we do not want that now, do we?
+/speaker Amethyst
+/hidename 1
+> It's hard to argue if a Psychic says so...WT Hmmmmmmm...WT
+> I guess it's better to be safe than sorry.WT However...
+
+[CH1_CRATER_AMETHYST,1]
+/speaker Amethyst
+/hidename 1
+> To be absolutely certain, I would like a 1-on-1 battle with PLAYER to ensure they are strong enough.
+?> Are you ready to battle?\n(Single battle with only your own Party)
+    /choice Yes
+        /return true
+    /choice No
+        > Not ready?WT I will wait here until you are, but please be quick.
+        /return false
+?/>
+
+[CH1_CRATER_AMETHYST,2]
+/speaker Amethyst
+/hidename 1
+> Show me what you can do!
+
+[CH1_CRATER_AMETHYST,3]
+/speaker Amethyst
+/hidename 1
+> You're definitely strong enough!
+> Sorry for challenging you so spontaneously.
+/hidename 0
+> Anyway, my name is [B]Amethyst[/].WT\nGlad to meet you!
+> Your name was PLAYER if I recall correctly.WT\nHow about you,WT Psy-WTNP
+/speaker Duke
+> DUKE!WT The one and only!
+> However, my work here is done, so I will be off.
+> PLAYER, I leave you with this.WT It is very important, so make sure not to lose it.
+
+[CH1_CRATER_AMETHYST,4]
+/speaker Duke
+!> VANISH!WTNP
+
+[CH1_CRATER_AMETHYST,5]
+> \ts[5]Duke has left the party.WTWTWTNP
+/speaker Amethyst
+> He's really got a thing for theatrics.WT\nI wonder where he's off to so suddenly.
+> Either way, I look forward to working with you!
+> If you're worried about how we can get across the lake, my Starmie will help us with that no problem.
+> As long as you're traveling with me, water will be no problem!
+
+[CH1_CRATER_AMETHYST,6]
+> \ts[5]Amethyst has joined the party!WTWTWTNP
+
+[CH1_NO_SURF]
+/speaker Amethyst
+> We want to avoid alerting the wild Pokémon as best we can.
+> I'm afraid surfing would cause too much noise.
+
+[CH1_RUINS_MEMORY,0]
+> This place.WT.WT.WT It's somewhat familiar.
+
+[CH1_RUINS_MEMORY,1]
+/speaker Nekane none
+/hidename 1
+> \ts[5]Everything is.WT.WT.WT falling apart.WTNP
+
+[CH1_RUINS_MEMORY,2]
+/speaker Nekane none
+/hidename 1
+> \ts[5]It...WT wasn't supposed to end like this.WTNP
+
+[CH1_RUINS_MEMORY,3]
+/speaker Nekane unknown
+/hidename 1
+> \ts[5]...WT ...WT ...WTNP
+/wait 30
+> \ts[5]This is the end...WT isn't it?WTNP
+/wait 30
+> \ts[5]I'm going to disappear...WT but...WTNP
+/wait 30
+> \ts[5]I will remember you...WTNP
+/wait 30
+> \ts[5]And if you somehow make it...WTNP
+/wait 30
+> \ts[5].WT.WT.WTplease remember me too.WTNP
+
+[CH1_RUINS_MEMORY,4]
+> \ts[5]Remember.WT.WT.WT Nekane.WT.WT.WTNP
+
+[CH1_NEKANE,0]
+/speaker Nekane sleep
+/hidename 1
+>.WT.WT.WT .WT.WT.WT
+/speaker 0
+> She's unconcious.
+
+[CH1_NEKANE,1]
+/speaker Amethyst
+> This must be the lost person.WT<br>I'll try to get her back on her feet.
+
+[CH1_NEKANE,2]
+/speaker Amethyst
+> Thank goodness,WT you seem unharmed.
+/speaker Nekane
+/hidename 1
+> Where am I.WT.WT?WT<br>Who are you.WT.WT?
+/speaker Amethyst
+> We got a report of a missing person in these woods.
+> What's even weirder is that we got a reading of an odd energy anomaly at the same time.
+> Were you here when it happened?
+/speaker Nekane
+/hidename 1
+> When what happened?WT<br>All my thoughts are too blurry to make out.
+
+[CH1_NEKANE,3]
+/speaker Amethyst
+> She can't think properly right now.WT We should let her recover before we ask any questions.
+> Let's bring her back to Lapis Lazuli City, south of the Crosswoods.
+> That's where the G.P.O. have their headquarters.WT She'll be taken care of there.
+
+[CH1_NEKANE,4]
+/speaker Amethyst
+> Please follow us.WT<br>Don't worry, we mean you no harm.
+/speaker Nekane
+/hidename 1
+> O-WT.WT.WT okay.
+
+[CH1_NEKANE,5]
+> The unknown girl is now traveling with you.
+
+[CH1_TABLET]
+U> Order is balanced by disorder. Good is balanced by evil.
+U> When the balance of the world is broken, the world itself falls thereafter.
+
+[CH1_GPO,0]
+/speaker Amethyst
+> Welcome to the G.P.O. HQ!WT<br>I'll show you the way to the healthcare facility.
+
+[CH1_GPO,1]
+/event set Amethyst 5
+/speaker Nurse
+> Oh, hello Ms. Amethyst.WT<br>What brings you here today?
+/speaker Amethyst
+> We found this girl unconcious in the Evergone Mangrove.WT Could you inspect her to see if everything is OK?
+/event Amethyst turn down
+> Please come here to see the Nurse.
+/speaker Nekane
+/hidename 1
+> O-Okay.
+
+[CH1_GPO,2]
+/speaker Nurse
+> Oh my,WT you are looking quite pale.
+> How are you feeling?
+/speaker Nekane
+/hidename 1
+> Uhm.WT.WT.WT I'm not sure I understand myself.
+/speaker Nurse
+> Hmmm.WT.WT.WT That is rather vague, but I shall see what I can do.
+> Please follow me.
+
+[CH1_GPO,3]
+/speaker Nurse
+> Rest yourself in this bed.
+
+[CH1_GPO,4]
+/event set Nurse 3
+/speaker Amethyst
+> Are you feeling comfortable?
+/speaker Nekane
+/hidename 1
+> Yes...WT I think so.
+/event Nurse turn right
+/speaker Nurse
+> Let me take care of it from here.WT<br>I will report back to you tomorrow morning.
+/speaker Amethyst
+> Thank you,WT hopefully she recovers swiftly.
+/event Nurse turn down
+/speaker Nurse
+> Please lie down and rest for the night.WT<br>You need to recover lost energy.
+
+[CH1_GPO,5]
+/speaker Amethyst
+> She's in the nurse's hands now.WT<br>Let's head back to the elevator.
+
+[CH1_GPO,6]
+> She's fast asleep.
+
+[CH1_GPO,7]
+/speaker Nurse
+> I will take care of things from here.
+
+[CH1_GPO,8]
+/speaker Amethyst
+> Give me a moment,WT I will send us down to the admin floor.
+/wait 8
+/se navopen
+/wait 12
+/speaker Speaker
+> BEEP!WT Identified as Amethyst.WT<br>Complete access granted.
+
+[CH1_GPO,9]
+/speaker Amethyst
+> Please head to my office.WT It's straight ahead from here.
+
+[CH1_GPO,10]
+/speaker Amethyst
+> Could we head to my office first?WT<br>It's straight ahead from here.
+
+[CH1_OFFICE,0]
+/event set Amethyst 1
+/speaker Amethyst
+> Thank for holding the fort while I've been gone, Weavile.
+/dialog POKEMON_WEAVILE
+/event Amethyst turn up
+/event Player turn down
+/speaker Amethyst
+> This is my most trusted Pokémon,WT Weavile.WT<br>I can always depend on them.
+> My assistant is also out,WT so I let Weavile keep watch of the place.
+> Speaking of,WT he should be back anyti-WTNP
+
+[CH1_OFFICE,1]
+/event set Amethyst 1
+/speaker Amethyst
+> Welcome back, Kira!WT<br>How'd the mission in Scoria City go?
+/speaker Kira
+> Everything was handled professionally,WT but you know that I dislike returning there.
+/speaker Amethyst
+> Any other person would take at least twice as long to finish such a mission.
+> You know as well as me that you are more familiar in Scoria than anyone here.
+/speaker Kira
+> ...Which will continue to be the case until someone else has missions there.
+> On a more important matter:WT Who's this new guy?
+/speaker Amethyst
+> This is PLAYER.WT<br>I met them at Evergone Crater, and they helped me rescue a girl from the woods.
+?> PLAYER,WT this is Kira,WT my assistant.
+    /choice Nice to meet you!
+        /speaker Kira
+        > I hope it will be "nice to meet you" too.
+    /choice What was your mission?
+        /speaker Kira
+        > Had to investigate some shady people doing shady deals.WT<br>The details are not for you to know.
+    /choice Are you a cowboy?
+        /speaker Kira
+        > Talking about my hat,WT are you?
+        > No,WT I am not a cowboy,WT but think what you will.
+?/>
+/speaker Kira
+> So this guy offered to help you at Evergone Crater?
+> A stranger appearing out of thin air to help you through some dangerous place.WT<br>Sounds awfully convenient.
+/speaker Amethyst
+> Yeah.WT A Psychic said I would need their help,WT and everything went smoothly!
+/speaker Kira
+> I was being sarcastic...
+> Does that not sound [R]too[/] convenient?
+> They could have any type of ulterior motive,WT and you brought them to the G.P.O. admin area?
+> Do you even know why they wanted to go to the Evergone Ruins in the first place?
+/speaker Amethyst
+> Hmmm.WT.WT.WT I guess I never actually asked.
+/wait 2
+/event Amethyst turn right
+/event Player turn left
+/wait 2
+?> Why did you want to go to the Evergone Ruins, PLAYER?
+    /choice I had a vision
+        /event Player turn up
+        /event Amethyst turn up
+        /speaker Kira
+        > A vision?WT Now that sounds like the right amount of nonsense.
+    /choice I had to find the girl
+        /event Player turn up
+        /event Amethyst turn up
+        /speaker Kira
+        > You knew about the lost person?WT<br>Do you know her?
+    /choice Duke told me to
+        /event Player turn up
+        /event Amethyst turn up
+        /speaker Kira
+        > That excuse does not help your case,WT as you just brought the Psychic's integrity into question instead.
+?/>
+/speaker Amethyst
+> Leave them be, Kira.
+> They offered help when I needed it,WT<br>and that's enough for now.
+> It's been a long day,WT and I think we could all use some rest.WT<br>PLAYER can use the guest room.
+/speaker Kira
+> Fine.
+
+[CH1_INTERMISSION,0]
+/windowpos center
+/hidewindow 1
+/speaker PLAYER
+/hidename 1
+/textpos middle
+> Oh,WT hi Eliana.WT<br>I didn't expect you to be up this late.
+/speaker Eliana
+/textpos middle
+> Welcome back!WT<br>How did the mission to the Evergone Ruins go?
+/speaker PLAYER
+/hidename 1
+/textpos middle
+> When I arrived,WT the target was already gone.
+> I am not sure where they went,WT<br>or who may have taken them.
+> However,WT I need to focus on my next mission.WT<br>It requires much research.
+> How is your mission to Mt. Pegma coming along?
+/speaker Eliana
+/textpos middle
+> We are moving out to finish it tomorrow.
+> Luckily,WT we have been uninterrupted so far,WT<br>avoiding causing suspicion as best we can.
+/speaker PLAYER
+/hidename 1
+/textpos middle
+> Good work,WT and good luck tomorrow.
+/speaker Eliana
+/textpos middle
+> Good night!

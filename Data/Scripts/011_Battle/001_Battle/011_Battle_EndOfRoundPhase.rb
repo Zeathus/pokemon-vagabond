@@ -14,6 +14,7 @@ class Battle
       when :Rain      then pbDisplay(_INTL("The rain stopped."))
       when :Sandstorm then pbDisplay(_INTL("The sandstorm subsided."))
       when :Hail      then pbDisplay(_INTL("The hail stopped."))
+      when :Winds     then pbDisplay(_INTL("The wind stopped."))
       when :ShadowSky then pbDisplay(_INTL("The shadow sky faded."))
       end
       @field.weather = :None
@@ -31,6 +32,7 @@ class Battle
 #    when :Rain        then pbDisplay(_INTL("Rain continues to fall."))
     when :Sandstorm   then pbDisplay(_INTL("The sandstorm is raging."))
     when :Hail        then pbDisplay(_INTL("The hail is crashing down."))
+    when :Winds       then pbDisplay(_INTL("The wind continues to blow."))
 #    when :HarshSun    then pbDisplay(_INTL("The sunlight is extremely harsh."))
 #    when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
 #    when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
@@ -120,7 +122,13 @@ class Battle
   def pbEORWishHealing
     @positions.each_with_index do |pos, idxPos|
       next if !pos || pos.effects[PBEffects::Wish] == 0
-      pos.effects[PBEffects::Wish] -= 1
+      if pos.hasActiveAbility?(:TIMESKIP) && pos.effects[PBEffects::Wish] >= 2
+        @battle.pbCommonAnimation("TimeSkip",i,nil)
+        pbDisplay(_INTL("{1} activated {2}!",i.pbThis,"Time Skip"))
+        pos.effects[PBEffects::Wish] -= 2
+      else
+        pos.effects[PBEffects::Wish] -= 1
+      end
       next if pos.effects[PBEffects::Wish] > 0
       next if !@battlers[idxPos] || !@battlers[idxPos].canHeal?
       wishMaker = pbThisEx(idxPos, pos.effects[PBEffects::WishMaker])

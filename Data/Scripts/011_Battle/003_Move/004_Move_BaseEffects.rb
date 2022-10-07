@@ -306,6 +306,7 @@ class Battle::Move::TwoTurnMove < Battle::Move
       @powerHerb = user.hasActiveItem?(:POWERHERB)
       @chargingTurn = true
       @damagingTurn = @powerHerb
+      @timeSkip = true if user.hasActiveAbility?(:TIMESKIP)
     end
     return !@damagingTurn   # Deliberately not "return @chargingTurn"
   end

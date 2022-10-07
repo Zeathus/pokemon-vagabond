@@ -137,6 +137,10 @@ class Battle::Move::FailsIfTargetHasNoItem < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1} was protected by the Aegis Talisman!", target.pbThis))
+      return true
+    end
     @battle.pbDisplay(_INTL("{1} is about to be attacked by its {2}!", target.pbThis, target.itemName))
     return false
   end
@@ -219,7 +223,8 @@ class Battle::Move::CrashDamageIfFailsUnusableInGravity < Battle::Move
     return if !user.takesIndirectDamage?
     @battle.pbDisplay(_INTL("{1} kept going and crashed!", user.pbThis))
     @battle.scene.pbDamageAnimation(user)
-    user.pbReduceHP(user.totalhp / 2, false)
+    hplost = user.hasActiveItem?(:STURDYHELMET) ? (user.totalhp / 4) : (user.totalhp / 2)
+    user.pbReduceHP(hplost, false)
     user.pbItemHPHealCheck
     user.pbFaint if user.fainted?
   end
@@ -628,7 +633,13 @@ class Battle::Move::AttackTwoTurnsLater < Battle::Move
   def pbEffectAgainstTarget(user, target)
     return if @battle.futureSight   # Attack is hitting
     effects = @battle.positions[target.index].effects
-    effects[PBEffects::FutureSightCounter]        = 3
+    if user.hasActiveAbility?(:TIMESKIP) ||
+       user.hasActiveItem?(:ODDSTONE) ||
+       user.hasActiveItem?(:TIMESTONE)
+      effects[PBEffects::FutureSightCounter]      = 1
+    else
+      effects[PBEffects::FutureSightCounter]      = 3
+    end
     effects[PBEffects::FutureSightMove]           = @id
     effects[PBEffects::FutureSightUserIndex]      = user.index
     effects[PBEffects::FutureSightUserPartyIndex] = user.pokemonIndex
@@ -636,6 +647,10 @@ class Battle::Move::AttackTwoTurnsLater < Battle::Move
       @battle.pbDisplay(_INTL("{1} chose Doom Desire as its destiny!", user.pbThis))
     else
       @battle.pbDisplay(_INTL("{1} foresaw an attack!", user.pbThis))
+    end
+    if user.hasActiveAbility?(:TIMESKIP)
+      @battle.pbCommonAnimation("TimeSkip", user, nil)
+      @battle.pbDisplay(_INTL("{1} activated {2}!", user.pbThis, "Time Skip"))
     end
   end
 

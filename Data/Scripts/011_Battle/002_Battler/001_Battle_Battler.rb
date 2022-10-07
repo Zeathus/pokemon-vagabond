@@ -43,6 +43,7 @@ class Battle::Battler
   attr_accessor :statsLoweredThisRound   # Boolean for whether self's stat(s) lowered this round
   attr_accessor :canRestoreIceFace   # Whether Hail started in the round
   attr_accessor :damageState
+  attr_accessor :affinityBooster
 
   #=============================================================================
   # Complex accessors
@@ -253,6 +254,7 @@ class Battle::Battler
       speedMult = Battle::ItemEffects.triggerSpeedCalc(self.item, self, speedMult)
     end
     # Other effects
+    speedMult *= 1.3 if airborne? && @battle.pbWeather == :Winds
     speedMult *= 2 if pbOwnSide.effects[PBEffects::Tailwind] > 0
     speedMult /= 2 if pbOwnSide.effects[PBEffects::Swamp] > 0
     # Paralysis
@@ -769,5 +771,11 @@ class Battle::Battler
       return @battle.battlers[i] if @battle.battlers[i]
     end
     return @battle.battlers[(@index ^ 1)]
+  end
+
+  def pbActiveHP
+    ret = @hp
+    ret = (ret / 2.0).floor if hasActiveItem?(:ZENCHARM)
+    return ret
   end
 end

@@ -8,7 +8,7 @@ class PokemonBag
   attr_reader   :ready_menu_selection
 
   def self.pocket_names
-    return Settings.bag_pocket_names
+    return Supplementals.bag_pocket_names
   end
 
   def self.pocket_count

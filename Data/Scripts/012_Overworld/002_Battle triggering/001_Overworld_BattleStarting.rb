@@ -171,6 +171,7 @@ module BattleCreationHelperMethods
   end
 
   def partner_can_participate?(foe_party)
+    return false if !isInParty
     return false if !$PokemonGlobal.partner || $game_temp.battle_rules["noPartner"]
     return true if foe_party.length > 1
     if $game_temp.battle_rules["size"]
@@ -183,20 +184,22 @@ module BattleCreationHelperMethods
 
   # Generate information for the player and partner trainer(s)
   def set_up_player_trainers(foe_party)
-    trainer_array = [$player]
+    primary_id = getPartyActive(0)
+    primary_trainer = Trainer.new(PBParty.getName(primary_id), PBParty.getTrainerType(primary_id))
+    primary_trainer.party = getActivePokemon(0)
+    trainer_array = [primary_trainer]
     ally_items    = []
-    pokemon_array = $player.party
+    pokemon_array = primary_trainer.party
     party_starts  = [0]
     if partner_can_participate?(foe_party)
-      ally = NPCTrainer.new($PokemonGlobal.partner[1], $PokemonGlobal.partner[0])
-      ally.id    = $PokemonGlobal.partner[2]
-      ally.party = $PokemonGlobal.partner[3]
-      ally_items[1] = ally.items.clone
-      trainer_array.push(ally)
+      ally_id = getPartyActive(1)
+      ally_trainer = Trainer.new(PBParty.getName(ally_id), PBParty.getTrainerType(ally_id))
+      ally_trainer.party = getActivePokemon(1)
+      trainer_array.push(ally_trainer)
       pokemon_array = []
-      $player.party.each { |pkmn| pokemon_array.push(pkmn) }
+      primary_trainer.party.each { |pkmn| pokemon_array.push(pkmn) }
       party_starts.push(pokemon_array.length)
-      ally.party.each { |pkmn| pokemon_array.push(pkmn) }
+      ally_trainer.party.each { |pkmn| pokemon_array.push(pkmn) }
       setBattleRule("double") if $game_temp.battle_rules["size"].nil?
     end
     return trainer_array, ally_items, pokemon_array, party_starts
@@ -257,6 +260,8 @@ module BattleCreationHelperMethods
         battle.defaultWeather = :Sandstorm
       when :Sun
         battle.defaultWeather = :Sun
+      when :Winds
+        battle.defaultWeather = :Winds
       end
     else
       battle.defaultWeather = battleRules["defaultWeather"]

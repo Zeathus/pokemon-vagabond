@@ -22,6 +22,9 @@ class Game_Character
   end
 
   def step_anime
+    if $PokemonGlobal.diving || $PokemonGlobal.surfing
+      return true
+    end
     return @step_anime
   end
 

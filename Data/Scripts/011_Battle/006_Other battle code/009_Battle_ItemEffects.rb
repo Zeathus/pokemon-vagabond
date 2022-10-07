@@ -932,7 +932,7 @@ Battle::ItemEffects::DamageCalcFromUser.add(:MIRACLESEED,
   }
 )
 
-Battle::ItemEffects::DamageCalcFromUser.copy(:MIRACLESEED, :MEADOWPLATE, :ROSEINCENSE)
+Battle::ItemEffects::DamageCalcFromUser.copy(:MIRACLESEED, :MEADOWPLATE, :ROSEINCENSE, :TROPICALINCENSE)
 
 Battle::ItemEffects::DamageCalcFromUser.add(:MUSCLEBAND,
   proc { |item, user, target, move, mults, baseDmg, type|

@@ -1,0 +1,64 @@
+[LAPIS_SHOPPER]
+/speaker Girl
+> Since my family moved to the city, I have been shopping every single day!
+> All my mom does is complain about me wasting money though
+
+[LAPIS_OLD_MAN]
+/speaker Old_Man
+> I was born in this here city.WT<br>Back then it was not as grand as you see today.
+> Transporting goods by sea truly got the economy blooming.
+
+[LAPIS_JEWELRY_SIGN,0]
+/textpos middle
+> <br>Lapis Lazuli Jewelry
+
+[LAPIS_JEWELRY_SIGN,1]
+/textpos middle
+> <br>{$quests[:NEEDFORINSPIRATION].dummy} Jewelry
+
+[LAPIS_CHANNELLE,0]
+/speaker Channelle
+> I need to woooooooooork.WT.WT.
+> Hello.WT.WT.WT Sorry, but I'm not really feeling it.
+> You know...WT I've just failed to be motivated for my craft lately.
+> A Pokémon with a bright pink pearl.WT.WT.WT<br>Now that is something that would motivate me.
+
+[LAPIS_CHANNELLE,1]
+/speaker Channelle
+> I've just failed to be motivated for my craft lately.
+> A Pokémon with a bright pink pearl.WT.WT.WT<br>Now that is something that would motivate me.
+
+[LAPIS_CHANNELLE,2]
+/speaker Channelle
+> Is that...WT a {$quests[:NEEDFORINSPIRATION].dummy}!?
+> It's absolutely GORGEOUS!WT<br>I'm really feeling it now!WT<br>I'm ready to make lots of jewelry!
+
+[LAPIS_CHANNELLE,3]
+/speaker Channelle
+> You showed me such a rare Pokémon just to help inspire me...
+
+[LAPIS_CHANNELLE,4]
+/speaker Channelle
+> I've always adored Meloetta...WT To be able to see one in the flesh,WT and a shiny one with a pink pearl at that.
+
+[LAPIS_CHANNELLE,5]
+/speaker Channelle
+> Please, have this as a token of gratitude.
+
+[LAPIS_CHANNELLE,6]
+/speaker Channelle
+?> Welcome to the {$quests[:NEEDFORINSPIRATION].dummy} Jewelry!WT<br>Would you like to have some jewelry made?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[LAPIS_GPO_RECEPTIONIST]
+/speaker Receptionist
+> Welcome.WT<br>If you are here to visit the G.P.O., it is at the bottom floor.
+> Enjoy your stay.
+
+[LAPIS_GPO_MAN]
+/speaker Man
+> This building is best known for the G.P.O. HQ which is on the bottom floor.

@@ -161,3 +161,12 @@ GameData::Weather.register({
   :tile_delta_y     => 0,
   :graphics         => [nil, ["fog_tile"]]
 })
+
+
+
+# NOTE: This alters the screen tone in RPG::Weather#update_screen_tone.
+GameData::Weather.register({
+  :id               => :Winds,
+  :id_number        => 9,
+  :category         => :Winds
+})

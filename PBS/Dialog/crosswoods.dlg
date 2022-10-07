@@ -1,0 +1,66 @@
+[CW_DOCTOR,0]
+/speaker Marty
+> I came here to find some medicinal herbs.
+> While I am here, I can heal your Pokémon for you if need be.
+
+[CW_DOCTOR,1]
+/speaker Marty
+?> Would you like me to heal your Pokémon?
+    /choice Yes
+        > Very well, now let's see here...
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[CW_DOCTOR,2]
+/speaker Marty
+> That should do the trick.WT Good luck out there!
+
+[CW_DOCTOR,3]
+/speaker Marty
+> You need to be careful out there.WT\nLuckily I was around this time.
+
+[CW_SIGN_BRECCIA]
+/textpos middle
+> West to Breccia City<br>The treetop city where all day long the wind delivers you the fresh forest air
+
+[CW_SIGN_PEGMA]
+/textpos middle
+> East to Pegma City<br>Split into two district on each side of the mountain, exporting metals to the region
+
+[CW_SIGN_LAPIS_LAZULI]
+/textpos middle
+> South to Lapis Lazuli City<br>The waterway city that serves as a hub for seafaring and renewable power
+
+[CW_TRAINER_BEN,0]
+/speaker Ben
+> I've been busy training!WT<br>Ready to see my skills?
+
+[CW_TRAINER_BEN,1]
+/speaker Ben
+> I hope we can battle again sometime"
+
+[CW_TRAINER_GEORGE,0]
+/speaker George
+> I'm looking for some ruins I've heard were hidden here.WT<br>You won't get there before me!
+
+[CW_TRAINER_GEORGE,1]
+/speaker George
+> The ruins have to be close.WT<br>I can feel it.
+
+[CW_TRAINER_CHLOE,0]
+/speaker Chloe
+> Just looking at you running around the tall grass makes me eager to battle!
+
+[CW_TRAINER_CHLOE,1]
+/speaker Chloe
+> I almost faint when I get to experience such skilled battling.
+
+[CW_TRAINER_TORIEL,0]
+/speaker Toriel
+> The first time you visit a new place, it's lock eyes, then fight!
+
+[CW_TRAINER_TORIEL,1]
+/speaker Toriel
+> Trainers on routes are a great way to train and become stronger!

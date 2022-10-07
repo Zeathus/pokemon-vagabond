@@ -71,13 +71,13 @@ class Battle::Battler
         target.effects[PBEffects::Quash]    = 0
       end
       # Grudge
-      if target.effects[PBEffects::Grudge] && target.fainted?
+      if target.effects[PBEffects::Grudge] && target.fainted? && !user.hasActiveItem?(:AEGISTALISMAN)
         user.pbSetPP(move, 0)
         @battle.pbDisplay(_INTL("{1}'s {2} lost all of its PP due to the grudge!",
                                 user.pbThis, move.name))
       end
       # Destiny Bond (recording that it should apply)
-      if target.effects[PBEffects::DestinyBond] && target.fainted? &&
+      if target.effects[PBEffects::DestinyBond] && target.fainted? && !user.hasActiveItem?(:AEGISTALISMAN)
          user.effects[PBEffects::DestinyBondTarget] < 0
         user.effects[PBEffects::DestinyBondTarget] = target.index
       end
@@ -135,7 +135,7 @@ class Battle::Battler
       if user.isSpecies?(:CRAMORANT) && user.ability == :GULPMISSILE && user.form == 0 &&
          ((move.id == :SURF && numHits > 0) || (move.id == :DIVE && move.chargingTurn))
         # NOTE: Intentionally no ability splash or message here.
-        user.pbChangeForm((user.hp > user.totalhp / 2) ? 1 : 2, nil)
+        user.pbChangeForm((user.pbActiveHP > user.totalhp / 2) ? 1 : 2, nil)
       end
     end
     # Room Service

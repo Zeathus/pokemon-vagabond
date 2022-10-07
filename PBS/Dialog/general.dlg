@@ -1,3 +1,10 @@
+[QUEST_LOG_UNLOCK]
+/textpos center
+> You can now open the\nQuest Log from the Pause Menu.
+
+[OTHERWORLDLY_RIFT]
+> You see a faint glow from the cracks.WT<br> Whatever could it be?
+
 [POKECENTER_NURSE,0]
 /speaker Nurse
 > Hello and welcome to the Pokémon Center.
@@ -24,40 +31,35 @@
 > Little is known about the PokéRus except that they are microscopic life-forms that attach to Pokémon.
 > While infected, Pokémon are said to grow exceptionally well.
 
-[EMOTE_TEST]
-/event set Test 5
-/event Test emote heart
-/event Test emote sweat
-/event Test emote angry
-/event Test emote sad
-/event Test emote dots
-/event Test emote annoyed
-/event Test emote smile
-/event Test emote frown
-/event Test emote idea
+[DRINK_LOVER_SWEET_SWIG]
+/speaker Drink_Lover
+> Okay, so here's the story...
+> I once came here and took a Sweet Swig before I wandered home.
+> When I got home, you won't believe what happened?
+> My dad's Growlithe doesn't like me, but suddenly, it hugged me like crazy!
+> Pretty wild, right?
 
-[PORTRAIT_TEST]
-/namepos center
-/speaker Amethyst
-> Hello 1.
-/speaker Kira
-> Hello 2.
-/portrait_left Amethyst
-> Hello 3.
-/speaker Amethyst
-> Hello 4.
-/portrait_right Kira
-> Hello 5.
-/speaker Kira
-> Hello 6.
-/expression angry
-> Hello 7.
-/expression_left confused
-> Hello 8.
-/portrait_left Kira
-/portrait_right Amethyst
-/expression_right confused
-/expression_left annoyed
-> Hello 9.
-/reset
-> Hello 10.
+[DRINK_LOVER_EFFORT_EXTRACT]
+/speaker Drink_Lover
+> Okay, so here's the story...
+> One day I wanted to try the Effort Extract.WT I was pretty bitter, won't get that again.
+> Anyway, after battling some dude, my Pokémon had grown so strong, much faster than usual.
+> Pretty wild, right?
+
+[DRINK_LOVER_RISING_REFRESH]
+/speaker Drink_Lover
+> Okay, so here's the story...
+> I was really tired and came to get a Rising Refresh.WT That one always gives me energy.
+> For some reason, I felt I learned so much while battling.WT Afterwards I was way more experienced than earlier.
+> Pretty wild, right?
+
+[DRINK_LOVER_GOLDEN_GLASS]
+/speaker Drink_Lover
+> Okay, so here's the story...
+> I won a battle and wanted to reward myself, so I used the prize money to buy me a Golden Glass.WT Yeah, that expensive one.
+> The guy came and wanted a rematch, which I won again of course, but he gave me TWICE as much prize money this time.
+> Pretty wild, right?
+
+[DRINK_LOVER_NO_THANKS]
+/speaker Drink_Lover
+> You don't believe me, do you?

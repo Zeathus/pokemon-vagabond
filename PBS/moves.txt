@@ -171,9 +171,9 @@ Accuracy = 100
 TotalPP = 5
 Target = NearOther
 FunctionCode = RaiseUserMainStats1
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,WindsBoosted
 EffectChance = 10
-Description = The foe is attacked with powdery scales blown by wind. It may also raise all the user's stats.
+Description = The foe is attacked with powdery scales blown by wind. Power is doubled during winds. It may also raise all the user's stats.
 #-------------------------------
 [FELLSTINGER]
 Name = Fell Stinger
@@ -1070,9 +1070,9 @@ Accuracy = 100
 TotalPP = 20
 Target = AllNearFoes
 FunctionCode = FlinchTargetDoublePowerIfTargetInSky
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,WindsBoosted
 EffectChance = 20
-Description = The user whips up a vicious tornado to tear at the opposing team. It may also make targets flinch.
+Description = The user whips up a vicious tornado to tear at the opposing team. Power is doubled during winds. It may also make targets flinch.
 #-------------------------------
 [SCALESHOT]
 Name = Scale Shot
@@ -1183,7 +1183,7 @@ Target = NearOther
 FunctionCode = ParalyzeTargetAlwaysHitsInRainHitsTargetInSky
 Flags = CanProtect,CanMirrorMove
 EffectChance = 30
-Description = A wicked thunderbolt is dropped on the foe to inflict damage. It may also leave the target paralyzed.
+Description = A wicked thunderbolt is dropped on the foe to inflict damage. Always hits during rain. It may also leave the target paralyzed.
 #-------------------------------
 [FUSIONBOLT]
 Name = Fusion Bolt
@@ -1664,8 +1664,8 @@ Accuracy = 100
 TotalPP = 30
 Target = NearOther
 FunctionCode = None
-Flags = CanProtect,CanMirrorMove
-Description = The user stirs up a fairy wind and strikes the target with it.
+Flags = CanProtect,CanMirrorMove,WindsBoosted
+Description = The user stirs up a fairy wind and strikes the target with it. Power is doubled during winds.
 #-------------------------------
 [NATURESMADNESS]
 Name = Nature's Madness
@@ -2886,7 +2886,7 @@ Target = Other
 FunctionCode = ConfuseTargetAlwaysHitsInRainHitsTargetInSky
 Flags = CanProtect,CanMirrorMove
 EffectChance = 30
-Description = The user wraps its foe in a fierce wind that flies up into the sky. It may also confuse the foe.
+Description = The user wraps its foe in a fierce wind that flies up into the sky. Always hits during rain or winds. It may also confuse the foe.
 #-------------------------------
 [AEROBLAST]
 Name = Aeroblast
@@ -2917,13 +2917,13 @@ Description = The user heats up its beak before attacking. Making contact in thi
 Name = Fly
 Type = FLYING
 Category = Physical
-Power = 90
-Accuracy = 95
+Power = 100
+Accuracy = 100
 TotalPP = 15
 Target = Other
 FunctionCode = TwoTurnAttackInvulnerableInSky
 Flags = Contact,CanProtect,CanMirrorMove
-Description = The user soars, then strikes on the second turn. It can also be used for flying to any familiar town.
+Description = The user soars, then strikes on the second turn. Attacks instantly if the weather is windy.
 #-------------------------------
 [BOUNCE]
 Name = Bounce
@@ -3081,8 +3081,8 @@ Accuracy = 100
 TotalPP = 35
 Target = Other
 FunctionCode = DoublePowerIfTargetInSky
-Flags = CanProtect,CanMirrorMove
-Description = A gust of wind is whipped up by wings and launched at the target to inflict damage.
+Flags = CanProtect,CanMirrorMove,WindsBoosted
+Description = A gust of wind is whipped up by wings and launched at the target to inflict damage. Power is doubled during winds.
 #-------------------------------
 [PECK]
 Name = Peck
@@ -3292,9 +3292,9 @@ Accuracy = 100
 TotalPP = 5
 Target = NearOther
 FunctionCode = RaiseUserMainStats1
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,WindsBoosted
 EffectChance = 10
-Description = The user blasts the target with a gust of repulsive wind. It may also raise all the user's stats at once.
+Description = The user blasts the target with a gust of repulsive wind. Power is doubled during winds. It may also raise all the user's stats at once.
 #-------------------------------
 [SHADOWPUNCH]
 Name = Shadow Punch
@@ -3688,9 +3688,9 @@ Accuracy = 90
 TotalPP = 10
 Target = NearOther
 FunctionCode = LowerTargetAccuracy1
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,WindsBoosted
 EffectChance = 50
-Description = The user attacks its foe by encircling it in sharp leaves. This attack may also lower the foe's accuracy.
+Description = The user attacks its foe by encircling it in sharp leaves. Power is doubled during winds. This attack may also lower the foe's accuracy.
 #-------------------------------
 [MAGICALLEAF]
 Name = Magical Leaf
@@ -4908,13 +4908,13 @@ Description = The target is slugged by a punch thrown with muscle-packed power.
 Name = Razor Wind
 Type = NORMAL
 Category = Special
-Power = 80
+Power = 75
 Accuracy = 100
 TotalPP = 10
 Target = AllNearFoes
-FunctionCode = TwoTurnAttack
-Flags = CanProtect,CanMirrorMove,HighCriticalHitRate
-Description = A two-turn attack. Blades of wind hit the foe on the second turn. Critical hits land more easily.
+FunctionCode = TwoTurnAttackOneTurnInWinds
+Flags = CanProtect,CanMirrorMove,HighCriticalHitRate,WindsBoosted
+Description = A two-turn attack. Blades of wind hit the foe on the second turn. Charging is skipped and power is doubled during winds. Critical hits land more easily.
 #-------------------------------
 [SLAM]
 Name = Slam
@@ -8722,3 +8722,265 @@ TotalPP = 40
 Target = User
 FunctionCode = RaiseUserDefense1
 Description = The user withdraws its body into its hard shell, raising its Defense stat.
+#-------------------------------
+[VICEGRIP]
+Name = Vice Grip
+Type = NORMAL
+Category = Physical
+Power = 55
+Accuracy = 100
+TotalPP = 30
+Target = NearOther
+FunctionCode = None
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The target is gripped and squeezed from both sides to inflict damage.
+#-------------------------------
+[TOUGHHUG]
+Name = Tough Hug
+Type = FAIRY
+Category = Physical
+Power = 50
+Accuracy = 100
+TotalPP = 25
+Target = NearOther
+FunctionCode = FlinchTarget
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 30
+Description = The user gives the target a really tough hug that might make them flinch.
+#-------------------------------
+[CORROSIVEACID]
+Name = Corrosive Acid
+Type = POISON
+Category = Status
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = StartNegateTargetPoisonImmunity
+Flags = CanProtect,CanMirrorMove
+Description = The user spits corrosive acid to make Steel-types vulnerable to Poison-type moves.
+#-------------------------------
+[WINDS]
+Name = Winds
+Type = FLYING
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = BothSides
+FunctionCode = StartWindsWeather
+Description = The user strengthens the wind for five turns, speeding up airborne Pokémon.
+#-------------------------------
+[GENERICBOOST]
+Name = Generic Boost
+Type = NORMAL
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user works together with its teammate. Power is increased by 50% if affinity boosted, or by Helping Hand.
+#-------------------------------
+[MUSCLEBOOST]
+Name = Muscle Boost
+Type = FIGHTING
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user shows off for its teammate. Raises attack if affinity boosted, or by Helping Hand.
+#-------------------------------
+[BREEZEBOOST]
+Name = Breeze Boost
+Type = FLYING
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user sweeps in to aid its teammate. Creates winds for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[VENOMBOOST]
+Name = Venom Boost
+Type = POISON
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user sneers at the target for opposing its teammate. Raises special attack if affinity boosted, or by Helping Hand.
+#-------------------------------
+[EARTHBOOST]
+Name = Earth Boost
+Type = GROUND
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user bolsters itself to protect its teammate. Raises special defense if affinity boosted, or by Helping Hand.
+#-------------------------------
+[BOULDERBOOST]
+Name = Boulder Boost
+Type = ROCK
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user braces itself to aid its teammate. Creates a sandstorm for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[VERMINBOOST]
+Name = Vermin Boost
+Type = BUG
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user agressively nibbles the target for its teammate. Lowers target special attack if affinity boosted, or by Helping Hand.
+#-------------------------------
+[SPIRITBOOST]
+Name = Spirit Boost
+Type = GHOST
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user haunts the target for opposing its teammate. Lowers target defense if affinity boosted, or by Helping Hand.
+#-------------------------------
+[METALBOOST]
+Name = Metal Boost
+Type = STEEL
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user steels itself to aid its teammate. Raises defense if affinity boosted, or by Helping Hand.
+#-------------------------------
+[FLAMEBOOST]
+Name = Flame Boost
+Type = FIRE
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user passionately aids its teammate. Creates harsh sunlight for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[AQUABOOST]
+Name = Aqua Boost
+Type = WATER
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user gracefully aids its teammate. Creates rain for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[FLORABOOST]
+Name = Flora Boost
+Type = GRASS
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user's instincts tell it to aid its teammate. Creates grassy terrain for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[PLASMABOOST]
+Name = Plasma Boost
+Type = ELECTRIC
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user and its teammate combine their energy. Creates electric terrain for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[MENTALBOOST]
+Name = Mental Boost
+Type = PSYCHIC
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user attacks with support from its teammate. Creates psychic terrain for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[FROSTBOOST]
+Name = Frost Boost
+Type = ICE
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user \"reluctantly\" aids its teammate. Creates hail for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[MYSTICBOOST]
+Name = Mystic Boost
+Type = DRAGON
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user rages against the target for opposing its teammate. Lowers target attack if affinity boosted, or by Helping Hand.
+#-------------------------------
+[GLOOMBOOST]
+Name = Gloom Boost
+Type = DARK
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user punishes the target for opposing its teammate. Lowers target special defense if affinity boosted, or by Helping Hand.
+#-------------------------------
+[HALLOWBOOST]
+Name = Hallow Boost
+Type = FAIRY
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AffinityBoostSideEffect
+Flags = CanProtect,CanMirrorMove
+Description = The user kindly assists its teammate. Creates misty terrain for two turns if affinity boosted, or by Helping Hand.

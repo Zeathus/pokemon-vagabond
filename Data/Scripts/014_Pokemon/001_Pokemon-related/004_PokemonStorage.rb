@@ -122,6 +122,7 @@ class PokemonStorage
   end
 
   def party_full?
+    return false if $player.inactive_party.length < 3
     return $player.party_full?
   end
 
@@ -131,7 +132,7 @@ class PokemonStorage
 
   def maxPokemon(box)
     return 0 if box >= self.maxBoxes
-    return (box < 0) ? Settings::MAX_PARTY_SIZE : self[box].length
+    return (box < 0) ? Settings::MAX_PARTY_BOX_SIZE : self[box].length
   end
 
   def full?
@@ -159,13 +160,21 @@ class PokemonStorage
       @boxes.each do |i|
         raise "Box is a Pokémon, not a box" if i.is_a?(Pokemon)
       end
-      return (x == -1) ? self.party[y] : @boxes[x][y]
+      if x == -1
+        return self.party[y] if y < Settings::MAX_PARTY_SIZE
+        return $player.inactive_party[y - Settings::MAX_PARTY_SIZE]
+      end
+      return @boxes[x][y]
     end
   end
 
   def []=(x, y, value)
     if x == -1
-      self.party[y] = value
+      if y < Settings::MAX_PARTY_SIZE
+        self.party[y] = value
+      else
+        $player.inactive_party[y - Settings::MAX_PARTY_SIZE] = value
+      end
     else
       @boxes[x][y] = value
     end
@@ -184,8 +193,13 @@ class PokemonStorage
     end
     if boxDst == -1   # Copying into party
       return false if party_full?
-      self.party[self.party.length] = self[boxSrc, indexSrc]
-      self.party.compact!
+      if self.party.length < Settings::MAX_PARTY_SIZE
+        self.party[self.party.length] = self[boxSrc, indexSrc]
+        self.party.compact!
+      else
+        $player.inactive_party[$player.inactive_party.length] = self[boxSrc, indexSrc]
+        $player.inactive_party.compact!
+      end
     else   # Copying into box
       pkmn = self[boxSrc, indexSrc]
       raise "Trying to copy nil to storage" if !pkmn
@@ -250,7 +264,10 @@ class PokemonStorage
   def pbDelete(box, index)
     if self[box, index]
       self[box, index] = nil
-      self.party.compact! if box == -1
+      if box == -1
+        self.party.compact! if index < Settings::MAX_PARTY_SIZE
+        $player.inactive_party.compact! if index >= Settings::MAX_PARTY_SIZE
+      end
     end
   end
 

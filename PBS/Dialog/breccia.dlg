@@ -1,0 +1,395 @@
+[BRECCIA_CITY_GYM,0]
+/speaker Guide
+/if $quests[:BRECCIAGYM].at_step?(1)
+    > Faunus wants to see something astounding?
+    > I swear, that boy needs to take his Gym Leader position seriously.
+    > He's quite the fickle one, always obsessed with discovering new wonders.
+    > I'd recommend speaking with his grandfather.WT He runs a carpentry shop to the right of the gym.
+    /return false
+/else
+    > The Gym Leader, Faunus, is away right now.
+    > He's probably at the Breccia Outlook, which he somehow consistently is whenever a challenger visits.
+    > You can reach Breccia Outlook from his home to the north, but you have to get there from below.
+    /return true
+/end
+
+[BRECCIA_CITY_GYM,1]
+/event set Faunus 2
+/speaker Faunus
+> Why hello there!
+> I'm Faunus, the Gym Leader of Breccia City.
+> It is quite unusual for someone else to find their way up here.
+/event Faunus turn up
+> The view here is just as breathtaking each time I visit.
+> Every time I see this glorious view, I know that if I wait for long enough, I'll see something astounding.
+/event Faunus turn right
+> It could be a Pidgeot soaring through the sky.
+> Maybe a swarm of Hoppip floating along the treetops.
+> Perhaps something else entirely.WT One can never know for certain.
+> Once I have seen such a thing, my will to battle challengers will blossom anew.
+/event Faunus turn up
+
+[BRECCIA_CITY_GYM,2]
+/event set Faunus 2
+/speaker Faunus
+> I will be waiting here to see something astounding.
+> It could be a Pidgeot soaring through the sky.
+> Maybe a swarm of Hoppip floating along the treetops.
+> Perhaps something else entirely.WT One can never know for certain.
+> Once I have seen such a thing, my will to battle challengers will blossom anew.
+/event Faunus turn up
+
+[BRECCIA_CITY_GYM,3]
+/speaker Flora
+/if $quests[:BRECCIAGYM].at_step?(1)
+    > Faunus is up on the treetops looking for something amazing again?
+    > That son of mine, he can be very peculiar.WT Please excuse him.
+    > I can promise you he won't move an inch until he sees something at random.WT Either that or you will have to make it happen.
+    > I'd suggest visiting his grandfather, Pent.WT He got this obession from that side of the family.
+    > Pent runs the carpentry shop up on the treetops.
+/else
+    > To think that trees can grow so sturdy as to support an entire city.
+    > It's such a curious thing, I decided to become a researcher of that very subject!
+    > My son, Faunus, even makes use of my research results to train his Grass-types as effectively as possible.
+/end
+
+[BRECCIA_CITY_GYM,4]
+/speaker Pent
+> Is Faunus giving you a hard time challenging the Gym here?WT How very like him.
+> I'd be happy to make you an incense to lure out a Pokémon and give him the view he desires!
+
+[BRECCIA_CITY_GYM,5]
+/speaker Pent
+> Give me a moment and I'll have it made for you.
+/fade black
+/wait 30
+/fade normal
+/wait 20
+> There we go. It's done!WT If you head up to Breccia Outlook and let out a good whiff of this incense, a Pokémon is sure to come flying.
+
+[BRECCIA_CITY_GYM,6]
+?> Do you want to light the Tropical Incense?
+    /choice Yes
+        /fade black
+        /wait 20
+        > You let out a good whiff of the\nTropical Incense to attract Pokémon...
+        /fade normal
+        /wait 20
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[BRECCIA_CITY_GYM,7]
+> You no longer have the Tropical Incense from Pent.WT You have to make a new one.
+
+[BRECCIA_CITY_GYM,8]
+/speaker Faunus
+> Huh?WT What is that over there?
+
+[BRECCIA_CITY_GYM,9]
+/event set Faunus 10
+/speaker Faunus
+> Sorry you had to see that.WT\nAs much as I hate to admit it, this is not the first time this has happened.
+> I planted this bush here for this alone.WT\nIt's quite prickly, but much better than hitting the ground.
+> Grandpa Pent says he's too old to climb up and finish the fence, and I can't do woodwork for the life of me.
+/fade black
+/wait 20
+/event Faunus sprite trainer_LEADER_Faunus down
+/fade normal
+/wait 20
+> Wasn't that Tropius amazing though?WT\nDefinitely worth the fall if you ask me.WT\nIt got so close to me!
+> The amazement really got me in the mood for a good Pokémon battle.
+> I'm going back to the Gym now.WT\nI'll be waiting for you!
+
+[BRECCIA_PENT,0]
+/speaker Pent
+> Welcome to Pent's Carpentry, kid!
+/if $quests[:BRECCIAGYM].at_step?(1)
+    /dialog BRECCIA_CITY_GYM 4
+/end
+> .WT.WT.WTIs what I would like to say if we had any lumber left.
+> Sadly, we're all out of lumber to carve! What kind of carpenter has no lumber?
+> Keepin' up with lumber demands gets really tiring for an old man y'know?
+> The stock would be no problem if I had someone helpin' out.
+/loop
+    ?> But who could possibly help me out..?
+        /choice Me
+            > No no, I can't demand that from ya.WT I know you must be too busy for a full-time job.
+        /choice A Pokémon
+            > A Pokémon!WT That's it!WT The question that remains now is...
+            /break
+        /choice You
+            > I'm too old to do such heavy work, unfortunately.WT I'd do it if I could.
+    ?/>
+/end
+/loop
+    ?> What Pokémon is suited for heavy work?
+        /choice Sudowoodo
+            > That'd be too cruel.WT Sudowoodo is a tree!\n.WT.WT.WTI think.
+        /choice Caterpie
+            > Ha!WT It would get squashed by a mere branch!
+        /choice Timburr
+            > Timburr.WT.WT.WT Perfect!
+            > Timburr already carries a log all the time.WT\nIt's used to that kind of work.
+            /break
+        /choice Ursaring
+            > Ursaring is sure to be strong enough...
+            > But taming that thing?WT That'd be a pain!
+    ?/>
+/end
+> Think ya could help me out a bit?
+/dialog BRECCIA_PENT 2
+
+[BRECCIA_PENT,1]
+/speaker Pent
+/if $quests[:BRECCIAGYM].at_step?(1)
+    /dialog BRECCIA_CITY_GYM 4
+    > That requires the lumber issue is resolved first though.
+/end
+/dialog BRECCIA_PENT 2
+
+[BRECCIA_PENT,2]
+/speaker Pent
+> There should be Timburr near Mt. Pegma.WT\nThat's east of the Crosswoods if you know it.
+> I'd be overjoyed if you could catch one for me!
+
+[BRECCIA_PENT,3]
+/speaker Pent
+> What do you know!WT You're back with a Timburr already!
+/eval $game_variables[1] = pbDeliverPokemon(:TIMBURR)
+/if $game_variables[1]
+    > This will be a huge help, thank ya so much!
+    # This continues in BRECCIA_PENT 4, 5 or 6
+/else
+    > Do you want to keep that one for yourself?\nNo problem, ya can come back with another one.
+    /return false
+/end
+/return true
+
+[BRECCIA_PENT,4] # If the Timburr has a neutral Attack nature
+/speaker Pent
+> The Timburr's in good shape.WT It should be ready to go immediately!
+
+[BRECCIA_PENT,5] # If the Timburr has a positive Attack nature
+/speaker Pent
+> Ya sure got a strong Timburr!WT This guy might be liftin' an entire tree before I know it!
+> I'll give ya a lil' extra for finding such a fine Timburr.
+/eval $Trainer.money += 2500
+/speaker 0
+> {Trainer.name} received $2500!WTWT
+
+[BRECCIA_PENT,6] # If the Timburr has a negative Attack nature
+/speaker Pent
+> The Timburr's a bit on the weaker side, but it should be able to carry logs nicely with some practice.
+
+[BRECCIA_PENT,7]
+/speaker Pent
+> Thank ya for the help.WT Feel free to come by whenever you need some crafts made!
+/if $quests[:BRECCIAGYM].at_step?(1)
+    /dialog BRECCIA_CITY_GYM 4
+    /eval $quests[:BRECCIAGYM].step = 2
+/elsif $quests[:BRECCIAGYM].at_step?(2)
+    > Now, back to the incense to lure out a Pokémon for Faunus.
+/end
+/if $quests[:BRECCIAGYM].at_step?(2)
+    /dialog BRECCIA_CITY_GYM 5
+/end
+
+[BRECCIA_PENT,8]
+/speaker Pent
+?> Welcome!WT Do ya need to craft somethin'?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[BRECCIA_FLORA]
+/speaker Flora
+> You have my son's Gym Badge?WT Very impressive!
+> He has used my research results to train his Pokemon efficiently, which makes in a very tough opponent.
+
+[BRECCIA_ARBOR]
+/speaker Arbor
+> Big brother Faunus often read me books about plants.
+> He shows me many Grass-type Pokémon.WT They're so cool!
+
+[BRECCIA_QUEEN_BEE,0]
+/speaker Bee-Fearing Man
+> I can never show my face around Breccia Trail anymore.
+> Please forgive me Queen Bee, I shall never target weak wild Combee to train again. *shiver*
+
+[BRECCIA_QUEEN_BEE,1]
+/speaker Bee-Fearing Man
+> YOU BROUGHT FORTH THE QUEEN?WT ARE YOU MAD!?
+> Now what am I gonna do...WT It's all over for me...WT I'd better write my will before it's too late.
+
+[BRECCIA_QUEEN_BEE,2]
+/speaker Bee-Fearing Man
+> I swear I can feel the Queen Bee buzzing all the way from Breccia Trail...WT<br>I'm finished before soon...
+> WHAT!?WT You...WT defeated her?
+> THANK YOU!!!WT<br>I thought I would never live a peaceful day for the rest of my life.
+> Please, accept this as a token of gratitude.
+
+[BRECCIA_QUEEN_BEE,3]
+/speaker Bee-Fearing Man
+> Thanks to you, I no longer live a life of constant fear.WT I am forever grateful.
+
+[BRECCIA_GYM_ARNOLD,0]
+/speaker Arnold
+> Isn't it peculiar how Grass-type Pokémon lay eggs unlike regular plants?
+
+[BRECCIA_GYM_ARNOLD,1]
+/speaker Arnold
+> Remember that Grass-types have many weaknesses.WT Use them to win!
+
+[BRECCIA_GYM_PATRICIA,0]
+/speaker Patricia
+> My adorable Pokémon will not lose!
+
+[BRECCIA_GYM_PATRICIA,1]
+/speaker Patricia
+> Grass-type Pokémon are fragile creatures.WT Maybe that's what makes them cute in a way.
+
+[BRECCIA_GYM_SALLY,0]
+/speaker Sally
+> Grass-type Pokémon are way cute, but they're also strong!
+
+[BRECCIA_GYM_SALLY,1]
+/speaker Sally
+> Good luck against Faunus!WT He's way stronger than all of us Gym trainers.
+
+[BRECCIA_GYM_FAUNUS,0]
+/event set Faunus 125
+/speaker Faunus
+> The leaves of this bush are so soft.WT The mulch I chose must have been perfect!WT These will make for a much nicer cushion beneath the outlook.
+/event Faunus turn down
+> Oh, pardon me.WT I didn't see you there.
+> Ah, PLAYER!WT I have been waiting for you ever since that Tropius quite literally knocked me off my feet.
+?> I understand you want to have a go at the Gym Challenge.WT Are you ready?
+    /choice Yes
+        > Let the battle blossom!
+        /return true
+    /cancelchoice No
+        /dialog BRECCIA_GYM_FAUNUS 2
+        /return false
+?/>
+
+[BRECCIA_GYM_FAUNUS,1]
+/speaker Faunus
+?> I see you have returned!WT\nPerhaps you are ready for our battle?
+    /choice Yes
+        > Let the battle blossom!
+        /return true
+    /cancelchoice No
+        /dialog BRECCIA_GYM_FAUNUS 2
+        /return false
+?/>
+
+[BRECCIA_GYM_FAUNUS,2]
+/speaker Faunus
+> Do you need to find some inspiration too?WT\nIt is only fair.WT I will wait for you.
+
+[BRECCIA_GYM_FAUNUS,3]
+/speaker Faunus
+> Your battling skills are as sharp as the thorns of a rose.
+> You might just go and become the champion if you grow this quickly!
+> Therefore, I present to you the [G]Fauna Badge[/]!
+
+[BRECCIA_GYM_FAUNUS,4]
+> \ts[5]PLAYER got the [G]Fauna Badge[/]!WTWTWTNP
+/speaker Faunus
+> This will also prove useful to you I am sure.
+
+[BRECCIA_GYM_FAUNUS,5]
+/speaker Faunus
+> This TM contains the move Grass Pledge.WT I think you will grow fond of it if you use it with another Pledge move in a double battle.
+/if $quests[:UNKNOWNDESTINATION].complete?
+    > If you are free, could you meet me at my house later?
+/else
+    > It looks like you have somewhere you need to go right now.WT Could you spare some time to meet me at my house when you are done?
+/end
+> I believe I can teach you something that will be useful during your travels.
+
+[BRECCIA_GYM_FAUNUS,6]
+/speaker Faunus
+> I look forward to when we can battle again!
+
+[BRECCIA_ALEX,0]
+/speaker Alex
+> I like to take strolls between cities.WT<br>Especially because I meet people to battle!
+
+[BRECCIA_ALEX,1]
+/speaker Alex
+> This place looks A-M-A-Z-I-N-G!WT<br>The perfect place for a nice walk!
+
+[BRECCIA_KARINE,0]
+/speaker Karine
+> Pokémon that look like plants are so interesting!
+
+[BRECCIA_KARINE,1]
+/speaker Karine
+> Oddish almost looks like tall grass!
+
+[BRECCIA_JEFF,0]
+/speaker Jeff
+> I like to camp out with my Pokémon to enjoy the scenery.WT This scenery looks great for a battle!
+
+[BRECCIA_JEFF,1]
+/speaker Jeff
+> Forests are so pretty.WT I enjoy the scent of the trees.
+
+[BRECCIA_WADE,0]
+/speaker Wade
+> My bees are coming for you!WT Bzzzzzz!
+
+[BRECCIA_WADE,1]
+/speaker Wade
+> I need more bees.
+
+[QUEST_AYFAO,0]
+/speaker Girl
+> I heard of cute grass owl Pokémon Gym Leader has.
+> They rare below the city,WT so I never seen one.
+> Even just a picture would be cute...
+
+[QUEST_AYFAO,1]
+/speaker Girl
+> You have picture of owl?
+> Let me seeeeeee!
+
+[QUEST_AYFAO,2]
+/speaker Girl
+> Owl is so cute!WT Thank you for showing me!
+> I made these with mom.WT You can have them as thanks!
+
+[QUEST_AYFAO,3]
+/speaker Girl
+/eval pbTextEffect("wave")
+> § Cute tiny Rowlet,WT sitting in a treeee~
+
+[QUEST_FIERY_ROBIN,0]
+/speaker Bird_Keeper
+> I have always been befriending all kinds of bird Pokémon, but there was one I never got my hands on.
+> They say it lives by the mountains east of the Crosswoods.WT The name is Fletchling.
+> Oh,WT how I wish for that fiery bird to be in my grasp.
+
+[QUEST_FIERY_ROBIN,1]
+/speaker Bird_Keeper
+> Is that a Fletchling you have!?
+> I would very much like to have a Fletchling.WT<br>Did you catch it for me?
+/eval $game_variables[1] = pbDeliverPokemon(:FLETCHLING)
+/if $game_variables[1]
+    > Thank you so much!WT<br>I know that Fletchling will be happy with my other birds.
+    > Please accept this as a gift for finding Fletchling for me.
+/else
+    > Oh,WT I see.WT.WT.
+    /return false
+/end
+/return true
+
+[QUEST_FIERY_ROBIN,2]
+/speaker Bird_Keeper
+> Fletchling is getting along perfectly with my other birds.
+> No other Fletchling could have been better!

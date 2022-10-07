@@ -45,6 +45,10 @@ class Battle::Move
       if target.effects[PBEffects::MiracleEye] && defType == :DARK
         ret = Effectiveness::NORMAL_EFFECTIVE_ONE
       end
+      # Corrosive Acid
+      if target.effects[PBEffects::CorrosiveAcid] && defType == :STEEL
+        ret = Effectiveness::NORMAL_EFFECTIVE_ONE
+      end
     elsif Effectiveness.super_effective_type?(moveType, defType)
       # Delta Stream's weather
       if target.effectiveWeather == :StrongWinds && defType == :FLYING
@@ -82,6 +86,16 @@ class Battle::Move
     ret = 1
     typeMods.each { |m| ret *= m }
     ret *= 2 if target.effects[PBEffects::TarShot] && moveType == :FIRE
+    trinity_orbs = 0
+    trinity_orbs += 1 if user.hasActiveItem?(:TRINITYORB)
+    trinity_orbs += 1 if target.hasActiveItem?(:TRINITYORB)
+    if trinity_orbs > 0
+      if ret > 1
+        ret *= (1.5**trinity_orbs)
+      elsif ret < 1
+        ret /= (1.5**trinity_orbs)
+      end
+    end
     return ret
   end
 
@@ -97,6 +111,7 @@ class Battle::Move
     return true if target.effects[PBEffects::Minimize] && tramplesMinimize? && Settings::MECHANICS_GENERATION >= 6
     baseAcc = pbBaseAccuracy(user, target)
     return true if baseAcc == 0
+    return true if user.affinityBooster && baseAcc >= 50
     # Calculate all multiplier effects
     modifiers = {}
     modifiers[:base_accuracy]  = baseAcc
@@ -427,6 +442,8 @@ class Battle::Move
       if target.pbHasType?(:ROCK) && specialMove? && @function != "UseTargetDefenseInsteadOfTargetSpDef"
         multipliers[:defense_multiplier] *= 1.5
       end
+    when :Winds
+      multipliers[:final_damage_multiplier] *= 2.0 if windsBoostedMove?
     end
     # Critical hits
     if target.damageState.critical
@@ -456,6 +473,16 @@ class Battle::Move
     if user.status == :BURN && physicalMove? && damageReducedByBurn? &&
        !user.hasActiveAbility?(:GUTS)
       multipliers[:final_damage_multiplier] /= 2
+    end
+    # Affinity Boost
+    if user.affinityBooster
+      if (user.hasActiveAbility?(:AQUAVORTEX) && type == :WATER) ||
+         (user.hasActiveAbility?(:FLAREVORTEX) && type == :FIRE) ||
+         (user.hasActiveAbility?(:FLORAVORTEX) && type == :GRASS)
+        multipliers[:final_damage_multiplier] *= 1.6
+      else
+        multipliers[:final_damage_multiplier] *= 1.3
+      end
     end
     # Aurora Veil, Reflect, Light Screen
     if !ignoresReflect? && !target.damageState.critical &&

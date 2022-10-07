@@ -399,6 +399,10 @@ class Battle::Move::StartDamageTargetEachTurnIfTargetAsleep < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1} was protected by the Aegis Talisman!", target.pbThis))
+      return true
+    end
     return false
   end
 
@@ -539,7 +543,7 @@ class Battle::Move::UserFaintsFixedDamageUserHP < Battle::Move::FixedDamageMove
   def pbNumHits(user, targets); return 1; end
 
   def pbOnStartUse(user, targets)
-    @finalGambitDamage = user.hp
+    @finalGambitDamage = user.pbActiveHP
   end
 
   def pbFixedDamage(user, target)
@@ -644,22 +648,38 @@ class Battle::Move::StartPerishCountsForAllBattlers < Battle::Move
     return false
   end
 
+  def pbOnStartUse(user,targets)
+    @timeSkip = false
+    if user.hasActiveAbility?(:TIMESKIP)
+      @timeSkip = true
+    end
+  end
+
   def pbFailsAgainstTarget?(user, target, show_message)
     if target.hp > target.totalhp
       @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
+      return true
+    end
+    if target.hasActiveItem?(:AEGISTALISMAN) && user.opposes?(target)
+      @battle.pbDisplay(_INTL("The Aegis Talisman protected {1}!",target.pbThis))
       return true
     end
     return target.effects[PBEffects::PerishSong] > 0   # Heard it before
   end
 
   def pbEffectAgainstTarget(user, target)
-    target.effects[PBEffects::PerishSong]     = 4
+    target.effects[PBEffects::PerishSong]     = @timeSkip ? 1 : 4
     target.effects[PBEffects::PerishSongUser] = user.index
   end
 
   def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)
     super
-    @battle.pbDisplay(_INTL("All Pokémon that hear the song will faint in three turns!"))
+    if @timeSkip
+      @battle.pbCommonAnimation("TimeSkip",user,nil)
+      @battle.pbDisplay(_INTL("All Pokémon that hear the song will faint at the end of turn!"))
+    else
+      @battle.pbDisplay(_INTL("All Pokémon that hear the song will faint in three turns!"))
+    end
   end
 end
 

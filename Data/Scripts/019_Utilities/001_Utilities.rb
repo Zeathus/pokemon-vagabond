@@ -238,6 +238,7 @@ def pbTrainerName(name = nil, outfit = 0)
 end
 
 def pbSuggestTrainerName(gender)
+  return "Alph"
   userName = pbGetUserName
   userName = userName.gsub(/\s+.*$/, "")
   if userName.length > 0 && userName.length < Settings::MAX_PLAYER_NAME_SIZE
@@ -426,34 +427,35 @@ def pbMoveTutorChoose(move, movelist = nil, bymachine = false, oneusemachine = f
   if movelist.is_a?(Array)
     movelist.map! { |m| GameData::Move.get(m).id }
   end
-  pbFadeOutIn {
-    movename = GameData::Move.get(move).name
-    annot = pbMoveTutorAnnotations(move, movelist)
-    scene = PokemonParty_Scene.new
-    screen = PokemonPartyScreen.new(scene, $player.party)
-    screen.pbStartScene(_INTL("Teach which Pokémon?"), false, annot)
-    loop do
-      chosen = screen.pbChoosePokemon
-      break if chosen < 0
-      pokemon = $player.party[chosen]
+  choice = pbChoosePokemonScreen(0) { |member, pkmn|
+    if !member && !pkmn
+      true
+    else
+      ret = false
+      pokemon = getPartyPokemon(member)[pkmn]
+      movename = GameData::Move.get(move).name
       if pokemon.egg?
-        pbMessage(_INTL("Eggs can't be taught any moves.")) { screen.pbUpdate }
+        pbMessage(_INTL("Eggs can't be taught any moves."))
       elsif pokemon.shadowPokemon?
-        pbMessage(_INTL("Shadow Pokémon can't be taught any moves.")) { screen.pbUpdate }
-      elsif movelist && movelist.none? { |j| j == pokemon.species }
-        pbMessage(_INTL("{1} can't learn {2}.", pokemon.name, movename)) { screen.pbUpdate }
+        pbMessage(_INTL("Shadow Pokémon can't be taught any moves."))
+      elsif movelist && !movelist.any? { |j| j==pokemon.species }
+        pbMessage(_INTL("{1} can't learn {2}.",pokemon.name,movename))
       elsif !pokemon.compatible_with_move?(move)
-        pbMessage(_INTL("{1} can't learn {2}.", pokemon.name, movename)) { screen.pbUpdate }
-      elsif pbLearnMove(pokemon, move, false, bymachine) { screen.pbUpdate }
-        $stats.moves_taught_by_item += 1 if bymachine
-        $stats.moves_taught_by_tutor += 1 if !bymachine
-        pokemon.add_first_move(move) if oneusemachine
+        pbMessage(_INTL("{1} can't learn {2}.",pokemon.name,movename))
+      else
         ret = true
-        break
       end
+      ret
     end
-    screen.pbEndScene
   }
+
+  if choice
+    pokemon = getPartyPokemon(choice[0])[choice[1]]
+    if pbLearnMove(pokemon,move,false,bymachine)
+      pokemon.add_first_move(move) if oneusemachine
+      ret = true
+    end
+  end
   return ret   # Returns whether the move was learned by a Pokemon
 end
 

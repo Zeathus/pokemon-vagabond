@@ -25,7 +25,9 @@ class Particle_Engine
       "flare"        => Particle_Engine::Flare,
       "splash"       => Particle_Engine::Splash,
       # By Peter O.
-      "starteleport" => Particle_Engine::StarTeleport
+      "starteleport" => Particle_Engine::StarTeleport,
+      # By Zeathus
+      "darkportal" => Particle_Engine::DarkPortal
     }
   end
 

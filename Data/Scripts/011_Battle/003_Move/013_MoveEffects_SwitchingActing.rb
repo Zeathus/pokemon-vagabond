@@ -687,6 +687,10 @@ class Battle::Move::LowerPPOfTargetLastMoveBy4 < Battle::Move
   def canMagicCoat?;            return true; end
 
   def pbFailsAgainstTarget?(user, target, show_message)
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1} was protected by the Aegis Talisman!", target.pbThis))
+      return true
+    end
     last_move = target.pbGetMoveWithID(target.lastRegularMoveUsed)
     if !last_move || last_move.pp == 0 || last_move.total_pp <= 0
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
@@ -714,6 +718,11 @@ class Battle::Move::DisableTargetLastMoveUsed < Battle::Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if target.effects[PBEffects::Disable] > 0 || !target.lastRegularMoveUsed
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1}'s Aegis Talisman protected it from {2}'s Disable!",
+        target.pbThis,user.pbThis(true)))
       return true
     end
     return true if pbMoveFailedAromaVeil?(user, target, show_message)
@@ -750,6 +759,11 @@ class Battle::Move::DisableTargetUsingSameMoveConsecutively < Battle::Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if target.effects[PBEffects::Torment]
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1}'s Aegis Talisman protected it from {2}'s Torment!",
+        target.pbThis,user.pbThis(true)))
       return true
     end
     return true if pbMoveFailedAromaVeil?(user, target, show_message)

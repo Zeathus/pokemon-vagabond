@@ -130,7 +130,7 @@ ItemHandlers::CanUseInBattle.add(:FULLHEAL, proc { |item, pokemon, battler, move
 
 ItemHandlers::CanUseInBattle.copy(:FULLHEAL,
    :LAVACOOKIE, :OLDGATEAU, :CASTELIACONE, :LUMIOSEGALETTE, :SHALOURSABLE,
-   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY, :HEALPOWDER)
+   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY, :HEALPOWDER, :LUMBERRYSOUP)
 ItemHandlers::CanUseInBattle.copy(:FULLHEAL, :RAGECANDYBAR) if Settings::RAGE_CANDY_BAR_CURES_STATUS_PROBLEMS
 
 ItemHandlers::CanUseInBattle.add(:FULLRESTORE, proc { |item, pokemon, battler, move, firstAction, battle, scene, showMessages|
@@ -432,7 +432,7 @@ ItemHandlers::BattleUseOnPokemon.add(:FULLHEAL, proc { |item, pokemon, battler, 
 
 ItemHandlers::BattleUseOnPokemon.copy(:FULLHEAL,
    :LAVACOOKIE, :OLDGATEAU, :CASTELIACONE, :LUMIOSEGALETTE, :SHALOURSABLE,
-   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY)
+   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY, :LUMBERRYSOUP)
 ItemHandlers::BattleUseOnPokemon.copy(:FULLHEAL, :RAGECANDYBAR) if Settings::RAGE_CANDY_BAR_CURES_STATUS_PROBLEMS
 
 ItemHandlers::BattleUseOnPokemon.add(:FULLRESTORE, proc { |item, pokemon, battler, choices, scene|

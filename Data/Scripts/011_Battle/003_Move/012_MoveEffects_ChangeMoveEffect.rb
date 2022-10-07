@@ -149,7 +149,7 @@ class Battle::Move::CurseTargetOrLowerUserSpd1RaiseUserAtkDef1 < Battle::Move
   end
 
   def pbMoveFailed?(user, targets)
-    return false if user.pbHasType?(:GHOST)
+    return false if user.pbHasType?(:GHOST) && !user.hasActiveItem?(:AEGISTALISMAN)
     if !user.pbCanLowerStatStage?(:SPEED, user, self) &&
        !user.pbCanRaiseStatStage?(:ATTACK, user, self) &&
        !user.pbCanRaiseStatStage?(:DEFENSE, user, self)
@@ -160,7 +160,7 @@ class Battle::Move::CurseTargetOrLowerUserSpd1RaiseUserAtkDef1 < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    if user.pbHasType?(:GHOST) && target.effects[PBEffects::Curse]
+    if user.pbHasType?(:GHOST) && !user.hasActiveItem?(:AEGISTALISMAN) && target.effects[PBEffects::Curse]
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -168,7 +168,7 @@ class Battle::Move::CurseTargetOrLowerUserSpd1RaiseUserAtkDef1 < Battle::Move
   end
 
   def pbEffectGeneral(user)
-    return if user.pbHasType?(:GHOST)
+    return if user.pbHasType?(:GHOST) && !user.hasActiveItem?(:AEGISTALISMAN)
     # Non-Ghost effect
     if user.pbCanLowerStatStage?(:SPEED, user, self)
       user.pbLowerStatStage(:SPEED, 1, user)
@@ -183,7 +183,7 @@ class Battle::Move::CurseTargetOrLowerUserSpd1RaiseUserAtkDef1 < Battle::Move
   end
 
   def pbEffectAgainstTarget(user, target)
-    return if !user.pbHasType?(:GHOST)
+    return if !user.pbHasType?(:GHOST) || user.hasActiveItem?(:AEGISTALISMAN)
     # Ghost effect
     @battle.pbDisplay(_INTL("{1} cut its own HP and laid a curse on {2}!", user.pbThis, target.pbThis(true)))
     target.effects[PBEffects::Curse] = true

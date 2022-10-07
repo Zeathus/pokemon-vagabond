@@ -99,9 +99,7 @@ class Scene_Map
     $game_temp.in_menu = true
     $game_player.straighten
     $game_map.update
-    sscene = PokemonPauseMenu_Scene.new
-    sscreen = PokemonPauseMenu.new(sscene)
-    sscreen.pbStartPokemonMenu
+    pbPauseMenu
     $game_temp.in_menu = false
   end
 

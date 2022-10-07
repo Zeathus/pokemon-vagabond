@@ -7,6 +7,7 @@ class Spriteset_Global
   def initialize
     @follower_sprites = FollowerSprites.new(Spriteset_Map.viewport)
     @playersprite = Sprite_Character.new(Spriteset_Map.viewport, $game_player)
+    @playersprite.initPartner
     @picture_sprites = []
     (1..100).each do |i|
       @picture_sprites.push(Sprite_Picture.new(@@viewport2, $game_screen.pictures[i]))

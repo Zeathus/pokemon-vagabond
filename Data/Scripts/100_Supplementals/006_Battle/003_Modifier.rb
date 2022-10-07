@@ -60,7 +60,7 @@ class EncounterModifiers
   end
 end
 
-class PokeBattle_Pokemon
+class Pokemon
   def modify
     if $game_variables[Supplementals::WILD_MODIFIER] && $game_variables[Supplementals::WILD_MODIFIER] != 0
       mod = $game_variables[Supplementals::WILD_MODIFIER]

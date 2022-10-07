@@ -85,7 +85,7 @@ class Battle::Battler
     when :SLEEP
       # No type is immune to sleep
     when :POISON
-      if !(user && user.hasActiveAbility?(:CORROSION))
+      if !(user && user.hasActiveAbility?(:CORROSION) && @effects[PBEffects::CorrosiveAcid])
         hasImmuneType |= pbHasType?(:POISON)
         hasImmuneType |= pbHasType?(:STEEL)
       end
@@ -182,7 +182,7 @@ class Battle::Battler
     case newStatus
     when :POISON
       # NOTE: target will have Synchronize, so it can't have Corrosion.
-      if !(target && target.hasActiveAbility?(:CORROSION))
+      if !(target && target.hasActiveAbility?(:CORROSION) && @effects[PBEffects::CorrosiveAcid])
         hasImmuneType |= pbHasType?(:POISON)
         hasImmuneType |= pbHasType?(:STEEL)
       end
@@ -339,6 +339,7 @@ class Battle::Battler
   end
 
   def pbPoison(user = nil, msg = nil, toxic = false)
+    toxic = true if user&.hasWorkingItem(:NOXIOUSCHOKER)
     pbInflictStatus(:POISON, (toxic) ? 1 : 0, msg, user)
   end
 
@@ -470,6 +471,10 @@ class Battle::Battler
     if pbOwnSide.effects[PBEffects::Safeguard] > 0 && !selfInflicted &&
        !(user && user.hasActiveAbility?(:INFILTRATOR))
       @battle.pbDisplay(_INTL("{1}'s team is protected by Safeguard!", pbThis)) if showMessages
+      return false
+    end
+    if !selfInflicted && hasActiveItem?(:MENTALWARD)
+      @battle.pbDisplay(_INTL("{1} is protected by its Mental Ward!",pbThis)) if showMessages
       return false
     end
     return true

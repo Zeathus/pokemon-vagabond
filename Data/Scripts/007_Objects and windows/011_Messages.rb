@@ -606,6 +606,9 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
       when "cn"     # Display coins window
         coinwindow&.dispose
         coinwindow = pbDisplayCoinsWindow(msgwindow, goldwindow)
+      when "sp"     # Display coins window
+        coinwindow&.dispose
+        coinwindow = pbDisplayStadiumPointsWindow(msgwindow, goldwindow)
       when "pt"     # Display battle points window
         battlepointswindow&.dispose
         battlepointswindow = pbDisplayBattlePointsWindow(msgwindow)
@@ -744,6 +747,7 @@ end
 
 def pbShowCommands(msgwindow, commands = nil, cmdIfCancel = 0, defaultCmd = 0)
   return 0 if !commands
+  return pbCenterCommands(msgwindow, commands, cmdIfCancel, defaultCmd)
   cmdwindow = Window_CommandPokemonEx.new(commands)
   cmdwindow.z = 99999
   cmdwindow.visible = true

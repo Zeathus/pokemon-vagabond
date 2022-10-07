@@ -412,4 +412,14 @@ module PBQuestType
   Story        = 2
   Challenge    = 3
   Main         = 4
+  Botanist     = 5
+  Miner        = 6
+  Crafter      = 7
+  Doctor       = 8
+  Fisher       = 9
+  Breeder      = 10
+  Engineer     = 11
+  Professor    = 12
+  Ranger       = 13
+  Archeologist = 14
 end

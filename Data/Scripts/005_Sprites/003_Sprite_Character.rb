@@ -63,13 +63,13 @@ class Sprite_Character < RPG::Sprite
     @character    = character
     @oldbushdepth = 0
     @spriteoffset = false
-    if !character || character == $game_player || (character.name[/reflection/i] rescue false)
+    if !@isPartner && (!character || character == $game_player || (character.name[/reflection/i] rescue false))
       @reflection = Sprite_Reflection.new(self, character, viewport)
     end
-    @surfbase = Sprite_SurfBase.new(self, character, viewport) if character == $game_player
+    #@surfbase = Sprite_SurfBase.new(self, character, viewport) if character == $game_player
     self.zoom_x = TilemapRenderer::ZOOM_X
     self.zoom_y = TilemapRenderer::ZOOM_Y
-    update
+    update if !@isPartner
   end
 
   def groundY
@@ -88,8 +88,8 @@ class Sprite_Character < RPG::Sprite
     @charbitmap = nil
     @reflection&.dispose
     @reflection = nil
-    @surfbase&.dispose
-    @surfbase = nil
+    #@surfbase&.dispose
+    #@surfbase = nil
     super
   end
 
@@ -170,6 +170,6 @@ class Sprite_Character < RPG::Sprite
       @character.animation_id = 0
     end
     @reflection&.update
-    @surfbase&.update
+    #@surfbase&.update
   end
 end

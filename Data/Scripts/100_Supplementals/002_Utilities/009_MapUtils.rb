@@ -1,8 +1,16 @@
 # Set home to the bed in Plum's house
 def pbSetPokemonCenterHome
-  $PokemonGlobal.pokecenterMapId = 1
-  $PokemonGlobal.pokecenterX = 1
-  $PokemonGlobal.pokecenterY = 1
+  $PokemonGlobal.pokecenterMapId = 7
+  $PokemonGlobal.pokecenterX = 35
+  $PokemonGlobal.pokecenterY = 28
+  $PokemonGlobal.pokecenterDirection = 8
+end
+
+# Set home to the bed in Plum's house
+def pbSetPokemonCenterCyrus
+  $PokemonGlobal.pokecenterMapId = 241
+  $PokemonGlobal.pokecenterX = 12
+  $PokemonGlobal.pokecenterY = 13
   $PokemonGlobal.pokecenterDirection = 8
 end
 

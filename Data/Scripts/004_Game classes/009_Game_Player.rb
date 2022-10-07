@@ -56,6 +56,7 @@ class Game_Player < Game_Character
                     !$PokemonGlobal.surfing && !$PokemonGlobal.bicycle
     return false if jumping?
     return false if pbTerrainTag.must_walk
+    return true if $game_switches && $game_switches[FORCED_RUNNING]
     return ($PokemonSystem.runstyle == 1) ^ Input.press?(Input::BACK)
   end
 
@@ -564,15 +565,21 @@ end
 #===============================================================================
 #
 #===============================================================================
-def pbGetPlayerCharset(charset, trainer = nil, force = false)
+def pbGetPlayerCharset(charset, trainer = nil, force = false, follower = false)
   trainer = $player if !trainer
   outfit = (trainer) ? trainer.outfit : 0
+  member_id = ($game_variables) ? getPartyActive(follower ? 1 : 0) : 0
+  if $game_switches && $game_switches[FORCE_VISUAL_LEADER]
+    member_id = $game_variables[FORCED_VISUAL_LEADER]
+  end
+  charsets = ["walk", "run", "surf"]
   return nil if !force && $game_player&.charsetData &&
                 $game_player.charsetData[0] == trainer.character_ID &&
                 $game_player.charsetData[1] == charset &&
-                $game_player.charsetData[2] == outfit
-  $game_player.charsetData = [trainer.character_ID, charset, outfit] if $game_player
-  ret = charset
+                $game_player.charsetData[2] == outfit &&
+                $game_player.charsetData[3] == member_id
+  $game_player.charsetData = [trainer.character_ID, charset, outfit, member_id] if $game_player
+  ret = "member" + member_id.to_s + "_" + charset
   if pbResolveBitmap("Graphics/Characters/" + ret + "_" + outfit.to_s)
     ret = ret + "_" + outfit.to_s
   end

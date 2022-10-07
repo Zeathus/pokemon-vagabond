@@ -8,3 +8,189 @@ FullLocation = near the Crosswoods
 Step1 = Tell the doctor in the Crosswoods about the sick Zigzagoon.
 Done = The doctor fixed up the sick Zigzagoon. Hooray!
 ShowAvailable = true
+
+[THEFIERYROBIN]
+Name = The Fiery Robin
+Type = Basic
+Exp = 125
+Items = SHARPBEAK
+Description = The Bird Keeper in Breccia City really wants to add a Fletchling to his collection.
+Location = Breccia City
+FullLocation = in Breccia City
+Step1 = Catch a Fletchling on Route 4 and deliver it to the Bird Keeper in Breccia City.
+Done = "You caught a Fletchling for the Bird Keeper, and now they enjoy each other's company."
+# Breccia City
+RequireMaps = 8
+
+[ANEYEFORANOWL]
+Name = An Eye for an Owl
+Type = Basic
+Exp = 75
+Description = A young girl in Breccia City reeeaaalllyyy wants to see a cute owl.
+Location = Breccia City
+FullLocation = in Breccia City
+Step1 = Register a Grass-type Owl Pokémon as seen in the Pokédex and show it to the girl in Breccia City.
+Done = The girl was so happy to see Rowlet! She even gave you some Sweet Hearts.
+# Breccia City
+RequireMaps = 8
+
+[LITTLEPOKEMONBIGCITY]
+Name = "Little Pokémon, Big City"
+Type = Basic
+Exp = 150
+Description = The clumsy Klaus has managed to lose sight of an Alolan Vulpix he was caring for.
+Location = G.P.O. HQ
+FullLocation = at the G.P.O. HQ
+Step1 = Ask the people in the G.P.O. lounge if they saw where the Alolan Vulpix went.
+Step2 = Find the Alolan Vulpix in the Lapis District and bring it back to the employee, Klaus.
+Done = Vulpix returned back to Klaus after running away. You found it standing in the park.
+# G.P.O. HQ
+RequireMaps = 35
+
+[LUMBERLESSCARPENTER]
+Name = Lumberless Carpenter
+Type = Feature
+Exp = 150
+Items = RAREBONE
+Description = "The carpenter in Breccia City, Pent, has trouble gathering woods for his workshop. He needs a Pokémon to help him out."
+Location = Breccia City
+FullLocation = in Breccia City
+Step1 = Help Pent get his carpenter business up and running again by getting him a Timburr.
+Step2 = Catch a Timburr for Pent. You can find it east of the Crosswoods.
+Done = Pent has got his shop up and running again! He can now craft you various items.
+# Breccia City
+RequireMaps = 8
+
+[NEEDFORINSPIRATION]
+Name = Need for Inspiration
+Type = Feature
+Exp = 150
+Description = "The jeweler in Lapis Lazuli City, Channelle, has a severe lack of motivation for her craft."
+Location = Lapis Lazuli City
+FullLocation = in Lapis Lazuli City
+Step1 = Show Channelle a Pokémon with a bright pink pearl to inspire her.
+Done = Channelle was happy to see the Pokémon you brought her. She even named her jewelry after it!
+# Lapis District
+RequireMaps = 27
+
+# Ceramist Quest
+
+# Enchantress Quest
+
+[SORROWFULZORUA]
+Name = Sorrowful Zorua
+Type = Story
+Exp = 150
+Items = CHOICESCARF
+HideName = true
+HideItem = true
+Description = A couple living at the Breccia Passage has lost their Zorua. Where could it have gone off to?
+Location = Breccia Passage
+FullLocation = at Breccia Passage
+Step1 = Ask if anyone knows where Zorua went.
+Step2 = You were told the woman's husband died half a year ago. Go visit her again at Tuff Trail.
+Step3 = The woman's husband has gone for a walk. Find him and talk to him.
+Step4 = Zorua is disguising itself as the husband. Should you tell the woman about it?
+Done = You helped the woman at Tuff Trail come to terms with the loss of her husband.
+# Breccia Trail
+RequireMaps = 62
+PartyMembers = Amethyst
+
+[BERRYIMPORTANT]
+Name = Berry Important
+Type = Botanist
+Step1 = Unfinished
+
+[DIGGYDIGGYHOLE]
+Name = Diggy Diggy Hole
+Type = Miner
+Step1 = Unfinished
+
+# [210] Crafter
+
+# [215] Doctor
+
+# [220] Fisher
+
+# [225] Breeder
+
+[NULLPOINTEREXCEPTION]
+Name = Null-Pointer Exception
+Type = Engineer
+Step1 = Unfinished
+
+# [235] Professor
+
+# [240] Ranger
+
+# [245] Archeologist
+
+[THEFIRSTGYM]
+Name = The First Gym
+Type = Main
+Exp = 100
+Description = Duke has tasked you to prove your strength by defeating a Gym Leader.
+Step1 = Defeat your first Pokémon Gym. Gyms can be challenged in any order.
+Done = "You defeated a Gym just as Duke suggested, a new quest is now available."
+AutoFinish = $game_variables[BADGE_COUNT] >= 1
+
+[BRECCIAGYM]
+Name = Breccia Gym
+Type = Main
+Exp = 200
+Description = The Gym Leader of Breccia City is away from his Gym. Find him and get him to return for a challenge.
+Step1 = Find the Gym Leader of Breccia City. He's supposedly visiting an area north of the city.
+Step2 = "Faunus wishes to see something astounding, but doesn't specify what. Maybe someone close to him has an idea."
+Step3 = "Faunus' grandfather Pent can make you an incense to lure out a Pokémon for Faunus, but he needs help finding a Timburr first."
+Step4 = You got a Tropical Incense from Pent. Use it at Breccia Outlook to lure out a Pokémon.
+Step5 = Faunus fell down from Breccia Outlook. Go talk to him below.
+Done = "After being witness to a Tropius in flight, you managed to both astound Faunus as well as almost breaking a few bones of his. He promptly returned to the Gym."
+
+[LAPISLAZULIGYM]
+Name = Lapis Lazuli Gym
+Type = Main
+Exp = 200
+Description = The Gym Leader of Lapis Lazuli City is off performing some maintenance on the city waterways.
+Step1 = Check the maintenance manholes throughout the city to find the Gym Leader.
+Step2 = Handle the Rotom messing with the machinery in the Lapis District.
+Step3 = Report back to Leroy in the maintenance room in the Lazuli District.
+Done = The waterways have been restored to proper order thanks to you and Leroy defeating the Rotom.
+
+[PEGMAGYM]
+Name = Pegma Gym
+Type = Main
+Exp = 200
+Description = The transportation of ore from the Mica District to the Feldspar District in Pegma City has reached a halt. Gym Leader Raphael is looking into it.
+Step1 = Meet with Raphael at the Blacksmith's house.
+Step2 = Follow Raphael to meet the supervisor of Pegma Quarry.
+Step3 = Raphael got heated.
+Step4 = Research the supply issue with Allon.
+Step5 = Find Steve in the first layer quarry zone.
+Step6 = Report back to Raphael and the supervisor.
+Done = You rescued Steve and successfully fixed the ore shortage.
+
+# [1004] Scoria Gym
+
+# [1005] Gabbro Gym
+
+# [1006] Breccia Gym R2 (Faunus R2: It will be a Breeze)
+
+# [1007] Lapis Lazuli Gym R2 (Leroy R2: Electric Boogaloo)
+
+# [1008] Pegma Gym R2 (Raphael R2: Strike while the Iron is Hot)
+
+# [1009] Scoria Gym R2
+
+# [1010] Gabbro Gym R2
+
+[UNKNOWNDESTINATION]
+Name = Unknown Destination
+Type = Main
+Exp = 100
+Description = It's time to head to the ruins you had a vision of before you came to your senses.
+Step1 = Meet with someone with hair of amethyst north of Breccia City.
+Step2 = Make your way through Evergone Mangrove with Amethyst.
+Step3 = "Head to the G.P.O. HQ in Lapis Lazuli City, south of the Crosswoods."
+Step4 = Go back to the elevator with Amethyst.
+Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
+

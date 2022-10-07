@@ -1867,10 +1867,15 @@ end
 #===============================================================================
 class Battle::Move::UserTargetAverageHP < Battle::Move
   def pbEffectAgainstTarget(user, target)
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1}'s Aegis Talisman protected it from {2}'s Pain Split!",
+        target.pbThis,user.pbThis))
+      return
+    end
     if target.hp > target.totalhp
       @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
     end
-    newHP = (user.hp + target.hp) / 2
+    newHP = (user.pbActiveHP + target.pbActiveHP) / 2
     if user.hp > newHP
       user.pbReduceHP(user.hp - newHP, false, false)
     elsif user.hp < newHP

@@ -76,7 +76,8 @@ class Battle::Battler
       return false
     end
     # Imprison
-    if @battle.allOtherSideBattlers(@index).any? { |b| b.effects[PBEffects::Imprison] && b.pbHasMove?(move.id) }
+    if !hasActiveItem?(:AEGISTALISMAN) &&
+       @battle.allOtherSideBattlers(@index).any? { |b| b.effects[PBEffects::Imprison] && b.pbHasMove?(move.id) }
       if showMessages
         msg = _INTL("{1} can't use its sealed {2}!", pbThis, move.name)
         (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)

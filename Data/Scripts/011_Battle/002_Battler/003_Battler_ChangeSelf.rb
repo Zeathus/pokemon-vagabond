@@ -3,6 +3,7 @@ class Battle::Battler
   # Change HP
   #=============================================================================
   def pbReduceHP(amt, anim = true, registerDamage = true, anyAnim = true)
+    old_active_hp = pbActiveHP
     amt = amt.round
     amt = @hp if amt > @hp
     amt = 1 if amt < 1 && !fainted?
@@ -13,7 +14,7 @@ class Battle::Battler
     raise _INTL("HP greater than total HP") if @hp > @totalhp && !Supplementals::ALLOW_HP_LAYERS
     @battle.scene.pbHPChanged(self, oldHP, anim) if anyAnim && amt > 0
     if amt > 0 && registerDamage
-      @droppedBelowHalfHP = true if @hp < @totalhp / 2 && @hp + amt >= @totalhp / 2
+      @droppedBelowHalfHP = true if pbActiveHP < @totalhp / 2 && old_active_hp >= @totalhp / 2
       @tookDamageThisRound = true
     end
     return amt
@@ -29,7 +30,7 @@ class Battle::Battler
     raise _INTL("HP less than 0") if @hp < 0
     raise _INTL("HP greater than total HP") if @hp > @totalhp && !Supplementals::ALLOW_HP_LAYERS
     @battle.scene.pbHPChanged(self, oldHP, anim) if anyAnim && amt > 0
-    @droppedBelowHalfHP = false if @hp >= @totalhp / 2
+    @droppedBelowHalfHP = false if pbActiveHP >= @totalhp / 2
     return amt
   end
 
@@ -70,10 +71,12 @@ class Battle::Battler
     PBDebug.log("[Pokémon fainted] #{pbThis} (#{@index})") if !showMessage
     @battle.scene.pbFaintBattler(self)
     @battle.pbSetDefeated(self) if opposes?
-    pbInitEffects(false)
-    # Reset status
-    self.status      = :NONE
-    self.statusCount = 0
+    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0)
+      pbInitEffects(false)
+      # Reset status
+      self.status      = :NONE
+      self.statusCount = 0
+    end
     # Lose happiness
     if @pokemon && @battle.internalBattle
       badLoss = @battle.allOtherSideBattlers(@index).any? { |b| b.level >= self.level + 30 }
@@ -93,9 +96,19 @@ class Battle::Battler
     end
     # Check other battlers' abilities that trigger upon a battler fainting
     pbAbilitiesOnFainting
+    if hasActiveAbility?(:EVERLASTING, true) && @form == 0
+      @hp = 0
+      @pokemon.hp = 1
+      pbChangeForm(1, nil)
+      @fainted = false
+      @effects[PBEffects::EverlastingFainted] = @battle.turnCount
+      @battle.pbDisplayPaused(_INTL("{1} is Everlasting!", pbThis)) if showMessage
+      return false
+    end
     # Check for end of primordial weather
     @battle.pbEndPrimordialWeather
     pbBoss.checkTriggers(@battle, :Faint, self)
+    return true
   end
 
   #=============================================================================
@@ -236,7 +249,7 @@ class Battle::Battler
     pbCheckFormOnWeatherChange if !endOfRound
     # Darmanitan - Zen Mode
     if isSpecies?(:DARMANITAN) && self.ability == :ZENMODE
-      if @hp <= @totalhp / 2
+      if pbActiveHP <= @totalhp / 2
         if @form.even?
           @battle.pbShowAbilitySplash(self, true)
           @battle.pbHideAbilitySplash(self)
@@ -250,7 +263,7 @@ class Battle::Battler
     end
     # Minior - Shields Down
     if isSpecies?(:MINIOR) && self.ability == :SHIELDSDOWN
-      if @hp > @totalhp / 2   # Turn into Meteor form
+      if pbActiveHP > @totalhp / 2   # Turn into Meteor form
         newForm = (@form >= 7) ? @form - 7 : @form
         if @form != newForm
           @battle.pbShowAbilitySplash(self, true)
@@ -267,7 +280,7 @@ class Battle::Battler
     end
     # Wishiwashi - Schooling
     if isSpecies?(:WISHIWASHI) && self.ability == :SCHOOLING
-      if @level >= 20 && @hp > @totalhp / 4
+      if @level >= 20 && pbActiveHP > @totalhp / 4
         if @form != 1
           @battle.pbShowAbilitySplash(self, true)
           @battle.pbHideAbilitySplash(self)
@@ -281,7 +294,7 @@ class Battle::Battler
     end
     # Zygarde - Power Construct
     if isSpecies?(:ZYGARDE) && self.ability == :POWERCONSTRUCT && endOfRound &&
-       @hp <= @totalhp / 2 && @form < 2   # Turn into Complete Forme
+       pbActiveHP <= @totalhp / 2 && @form < 2   # Turn into Complete Forme
       newForm = @form + 2
       @battle.pbDisplay(_INTL("You sense the presence of many!"))
       @battle.pbShowAbilitySplash(self, true)

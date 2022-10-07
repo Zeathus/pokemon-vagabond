@@ -66,6 +66,10 @@ class Battle::Move::SleepTargetNextTurn < Battle::Move
   def pbEffectAgainstTarget(user, target)
     target.effects[PBEffects::Yawn] = 2
     @battle.pbDisplay(_INTL("{1} made {2} drowsy!", user.pbThis, target.pbThis(true)))
+    if user.hasActiveAbility?(:TIMESKIP)
+      target.effects[PBEffects::Yawn] = 1
+      @battle.pbCommonAnimation("TimeSkip",user,nil)
+    end
   end
 end
 
@@ -623,7 +627,7 @@ class Battle::Move::ConfuseTargetAlwaysHitsInRainHitsTargetInSky < Battle::Move:
     case target.effectiveWeather
     when :Sun, :HarshSun
       return 50
-    when :Rain, :HeavyRain
+    when :Rain, :HeavyRain, :Winds
       return 0
     end
     return super
@@ -901,6 +905,10 @@ class Battle::Move::AddGhostTypeToTarget < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1} was protected by its Aegis Talisman!", target.pbThis))
+      return true
+    end
     return false
   end
 
@@ -920,6 +928,10 @@ class Battle::Move::AddGrassTypeToTarget < Battle::Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if !GameData::Type.exists?(:GRASS) || target.pbHasType?(:GRASS) || !target.canChangeType?
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    if target.hasActiveItem?(:AEGISTALISMAN)
+      @battle.pbDisplay(_INTL("{1} was protected by its Aegis Talisman!", target.pbThis))
       return true
     end
     return false

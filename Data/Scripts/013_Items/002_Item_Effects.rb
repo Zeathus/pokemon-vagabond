@@ -38,14 +38,12 @@ ItemHandlers::UseFromBag.add(:BICYCLE, proc { |item|
 
 ItemHandlers::UseFromBag.copy(:BICYCLE, :MACHBIKE, :ACROBIKE)
 
-ItemHandlers::UseFromBag.add(:OLDROD, proc { |item|
+ItemHandlers::UseFromBag.add(:FISHINGROD, proc { |item|
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
   next 2 if $game_player.pbFacingTerrainTag.can_fish && ($PokemonGlobal.surfing || notCliff)
   pbMessage(_INTL("Can't use that here."))
   next 0
 })
-
-ItemHandlers::UseFromBag.copy(:OLDROD, :GOODROD, :SUPERROD)
 
 ItemHandlers::UseFromBag.add(:ITEMFINDER, proc { |item|
   next 2
@@ -251,48 +249,6 @@ ItemHandlers::UseInField.add(:BICYCLE, proc { |item|
 })
 
 ItemHandlers::UseInField.copy(:BICYCLE, :MACHBIKE, :ACROBIKE)
-
-ItemHandlers::UseInField.add(:OLDROD, proc { |item|
-  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
-    pbMessage(_INTL("Can't use that here."))
-    next false
-  end
-  encounter = $PokemonEncounters.has_encounter_type?(:OldRod)
-  if pbFishing(encounter, 1)
-    $stats.fishing_battles += 1
-    pbEncounter(:OldRod)
-  end
-  next true
-})
-
-ItemHandlers::UseInField.add(:GOODROD, proc { |item|
-  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
-    pbMessage(_INTL("Can't use that here."))
-    next false
-  end
-  encounter = $PokemonEncounters.has_encounter_type?(:GoodRod)
-  if pbFishing(encounter, 2)
-    $stats.fishing_battles += 1
-    pbEncounter(:GoodRod)
-  end
-  next true
-})
-
-ItemHandlers::UseInField.add(:SUPERROD, proc { |item|
-  notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-  if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
-    pbMessage(_INTL("Can't use that here."))
-    next false
-  end
-  encounter = $PokemonEncounters.has_encounter_type?(:SuperRod)
-  if pbFishing(encounter, 3)
-    $stats.fishing_battles += 1
-    pbEncounter(:SuperRod)
-  end
-  next true
-})
 
 ItemHandlers::UseInField.add(:ITEMFINDER, proc { |item|
   $stats.itemfinder_count += 1
@@ -507,7 +463,7 @@ ItemHandlers::UseOnPokemon.add(:FULLHEAL, proc { |item, qty, pkmn, scene|
 
 ItemHandlers::UseOnPokemon.copy(:FULLHEAL,
    :LAVACOOKIE, :OLDGATEAU, :CASTELIACONE, :LUMIOSEGALETTE, :SHALOURSABLE,
-   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY)
+   :BIGMALASADA, :PEWTERCRUNCHIES, :LUMBERRY, :LUMBERRYSOUP)
 ItemHandlers::UseOnPokemon.copy(:FULLHEAL, :RAGECANDYBAR) if Settings::RAGE_CANDY_BAR_CURES_STATUS_PROBLEMS
 
 ItemHandlers::UseOnPokemon.add(:FULLRESTORE, proc { |item, qty, pkmn, scene|

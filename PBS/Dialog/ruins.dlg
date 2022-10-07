@@ -1,0 +1,22 @@
+[RUINS_TABLET]
+U> Through a creatures essence a new path is revealed
+U> Its true nature within these rooms lie concealed
+
+[RUINS_CROSSWOODS,0]
+?> The Dunsparce looks like it wants to test your strength. Are you ready?
+    /choice Yes
+        /return true
+    /choice No
+        /return false
+?/>
+
+[RUINS_CROSSWOODS,1]
+> The Dunsparce gives you an affirmative nod, and lets you pass.
+
+[RUINS_CROSSWOODS,2]
+?> Would you like to challenge Dunsparce again?
+    /choice Yes
+        /return true
+    /choice No
+        /return false
+?/>

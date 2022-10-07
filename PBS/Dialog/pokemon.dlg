@@ -1,0 +1,69 @@
+[POKEMON_NATU]
+/speaker Natu
+/cry NATU 100 100
+> Nattuu!
+
+[POKEMON_ABRA]
+/speaker Abra
+/cry ABRA 100 100
+> Abuuuu.
+
+[POKEMON_KADABRA]
+/speaker Kadabra
+/cry KADABRA 100 100
+> Kadahbu!
+
+[POKEMON_HEATMOR]
+/speaker Heatmor
+/cry HEATMOR 100 100
+> Kuuui!
+
+[POKEMON_EEVEE]
+/speaker Eevee
+/cry EEVEE 100 100
+> Weeee!
+
+[POKEMON_VULPIX]
+/speaker Vulpix
+/cry VULPIX 100 100
+> Kyun! Kyun!
+
+[POKEMON_TAILLOW]
+/speaker Taillow
+/cry TAILLOW 100 100
+> Tailooo!
+
+[POKEMON_FLETCHLING]
+/speaker Fletchling
+/cry FLETCHLING 100 100
+> Fretch!
+
+[POKEMON_STARLY]
+/speaker Starly
+/cry STARLY 100 100
+> Staaaaaaar!
+
+[POKEMON_PIDGEY]
+/speaker Pidgey
+/cry PIDGEY 100 100
+> Pidooo!
+
+[POKEMON_SPEAROW]
+/speaker Spearow
+/cry SPEAROW 100 100
+> Sprooow!
+
+[POKEMON_DEINO]
+/speaker Deino
+/cry DEINO 100 100
+> Deiiiin!
+
+[POKEMON_WEAVILE]
+/speaker Weavile
+/cry WEAVILE 100 100
+> Weav!
+
+[POKEMON_SANDSLASH]
+/speaker Sandslash
+/cry SANDSLASH 100 100
+> Srash!

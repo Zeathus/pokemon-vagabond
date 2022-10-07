@@ -1,5 +1,21 @@
 DIALOG_FILES = [
-  "general"
+  "prologue",
+  "chapter1",
+  "chapter2",
+  "crosswoods",
+  "breccia",
+  "lazuli",
+  "lapis",
+  "quartz",
+  "feldspar",
+  "mica",
+  "general",
+  "pokemon",
+  "ruins",
+  "quests_minor",
+  "gpo",
+  "evergone",
+  "job_engineer"
 ]
 
 def pbDialog(name, index=0)

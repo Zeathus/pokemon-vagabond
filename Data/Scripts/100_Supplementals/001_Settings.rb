@@ -45,8 +45,8 @@ module Supplementals
   COMPRESS_MAPS = false
 
   # How many pixels will be faded from the bottom of an event's sprite when submerged in bushes and swamps
-  BUSH_DEPTH = 12
-  SWAMP_DEPTH = 10
+  BUSH_DEPTH = 16
+  SWAMP_DEPTH = 14
   
   # Whether the player will attempt to move down one tile when starting to surf or up one when stopping, to simulate a height difference
   HIGH_WATER_EDGES = true

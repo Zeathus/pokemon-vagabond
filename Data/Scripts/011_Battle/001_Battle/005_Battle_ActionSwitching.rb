@@ -7,6 +7,10 @@ class Battle
   # NOTE: Messages are only shown while in the party screen when choosing a
   #       command for the next round.
   def pbCanSwitchLax?(idxBattler, idxParty, partyScene = nil)
+    if pbPartyStarts(idxBattler).length > 1
+      return false if idxBattler==0 && idxParty >= pbPartyStarts(idxBattler)[1]
+      return false if idxBattler==2 && idxParty < pbPartyStarts(idxBattler)[1]
+    end
     return true if idxParty < 0
     party = pbParty(idxBattler)
     return false if idxParty >= party.length

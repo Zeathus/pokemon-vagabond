@@ -59,6 +59,8 @@ class GameStats
   attr_accessor :play_time   # In seconds
   attr_accessor :play_sessions
   attr_accessor :time_last_saved   # In seconds
+  # Vagabond
+  attr_accessor :affinity_boosts
 
   def initialize
     # Travel
@@ -143,6 +145,8 @@ class GameStats
     @play_time                     = 0
     @play_sessions                 = 0
     @time_last_saved               = 0
+    # Vagabond
+    @affinity_boosts               = 0
   end
 
   def distance_moved

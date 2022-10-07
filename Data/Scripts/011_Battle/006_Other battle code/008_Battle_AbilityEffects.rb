@@ -813,7 +813,8 @@ Battle::AbilityEffects::OnStatLoss.add(:DEFIANT,
 
 Battle::AbilityEffects::PriorityChange.add(:GALEWINGS,
   proc { |ability, battler, move, pri|
-    next pri + 1 if (Settings::MECHANICS_GENERATION <= 6 || battler.hp >= battler.totalhp) &&
+    next pri + 1 if ((Settings::MECHANICS_GENERATION <= 6 || battler.pbActiveHP >= battler.totalhp) ||
+                     [:Winds, :StrongWinds].include?(battler.battle.pbWeather)) &&
                     move.type == :FLYING
   }
 )
@@ -1216,7 +1217,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:ANALYTIC,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:BLAZE,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    if user.hp <= user.totalhp / 3 && type == :FIRE
+    if user.pbActiveHP <= user.totalhp / 3 && type == :FIRE
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1224,7 +1225,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:BLAZE,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:DEFEATIST,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    mults[:attack_multiplier] /= 2 if user.hp <= user.totalhp / 2
+    mults[:attack_multiplier] /= 2 if user.pbActiveHP <= user.totalhp / 2
   }
 )
 
@@ -1319,7 +1320,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:NEUROFORCE,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:OVERGROW,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    if user.hp <= user.totalhp / 3 && type == :GRASS
+    if user.pbActiveHP <= user.totalhp / 3 && type == :GRASS
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1412,7 +1413,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:STRONGJAW,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:SWARM,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    if user.hp <= user.totalhp / 3 && type == :BUG
+    if user.pbActiveHP <= user.totalhp / 3 && type == :BUG
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1435,7 +1436,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:TINTEDLENS,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:TORRENT,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    if user.hp <= user.totalhp / 3 && type == :WATER
+    if user.pbActiveHP <= user.totalhp / 3 && type == :WATER
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1905,6 +1906,7 @@ Battle::AbilityEffects::OnBeingHit.add(:MUMMY,
     next if !move.pbContactMove?(user)
     next if user.fainted?
     next if user.unstoppableAbility? || user.ability == ability
+    next if user.hasActiveItem?(:AEGISTALISMAN)
     oldAbil = nil
     battle.pbShowAbilitySplash(target) if user.opposes?(target)
     if user.affectedByContactEffect?(Battle::Scene::USE_ABILITY_SPLASH)

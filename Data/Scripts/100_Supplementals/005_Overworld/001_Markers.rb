@@ -8,7 +8,7 @@ def pbLoadQuestMarkers
     event = $game_map.events[marker[0]]
     next if !event
     page = marker[1]
-    next if event.pageNum != page
+    next if event.page_number != page
     type = marker[2]
     next if !event
     active=true

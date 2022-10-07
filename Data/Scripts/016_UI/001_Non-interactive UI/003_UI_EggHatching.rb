@@ -255,6 +255,7 @@ EventHandlers.add(:on_player_step_taken, :hatch_eggs,
         egg.steps_to_hatch -= 1
         break
       end
+      egg.steps_to_hatch -= 2 if pbActiveDrink == "hatch"
       if egg.steps_to_hatch <= 0
         egg.steps_to_hatch = 0
         pbHatch(egg)

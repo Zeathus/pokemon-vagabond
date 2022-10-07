@@ -315,6 +315,7 @@ class Battle
     when :Rain        then pbDisplay(_INTL("It is raining."))
     when :Sandstorm   then pbDisplay(_INTL("A sandstorm is raging."))
     when :Hail        then pbDisplay(_INTL("Hail is falling."))
+    when :Winds       then pbDisplay(_INTL("The air is windy."))
     when :HarshSun    then pbDisplay(_INTL("The sunlight is extremely harsh."))
     when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
     when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
@@ -333,6 +334,17 @@ class Battle
     when :Psychic
       pbDisplay(_INTL("The battlefield is weird!"))
     end
+
+    if $stats.affinity_boosts <= 0
+      if trainerBattle? && @player.length >= 2
+        if [:KRABBY, :SKIDDO, :NUMEL].include?(pbGetChoice(:Starter))
+          pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 0)
+          pbGuide("Affinity Boosts")
+          pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 1)
+        end
+      end
+    end
+
     # Abilities upon entering battle
     pbOnAllBattlersEnteringBattle
     # Main battle loop
@@ -383,6 +395,7 @@ class Battle
       end
       tMoney *= 2 if @field.effects[PBEffects::AmuletCoin]
       tMoney *= 2 if @field.effects[PBEffects::HappyHour]
+      tMoney *= 2 if pbActiveDrink == "money"
       oldMoney = pbPlayer.money
       pbPlayer.money += tMoney
       moneyGained = pbPlayer.money - oldMoney
@@ -395,6 +408,7 @@ class Battle
     if @field.effects[PBEffects::PayDay] > 0
       @field.effects[PBEffects::PayDay] *= 2 if @field.effects[PBEffects::AmuletCoin]
       @field.effects[PBEffects::PayDay] *= 2 if @field.effects[PBEffects::HappyHour]
+      @field.effects[PBEffects::PayDay] *= 2 if pbActiveDrink == "money"
       oldMoney = pbPlayer.money
       pbPlayer.money += @field.effects[PBEffects::PayDay]
       moneyGained = pbPlayer.money - oldMoney
@@ -429,6 +443,26 @@ class Battle
   def pbEndOfBattle
     oldDecision = @decision
     @decision = 4 if @decision == 1 && wildBattle? && @caughtPokemon.length > 0
+    if $stats.affinity_boosts == 0 && @decision == 1
+      if trainerBattle? && @player.length >= 2
+        pbSpeech("Duke", "none",
+          "You did not perform an Affinity Boost.WT Let's try this again.")
+        @decision = -1
+        @expgained = 0
+        @expgainedshared = 0
+        for p in @party1 + @party2
+          if p
+            p.hp = p.totalhp
+            p.status = :NONE
+            for m in p.moves
+              m.pp = m.totalpp
+            end
+          end
+        end
+        @scene.pbEndBattle(@decision)
+        return @decision
+      end
+    end
     case oldDecision
     ##### WIN #####
     when 1
@@ -451,6 +485,20 @@ class Battle
           msg = trainer.lose_text
           msg = "..." if !msg || msg.empty?
           pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/, pbPlayer.name))
+        end
+      end
+      # Update chain data
+      if !trainerBattle?
+        if $game_variables[CHAIN_SPECIES] == @battlers[1].species
+          $game_variables[CHAIN_LENGTH] += 1
+        else
+          $game_variables[CHAIN_SPECIES] = @battlers[1].species
+          $game_variables[CHAIN_LENGTH] = 1
+        end
+        # Breccia Trail - Vespiquen Boss
+        if $game_map.map_id == 62
+          $game_self_switches[[62, 34, "A"]] = true
+          $MapFactory.getMap($game_map.map_id, false).need_refresh = true
         end
       end
       # Gain money from winning a trainer battle, and from Pay Day
@@ -520,10 +568,20 @@ class Battle
       pbCancelChoice(b.index)   # Restore unused items to Bag
       Battle::AbilityEffects.triggerOnSwitchOut(b.ability, b, true) if b.abilityActive?
     end
-    pbParty(0).each_with_index do |pkmn, i|
+    getActivePokemon(0).each_with_index do |pkmn, i|
       next if !pkmn
       @peer.pbOnLeavingBattle(self, pkmn, @usedInBattle[0][i], true)   # Reset form
       pkmn.item = @initialItems[0][i]
+    end
+    if isInParty && pbPartyStarts(2).length > 1
+      getActivePokemon(1).each_with_index do |pkmn,i|
+        next if !pkmn
+        @peer.pbOnLeavingBattle(self,pkmn,@usedInBattle[0][i],true)   # Reset form
+        pkmn.item = @initialItems[0][i+pbPartyStarts(2)[1]]
+      end
+    end
+    if @decision == 1
+      pbEXPScreen(@expGained,@sharedExpGained)
     end
     return @decision
   end

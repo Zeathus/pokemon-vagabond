@@ -166,6 +166,8 @@ class Battle
     @moldBreaker       = false
     @runCommand        = 0
     @nextPickupUse     = 0
+    @expGained         = 0
+    @sharedExpGained   = 0
     if GameData::Move.exists?(:STRUGGLE)
       @struggle = Move.from_pokemon_move(self, Pokemon::Move.new(:STRUGGLE))
     else
@@ -217,7 +219,7 @@ class Battle
   #=============================================================================
   # Trainers and owner-related methods
   #=============================================================================
-  def pbPlayer; return @player[0]; end
+  def pbPlayer; return $player; end
 
   # Given a battler index, returns the index within @player/@opponent of the
   # trainer that controls that battler index.
@@ -280,6 +282,7 @@ class Battle
   # trainer that owns the Pokémon in party slot idxParty. This assumes that
   # both the battler position and the party slot are from the same side.
   def pbIsOwner?(idxBattler, idxParty)
+    return true if !opposes?(idxBattler)
     idxTrainer1 = pbGetOwnerIndexFromBattlerIndex(idxBattler)
     idxTrainer2 = pbGetOwnerIndexFromPartyIndex(idxBattler, idxParty)
     return idxTrainer1 == idxTrainer2
@@ -288,7 +291,7 @@ class Battle
   def pbOwnedByPlayer?(idxBattler)
     return false if @playerUseAI
     return false if opposes?(idxBattler)
-    return pbGetOwnerIndexFromBattlerIndex(idxBattler) == 0
+    return true # pbGetOwnerIndexFromBattlerIndex(idxBattler) == 0
   end
 
   # Returns the number of Pokémon positions controlled by the given trainerIndex
@@ -727,6 +730,7 @@ class Battle
     when :Rain        then pbDisplay(_INTL("It started to rain!"))
     when :Sandstorm   then pbDisplay(_INTL("A sandstorm brewed!"))
     when :Hail        then pbDisplay(_INTL("It started to hail!"))
+    when :Winds       then pbDisplay(_INTL("The air became windy!"))
     when :HarshSun    then pbDisplay(_INTL("The sunlight turned extremely harsh!"))
     when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
     when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
