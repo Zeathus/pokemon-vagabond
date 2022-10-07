@@ -1,4 +1,4 @@
-class PokeBattle_Battler
+class Battle::Battler
 
   def allyHasActiveAbility?(abil)
     eachAlly do |b|
@@ -61,7 +61,7 @@ class PokeBattle_Battler
 
 end
 
-class PokeBattle_Battle
+class Battle
 
     def pbGetEffectScore(move,damage,user,target,actionable,fainted,chosen=false)
       score = 0
@@ -1021,7 +1021,7 @@ class PokeBattle_Battle
           if !target.opposes?(user)
             # Use on partner if they have a buffing move
             for m in target.moves
-              if m.is_a?(PokeBattle_StatUpMove)
+              if m.is_a?(Battle::Move::StatUpMove)
                 score -= 50
               end
             end

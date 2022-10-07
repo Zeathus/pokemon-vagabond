@@ -583,7 +583,7 @@ class Battle
               can_switch[p] = true
 
               # Create an imaginary battler for the party member, for damage calcs
-              pkmnbattler = PokeBattle_Battler.new(self, i)
+              pkmnbattler = Battle::Battler.new(self, i)
               pkmnbattler.pbInitPokemon(pkmn, p)
 
               # Take damage from hazards

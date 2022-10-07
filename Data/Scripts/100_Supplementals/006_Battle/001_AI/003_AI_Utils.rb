@@ -391,7 +391,7 @@ class Battle
 
 end
 
-class PokeBattle_Move
+class Battle::Move
 
   def pbPredictDamage(user, target, numTargets, queue, boost, options = 0)
     calcType = pbCalcType(user)

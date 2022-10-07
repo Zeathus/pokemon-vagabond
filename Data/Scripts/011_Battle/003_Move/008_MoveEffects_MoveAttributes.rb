@@ -177,7 +177,7 @@ end
 #===============================================================================
 class Battle::Move::PowerHigherWithUserHP < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
-    return [150 * user.hp / user.totalhp, 1].max
+    return [[150 * user.hp / user.totalhp, 1].max, 150].min
   end
 end
 
@@ -208,7 +208,7 @@ end
 #===============================================================================
 class Battle::Move::PowerHigherWithTargetHP < Battle::Move
   def pbBaseDamage(baseDmg, user, target)
-    return [120 * target.hp / target.totalhp, 1].max
+    return [[120 * target.hp / target.totalhp, 1].max, 120].min
   end
 end
 

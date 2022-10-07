@@ -59,7 +59,7 @@ class BossEff_Moveset < BossEffect
     target.moves = []
     for m in @moves
       newMove = Pokemon::Move.new(m)
-      target.moves.push(PokeBattle_Move.from_pokemon_move(battle,newMove))
+      target.moves.push(Battle::Move.from_pokemon_move(battle,newMove))
     end
   end
 end
@@ -80,7 +80,7 @@ class BossEff_Item < BossEffect
       if target.hasActiveAbility?(:STICKYHOLD) && !battle.moldBreaker
         if @showmsg
           battle.pbShowAbilitySplash(target)
-          if PokeBattle_SceneConstants::USE_ABILITY_SPLASH
+          if Battle::Scene::USE_ABILITY_SPLASH
             battle.pbDisplay(_INTL("But it failed to affect {1}!",target.pbThis(true)))
           else
             battle.pbDisplay(_INTL("But it failed to affect {1} because of its {2}!",
