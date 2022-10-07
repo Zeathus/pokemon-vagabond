@@ -8,6 +8,7 @@ Logs/
 Data/*
 !Data/Scripts.rxdata
 !Data/Animations.rxdata
+!Data/default_keys.mkxp1
 !Data/Scripts/
 
 # Files in the main project folder
