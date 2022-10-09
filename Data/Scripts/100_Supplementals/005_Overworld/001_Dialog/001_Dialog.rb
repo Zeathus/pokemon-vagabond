@@ -11,7 +11,13 @@ def pbDialog(name, index=0)
     raise _INTL("Did not find a dialog with the name [{1}]", name)
   end
 
-  ret = pbRunDialogFeed(dialog)
+  msgwindows = TalkMessageWindows.new
+
+  ret = pbRunDialogFeed(dialog, msgwindows)
+  Graphics.update
+  Input.update
+
+  msgwindows.dispose
 
   $game_system.message_position = 2
   $game_system.message_frame = 0
@@ -24,7 +30,7 @@ def pbDialog(name, index=0)
 
 end
 
-def pbRunDialogFeed(dialog, opts={})
+def pbRunDialogFeed(dialog, msgwindows = nil)
   ret = [0]
 
   for action in dialog
@@ -33,23 +39,23 @@ def pbRunDialogFeed(dialog, opts={})
 
     case type
     when Dialog::Talk
-      speech = pbFormatDialog(action[1])
-      pbTalk(speech, opts)
+      speech = _format(action[1])
+      pbTalk(speech, msgwindows)
     when Dialog::Shout
-      speech = pbFormatDialog(action[1])
+      speech = _format(action[1])
       opts["shout"] = true
-      pbTalk(speech, opts)
+      pbTalk(speech, msgwindows)
       opts["shout"] = false
     when Dialog::Unown
-      speech = pbFormatDialog(action[1])
-      pbShowUnownText(speech)
+      text = _format(action[1])
+      pbShowUnownText(text)
     when Dialog::Prompt
-      question = pbFormatDialog(action[1])
+      question = _format(action[1])
       variable = action[2]
       cancel = 0
       choices = []
       for i in 0...action[3].length
-        choices.push(pbFormatDialog(action[3][i][1]))
+        choices.push(_format(action[3][i][1]))
         cancel = i+1 if action[3][i][3]
       end
       if question
@@ -60,13 +66,13 @@ def pbRunDialogFeed(dialog, opts={})
           question += choice
         end
         question += "]"
-        pbTalk(question, opts)
+        pbTalk(question, msgwindows)
 
         answer = $game_variables[variable]
 
         choice = action[3][answer]
         if choice
-          ret = pbRunDialogFeed(choice[2], opts)
+          ret = pbRunDialogFeed(choice[2], msgwindows)
         else
           raise "Failed to find the selected choice's contents"
         end
@@ -79,52 +85,88 @@ def pbRunDialogFeed(dialog, opts={})
       args = action[2...action.length] if action.length > 2
 
       case command
+      when "hold"
+        msgwindows.holding = true
+      when "start"
+        msgwindows.holding = false
+      when "focus"
+        msgwindows.focus(args[0])
       when "reset"
-        opts = {}
+        msgwindows.each { |w| w.reset(true) }
       when "speaker"
         # Change all speaker properties
-        speaker = args[0] ? pbFormatDialog(args[0]) : nil
+        speaker = args[0] ? _format(args[0]) : nil
         expression = args[1] || "neutral"
-        opts["speaker"] = speaker
-        opts["expression"] = expression
+        msgwindows.focused.portrait.set(speaker, expression)
+        msgwindows.focused.namebox.real_name = speaker
       when "expression"
-        opts["expression"] = args[0]
+        msgwindows.focused.portrait.expression = args[0]
       when "expression_left"
-        opts["expression_left"] = args[0]
+        msgwindows.focused.portrait(1).expression = args[0]
       when "portrait"
-        opts["portrait"] = args[0]
+        msgwindows.focused.portrait.character = args[0]
       when "portrait_left"
-        opts["portrait_left"] = args[0]
+        msgwindows.focused.portrait(1).character = args[0]
       when "name"
-        opts["name_tag"] = pbFormatDialog(args[0])
+        msgwindows.focused.namebox.name = _format(args[0])
       when "namepos"
-        opts["namepos"] = args[0]
+        if args[0] == "left"
+          msgwindows.focused.namebox.position = 0
+        elsif args[0] == "center"
+          msgwindows.focused.namebox.position = 2
+        else
+          msgwindows.focused.namebox.position = 1
+        end
       when "hidename"
-        opts["hide_name"] = args[0]
+        msgwindows.focused.namebox.hide_name = args[0]
       when "hidenamebox"
-        opts["hide_namebox"] = args[0]
+        msgwindows.focused.namebox.real_name = nil
       when "window"
-        opts["window_type"] = args[0]
+        msgwindows.focused.setSkin(args[0])
       when "windowpos"
         if args[0] == "top"
-          $game_system.message_position = 0
+          msgwindows.focused.message_position = 0
         elsif args[0] == "center"
-          $game_system.message_position = 1
+          msgwindows.focused.message_position = 1
         else
-          $game_system.message_position = 2
+          msgwindows.focused.message_position = 2
+        end
+      when "newwindow"
+        if args.length == 1
+          msgwindows.add_window(args[0])
+        elsif args.length == 4
+          msgwindows.add_window_manual(args[0], args[1], args[2], args[3])
         end
       when "hidewindow"
-        $game_system.message_frame = args[0]
+        msgwindows.focused.message_frame = args[0]
       when "textpos"
         if args[0] == "left"
-          opts["textpos"] = nil
+          msgwindows.focused.text_alignment = 0
+        elsif args[0] == "right"
+          msgwindows.focused.text_alignment = 2
         else
-          opts["textpos"] = args[0]
+          msgwindows.focused.text_alignment = 1
         end
       when "lines"
-        opts["lines"] = args[0]
+        msgwindows.focused.line_count = args[0]
+      when "addpauses"
+        msgwindows.focused.add_pauses = args[0]
       when "wait"
+        args[0].times do
+          Graphics.update
+          Input.update
+          msgwindows.update
+        end
+      when "rest"
+        old_vis = []
+        for i in 0...msgwindows.length
+          old_vis.push(msgwindows[i].visible)
+          msgwindows[i].visible = false
+        end
         pbWait(args[0])
+        for i in 0...msgwindows.length
+          msgwindows[i].visible = old_vis[i]
+        end
       when "fade"
         tone = Tone.new(0, 0, 0, 0)
         case args[1]
@@ -148,7 +190,7 @@ def pbRunDialogFeed(dialog, opts={})
       when "bgm"
         pbBGMPlay(args[0], args[1], args[2])
       when "cry"
-        species = pbFormatDialog(args[0])
+        species = _format(args[0])
         if species[0] == ':'
           species = eval(species)
         else
@@ -156,7 +198,7 @@ def pbRunDialogFeed(dialog, opts={})
         end
         GameData::Species.play_cry(species, (args[1] || 100), args[2])
       when "pokemon"
-        species = pbFormatDialog(args[0])
+        species = _format(args[0])
         if species[0] == ':'
           species = eval(species)
         else
@@ -191,7 +233,7 @@ def pbRunDialogFeed(dialog, opts={})
           end
         when "sprite"
           event = get_character(args[args.length - 1])
-          event.character_name = pbFormatDialog(args[1])
+          event.character_name = _format(args[1])
           if args.length > 3
             case args[2]
             when "left"
@@ -225,13 +267,13 @@ def pbRunDialogFeed(dialog, opts={})
       end
     when Dialog::If
       if (eval(action[1]))
-        pbRunDialogFeed(action[2], opts)
+        pbRunDialogFeed(action[2], msgwindows)
       else
         feed = action[2]
         done = false
         while feed[feed.length-1][0] == Dialog::Elsif
           if (eval(feed[feed.length-1][1]))
-            ret = pbRunDialogFeed(feed[feed.length-1][2], opts)
+            ret = pbRunDialogFeed(feed[feed.length-1][2], msgwindows)
             done = true
             break
           end
@@ -239,14 +281,14 @@ def pbRunDialogFeed(dialog, opts={})
         end
         if !done
           if feed[feed.length-1][0] == Dialog::Else
-            ret = pbRunDialogFeed(feed[feed.length-1][1], opts)
+            ret = pbRunDialogFeed(feed[feed.length-1][1], msgwindows)
           end
         end
       end
     when Dialog::Loop
       feed = action[1]
       loop do
-        ret = pbRunDialogFeed(feed, opts)
+        ret = pbRunDialogFeed(feed, msgwindows)
         break if [Dialog::Break, Dialog::Exit, Dialog::Return].include?(ret[0])
       end
     when Dialog::Break
@@ -269,17 +311,4 @@ def pbRunDialogFeed(dialog, opts={})
   end
 
   return ret
-end
-
-def pbFormatDialog(speech)
-  while speech.include?('{') && speech.include?('}')
-    index1 = speech.index('{')
-    index2 = speech.index('}')
-    code = eval(speech[(index1+1)...index2])
-    speech = _INTL("{1}{2}{3}",
-      speech[0...index1],
-      code,
-      speech[(index2+1)...speech.length])
-  end
-  return speech
 end

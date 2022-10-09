@@ -413,6 +413,7 @@
 008_EventUtils
 009_MapUtils
 010_KeybindList
+011_FormatText
 @@003_Variables
 001_DefeatedBosses
 002_SavedChoices
@@ -432,6 +433,7 @@
 004_CharacterColors
 005_Emotes
 006_TextBubbles
+007_MessagesDisplay
 @@006_Battle
 001_ScaleLevel
 002_Abilities

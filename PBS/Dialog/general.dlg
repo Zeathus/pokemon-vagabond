@@ -37,19 +37,37 @@
 /event Test emote idea
 
 [PORTRAIT_TEST]
-/namepos center
-/speaker Amethyst
-> Hello 1.
 /speaker Kira
-> Hello 2.
+> Hello! Wait... Who are you? Yo, I am Kira.
+/reset
+/hold
+/namepos center
+/newwindow bottomleft
+/focus 1
+/speaker Amethyst
+> <wave>Hello 1.</wave> <shake>Test</shake>
+/newwindow bottomright
+/focus 2
+/speaker Kira
+> <shake>Hello 2.</shake>
+/start
+/focus 1
+> I can say something <wave>[B]more![/]</wave>
+/reset
+/focus 0
 /portrait_left Amethyst
-> Hello 3.
+> <wave>Hello 3.</wave>
 /speaker Amethyst
 > Hello 4.
 /portrait_right Kira
-> Hello 5.
+?> This is a question?
+    /choice Yes
+        > Yes!
+    /cancelchoice No
+        > No!!!
+?/>
 /speaker Kira
-> Hello 6.
+> Hi. Wait... Hello. Yo, I am Kira.
 /expression angry
 > Hello 7.
 /expression_left confused

@@ -144,6 +144,7 @@ module Supplementals
 
   # The width of the standard message windows from pbMessage
   MESSAGE_WINDOW_WIDTH = 512
+  MESSAGE_WINDOW_LINES = 2
 
   # Use a hard-coded font with drawing instructions rather than the regular font
   USE_HARD_CODED_FONT = true
