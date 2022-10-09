@@ -20,12 +20,12 @@ module Dialog
   end
 
   def Dialog.getWindowSkin(name)
-    name = name.downcase
-    return false  # false means default
+    name = name.downcase if name
+    return nil  # default
   end
 
   def Dialog.getNameBox(name)
-    name = name.downcase
+    name = name.downcase if name
     ret = "name_box"
     return _INTL("Graphics/Messages/{1}", ret)
   end 
