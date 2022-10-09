@@ -255,7 +255,11 @@ class TalkMessageWindowWrapper
   end
 
   def setSkin(skin)
-    skin = MessageConfig.pbGetSpeechFrame if !skin
+    if skin
+      skin = "Graphics/Windowskins/" + skin
+    else
+      skin = MessageConfig.pbGetSpeechFrame
+    end
     @msgwindow.setSkin(skin)
   end
 
