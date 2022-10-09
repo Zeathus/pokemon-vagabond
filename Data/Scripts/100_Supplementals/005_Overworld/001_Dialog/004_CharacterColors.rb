@@ -63,6 +63,7 @@ module Dialog
   end
 
   def Dialog.getWindowSkin(name)
+    name = name.downcase
     if name == "sign"
       return "sign"
     elsif name == "player"
@@ -92,6 +93,7 @@ module Dialog
   end
 
   def Dialog.getNameBox(name)
+    name = name.downcase
     ret = "name_box"
     if name == "player"
       ret = "name_box_player"
