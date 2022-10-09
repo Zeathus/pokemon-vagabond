@@ -89,7 +89,7 @@ module Dialog
     elsif name == "giratina"
       return "giratina"
     end
-    return false  # false means default
+    return nil  # false means default
   end
 
   def Dialog.getNameBox(name)

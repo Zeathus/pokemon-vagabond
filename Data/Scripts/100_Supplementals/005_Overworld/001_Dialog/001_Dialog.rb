@@ -115,6 +115,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         expression = args[1] || "neutral"
         msgwindows.focused.portrait.set(speaker, expression)
         msgwindows.focused.namebox.real_name = speaker
+        skin = Dialog.getWindowSkin(speaker)
+        msgwindows.focused.setSkin(skin)
       when "expression"
         msgwindows.focused.portrait.expression = args[0]
       when "expression_left"
