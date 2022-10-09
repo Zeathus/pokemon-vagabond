@@ -165,6 +165,16 @@ def compile_dialog
           choice.push(true) if command == "cancelchoice"
           feed.push(choice)
           buffer.push([Dialog::Choice, choice[2]])
+        when "focus"
+          arg = arguments[0]
+          if !("012345678".include?(arg))
+            compile_dialog_error(file, line_no, "/focus only accepts the numbers 0-8.")
+          end
+          feed.push([Dialog::Command, "focus", arg.to_i])
+        when "hold"
+          feed.push([Dialog::Command, "hold"])
+        when "start"
+          feed.push([Dialog::Command, "start"])
         when "reset"
           feed.push([Dialog::Command, "reset"])
         when "speaker"
@@ -221,6 +231,27 @@ def compile_dialog
           end
           arg = "center" if arg == "middle"
           feed.push([Dialog::Command, "windowpos", arg])
+        when "newwindow"
+          if arguments.length == 1
+            case arguments[0]
+            when "bottom"
+              feed.push([Dialog::Command, "newwindow", 2])
+            when "center", "middle"
+              feed.push([Dialog::Command, "newwindow", 1])
+            when "top"
+              feed.push([Dialog::Command, "newwindow", 0])
+            when "bottomleft"
+              feed.push([Dialog::Command, "newwindow", 3])
+            when "bottomright"
+              feed.push([Dialog::Command, "newwindow", 4])
+            else
+              compile_dialog_error(file, line_no, "/newwindow only accepts <bottom/top/center/bottomleft/bottomright> or <x, y, width, lines>.")
+            end
+          elsif arguments.length == 4
+            feed.push([Dialog::Command, "newwindow", arguments[0].to_i, arguments[1].to_i, arguments[2].to_i, arguments[3].to_i])
+          else
+            compile_dialog_error(file, line_no, "/newwindow only accepts <bottom/top/center/bottomleft/bottomright> or <x, y, width, lines>.")
+          end
         when "hidewindow"
           arg = arguments[0]
           if !["0", "1"].include?(arg)
@@ -237,6 +268,12 @@ def compile_dialog
         when "lines"
           arg = arguments[0].to_i
           feed.push([Dialog::Command, "lines", arg])
+        when "addpauses"
+          arg = arguments[0].to_i
+          if !["true", "false"].include?(arg)
+            compile_dialog_error(file, line_no, "/hidename only accepts true or false as arguments")
+          end
+          feed.push([Dialog::Command, "addpauses", (arg == "true") ? true : false])
         when "wait"
           arg = arguments[0]
           if arg[arg.length - 1] == "s"
@@ -245,6 +282,14 @@ def compile_dialog
             arg = arg.to_i
           end
           feed.push([Dialog::Command, "wait", arg])
+        when "rest"
+          arg = arguments[0]
+          if arg[arg.length - 1] == "s"
+            arg = (arg[0...(arg.length-1)].to_f * Graphics.frame_rate).round.to_i
+          else
+            arg = arg.to_i
+          end
+          feed.push([Dialog::Command, "rest", arg])
         when "fade"
           tone_color = arguments[0]
           if !["white", "black", "normal", "sepia", "gray", "grey"].include?(tone_color)

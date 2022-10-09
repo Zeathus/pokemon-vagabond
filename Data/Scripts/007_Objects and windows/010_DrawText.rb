@@ -120,7 +120,7 @@ end
 #===============================================================================
 # Format text
 #===============================================================================
-FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2)(\s*\=\s*([^>]*))?>/i
+FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2|wave|wavebow|shake)(\s*\=\s*([^>]*))?>/i
 
 def fmtescape(text)
   if text[/[&<>]/]
@@ -437,6 +437,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
   text = textchunks.join
   textchars = text.scan(/./m)
   colorstack = []
+  effectstack = []
   boldcount = 0
   italiccount = 0
   outlinecount = 0
@@ -594,6 +595,12 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
             rightalign = 1
             lastword = [characters.length, x]
           end
+        when "wave", "wavebow", "shake"
+          if endtag
+            effectstack.pop
+          else
+            effectstack.push(control)
+          end
         end
         controls[i] = nil
       end
@@ -681,7 +688,8 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
                        (boldcount > 0), (italiccount > 0), colors[0], colors[1],
                        (underlinecount > 0), (strikecount > 0), fontname, fontsize,
                        position, graphicRect,
-                       ((outlinecount > 0) ? 1 : 0) + ((outline2count > 0) ? 2 : 0)])
+                       ((outlinecount > 0) ? 1 : 0) + ((outline2count > 0) ? 2 : 0),
+                       (effectstack.length == 0 ? nil : (effectstack[effectstack.length-1]))])
       charactersInternal.push([alignment, y, xStart, textchars[position], extraspace])
     end
     x += width
