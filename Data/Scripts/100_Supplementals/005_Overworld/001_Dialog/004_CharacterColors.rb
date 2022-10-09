@@ -2,6 +2,11 @@ module Dialog
 
   def Dialog.getCharColor(name, tint, haswindow = true)
 
+    if haswindow
+      return Color.new(252, 252, 252) if tint == 0
+      return Color.new(120, 120, 132) if tint == 1
+    end
+
     tint = (tint + 1) % 2 if !haswindow
 
     if name == "PLAYER"
