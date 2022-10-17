@@ -184,7 +184,7 @@ class TalkMessageWindowWrapper
 
   def initialize(viewport)
     @viewport = viewport
-    @msgwindow = pbCreateMessageWindow(nil, nil)
+    @msgwindow = pbCreateMessageWindow(viewport, nil)
     @namebox = NameBoxSprite.new(@msgwindow, @viewport)
     @raw_pos = nil
     self.reset(true)
@@ -764,6 +764,7 @@ class TalkMessageWindows
 
   def initialize
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport.z = 99999
     @focus = 0
     @msgwindows = [
       TalkMessageWindowWrapper.new(@viewport)
