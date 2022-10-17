@@ -43,9 +43,13 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       pbTalk(speech, msgwindows)
     when Dialog::Shout
       speech = _format(action[1])
-      opts["shout"] = true
-      pbTalk(speech, msgwindows)
-      opts["shout"] = false
+      pbShout(speech, msgwindows)
+    when Dialog::Whisper
+      speech = _format(action[1])
+      pbWhisper(speech, msgwindows)
+    when Dialog::Silent
+      speech = _format(action[1])
+      pbSilent(speech, msgwindows)
     when Dialog::Unown
       text = _format(action[1])
       pbShowUnownText(text)
@@ -120,7 +124,7 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           msgwindows.focused.namebox.position = 1
         end
       when "hidename"
-        msgwindows.focused.namebox.hide_name = args[0]
+        msgwindows.focused.namebox.hide_name = (args[0] == 1)
       when "hidenamebox"
         msgwindows.focused.namebox.real_name = nil
       when "window"

@@ -179,6 +179,7 @@ class TalkMessageWindowWrapper
   attr_accessor :active
   attr_accessor :commands
   attr_accessor :line_count
+  attr_accessor :letterbyletter
 
   def initialize(viewport)
     @viewport = viewport
@@ -209,12 +210,14 @@ class TalkMessageWindowWrapper
     @battlepointswindow&.dispose
     @battlepointswindow = nil
     if full
-      if $game_system
-        @message_position = $game_system.message_position
-        @message_frame = $game_system.message_frame
-      else
-        @message_position = 2
-        @message_frame = 0
+      if !@message_position || @message_position <= 2
+        if $game_system
+          @message_position = $game_system.message_position
+          @message_frame = $game_system.message_frame
+        else
+          @message_position = 2
+          @message_frame = 0
+        end
       end
       @portraits&.each { |p| p.dispose }
       @portraits = []
@@ -226,12 +229,12 @@ class TalkMessageWindowWrapper
       @line_count = Supplementals::MESSAGE_WINDOW_LINES
       @text_alignment = 0
       self.visible = false
+      self.reposition
     end
   end
 
   def message_position=(value)
     @message_position = value
-    @raw_pos = nil
     if value == 3 # bottom-left
       @namebox&.position = 1
       self.portrait.position = 3
@@ -646,6 +649,8 @@ class TalkMessageWindowWrapper
     if @namebox&.real_name
       base   = Dialog::getCharColor(@namebox.real_name, 0, @message_frame == 0)
       shadow = Dialog::getCharColor(@namebox.real_name, 1, @message_frame == 0)
+      base   = Dialog.defaultTextColor(0, @message_frame == 0) if !base
+      shadow = Dialog.defaultTextColor(1, @message_frame == 0) if !shadow
       if base && shadow
         value = _INTL("<c2={1}{2}>{3}</c2>",
           colorToRgb16(base).to_s, colorToRgb16(shadow).to_s, value)
@@ -655,6 +660,7 @@ class TalkMessageWindowWrapper
     if @add_pauses
       i = 1
       brackets = 0
+      echoln value
       while i < value.length
         if value[i] == "["
           brackets += 1
@@ -674,6 +680,7 @@ class TalkMessageWindowWrapper
         end
         i += 1
       end
+      echoln value
     end
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
@@ -692,6 +699,7 @@ class TalkMessageWindowWrapper
     if !@portraits[idx]
       @portraits[idx] = PortraitSprite.new(@msgwindow, @viewport)
       @portraits[idx].position = 0 if idx == 1
+      self.message_position = @message_position
     end
     return @portraits[idx]
   end
@@ -703,6 +711,18 @@ class TalkMessageWindowWrapper
   def window_skin=(value)
     value = MessageConfig.pbGetSpeechFrame if value.nil?
     @msgwindow.setSkin(value)
+  end
+
+  def font=(value)
+    @msgwindow.setFont(value)
+  end
+
+  def textspeed
+    return @msgwindow.textspeed
+  end
+
+  def textspeed=(value)
+    @msgwindow.textspeed = value
   end
 
   def reposition
@@ -751,25 +771,41 @@ class TalkMessageWindows
     ]
     @holding = false # Collect messages to display simultaneously
     @queue = [] # Queue in holding
+    @queue_shout = false
+    @queue_whisper = false
+    @queue_silent = false
   end
 
   def holding=(value)
     @holding = value
-    if @queue.length == 1
-      self.display(@queue[0][0], @queue[0][1])
-    elsif @queue.length > 1
-      self.display_queued
-    end
+    self.display_queued
   end
 
   def display_queued
+    oldtextspeeds = []
+    if @queue_shout
+      $game_temp.textSize = 4
+      pbSEPlay("Damage1",100,100)
+      $game_screen.start_shake(2, 25, 10)
+    end
+    if @queue_whisper || @queue_silent
+      @queue.each { |i|
+        i[1].font = (@queue_whisper ? 1 : 2)
+      }
+    end
     windows = []
     @queue.each { |i|
       window = i[1]
       window.text = i[0]
       window.start
       windows.push(window)
+      oldtextspeeds.push(window.textspeed)
     }
+    if @queue_shout
+      windows.each { |w|
+        w.textspeed = -999
+      }
+    end
     loop do
       break if windows.all? { |w| w.refresh }
       Graphics.update
@@ -787,6 +823,19 @@ class TalkMessageWindows
       w.finish
       w.close
     }
+    for i in 0...oldtextspeeds.length
+      windows[i].textspeed = oldtextspeeds[i]
+    end
+    @queue = []
+    @queue_shout = false
+    if @queue_whisper || @queue_silent
+      windows.each { |w|
+        w.font = 0
+      }
+      @queue_whisper = false
+      @queue_silent = false
+    end
+    $game_temp.textSize = 2
   end
 
   def display(text, idx = -1)
@@ -810,6 +859,50 @@ class TalkMessageWindows
       end
       window.finish
       window.close
+    end
+  end
+
+  def shout(text, idx = -1)
+    idx = @focus if idx == -1
+    window = @msgwindows[idx]
+    if @holding
+      @queue.push([text, window])
+      @queue_shout = true
+    else
+      oldtextspeed = window.textspeed
+      window.textspeed = -999
+      $game_temp.textSize = 4
+      $game_screen.start_shake(2, 25, 10)
+      pbSEPlay("Damage1", 100, 100)
+      self.display(text, idx)
+      $game_temp.textSize = 2
+      window.textspeed = oldtextspeed
+    end
+  end
+
+  def whisper(text, idx = -1)
+    idx = @focus if idx == -1
+    window = @msgwindows[idx]
+    if @holding
+      @queue.push([text, window])
+      @queue_whisper = true
+    else
+      window.font = 1
+      self.display(text, idx)
+      window.font = 0
+    end
+  end
+
+  def silent(text, idx = -1)
+    idx = @focus if idx == -1
+    window = @msgwindows[idx]
+    if @holding
+      @queue.push([text, window])
+      @queue_silent = true
+    else
+      window.font = 2
+      self.display(text, idx)
+      window.font = 0
     end
   end
 

@@ -139,8 +139,18 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     super(0, 0, 33, 33)
     @pausesprite      = nil
     @text             = ""
-    @font             = font
     self.contents = Bitmap.new(1, 1)
+    self.setFont(font)
+    self.resizeToFit(text, Graphics.width)
+    colors = getDefaultTextColors(self.windowskin)
+    @baseColor        = colors[0]
+    @shadowColor      = colors[1]
+    self.text         = text
+    @starting         = false
+  end
+
+  def setFont(font)
+    @font = font
     case @font
     when 0
       pbSetSystemFont(self.contents)
@@ -151,12 +161,6 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     when 3
       pbSetNarrowFont(self.contents)
     end
-    self.resizeToFit(text, Graphics.width)
-    colors = getDefaultTextColors(self.windowskin)
-    @baseColor        = colors[0]
-    @shadowColor      = colors[1]
-    self.text         = text
-    @starting         = false
   end
 
   def self.newWithSize(text, x, y, width, height, viewport = nil)
@@ -471,7 +475,8 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
 
   def refresh
     oldcontents = self.contents
-    self.contents = pbDoEnsureBitmap(oldcontents, @bitmapwidth, @bitmapheight)
+    text_size = $game_temp.textSize ? ($game_temp.textSize / 2) : 1
+    self.contents = pbDoEnsureBitmap(oldcontents, @bitmapwidth, @bitmapheight * text_size)
     self.oy       = @scrollY
     numchars = @numtextchars
     numchars = [@curchar, @numtextchars].min if self.letterbyletter

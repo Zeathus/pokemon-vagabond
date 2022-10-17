@@ -2,18 +2,20 @@ module Dialog
   None    = 0
   Talk    = 1
   Shout   = 2
-  Prompt  = 3
-  Choice  = 4
-  Command = 5
-  Unown   = 6
-  If      = 7
-  Else    = 8
-  Elsif   = 9
-  Loop    = 10
-  End     = 11
-  Break   = 12
-  Return  = 13
-  Exit    = 14
+  Whisper = 3
+  Silent  = 4
+  Prompt  = 5
+  Choice  = 6
+  Command = 7
+  Unown   = 8
+  If      = 9
+  Else    = 10
+  Elsif   = 11
+  Loop    = 12
+  End     = 13
+  Break   = 14
+  Return  = 15
+  Exit    = 16
 end
 
 def pbLoadDialog
@@ -102,6 +104,21 @@ def compile_dialog
         end
         shout = line[2...line.length].strip()
         feed.push([Dialog::Shout, shout])
+      when '.'
+        # Whispering
+        if line[1] == '.'
+          if line[2] != '>'
+            compile_dialog_error(file, line_no, "Missing > after .. for silent whispering.")
+          end
+          whisper = line[3...line.length].strip()
+          feed.push([Dialog::Silent, whisper])
+        else
+          if line[1] != '>'
+            compile_dialog_error(file, line_no, "Missing > after . for whispering.")
+          end
+          whisper = line[2...line.length].strip()
+          feed.push([Dialog::Whisper, whisper])
+        end
       when 'U'
         # Unown text
         if line[1] != '>'

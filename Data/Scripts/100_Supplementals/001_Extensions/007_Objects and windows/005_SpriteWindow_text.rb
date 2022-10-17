@@ -51,6 +51,8 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
 
     return if !(@fmtchars[0...numchars].any? { |c| !(c[17].nil?) })
     clear_all = (@fmtchars[0...numchars].all? { |c| !(c[17].nil?) })
+    text_size = $game_temp.textSize ? ($game_temp.textSize / 2) : 1
+    drew_previous = false
 
     @ef_frame = 0 if !@ef_frame
     @ef_frame += 1
@@ -63,11 +65,18 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
           next if @fmtchars[i][1]>=maxX
           next if @fmtchars[i][2]>=maxY
         end
-        next if @fmtchars[i][17].nil?
+        if @fmtchars[i][17].nil?
+          if drew_previous
+            drawSingleFormattedChar(self.contents, @fmtchars[i])
+            drew_previous = false
+          end
+          next
+        end
+        drew_previous = true
         if !clear_all
           self.contents.fill_rect(
             @fmtchars[i][1],@fmtchars[i][2],
-            @fmtchars[i][3],@fmtchars[i][4],
+            @fmtchars[i][3],@fmtchars[i][4]*text_size,
             Color.new(0,0,0,0))
         end
         case @fmtchars[i][17]

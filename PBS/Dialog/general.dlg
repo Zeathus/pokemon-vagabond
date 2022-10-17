@@ -38,7 +38,9 @@
 
 [PORTRAIT_TEST]
 /speaker Kira
-> Hello! Wait... Who are you? Yo, I am Kira.
+> Hello! Wait... <wave>Who are you</wave>? Yo, I am Kira.
+/speaker Kira
+!> I CAN <shake>SHOUT</shake>!
 /reset
 /hold
 /namepos center
@@ -53,10 +55,24 @@
 /start
 /focus 1
 > I can say something <wave>[B]more![/]</wave>
+/hold
+!> WE <wave>BOTH</wave>!
+/focus 2
+!> WE <shake>BOTH</shake>!
+/start
+/reset
+/focus 1
+/speaker Amethyst
+..> You know <PLAYER>?
+/focus 2
+/speaker Kira
+..> Yeah, what [R]a dumbass[/].
 /reset
 /focus 0
 /portrait_left Amethyst
 > <wave>Hello 3.</wave>
+.> <wave>It's a seeeeecret...</wave>
+..> <wave>Suuuuuper seeeeecret...</wave>
 /speaker Amethyst
 > Hello 4.
 /portrait_right Kira
@@ -67,7 +83,6 @@
         > No!!!
 ?/>
 /speaker Kira
-> Hi. Wait... Hello. Yo, I am Kira.
 /expression angry
 > Hello 7.
 /expression_left confused
