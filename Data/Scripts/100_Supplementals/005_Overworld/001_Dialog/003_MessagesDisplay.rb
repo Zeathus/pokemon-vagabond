@@ -67,7 +67,7 @@ class PortraitSprite < IconSprite
         self.x = @msgwindow.x + @msgwindow.width - self.bitmap.width + 32
       end
     end
-    self.z = msgwindow.z
+    self.z = @msgwindow.z
   end
 
   def portrait_file
@@ -160,7 +160,7 @@ class NameBoxSprite < IconSprite
     end
     @overlay.x = self.x
     @overlay.y = self.y
-    self.z = msgwindow.z + 1
+    self.z = @msgwindow.z + 1
     @overlay.z = self.z + 1
   end
 
