@@ -1,11 +1,8 @@
 module Dialog
 
-  def Dialog.getCharColor(name, tint, haswindow = true)
+  def Dialog.getCharColor(name, tint, haswindow = true, force = false)
 
-    if haswindow
-      return Color.new(252, 252, 252) if tint == 0
-      return Color.new(120, 120, 132) if tint == 1
-    end
+    return nil if haswindow && !force
 
     tint = (tint + 1) % 2 if !haswindow
     name = name.downcase
@@ -57,6 +54,10 @@ module Dialog
   end
 
   def Dialog.defaultTextColor(tint, haswindow = true)
+    if haswindow
+      return Color.new(252, 252, 252) if tint == 0
+      return Color.new(120, 120, 132) if tint == 1
+    end
     tint = (tint + 1) % 2 if !haswindow
     return Color.new(80, 80, 88) if tint == 0
     return Color.new(160, 160, 168) if tint == 1

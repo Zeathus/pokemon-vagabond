@@ -147,6 +147,7 @@ def pbTalk(text, msgwindows = nil)
     #format_text = _INTL("{1}{2}</c2>", color, format_text) if color
     #format_text = _INTL("\\w[{1}]{2}", window_type, format_text) if window_type
 
+    echoln text
     msgwindows.display(text)
 
     #pbMessagesDisplay(msgwindow, format_text, controls)

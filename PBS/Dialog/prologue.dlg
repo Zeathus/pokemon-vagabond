@@ -1,6 +1,6 @@
 [PROLOGUE_MEMORY,0]
 /speaker ???
-> Come on!WT You've got to hurry!
+> Come on! You've got to hurry!
 
 [PROLOGUE_MEMORY,1]
 /speaker ???
@@ -8,31 +8,31 @@
 
 [PROLOGUE_MEMORY,2]
 /speaker ???
-> Quickly!WT We don't have much time!
+> Quickly! We don't have much time!
 
 [PROLOGUE_MEMORY,3]
-> Something's coming!\wtnp[30]
+> Something's coming!\[30]
 
 [PROLOGUE_MEMORY,4]
 /speaker ???
 > We are barely going to make it.
 > This is our [R]last resort[/].
-> We're counting on you! \wtnp[20] 
+> We're counting on you! \[20] 
 
 [PROLOGUE_MEMORY,5]
 /windowpos middle
 /hidewindow 1
-> "We're counting on you."\wtnp[40]
+> "We're counting on you."\[40]
 
 [PROLOGUE_NAME]
 /windowpos middle
 /hidewindow 1
 /speaker Celebi none
 /hidename 2
-> ...WT ...WT ...WT
-> ...WT Can you-WT..?
+> ... ... ...
+> ... Can you-..?
 > Can you hear me?
-> I finally reached your consciousness.WT<br>I was afraid you would never respond.
+> I finally reached your consciousness.\nI was afraid you would never respond.
 /loop
     > Can you recall [B]your name[/]?
     /eval pbTrainerName
@@ -45,38 +45,38 @@
 /end
 > You are correct, [B]PLAYER[/] is your name.
 /wait 20
-> Open your eyes.WT Let your heart guide you, and the path shall reveal itself.
+> Open your eyes. Let your heart guide you, and the path shall reveal itself.
 /speaker R-Celebi none
 /hidename 2
-> Onwards, to fate.WT WTNP
+> Onwards, to fate. 
 
 [PROLOGUE_VISION]
 /speaker Celebi none
 /windowpos middle
 /hidewindow 1
 /hidename 2
-> PLAYER.WT.WT.WT
-> You need to.WT.WT.WT go there.WT.WT.
-> Find.WT.WT.
-> ...WT ...WT ...WT
+> PLAYER...
+> You need to... go there...
+> Find...
+> ... ... ...
 /speaker 0
 /windowpos bottom
 /hidewindow 0
 > The voice faded into nothingness.
 
 [PROLOGUE_WAKE_UP]
-> A relieving wind blows through the forest, putting you at ease.WT.WT.
+> A relieving wind blows through the forest, putting you at ease...
 
 [PROLOGUE_CW_DUKE,0]
 /speaker Duke
 /hidename 1
-> Greetings, PLAYER.WT<br>Could you please come here for a moment?
+> Greetings, PLAYER.\nCould you please come here for a moment?
 
 [PROLOGUE_CW_DUKE,1]
 /event set Duke 13
 /speaker Duke
 /hidename 1
-?> I could sense your presence.WT<br>It is strong as always.
+?> I could sense your presence.\nIt is strong as always.
     /choice Do I know you?
         > There may be a world where you know me, but alas, we are not in that world.
     /choice Have we met?
@@ -95,7 +95,7 @@
 !> CHOICES!
 /event Duke sprite trainer_FORETELLER_1 down 0
 /expression neutral
-> Which path will you take?WT<br>Which road will you choose?
+> Which path will you take?\nWhich road will you choose?
 > These are all choices that factor into your journey.
 > Will you take the path to the east, facing [R]heated and durable[/] Pokémon?
 > Maybe face [B]the waves[/] of the south?
@@ -110,12 +110,12 @@
 > That is what I have come to present to you.
 /event Duke sprite trainer_FORETELLER_1 down 1
 /expression power
-> Partner Pokémon, assemble!WTNP
+> Partner Pokémon, assemble!
 /event Duke sprite trainer_FORETELLER_1 down 0
 
 [PROLOGUE_CW_DUKE,2]
 /speaker Duke
-> This is your first choice!WT Now choose wisely.
+> This is your first choice! Now choose wisely.
 /expression point
 > These Pokémon are particularly spry, as they all evolve at level 24.
 
@@ -153,10 +153,10 @@
     /choice Please do!
         > I knew you wouldn't be able to resist my most generous offer.
     /choice No thanks.
-        > The scorn!WT Even after my most generous gift...
-        > However.WT.WT.WT
+        > The scorn! Even after my most generous gift...
+        > However...
 ?/>
-> You had a vision of ruins, did you not?WT<br>I happen to know the way there.
+> You had a vision of ruins, did you not?\nI happen to know the way there.
 ?> Would you like me to guide you to the ruins?
     /choice Yes
     /choice Definitely
@@ -167,19 +167,19 @@
 
 [PROLOGUE_CW_DUKE,4]
 /speaker Duke
-> Marvelous!WT It would be my pleasure.
+> Marvelous! It would be my pleasure.
 > However, we must not get ahead of ourselves.
-> The place you are headed is known as the Evergone Mangrove.WT It is home to strong Pokémon you are yet to match.
+> The place you are headed is known as the Evergone Mangrove. It is home to strong Pokémon you are yet to match.
 > That is why I will only show you the way once you defeat a Gym Leader.
 > Gym Leaders are strong trainers whose job is to test the skill of trainers.
 > In Rokk, we have five such establishments, and three of them are in cities you can reach from this very forest.
 > I will let you lead the way to whichever you wish to battle.
 /expression power
-> ADVENTURE,WT COMMENCE!WTNP
+> ADVENTURE, COMMENCE!\wtnp[20]
 
 [PROLOGUE_DUKE_JOIN]
 /me Slots win
-> \ts[5]Duke has joined the party!WTWTWTNP
+> \ts[5]Duke has joined the party!
 > You can now press X to open the menu.
 
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,0]
@@ -190,17 +190,17 @@
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,1]
 /speaker Duke
 /if pbGetChoice(:Starter) == :KRABBY
-    > Riolu is faster than your Krabby.WT<br>Have Riolu use a Fighting-type move to trigger an Affinity Boost.
+    > Riolu is faster than your Krabby.\nHave Riolu use a Fighting-type move to trigger an Affinity Boost.
 /elsif pbGetChoice(:Starter) == :SKIDDO
-    > Riolu is faster than your Skiddo.WT<br>Have Riolu use a Normal-type move to trigger an Affinity Boost.
+    > Riolu is faster than your Skiddo.\nHave Riolu use a Normal-type move to trigger an Affinity Boost.
 /elsif pbGetChoice(:Starter) == :NUMEL
-    > Riolu is faster than your Numel.WT<br>Have Riolu use a Steel-type move to trigger an Affinity Boost.
+    > Riolu is faster than your Numel.\nHave Riolu use a Steel-type move to trigger an Affinity Boost.
 /end
 
 [PROLOGUE_GYM_DUKE]
 /speaker Duke
 > Well done, PLAYER.
-> You successfully defeated your first Gym.WT\nAs promised, I will show you the way to the Evergone Mangrove.
-> I will have you meet a woman with hair of amethyst.WT She will help you along the way.
+> You successfully defeated your first Gym.\nAs promised, I will show you the way to the Evergone Mangrove.
+> I will have you meet a woman with hair of amethyst. She will help you along the way.
 > To meet up with her, we must go to the lake adjacent to the Evergone Mangrove.
-> That is to the north of Breccia City.WT You can check your map if you are unsure of the way.
+> That is to the north of Breccia City. You can check your map if you are unsure of the way.

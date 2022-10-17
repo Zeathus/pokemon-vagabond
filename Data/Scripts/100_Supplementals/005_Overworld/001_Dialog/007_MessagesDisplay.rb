@@ -143,14 +143,14 @@ class NameBoxSprite < IconSprite
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       textpos = [[
         (@hide_name ? "???" : (@show_name || @real_name)),
-        self.bitmap.width / 2, 12, 2, base, shadow
+        self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
     if @msgwindow.y < self.bitmap.height
-      self.y = @msgwindow.y + @msgwindow.height - 2
+      self.y = @msgwindow.y + @msgwindow.height + 2
     else
-      self.y = @msgwindow.y - self.bitmap.height + 2
+      self.y = @msgwindow.y - self.bitmap.height - 2
     end
     if @position == 0
       self.x = @msgwindow.x + 2
@@ -577,8 +577,8 @@ class TalkMessageWindowWrapper
       index1 = temp.index('[')
       index2 = temp.index(']')
       name = temp[(index1+1)...index2]
-      base = Dialog.getCharColor(name, 0, @message_frame == 0)
-      shadow = Dialog.getCharColor(name, 1, @message_frame == 0)
+      base = Dialog.getCharColor(name, 0, @message_frame == 0, true)
+      shadow = Dialog.getCharColor(name, 1, @message_frame == 0, true)
       if base && shadow
         temp = _INTL("{1}<c2={2}{3}>{4}",
           temp[0...index1],
@@ -644,8 +644,10 @@ class TalkMessageWindowWrapper
     end
 
     if @namebox&.real_name
-      base   = Dialog::getCharColor(@namebox.real_name, 0, @message_frame == 0)
-      shadow = Dialog::getCharColor(@namebox.real_name, 1, @message_frame == 0)
+      base   = Dialog.getCharColor(@namebox.real_name, 0, @message_frame == 0)
+      shadow = Dialog.getCharColor(@namebox.real_name, 1, @message_frame == 0)
+      base   = Dialog.defaultTextColor(0, @message_frame == 0) if !base
+      shadow = Dialog.defaultTextColor(1, @message_frame == 0) if !shadow
       if base && shadow
         value = _INTL("<c2={1}{2}>{3}</c2>",
           colorToRgb16(base).to_s, colorToRgb16(shadow).to_s, value)
