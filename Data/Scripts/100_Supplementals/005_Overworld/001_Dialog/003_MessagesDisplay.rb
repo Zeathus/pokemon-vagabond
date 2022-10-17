@@ -67,6 +67,7 @@ class PortraitSprite < IconSprite
         self.x = @msgwindow.x + @msgwindow.width - self.bitmap.width + 32
       end
     end
+    self.z = msgwindow.z
   end
 
   def portrait_file
@@ -101,8 +102,6 @@ class NameBoxSprite < IconSprite
     self.setBitmap(Dialog::getNameBox(@real_name))
     @overlay    = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(self.bitmap.width, self.bitmap.height)
-    self.z      = 1
-    @overlay.z  = 2
     pbSetSystemFont(@overlay.bitmap)
     self.refresh(true)
   end
@@ -161,6 +160,8 @@ class NameBoxSprite < IconSprite
     end
     @overlay.x = self.x
     @overlay.y = self.y
+    self.z = msgwindow.z + 1
+    @overlay.z = self.z + 1
   end
 
   def dispose
@@ -660,7 +661,6 @@ class TalkMessageWindowWrapper
     if @add_pauses
       i = 1
       brackets = 0
-      echoln value
       while i < value.length
         if value[i] == "["
           brackets += 1
@@ -680,7 +680,6 @@ class TalkMessageWindowWrapper
         end
         i += 1
       end
-      echoln value
     end
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
