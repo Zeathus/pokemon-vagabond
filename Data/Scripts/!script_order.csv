@@ -429,11 +429,10 @@
 @@@001_Dialog
 001_Dialog
 002_Talk
-003_FormatDialog
+003_MessagesDisplay
 004_CharacterColors
 005_Emotes
 006_TextBubbles
-007_MessagesDisplay
 @@006_Battle
 001_ScaleLevel
 002_Abilities

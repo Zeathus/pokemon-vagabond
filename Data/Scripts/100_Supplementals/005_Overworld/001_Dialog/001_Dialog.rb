@@ -59,9 +59,13 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       pbTalk(speech, msgwindows)
     when Dialog::Shout
       speech = _format(action[1])
-      opts["shout"] = true
-      pbTalk(speech, msgwindows)
-      opts["shout"] = false
+      pbShout(speech, msgwindows)
+    when Dialog::Whisper
+      speech = _format(action[1])
+      pbWhisper(speech, msgwindows)
+    when Dialog::Silent
+      speech = _format(action[1])
+      pbSilent(speech, msgwindows)
     when Dialog::Unown
       text = _format(action[1])
       pbShowUnownText(text)
