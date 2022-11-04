@@ -475,7 +475,7 @@ MenuHandlers.add(:debug_menu, :fill_bag, {
       $bag.clear
       # NOTE: This doesn't simply use $bag.add for every item in turn, because
       #       that's really slow when done in bulk.
-      pocket_sizes = Settings::BAG_MAX_POCKET_SIZE
+      pocket_sizes = Supplementals::BAG_MAX_POCKET_SIZE
       bag = $bag.pockets   # Called here so that it only rearranges itself once
       GameData::Item.each do |i|
         next if !pocket_sizes[i.pocket - 1] || pocket_sizes[i.pocket - 1] == 0
