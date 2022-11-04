@@ -6,7 +6,7 @@ def pbGetSuggestedRevive(pkmn)
     :REVIVALHERB
   ]
   for i in 0...items.length
-    if $bag.pbQuantity(items[i]) > 0
+    if $bag.quantity(items[i]) > 0
       return items[i]
     end
   end
@@ -32,7 +32,7 @@ def pbGetSuggestedPotion(pkmn)
   ]
 
   for i in 0...items.length
-    if $bag.pbQuantity(items[i][0]) > 0
+    if $bag.quantity(items[i][0]) > 0
       if !ret || (pkmn.totalhp - pkmn.hp) <= items[i][1]
         ret = items[i][0]
       end
@@ -79,13 +79,13 @@ def pbGetSuggestedMedicine(pkmn)
   ]
 
   for i in 0...items[pkmn.status].length
-    if $bag.pbQuantity(items[pkmn.status][i]) > 0
+    if $bag.quantity(items[pkmn.status][i]) > 0
       return items[pkmn.status][i]
     end
   end
 
   for i in 0...all_items.length
-    if $bag.pbQuantity(all_items[i]) > 0
+    if $bag.quantity(all_items[i]) > 0
       return all_items[i]
     end
   end
@@ -137,7 +137,7 @@ def pbGetSuggestedBall(pkmn, wildpkmn)
 
   rate=0
   for i in 0...items.length
-    if $bag.pbQuantity(items[i][0])>0
+    if $bag.quantity(items[i][0])>0
       if ret==0 || rate<items[i][1]
         ret = items[i][0]
         rate = items[i][1]

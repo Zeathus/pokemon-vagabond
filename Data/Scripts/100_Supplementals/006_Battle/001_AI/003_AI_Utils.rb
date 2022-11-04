@@ -25,7 +25,7 @@ class Battle
   def pbRoughPriority(user, move)
     pri = move.priority
     if user.abilityActive?
-      pri = BattleHandlers.triggerPriorityChangeAbility(user.ability,user,move,pri)
+      pri = Battle::AbilityEffects.triggerPriorityChange(user.ability, user, move, pri)
     end
     return pri
   end
@@ -331,10 +331,10 @@ class Battle
       :CorrosiveAcid
     ]
     @battle_log.write(_INTL("  > Lv. {1} {2} {3}\n", b.level, b.species.to_s, ["M", "F", ""][b.gender]))
-    if b.type1 == b.type2
-      @battle_log.write(_INTL("    Types:   {1} - {2}\n", b.type1, b.pokemon.affinity))
+    if b.types.length == 1
+      @battle_log.write(_INTL("    Types:   {1}\n", b.types[0]))
     else
-      @battle_log.write(_INTL("    Types:   {1}/{2} - {3}\n", b.type1, b.type2, b.pokemon.affinity))
+      @battle_log.write(_INTL("    Types:   {1}/{2}\n", b.types[0], b.types[1]))
     end
     @battle_log.write(_INTL("    HP:      {1} / {2} ({3}%)\n", b.hp.to_i, b.totalhp, (b.hp * 100 / b.totalhp).to_i))
     @battle_log.write(_INTL("    Status:  {1} {2}\n", b.status.to_s, (b.statusCount > 0) ? b.statusCount : 0))
@@ -396,7 +396,7 @@ class Battle::Move
   def pbPredictDamage(user, target, numTargets, queue, boost, options = 0)
     calcType = pbCalcType(user)
     target.damageState.typeMod = pbCalcTypeMod(calcType, user, target)
-    if (pbImmunityByAbility(user, target)) ||
+    if (pbImmunityByAbility(user, target, false)) ||
         (Effectiveness.ineffective?(target.damageState.typeMod)) ||
         (calcType == :GROUND && target.airborne? && !hitsFlyingTargets?)
       target.damageState.reset

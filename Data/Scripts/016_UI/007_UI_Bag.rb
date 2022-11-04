@@ -9,6 +9,7 @@ class Window_PokemonBag < Window_DrawableCommand
     @bag        = bag
     @filterlist = filterlist
     @pocket     = pocket
+    @in_pocket  = false
     @sorting = false
     @adapter = PokemonMartAdapter.new
     super(x, y, width, height)
@@ -20,6 +21,14 @@ class Window_PokemonBag < Window_DrawableCommand
   def dispose
     @swaparrow.dispose
     super
+  end
+
+  def in_pocket
+    return @in_pocket
+  end
+
+  def in_pocket=(value)
+    return @in_pocket = value
   end
 
   def pocket=(value)
@@ -54,9 +63,15 @@ class Window_PokemonBag < Window_DrawableCommand
     end
   end
 
+  def pocketRect(pocket)
+    x = 14 + ((pocket - 1) % 3) * 50
+    y = 50 + ((pocket - 1) / 3).floor * 50
+    return Rect.new(x, y, 60, 60)
+  end
+
   def drawCursor(index, rect)
     if self.index == index
-      bmp = (@sorting) ? @swaparrow.bitmap : @selarrow.bitmap
+      bmp = (@in_pocket) ? ((@sorting) ? @swaparrow.bitmap : @selarrow.bitmap) : @pocketarrow.bitmap
       pbCopyBitmap(self.contents, bmp, rect.x, rect.y + 2)
     end
   end
@@ -111,10 +126,11 @@ class Window_PokemonBag < Window_DrawableCommand
       next if i < self.top_item - 1 || i > self.top_item + self.page_item_max
       drawItem(i, @item_max, itemRect(i))
     end
-    drawCursor(self.index, itemRect(self.index))
+    drawCursor(self.index, itemRect(self.index)) if @in_pocket
   end
 
   def update
+    return if !@in_pocket
     super
     @uparrow.visible   = false
     @downarrow.visible = false
@@ -173,25 +189,10 @@ class PokemonBag_Scene
     end
     @bag.last_viewed_pocket = lastpocket
     @sliderbitmap = AnimatedBitmap.new("Graphics/Pictures/Bag/icon_slider")
-    @pocketbitmap = AnimatedBitmap.new("Graphics/Pictures/Bag/icon_pocket")
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     pbSetSystemFont(@sprites["overlay"].bitmap)
-    @sprites["bagsprite"] = IconSprite.new(30, 20, @viewport)
-    @sprites["pocketicon"] = BitmapSprite.new(186, 32, @viewport)
-    @sprites["pocketicon"].x = 0
-    @sprites["pocketicon"].y = 224
-    @sprites["leftarrow"] = AnimatedSprite.new("Graphics/Pictures/leftarrow", 8, 40, 28, 2, @viewport)
-    @sprites["leftarrow"].x       = -4
-    @sprites["leftarrow"].y       = 76
-    @sprites["leftarrow"].visible = (!@choosing || numfilledpockets > 1)
-    @sprites["leftarrow"].play
-    @sprites["rightarrow"] = AnimatedSprite.new("Graphics/Pictures/rightarrow", 8, 40, 28, 2, @viewport)
-    @sprites["rightarrow"].x       = 150
-    @sprites["rightarrow"].y       = 76
-    @sprites["rightarrow"].visible = (!@choosing || numfilledpockets > 1)
-    @sprites["rightarrow"].play
     @sprites["itemlist"] = Window_PokemonBag.new(@bag, @filterlist, lastpocket, 168, -8, 314, 40 + 32 + (ITEMSVISIBLE * 32))
     @sprites["itemlist"].viewport    = @viewport
     @sprites["itemlist"].pocket      = lastpocket
@@ -212,6 +213,8 @@ class PokemonBag_Scene
     @sprites["msgwindow"] = Window_AdvancedTextPokemon.new("")
     @sprites["msgwindow"].visible  = false
     @sprites["msgwindow"].viewport = @viewport
+    @sprites["pocketarrow"] = IconSprite.new(14, 50, @viewport)
+    @sprites["pocketarrow"].setBitmap("Graphics/Pictures/Bag/cursor_pocket")
     pbBottomLeftLines(@sprites["helpwindow"], 1)
     pbDeactivateWindows(@sprites)
     pbRefresh
@@ -236,7 +239,6 @@ class PokemonBag_Scene
   def dispose
     pbDisposeSpriteHash(@sprites)
     @sliderbitmap.dispose
-    @pocketbitmap.dispose
     @viewport.dispose
   end
 
@@ -259,27 +261,6 @@ class PokemonBag_Scene
   def pbRefresh
     # Set the background image
     @sprites["background"].setBitmap(sprintf("Graphics/Pictures/Bag/bg_#{@bag.last_viewed_pocket}"))
-    # Set the bag sprite
-    fbagexists = pbResolveBitmap(sprintf("Graphics/Pictures/Bag/bag_#{@bag.last_viewed_pocket}_f"))
-    if $player.female? && fbagexists
-      @sprites["bagsprite"].setBitmap("Graphics/Pictures/Bag/bag_#{@bag.last_viewed_pocket}_f")
-    else
-      @sprites["bagsprite"].setBitmap("Graphics/Pictures/Bag/bag_#{@bag.last_viewed_pocket}")
-    end
-    # Draw the pocket icons
-    @sprites["pocketicon"].bitmap.clear
-    if @choosing && @filterlist
-      (1...@bag.pockets.length).each do |i|
-        next if @filterlist[i].length > 0
-        @sprites["pocketicon"].bitmap.blt(
-          6 + ((i - 1) * 22), 6, @pocketbitmap.bitmap, Rect.new((i - 1) * 20, 28, 20, 20)
-        )
-      end
-    end
-    @sprites["pocketicon"].bitmap.blt(
-      2 + ((@sprites["itemlist"].pocket - 1) * 22), 2, @pocketbitmap.bitmap,
-      Rect.new((@sprites["itemlist"].pocket - 1) * 28, 0, 28, 28)
-    )
     # Refresh the item window
     @sprites["itemlist"].refresh
     # Refresh more things
@@ -293,7 +274,7 @@ class PokemonBag_Scene
     # Draw the pocket name
     pbDrawTextPositions(
       overlay,
-      [[PokemonBag.pocket_names[@bag.last_viewed_pocket - 1], 94, 186, 2, POCKETNAMEBASECOLOR, POCKETNAMESHADOWCOLOR]]
+      [[PokemonBag.pocket_names[@bag.last_viewed_pocket - 1], 94, 230, 2, POCKETNAMEBASECOLOR, POCKETNAMESHADOWCOLOR]]
     )
     # Draw slider arrows
     showslider = false
@@ -305,6 +286,10 @@ class PokemonBag_Scene
       overlay.blt(470, 228, @sliderbitmap.bitmap, Rect.new(0, 38, 36, 38))
       showslider = true
     end
+    pocketRect = itemlist.pocketRect(itemlist.pocket)
+    @sprites["pocketarrow"].x = pocketRect.x
+    @sprites["pocketarrow"].y = pocketRect.y
+    @sprites["pocketarrow"].visible = !itemlist.in_pocket
     # Draw slider box
     if showslider
       sliderheight = 174
@@ -380,66 +365,114 @@ class PokemonBag_Scene
             pbRefresh
           end
         else   # Change pockets
-          if Input.trigger?(Input::LEFT)
-            newpocket = itemwindow.pocket
-            loop do
-              newpocket = (newpocket == 1) ? PokemonBag.pocket_count : newpocket - 1
-              break if !@choosing || newpocket == itemwindow.pocket
-              if @filterlist
-                break if @filterlist[newpocket].length > 0
-              elsif @bag.pockets[newpocket].length > 0
-                break
-              end
-            end
-            if itemwindow.pocket != newpocket
-              itemwindow.pocket = newpocket
-              @bag.last_viewed_pocket = itemwindow.pocket
-              thispocket = @bag.pockets[itemwindow.pocket]
-              pbPlayCursorSE
+          if itemwindow.in_pocket
+            if Input.trigger?(Input::BACK)   # Cancel the item screen
+              pbPlayCloseMenuSE
+              itemwindow.in_pocket = false
               pbRefresh
-            end
-          elsif Input.trigger?(Input::RIGHT)
-            newpocket = itemwindow.pocket
-            loop do
-              newpocket = (newpocket == PokemonBag.pocket_count) ? 1 : newpocket + 1
-              break if !@choosing || newpocket == itemwindow.pocket
-              if @filterlist
-                break if @filterlist[newpocket].length > 0
-              elsif @bag.pockets[newpocket].length > 0
-                break
+            elsif Input.trigger?(Input::ACTION)   # Start switching the selected item
+              if !@choosing && thispocket.length > 1 && itemwindow.index < thispocket.length &&
+                !Supplementals::BAG_POCKET_AUTO_SORT[itemwindow.pocket - 1]
+                itemwindow.sorting = true
+                swapinitialpos = itemwindow.index
+                pbPlayDecisionSE
+                pbRefresh
               end
+            elsif Input.trigger?(Input::USE)   # Choose selected item
+              (itemwindow.item) ? pbPlayDecisionSE : pbPlayCloseMenuSE
+              return itemwindow.item
             end
-            if itemwindow.pocket != newpocket
-              itemwindow.pocket = newpocket
-              @bag.last_viewed_pocket = itemwindow.pocket
-              thispocket = @bag.pockets[itemwindow.pocket]
-              pbPlayCursorSE
-              pbRefresh
-            end
-#          elsif Input.trigger?(Input::SPECIAL)   # Register/unregister selected item
-#            if !@choosing && itemwindow.index<thispocket.length
-#              if @bag.registered?(itemwindow.item)
-#                @bag.unregister(itemwindow.item)
-#              elsif pbCanRegisterItem?(itemwindow.item)
-#                @bag.register(itemwindow.item)
-#              end
-#              pbPlayDecisionSE
-#              pbRefresh
-#            end
-          elsif Input.trigger?(Input::ACTION)   # Start switching the selected item
-            if !@choosing && thispocket.length > 1 && itemwindow.index < thispocket.length &&
-               !Settings::BAG_POCKET_AUTO_SORT[itemwindow.pocket - 1]
-              itemwindow.sorting = true
-              swapinitialpos = itemwindow.index
+          else
+            if Input.trigger?(Input::LEFT)
+              newpocket = itemwindow.pocket
+              loop do
+                newpocket = (newpocket % 3 == 1) ? newpocket + 2 : newpocket - 1
+                break if !@choosing || newpocket == itemwindow.pocket
+                if @filterlist
+                  break if @filterlist[newpocket].length > 0
+                elsif @bag.pockets[newpocket].length > 0
+                  break
+                end
+              end
+              if itemwindow.pocket != newpocket
+                itemwindow.pocket = newpocket
+                @bag.last_viewed_pocket = itemwindow.pocket
+                thispocket = @bag.pockets[itemwindow.pocket]
+                pbPlayCursorSE
+                pbRefresh
+              end
+            elsif Input.trigger?(Input::RIGHT)
+              newpocket = itemwindow.pocket
+              loop do
+                newpocket = (newpocket % 3 == 0) ? newpocket - 2 : newpocket + 1
+                break if !@choosing || newpocket == itemwindow.pocket
+                if @filterlist
+                  break if @filterlist[newpocket].length > 0
+                elsif @bag.pockets[newpocket].length > 0
+                  break
+                end
+              end
+              if itemwindow.pocket != newpocket
+                itemwindow.pocket = newpocket
+                @bag.last_viewed_pocket = itemwindow.pocket
+                thispocket = @bag.pockets[itemwindow.pocket]
+                pbPlayCursorSE
+                pbRefresh
+              end
+            elsif Input.trigger?(Input::UP)
+              newpocket = itemwindow.pocket
+              loop do
+                newpocket = (newpocket <= 3) ? newpocket + 6 : newpocket - 3
+                break if !@choosing || newpocket == itemwindow.pocket
+                if @filterlist
+                  break if @filterlist[newpocket].length > 0
+                elsif @bag.pockets[newpocket].length > 0
+                  break
+                end
+              end
+              if itemwindow.pocket != newpocket
+                itemwindow.pocket = newpocket
+                @bag.last_viewed_pocket = itemwindow.pocket
+                thispocket = @bag.pockets[itemwindow.pocket]
+                pbPlayCursorSE
+                pbRefresh
+              end
+            elsif Input.trigger?(Input::DOWN)
+              newpocket = itemwindow.pocket
+              loop do
+                newpocket = (newpocket >= 7) ? newpocket - 6 : newpocket + 3
+                break if !@choosing || newpocket == itemwindow.pocket
+                if @filterlist
+                  break if @filterlist[newpocket].length > 0
+                elsif @bag.pockets[newpocket].length > 0
+                  break
+                end
+              end
+              if itemwindow.pocket != newpocket
+                itemwindow.pocket = newpocket
+                @bag.last_viewed_pocket = itemwindow.pocket
+                thispocket = @bag.pockets[itemwindow.pocket]
+                pbPlayCursorSE
+                pbRefresh
+              end
+  #          elsif Input.trigger?(Input::SPECIAL)   # Register/unregister selected item
+  #            if !@choosing && itemwindow.index<thispocket.length
+  #              if @bag.registered?(itemwindow.item)
+  #                @bag.unregister(itemwindow.item)
+  #              elsif pbCanRegisterItem?(itemwindow.item)
+  #                @bag.register(itemwindow.item)
+  #              end
+  #              pbPlayDecisionSE
+  #              pbRefresh
+  #            end
+            elsif Input.trigger?(Input::BACK)   # Cancel the item screen
+              pbPlayCloseMenuSE
+              return nil
+            elsif Input.trigger?(Input::USE)   # Choose selected item
               pbPlayDecisionSE
+              itemwindow.in_pocket = true
               pbRefresh
             end
-          elsif Input.trigger?(Input::BACK)   # Cancel the item screen
-            pbPlayCloseMenuSE
-            return nil
-          elsif Input.trigger?(Input::USE)   # Choose selected item
-            (itemwindow.item) ? pbPlayDecisionSE : pbPlayCloseMenuSE
-            return itemwindow.item
           end
         end
       end

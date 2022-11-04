@@ -533,6 +533,9 @@ class TrainerBattle
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable, true)
     end
+    outcome = 0
+    foe_party = nil
+    foe_trainers = nil
     loop do
       # Record information about party Pokémon to be used at the end of battle (e.g.
       # comparing levels for an evolution check)
@@ -589,7 +592,9 @@ class TrainerBattle
       foe_party.each { |pokemon|
         Scaling.reset_difficulty(pokemon)
       }
-      Scaling.update(trainer)
+      foe_trainers.each { |trainer|
+        Scaling.update(trainer)
+      }
     end
     return outcome
   end

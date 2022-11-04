@@ -18,8 +18,8 @@ module Supplementals
       _INTL("Key Items")
     ]
   end
-  BAG_MAX_POCKET_SIZE = [0, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-  BAG_POCKET_AUTO_SORT = [0, false, false, false, false, false, false, true, false, false]
+  BAG_MAX_POCKET_SIZE = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
+  BAG_POCKET_AUTO_SORT = [false, false, false, false, false, false, true, false, false]
 
   #=============================================================================
   ### OVERWORLD OPTIONS ###
