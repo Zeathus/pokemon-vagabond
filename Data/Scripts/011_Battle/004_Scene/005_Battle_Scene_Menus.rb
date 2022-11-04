@@ -116,10 +116,10 @@ class Battle::Scene::CommandMenu < Battle::Scene::MenuBase
   def initialize(viewport, z)
     super(viewport)
     self.x = 0
-    self.y = Graphics.height - 96
+    self.y = viewport.rect.height - 96
     # Create message box (shows "What will X do?")
     @msgBox = Window_UnformattedTextPokemon.newWithSize(
-      "", self.x + 16, self.y + 2, 220, Graphics.height - self.y, viewport
+      "", self.x + 16, self.y + 2, 220, viewport.rect.height - self.y, viewport
     )
     @msgBox.baseColor   = TEXT_BASE_COLOR
     @msgBox.shadowColor = TEXT_SHADOW_COLOR
@@ -136,7 +136,7 @@ class Battle::Scene::CommandMenu < Battle::Scene::MenuBase
       @buttons = Array.new(4) do |i|   # 4 command options, therefore 4 buttons
         button = Sprite.new(viewport)
         button.bitmap = @buttonBitmap.bitmap
-        button.x = self.x + Graphics.width - 260
+        button.x = self.x + viewport.rect.width - 260
         button.x += (i.even? ? 0 : (@buttonBitmap.width / 2) - 4)
         button.y = self.y + 6
         button.y += (((i / 2) == 0) ? 0 : BUTTON_HEIGHT - 4)
@@ -148,7 +148,7 @@ class Battle::Scene::CommandMenu < Battle::Scene::MenuBase
     else
       # Create command window (shows Fight/Bag/Pokémon/Run)
       @cmdWindow = Window_CommandPokemon.newWithSize(
-        [], self.x + Graphics.width - 240, self.y, 240, Graphics.height - self.y, viewport
+        [], self.x + viewport.rect.width - 240, self.y, 240, viewport.rect.height - self.y, viewport
       )
       @cmdWindow.columns       = 2
       @cmdWindow.columnSpacing = 4
@@ -224,7 +224,7 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
   def initialize(viewport, z)
     super(viewport)
     self.x = 0
-    self.y = Graphics.height - 96
+    self.y = viewport.rect.height - 96
     @battler   = nil
     @shiftMode = 0
     # NOTE: @mode is for the display of the Mega Evolution button.
@@ -236,7 +236,7 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
       @megaEvoBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/cursor_mega"))
       @shiftBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/cursor_shift"))
       # Create background graphic
-      background = IconSprite.new(0, Graphics.height - 96, viewport)
+      background = IconSprite.new(0, viewport.rect.height - 96, viewport)
       background.setBitmap("Graphics/Pictures/Battle/overlay_fight")
       addSprite("background", background)
       # Create move buttons
@@ -253,13 +253,13 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
         next button
       end
       # Create overlay for buttons (shows move names)
-      @overlay = BitmapSprite.new(Graphics.width, Graphics.height - self.y, viewport)
+      @overlay = BitmapSprite.new(viewport.rect.width, viewport.rect.height - self.y, viewport)
       @overlay.x = self.x
       @overlay.y = self.y
       pbSetNarrowFont(@overlay.bitmap)
       addSprite("overlay", @overlay)
       # Create overlay for selected move's info (shows move's PP)
-      @infoOverlay = BitmapSprite.new(Graphics.width, Graphics.height - self.y, viewport)
+      @infoOverlay = BitmapSprite.new(viewport.rect.width, viewport.rect.height - self.y, viewport)
       @infoOverlay.x = self.x
       @infoOverlay.y = self.y
       pbSetNarrowFont(@infoOverlay.bitmap)
@@ -287,7 +287,7 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
     else
       # Create message box (shows type and PP of selected move)
       @msgBox = Window_AdvancedTextPokemon.newWithSize(
-        "", self.x + 320, self.y, Graphics.width - 320, Graphics.height - self.y, viewport
+        "", self.x + 320, self.y, viewport.rect.width - 320, viewport.rect.height - self.y, viewport
       )
       @msgBox.baseColor   = TEXT_BASE_COLOR
       @msgBox.shadowColor = TEXT_SHADOW_COLOR
@@ -295,7 +295,7 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
       addSprite("msgBox", @msgBox)
       # Create command window (shows moves)
       @cmdWindow = Window_CommandPokemon.newWithSize(
-        [], self.x, self.y, 320, Graphics.height - self.y, viewport
+        [], self.x, self.y, 320, viewport.rect.height - self.y, viewport
       )
       @cmdWindow.columns       = 2
       @cmdWindow.columnSpacing = 4
@@ -466,8 +466,8 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     @sideSizes = sideSizes
     maxIndex = (@sideSizes[0] > @sideSizes[1]) ? (@sideSizes[0] - 1) * 2 : (@sideSizes[1] * 2) - 1
     @smallButtons = (@sideSizes.max > 2)
-    self.x = 0
-    self.y = Graphics.height - 96
+    self.x = (Graphics.width - 512) / 2
+    self.y = viewport.rect.height - 96
     @texts = []
     # NOTE: @mode is for which buttons are shown as selected.
     #       0=select 1 button (@index), 1=select all buttons with text
@@ -497,7 +497,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       next button
     end
     # Create overlay (shows target names)
-    @overlay = BitmapSprite.new(Graphics.width, Graphics.height - self.y, viewport)
+    @overlay = BitmapSprite.new(viewport.rect.width, viewport.rect.height - self.y, viewport)
     @overlay.x = self.x
     @overlay.y = self.y
     pbSetNarrowFont(@overlay.bitmap)

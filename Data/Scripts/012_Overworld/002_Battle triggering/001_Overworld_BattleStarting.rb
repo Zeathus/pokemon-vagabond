@@ -171,8 +171,8 @@ module BattleCreationHelperMethods
   end
 
   def partner_can_participate?(foe_party)
-    return false if !isInParty
-    return false if !$PokemonGlobal.partner || $game_temp.battle_rules["noPartner"]
+    return false if !isInParty && !$PokemonGlobal.partner
+    return false if $game_temp.battle_rules["noPartner"]
     return true if foe_party.length > 1
     if $game_temp.battle_rules["size"]
       return false if $game_temp.battle_rules["size"] == "single" ||
@@ -538,6 +538,9 @@ class TrainerBattle
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable, true)
     end
+    outcome = 0
+    foe_party = nil
+    foe_trainers = nil
     loop do
       # Record information about party Pokémon to be used at the end of battle (e.g.
       # comparing levels for an evolution check)
@@ -594,7 +597,9 @@ class TrainerBattle
       foe_party.each { |pokemon|
         Scaling.reset_difficulty(pokemon)
       }
-      Scaling.update(trainer)
+      foe_trainers.each { |trainer|
+        Scaling.update(trainer)
+      }
     end
     return outcome
   end

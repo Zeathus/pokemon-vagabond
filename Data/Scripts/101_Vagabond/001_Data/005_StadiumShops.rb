@@ -61,7 +61,7 @@ def pbStadiumShop2
   hasRing = false
   for i in megaRings
     next if !hasConst?(PBItems,i)
-    hasRing = true if $PokemonBag.pbQuantity(i)>0
+    hasRing = true if $bag.quantity(i)>0
   end
   if hasRing
     items.push(:DECIDIUMZ)

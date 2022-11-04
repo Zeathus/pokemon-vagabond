@@ -41,10 +41,10 @@ class Battle::Scene::Animation::Intro < Battle::Scene::Animation
     blackScreen.setZ(0, 999)
     blackScreen.moveOpacity(0, 8, 0)
     # Fading blackness over command bar
-    blackBar = addNewSprite(@sprites["cmdBar_bg"].x, @sprites["cmdBar_bg"].y,
-                            "Graphics/Battle animations/black_bar")
-    blackBar.setZ(0, 998)
-    blackBar.moveOpacity(appearTime * 3 / 4, appearTime / 4, 0)
+    #blackBar = addNewSprite(@sprites["cmdBar_bg"].x, @sprites["cmdBar_bg"].y,
+    #                        "Graphics/Battle animations/black_bar")
+    #blackBar.setZ(0, 998)
+    #blackBar.moveOpacity(appearTime * 3 / 4, appearTime / 4, 0)
   end
 
   def makeSlideSprite(spriteName, deltaMult, appearTime, origin = nil)
@@ -52,8 +52,8 @@ class Battle::Scene::Animation::Intro < Battle::Scene::Animation
     # left (for sprites on the player's side and the background).
     return if !@sprites[spriteName]
     s = addSprite(@sprites[spriteName], origin)
-    s.setDelta(0, (Graphics.width * deltaMult).floor, 0)
-    s.moveDelta(0, appearTime, (-Graphics.width * deltaMult).floor, 0)
+    s.setDelta(0, (@viewport.rect.width * deltaMult).floor, 0)
+    s.moveDelta(0, appearTime, (-@viewport.rect.width * deltaMult).floor, 0)
   end
 end
 
@@ -93,16 +93,16 @@ class Battle::Scene::Animation::LineupAppear < Battle::Scene::Animation
     @party       = party
     @partyStarts = partyStarts
     @fullAnim    = fullAnim   # True at start of battle, false when switching
-    resetGraphics(sprites)
     super(sprites, viewport)
+    resetGraphics(sprites)
   end
 
   def resetGraphics(sprites)
     bar = sprites["partyBar_#{@side}"]
     case @side
     when 0   # Player's lineup
-      barX  = Graphics.width - BAR_DISPLAY_WIDTH
-      barY  = Graphics.height - 142
+      barX  = @viewport.rect.width - BAR_DISPLAY_WIDTH
+      barY  = @viewport.rect.height - 142
       ballX = barX + 44
       ballY = barY - 30
     when 1   # Opposing lineup
@@ -151,8 +151,8 @@ class Battle::Scene::Animation::LineupAppear < Battle::Scene::Animation
     bar = addSprite(@sprites["partyBar_#{@side}"])
     bar.setVisible(0, true)
     dir = (@side == 0) ? 1 : -1
-    bar.setDelta(0, dir * Graphics.width / 2, 0)
-    bar.moveDelta(0, 8, -dir * Graphics.width / 2, 0)
+    bar.setDelta(0, dir * @viewport.rect.width / 2, 0)
+    bar.moveDelta(0, 8, -dir * @viewport.rect.width / 2, 0)
     delay = bar.totalDuration
     Battle::Scene::NUM_BALLS.times do |i|
       createBall(i, (@fullAnim) ? delay + (i * 2) : 0, dir)
@@ -176,8 +176,8 @@ class Battle::Scene::Animation::LineupAppear < Battle::Scene::Animation
     ball = addSprite(@sprites["partyBall_#{@side}_#{idxBall}"])
     ball.setVisible(delay, true)
     ball.setName(delay, graphicFilename)
-    ball.setDelta(delay, dir * Graphics.width / 2, 0)
-    ball.moveDelta(delay, 8, -dir * Graphics.width / 2, 0)
+    ball.setDelta(delay, dir * @viewport.rect.width / 2, 0)
+    ball.moveDelta(delay, 8, -dir * @viewport.rect.width / 2, 0)
   end
 end
 
@@ -197,8 +197,8 @@ class Battle::Scene::Animation::DataBoxAppear < Battle::Scene::Animation
     box = addSprite(@sprites["dataBox_#{@idxBox}"])
     box.setVisible(0, true)
     dir = (@idxBox.even?) ? 1 : -1
-    box.setDelta(0, dir * Graphics.width / 2, 0)
-    box.moveDelta(0, 8, -dir * Graphics.width / 2, 0)
+    box.setDelta(0, dir * @viewport.rect.width / 2, 0)
+    box.moveDelta(0, 8, -dir * @viewport.rect.width / 2, 0)
   end
 end
 
@@ -217,7 +217,7 @@ class Battle::Scene::Animation::DataBoxDisappear < Battle::Scene::Animation
     return if !@sprites["dataBox_#{@idxBox}"] || !@sprites["dataBox_#{@idxBox}"].visible
     box = addSprite(@sprites["dataBox_#{@idxBox}"])
     dir = (@idxBox.even?) ? 1 : -1
-    box.moveDelta(0, 8, dir * Graphics.width / 2, 0)
+    box.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
     box.setVisible(8, false)
   end
 end
@@ -238,7 +238,7 @@ class Battle::Scene::Animation::AbilitySplashAppear < Battle::Scene::Animation
     bar = addSprite(@sprites["abilityBar_#{@side}"])
     bar.setVisible(0, true)
     dir = (@side == 0) ? 1 : -1
-    bar.moveDelta(0, 8, dir * Graphics.width / 2, 0)
+    bar.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
   end
 end
 
@@ -257,7 +257,7 @@ class Battle::Scene::Animation::AbilitySplashDisappear < Battle::Scene::Animatio
     return if !@sprites["abilityBar_#{@side}"]
     bar = addSprite(@sprites["abilityBar_#{@side}"])
     dir = (@side == 0) ? -1 : 1
-    bar.moveDelta(0, 8, dir * Graphics.width / 2, 0)
+    bar.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
     bar.setVisible(8, false)
   end
 end
@@ -280,18 +280,18 @@ class Battle::Scene::Animation::TrainerAppear < Battle::Scene::Animation
     # Make old trainer sprite move off-screen first if necessary
     if @idxTrainer > 0 && @sprites["trainer_#{@idxTrainer}"].visible
       oldTrainer = addSprite(@sprites["trainer_#{@idxTrainer}"], PictureOrigin::BOTTOM)
-      oldTrainer.moveDelta(delay, 8, Graphics.width / 4, 0)
+      oldTrainer.moveDelta(delay, 8, @viewport.rect.width / 4, 0)
       oldTrainer.setVisible(delay + 8, false)
       delay = oldTrainer.totalDuration
     end
     # Make new trainer sprite move on-screen
     if @sprites["trainer_#{@idxTrainer + 1}"]
       trainerX, trainerY = Battle::Scene.pbTrainerPosition(1)
-      trainerX += 64 + (Graphics.width / 4)
+      trainerX += 64 + (@viewport.rect.width / 4)
       newTrainer = addSprite(@sprites["trainer_#{@idxTrainer + 1}"], PictureOrigin::BOTTOM)
       newTrainer.setVisible(delay, true)
       newTrainer.setXY(delay, trainerX, trainerY)
-      newTrainer.moveDelta(delay, 8, -Graphics.width / 4, 0)
+      newTrainer.moveDelta(delay, 8, -@viewport.rect.width / 4, 0)
     end
   end
 end
@@ -319,7 +319,7 @@ class Battle::Scene::Animation::PlayerFade < Battle::Scene::Animation
       i += 1
       next if !pl.visible || pl.x < 0
       trainer = addSprite(pl, PictureOrigin::BOTTOM)
-      trainer.moveDelta(0, 16, -Graphics.width / 2, 0)
+      trainer.moveDelta(0, 16, -@viewport.rect.width / 2, 0)
       # Animate trainer sprite(s) if they have multiple frames
       if pl.bitmap && !pl.bitmap.disposed? && pl.bitmap.width >= pl.bitmap.height * 2
         size = pl.src_rect.width   # Width per frame
@@ -334,7 +334,7 @@ class Battle::Scene::Animation::PlayerFade < Battle::Scene::Animation
     delay = 3
     if @sprites["partyBar_0"]&.visible
       partyBar = addSprite(@sprites["partyBar_0"])
-      partyBar.moveDelta(delay, 16, -Graphics.width / 4, 0) if @fullAnim
+      partyBar.moveDelta(delay, 16, -@viewport.rect.width / 4, 0) if @fullAnim
       partyBar.moveOpacity(delay, 12, 0)
       partyBar.setVisible(delay + 12, false)
       partyBar.setOpacity(delay + 12, 255)
@@ -342,7 +342,7 @@ class Battle::Scene::Animation::PlayerFade < Battle::Scene::Animation
     Battle::Scene::NUM_BALLS.times do |i|
       next if !@sprites["partyBall_0_#{i}"] || !@sprites["partyBall_0_#{i}"].visible
       partyBall = addSprite(@sprites["partyBall_0_#{i}"])
-      partyBall.moveDelta(delay + (2 * i), 16, -Graphics.width, 0) if @fullAnim
+      partyBall.moveDelta(delay + (2 * i), 16, -@viewport.rect.width, 0) if @fullAnim
       partyBall.moveOpacity(delay, 12, 0)
       partyBall.setVisible(delay + 12, false)
       partyBall.setOpacity(delay + 12, 255)
@@ -370,16 +370,16 @@ class Battle::Scene::Animation::TrainerFade < Battle::Scene::Animation
     while @sprites[spriteNameBase + "_#{i}"]
       trSprite = @sprites[spriteNameBase + "_#{i}"]
       i += 1
-      next if !trSprite.visible || trSprite.x > Graphics.width
+      next if !trSprite.visible || trSprite.x > @viewport.rect.width
       trainer = addSprite(trSprite, PictureOrigin::BOTTOM)
-      trainer.moveDelta(0, 16, Graphics.width / 2, 0)
+      trainer.moveDelta(0, 16, @viewport.rect.width / 2, 0)
       trainer.setVisible(16, false)
     end
     # Move and fade party bar/balls
     delay = 3
     if @sprites["partyBar_1"]&.visible
       partyBar = addSprite(@sprites["partyBar_1"])
-      partyBar.moveDelta(delay, 16, Graphics.width / 4, 0) if @fullAnim
+      partyBar.moveDelta(delay, 16, @viewport.rect.width / 4, 0) if @fullAnim
       partyBar.moveOpacity(delay, 12, 0)
       partyBar.setVisible(delay + 12, false)
       partyBar.setOpacity(delay + 12, 255)
@@ -387,7 +387,7 @@ class Battle::Scene::Animation::TrainerFade < Battle::Scene::Animation
     Battle::Scene::NUM_BALLS.times do |i|
       next if !@sprites["partyBall_1_#{i}"] || !@sprites["partyBall_1_#{i}"].visible
       partyBall = addSprite(@sprites["partyBall_1_#{i}"])
-      partyBall.moveDelta(delay + (2 * i), 16, Graphics.width, 0) if @fullAnim
+      partyBall.moveDelta(delay + (2 * i), 16, @viewport.rect.width, 0) if @fullAnim
       partyBall.moveOpacity(delay, 12, 0)
       partyBall.setVisible(delay + 12, false)
       partyBall.setOpacity(delay + 12, 255)
@@ -872,7 +872,7 @@ class Battle::Scene::Animation::PokeballThrowDeflect < Battle::Scene::Animation
     # Poké Ball knocked back
     delay = ball.totalDuration
     ball.setSE(delay, "Battle ball drop")
-    ball.moveXY(delay, 8, -32, Graphics.height - 96 + 32)   # Back to player's corner
+    ball.moveXY(delay, 8, -32, @viewport.rect.height - 96 + 32)   # Back to player's corner
     createBallTumbling(ball, delay, 8)
   end
 end

@@ -25,7 +25,7 @@ class Window_Jobs < Window_DrawableCommand
     rect=drawCursor(index,rect)
     ypos=rect.y
     itemname=@items[index]
-    textpos.push([itemname,rect.x,ypos-4,false,self.baseColor,self.shadowColor])
+    textpos.push([itemname,rect.x,ypos+2,false,self.baseColor,self.shadowColor])
     pbDrawTextPositions(self.contents,textpos)
   end
 end
@@ -45,12 +45,13 @@ class PokemonJobs_Scene
       addBackgroundPlane(@sprites,"bg","Trainer Card/bg",@viewport)
     end
     cardexists = pbResolveBitmap(sprintf("Graphics/Pictures/Trainer Card/card_f"))
-    @jobs = ["Trainer", "Stats"]
+    @jobs = ["Trainer"]
     for job in pbJobs
       if job.level > 0
         @jobs.push(job.name)
       end
     end
+    @jobs.push("General Stats", "Battle Stats")
     @sprites["listbg"] = IconSprite.new(0,48,@viewport)
     @sprites["listbg"].setBitmap("Graphics/Pictures/Trainer Card/list")
     @sprites["itemlist"]=Window_Jobs.new(@jobs, -12, 54, 264, Graphics.height - 56)
@@ -96,8 +97,10 @@ class PokemonJobs_Scene
       case job
       when "Trainer"
         pbDrawTrainerCard(card, overlay)
-      when "Stats"
-        pbDrawStats(card, overlay)
+      when "General Stats"
+        pbDrawStats(card, overlay, "general")
+      when "Battle Stats"
+        pbDrawStats(card, overlay, "battle")
       else
         pbDrawJob(job, card, overlay)
       end
@@ -141,18 +144,18 @@ class PokemonJobs_Scene
        $PokemonGlobal.startTime.day,
        $PokemonGlobal.startTime.year)
     textPositions = [
-       [_INTL("Name"),34,58,0,baseColor,shadowColor],
-       [$player.name,302,58,1,baseColor,shadowColor],
-       [_INTL("ID No."),332,58,0,baseColor,shadowColor],
-       [sprintf("%05d",$player.public_ID),468,58,1,baseColor,shadowColor],
-       [_INTL("Money"),34,106,0,baseColor,shadowColor],
-       [_INTL("${1}",$player.money.to_s_formatted),302,106,1,baseColor,shadowColor],
-       [_INTL("Pokédex"),34,154,0,baseColor,shadowColor],
-       [sprintf("%d/%d",$player.pokedex.owned_count,$player.pokedex.seen_count),302,154,1,baseColor,shadowColor],
-       [_INTL("Time"),34,202,0,baseColor,shadowColor],
-       [time,302,202,1,baseColor,shadowColor],
-       [_INTL("Started"),34,250,0,baseColor,shadowColor],
-       [starttime,302,250,1,baseColor,shadowColor]
+       [_INTL("Name"),34,70,0,baseColor,shadowColor],
+       [$player.name,302,70,1,baseColor,shadowColor],
+       [_INTL("ID No."),332,70,0,baseColor,shadowColor],
+       [sprintf("%05d",$player.public_ID),468,70,1,baseColor,shadowColor],
+       [_INTL("Money"),34,118,0,baseColor,shadowColor],
+       [_INTL("${1}",$player.money.to_s_formatted),302,118,1,baseColor,shadowColor],
+       [_INTL("Pokédex"),34,166,0,baseColor,shadowColor],
+       [sprintf("%d/%d",$player.pokedex.owned_count,$player.pokedex.seen_count),302,166,1,baseColor,shadowColor],
+       [_INTL("Time"),34,214,0,baseColor,shadowColor],
+       [time,302,214,1,baseColor,shadowColor],
+       [_INTL("Started"),34,262,0,baseColor,shadowColor],
+       [starttime,302,262,1,baseColor,shadowColor]
     ]
     if $game_switches[GPO_MEMBER]
       count = $game_variables[MINIQUESTCOUNT]
@@ -189,37 +192,65 @@ class PokemonJobs_Scene
     pbDrawImagePositions(overlay.bitmap,imagePositions)
   end
 
-  def pbDrawStats(card, overlay)
-    if $game_switches[GPO_MEMBER]
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_gpo_2")
-    else
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_2")
-    end
+  def pbDrawStats(card, overlay, section="general")
+    card.setBitmap("Graphics/Pictures/Trainer Card/card_2")
     return if !overlay
     #@sprites["trainer"].visible=false
     overlay.bitmap.clear
     baseColor=Color.new(72,72,72)
     shadowColor=Color.new(160,160,160)
     quest = pbGetQuestProgress
+    stats = []
+    case section
+    when "general"
+      stats = [
+        ["Heals at Poké Centers", $stats.poke_center_count],
+        ["Times Evolved", $stats.evolution_count],
+        ["Eggs Hatched", $stats.eggs_hatched],
+        ["Berries Picked", $stats.berry_plants_picked],
+        ["$ Spent at Marts", $stats.money_spent_at_marts],
+        ["$ Earned at Marts", $stats.money_earned_at_marts],
+        ["Distance Walked", $stats.distance_walked],
+        ["Distance Surfed", $stats.distance_surfed]
+      ]
+    when "battle"
+      stats = [
+        ["Affinity Boosts", $stats.affinity_boosts || 0],
+        ["Trainer Battles Won", $stats.trainer_battles_won],
+        ["Trainer Battles Lost", $stats.trainer_battles_lost],
+        ["Wild Battles Won", $stats.wild_battles_won],
+        ["Wild Battles Lost", $stats.wild_battles_lost],
+        ["Total Exp. Gained", $stats.total_exp_gained],
+        ["Prize Money Earned", $stats.battle_money_gained],
+        ["Times Blacked Out", $stats.blacked_out_count]
+      ]
+    end
+    textPositions = []
+    for i in 0...stats.length
+      textPositions.push([stats[i][0],84,88 + i * 32,0,baseColor,shadowColor])
+      textPositions.push([_INTL("{1}", stats[i][1]),422,88 + i * 32,1,baseColor,shadowColor])
+    end
+    pbDrawTextPositions(overlay.bitmap,textPositions)
+    return
     textPositions=[
-       [_INTL("Trainer Battles"),84,82,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.battles),422,82,1,baseColor,shadowColor],
-       [_INTL("Wins vs. Trainers"),84,114,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.battles_won),422,114,1,baseColor,shadowColor],
-       [_INTL("Wild Encounters"),84,146,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.wild_battles),422,146,1,baseColor,shadowColor],
-       [_INTL("Pokémon Captured"),84,178,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.pokemon_caught),422,178,1,baseColor,shadowColor],
-       [_INTL("Eggs Hatched"),84,210,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.eggs_hatched),422,210,1,baseColor,shadowColor],
-       [_INTL("Steps Taken"),84,242,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.steps_taken),422,242,1,baseColor,shadowColor],
-       [_INTL("Money Earned"),84,274,0,baseColor,shadowColor],
-       [_INTL("${1}",$player.stats.money_earned),422,274,1,baseColor,shadowColor],
-       [_INTL("Money Spent"),84,306,0,baseColor,shadowColor],
-       [_INTL("${1}",$player.stats.money_spent),422,306,1,baseColor,shadowColor]
+       [_INTL("Trainer Battles"),84,88,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.trainer_battles_won + $stats.trainer_battles_lost),422,88,1,baseColor,shadowColor],
+       [_INTL("Wins vs. Trainers"),84,120,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.trainer_battles_won),422,120,1,baseColor,shadowColor],
+       [_INTL("Wild Encounters"),84,152,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.wild_battles_won + $stats.wild_battles_lost),422,152,1,baseColor,shadowColor],
+       [_INTL("Total Exp. Gained"),84,184,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.total_exp_gained),422,184,1,baseColor,shadowColor],
+       [_INTL("Eggs Hatched"),84,216,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.eggs_hatched),422,216,1,baseColor,shadowColor],
+       [_INTL("Steps Taken"),84,248,0,baseColor,shadowColor],
+       [_INTL("{1}",$stats.distance_walked),422,248,1,baseColor,shadowColor],
+       [_INTL("Prize Money Earned"),84,280,0,baseColor,shadowColor],
+       [_INTL("${1}",$stats.battle_money_gained),422,280,1,baseColor,shadowColor],
+       [_INTL("Money Spent"),84,312,0,baseColor,shadowColor],
+       [_INTL("${1}",$stats.money_spent_at_marts),422,312,1,baseColor,shadowColor]
     ]
-    pbDrawTextPositions(overlay.bitmap,textPositions,false)
+    pbDrawTextPositions(overlay.bitmap,textPositions)
   end
 
   def pbDrawJob(name, card, overlay)
@@ -258,39 +289,6 @@ class PokemonJobs_Scene
       y += 36
     end
     pbDrawImagePositions(overlay.bitmap,imagePositions)
-  end
-
-  def pbDrawStats(card, overlay)
-    if $game_switches[GPO_MEMBER]
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_gpo_2")
-    else
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_2")
-    end
-    return if !overlay
-    #@sprites["trainer"].visible=false
-    overlay.bitmap.clear
-    baseColor=Color.new(72,72,72)
-    shadowColor=Color.new(160,160,160)
-    quest = pbGetQuestProgress
-    textPositions=[
-       [_INTL("Trainer Battles"),84,82,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.battles),422,82,1,baseColor,shadowColor],
-       [_INTL("Wins vs. Trainers"),84,114,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.battles_won),422,114,1,baseColor,shadowColor],
-       [_INTL("Wild Encounters"),84,146,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.wild_battles),422,146,1,baseColor,shadowColor],
-       [_INTL("Pokémon Captured"),84,178,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.pokemon_caught),422,178,1,baseColor,shadowColor],
-       [_INTL("Eggs Hatched"),84,210,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.eggs_hatched),422,210,1,baseColor,shadowColor],
-       [_INTL("Steps Taken"),84,242,0,baseColor,shadowColor],
-       [_INTL("{1}",$player.stats.steps_taken),422,242,1,baseColor,shadowColor],
-       [_INTL("Money Earned"),84,274,0,baseColor,shadowColor],
-       [_INTL("${1}",$player.stats.money_earned),422,274,1,baseColor,shadowColor],
-       [_INTL("Money Spent"),84,306,0,baseColor,shadowColor],
-       [_INTL("${1}",$player.stats.money_spent),422,306,1,baseColor,shadowColor]
-    ]
-    pbDrawTextPositions(overlay.bitmap,textPositions,false)
   end
 
   def pbJobsScreen

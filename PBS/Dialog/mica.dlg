@@ -8,23 +8,23 @@
         /event Guitarist switch A true
         /me the_best_guitar 200
         /eval pbTextEffect("wave")
-        >\ts[3]§ I want to be,WT the ve\wt[2]ry bestWTWT<br>§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!WTWTWTNP
+        >\ts[3]§ I want to be, the ve\wt[2]ry best<br>§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!\wtnp[60]
         /event Guitarist switch A false
         /wait 4
         ?> What do you think?
             /choice Good
-                > Yes!WT Looks like I'm getting places!
+                > Yes! Looks like I'm getting places!
             /choice Bad
-                > I know...WT<br>But all you can do is keep practicing!
+                > I know...<br>But all you can do is keep practicing!
         ?/>
     /cancelchoice No
-        > Oh,WT I worked really hard on it...
+        > Oh, I worked really hard on it...
 ?/>
 
 [MICA_CABLECAR,0]
 /speaker Employee
 > This cable car goes down to the Pegma Quarry.
-> If you are to visit,WT refrain from going to dangerous areas unsupervised.
+> If you are to visit, refrain from going to dangerous areas unsupervised.
 
 [MICA_CABLECAR,1]
 /speaker Employee
@@ -46,16 +46,16 @@
 
 [MICA_ALISTER,0]
 /speaker Alister
-> Welcome to Pegma Quarry.WT<br>I'm Alister, and I supervise this place.
+> Welcome to Pegma Quarry.<br>I'm Alister, and I supervise this place.
 > Feel free to look around, but do not enter any mining zones without permission.
 
 [MICA_ALISTER,1]
 /speaker Alister
-> Excuse me, but I can't talk right now.<br>I'm dealing with.WT.WT.WT something.
+> Excuse me, but I can't talk right now.<br>I'm dealing with... something.
 
 [MICA_ALISTER,2]
 /speaker Alister
-> Thank you for your help rescuing Steve.WT<br>You may be useful to our operation later.
+> Thank you for your help rescuing Steve.<br>You may be useful to our operation later.
 
 [MICA_TREVOR,0]
 /speaker Trevor
@@ -64,7 +64,7 @@
 
 [MICA_TREVOR,1]
 /speaker Trevor
-> Thank you for saving Steve.WT We can finally start sending shipments again.
+> Thank you for saving Steve. We can finally start sending shipments again.
 
 [MICA_LAYER_1_WORKER,0]
 /speaker Layer_1_Worker
@@ -73,7 +73,7 @@
 [MICA_LAYER_1_WORKER,1]
 /speaker Layer_1_Worker
 > Steve has not been reporting properly?
-> He went into this mining area a good while ago.WT Maybe something happened.
+> He went into this mining area a good while ago. Maybe something happened.
 > I will grant you temporary permission to enter the area.
 > Hopefully you can find Steve.
 
@@ -84,11 +84,11 @@
 
 [MICA_LAYER_1_WORKER,3]
 /speaker Layer_1_Worker
-> Thank you for rescuing Steve.WT<br>Your temporary access has been revoked though.
+> Thank you for rescuing Steve.<br>Your temporary access has been revoked though.
 
 [MICA_STEVE,0]
 /speaker Steve
-> Thank you for rescuing me.WT<br>I was finally able to get a huge shipment going.
+> Thank you for rescuing me.<br>I was finally able to get a huge shipment going.
 
 [MICA_RESTRICTED]
 > This area is restricted.

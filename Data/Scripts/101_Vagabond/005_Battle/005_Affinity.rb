@@ -73,12 +73,12 @@ end
 class Battle::Scene
   def pbAffinityBoostAnimation(attacker,booster)
 
-    if attacker.isFainted?
+    if attacker.fainted?
       return
     end
 
     partner = booster
-    partner = false if !partner || partner.isFainted?
+    partner = false if !partner || partner.fainted?
 
     opponent = (attacker.index % 2 == 1)
 
@@ -133,14 +133,14 @@ class Battle::Scene
       sprites["pkmn1"].z = 104
       sprites["pkmn1"].x = -64 + 32
       sprites["pkmn1"].y = 120 + 32
-      sprites["pkmn1"].setOffset(PictureOrigin::Center)
+      sprites["pkmn1"].setOffset(PictureOrigin::CENTER)
       sprites["pkmn1"].mirror = true
 
       sprites["pkmn2"] = partner ? PokemonIconSprite.new(partner.pokemon,@viewport) : Sprite.new(@viewport)
       sprites["pkmn2"].z = 103
       sprites["pkmn2"].x = 506 + 32
       sprites["pkmn2"].y = 120 + 32
-      sprites["pkmn2"].setOffset(PictureOrigin::Center)
+      sprites["pkmn2"].setOffset(PictureOrigin::CENTER)
     end
 
     if rand < 5

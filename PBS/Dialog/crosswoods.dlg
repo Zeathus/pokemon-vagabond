@@ -15,11 +15,11 @@
 
 [CW_DOCTOR,2]
 /speaker Marty
-> That should do the trick.WT Good luck out there!
+> That should do the trick. Good luck out there!
 
 [CW_DOCTOR,3]
 /speaker Marty
-> You need to be careful out there.WT\nLuckily I was around this time.
+> You need to be careful out there.\nLuckily I was around this time.
 
 [CW_SIGN_BRECCIA]
 /textpos middle
@@ -35,7 +35,7 @@
 
 [CW_TRAINER_BEN,0]
 /speaker Ben
-> I've been busy training!WT<br>Ready to see my skills?
+> I've been busy training!<br>Ready to see my skills?
 
 [CW_TRAINER_BEN,1]
 /speaker Ben
@@ -43,11 +43,11 @@
 
 [CW_TRAINER_GEORGE,0]
 /speaker George
-> I'm looking for some ruins I've heard were hidden here.WT<br>You won't get there before me!
+> I'm looking for some ruins I've heard were hidden here.<br>You won't get there before me!
 
 [CW_TRAINER_GEORGE,1]
 /speaker George
-> The ruins have to be close.WT<br>I can feel it.
+> The ruins have to be close.<br>I can feel it.
 
 [CW_TRAINER_CHLOE,0]
 /speaker Chloe

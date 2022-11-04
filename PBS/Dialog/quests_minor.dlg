@@ -5,34 +5,34 @@
 
 [SICKZAGOON,1]
 /speaker PLAYER
-> This Zigzagoon doesn't look well.WT\nIt must be sick.
-> We should help it.WT Do you have any ideas Duke?
+> This Zigzagoon doesn't look well.\nIt must be sick.
+> We should help it. Do you have any ideas Duke?
 /speaker Duke
-> I knew this moment would come.WT.WT.WT
+> I knew this moment would come...
 > This is likely to be the first of many occasions where you encounter someone in need.
-> As your heart yearns to help these poor souls, I present to you.WT.WT.WT
+> As your heart yearns to help these poor souls, I present to you...
 /expression huzzah
 !> A QUEST LOG!
 /speaker PLAYER
-> A.WT.WT.WT quest log?
+> A... quest log?
 /speaker Duke
-> Yes, a quest log.WT It allows you to keep track of the ones that need your help.
+> Yes, a quest log. It allows you to keep track of the ones that need your help.
 /expression heh
 > It even covers what rewards they may give you, if that's what you're in for.
 /speaker PLAYER
-> Pretty self-explanatory.WT\nThat will surely come in handy.
+> Pretty self-explanatory.\nThat will surely come in handy.
 /speaker Duke
-> Your keen eyes surely spotted the doctor back in the Crosswoods.WT He should be able to help rid this Zigzagoon of their illness.
+> Your keen eyes surely spotted the doctor back in the Crosswoods. He should be able to help rid this Zigzagoon of their illness.
 
 [SICKZAGOON,2]
 /speaker PLAYER
-> Another sick Zigzagoon?WT We really need to talk to that doctor.
+> Another sick Zigzagoon? We really need to talk to that doctor.
 /speaker Duke
-> We passed him on the way here.WT\nDid you simply forget?
+> We passed him on the way here.\nDid you simply forget?
 
 [SICKZAGOON,3]
 /speaker Duke
-> Yet another Zigzagoon.WT How did they get themselves into this mess?
+> Yet another Zigzagoon. How did they get themselves into this mess?
 > And more importantly...
 > How did we pass through the Crosswoods twice without dealing with the situation?
 
@@ -53,7 +53,7 @@
 /wait 30
 /fade normal
 /wait 20
-> That should do the trick.WT\nThanks for informing me!
+> That should do the trick.\nThanks for informing me!
 
 [SICKZAGOON,5]
 /dialog SICKZAGOON 0

@@ -194,7 +194,7 @@ class MiniQuest
       return false
     elsif type==2 # Item Fetching
       item = requirements[0]
-      return true if $PokemonBag.pbQuantity(item)>0
+      return true if $bag.quantity(item)>0
     end
     return false
   end
@@ -230,7 +230,7 @@ class MiniQuest
         _INTL("Do you want to deliver the {1}?",item),
         false,["Yes","No"])
       if pbGet(1)==0
-        $PokemonBag.pbDeleteItem(requirements[0],1)
+        $bag.pbDeleteItem(requirements[0],1)
       else
         pbSpeech("Receptionist", "none",
           "Please come back when you wish to deliver the item.")

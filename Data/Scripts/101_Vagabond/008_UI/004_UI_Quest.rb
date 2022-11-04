@@ -20,10 +20,10 @@ class QuestHeaderSprite < Sprite
     self.bitmap.clear
     self.bitmap.blt(0,0,@buttonBitmap,Rect.new(
       @selected ? 236 : 0, 0, 236, 40))
-    textpos = [[@text,118,4,2,
+    textpos = [[@text,118,10,2,
       Color.new(250,250,250),Color.new(100,60,50)]]
     pbSetSystemFont(self.bitmap)
-    pbDrawTextPositions(self.bitmap,textpos,false)
+    pbDrawTextPositions(self.bitmap,textpos)
   end
 
   def dispose
@@ -78,12 +78,12 @@ class QuestBarSprite < Sprite
     if @quest
       self.bitmap.blt(0,0,@barbitmap,
         Rect.new(0,@selected ? 38 : 0,464 - @crop,38))
-      textpos = [[@quest.display_name,50,6,0,
+      textpos = [[@quest.display_name,50,12,0,
         Color.new(250,250,250),Color.new(100,60,50)],
-                 [@quest.location,458,6,1,
+                 [@quest.location,458,12,1,
         Color.new(250,250,250),Color.new(100,60,50)]]
       pbSetSmallFont(self.bitmap)
-      pbDrawTextPositions(self.bitmap,textpos,false)
+      pbDrawTextPositions(self.bitmap,textpos)
       imagepos=[
         ["Graphics/Pictures/Quests/status",
          18,4,0,30*(@quest.status+1),30,30]
@@ -118,23 +118,23 @@ class QuestBarSprite < Sprite
       lines = pbLineBreakText(content,@quest.description.upcase,192)
       for i in 0...lines.length
         s = lines[i]
-        textpos.push([s,10,18+i*14,0,white,shadow])
+        textpos.push([s,10,24+i*14,0,white,shadow])
       end
-      textpos.push([@quest.money.to_s,38,152,0,white,shadow])
-      textpos.push([_INTL("{1}%",@quest.exp.to_s),148,152,0,white,shadow])
+      textpos.push([@quest.money.to_s,38,158,0,white,shadow])
+      textpos.push([_INTL("{1}%",@quest.exp.to_s),148,158,0,white,shadow])
       if @quest.items.length > 0
         if @quest.hide_items
           imagepos.push(
             ["Graphics/Items/000",
              12,184,0,0,48,48,24,24])
           pbDrawTextPositions(content,
-            [["SECRET TO EVERYBODY",40,182,0,white,shadow]],false)
+            [["SECRET TO EVERYBODY",40,188,0,white,shadow]])
         else
           imagepos.push(
             [sprintf("Graphics/Items/%s",@quest.items[0][0].to_s),
-             12,184,0,0,48,48,24,24])
+             12,190,0,0,48,48,24,24])
           pbDrawTextPositions(content,
-            [[GameData::Item.get(@quest.items[0][0]).name.upcase,40,182,0,white,shadow]],false)
+            [[GameData::Item.get(@quest.items[0][0]).name.upcase,40,182,0,white,shadow]])
         end
       end
       offset = 0
@@ -143,7 +143,7 @@ class QuestBarSprite < Sprite
         for s in lines
           content.fill_rect(210,22+offset,228,20,color)
           content.fill_rect(208,24+offset,232,16,color)
-          textpos.push([s,214,18+offset,0,white,shadow])
+          textpos.push([s,214,24+offset,0,white,shadow])
           offset += 14
         end
         offset += 10
@@ -161,7 +161,7 @@ class QuestBarSprite < Sprite
         for s in lines
           content.fill_rect(210,22+offset,228,20,color)
           content.fill_rect(208,24+offset,232,16,color)
-          textpos.push([s,complete ? 240 : 214,18+offset,0,white,shadow])
+          textpos.push([s,complete ? 240 : 214,24+offset,0,white,shadow])
           offset += 14
         end
         offset += 10
@@ -174,11 +174,11 @@ class QuestBarSprite < Sprite
       lines = pbLineBreakText(content, text, 192)
       for i in 0...lines.length
         s = lines[i]
-        textpos.push([s,10,18+i*14,0,white,shadow])
+        textpos.push([s,10,24+i*14,0,white,shadow])
       end
     end
 
-    pbDrawTextPositions(content,textpos,false)
+    pbDrawTextPositions(content,textpos)
     pbDrawImagePositions(content,imagepos)
 
     self.z += 10

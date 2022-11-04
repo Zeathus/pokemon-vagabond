@@ -4,14 +4,6 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
 
   if expgain > 0 || sharedexp > 0
 
-    if $game_variables[PLAYER_EXP] < 10**3
-      # Set player level to 10 if not set yet
-      $game_variables[PLAYER_EXP] = 10**3
-    end
-    if pbPlayerLevel < 100
-      $game_variables[PLAYER_EXP] += (expgain + sharedexp) * 0.35
-    end
-
     viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     viewport.z = 99999
 

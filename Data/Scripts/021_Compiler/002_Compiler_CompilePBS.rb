@@ -670,7 +670,7 @@ module Compiler
         types = contents["Types"] || [contents["Type1"], contents["Type2"]]
         types = [types] if !types.is_a?(Array)
         types = types.uniq.compact
-        extra_types = contents["ExtraTypes"] || [contents["Type3"], contents["Type4"]]
+        extra_types = contents["Affinities"] || [contents["Type3"], contents["Type4"]]
         extra_types = [extra_types] if !extra_types.is_a?(Array)
         extra_types = extra_types.uniq.compact
         species_hash = {
@@ -902,7 +902,7 @@ module Compiler
           :pokedex_entry      => contents["Pokedex"] || base_data.real_pokedex_entry,
           :pokedex_form       => contents["PokedexForm"],
           :types              => types,
-          :extra_types        => contents["ExtraTypes"],
+          :extra_types        => contents["Affinities"],
           :base_stats         => contents["BaseStats"] || base_data.base_stats,
           :evs                => contents["EVs"] || contents["EffortPoints"] || base_data.evs,
           :base_exp           => contents["BaseExp"] || contents["BaseEXP"] || base_data.base_exp,

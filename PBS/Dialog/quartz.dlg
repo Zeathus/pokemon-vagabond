@@ -4,23 +4,23 @@
 
 [QUARTZ_MARK,1]
 /speaker Mark
-> Pegma City is built on top of a mountain.WT<br>Great for hiking!
+> Pegma City is built on top of a mountain.<br>Great for hiking!
 
 [QUARTZ_FRANKIE,0]
 /speaker Frankie
-> I'm going straight for Pegma City!WT<br>Are you going too?
+> I'm going straight for Pegma City!<br>Are you going too?
 
 [QUARTZ_FRANKIE,1]
 /speaker Frankie
-> Pegma City is just west of here.WT<br>There's a steep staircase going up the mountain.
+> Pegma City is just west of here.<br>There's a steep staircase going up the mountain.
 
 [QUARTZ_VILKO,0]
 /speaker Vilko
-> Pokémon battles are similar to gambling.WT<br>We bet money, and there is a winner and a loser.
+> Pokémon battles are similar to gambling.<br>We bet money, and there is a winner and a loser.
 
 [QUARTZ_VILKO,1]
 /speaker Vilko
-> You win or you lose.WT<br>That's just how gambling goes.
+> You win or you lose.<br>That's just how gambling goes.
 
 [QUARTZ_TRACY,0]
 /speaker Tracy
@@ -32,8 +32,8 @@
 
 [QUARTZ_AGNOL,0]
 /speaker Agnol
-> You really don't know what you're in for.WT<br>I pity you.
+> You really don't know what you're in for.<br>I pity you.
 
 [QUARTZ_AGNOL,1]
 /speaker Agnol
-> I will have you know I ran a colosseum once.WT<br>Now begone from my sight.
+> I will have you know I ran a colosseum once.<br>Now begone from my sight.

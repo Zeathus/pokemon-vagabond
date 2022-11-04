@@ -337,7 +337,7 @@ class Battle
 
     if $stats.affinity_boosts <= 0
       if trainerBattle? && @player.length >= 2
-        if [:KRABBY, :SKIDDO, :NUMEL].include?(pbGetChoice(:Starter))
+        if [:KRABBY, :SKIDDO, :NUMEL].include?(pbGetChoiceValue(:Starter))
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 0)
           pbGuide("Affinity Boosts")
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 1)
@@ -446,7 +446,7 @@ class Battle
     if $stats.affinity_boosts == 0 && @decision == 1
       if trainerBattle? && @player.length >= 2
         pbSpeech("Duke", "none",
-          "You did not perform an Affinity Boost.WT Let's try this again.")
+          "You did not perform an Affinity Boost. Let's try this again.")
         @decision = -1
         @expgained = 0
         @expgainedshared = 0

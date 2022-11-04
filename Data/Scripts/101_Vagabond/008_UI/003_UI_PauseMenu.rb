@@ -98,8 +98,8 @@ class PauseControlsSprite < IconSprite
     @overlay.bitmap.blt(14, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::ACTION))
     @overlay.bitmap.blt(158, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::USE))
     textpos = [
-      [@controls[@index][0],46,12,0,Color.new(252,252,252),Color.new(0,0,0),true],
-      [@controls[@index][1],190,12,0,Color.new(252,252,252),Color.new(0,0,0),true]
+      [@controls[@index][0],46,18,0,Color.new(252,252,252),Color.new(0,0,0),true],
+      [@controls[@index][1],190,18,0,Color.new(252,252,252),Color.new(0,0,0),true]
     ]
     pbSetSmallFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap, textpos)
@@ -153,17 +153,17 @@ class PauseInfoBox < IconSprite
     when 0 # Money
       @value = $player.money
       text = "$" + self.number_with_delimiter(@value)
-      textpos = [[text, 82, 28, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
+      textpos = [[text, 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     when 1 # Time
       @value = pbGetTimeNow.to_i_min
       text = (pbGetLanguage()==2) ? pbGetTimeNow.getDigitalString : pbGetTimeNow.getDigitalString(true, true)
-      textpos = [[text, 82, 28, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
+      textpos = [[text, 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     when 2 # Weather
       @value = pbGetForecast[$game_map.map_id]
       text = "[WIP]"
-      textpos = [[text, 82, 28, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
+      textpos = [[text, 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
   end
@@ -261,7 +261,7 @@ class PausePokemonBox < IconSprite
       elsif @pokemon.status == :NONE
         @status_icon.visible = false
       else
-        id = GameData::Status.get(@pokemon.status).id_number - 1
+        id = GameData::Status.get(@pokemon.status).icon_position - 1
         @status_icon.src_rect = Rect.new(0, 32*id, 32, 32)
       end
       hpzone=0
@@ -475,7 +475,7 @@ def pbPauseMenu
       else
         item=0
         scene=PokemonBag_Scene.new
-        screen=PokemonBagScreen.new(scene,$PokemonBag)
+        screen=PokemonBagScreen.new(scene,$bag)
         pbFadeOutIn(99999) { 
           item=screen.pbStartScreen 
           if item

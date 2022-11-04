@@ -533,8 +533,10 @@
 013_UI_ItemPickup
 014_UI_CustomPokemon
 015_UI_Commands
+016_UI_Battle
 @@009_Graphics
 001_ParticleEffects
+002_Utils
 @@098_Debug
 001_DebugMenu
 ---------------------------~blank

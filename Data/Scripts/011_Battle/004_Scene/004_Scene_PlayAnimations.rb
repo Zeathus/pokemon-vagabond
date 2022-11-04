@@ -58,6 +58,7 @@ class Battle::Scene
   # Animates a party lineup appearing for the given side
   #=============================================================================
   def pbShowPartyLineup(side, fullAnim = false)
+    return
     @animations.push(
       Animation::LineupAppear.new(@sprites, @viewport, side,
                                   @battle.pbParty(side), @battle.pbPartyStarts(side),

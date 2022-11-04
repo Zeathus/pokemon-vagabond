@@ -71,7 +71,7 @@ def pbFieldTrainer(trainerid,trainername,endspeech=nil,doublebattle=true,min_lvl
       end
     end
   end
-  return pbTrainerBattle(trainerid,trainername,endspeech,doublebattle,partyid)
+  return TrainerBattle.start(trainerid, trainername, partyid)
 end
 
 def pbGenerateTrainers

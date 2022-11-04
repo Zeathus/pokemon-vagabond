@@ -183,6 +183,10 @@ class GameStats
   def time_since_last_save
     return @play_time - @time_last_saved
   end
+
+  def affinity_boosts
+    return @affinity_boosts || 0
+  end
 end
 
 #===============================================================================

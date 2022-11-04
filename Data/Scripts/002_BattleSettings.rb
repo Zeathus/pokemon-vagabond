@@ -9,7 +9,7 @@ module Settings
   ANY_HIGH_LEVEL_POKEMON_CAN_DISOBEY          = false
   # Whether foreign Pokémon can disobey the player's commands if the Pokémon is
   # too high a level compared to the number of Gym Badges the player has.
-  FOREIGN_HIGH_LEVEL_POKEMON_CAN_DISOBEY      = true
+  FOREIGN_HIGH_LEVEL_POKEMON_CAN_DISOBEY      = false
   # Whether a move's physical/special category depends on the move itself as in
   # newer Gens (true), or on its type as in older Gens (false).
   MOVE_CATEGORY_PER_MOVE                      = (MECHANICS_GENERATION >= 4)

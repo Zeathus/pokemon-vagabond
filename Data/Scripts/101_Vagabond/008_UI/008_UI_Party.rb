@@ -96,8 +96,8 @@ class PokeSelectionMenuItemSprite < SpriteWrapper
     @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
     @yoffset=8
     pbSetSmallFont(@overlaysprite.bitmap)
-    textpos=[[text,68,2,2,Color.new(248,248,248),Color.new(40,40,40)]]
-    pbDrawTextPositions(@overlaysprite.bitmap,textpos,false)
+    textpos=[[text,68,8,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     @overlaysprite.z=self.z+1 # For compatibility with RGSS2
     self.x=x
     self.y=y
@@ -171,8 +171,8 @@ class PokeSelectionConfirmCancelSprite < SpriteWrapper
     @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
     @yoffset=8
     pbSetSystemFont(@overlaysprite.bitmap)
-    textpos=[[text,94,4,2,Color.new(248,248,248),Color.new(40,40,40)]]
-    pbDrawTextPositions(@overlaysprite.bitmap,textpos,false)
+    textpos=[[text,94,10,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     @overlaysprite.z=self.z+1 # For compatibility with RGSS2
     self.x=x
     self.y=y
@@ -241,8 +241,8 @@ class PokeSelectionSwitchSprite < SpriteWrapper
     @yoffset=8
     @mode=0
     pbSetSystemFont(@overlaysprite.bitmap)
-    textpos=[[text,94,4,2,Color.new(248,248,248),Color.new(40,40,40)]]
-    pbDrawTextPositions(@overlaysprite.bitmap,textpos,false)
+    textpos=[[text,94,10,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     @overlaysprite.z=self.z+1 # For compatibility with RGSS2
     self.x=x
     self.y=y
@@ -289,14 +289,14 @@ class PokeSelectionSwitchSprite < SpriteWrapper
       @bgsprite.changeBitmap((@selected) ? "selbitmap" : "deselbitmap")
       @overlaysprite.bitmap.clear
       pbSetSystemFont(@overlaysprite.bitmap)
-      textpos=[["SWITCH",94,4,2,Color.new(248,248,248),Color.new(40,40,40)]]
-      pbDrawTextPositions(@overlaysprite.bitmap,textpos,false)
+      textpos=[["SWITCH",94,10,2,Color.new(248,248,248),Color.new(40,40,40)]]
+      pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     else
       @bgsprite.changeBitmap((@selected) ? "switchselbitmap" : "switchbitmap")
       @overlaysprite.bitmap.clear
       pbSetSystemFont(@overlaysprite.bitmap)
-      textpos=[["SUMMARY",94,4,2,Color.new(248,248,248),Color.new(40,40,40)]]
-      pbDrawTextPositions(@overlaysprite.bitmap,textpos,false)
+      textpos=[["SUMMARY",94,10,2,Color.new(248,248,248),Color.new(40,40,40)]]
+      pbDrawTextPositions(@overlaysprite.bitmap,textpos)
     end
     if @bgsprite && !@bgsprite.disposed?
       @bgsprite.x=self.x
@@ -579,9 +579,9 @@ class PartyMemberChangeSprite < SpriteWrapper
   def refreshName
     self.bitmap.blt(106,64,@namebitmap.bitmap,Rect.new(0,0,172,40))
     name=PBParty.getName(@members[@selected])
-    textpos=[[name,192,68,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    textpos=[[name,192,66,2,Color.new(248,248,248),Color.new(40,40,40)]]
     #pbSetSmallFont(self.bitmap)
-    pbDrawTextPositions(self.bitmap,textpos,false)
+    pbDrawTextPositions(self.bitmap,textpos)
   end
 
   def right
@@ -672,9 +672,9 @@ class PokeSelectionSprite < SpriteWrapper
     @spriteXOffset=@other ? 14 : 28
     @spriteYOffset=-18
     @pokenameX=@spriteXOffset + 60
-    @pokenameY=10
+    @pokenameY=16
     #@levelX=@other ? 274 : 292
-    @levelY=14
+    @levelY=20
     @numberX=@other ? 280 : 8
     @numberY=10
     @statusX=@numberX
@@ -686,7 +686,7 @@ class PokeSelectionSprite < SpriteWrapper
     @hpbarX=@gaugeX - 50
     @hpbarY=34
     @hpX=@gaugeX + 90
-    @hpY=@gaugeY - 10
+    @hpY=@gaugeY - 4
     @itemXOffset=@spriteXOffset + 40
     @itemYOffset=@spriteYOffset + 46
     @annotX=96
@@ -880,31 +880,31 @@ class PokeSelectionSprite < SpriteWrapper
           self.bitmap.fill_rect(@gaugeX,@gaugeY+6,hpgauge,2,hpcolors[hpzone*2])
           self.bitmap.blt(@hpbarX,@hpbarY,@hpbar.bitmap,Rect.new(0,@otherid*32,@hpbar.width,32))
           if @pokemon.hp==0 || @pokemon.status != :NONE
-            status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).id_number - 1)
+            status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position - 1)
             statusrect=Rect.new(0,32*status,32,32)
             self.bitmap.blt(@statusX,@statusY,@statuses.bitmap,statusrect)
           end
         end
         pbSetSmallestFont(self.bitmap)
-        pbDrawTextPositions(self.bitmap,hptextpos,false)
+        pbDrawTextPositions(self.bitmap,hptextpos)
       end
       pbSetSystemFont(self.bitmap)
-      pbDrawTextPositions(self.bitmap,textpos,false)
+      pbDrawTextPositions(self.bitmap,textpos)
       pbSetSmallFont(self.bitmap)
       if !@pokemon.egg?
         pbSetSystemFont(self.bitmap)
         levelX = @pokenameX + self.bitmap.text_size(pokename).width + 8
         leveltext=[([_INTL("Lv.{1}",@pokemon.level),levelX,@levelY,0,base,shadow])]
         pbSetSmallFont(self.bitmap)
-        pbDrawTextPositions(self.bitmap,leveltext,false)
+        pbDrawTextPositions(self.bitmap,leveltext)
       end
       if @text && @text.is_a?(String) && @text.length>0
         pbSetSystemFont(self.bitmap)
         #annotation=[[@text,@annotX,@annotY,0,base,shadow]]
         self.bitmap.fill_rect(320,14,156,8,Color.new(104,85,85))
         self.bitmap.fill_rect(320,22,150,4,Color.new(104,85,85))
-        annotation=[[@text,400,4,2,base,shadow]]
-        pbDrawTextPositions(self.bitmap,annotation,false)
+        annotation=[[@text,400,10,2,base,shadow]]
+        pbDrawTextPositions(self.bitmap,annotation)
       end
     end
     @refreshing=false
@@ -1163,31 +1163,31 @@ class QuickSummarySprite < SpriteWrapper
       shadow=Color.new(176,176,176)
       base2=Color.new(248,248,248)
       shadow2=Color.new(104,104,104)
-      type1rect=Rect.new(0,GameData::Type.get(@pokemon.type1).id_number*28,64,28)
-      type2rect=Rect.new(0,GameData::Type.get(@pokemon.type2).id_number*28,64,28)
-      affinity1rect=Rect.new(0,GameData::Type.get(@pokemon.affinity1).id_number*28,64,28)
-      affinity2rect=Rect.new(0,GameData::Type.get(@pokemon.affinity2).id_number*28,64,28)
-      if @pokemon.type1==@pokemon.type2
-        @overlay.bitmap.blt(478,40,@typebitmap.bitmap,type1rect)
+      typerect=Rect.new(0,GameData::Type.get(@pokemon.types[0]).icon_position*28,64,28)
+      affinityrect=Rect.new(0,GameData::Type.get(@pokemon.affinities[0]).icon_position*28,64,28)
+      if @pokemon.types.length == 1
+        @overlay.bitmap.blt(478,40,@typebitmap.bitmap,typerect)
       else
-        @overlay.bitmap.blt(478-34,40,@typebitmap.bitmap,type1rect)
+        type2rect=Rect.new(0,GameData::Type.get(@pokemon.types[1]).icon_position*28,64,28)
+        @overlay.bitmap.blt(478-34,40,@typebitmap.bitmap,typerect)
         @overlay.bitmap.blt(478+34,40,@typebitmap.bitmap,type2rect)
       end
-      if @pokemon.affinity1==@pokemon.affinity2
-        @overlay.bitmap.blt(478,40+58,@typebitmap.bitmap,affinity1rect)
+      if @pokemon.affinities.length == 1
+        @overlay.bitmap.blt(478,40+58,@typebitmap.bitmap,affinityrect)
       else
-        @overlay.bitmap.blt(478-34,40+58,@typebitmap.bitmap,affinity1rect)
+        affinity2rect=Rect.new(0,GameData::Type.get(@pokemon.affinities[1]).icon_position*28,64,28)
+        @overlay.bitmap.blt(478-34,40+58,@typebitmap.bitmap,affinityrect)
         @overlay.bitmap.blt(478+34,40+58,@typebitmap.bitmap,affinity2rect)
       end
       textpos = []
       imagepos = []
       if @pokemon.hasItem?
-        textpos.push([GameData::Item.get(@pokemon.item).name,478+32,34+58*2,2,base2,shadow2])
+        textpos.push([GameData::Item.get(@pokemon.item).name,478+32,40+58*2,2,base2,shadow2])
       else
-        textpos.push([_INTL("No Item"),478+32,34+58*2,2,Color.new(208,208,200),Color.new(120,144,184)])
+        textpos.push([_INTL("No Item"),478+32,46+58*2,2,Color.new(208,208,200),Color.new(120,144,184)])
       end
       abilityname = GameData::Ability.get(@pokemon.ability).name
-      textpos.push([abilityname,478+32,34+58*3,2,base2,shadow2])
+      textpos.push([abilityname,478+32,46+58*3,2,base2,shadow2])
 
       xPos=16
       yPos=52
@@ -1197,8 +1197,8 @@ class QuickSummarySprite < SpriteWrapper
           movedata=GameData::Move.get(moveobject.id)
           if moveobject.id!=0
             imagepos.push(["Graphics/Pictures/Party/move_slot",xPos,yPos,0,
-                GameData::Type.get(moveobject.type).id_number*46,192,46])
-            textpos.push([movedata.name,xPos+98,yPos+4,2,
+                GameData::Type.get(moveobject.type).icon_position*46,192,46])
+            textpos.push([movedata.name,xPos+98,yPos+16,2,
                 Color.new(64,64,64),Color.new(176,176,176)])
           end
         end
@@ -2459,7 +2459,7 @@ class PokemonScreen
   def pbTakeMail(pkmn)
     if !pkmn.hasItem?
       pbDisplay(_INTL("{1} isn't holding anything.",pkmn.name))
-    elsif !$PokemonBag.pbCanStore?(pkmn.item)
+    elsif !$bag.pbCanStore?(pkmn.item)
       pbDisplay(_INTL("The Bag is full. The Pokémon's item could not be removed."))
     elsif pkmn.mail
       if pbConfirm(_INTL("Send the removed mail to your PC?"))
@@ -2471,12 +2471,12 @@ class PokemonScreen
         end
       elsif pbConfirm(_INTL("If the mail is removed, the message will be lost. OK?"))
         pbDisplay(_INTL("Mail was taken from the Pokémon."))
-        $PokemonBag.pbStoreItem(pkmn.item)
+        $bag.pbStoreItem(pkmn.item)
         pkmn.item = nil
         pkmn.mail=nil
       end
     else
-      $PokemonBag.pbStoreItem(pkmn.item)
+      $bag.pbStoreItem(pkmn.item)
       itemname=GameData::Item.get(pkmn.item).name
       pbDisplay(_INTL("Received the {1} from {2}.",itemname,pkmn.name))
       pkmn.item = nil
@@ -2497,9 +2497,9 @@ class PokemonScreen
       itemname=PBItems.getName(pkmn.item)
       pbDisplay(_INTL("{1} is already holding {2}.\1",pkmn.name,itemname))
       if pbConfirm(_INTL("Would you like to switch the two items?"))
-        $PokemonBag.pbDeleteItem(item)
-        if !$PokemonBag.pbStoreItem(pkmn.item)
-          if !$PokemonBag.pbStoreItem(item) # Compensate
+        $bag.pbDeleteItem(item)
+        if !$bag.pbStoreItem(pkmn.item)
+          if !$bag.pbStoreItem(item) # Compensate
             raise _INTL("Can't re-store deleted item in bag")
           end
           pbDisplay(_INTL("The Bag is full. The Pokémon's item could not be removed."))
@@ -2511,7 +2511,7 @@ class PokemonScreen
               pbDisplay(_INTL("The {1} was taken and replaced with the {2}.",itemname,thisitemname))
               return true
             else
-              if !$PokemonBag.pbStoreItem(item) # Compensate
+              if !$bag.pbStoreItem(item) # Compensate
                 raise _INTL("Can't re-store deleted item in bag")
               end
             end
@@ -2525,7 +2525,7 @@ class PokemonScreen
       end
     else
       if !GameData::Item.get(item).is_mail? || pbMailScreen(item,pkmn,pkmnid) # Open the mail screen if necessary
-        $PokemonBag.pbDeleteItem(item)
+        $bag.pbDeleteItem(item)
         pkmn.item = item
         pbRKSMemoryCheck(pkmn)
         pbDisplay(_INTL("The Pokémon is now holding the {1}.",thisitemname))
@@ -2957,7 +2957,7 @@ class PokemonScreen
             itemcommands[itemcommands.length]                 = _INTL("Cancel")
             command=@scene.pbShowCommands(_INTL("Do what with an item?"),itemcommands)
             if cmdUseItem>=0 && command==cmdUseItem   # Use
-              item = @scene.pbUseItem($PokemonBag,pkmn) {
+              item = @scene.pbUseItem($bag,pkmn) {
                 @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
               }
               if item
@@ -2965,7 +2965,7 @@ class PokemonScreen
                 pbRefreshSingle(pkmnid)
               end
             elsif cmdGiveItem>=0 && command==cmdGiveItem   # Give
-              item = @scene.pbChooseItem($PokemonBag) {
+              item = @scene.pbChooseItem($bag) {
                 @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
               }
               if item
@@ -3016,11 +3016,11 @@ class PokemonScreen
               @scene.refresh_summary
               break
             elsif cmdHealItem>=0 && command==cmdHealItem   # Quick Potion/Revive
-              if $PokemonBag.pbQuantity(quick[0])>0
+              if $bag.quantity(quick[0])>0
                 pbUseItemOnPokemon(quick[0],pkmn,self)
               end
             elsif cmdMedicineItem>=0 && command==cmdMedicineItem   # Quick Medicine
-              if $PokemonBag.pbQuantity(quick[1])>0
+              if $bag.quantity(quick[1])>0
                 pbUseItemOnPokemon(quick[1],pkmn,self)
               end
             end
@@ -3163,13 +3163,13 @@ class PokemonScreen
         itemcommands[itemcommands.length]             = _INTL("Cancel")
         command=@scene.pbShowCommands(_INTL("Do what with an item?"),itemcommands)
         if cmdUseItem>=0 && command==cmdUseItem   # Use
-          item=@scene.pbUseItem($PokemonBag,pkmn)
+          item=@scene.pbUseItem($bag,pkmn)
           if item>0
             pbUseItemOnPokemon(item,pkmn,self)
             pbRefreshSingle(pkmnid)
           end
         elsif cmdGiveItem>=0 && command==cmdGiveItem   # Give
-          item=@scene.pbChooseItem($PokemonBag)
+          item=@scene.pbChooseItem($bag)
           if item>0
             pbGiveMail(item,pkmn,pkmnid)
             pbRefreshSingle(pkmnid)

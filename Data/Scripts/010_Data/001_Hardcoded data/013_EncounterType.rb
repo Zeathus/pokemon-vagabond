@@ -133,17 +133,7 @@ GameData::EncounterType.register({
 })
 
 GameData::EncounterType.register({
-  :id             => :OldRod,
-  :type           => :fishing
-})
-
-GameData::EncounterType.register({
-  :id             => :GoodRod,
-  :type           => :fishing
-})
-
-GameData::EncounterType.register({
-  :id             => :SuperRod,
+  :id             => :FishingRod,
   :type           => :fishing
 })
 

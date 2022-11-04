@@ -4,6 +4,9 @@ class Battle::Scene
   attr_reader   :viewport
   attr_reader   :sprites
 
+  BATTLE_VIEW_WIDTH    = 512
+  BATTLE_VIEW_HEIGHT   = 384
+
   USE_ABILITY_SPLASH   = (Settings::MECHANICS_GENERATION >= 5)
   MESSAGE_PAUSE_TIME   = 1.0   # In seconds
   # Text colors
@@ -13,10 +16,10 @@ class Battle::Scene
   NUM_BALLS            = Settings::MAX_PARTY_SIZE
   # Centre bottom of the player's side base graphic
   PLAYER_BASE_X        = 128
-  PLAYER_BASE_Y        = Settings::SCREEN_HEIGHT - 80
+  PLAYER_BASE_Y        = BATTLE_VIEW_HEIGHT - 80
   # Centre middle of the foe's side base graphic
-  FOE_BASE_X           = Settings::SCREEN_WIDTH - 128
-  FOE_BASE_Y           = (Settings::SCREEN_HEIGHT * 3 / 4) - 112
+  FOE_BASE_X           = BATTLE_VIEW_WIDTH - 128
+  FOE_BASE_Y           = (BATTLE_VIEW_HEIGHT * 3 / 4) - 132
   # Default focal points of user and target in animations - do not change!
   # Is the centre middle of each sprite
   FOCUSUSER_X          = 128
@@ -57,9 +60,9 @@ class Battle::Scene
   def self.pbTrainerPosition(side, index = 0, sideSize = 1)
     # Start at the centre of the base for the appropriate side
     if side == 0
-      ret = [PLAYER_BASE_X, PLAYER_BASE_Y - 16]
+      ret = [PLAYER_BASE_X, PLAYER_BASE_Y + 192]
     else
-      ret = [FOE_BASE_X, FOE_BASE_Y + 6]
+      ret = [FOE_BASE_X, FOE_BASE_Y + 20]
     end
     # Shift depending on index (no shifting needed for sideSize of 1)
     case sideSize
@@ -118,6 +121,7 @@ class Battle::Scene
       @sprites["pokemon_#{i}"]&.update(@frameCounter)
       @sprites["shadow_#{i}"]&.update(@frameCounter)
     end
+    @outer.update
   end
 
   def pbRefresh
@@ -156,10 +160,11 @@ class Battle::Scene
     # NOTE: If you are not using fancy graphics for the command/fight menus, you
     #       will need to make "messageBox" also visible if the windowtype if
     #       COMMAND_BOX/FIGHT_BOX respectively.
-    @sprites["messageBox"].visible    = (windowType == MESSAGE_BOX)
+    @outer.pbShowWindow(windowType)
+    @sprites["messageBox"].visible    = false #(windowType == MESSAGE_BOX)
     @sprites["messageWindow"].visible = (windowType == MESSAGE_BOX)
-    @sprites["commandWindow"].visible = (windowType == COMMAND_BOX)
-    @sprites["fightWindow"].visible   = (windowType == FIGHT_BOX)
+    @sprites["commandWindow"].visible = false #(windowType == COMMAND_BOX)
+    @sprites["fightWindow"].visible   = false #(windowType == FIGHT_BOX)
     @sprites["targetWindow"].visible  = (windowType == TARGET_BOX)
   end
 
@@ -277,9 +282,9 @@ class Battle::Scene
     dw = @sprites["messageWindow"]
     dw.text = msg
     cw = Window_CommandPokemon.new(commands)
-    cw.height   = Graphics.height - dw.height if cw.height > Graphics.height - dw.height
-    cw.x        = Graphics.width - cw.width
-    cw.y        = Graphics.height - cw.height - dw.height
+    cw.height   = @viewport.rect.height - dw.height if cw.height > @viewport.rect.height - dw.height
+    cw.x        = @viewport.rect.width - cw.width
+    cw.y        = @viewport.rect.height - cw.height - dw.height
     cw.z        = dw.z + 1
     cw.index    = 0
     cw.viewport = @viewport
@@ -333,6 +338,7 @@ class Battle::Scene
 
   def pbDisposeSprites
     pbDisposeSpriteHash(@sprites)
+    @outer.dispose
   end
 
   # Used by Ally Switch.

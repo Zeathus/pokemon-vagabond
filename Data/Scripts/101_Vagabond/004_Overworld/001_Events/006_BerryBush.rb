@@ -50,7 +50,7 @@ def pbHarvestBerry(item, quantity)
       end
     end
     pbItemBall(item, realqnt)
-    #$PokemonBag.pbStoreItem(item,realqnt)
+    #$bag.pbStoreItem(item,realqnt)
     #pbSEPlay("ItemGet",100)
     #text = text.upcase if text
     #text2 = text2.upcase if text2
@@ -124,7 +124,7 @@ def pbHarvestBerry(item, quantity)
       rng = rand(bonus[0])
       if rng < realqnt
         pbItemBall(bonus[1], 1)
-        #$PokemonBag.pbStoreItem(bonus[1], 1)
+        #$bag.pbStoreItem(bonus[1], 1)
         #pbCollectNotification(GameData::Item.get(item).name, "BONUS ITEM!")
       end
     end

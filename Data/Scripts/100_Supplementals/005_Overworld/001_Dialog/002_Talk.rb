@@ -38,6 +38,19 @@ def pbSilent(text, msgwindows = nil)
   msgwindows.dipose if create_window
 end
 
+def pbSpeech(name, expression="neutral", phrase=nil)
+  if phrase.nil?
+    phrase = name
+    name = nil
+  end
+  msgwindows = TalkMessageWindows.new
+  msgwindows.focused.portrait.set(name, expression)
+  msgwindows.display(phrase)
+  msgwindows.dispose
+  Graphics.update
+  Input.update
+end
+
 def pbPortraitFile(character, expression, left = false)
   files = left ? [
       _INTL("Graphics/Messages/{1}/left/{2}", character.downcase, expression.downcase),

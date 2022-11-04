@@ -1,3 +1,437 @@
+class Battle::Scene::Outer
+
+  BLANK       = 0
+  MESSAGE_BOX = 1
+  COMMAND_BOX = 2
+  FIGHT_BOX   = 3
+  TARGET_BOX  = 4
+
+  def initialize(sprites,parent,battle)
+    @sprites = sprites
+    @parent = parent
+    @battle = battle
+  end
+
+  def pbInitMenuSprites
+    @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
+    @viewport.z = @parent.z
+    @sprites["border"] = IconSprite.new(0, 0, @viewport)
+    @sprites["border"].setBitmap("Graphics/Pictures/Battle/border")
+    #@sprites["border"].z = 999
+    @sprites["outerOverlay"] = IconSprite.new(0,0,@viewport)
+    @sprites["outerOverlay"].setBitmap("Graphics/Pictures/Battle/outer_overlay")
+    # Create message box graphic
+    messageBox = pbAddSprite("messageBox",0,576-100,
+      "Graphics/Pictures/Battle/overlay_message",@viewport)
+    messageBox.z = 195
+    # Create message window (displays the message)
+    msgWindow = Window_AdvancedTextPokemon.newWithSize("",
+      16+128,576-100+2,512-32,96,@viewport)
+    msgWindow.z              = 200
+    msgWindow.opacity        = 0
+    msgWindow.baseColor      = Color.new(248,248,248)
+    msgWindow.shadowColor    = Color.new(33,29,29)
+    msgWindow.letterbyletter = true
+    @sprites["messageWindow"] = msgWindow
+    xPos = [148,386,148,386]
+    yPos = [482,482,528,528]
+    for i in 0...4
+      @sprites[_INTL("command_{1}",i)] = OuterCommandSprite.new(xPos[i],yPos[i],@viewport,@sprites["commandWindow"],i)
+      @sprites[_INTL("command_{1}",i)].z = 1
+    end
+    @sprites["moveInfo"] = OuterMoveInfo.new(@viewport,@sprites["fightWindow"])
+    @sprites["moveInfo"].z = 1
+    # Create targeting window
+    @sprites["targetWindow"] = Battle::Scene::TargetMenu.new(@viewport, 200, @battle.sideSizes)
+    @sprites["targetWindow"].z = 1
+  end
+
+  def pbAddSprite(id,x,y,filename,viewport)
+    sprite = IconSprite.new(x,y,viewport)
+    if filename
+      sprite.setBitmap(filename) rescue nil
+    end
+    @sprites[id] = sprite
+    return sprite
+  end
+
+  def pbInitInfoSprites
+    boxCount = 0
+    for i in 0...6
+      boxCount += 1 if @sprites["dataBox_#{i}"]
+    end
+    for i in 0...4
+      dataBox = @sprites["dataBox_#{i}"]
+      if dataBox
+        @sprites[_INTL("info_{1}",i)] = OuterDataBox.new(0,0,@viewport,dataBox,i,boxCount)
+        @sprites[_INTL("info_{1}",i)].z = 1
+      end
+    end
+  end
+
+  def pbShowWindow(windowType)
+    for i in 0...4
+        @sprites[_INTL("command_{1}",i)].visible = (windowType==COMMAND_BOX)
+    end
+    @sprites["moveInfo"].visible = (windowType==FIGHT_BOX)
+  end
+
+  def update(cw=nil)
+    for i in 0...4
+      @sprites[_INTL("command_{1}",i)].update
+    end
+    for i in 0...4
+      @sprites[_INTL("info_{1}",i)].update if @sprites[_INTL("info_{1}",i)]
+    end
+    @sprites["moveInfo"].update
+  end
+
+  def dispose
+    @viewport.dispose
+  end
+
+end
+
+class OuterMoveBox < IconSprite
+
+  def initialize(viewport,parent,pos)
+    @parent = parent
+    @pos = pos
+    x = 132
+    y = 482
+    x += 186 if @pos&1==1
+    y += 46  if @pos>1
+    super(x,y,viewport)
+    setBitmap("Graphics/Pictures/Battle/move_buttons")
+    self.src_rect = Rect.new(0,0,182,42)
+    @overlay = SpriteWrapper.new(viewport)
+    @overlay.bitmap = Bitmap.new(self.src_rect.width,self.src_rect.height)
+    @overlay.x = self.x
+    @overlay.y = self.y
+    @overlay.z = self.z + 1
+  end
+
+  def refresh(move,selected=false)
+    @overlay.bitmap.clear
+    if !move
+      self.src_rect.x = -182
+      self.src_rect.y = -42
+      return
+    end
+    type_id = GameData::Type.get(move.type).icon_position
+    self.src_rect.x = selected ? 182 : 0
+    self.src_rect.y = type_id * 42
+    #moveNameBase = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
+    moveNameBase = self.bitmap.get_pixel(2,self.src_rect.y+2)
+    moveNameShadow = Battle::Scene::MESSAGE_SHADOW_COLOR
+    textPos = [[move.name,92,12,2,moveNameBase,moveNameShadow]]
+    pbSetSystemFont(@overlay.bitmap)
+    pbDrawTextPositions(@overlay.bitmap,textPos)
+  end
+
+  def opacity=(value)
+    super(value)
+    @overlay.opacity = value
+  end
+
+  def color=(value)
+    super(value)
+    @overlay.color = value
+  end
+
+  def visible=(value)
+    super(value)
+    @overlay.visible = value
+  end
+
+  def z=(value)
+    super(value)
+    @overlay.z = self.z + 1
+  end
+
+  def dispose
+    @overlay.dispose
+    super
+  end
+end
+
+class OuterMoveInfo < IconSprite
+
+  def initialize(viewport,parent)
+    super(502,478,viewport)
+    setBitmap("Graphics/Pictures/Battle/outer_move_info")
+    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @categoryBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/category"))
+    @overlay = SpriteWrapper.new(viewport)
+    @overlay.bitmap = Bitmap.new(self.bitmap.width,self.bitmap.height)
+    @overlay.x = self.x
+    @overlay.y = self.y
+    @sprites = []
+    for i in 0...4
+      sprite = OuterMoveBox.new(viewport,parent,i)
+      sprite.z = self.z + 1
+      @sprites.push(sprite)
+    end
+    @overlay.z = self.z + 1
+    self.visible = false
+    @parent = parent
+    refresh
+  end
+
+  def refresh
+    @overlay.bitmap.clear
+    @index = @parent.index
+    @battler = @parent.battler
+    return if !@battler
+    move = @battler.moves[@index]
+    return if !move
+    base = Color.new(248,248,248)
+    shadow = Color.new(80,80,88)
+    @overlay.bitmap.blt(64,6,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(move.type).icon_position,64,28))
+    @overlay.bitmap.blt(64,62,@categoryBitmap.bitmap,Rect.new(0,28*move.category,64,28))
+    textPos = []
+    powerString = (move.baseDamage <= 0) ? "-" : move.baseDamage.to_s
+    textPos.push([powerString,28,18,2,base,shadow])
+    accString = (move.accuracy <= 0) ? "-" : (move.accuracy.to_s + "%")
+    textPos.push([accString,28,54,2,base,shadow])
+    textPos.push([move.pp.to_s,40,76,2,base,shadow])
+    pbSetSmallestFont(@overlay.bitmap)
+    pbDrawTextPositions(@overlay.bitmap,textPos)
+    for i in 0...4
+        @sprites[i].refresh(@battler.moves[i],i==@index)
+    end
+  end
+
+  def opacity=(value)
+    super(value)
+    @overlay.opacity = value
+    for i in 0...4
+      @sprites[i].opacity = value
+    end
+  end
+
+  def color=(value)
+    super(value)
+    @overlay.color = value
+    for i in 0...4
+      @sprites[i].color = value
+    end
+  end
+
+  def visible=(value)
+    super(value)
+    @overlay.visible = value
+    for i in 0...4
+      @sprites[i].visible = value
+    end
+    refresh if value
+  end
+
+  def z=(value)
+    super(value)
+    @overlay.z = value + 1
+    for i in 0...4
+      @sprites[i].z = value + 1
+    end
+  end
+
+  def dispose
+    @overlay.dispose
+    @typeBitmap.dispose
+    @categoryBitmap.dispose
+    for i in 0...4
+      @sprites[i].dispose
+    end
+    super
+  end
+
+  def update
+    super
+    @overlay.update
+    for i in 0...4
+      @sprites[i].update
+    end
+    if @index != @parent.index || @battler != @parent.battler
+      refresh
+    end
+  end
+
+end
+
+class OuterDataBox < RPG::Sprite
+
+  def initialize(x,y,viewport,parent,pos,boxCount)
+    super(viewport)
+    @frame = 0
+    @contents = BitmapWrapper.new(Graphics.width,Graphics.height)
+    self.bitmap  = @contents
+    pbSetSmallestFont(self.bitmap)
+    @parent = parent
+    pos = (pos + 2) % 4 if pos % 2 == 0 && boxCount >= 3
+    pos = (pos + 2) % 4 if pos % 2 == 1 && boxCount >= 4
+    @pos = pos
+    @statX = [96,674,96,674][pos]
+    @statY = [484,26,26,484][pos]
+    @affinityX = (pos % 2 == 1) ? @statX - 2 : @statX - 66
+    @affinityY = (pos != 1 && pos != 2) ? @statY - 60 : @statY + 120
+    @battler = parent.battler
+    @stages = {}
+    for i in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
+      @stages[i] = @battler.stages[i]
+    end
+    @fainted = @battler.fainted?
+    @boxVisible = @parent.visible
+    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @pkmnSprite = PokemonIconSprite.new(@battler.pokemon,viewport)
+    @pkmnSprite.visible = false
+    @pkmnX = (pos % 2 == 1) ? @statX - 2 : @statX - 66
+    @pkmnY = (pos != 1 && pos != 2) ? @statY - 170 : @statY + 170
+    @pkmnSprite.x = @pkmnX
+    @pkmnSprite.y = @pkmnY
+    refresh
+  end
+
+  def opacity=(value)
+    super
+    @pkmnSprite.opacity = value
+  end
+  
+  def visible=(value)
+    super
+    @pkmnSprite.visible = visible
+  end
+  
+  def color=(value)
+    super
+    @pkmnSprite.color = color
+  end
+
+  def refresh
+    self.bitmap.clear
+    @pkmnSprite.visible = @parent.visible
+    return if !@parent.visible || !@battler || @battler.fainted?
+    colors=[
+      Color.new(248,248,248),Color.new(33,29,29),
+      Color.new(160,160,168),Color.new(80,80,80),
+      Color.new(140,225,140),Color.new(0,150,0),
+      Color.new(225,140,140),Color.new(150,0,0)]
+    pokemon=@parent.battler
+    textPos=[]
+    i = 0; j = 0
+    statNames = ["ATTACK","DEFENSE","SP.ATK","SP.DEF","SPEED","ACC.","EVASION"]
+    for s in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
+      stage=pokemon.stages[s]
+      if stage != 0
+        c = stage>0 ? [colors[4],colors[5]] : [colors[6],colors[7]]
+        stageStr = stage.to_s
+        statview = 0 #$PokemonSystem.statstages
+        if statview==2
+          if stage>0
+            stageStr = sprintf("+%d",stage)
+          elsif stage<0
+            stageStr = sprintf("-%d",stage)
+          else
+            stageStr = "-"
+          end
+        else
+          base = [:ACCURACY,:EVASION].include?(s) ? 3.0 : 2.0
+          stat=(stage>=0) ? ((base+stage)/base) : (base/(base-stage))
+          if statview==1
+            stat*=(stat*100).round
+            stageStr = sprintf("%d%%",stat)
+          else
+            if (base==2.0 ? (stage>=-3 && stage!=-1) : (stage%3==0))
+              stageStr = sprintf("%.01fx",stat)
+            else
+              stageStr = sprintf("%.02fx",stat)
+            end
+          end
+        end
+        statNameX = @statX
+        statNameX += (@pos&1 == 1) ? 59 : -61
+        textPos.push([stageStr,@statX,@statY+18*i,2,c[0],c[1]])
+        textPos.push([statNames[j],statNameX,@statY+18*i,2,c[0],c[1]])
+        i+=1
+        break if i > 4
+      end
+      j+=1
+    end
+    pbDrawTextPositions(self.bitmap,textPos)
+    self.bitmap.blt(@affinityX,@affinityY,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(@battler.pokemon.affinities[0]).icon_position,64,28))
+  end
+
+  def dispose
+    @pkmnSprite.dispose
+    @typeBitmap.dispose
+    super
+  end
+
+  def update
+    super
+    @frame = (@frame + 1) % 2
+    mustRefresh = false
+    if @battler != @parent.battler || @fainted != @battler.fainted? || @boxVisible != @parent.visible
+      mustRefresh = true
+    elsif 
+      for i in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
+        if @stages[i] != @battler.stages[i]
+          mustRefresh = true
+          break
+        end
+      end
+    end
+    if mustRefresh
+      @battler = @parent.battler
+      @pkmnSprite.pokemon = @battler.pokemon
+      for i in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
+        @stages[i] = @battler.stages[i]
+      end
+      @fainted = @battler.fainted?
+      @boxVisible = @parent.visible
+      refresh
+    end
+    @pkmnSprite.update if (@parent.selected==1 || @parent.selected==2) && @frame == 0
+  end
+
+end
+
+class OuterCommandSprite < IconSprite
+  
+  def initialize(x,y,viewport=nil,parent,pos)
+    super(x,y,viewport)
+    @parent  = parent
+    @pos = pos
+    setBitmap(_INTL("Graphics/Pictures/Battle/options"))
+    refresh
+  end
+
+  def getRect(i)
+    return (@parent.index==@pos) ? Rect.new(234,i*44,234,44) : Rect.new(0,i*44,234,44)
+  end
+  
+  def dispose
+    super
+  end
+
+  def visible=(value)
+    super(value)
+    refresh if value
+  end
+  
+  def refresh
+    if @parent.mode==1 && @pos==3
+      self.src_rect = getRect(5)
+    else
+      self.src_rect = getRect(@pos)
+    end
+  end
+  
+  def update
+    super
+    refresh
+  end
+end
+
 #===============================================================================
 # Data box for regular battles
 #===============================================================================
@@ -6,19 +440,21 @@ class Battle::Scene::PokemonDataBox < Sprite
   attr_accessor :selected
   attr_reader   :animatingHP
   attr_reader   :animatingExp
-
+  
   # Time in seconds to fully fill the Exp bar (from empty).
   EXP_BAR_FILL_TIME  = 1.75
   # Maximum time in seconds to make a change to the HP bar.
   HP_BAR_CHANGE_TIME = 1.0
-  STATUS_ICON_HEIGHT = 16
-  NAME_BASE_COLOR         = Color.new(72, 72, 72)
-  NAME_SHADOW_COLOR       = Color.new(184, 184, 184)
-  MALE_BASE_COLOR         = Color.new(48, 96, 216)
-  MALE_SHADOW_COLOR       = NAME_SHADOW_COLOR
-  FEMALE_BASE_COLOR       = Color.new(248, 88, 40)
-  FEMALE_SHADOW_COLOR     = NAME_SHADOW_COLOR
-
+  STATUS_ICON_HEIGHT = 32
+  NAME_BASE_COLOR         = Color.new(248, 248, 248)
+  NAME_SHADOW_COLOR       = Color.new( 15,  15,  15)
+  MALE_BASE_COLOR         = Color.new( 24, 112, 216)
+  MALE_SHADOW_COLOR       = Color.new(136, 168, 208)
+  FEMALE_BASE_COLOR       = Color.new(248,  56,  32)
+  FEMALE_SHADOW_COLOR     = Color.new(224, 152, 144)
+  NONBINARY_BASE_COLOR    = Color.new(136,  84, 128)
+  NONBINARY_SHADOW_COLOR  = Color.new(180, 160, 176)
+  
   def initialize(battler, sideSize, viewport = nil)
     super(viewport)
     @battler      = battler
@@ -38,37 +474,38 @@ class Battle::Scene::PokemonDataBox < Sprite
     initializeOtherGraphics(viewport)
     refresh
   end
-
+  
   def onPlayerSide
     return (@battler.index % 2 == 0)
   end
-
+  
   def initializeDataBoxGraphic(sideSize)
     onPlayerSide = @battler.index.even?
     # Get the data box graphic and set whether the HP numbers/Exp bar are shown
     if sideSize == 1   # One Pokémon on side, use the regular dara box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_normal",
                     "Graphics/Pictures/Battle/databox_normal_foe"][@battler.index % 2]
-      if onPlayerSide
-        @showHP  = true
-        @showExp = true
-      end
     else   # Multiple Pokémon on side, use the thin dara box BG
       bgFilename = ["Graphics/Pictures/Battle/databox_thin",
                     "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index % 2]
     end
+    if onPlayerSide
+      @showHP = true
+    end
+    @showExp = false
     @databoxBitmap&.dispose
     @databoxBitmap = AnimatedBitmap.new(bgFilename)
     # Determine the co-ordinates of the data box and the left edge padding width
     if onPlayerSide
       @spriteX = self.viewport.rect.width - 244
-      @spriteY = self.viewport.rect.height - 192
+      @spriteY = self.viewport.rect.height - 112
       @spriteBaseX = 34
     else
-      @spriteX = -16
+      @spriteX = -12
       @spriteY = 36
       @spriteBaseX = 16
     end
+    @smallLevel = (sideSize == 3)
     case sideSize
     when 1
       if @battler.index == 1
@@ -81,6 +518,7 @@ class Battle::Scene::PokemonDataBox < Sprite
           end
         end
         @spriteY -= [offset, 40].min
+        @smallLevel = true if offset >= 36
       end
     when 2
       @spriteX += [-12,  12,  0,  0][@battler.index]
@@ -90,16 +528,17 @@ class Battle::Scene::PokemonDataBox < Sprite
       @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]
     end
   end
-
+  
   def initializeOtherGraphics(viewport)
     # Create other bitmaps
     @numbersBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers")
-    @hpBarBitmap   = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_hp")
+    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp_vb{1}", onPlayerSide ? "" : "_foe"))
+    @hpBarExBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp_extra{1}", onPlayerSide ? "" : "_foe"))
     @expBarBitmap  = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_exp")
     @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers_white")
     # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124, 16, viewport)
-#    pbSetSmallFont(@hpNumbers.bitmap)
+  #    pbSetSmallFont(@hpNumbers.bitmap)
     @sprites["hpNumbers"] = @hpNumbers
     # Create sprite wrapper that displays HP bar
     @hpBar = Sprite.new(viewport)
@@ -117,7 +556,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     self.z       = 150 + ((@battler.index / 2) * 5)
     pbSetSystemFont(self.bitmap)
   end
-
+  
   def dispose
     pbDisposeSpriteHash(@sprites)
     @databoxBitmap.dispose
@@ -127,35 +566,35 @@ class Battle::Scene::PokemonDataBox < Sprite
     @contents.dispose
     super
   end
-
+  
   def x=(value)
     super
-    @hpBar.x     = value + @spriteBaseX + 102
+    @hpBar.x     = value + @spriteBaseX + (onPlayerSide ? 12 : 38)
     @expBar.x    = value + @spriteBaseX + 6
-    @hpNumbers.x = value + @spriteBaseX + (@showHP ? 80 : 98)
+    @hpNumbers.x = value + @spriteBaseX + (@showHP ? 40 : 60)
   end
-
+  
   def y=(value)
     super
-    @hpBar.y     = value + 40
+    @hpBar.y     = value + 28
     @expBar.y    = value + 74
-    @hpNumbers.y = value + (@showHP ? 52 : 34)
+    @hpNumbers.y = value + 28
   end
-
+  
   def z=(value)
     super
     @hpBar.z     = value + 1
     @expBar.z    = value + 1
     @hpNumbers.z = value + 2
   end
-
+  
   def opacity=(value)
     super
     @sprites.each do |i|
       i[1].opacity = value if !i[1].disposed?
     end
   end
-
+  
   def visible=(value)
     super
     @sprites.each do |i|
@@ -163,28 +602,28 @@ class Battle::Scene::PokemonDataBox < Sprite
     end
     @expBar.visible = (value && @showExp)
   end
-
+  
   def color=(value)
     super
     @sprites.each do |i|
       i[1].color = value if !i[1].disposed?
     end
   end
-
+  
   def battler=(b)
     @battler = b
     self.visible = (@battler && !@battler.fainted?)
   end
-
+  
   def hp
     return (@animatingHP) ? @currentHP : @battler.hp
   end
-
+  
   def exp_fraction
     return 0.0 if @rangeExp == 0
     return (@animatingExp) ? @currentExp.to_f / @rangeExp : @battler.pokemon.exp_fraction
   end
-
+  
   def animateHP(oldHP, newHP, rangeHP)
     @currentHP   = oldHP
     @endHP       = newHP
@@ -198,7 +637,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpIncPerFrame = minInc if @hpIncPerFrame < minInc
     @animatingHP   = true
   end
-
+  
   def animateExp(oldExp, newExp, rangeExp)
     return if rangeExp == 0
     @currentExp     = oldExp
@@ -210,7 +649,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @animatingExp   = true
     pbSEPlay("Pkmn exp gain") if @showExp
   end
-
+  
   def pbDrawNumber(number, btmp, startX, startY, align = 0, white = false)
     # -1 means draw the / character
     n = (number == -1) ? [10] : number.to_i.digits.reverse
@@ -224,38 +663,40 @@ class Battle::Scene::PokemonDataBox < Sprite
       startX += charWidth
     end
   end
-
+  
   def draw_background
     self.bitmap.blt(0, 0, @databoxBitmap.bitmap, Rect.new(0, 0, @databoxBitmap.width, @databoxBitmap.height))
   end
-
+  
   def draw_name
-    nameWidth = self.bitmap.text_size(@battler.name).width
-    nameOffset = 0
-    nameOffset = nameWidth - 116 if nameWidth > 116
-    pbDrawTextPositions(self.bitmap,
-      [[@battler.name, @spriteBaseX + 8 - nameOffset, 12, false, NAME_BASE_COLOR, NAME_SHADOW_COLOR]]
-    )
+    if onPlayerSide
+      pbDrawTextPositions(self.bitmap,
+        [[@battler.name, @spriteBaseX + 10, 0, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
+      )
+    else
+      pbDrawTextPositions(self.bitmap,
+        [[@battler.name, @spriteBaseX + 202, 0, 1, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
+      )
+    end
   end
-
+  
   def draw_level
-    # "Lv" graphic
-    pbDrawImagePositions(self.bitmap,
-      [["Graphics/Pictures/Battle/overlay_lv", @spriteBaseX + 140, 16]]
-    )
     # Level number
-    pbDrawNumber(@battler.level, self.bitmap, @spriteBaseX + 162, 16)
+    lvl_text = _INTL("{1}", @battler.level)
+    lvl_x = onPlayerSide ? 174 : 16
+    pbDrawTextPositions(self.bitmap,
+      [[lvl_text, @spriteBaseX + lvl_x, 0, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
   end
-
+  
   def draw_gender
     gender = @battler.displayGender
-    return if ![0, 1].include?(gender)
-    gender_text  = (gender == 0) ? _INTL("♂") : _INTL("♀")
-    base_color   = (gender == 0) ? MALE_BASE_COLOR : FEMALE_BASE_COLOR
-    shadow_color = (gender == 0) ? MALE_SHADOW_COLOR : FEMALE_SHADOW_COLOR
-    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + 126, 12, false, base_color, shadow_color]])
+    gender_x = onPlayerSide ? 140 : (24 + self.bitmap.text_size(_INTL("{1}", @battler.level)).width)
+    gender_text = ["♂", "♀", "⚲"][gender]
+    base_color   = [MALE_BASE_COLOR, FEMALE_BASE_COLOR, NONBINARY_BASE_COLOR][gender]
+    shadow_color = [MALE_SHADOW_COLOR, FEMALE_SHADOW_COLOR, NONBINARY_SHADOW_COLOR][gender]
+    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + gender_x, 2, false, base_color, shadow_color, true]])
   end
-
+  
   def draw_status
     return if @battler.status == :NONE
     if @battler.status == :POISON && @battler.statusCount > 0   # Badly poisoned
@@ -267,13 +708,13 @@ class Battle::Scene::PokemonDataBox < Sprite
     pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + 24, 36,
                                         0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
   end
-
+  
   def draw_shiny_icon
     return if !@battler.shiny?
     shiny_x = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
     pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/shiny", @spriteBaseX + shiny_x, 36]])
   end
-
+  
   def draw_special_form_icon
     # Mega Evolution/Primal Reversion icon
     if @battler.mega?
@@ -289,12 +730,12 @@ class Battle::Scene::PokemonDataBox < Sprite
       pbDrawImagePositions(self.bitmap, [[filename, @spriteBaseX + primalX, 4]]) if filename
     end
   end
-
+  
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
     pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 8, 36]])
   end
-
+  
   def refresh
     self.bitmap.clear
     return if !@battler.pokemon
@@ -309,7 +750,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     refreshHP
     refreshExp
   end
-
+  
   def refreshHP
     @hpNumbers.bitmap.clear
     return if !@battler.pokemon
@@ -322,7 +763,7 @@ class Battle::Scene::PokemonDataBox < Sprite
       hpPercent = [(self.hp * 100.0 / @battler.totalhp), 0.1].max
       hpPercent = 0.1 if self.hp == 1
       hpText = self.hp >= @battler.totalhp ? sprintf("%d%%", hpPercent.round) : sprintf("%.1f%%", hpPercent)
-      pbDrawNumber(hpText, @hpNumbers.bitmap, 54, 2, 2, true)
+      pbDrawNumber(hpText, @hpNumbers.bitmap, 54, 2, 2)
     end
     # Resize HP bar
     w = 0
@@ -339,7 +780,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     hpColor = 2 if self.hp <= @battler.totalhp / 4   # Red bar
     @hpBar.src_rect.y = hpColor * @hpBarBitmap.height / 3
   end
-
+  
   def refreshExp
     return if !@showExp
     w = exp_fraction * @expBarBitmap.width
@@ -348,7 +789,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     w = ((w / 2).round) * 2
     @expBar.src_rect.width = w
   end
-
+  
   def updateHPAnimation
     return if !@animatingHP
     if @currentHP < @endHP      # Gaining HP
@@ -362,7 +803,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     refreshHP
     @animatingHP = false if @currentHP == @endHP
   end
-
+  
   def updateExpAnimation
     return if !@animatingExp
     if !@showExp   # Not showing the Exp bar, no need to waste time animating it
@@ -400,22 +841,22 @@ class Battle::Scene::PokemonDataBox < Sprite
       @animatingExp = false
     end
   end
-
+  
   def refreshBossGauges
     return if @battler.index != 1 || @sideSize > 1
-
+  
     x_offset = @spriteBaseX
     y_offset = 48
-
+  
     base = Color.new(248,248,248)
     shadow = Color.new(15,15,15)
-
+  
     for gauge in pbBoss.gauges
       next if !gauge.enabled
-
+  
       imagepos = []
       textpos = []
-
+  
       case gauge.type
       when PBGauge::Full
         imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
@@ -430,9 +871,9 @@ class Battle::Scene::PokemonDataBox < Sprite
       pbDrawImagePositions(self.bitmap,imagepos)
       pbSetSmallestFont(self.bitmap)
       pbDrawTextPositions(self.bitmap,textpos)
-
+  
       colors = gauge.get_colors
-
+  
       case gauge.type
       when PBGauge::Full
         self.bitmap.fill_rect(
@@ -473,9 +914,9 @@ class Battle::Scene::PokemonDataBox < Sprite
       end
     end
   end
-
+  
   QUARTER_ANIM_PERIOD = Graphics.frame_rate * 3 / 20
-
+  
   def updatePositions(frameCounter)
     self.x = @spriteX
     self.y = @spriteY
@@ -487,7 +928,7 @@ class Battle::Scene::PokemonDataBox < Sprite
       end
     end
   end
-
+  
   def update(frameCounter = 0)
     super()
     # Animate HP bar
@@ -497,294 +938,5 @@ class Battle::Scene::PokemonDataBox < Sprite
     # Update coordinates of the data box
     updatePositions(frameCounter)
     pbUpdateSpriteHash(@sprites)
-  end
-end
-
-
-
-#===============================================================================
-# Splash bar to announce a triggered ability
-#===============================================================================
-class Battle::Scene::AbilitySplashBar < Sprite
-  attr_reader :battler
-
-  TEXT_BASE_COLOR   = Color.new(0, 0, 0)
-  TEXT_SHADOW_COLOR = Color.new(248, 248, 248)
-
-  def initialize(side, viewport = nil)
-    super(viewport)
-    @side    = side
-    @battler = nil
-    # Create sprite wrapper that displays background graphic
-    @bgBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/ability_bar")
-    @bgSprite = Sprite.new(viewport)
-    @bgSprite.bitmap = @bgBitmap.bitmap
-    @bgSprite.src_rect.y      = (side == 0) ? 0 : @bgBitmap.height / 2
-    @bgSprite.src_rect.height = @bgBitmap.height / 2
-    # Create bitmap that displays the text
-    @contents = BitmapWrapper.new(@bgBitmap.width, @bgBitmap.height / 2)
-    self.bitmap = @contents
-    pbSetSystemFont(self.bitmap)
-    # Position the bar
-    self.x       = (side == 0) ? -viewport.rect.width / 2 : viewport.rect.width
-    self.y       = (side == 0) ? 180 : 80
-    self.z       = 120
-    self.visible = false
-  end
-
-  def dispose
-    @bgSprite.dispose
-    @bgBitmap.dispose
-    @contents.dispose
-    super
-  end
-
-  def x=(value)
-    super
-    @bgSprite.x = value
-  end
-
-  def y=(value)
-    super
-    @bgSprite.y = value
-  end
-
-  def z=(value)
-    super
-    @bgSprite.z = value - 1
-  end
-
-  def opacity=(value)
-    super
-    @bgSprite.opacity = value
-  end
-
-  def visible=(value)
-    super
-    @bgSprite.visible = value
-  end
-
-  def color=(value)
-    super
-    @bgSprite.color = value
-  end
-
-  def battler=(value)
-    @battler = value
-    refresh
-  end
-
-  def refresh
-    self.bitmap.clear
-    return if !@battler
-    textPos = []
-    textX = (@side == 0) ? 10 : self.bitmap.width - 8
-    # Draw Pokémon's name
-    textPos.push([_INTL("{1}'s", @battler.name), textX, 8, @side == 1,
-                  TEXT_BASE_COLOR, TEXT_SHADOW_COLOR, true])
-    # Draw Pokémon's ability
-    textPos.push([@battler.abilityName, textX, 38, @side == 1,
-                  TEXT_BASE_COLOR, TEXT_SHADOW_COLOR, true])
-    pbDrawTextPositions(self.bitmap, textPos)
-  end
-
-  def update
-    super
-    @bgSprite.update
-  end
-end
-
-
-
-#===============================================================================
-# Pokémon sprite (used in battle)
-#===============================================================================
-class Battle::Scene::BattlerSprite < RPG::Sprite
-  attr_reader   :pkmn
-  attr_accessor :index
-  attr_accessor :selected
-  attr_reader   :sideSize
-
-  def initialize(viewport, sideSize, index, battleAnimations)
-    super(viewport)
-    @pkmn             = nil
-    @sideSize         = sideSize
-    @index            = index
-    @battleAnimations = battleAnimations
-    # @selected: 0 = not selected, 1 = choosing action bobbing for this Pokémon,
-    #            2 = flashing when targeted
-    @selected         = 0
-    @frame            = 0
-    @updating         = false
-    @spriteX          = 0   # Actual x coordinate
-    @spriteY          = 0   # Actual y coordinate
-    @spriteXExtra     = 0   # Offset due to "bobbing" animation
-    @spriteYExtra     = 0   # Offset due to "bobbing" animation
-    @_iconBitmap      = nil
-    self.visible      = false
-  end
-
-  def dispose
-    @_iconBitmap&.dispose
-    @_iconBitmap = nil
-    self.bitmap = nil if !self.disposed?
-    super
-  end
-
-  def x; return @spriteX; end
-  def y; return @spriteY; end
-
-  def x=(value)
-    @spriteX = value
-    super(value + @spriteXExtra)
-  end
-
-  def y=(value)
-    @spriteY = value
-    super(value + @spriteYExtra)
-  end
-
-  def width;  return (self.bitmap) ? self.bitmap.width : 0;  end
-  def height; return (self.bitmap) ? self.bitmap.height : 0; end
-
-  def visible=(value)
-    @spriteVisible = value if !@updating   # For selection/targeting flashing
-    super
-  end
-
-  # Set sprite's origin to bottom middle
-  def pbSetOrigin
-    return if !@_iconBitmap
-    self.ox = @_iconBitmap.width / 2
-    self.oy = @_iconBitmap.height
-  end
-
-  def pbSetPosition
-    return if !@_iconBitmap
-    zoom = ((@index & 1  == 0) ? 1.5 : 1.0)
-    self.zoom_x = zoom
-    self.zoom_y = zoom
-    pbSetOrigin
-    if @index.even?
-      self.z = 50 + (5 * @index / 2)
-    else
-      self.z = 50 - (5 * (@index + 1) / 2)
-    end
-    # Set original position
-    p = Battle::Scene.pbBattlerPosition(@index, @sideSize)
-    @spriteX = p[0]
-    @spriteY = p[1]
-    # Apply metrics
-    @pkmn.species_data.apply_metrics_to_sprite(self, @index)
-  end
-
-  def setPokemonBitmap(pkmn, back = false)
-    @pkmn = pkmn
-    @_iconBitmap&.dispose
-    @_iconBitmap = GameData::Species.sprite_bitmap_from_pokemon(@pkmn, back)
-    self.bitmap = (@_iconBitmap) ? @_iconBitmap.bitmap : nil
-    pbSetPosition
-  end
-
-  # This method plays the battle entrance animation of a Pokémon. By default
-  # this is just playing the Pokémon's cry, but you can expand on it. The
-  # recommendation is to create a PictureEx animation and push it into
-  # the @battleAnimations array.
-  def pbPlayIntroAnimation(pictureEx = nil)
-    @pkmn&.play_cry
-  end
-
-  QUARTER_ANIM_PERIOD = Graphics.frame_rate * 3 / 20
-  SIXTH_ANIM_PERIOD   = Graphics.frame_rate * 2 / 20
-
-  def update(frameCounter = 0)
-    return if !@_iconBitmap
-    @updating = true
-    # Update bitmap
-    @_iconBitmap.update
-    self.bitmap = @_iconBitmap.bitmap
-    # Pokémon sprite bobbing while Pokémon is selected
-    @spriteYExtra = 0
-    if @selected == 1    # When choosing commands for this Pokémon
-      case (frameCounter / QUARTER_ANIM_PERIOD).floor
-      when 1 then @spriteYExtra = 2
-      when 3 then @spriteYExtra = -2
-      end
-    end
-    self.x       = self.x
-    self.y       = self.y
-    self.visible = @spriteVisible
-    # Pokémon sprite blinking when targeted
-    if @selected == 2 && @spriteVisible
-      case (frameCounter / SIXTH_ANIM_PERIOD).floor
-      when 2, 5 then self.visible = false
-      else           self.visible = true
-      end
-    end
-    @updating = false
-  end
-end
-
-
-
-#===============================================================================
-# Shadow sprite for Pokémon (used in battle)
-#===============================================================================
-class Battle::Scene::BattlerShadowSprite < RPG::Sprite
-  attr_reader   :pkmn
-  attr_accessor :index
-  attr_accessor :selected
-
-  def initialize(viewport, sideSize, index)
-    super(viewport)
-    @pkmn        = nil
-    @sideSize    = sideSize
-    @index       = index
-    @_iconBitmap = nil
-    self.visible = false
-  end
-
-  def dispose
-    @_iconBitmap&.dispose
-    @_iconBitmap = nil
-    self.bitmap = nil if !self.disposed?
-    super
-  end
-
-  def width;  return (self.bitmap) ? self.bitmap.width : 0;  end
-  def height; return (self.bitmap) ? self.bitmap.height : 0; end
-
-  # Set sprite's origin to centre
-  def pbSetOrigin
-    return if !@_iconBitmap
-    self.ox = @_iconBitmap.width / 2
-    self.oy = @_iconBitmap.height / 2
-  end
-
-  def pbSetPosition
-    return if !@_iconBitmap
-    pbSetOrigin
-    self.z = 3
-    # Set original position
-    p = Battle::Scene.pbBattlerPosition(@index, @sideSize)
-    self.x = p[0]
-    self.y = p[1]
-    # Apply metrics
-    @pkmn.species_data.apply_metrics_to_sprite(self, @index, true)
-  end
-
-  def setPokemonBitmap(pkmn)
-    @pkmn = pkmn
-    @_iconBitmap&.dispose
-    @_iconBitmap = GameData::Species.shadow_bitmap_from_pokemon(@pkmn)
-    self.bitmap = (@_iconBitmap) ? @_iconBitmap.bitmap : nil
-    pbSetPosition
-  end
-
-  def update(frameCounter = 0)
-    return if !@_iconBitmap
-    # Update bitmap
-    @_iconBitmap.update
-    self.bitmap = @_iconBitmap.bitmap
   end
 end

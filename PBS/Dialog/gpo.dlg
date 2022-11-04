@@ -1,7 +1,7 @@
 [GPO_RECEPTION,0]
 /event set Receptionist 4
 /speaker Receptionist
-?> Welcome to the G.P.O. headquarters.WT<br>Do you have any question?
+?> Welcome to the G.P.O. headquarters.<br>Do you have any question?
     /choice What's the G.P.O.?
         > The G.P.O. is an acronym for "Global Pokémon Organization".
         > We do our best to take care of troubles around the globe.
@@ -15,7 +15,7 @@
         > On the east side are living quarters for those who might need temporary residence.
         > Lastly, the admin area is on the floor below, but you need special access to go there.
     /choice Who are you?
-        > Who am I.WT.WT?WT I'm just a receptionist, I don't really need any further personality traits to do what I'm supposed to.
+        > Who am I..? I'm just a receptionist, I don't really need any further personality traits to do what I'm supposed to.
     /cancelchoice Never mind
         > Come back if you have any questions.
 ?/>
@@ -23,7 +23,7 @@
 [GPO_RECEPTION,1]
 /speaker Receptionist
 > This is where members of the G.P.O. are assigned to various tasks.
-> You're not a member.WT Therefore you cannot be assigned to any tasks.
+> You're not a member. Therefore you cannot be assigned to any tasks.
 
 [GPO_MAN,0]
 /speaker Man
@@ -39,7 +39,7 @@
 /speaker Employee
 > The guy working across from me was sent from Alola to research how Alolan Pokémon fare in different regions.
 > Half of the time he's telling stories about Alola, while I think half of those are one's he made up on his own.
-> Mysterious beasts from otherwordly portals?WT<br>Hah!WT As if I'd believe something that surreal.
+> Mysterious beasts from otherwordly portals?<br>Hah! As if I'd believe something that surreal.
 
 [GPO_EMPLOYEE,1]
 /speaker Employee
@@ -72,7 +72,7 @@
 
 [GPO_HEALTHCARE_EMPLOYEE,1]
 /speaker Employee
-> The Aether Foundation has its main facility in the Alola region.WT That is also where our president, Lusamine lives.
+> The Aether Foundation has its main facility in the Alola region. That is also where our president, Lusamine lives.
 > We were asked if we could help care for Pokémon at the G.P.O. here in the Rokk region.
 > President Lusamine couldn't refuse the offer to help more Pokémon, so she accepted.
 
@@ -82,15 +82,15 @@
 
 [QUEST_LPBC,0]
 /speaker Employee
-> How could I not notice.WT.WT?WT I guess being clumsy comes with the name Klaus.WT.WT.
+> How could I not notice..? I guess being clumsy comes with the name Klaus...
 
 [QUEST_LPBC,1]
 /speaker Klaus
-> Hello there.WT Someone came at the perfect time.
+> Hello there. Someone came at the perfect time.
 > I really need some help.
 > I was completely focused on developing my story in RPG Maker, and the Vulpix that was resting here ran away somewhere.
-> It is a special Vulpix from Alola.WT You can recognize it by its snow-white color.
-> A curious thing, Alolan Pokémon.WT.WT.WT Raised in a different region to become types almost opposite of their usual variants.
+> It is a special Vulpix from Alola. You can recognize it by its snow-white color.
+> A curious thing, Alolan Pokémon... Raised in a different region to become types almost opposite of their usual variants.
 > Asking the people in the lounge would probably be a good start to find out where Vulpix went.
 
 [QUEST_LPBC,2]
@@ -110,11 +110,11 @@
 /speaker Klaus
 /dialog QUEST_LPBC 4
 > Meanwhile, I will be developing a riveting story!
-> Err, I mean.WT.WT.WT Work on the analysis.
+> Err, I mean... Work on the analysis.
 
 [QUEST_LPBC,6]
 /speaker Man
-> You're looking for a snow-white Vulpix?WT<br>Those exist?
+> You're looking for a snow-white Vulpix?<br>Those exist?
 > I would have loved to see one, but sadly I haven't.
 
 [QUEST_LPBC,7]
@@ -126,7 +126,7 @@
 [QUEST_LPBC,8]
 /speaker Employee
 > If I have seen an Alolan Vulpix pass by?
-> There was one who followed a boy towards the elevator.WT I assumed it was his Pokémon.
+> There was one who followed a boy towards the elevator. I assumed it was his Pokémon.
 > It's probably somewhere in the Lapis District now.
 
 [QUEST_LPBC,9]
@@ -151,7 +151,7 @@
 > Vulpix is a bit scared of you and keeps its distance.
 
 [QUEST_LPBC,13]
-> Vulpix backs away slowly...WT<br>It is a bit scared of you.
+> Vulpix backs away slowly...<br>It is a bit scared of you.
 
 [QUEST_LPBC,14]
 > Vulpix is unsure if it is safe to approach you yet.
@@ -163,7 +163,7 @@
 > Vulpix inches closer to you and smells your hand cautiously.
 
 [QUEST_LPBC,17]
-> Vulpix sounds quite happy.WT<br>It will follow you back to Klaus.
+> Vulpix sounds quite happy.<br>It will follow you back to Klaus.
 
 [QUEST_LPBC,18]
 > Your sudden motion made the Vulpix unsure about you.
@@ -178,47 +178,47 @@
 > Vulpix remains curious about you.
 
 [QUEST_LPBC,22]
-> The sound was too loud with Vulpix so close.WT It distanced itself slightly.
+> The sound was too loud with Vulpix so close. It distanced itself slightly.
 
 [QUEST_LPBC,23]
 /speaker Klaus
-> Thank you for finding Vulpix!WT<br>You were a great help!
+> Thank you for finding Vulpix!<br>You were a great help!
 > I gave it one of its favorite treats, Big Malasadas, a homemade treat from the Alola region.
 /dialog POKEMON_VULPIX
 
 [QUEST_LPBC,24]
 /speaker Klaus
-> Oh!WT Vulpix wanted to share some with you!
-> Vulpix has been away from Alola for a while now.WT I think it's time to test how it fares in battle.
+> Oh! Vulpix wanted to share some with you!
+> Vulpix has been away from Alola for a while now. I think it's time to test how it fares in battle.
 > Please come back for a battle when you have the time.
 
 [QUEST_LPBC,25]
 /speaker Girl
-> A white Vulpix?WT It did run past me a moment ago,WT and it was so cute!
-> I didn't catch where it went though,WT sorry.
+> A white Vulpix? It did run past me a moment ago, and it was so cute!
+> I didn't catch where it went though, sorry.
 
 [QUEST_LPBC_POST,0]
 /speaker Klaus
-?> Are you ready to test how Vulpix fares in battle?WT<br>I will use some of my other Pokémon as well.
+?> Are you ready to test how Vulpix fares in battle?<br>I will use some of my other Pokémon as well.
     /choice Yes
         /return true
     /cancelchoice No
-        > Take your time.WT I understand you are busy.
+        > Take your time. I understand you are busy.
         /return false
 ?/>
 
 [QUEST_LPBC_POST,1]
 /speaker Klaus
-> You are far too strong to test Vulpix against.WT It's not of a high enough level compared to your Pokémon.
+> You are far too strong to test Vulpix against. It's not of a high enough level compared to your Pokémon.
 > I have a proposal for you.
 > It would be highly beneficial to my research to have data on Alolan Vulpix traveling with a trainer.
 /loop
     ?> Could you take this Vulpix with you?
         /choice Yes
-            > Great!WT I know it will be happy traveling with you.
+            > Great! I know it will be happy traveling with you.
             /break
         /cancelchoice No
-            > No need to be shy,WT I know Vulpix already likes you!
+            > No need to be shy, I know Vulpix already likes you!
     ?/>
 /end
 

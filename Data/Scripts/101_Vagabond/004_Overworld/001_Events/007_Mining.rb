@@ -44,7 +44,7 @@ def pbMineShards(item, quantity)
         text2 = pkmn.name + "'s " + "Rock Smash: +" + (realqnt-quantity).to_s + "x" 
       end
     end
-    $PokemonBag.pbStoreItem(item,realqnt)
+    $bag.pbStoreItem(item,realqnt)
     pbSEPlay("ItemGet",100)
     text = text.upcase if text
     text2 = text2.upcase if text2
@@ -79,7 +79,7 @@ def pbMineShards(item, quantity)
     for bonus in loot
       rng = rand(bonus[0])
       if rng < realqnt
-        $PokemonBag.pbStoreItem(bonus[1], 1)
+        $bag.pbStoreItem(bonus[1], 1)
         pbCollectNotification(PBItems.getName(bonus[1]).upcase, "BONUS ITEM!")
       end
     end

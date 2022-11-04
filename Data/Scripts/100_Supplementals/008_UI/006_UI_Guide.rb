@@ -140,9 +140,9 @@ class GuideScreen
     @page  = 0
     @width = Graphics.width * 2 / 5
     @height = Graphics.height * 3 / 4
-    @text_x = 210
+    @text_x = 236
     @text_y = 12
-    @text_width = Graphics.width - 214
+    @text_width = Graphics.width - 240
     @text_height = Graphics.height - 48
     @image_max_width = @text_width * 1.0
     @image_max_height = Graphics.height * 3.0 / 4.0

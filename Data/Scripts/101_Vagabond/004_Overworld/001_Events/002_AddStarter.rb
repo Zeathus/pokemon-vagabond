@@ -1,16 +1,16 @@
 def pbAddStarter(species)
 
-  pokemon = Pokemon.new(species,10,$player)
+  pokemon = Pokemon.new(species, 10, $player)
   $game_variables[STARTER_ID] = pokemon.personalID
   pokemon.ability_index = 0
   pokemon.nature = :BASHFUL
   case species
   when :SKIDDO
-    pokemon.iv = pbArrayToIVs([31,31,16,5,10,16])
+    pokemon.iv = pbStatArrayToHash([31,31,16,5,10,16])
   when :NUMEL
-    pokemon.iv = pbArrayToIVs([31,16,16,5,31,10])
+    pokemon.iv = pbStatArrayToHash([31,16,16,5,31,10])
   when :KRABBY
-    pokemon.iv = pbArrayToIVs([31,31,16,5,10,16])
+    pokemon.iv = pbStatArrayToHash([31,31,16,5,10,16])
   end
 
   pokemon.happiness = 128

@@ -26,7 +26,7 @@ class CenterCommandSprite < SpriteWrapper
       self.bitmap.stretch_blt(Rect.new(24, 0, self.bitmap.width-48, 48), bg_bitmap, Rect.new(22, 0, 4, 48))
       textpos = [
           #[_INTL(@command),self.bitmap.width / 2,2,2,Color.new(80, 80, 88),Color.new(160, 160, 168)]
-          [_INTL(@command),self.bitmap.width / 2,2,2,Color.new(252, 252, 252),Color.new(120, 120, 132)]
+          [_INTL(@command),self.bitmap.width / 2, 14, 2, Color.new(252, 252, 252), Color.new(120, 120, 132)]
       ]
       pbSetSystemFont(self.bitmap)
       pbDrawTextPositions(self.bitmap, textpos)

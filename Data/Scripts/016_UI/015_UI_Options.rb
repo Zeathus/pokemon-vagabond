@@ -499,36 +499,6 @@ MenuHandlers.add(:options_menu, :give_nicknames, {
   "set_proc"    => proc { |value, _scene| $PokemonSystem.givenicknames = value }
 })
 
-MenuHandlers.add(:options_menu, :speech_frame, {
-  "name"        => _INTL("Speech Frame"),
-  "order"       => 90,
-  "type"        => NumberOption,
-  "parameters"  => 1..Settings::SPEECH_WINDOWSKINS.length,
-  "description" => _INTL("Choose the appearance of dialogue boxes."),
-  "get_proc"    => proc { next $PokemonSystem.textskin },
-  "set_proc"    => proc { |value, scene|
-    $PokemonSystem.textskin = value
-    MessageConfig.pbSetSpeechFrame("Graphics/Windowskins/" + Settings::SPEECH_WINDOWSKINS[value])
-    # Change the windowskin of the options text box to selected one
-    scene.sprites["textbox"].setSkin(MessageConfig.pbGetSpeechFrame)
-  }
-})
-
-MenuHandlers.add(:options_menu, :menu_frame, {
-  "name"        => _INTL("Menu Frame"),
-  "order"       => 100,
-  "type"        => NumberOption,
-  "parameters"  => 1..Settings::MENU_WINDOWSKINS.length,
-  "description" => _INTL("Choose the appearance of menu boxes."),
-  "get_proc"    => proc { next $PokemonSystem.frame },
-  "set_proc"    => proc { |value, scene|
-    $PokemonSystem.frame = value
-    MessageConfig.pbSetSystemFrame("Graphics/Windowskins/" + Settings::MENU_WINDOWSKINS[value])
-    # Change the windowskin of the options text box to selected one
-    scene.sprites["option"].setSkin(MessageConfig.pbGetSystemFrame)
-  }
-})
-
 MenuHandlers.add(:options_menu, :text_input_style, {
   "name"        => _INTL("Text Entry"),
   "order"       => 110,

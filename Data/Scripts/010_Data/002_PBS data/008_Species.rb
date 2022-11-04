@@ -77,7 +77,7 @@ module GameData
         "Category"          => [0, "s"],
         "Pokedex"           => [0, "q"],
         "Types"             => [0, "eE", :Type, :Type],
-        "ExtraTypes"        => [0, "eE", :Type, :Type],
+        "Affinities"        => [0, "eE", :Type, :Type],
         "BaseStats"         => [0, "vvvvvv"],
         "EVs"               => [0, "*ev", :Stat],
         "BaseExp"           => [0, "v"],

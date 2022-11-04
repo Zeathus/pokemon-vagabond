@@ -299,7 +299,7 @@ class Battle
                 # group is an array of targets (for multi target moves like Earthquake)
                 # target is each target in said group
                 damage = 0
-                if !move.pbMoveFailed?(user, group) && (target == user || !move.pbFailsAgainstTarget?(user, target))
+                if !move.pbMoveFailed?(user, group) && (target == user || !move.pbFailsAgainstTarget?(user, target, false))
                   if target != user && !move.statusMove?
                     damage = move.pbPredictDamage(user, target, group.length, queue, affinityboost[user.index])
                     damage = 0 if !damage
@@ -345,7 +345,7 @@ class Battle
 
             # Run effect score again, but with chosen=true to update actionable and fainted values
             for t in target_group
-              if !move.pbMoveFailed?(user, group) && (t == user || !move.pbFailsAgainstTarget?(user, t))
+              if !move.pbMoveFailed?(user, group) && (t == user || !move.pbFailsAgainstTarget?(user, t, false))
                 pbGetEffectScore(move, damage[t.index], user, t, actionable, fainted, true)
               end
             end

@@ -3,14 +3,14 @@
 > You can now open the\nQuest Log from the Pause Menu.
 
 [OTHERWORLDLY_RIFT]
-> You see a faint glow from the cracks.WT<br> Whatever could it be?
+> You see a faint glow from the cracks.<br> Whatever could it be?
 
 [POKECENTER_NURSE,0]
 /speaker Nurse
 > Hello and welcome to the Pokémon Center.
 ?> Would you like to rest your Pokémon?
     /choice Yes
-        > OK,WT I will take your Pokémon for a few seconds.
+        > OK, I will take your Pokémon for a few seconds.
         /return true
     /cancelchoice No
         > Come visit us anytime!
@@ -19,7 +19,7 @@
 
 [POKECENTER_NURSE,1]
 /speaker Nurse
-> Thank you for waiting.WT<br>We have restored your Pokémon to full health.
+> Thank you for waiting.<br>We have restored your Pokémon to full health.
 
 [POKECENTER_NURSE,2]
 /speaker Nurse
@@ -42,21 +42,21 @@
 [DRINK_LOVER_EFFORT_EXTRACT]
 /speaker Drink_Lover
 > Okay, so here's the story...
-> One day I wanted to try the Effort Extract.WT I was pretty bitter, won't get that again.
+> One day I wanted to try the Effort Extract. I was pretty bitter, won't get that again.
 > Anyway, after battling some dude, my Pokémon had grown so strong, much faster than usual.
 > Pretty wild, right?
 
 [DRINK_LOVER_RISING_REFRESH]
 /speaker Drink_Lover
 > Okay, so here's the story...
-> I was really tired and came to get a Rising Refresh.WT That one always gives me energy.
-> For some reason, I felt I learned so much while battling.WT Afterwards I was way more experienced than earlier.
+> I was really tired and came to get a Rising Refresh. That one always gives me energy.
+> For some reason, I felt I learned so much while battling. Afterwards I was way more experienced than earlier.
 > Pretty wild, right?
 
 [DRINK_LOVER_GOLDEN_GLASS]
 /speaker Drink_Lover
 > Okay, so here's the story...
-> I won a battle and wanted to reward myself, so I used the prize money to buy me a Golden Glass.WT Yeah, that expensive one.
+> I won a battle and wanted to reward myself, so I used the prize money to buy me a Golden Glass. Yeah, that expensive one.
 > The guy came and wanted a rematch, which I won again of course, but he gave me TWICE as much prize money this time.
 > Pretty wild, right?
 

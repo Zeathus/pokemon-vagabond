@@ -133,7 +133,7 @@ class Battle::Move::BadPoisonTarget < Battle::Move::PoisonTarget
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Settings::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON))
+    return (Supplementals::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON))
   end
 end
 
@@ -173,7 +173,7 @@ class Battle::Move::ParalyzeTargetIfNotTypeImmune < Battle::Move::ParalyzeTarget
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Settings::PARALYZE_TYPE_EFFECT && statusMove? && user.pbHasType?(:ELECTRIC))
+    return (Supplementals::PARALYZE_TYPE_EFFECT && statusMove? && user.pbHasType?(:ELECTRIC))
   end
 end
 
@@ -234,7 +234,7 @@ class Battle::Move::BurnTarget < Battle::Move
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Settings::BURN_TYPE_EFFECT && statusMove? && user.pbHasType?(:FIRE))
+    return (Supplementals::BURN_TYPE_EFFECT && statusMove? && user.pbHasType?(:FIRE))
   end
 end
 

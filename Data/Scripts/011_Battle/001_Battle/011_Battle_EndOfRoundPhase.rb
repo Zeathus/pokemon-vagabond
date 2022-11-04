@@ -768,6 +768,7 @@ class Battle
       battler.statsLoweredThisRound                = false
       battler.canRestoreIceFace                    = false
       battler.lastRoundMoveFailed                  = battler.lastMoveFailed
+      battler.affinityBooster                      = nil
       battler.lastAttacker.clear
       battler.lastFoeAttacker.clear
     end

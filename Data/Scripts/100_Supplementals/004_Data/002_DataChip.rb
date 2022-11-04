@@ -19,7 +19,7 @@ def pbAllDataChipMoves
     [:SUBSTITUTE,4]
   ]
 
-  if $bag.pbQuantity(:DATARECOVERYDEVICE)>0
+  if $bag.quantity(:DATARECOVERYDEVICE)>0
     moves += [
       [:ROOST,3],
       [:TERRAINPULSE,3],
@@ -37,7 +37,7 @@ def pbAllDataChipMoves
     ]
   end
 
-  if $bag.pbQuantity(:DATARECOVERYDEVICEV2)>0
+  if $bag.quantity(:DATARECOVERYDEVICEV2)>0
     moves += [
       [:BODYPRESS,4],
       [:EXPLOSION,4],
@@ -100,7 +100,7 @@ def pbGetTMMoves(pokemon)
   return [] if !pokemon || pokemon.egg? || (pokemon.isShadow? rescue false)
   moves=[]
   GameData::Item.each { |i|
-    if i.is_TM? && $bag.pbQuantity(i) > 0
+    if i.is_TM? && $bag.quantity(i) > 0
       if pokemon.compatible_with_move?(i.move)
         moves.push([i.move, i.name])
       end
@@ -111,7 +111,7 @@ end
 
 def pbGiveAllTMs
   for i in 0...$ItemData.length
-    if $ItemData[i][ITEMUSE]==3 && $bag.pbQuantity(i)<=0
+    if $ItemData[i][ITEMUSE]==3 && $bag.quantity(i)<=0
       $bag.pbStoreItem(i,1)
     end
   end

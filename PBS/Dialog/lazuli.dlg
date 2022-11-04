@@ -3,31 +3,31 @@
 
 [LAZULI_GYM_LEROY_WARNING]
 /speaker Leroy
-> Ah, PLAYER, I've been looking forward to your arrival.
+> Ah, <PLAYER>, I've been looking forward to your arrival.
 > Before you begin my Gym challenge, I would like to give you a warning.
 > The flowing water here is connected to water dynamos that generate electricity for the connected wires.
-> Be mindful of puddles connected to powered wires, or else you are in for a shock!WT Haha!
-> I will be waiting ri-WTi-WTiWTght here by the entrance,WT just out of reach.WT Good luck!
+> Be mindful of puddles connected to powered wires, or else you are in for a shock! Haha!
+> I will be waiting ri-i-ight here by the entrance, just out of reach. Good luck!
 
 [LAZULI_GYM_BUTTON_DISABLED]
-> The button has been disabled.WT<br>Probably because the Gym Leader is absent.
+> The button has been disabled.<br>Probably because the Gym Leader is absent.
 
 [LAZULI_GYM_SLOWPOKE,0]
 /speaker Slowpoke
 > Ya... do..?
 /speaker 0
 > There's a note stuck to the Slowpoke.
-> "I am doing maintenance on the city waterways.WT Knock on the city manholes if you need me.WT<br> - Gym Leader Leroy"
+> "I am doing maintenance on the city waterways. Knock on the city manholes if you need me.<br> - Gym Leader Leroy"
 
 [LAZULI_GYM_SLOWPOKE,1]
 /speaker Slowpoke
 > Ya... do..?
 /speaker 0
 > The Slowpoke looks to have been shocked by the water, but it doesn't seem to bother it.
-> Its dopey eyes have a slight gleam to them.WT<br>It is happy to see you.
+> Its dopey eyes have a slight gleam to them.<br>It is happy to see you.
 
 [LAZULI_MANHOLE,0]
-?> The manhole is locked.WT Do you want to knock?
+?> The manhole is locked. Do you want to knock?
     /choice Yes
         > You knock on the manhole.
         > There's no answer.
@@ -35,13 +35,13 @@
 ?/>
 
 [LAZULI_MANHOLE,1]
-?> The manhole is locked.WT Do you want to knock?
+?> The manhole is locked. Do you want to knock?
     /choice Yes
         > You knock on the manhole.
         /speaker Leroy
         /expression none
         /hidename 1
-        > Who's there?WT Do you have need of me?
+        > Who's there? Do you have need of me?
         > One moment, I shall let you down here.
         /return true
     /cancelchoice No
@@ -49,7 +49,7 @@
 ?/>
 
 [LAZULI_MANHOLE_MACHINE,0]
-> It looks complicated.WT Better not touch it.
+> It looks complicated. Better not touch it.
 
 [LAZULI_MANHOLE_MACHINE,1]
 > The machine looks to be in proper order.
@@ -58,7 +58,7 @@
 > The machine returned to normal.
 
 [LAZULI_MANHOLE_ROTOM,0]
-?> You hear faint sparks from inside the machine.WT<br>Inspect the machine closely?
+?> You hear faint sparks from inside the machine.<br>Inspect the machine closely?
     /choice Yes
         /return true
     /cancelchoice No
@@ -66,7 +66,7 @@
 ?/>
 
 [LAZULI_MANHOLE_ROTOM,1]
-?> It sounds as if there is water splashing around inside the machine.WT<br>Inspect the machine closely?
+?> It sounds as if there is water splashing around inside the machine.<br>Inspect the machine closely?
     /choice Yes
         /return true
     /cancelchoice No
@@ -74,7 +74,7 @@
 ?/>
 
 [LAZULI_MANHOLE_ROTOM,2]
-?> It sounds as if there is a loud engine inside the machine.WT.WT.WT which makes sense really.WT<br>Inspect the machine closely anyway?
+?> It sounds as if there is a loud engine inside the machine... which makes sense really.<br>Inspect the machine closely anyway?
     /choice Yes
         /return true
     /cancelchoice No
@@ -84,97 +84,97 @@
 [LAPIS_LAZULI_GYM,0]
 /speaker Leroy
 /hidename 1
-?> Well hello there.WT Am I to assume you saw my message attached to Slowpoke and wish to challenge me to a gym battle?
+?> Well hello there. Am I to assume you saw my message attached to Slowpoke and wish to challenge me to a gym battle?
     /choice Yes
         /if $quests[:LAPISLAZULIGYM].active?
-            > As I thought.WT<br>I am glad Slowpoke delivered the message successfully.
+            > As I thought.<br>I am glad Slowpoke delivered the message successfully.
         /else
-            > You did not see Slowpoke?WT How lucky for you to still stumble onto me then.
+            > You did not see Slowpoke? How lucky for you to still stumble onto me then.
         /end
         > However, I cannot return to the gym right now.
     /choice No
-        > No you do not wish to battle,WT or no you did not see the message?
-        > Not that it matters.WT<br>I cannot return to the gym right now.
+        > No you do not wish to battle, or no you did not see the message?
+        > Not that it matters.<br>I cannot return to the gym right now.
     /choice You're the Gym Leader?
-        > Did you not expect a Pokémon to be a Gym Leader?WT Not that I can blame you really.
+        > Did you not expect a Pokémon to be a Gym Leader? Not that I can blame you really.
         > However, I cannot return to the gym right now.
 ?/>
 > As you may have discerned, Lapis Lazuli City is mainly powered by the river flowing through it.
-> In fact,WT I am the engineer that assembled these machines.
+> In fact, I am the engineer that assembled these machines.
 /eval pbTextEffect("wave", 12, 24)
-> Some pesky,WT electrifying,WT Rotom decided to enter the machinery,WT causing it to malfunction.
-> You will have to excuse me,WT but I have no choice but to deal with them before I can accept challengers.
-> .WT.WT.WTHowever.
+> Some pesky, electrifying, Rotom decided to enter the machinery, causing it to malfunction.
+> You will have to excuse me, but I have no choice but to deal with them before I can accept challengers.
+> ...However.
 > There are two more maintenance rooms like this in the Lapis District to the south.
-> If you wish to challenge me sooner, you are free to help me out with this.WT<br>I will take care of the Lazuli District.
+> If you wish to challenge me sooner, you are free to help me out with this.<br>I will take care of the Lazuli District.
 > Thank you in advance for your help.
 
 [LAPIS_LAZULI_GYM,1]
 /speaker Leroy
 /hidename 1
-> OH!WT I almost forgot!
+> OH! I almost forgot!
 
 [LAPIS_LAZULI_GYM,2]
 /speaker Leroy
 /hidename 1
-> Sorry, I can be a bit slow at times.WT<br>I didn't properly introduce myself.
+> Sorry, I can be a bit slow at times.<br>I didn't properly introduce myself.
 /hidename 0
-> I am named Leroy.WT As you know, I am the Gym Leader of Lapis Lazuli City.WT<br>'Tis a pleasure to meet you.
+> I am named Leroy. As you know, I am the Gym Leader of Lapis Lazuli City.<br>'Tis a pleasure to meet you.
 > With that, I leave you to the Lapis District.
 
 [LAPIS_LAZULI_GYM,3]
 /speaker Leroy
-> OH!WT I almost forgot!
+> OH! I almost forgot!
 
 [LAPIS_LAZULI_GYM,4]
 /speaker Leroy
-> I did not give you the key to access the other maintenance rooms.WT 'Twould be quite difficult to access them without one.
+> I did not give you the key to access the other maintenance rooms. 'Twould be quite difficult to access them without one.
 /speaker 0
 /se ItemGet 100 100
-> \ts[3]PLAYER received a maintenance room access key!WTWTWTNP
+> \ts[3]<PLAYER> received a maintenance room access key!\wtnp[60]
 /speaker Leroy
-> With THAT.WT.WT.WT I leave you to the Lapis District.
+> With THAT... I leave you to the Lapis District.
 
 [LAPIS_LAZULI_GYM,5]
 /speaker Leroy
-> I shall handle the Rotom here.WT Could you handle the Lapis District maintenance rooms?
+> I shall handle the Rotom here. Could you handle the Lapis District maintenance rooms?
 
 [LAPIS_LAZULI_GYM,6]
 /speaker Leroy
-> One moment.WT I need to fix one last machine.
+> One moment. I need to fix one last machine.
 
 [LAPIS_LAZULI_GYM,7]
 /speaker Leroy
-> Yadoooo.WT.WT.WT
-> Move that wire there.WT.WT.WT Reconnect this.WT.WT.WT
-> OOPS!WTNP
+> Yadoooo...
+> Move that wire there... Reconnect this...
+> OOPS!\wtnp[20]
 
 [LAPIS_LAZULI_GYM,8]
 /speaker Leroy hurt
 ?> That one had quite the voltage!
     /choice Are you okay?
-        > I can assure you that I am well.WT<br>'Tis but a scratch.
+        > I can assure you that I am well.<br>'Tis but a scratch.
     /choice You're a Water-type. Be careful.
-        > I can assure you that I am well.WT<br>'Tis but a scratch.
+        > I can assure you that I am well.<br>'Tis but a scratch.
     /choice Looks like you're fine.
-        > Of course I am.WT 'Tis but a scratch.
+        > Of course I am. 'Tis but a scratch.
 ?/>
-> You may already be aware,WT but we Slowking have quite the Special Defense.WT<br>I can take a shock or two.
+> You may already be aware, but we Slowking have quite the Special Defense.<br>I can take a shock or two.
 ?> Though is it not the chance of being electrocuted which makes this job exciting?
     /choice That's just you
-        > 'Twould seem it is simply a matter of personal taste.WT Hopefully you will not be caught off guard by my gym puzzle.
+        > 'Twould seem it is simply a matter of personal taste. Hopefully you will not be caught off guard by my gym puzzle.
     /choice I beg to differ
-        > 'Twould seem it is simply a matter of personal taste.WT Hopefully you will not be caught off guard by my gym puzzle.
+        > 'Twould seem it is simply a matter of personal taste. Hopefully you will not be caught off guard by my gym puzzle.
     /choice Most definitely
-        > 'Twould seem I have stumbled upon a promising engineer!WT I am certain you will find my gym puzzle most appealing.
+        > 'Twould seem I have stumbled upon a promising engineer! I am certain you will find my gym puzzle most appealing.
 ?/>
-> For you to challenge me,WT I should head back to my gym now.WT I am looking forward to our battle.
+> For you to challenge me, I should head back to my gym now. I am looking forward to our battle.
 
 [LAZULI_GYM_LEROY,0]
 /speaker Leroy
-> 'Twas no problem for you to solve my puzzle!WT<br>You have quite the engineer in you.
+> 'Twas no problem for you to solve my puzzle!<br>You have quite the engineer in you.
 > I hope you enjoyed getting electrocuted by the puzzle as much as I enjoyed putting it together.
-> You may be expecting Electric-types,WT but for this battle I will use mainly Water-types.
+> You may be expecting Electric-types, but for this battle I will use mainly Water-types.
 ?> Are you ready to battle?
     /choice Yes
         > My currents shall wash you away!
@@ -197,41 +197,41 @@
 
 [LAZULI_GYM_LEROY,2]
 /speaker Leroy
-> Did the puzzle leave you that startled?WT<br>Recover and come back later if you need to.
+> Did the puzzle leave you that startled?<br>Recover and come back later if you need to.
 
 [LAZULI_GYM_LEROY,3]
 /speaker Leroy
-> My Pokémon took such a beating from you during that battle.WT I am slightly jealous!
+> My Pokémon took such a beating from you during that battle. I am slightly jealous!
 > The other Gym Leaders will be in for a treat fighting you.
 > As a reward for your thorough thrashing, I shall give you the [B]Shell Badge[/]!
 
 [LAZULI_GYM_LEROY,4]
-> \ts[5]PLAYER got the [B]Shell Badge[/]!WTWTWTNP
+> \ts[5]<PLAYER> got the [B]Shell Badge[/]!\wtnp[60]
 /speaker Leroy
 > You deserve this as well.
 
 [LAZULI_GYM_LEROY,5]
 /speaker Leroy
-> This TM contains the move Water Pledge.WT<br>Try to use it with the other Pledge moves to wreak havoc!
+> This TM contains the move Water Pledge.<br>Try to use it with the other Pledge moves to wreak havoc!
 /if $PokemonGlobal.visitedMaps[57] # G.P.O. Admin Area
     > I also wanted to mention that I work at the G.P.O. science facility, in the admin area.
-    > Please do pay me a visit there.WT<br>I have something to show you.
+    > Please do pay me a visit there.<br>I have something to show you.
 /else
-    > You look like you have something to do.WT<br>I am sure we will meet again in due time.
+    > You look like you have something to do.<br>I am sure we will meet again in due time.
 /end
 > 'Twas a pleasure to make your acquaintance.
 
 [LAZULI_GYM_LEROY,6]
 /event set Leroy 4
 /speaker Leroy
-> Should I increase the voltage on my puzzle for next time.WT.WT?
+> Should I increase the voltage on my puzzle for next time..?
 /event Leroy exclaim
-> Oh!WT Sorry!WT I was simply lost in thought.
+> Oh! Sorry! I was simply lost in thought.
 
 [LAZULI_GYM_GERALD,0]
 /speaker Gerald
-> You know what's wet like my mop?WT Water-types!
-> .WT.WT.WTI don't think that landed as well as I hoped.
+> You know what's wet like my mop? Water-types!
+> ...I don't think that landed as well as I hoped.
 
 [LAZULI_GYM_GERALD,1]
 /speaker Gerald
@@ -243,11 +243,11 @@
 
 [LAZULI_GYM_BOBBY,1]
 /speaker Bobby
-> Have you figured out the puzzle yet?WT<br>Leroy deployed it himself.
+> Have you figured out the puzzle yet?<br>Leroy deployed it himself.
 
 [LAZULI_GYM_BEATRICE,0]
 /speaker Beatrice
-> Why am I carrying this parasol inside?WT<br>I think it's stylish, wouldn't you agree?
+> Why am I carrying this parasol inside?<br>I think it's stylish, wouldn't you agree?
 
 [LAZULI_GYM_BEATRICE,1]
 /speaker Beatrice
@@ -255,9 +255,9 @@
 
 [LAZULI_COUPLE]
 /speaker Husband
-> Isn't the ocean beautiful today?WT<br>Water as far as the eye can see.
+> Isn't the ocean beautiful today?<br>Water as far as the eye can see.
 /speaker Wife
-> So, so much water.WT<br>Almost too much water.
+> So, so much water.<br>Almost too much water.
 
 [LAZULI_WORKER,0]
 /speaker Worker
@@ -267,7 +267,7 @@
 [LAZULI_WORKER,1]
 /speaker Worker
 > We're awaiting more girders from Pegma City soon.
-> Their quarry is quite impressive.WT<br>I've never seen a hole that big!
+> Their quarry is quite impressive.<br>I've never seen a hole that big!
 
 [LAZULI_TECH_GUY]
 /speaker Tech_Guy
@@ -277,30 +277,30 @@
 [LAZULI_MUSICIAN]
 /speaker Musician
 /eval pbTextEffect("wave")
-> \ts[2]$ A lone musician on the streetWT<br>$ Has no idea who they'll meet
+> \ts[2]$ A lone musician on the street<br>$ Has no idea who they'll meet
 /eval pbTextEffect("wave")
-> \ts[2]$ Some pass by,WT some say hiWT<br>$ The guitar I play,WT they are why
+> \ts[2]$ Some pass by, some say hi<br>$ The guitar I play, they are why
 
 [LAZULI_WAITRESS]
 /speaker Waitress
 > I work at the cafeteria inside the Department Store.
-> Have you tried any of our drinks?WT<br>They can help you in various ways!
+> Have you tried any of our drinks?<br>They can help you in various ways!
 
 [LAZULI_BUSINESS_MAN]
 /speaker Business_Man
-> Let's talk business.WT I do business in fact.WT That is how my family earns a living.
-> Do you like business?WT I really like business.WT After all,WT I am a business man.
+> Let's talk business. I do business in fact. That is how my family earns a living.
+> Do you like business? I really like business. After all, I am a business man.
 
 [LAZULI_MOVIEGOER]
 /speaker Moviegoer
 > I love the cinema!
 > Different movies play each day of the week.
-> Sadly they are closed for maintenance right now though,WT so you can't see any movies.
+> Sadly they are closed for maintenance right now though, so you can't see any movies.
 # > You can easily check what weekday it is on your [B]phone[/].
 
 [LAZULI_RIVER_SUSIE,0]
 /speaker Susie
-> Both me and my Pokémon love to be out in the fresh air.WT Let's start some winds with a Pokémon battle!
+> Both me and my Pokémon love to be out in the fresh air. Let's start some winds with a Pokémon battle!
 
 [LAZULI_RIVER_SUSIE,1]
 /speaker Susie
@@ -308,11 +308,11 @@
 
 [LAZULI_RIVER_REVALI,0]
 /speaker Revali
-> My Pokémon always win competitions!WT<br>You don't stand a chance!
+> My Pokémon always win competitions!<br>You don't stand a chance!
 
 [LAZULI_RIVER_REVALI,1]
 /speaker Revali
-> Have you tried archery before?WT<br>It can be hard to hit even a single arrow,WT but I can hit three at once!
+> Have you tried archery before?<br>It can be hard to hit even a single arrow, but I can hit three at once!
 
 [LAZULI_RIVER_ROBIN,0]
 /speaker Robin
@@ -324,22 +324,22 @@
 
 [LAZULI_RIVER_RIKI,0]
 /speaker Riki
-> Riki like round Pokémon.WT They go boing-boing!
+> Riki like round Pokémon. They go boing-boing!
 
 [LAZULI_RIVER_RIKI,1]
 /speaker Riki
-> Meh meh meh.WT Riki will go play splish-splash with my Pokémon.
+> Meh meh meh. Riki will go play splish-splash with my Pokémon.
 
 [LAZULI_RIVER_SANDRA,0]
 /speaker Sandra
-> I like to touch Mareep's wool.WT It's so fluffy!
+> I like to touch Mareep's wool. It's so fluffy!
 
 [LAZULI_RIVER_SANDRA,1]
 /speaker Sandra
-> Have you battled my boyfriend?WT He loves camping all over the place!
+> Have you battled my boyfriend? He loves camping all over the place!
 
 [LAZULI_RIVER_DOOR]
-> The door is locked.WT<br>Deep inside, you feel you should come back once you are ready to take on a job.
+> The door is locked.<br>Deep inside, you feel you should come back once you are ready to take on a job.
 
 [LAZULI_FINN,0]
 /speaker Finn
@@ -347,7 +347,7 @@
 > You know how trainers just sorta stand around waiting for someone to challenge?
 ?> Would you like to try it?
     /choice Yes
-        > Yes!WT You're gonna love this.
+        > Yes! You're gonna love this.
         /return true
     /cancelchoice No
         > Maybe later then.
@@ -367,42 +367,42 @@
     /choice Prepare to be defeated!
 ?/>
 /speaker Eric
-> Dang!WT<br>Right before I got to the next city too!
+> Dang!<br>Right before I got to the next city too!
 
 [LAZULI_FINN,3]
 /speaker Eric
-> Shoot!WT I need to scurry back to the nearest Pokémon Center.
+> Shoot! I need to scurry back to the nearest Pokémon Center.
 > Will you let me pass to get to the Lapis Lazuli Pokémon Center?
 
 [LAZULI_FINN,4]
 /speaker Finn
-> Nope!WT No can do!
+> Nope! No can do!
 /speaker Eric
-> No?WT Sounds kinda arbitrary, but OK.WT<br>Thank Arceus there's a doctor in the Crosswoods.
+> No? Sounds kinda arbitrary, but OK.<br>Thank Arceus there's a doctor in the Crosswoods.
 
 [LAZULI_FINN,5]
 /speaker Finn
 ?> Isn't it great sending them all the way back?
     /choice It feels great
-        > Right?WT Happy to share the enjoyment with you!
+        > Right? Happy to share the enjoyment with you!
     /choice Feels unnecessary
-        > Unecessary?WT NO!WT<br>This is what gives our life meaning.
+        > Unecessary? NO!<br>This is what gives our life meaning.
     /choice Why are you like this
         > That super disgusted look you're giving me tells me you are usually the trainer running by...
 ?/>
-> Anyway!WT<br>I will let you continue whatever you were doing!
+> Anyway!<br>I will let you continue whatever you were doing!
 
 [LAZULI_FINN,6]
 /speaker Finn
-> Hmmm,WT where should I will wait for my next prey...
+> Hmmm, where should I will wait for my next prey...
 
 [LAZULI_MALL_DRINK_SHOP]
 /speaker Shopkeep
-> Welcome to the Lapis Lazuli Café.WT<br>What can we do for you today?
+> Welcome to the Lapis Lazuli Café.<br>What can we do for you today?
 
 [LAZULI_MALL_DRINK_LOVER]
 /speaker Drink_Lover
-> Pssst.WT.WT.WT I have something to tell you.
+> Pssst... I have something to tell you.
 > I don't know how they do it, but these drinks have strange effects for like half an hour.
 ?> Do you want me to tell you about one?
     /choice Sweet Swig
@@ -419,4 +419,4 @@
 /speaker Gamer_1
 > Have you played the new game GoldeenEye yet?
 /speaker Gamer_2
-> Nah, man.WT That game's just another one of those Gloom-clones.
+> Nah, man. That game's just another one of those Gloom-clones.

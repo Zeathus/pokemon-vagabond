@@ -262,7 +262,7 @@ class CustomPokemon
   end
 
   def form
-      return GameData::Type.get(@type).id_number + @frame * 19
+      return GameData::Type.get(@type).icon_position + @frame * 19
   end
 
   def category

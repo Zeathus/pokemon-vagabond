@@ -14,11 +14,12 @@ class Battle::Scene
   # Called whenever the battle begins.
   def pbStartBattle(battle)
     @battle   = battle
-    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport = Viewport.new(128, 92, 512, 384)
     @viewport.z = 99999
     @lastCmd  = Array.new(@battle.battlers.length, 0)
     @lastMove = Array.new(@battle.battlers.length, 0)
     pbInitSprites
+    @outer.pbInitInfoSprites
     pbBattleIntroAnimation
   end
 
@@ -26,26 +27,16 @@ class Battle::Scene
     @sprites = {}
     # The background image and each side's base graphic
     pbCreateBackdropSprites
-    # Create message box graphic
-    messageBox = pbAddSprite("messageBox", 0, Graphics.height - 96,
-                             "Graphics/Pictures/Battle/overlay_message", @viewport)
-    messageBox.z = 195
-    # Create message window (displays the message)
-    msgWindow = Window_AdvancedTextPokemon.newWithSize(
-      "", 16, Graphics.height - 96 + 2, Graphics.width - 32, 96, @viewport
-    )
-    msgWindow.z              = 200
-    msgWindow.opacity        = 0
-    msgWindow.baseColor      = MESSAGE_BASE_COLOR
-    msgWindow.shadowColor    = MESSAGE_SHADOW_COLOR
-    msgWindow.letterbyletter = true
-    @sprites["messageWindow"] = msgWindow
+
     # Create command window
     @sprites["commandWindow"] = CommandMenu.new(@viewport, 200)
     # Create fight window
     @sprites["fightWindow"] = FightMenu.new(@viewport, 200)
-    # Create targeting window
-    @sprites["targetWindow"] = TargetMenu.new(@viewport, 200, @battle.sideSizes)
+    
+    # Custom Outer Scene
+    @outer = Battle::Scene::Outer.new(@sprites, @viewport, @battle)
+    @outer.pbInitMenuSprites
+
     pbShowWindow(MESSAGE_BOX)
     # The party lineup graphics (bar and balls) for both sides
     2.times do |side|
@@ -134,11 +125,12 @@ class Battle::Scene
     # Apply graphics
     bg = pbAddSprite("battle_bg", 0, 0, battleBG, @viewport)
     bg.z = 0
-    bg = pbAddSprite("battle_bg2", -Graphics.width, 0, battleBG, @viewport)
+    bg = pbAddSprite("battle_bg2", -@viewport.rect.width, 0, battleBG, @viewport)
     bg.z      = 0
     bg.mirror = true
     2.times do |side|
       baseX, baseY = Battle::Scene.pbBattlerPosition(side)
+      baseY += 90 if side == 0
       base = pbAddSprite("base_#{side}", baseX, baseY,
                          (side == 0) ? playerBase : enemyBase, @viewport)
       base.z = 1
@@ -147,8 +139,8 @@ class Battle::Scene
         base.oy = (side == 0) ? base.bitmap.height : base.bitmap.height / 2
       end
     end
-    cmdBarBG = pbAddSprite("cmdBar_bg", 0, Graphics.height - 96, messageBG, @viewport)
-    cmdBarBG.z = 180
+    #cmdBarBG = pbAddSprite("cmdBar_bg", 0, @viewport.rect.height - 96, messageBG, @viewport)
+    #cmdBarBG.z = 180
   end
 
   def pbCreateTrainerBackSprite(idxTrainer, trainerType, numTrainers = 1)

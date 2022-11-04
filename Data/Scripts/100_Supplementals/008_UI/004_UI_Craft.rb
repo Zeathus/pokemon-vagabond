@@ -3,7 +3,7 @@
 #===============================================================================
 class CraftAdapter
   def getInventory()
-    return $PokemonBag
+    return $bag
   end
 
   def getItemIcon(item)
@@ -34,11 +34,11 @@ class CraftAdapter
   end
 
   def addItem(item)
-    return $PokemonBag.pbStoreItem(item)
+    return $bag.pbStoreItem(item)
   end
 
   def getQuantity(item)
-    return $PokemonBag.pbQuantity(item)
+    return $bag.quantity(item)
   end
 
   def canSell?(item)
@@ -50,7 +50,7 @@ class CraftAdapter
   end
 
   def removeItem(item)
-    return $PokemonBag.pbDeleteItem(item)
+    return $bag.pbDeleteItem(item)
   end
 end
 
@@ -58,7 +58,7 @@ end
 
 #===============================================================================
 # Abstraction layer for RPG Maker XP/VX
-# Won't be used if $PokemonBag exists
+# Won't be used if $bag exists
 #===============================================================================
 class RpgxpCraftAdapter
   def getMoney
@@ -285,7 +285,7 @@ class CraftScene
               _INTL("${1}", pbFormatNumber(quantity))
           else
             @sprites[_INTL("item{1}text",i+1)].text = 
-              _INTL("{1} ({2}/{3})", @adapter.getName(itemid), $PokemonBag.pbQuantity(itemid), quantity)
+              _INTL("{1} ({2}/{3})", @adapter.getName(itemid), $bag.quantity(itemid), quantity)
           end
           itemhint = pbItemHint(itemid)
           if itemhint
@@ -316,7 +316,7 @@ class CraftScene
               _INTL("${1}", pbFormatNumber(quantity))
           else
             @sprites[_INTL("item{1}text",i+4)].text = 
-              _INTL("{1} ({2}/{3})", @adapter.getName(itemid), $PokemonBag.pbQuantity(itemid), quantity)
+              _INTL("{1} ({2}/{3})", @adapter.getName(itemid), $bag.quantity(itemid), quantity)
           end
         else
           @sprites[_INTL("icon{1}",i+4)].visible = false
@@ -595,7 +595,7 @@ class CraftScreen
             if $game_variables[BONUS_EXP] < qt
               hasitems = false
             end
-          elsif $PokemonBag.pbQuantity(it)<qt
+          elsif $bag.quantity(it)<qt
             hasitems = false
           end
         end
@@ -614,7 +614,7 @@ class CraftScreen
             if it == :PAY
               $player.money -= qt
             else
-               $PokemonBag.pbDeleteItem(it,qt)
+               $bag.pbDeleteItem(it,qt)
             end
           end
         end
