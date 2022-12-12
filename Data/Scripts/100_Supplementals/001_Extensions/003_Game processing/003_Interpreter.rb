@@ -16,7 +16,7 @@ class Interpreter
           end
         end
       end
-    when Array
+    when Array, Range
       for i in eventid
         sup_pbSetSelfSwitch(i, switch_name, value, mapid)
       end
