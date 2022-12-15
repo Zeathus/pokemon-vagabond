@@ -26,4 +26,8 @@ class Game_Character
     return @step_anime
   end
 
+  def setOpacity(op)
+    @opacity = op
+  end
+  
 end
