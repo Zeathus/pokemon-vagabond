@@ -64,12 +64,12 @@ class Sprite_Character
         end
       end
     end
-    if @marker
+    if @marker && !@marker.disposed?
       @marker.x = self.x
       @marker.y = self.y
       @marker.z = self.z
+      @marker&.update
     end
-    @marker&.update
   end
 
 end
