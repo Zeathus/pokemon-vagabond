@@ -1,5 +1,6 @@
 class Game_Character
   attr_accessor :marker_id
+  attr_accessor :marker_text
 
   alias sup_initialize initialize
 

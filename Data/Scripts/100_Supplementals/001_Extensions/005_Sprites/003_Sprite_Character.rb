@@ -47,7 +47,7 @@ class Sprite_Character
           src_bm = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/markers")
           bm.blt(bm.width / 2 - 16, 0, src_bm, Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48))
           src_bm.dispose
-          pbDrawTextPositions(bm, [[_INTL(@marker_text),bm.width / 2,0,2,Color.new(252,252,252),Color.new(0,0,0),true]])
+          pbDrawTextPositions(bm, [[_INTL(@marker_text), bm.width / 2, 6, 2, Color.new(252,252,252), Color.new(0,0,0), true]])
           @marker.bitmap = bm
         else
           if !@marker
