@@ -57,7 +57,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     @ef_frame = 0 if !@ef_frame
     @ef_frame += 1
     if @ef_frame % 2 == 0
-      speed = 6.0
+      speed = 4.0
       self.contents.clear if clear_all
       for i in 0...numchars
         break if i >= @fmtchars.length
