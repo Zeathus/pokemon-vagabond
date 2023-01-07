@@ -2438,15 +2438,15 @@ class PokemonScreen
         poke1=poke2=poke3=nil
         if $player.party[pkmnid+2]
           p=$player.party[pkmnid+2]
-          poke1=[p.species,p.gender,p.isShiny?,(p.form rescue 0),(p.isShadow? rescue false)]
+          poke1=[p.species,p.gender,p.isShiny?,(p.form rescue 0),(p.shadowPokemon? rescue false)]
           poke1.push(true) if p.egg?
         end
         if $player.party[pkmnid+1]
           p=$player.party[pkmnid+1]
-          poke2=[p.species,p.gender,p.isShiny?,(p.form rescue 0),(p.isShadow? rescue false)]
+          poke2=[p.species,p.gender,p.isShiny?,(p.form rescue 0),(p.shadowPokemon? rescue false)]
           poke2.push(true) if p.egg?
         end
-        poke3=[pkmn.species,pkmn.gender,pkmn.isShiny?,(pkmn.form rescue 0),(pkmn.isShadow? rescue false)]
+        poke3=[pkmn.species,pkmn.gender,pkmn.isShiny?,(pkmn.form rescue 0),(pkmn.shadowPokemon? rescue false)]
         poke3.push(true) if pkmn.egg?
         pbStoreMail(pkmn,item,message,poke1,poke2,poke3)
         return true
