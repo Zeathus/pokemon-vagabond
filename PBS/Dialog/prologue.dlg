@@ -34,16 +34,19 @@
 > Can you hear me?
 > I finally reached your consciousness.\nI was afraid you would never respond.
 /loop
-    > Can you recall [B]your name[/]?
+    > Can you recall [PLAYER]your name[/]?
     /eval pbTrainerName
-    ?> Are you sure [B]<PLAYER>[/] is your name?
+    /windowpos bottom
+    ?> Are you sure [PLAYER]<PLAYER>[/] is your name?
         /choice Yes
             /break
         /cancelchoice No
+            /windowpos middle
             > Then let me ask again.
     ?/>
 /end
-> You are correct, [B]<PLAYER>[/] is your name.
+/windowpos middle
+> You are correct, [PLAYER]<PLAYER>[/] is your name.
 /wait 20
 > Open your eyes. Let your heart guide you, and the path shall reveal itself.
 /speaker R-Celebi none

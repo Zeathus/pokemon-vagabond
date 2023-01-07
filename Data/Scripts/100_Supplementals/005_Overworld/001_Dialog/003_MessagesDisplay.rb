@@ -97,7 +97,7 @@ class NameBoxSprite < IconSprite
     @msgwindow  = msgwindow
     @show_name  = nil
     @real_name  = nil
-    @hide_name  = false
+    @hide_name  = 0
     @position   = 0 # 0 = left, 1 = right, 2 = center
     self.setBitmap(Dialog::getNameBox(@real_name))
     @overlay    = Sprite.new(viewport)
@@ -109,13 +109,13 @@ class NameBoxSprite < IconSprite
   def real_name=(value)
     @real_name = value
     @show_name = nil
-    @hide_name = false
+    @hide_name = 0
     self.refresh(true)
   end
 
   def name=(value)
     @show_name = value
-    @hide_name = false
+    @hide_name = 0
     self.refresh(true)
   end
 
@@ -130,9 +130,9 @@ class NameBoxSprite < IconSprite
   end
 
   def refresh(redraw = false)
-    self.visible = (!(@real_name.nil?)) && @msgwindow.visible
+    self.visible = (!(@real_name.nil?)) && @msgwindow.visible && (@hide_name != 2)
     @overlay.visible = self.visible
-    return if @real_name.nil?
+    return if @real_name.nil? || (@hide_name == 2)
     if redraw
       self.setBitmap(Dialog::getNameBox(@real_name))
       @overlay.bitmap.clear
@@ -141,7 +141,7 @@ class NameBoxSprite < IconSprite
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       textpos = [[
-        (@hide_name ? "???" : (@show_name || @real_name)),
+        ((@hide_name == 1) ? "???" : (@show_name || @real_name)),
         self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
@@ -250,6 +250,7 @@ class TalkMessageWindowWrapper
 
   def visible=(value)
     @msgwindow.visible = value
+    @msgwindow.opacity = ((@message_frame == 0) ? 255 : 0)
     @namebox&.refresh
     @portraits.each { |p| p&.refresh }
   end
@@ -327,11 +328,11 @@ class TalkMessageWindowWrapper
       break if text == last_text
     end
     colortag = ""
-    if $game_system && $game_system.message_frame != 0
+    #if @message_frame != 0
       colortag = getSkinColor(@msgwindow.windowskin, 0, true)
-    else
-      colortag = getSkinColor(@msgwindow.windowskin, 0, isDarkSkin)
-    end
+    #else
+    #  colortag = getSkinColor(@msgwindow.windowskin, 0, isDarkSkin)
+    #end
     text = colortag + text
     ### Controls
     textchunks = []
@@ -566,13 +567,13 @@ class TalkMessageWindowWrapper
       value.gsub!(_INTL("[/{1}]", i), "[/]")
       value.gsub!(_INTL("[/{1}]", i.downcase), "[/]")
     end
-    value.gsub!("[r]","<c2=043c3aff>")
-    value.gsub!("[g]","<c2=06644bd2>")
-    value.gsub!("[b]","<c2=65467b14>")
-    value.gsub!("[y]","<c2=129B43DF>")
-    value.gsub!("[p]","<c2=7C1F7EFF>")
-    value.gsub!("[o]","<c2=017F473F>")
-    value.gsub!("[w]","<c2=2D497FFF>")
+    value.gsub!("[r]","<c2=3aff043c>")
+    value.gsub!("[g]","<c2=4bd20664>")
+    value.gsub!("[b]",shadowctag(Color.new(136, 165, 248, 255), Color.new(41, 112, 188, 255)))
+    value.gsub!("[y]","<c2=43DF129B>")
+    value.gsub!("[p]","<c2=7EFF7C1F>")
+    value.gsub!("[o]","<c2=473F017F>")
+    value.gsub!("[w]","<c2=7FFF2D49>")
     value.gsub!("[/]","</c2>")
 
     temp = value + ""

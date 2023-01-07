@@ -132,6 +132,8 @@ end
 #
 #===============================================================================
 def pbPokeCenterPC
+  pbBootShellOS
+  return
   pbMessage(_INTL("\\se[PC open]{1} booted up the PC.", $player.name))
   # Get all commands
   command_list = []

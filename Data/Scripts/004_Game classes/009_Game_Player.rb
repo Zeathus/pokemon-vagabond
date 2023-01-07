@@ -50,13 +50,13 @@ class Game_Player < Game_Character
 
   def can_run?
     return @move_speed > 3 if @move_route_forcing
+    return true if $game_switches && $game_switches[FORCED_RUNNING]
     return false if $game_temp.in_menu || $game_temp.in_battle ||
                     $game_temp.message_window_showing || pbMapInterpreterRunning?
     return false if !$player.has_running_shoes && !$PokemonGlobal.diving &&
                     !$PokemonGlobal.surfing && !$PokemonGlobal.bicycle
     return false if jumping?
     return false if pbTerrainTag.must_walk
-    return true if $game_switches && $game_switches[FORCED_RUNNING]
     return ($PokemonSystem.runstyle == 1) ^ Input.press?(Input::BACK)
   end
 

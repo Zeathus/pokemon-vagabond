@@ -140,7 +140,7 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           msgwindows.focused.namebox.position = 1
         end
       when "hidename"
-        msgwindows.focused.namebox.hide_name = (args[0] == 1)
+        msgwindows.focused.namebox.hide_name = args[0]
       when "hidenamebox"
         msgwindows.focused.namebox.real_name = nil
       when "window"
