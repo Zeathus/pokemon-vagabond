@@ -808,7 +808,11 @@ class TalkMessageWindows
       }
     end
     loop do
-      break if windows.all? { |w| w.refresh }
+      finish = true
+      windows.each { |w|
+        finish = w.refresh && finish
+      }
+      break if finish
       Graphics.update
       Input.update
       pbUpdateSceneMap
@@ -933,7 +937,7 @@ class TalkMessageWindows
   end
 
   def update
-    @msgwindows.each { |w| w.update }
+    #@msgwindows.each { |w| w.update }
   end
 
   def add_window(position)
