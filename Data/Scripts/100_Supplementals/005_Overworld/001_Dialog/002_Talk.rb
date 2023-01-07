@@ -8,7 +8,7 @@ def pbTalk(text, msgwindows = nil)
 
   msgwindows.display(text)
 
-  msgwindows.dipose if create_window
+  msgwindows.dispose if create_window
 end
 
 def pbShout(text, msgwindows = nil)
@@ -17,7 +17,7 @@ def pbShout(text, msgwindows = nil)
 
   msgwindows.shout(text)
 
-  msgwindows.dipose if create_window
+  msgwindows.dispose if create_window
 end
 
 def pbWhisper(text, msgwindows = nil)
@@ -26,7 +26,7 @@ def pbWhisper(text, msgwindows = nil)
 
   msgwindows.whisper(text)
 
-  msgwindows.dipose if create_window
+  msgwindows.dispose if create_window
 end
 
 def pbSilent(text, msgwindows = nil)
@@ -35,7 +35,7 @@ def pbSilent(text, msgwindows = nil)
 
   msgwindows.silent(text)
 
-  msgwindows.dipose if create_window
+  msgwindows.dispose if create_window
 end
 
 def pbSpeech(name, expression="neutral", phrase=nil)

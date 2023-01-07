@@ -357,7 +357,7 @@ def compile_dialog
           buffer.pop
         when "break"
           feed.push([Dialog::Break])
-        when "se", "me", "bgm"
+        when "se", "me", "bgm", "bgs"
           fname = [arguments[0]]
           for i in 1...arguments.length
             if arguments[i].to_i != 0

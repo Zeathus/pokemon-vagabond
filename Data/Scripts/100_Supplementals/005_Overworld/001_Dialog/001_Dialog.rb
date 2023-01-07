@@ -211,6 +211,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         pbMEPlay(args[0], args[1], args[2])
       when "bgm"
         pbBGMPlay(args[0], args[1], args[2])
+      when "bgs"
+        pbBGMPlay(args[0], args[1], args[2])
       when "cry"
         species = _format(args[0])
         if species[0] == ':'

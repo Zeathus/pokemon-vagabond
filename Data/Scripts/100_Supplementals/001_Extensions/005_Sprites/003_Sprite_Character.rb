@@ -84,7 +84,7 @@ class Sprite_Character
           src_bm = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/markers")
           bm.blt(bm.width / 2 - 16, 0, src_bm, Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48))
           src_bm.dispose
-          pbDrawTextPositions(bm, [[_INTL(@marker_text),bm.width / 2,0,2,Color.new(252,252,252),Color.new(0,0,0),true]])
+          pbDrawTextPositions(bm, [[_INTL(@marker_text), bm.width / 2, 6, 2, Color.new(252,252,252), Color.new(0,0,0), true]])
           @marker.bitmap = bm
         else
           if !@marker
@@ -94,15 +94,19 @@ class Sprite_Character
         end
         @marker.src_rect = Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48) if !@marker_text
         @marker.ox = @marker_text ? (@marker.bitmap.width / 2) : 16
-        @marker.oy = @ch + 40
+        if @ch
+          @marker.oy = @ch + 40
+        else
+          @marker.oy = 40
+        end
       end
     end
-    if @marker
+    if @marker && !@marker.disposed?
       @marker.x = self.x
       @marker.y = self.y
       @marker.z = self.z
+      @marker&.update
     end
-    @marker&.update
   end
 
   def updatePartner(owner, sx, sy, run)

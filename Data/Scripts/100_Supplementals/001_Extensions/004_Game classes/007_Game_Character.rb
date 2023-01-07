@@ -1,5 +1,6 @@
 class Game_Character
   attr_accessor :marker_id
+  attr_accessor :marker_text
 
   alias sup_initialize initialize
 
@@ -28,4 +29,8 @@ class Game_Character
     return @step_anime
   end
 
+  def setOpacity(op)
+    @opacity = op
+  end
+  
 end
