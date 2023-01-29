@@ -89,6 +89,13 @@ class Battle::Move::SpindaDiversity < Battle::Move
 end
 
 #===============================================================================
+# This attack is always a critical hit. (Frost Breath, Storm Throw)
+#===============================================================================
+class Battle::Move::AlwaysCriticalHitWhenAffinityBoosted < Battle::Move
+  def pbCritialOverride(user, target); return !(user.affinityBooster.nil?); end
+end
+
+#===============================================================================
 # Grants a side effect if affinity boosted.
 # Effect is determined by the move's type. (Boost Moves)
 #===============================================================================

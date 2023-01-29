@@ -428,24 +428,24 @@ MenuHandlers.add(:options_menu, :se_volume, {
   }
 })
 
-MenuHandlers.add(:options_menu, :text_speed, {
-  "name"        => _INTL("Text Speed"),
-  "order"       => 30,
-  "type"        => EnumOption,
-  "parameters"  => [_INTL("Slow"), _INTL("Normal"), _INTL("Fast")],
-  "description" => _INTL("Choose the speed at which text appears."),
-  "on_select"   => proc { |scene| scene.sprites["textbox"].letterbyletter = true },
-  "get_proc"    => proc { next $PokemonSystem.textspeed },
-  "set_proc"    => proc { |value, scene|
-    next if value == $PokemonSystem.textspeed
-    $PokemonSystem.textspeed = value
-    MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
-    # Display the message with the selected text speed to gauge it better.
-    scene.sprites["textbox"].textspeed      = MessageConfig.pbGetTextSpeed
-    scene.sprites["textbox"].letterbyletter = true
-    scene.sprites["textbox"].text           = scene.sprites["textbox"].text
-  }
-})
+#MenuHandlers.add(:options_menu, :text_speed, {
+#  "name"        => _INTL("Text Speed"),
+#  "order"       => 30,
+#  "type"        => EnumOption,
+#  "parameters"  => [_INTL("Slow"), _INTL("Normal"), _INTL("Fast")],
+#  "description" => _INTL("Choose the speed at which text appears."),
+#  "on_select"   => proc { |scene| scene.sprites["textbox"].letterbyletter = true },
+#  "get_proc"    => proc { next $PokemonSystem.textspeed },
+#  "set_proc"    => proc { |value, scene|
+#    next if value == $PokemonSystem.textspeed
+#    $PokemonSystem.textspeed = value
+#    MessageConfig.pbSetTextSpeed(MessageConfig.pbSettingToTextSpeed(value))
+#    # Display the message with the selected text speed to gauge it better.
+#    scene.sprites["textbox"].textspeed      = MessageConfig.pbGetTextSpeed
+#    scene.sprites["textbox"].letterbyletter = true
+#    scene.sprites["textbox"].text           = scene.sprites["textbox"].text
+#  }
+#})
 
 MenuHandlers.add(:options_menu, :battle_animations, {
   "name"        => _INTL("Battle Effects"),

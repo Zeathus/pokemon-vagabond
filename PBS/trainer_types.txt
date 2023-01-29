@@ -1,4 +1,4 @@
-﻿# See the documentation on the wiki to learn how to edit this file.
+# See the documentation on the wiki to learn how to edit this file.
 0,PROTAGONIST,Pokémon Trainer,60,,,,Male,255,
 1,POKEMONTRAINER_Female,Pokémon Trainer,60,,,,Female,255,
 2,PROTAGONIST_NoCoat,Pokémon Trainer,60,,,,Male,255,

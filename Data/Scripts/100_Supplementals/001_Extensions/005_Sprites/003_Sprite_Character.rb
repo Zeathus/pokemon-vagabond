@@ -145,7 +145,10 @@ class Sprite_Character
     distance = Game_Map::TILE_WIDTH * 4
     speed = owner.character.move_speed_real
 
-    if (dif_x != 0 && dif_y != 0) ||
+    if (dif_x.abs > 256 || dif_y.abs > 256)
+      @real_x = owner.character.real_x
+      @real_y = owner.character.real_y
+    elsif (dif_x != 0 && dif_y != 0) ||
         dif_x.abs > distance || dif_y.abs > distance
       goal_x = owner.character.real_x
       goal_y = owner.character.real_y

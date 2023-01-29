@@ -1,10 +1,26 @@
 class PortraitSprite < IconSprite
 
   def initialize(msgwindow, viewport)
+    @parts      = {
+      "eyes" => IconSprite.new(0, 0, viewport),
+      "mouth" => IconSprite.new(0, 0, viewport)
+    }
+    @visibilities = {
+      "eyes" => false,
+      "mouth" => false
+    }
+    @timers = {
+      "eyes" => 0,
+      "mouth" => 0
+    }
     super(0, 0, viewport)
     @msgwindow  = msgwindow
     @character  = nil
     @expression = "neutral"
+    @new_character  = @character
+    @new_expression = @expression
+    @bounce_on_change = true
+    @bounce_timer = 0
     @position   = 1 # 0 = left, 1 = right, 2 = center, 3 = far left, 4 = far right
     self.refresh
   end
@@ -15,30 +31,48 @@ class PortraitSprite < IconSprite
     else
       @character = nil
     end
+    @new_character = @character
     if expr
       @expression = expr.downcase
     else
       @expression = "neutral"
     end
+    @new_expression = @expression
     self.refresh(true)
   end
 
   def character=(value)
     if value && value != "none"
-      @character = value.downcase
+      value = value.downcase
     else
-      @character = nil
+      value = nil
     end
-    self.refresh(true)
+    if value != @character && value != @new_character
+      @new_character = value
+      if !value.nil? && @bounce_on_change
+        @bounce_timer = 8
+      else
+        @character = value
+        self.refresh(true)
+      end
+    end
   end
 
   def expression=(value)
     if value
-      @expression = value.downcase
+      value = value.downcase
     else
-      @expression = "neutral"
+      value = "neutral"
     end
-    self.refresh(true)
+    if value != @expression && value != @new_expression
+      @new_expression = value
+      if !value.nil? && @bounce_on_change
+        @bounce_timer = 12
+      else
+        @expression = value
+        self.refresh(true)
+      end
+    end
   end
 
   def position=(value)
@@ -51,9 +85,15 @@ class PortraitSprite < IconSprite
     return if @character.nil?
     if redraw
       self.setBitmap(self.portrait_file)
+      @parts.each do |key, part|
+        file = self.part_file(key)
+        @visibilities[key] = !(file.nil?)
+        part.setBitmap(file)
+        part.src_rect = Rect.new(0, 0, self.bitmap.width, self.bitmap.height) if file
+      end
     end
     if self.bitmap
-      self.y = @msgwindow.y - self.bitmap.height + 2
+      self.y = @msgwindow.y - self.bitmap.height + 4
       case @position
       when 0
         self.x = @msgwindow.x + 10
@@ -67,7 +107,116 @@ class PortraitSprite < IconSprite
         self.x = @msgwindow.x + @msgwindow.width - self.bitmap.width + 32
       end
     end
-    self.z = @msgwindow.z
+    self.z = @msgwindow.z - 3
+  end
+
+  def update
+    if @bounce_timer > 0
+      @bounce_timer -= 1
+      if @bounce_timer == 6
+        @character = @new_character
+        @expression = @new_expression
+        self.refresh(true)
+      end
+      self.y = @msgwindow.y - self.bitmap.height + [4, 4, 2, 2, 4, 4, 8, 8, 4, 4, 2, 2][@bounce_timer]
+    end
+    self.update_parts if self.bitmap
+    super
+  end
+
+  def update_parts
+    if @visibilities["eyes"]
+      part = @parts["eyes"]
+      timer = @timers["eyes"]
+      if timer <= 0
+        timer = [180, 240, 300].shuffle[0]
+      end
+      timer -= 1
+      @timers["eyes"] = timer
+      if timer < 4
+        part.src_rect.x = self.bitmap.width
+      elsif timer < 12
+        part.src_rect.x = self.bitmap.width * 2 
+      elsif timer < 16
+        part.src_rect.x = self.bitmap.width
+      else
+        part.src_rect.x = 0
+      end
+    end
+    if @visibilities["mouth"]
+      part = @parts["mouth"]
+      timer = @timers["mouth"]
+      speed = 6
+      speaking = true
+      frame = ((timer / speed).floor + 1) % 4
+      if !@msgwindow.busy? || @msgwindow.waitcount > 0
+        if frame == 0 || frame == 2
+          timer = ((frame - 1) % 4) * speed
+          @timers["mouth"] = timer
+          speaking = false
+        end
+      end
+      if speaking
+        if timer >= speed * 4
+          timer = 0
+        end
+        timer += 1
+        @timers["mouth"] = timer
+        part.src_rect.x = self.bitmap.width * (((timer / speed).floor + 1) % 4)
+      else
+        part.src_rect.x = 0
+      end
+    end
+    pbUpdateSpriteHash(@parts)
+  end
+
+  def tone=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.tone = value
+    end
+  end
+
+  def color=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.color = value
+    end
+  end
+
+  def opacity=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.opacity = (value < 255) ? 0 : 255
+    end
+  end
+
+  def visible=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.visible = value
+    end
+  end
+
+  def x=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.x = value
+    end
+  end
+
+  def y=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.y = value
+    end
+  end
+
+  def z=(value)
+    super(value)
+    @parts.each do |key, part|
+      part.z = value + 1
+    end
   end
 
   def portrait_file
@@ -84,6 +233,21 @@ class PortraitSprite < IconSprite
       end
     end
     return nil
+  end
+
+  def part_file(part="eyes")
+    file = self.portrait_file
+    return nil if file.nil?
+    file = _INTL("{1}_{2}", file, part)
+    return file if pbResolveBitmap(file)
+    return nil
+  end
+
+  def dispose
+    @parts.each do |key, part|
+      part.dispose
+    end
+    super
   end
 
 end
@@ -514,7 +678,7 @@ class TalkMessageWindowWrapper
     @msgwindow&.update
     @msgwindow&.updateEffect
     @namebox&.update
-    @portaits&.each { |p| p.update }
+    @portraits&.each { |p| p.update }
     @facewindow&.update
     @goldwindow&.update
     @coinwindow&.update
@@ -670,11 +834,11 @@ class TalkMessageWindowWrapper
         elsif brackets == 0 && value[i - 1] != "\\"
           case value[i]
           when ".", "!", "?"
-            add = "\\wt[12]"
+            add = "\\wt[8]"
             value = (value[0..i] + add + value[(i+1)...value.length])
             i += add.length
           when ",", ":", ";"
-            add = "\\wt[8]"
+            add = "\\wt[6]"
             value = (value[0..i] + add + value[(i+1)...value.length])
             i += add.length
           end
@@ -723,6 +887,14 @@ class TalkMessageWindowWrapper
 
   def textspeed=(value)
     @msgwindow.textspeed = value
+  end
+
+  def waitcount
+    return @msgwindow.waitcount
+  end
+
+  def busy?
+    return @msgwindow.busy?
   end
 
   def reposition
