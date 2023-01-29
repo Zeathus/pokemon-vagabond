@@ -1,4 +1,4 @@
-﻿# Pokémon Essentials
+# Pokémon Essentials
 
 Based on Essentials v20.1.
 

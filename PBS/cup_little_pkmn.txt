@@ -1,4 +1,4 @@
-﻿# See the documentation on the wiki to learn how to edit this file.
+# See the documentation on the wiki to learn how to edit this file.
 #-------------------------------
 SUNKERN;TWISTEDSPOON;NAUGHTY;HP,DEF,SA;FACADE,SOLARBEAM,NATUREPOWER,TOXIC
 AZURILL;MIRACLESEED;LAX;HP,ATK,DEF;SLAM,SECRETPOWER,BLIZZARD,FACADE

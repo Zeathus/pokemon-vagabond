@@ -242,44 +242,292 @@ module InputCode
   EJECT = 281,
   SLEEP = 282
 
+  def InputCode.getName(code)
+    case code
+      when InputCode::UNKNOWN then "Unknown Key"
+      when InputCode::A then "A"
+      when InputCode::B then "B"
+      when InputCode::C then "C"
+      when InputCode::D then "D"
+      when InputCode::E then "E"
+      when InputCode::F then "F"
+      when InputCode::G then "G"
+      when InputCode::H then "H"
+      when InputCode::I then "I"
+      when InputCode::J then "J"
+      when InputCode::K then "K"
+      when InputCode::L then "L"
+      when InputCode::M then "M"
+      when InputCode::N then "N"
+      when InputCode::O then "O"
+      when InputCode::P then "P"
+      when InputCode::Q then "Q"
+      when InputCode::R then "R"
+      when InputCode::S then "S"
+      when InputCode::T then "T"
+      when InputCode::U then "U"
+      when InputCode::V then "V"
+      when InputCode::W then "W"
+      when InputCode::X then "X"
+      when InputCode::Y then "Y"
+      when InputCode::Z then "Z"
+      when InputCode::NUM1 then "1"
+      when InputCode::NUM2 then "2"
+      when InputCode::NUM3 then "3"
+      when InputCode::NUM4 then "4"
+      when InputCode::NUM5 then "5"
+      when InputCode::NUM6 then "6"
+      when InputCode::NUM7 then "7"
+      when InputCode::NUM8 then "8"
+      when InputCode::NUM9 then "9"
+      when InputCode::NUM0 then "0"
+      when InputCode::RETURN then "Enter"
+      when InputCode::ESCAPE then "Escape"
+      when InputCode::BACKSPACE then "Backspace"
+      when InputCode::TAB then "Tab"
+      when InputCode::SPACE then "Space"
+      when InputCode::MINUS then "-"
+      when InputCode::EQUALS then "="
+      when InputCode::LEFTBRACKET then "["
+      when InputCode::RIGHTBRACKET then "]"
+      when InputCode::BACKSLASH then "\\"
+      when InputCode::NONUSHASH then "#"
+      when InputCode::SEMICOLON then ";"
+      when InputCode::APOSTROPHE then "'"
+      when InputCode::GRAVE then "`"
+      when InputCode::COMMA then ","
+      when InputCode::PERIOD then "."
+      when InputCode::SLASH then "/"
+      when InputCode::CAPSLOCK then "Caps Lock"
+      when InputCode::F1 then "F1"
+      when InputCode::F2 then "F2"
+      when InputCode::F3 then "F3"
+      when InputCode::F4 then "F4"
+      when InputCode::F5 then "F5"
+      when InputCode::F6 then "F6"
+      when InputCode::F7 then "F7"
+      when InputCode::F8 then "F8"
+      when InputCode::F9 then "F9"
+      when InputCode::F10 then "F10"
+      when InputCode::F11 then "F11"
+      when InputCode::F12 then "F12"
+      when InputCode::PRINTSCREEN then "PrintScreen"
+      when InputCode::SCROLLLOCK then "Scroll Lock"
+      when InputCode::PAUSE then "Pause"
+      when InputCode::INSERT then "Insert"
+      when InputCode::HOME then "Home"
+      when InputCode::PAGEUP then "Page Up"
+      when InputCode::DELETE then "Delete"
+      when InputCode::KEY then "Key"
+      when InputCode::PAGEDOWN then "Page Down"
+      when InputCode::RIGHT then "Right Arrow"
+      when InputCode::LEFT then "Left Arrow"
+      when InputCode::DOWN then "Down Arrow"
+      when InputCode::UP then "Up Arrow"
+      when InputCode::NUMLOCKCLEAR then "Num Lock"
+      when InputCode::KP_DIVIDE then "NumPad /"
+      when InputCode::KP_MULTIPLY then "NumPad *"
+      when InputCode::KP_MINUS then "NumPad -"
+      when InputCode::KP_PLUS then "NumPad +"
+      when InputCode::KP_ENTER then "NumPad Enter"
+      when InputCode::KP_1 then "NumPad 1"
+      when InputCode::KP_2 then "NumPad 2"
+      when InputCode::KP_3 then "NumPad 3"
+      when InputCode::KP_4 then "NumPad 4"
+      when InputCode::KP_5 then "NumPad 5"
+      when InputCode::KP_6 then "NumPad 6"
+      when InputCode::KP_7 then "NumPad 7"
+      when InputCode::KP_8 then "NumPad 8"
+      when InputCode::KP_9 then "NumPad 9"
+      when InputCode::KP_0 then "NumPad 0"
+      when InputCode::KP_PERIOD then "NumPad ."
+      when InputCode::NONUSBACKSLASH then "\\"
+      when InputCode::APPLICATION then "Application"
+      when InputCode::POWER then "Power"
+      when InputCode::KP_EQUALS then "NumPad ="
+      when InputCode::F13 then "F13"
+      when InputCode::F14 then "F14"
+      when InputCode::F15 then "F15"
+      when InputCode::F16 then "F16"
+      when InputCode::F17 then "F17"
+      when InputCode::F18 then "F18"
+      when InputCode::F19 then "F19"
+      when InputCode::F20 then "F20"
+      when InputCode::F21 then "F21"
+      when InputCode::F22 then "F22"
+      when InputCode::F23 then "F23"
+      when InputCode::F24 then "F24"
+      when InputCode::EXECUTE then "Execute"
+      when InputCode::HELP then "Help"
+      when InputCode::MENU then "Menu"
+      when InputCode::SELECT then "Select"
+      when InputCode::STOP then "Stop"
+      when InputCode::AGAIN then "Again"
+      when InputCode::UNDO then "Undo"
+      when InputCode::CUT then "Cut"
+      when InputCode::COPY then "Copy"
+      when InputCode::PASTE then "Paste"
+      when InputCode::FIND then "Find"
+      when InputCode::MUTE then "Mute"
+      when InputCode::VOLUMEUP then "Volume Up"
+      when InputCode::VOLUMEDOWN then "Volume Down"
+      when InputCode::LOCKINGCAPSLOCK then "Caps Lock"
+      when InputCode::LOCKINGNUMLOCK then "Num Lock"
+      when InputCode::LOCKINGSCROLLLOCK then "Scroll Lock"
+      when InputCode::KP_COMMA then "NumPad ,"
+      when InputCode::KP_EQUALSAS400 then "NumPad ="
+      when InputCode::INTERNATIONAL1 then "Unknown Key"
+      when InputCode::INTERNATIONAL2 then "Unknown Key"
+      when InputCode::INTERNATIONAL3 then "Unknown Key"
+      when InputCode::INTERNATIONAL4 then "Unknown Key"
+      when InputCode::INTERNATIONAL5 then "Unknown Key"
+      when InputCode::INTERNATIONAL6 then "Unknown Key"
+      when InputCode::INTERNATIONAL7 then "Unknown Key"
+      when InputCode::INTERNATIONAL8 then "Unknown Key"
+      when InputCode::INTERNATIONAL9 then "Unknown Key"
+      when InputCode::LANG1 then "Unknown Key"
+      when InputCode::LANG2 then "Unknown Key"
+      when InputCode::LANG3 then "Unknown Key"
+      when InputCode::LANG4 then "Unknown Key"
+      when InputCode::LANG5 then "Unknown Key"
+      when InputCode::LANG6 then "Unknown Key"
+      when InputCode::LANG7 then "Unknown Key"
+      when InputCode::LANG8 then "Unknown Key"
+      when InputCode::LANG9 then "Unknown Key"
+      when InputCode::ALTERASE then "Alt Erase"
+      when InputCode::SYSREQ then "SysReq"
+      when InputCode::CANCEL then "Cancel"
+      when InputCode::CLEAR then "Clear"
+      when InputCode::PRIOR then "Prior"
+      when InputCode::RETURN2 then "Enter 2"
+      when InputCode::SEPARATOR then "Separator"
+      when InputCode::OUT then "Out"
+      when InputCode::OPER then "Oper"
+      when InputCode::CLEARAGAIN then "Clear Again"
+      when InputCode::CRSEL then "CRSel"
+      when InputCode::EXSEL then "EXSel"
+      when InputCode::KP_00 then "NumPad 00"
+      when InputCode::KP_000 then "NumPad 000"
+      when InputCode::THOUSANDSSEPARATOR then "Thousands Separator"
+      when InputCode::DECIMALSEPARATOR then "Decimal Separator"
+      when InputCode::CURRENCYUNIT then "Currency Unit"
+      when InputCode::CURRENCYSUBUNIT then "Currency Subunit"
+      when InputCode::KP_LEFTPAREN then "NumPad ("
+      when InputCode::KP_RIGHTPAREN then "NumPad )"
+      when InputCode::KP_LEFTBRACE then "NumPad ["
+      when InputCode::KP_RIGHTBRACE then "NumPad ]"
+      when InputCode::KP_TAB then "NumPad Tab"
+      when InputCode::KP_BACKSPACE then "NumPad Backspace"
+      when InputCode::KP_A then "NumPad A"
+      when InputCode::KP_B then "NumPad B"
+      when InputCode::KP_C then "NumPad C"
+      when InputCode::KP_D then "NumPad D"
+      when InputCode::KP_E then "NumPad E"
+      when InputCode::KP_F then "NumPad F"
+      when InputCode::KP_XOR then "NumPad XOR"
+      when InputCode::KP_POWER then "NumPad Power"
+      when InputCode::KP_PERCENT then "NumPad %"
+      when InputCode::KP_LESS then "NumPad <"
+      when InputCode::KP_GREATER then "NumPad >"
+      when InputCode::KP_AMPERSAND then "NumPad &"
+      when InputCode::KP_DBLAMPERSAND then "NumPad &"
+      when InputCode::KP_VERTICALBAR then "NumPad |"
+      when InputCode::KP_DBLVERTICALBAR then "NumPad |"
+      when InputCode::KP_COLON then "NumPad :"
+      when InputCode::KP_HASH then "NumPad #"
+      when InputCode::KP_SPACE then "NumPad Space"
+      when InputCode::KP_AT then "NumPad @"
+      when InputCode::KP_EXCLAM then "NumPad !"
+      when InputCode::KP_MEMSTORE then "NumPad Store"
+      when InputCode::KP_MEMRECALL then "NumPad Recall"
+      when InputCode::KP_MEMCLEAR then "NumPad Clear"
+      when InputCode::KP_MEMADD then "NumPad Add"
+      when InputCode::KP_MEMSUBTRACT then "NumPad Subtract"
+      when InputCode::KP_MEMMULTIPLY then "NumPad Multiply"
+      when InputCode::KP_MEMDIVIDE then "NumPad Divide"
+      when InputCode::KP_PLUSMINUS then "NumPad +-"
+      when InputCode::KP_CLEAR then "NumPad Clear"
+      when InputCode::KP_CLEARENTRY then "NumPad Clear Entry"
+      when InputCode::KP_BINARY then "NumPad Binary"
+      when InputCode::KP_OCTAL then "NumPad Octal"
+      when InputCode::KP_DECIMAL then "NumPad Decimal"
+      when InputCode::KP_HEXADECIMAL then "NumPad Hex"
+      when InputCode::LCTRL then "Left Ctrl"
+      when InputCode::LSHIFT then "Left Shift"
+      when InputCode::LALT then "Left Alt"
+      when InputCode::LGUI then "Left GUI"
+      when InputCode::RCTRL then "Right Ctrl"
+      when InputCode::RSHIFT then "Right Shift"
+      when InputCode::RALT then "Right Alt"
+      when InputCode::RGUI then "Right GUI"
+      when InputCode::MODE then "Mode"
+      when InputCode::AUDIONEXT then "Audio Next"
+      when InputCode::AUDIOPREV then "Audio Prev"
+      when InputCode::AUDIOSTOP then "Audio Stop"
+      when InputCode::AUDIOPLAY then "Audio Play"
+      when InputCode::AUDIOMUTE then "Audio Mute"
+      when InputCode::MEDIASELECT then "Media Select"
+      when InputCode::WWW then "www"
+      when InputCode::MAIL then "Mail"
+      when InputCode::CALCULATOR then "Calculator"
+      when InputCode::COMPUTER then "Computer"
+      when InputCode::AC_SEARCH then "Search"
+      when InputCode::AC_HOME then "Home"
+      when InputCode::AC_BACK then "Back"
+      when InputCode::AC_FORWARD then "Forward"
+      when InputCode::AC_STOP then "Stop"
+      when InputCode::AC_REFRESH then "Refresh"
+      when InputCode::AC_BOOKMARKS then "Bookmarks"
+      when InputCode::BRIGHTNESSDOWN then "Brightness Down"
+      when InputCode::BRIGHTNESSUP then "Brightness Up"
+      when InputCode::DISPLAYSWITCH then "Display Switch"
+      when InputCode::KBDILLUMTOGGLE then "Illum Toggle"
+      when InputCode::KBDILLUMDOWN then "Illum Down"
+      when InputCode::KBDILLUMUP then "Illum Up"
+      when InputCode::EJECT then "Eject"
+      when InputCode::SLEEP then "Sleep"
+    end
+    return "Unknown Key"
+  end
+
   module SourceType
-      Invalid = 0,
-      Key = 1,
-      JButton = 2,
-      JAxis = 3,
-      JHat = 4
+    Invalid = 0,
+    Key = 1,
+    JButton = 2,
+    JAxis = 3,
+    JHat = 4
   end
 
   module AxisDir
-      Negative = 0,
-      Positive = 1
+    Negative = 0,
+    Positive = 1
   end
 
   class Keybind
-      attr_accessor :src_type
-      attr_accessor :input_code
-      attr_accessor :input_arg
-      attr_accessor :target
+    attr_accessor :src_type
+    attr_accessor :input_code
+    attr_accessor :input_arg
+    attr_accessor :target
 
-      def initialize(src_type, input_code, input_arg, target)
-          self.src_type = src_type
-          self.input_code = input_code
-          self.input_arg = input_arg
-          self.target = target
-      end
+    def initialize(src_type, input_code, input_arg, target)
+      self.src_type = src_type
+      self.input_code = input_code
+      self.input_arg = input_arg
+      self.target = target
+    end
 
-      def to_s
-          keys = []
-          keys[Input::UP] = "up"
-          keys[Input::DOWN] = "down"
-          keys[Input::RIGHT] = "right"
-          keys[Input::LEFT] = "left"
-          keys[Input::USE] = "use"
-          keys[Input::BACK] = "back"
-          keys[Input::ACTION] = "action"
-          return _INTL("Type: {1}, Key: {2}, Arg: {3}, Trg: {4}",
-              self.src_type, self.input_code, self.input_arg, (keys[self.target] rescue "nil"))
-      end
+    def to_s
+      keys = []
+      keys[Input::UP] = "up"
+      keys[Input::DOWN] = "down"
+      keys[Input::RIGHT] = "right"
+      keys[Input::LEFT] = "left"
+      keys[Input::USE] = "use"
+      keys[Input::BACK] = "back"
+      keys[Input::ACTION] = "action"
+      return _INTL("Type: {1}, Key: {2}, Arg: {3}, Trg: {4}",
+        self.src_type, self.input_code, self.input_arg, (keys[self.target] rescue "nil"))
+    end
   end
 
   def InputCode.read_keybinds_file(file)
@@ -288,59 +536,76 @@ module InputCode
     count = file.read(4).unpack("L")[0]
     keybinds = []
     for i in 0...count
-        src_type = file.read(4).unpack("L")[0]
-        input_code = file.read(4).unpack("L")[0]
-        input_arg = file.read(4).unpack("L")[0]
-        target = file.read(4).unpack("L")[0]
-        keybinds.push(Keybind.new(src_type, input_code, input_arg, target))
+      src_type = file.read(4).unpack("L")[0]
+      input_code = file.read(4).unpack("L")[0]
+      input_arg = file.read(4).unpack("L")[0]
+      target = file.read(4).unpack("L")[0]
+      keybinds.push(Keybind.new(src_type, input_code, input_arg, target))
     end
     return keybinds
   end
 
   def InputCode.read_keybinds
-      keybinds = []
-      begin
-          dir = System.data_directory
-          delim = dir[dir.length - 1]
-          dir = dir[0...(dir.length - 1)]
-          dir = dir[0..(dir.rindex("/") || dir.rindex("\\"))] + "mkxp-z" + delim
-          keybinds_file = _INTL("{1}{2}",
-              dir, "keybindings.mkxp1")
-          File.open(keybinds_file, "r") do |file|
-            keybinds = InputCode.read_keybinds_file(file)
-          end
-      rescue
-          echo "Failed to load keybinds file. Loading default.\n"
-          keybinds_file = _INTL("Data/default_keys.mkxp1")
-          File.open(keybinds_file, "r") do |file|
-            keybinds = InputCode.read_keybinds_file(file)
-          end
+    keybinds = []
+    begin
+      dir = System.data_directory
+      delim = dir[dir.length - 1]
+      dir = dir[0...(dir.length - 1)]
+      dir = dir[0..(dir.rindex("/") || dir.rindex("\\"))] + "mkxp-z" + delim
+      keybinds_file = _INTL("{1}{2}",
+        dir, "keybindings.mkxp1")
+      File.open(keybinds_file, "r") do |file|
+        keybinds = InputCode.read_keybinds_file(file)
       end
-      return keybinds
+    rescue
+      echo "Failed to load keybinds file. Loading default.\n"
+      keybinds_file = _INTL("Data/default_keys.mkxp1")
+      File.open(keybinds_file, "r") do |file|
+        keybinds = InputCode.read_keybinds_file(file)
+      end
+    end
+    return keybinds
   end
 end
 
 class KeybindList
   def initialize
-      @keybinds = InputCode.read_keybinds
+    @keybinds = InputCode.read_keybinds
+  end
+
+  def key(input)
+    keybind = nil
+    for k in @keybinds
+      if k.target == input
+        if k.src_type == 1
+          if !keybind || k.input_code < keybind.input_code
+            keybind = k
+          end
+        end
+      end
+    end
+    if keybind
+      InputCode.getName(keybind.input_code)
+    end
+    return "Unknown Input"
   end
 
   def rect(input)
-      keybind = nil
-      for k in @keybinds
-          if k.target == input
-              if k.src_type == 1
-                  if !keybind || k.input_code < keybind.input_code
-                      keybind = k
-                  end
-              end
+    keybind = nil
+    for k in @keybinds
+      if k.target == input
+        if k.src_type == 1
+          if !keybind || k.input_code < keybind.input_code
+            keybind = k
           end
+        end
       end
-      if keybind
-          id = keybind.input_code
-          return Rect.new((id%16)*28,(id/16).floor*28,28,28)
-      end
-      return Rect.new(0, 0, 28, 28)
+    end
+    if keybind
+      id = keybind.input_code
+      return Rect.new((id%16)*28,(id/16).floor*28,28,28)
+    end
+    return Rect.new(0, 0, 28, 28)
   end
 end
 
