@@ -1,31 +1,36 @@
-def pbRaiseEffortLevels(pkmn, stat, evGain = 10)
+def pbRaiseEffortLevels(pkmn, stat, min_el, max_el)
   stat = GameData::Stat.get(stat).id
-  return 0 if !no_ev_cap && pkmn.ev[stat] >= 100
-  evTotal = 0
-  GameData::Stat.each_main { |s| evTotal += pkmn.ev[s.id] }
-  evGain = evGain.clamp(0, Pokemon::EV_STAT_LIMIT - pkmn.ev[stat])
-  evGain = evGain.clamp(0, 100 - pkmn.ev[stat]) if !no_ev_cap
-  evGain = evGain.clamp(0, Pokemon::EV_LIMIT - evTotal)
-  if evGain > 0
-    pkmn.ev[stat] += evGain
-    pkmn.calc_stats
+  els = pkmn.el
+  return 0 if els[stat] < min_el || els[stat] >= max_el
+  return 0 if els[stat] >= Supplementals::MAX_EFFORT_LEVEL
+  total_counting_els = pkmn.total_counting_els
+  return 0 if els[stat] >= Supplementals::IGNORE_TOTAL_EFFORT_LEVELS && total_counting_els >= Supplementals::MAX_TOTAL_EFFORT_LEVEL
+  elGain = 1
+  els[stat] += elGain
+  pkmn.el = els
+  pkmn.calc_stats
+  return elGain
+end
+
+def pbMaxUsesOfELRaisingItem(stat, min_el, max_el, pkmn)
+  els = pkmn.el
+  return 0 if els[stat] < min_el || els[stat] >= max_el
+  return 0 if els[stat] >= Supplementals::MAX_EFFORT_LEVEL
+  total_counting_els = pkmn.total_counting_els
+  return 0 if els[stat] >= Supplementals::IGNORE_TOTAL_EFFORT_LEVELS && total_counting_els >= Supplementals::MAX_TOTAL_EFFORT_LEVEL
+  to_next_tier = max_el - els[stat]
+  max_can_gain = Supplementals::MAX_TOTAL_EFFORT_LEVEL - total_counting_els
+  if els[stat] < Supplementals::IGNORE_TOTAL_EFFORT_LEVELS
+    max_can_gain = Supplementals::IGNORE_TOTAL_EFFORT_LEVELS - els[stat]
   end
-  return evGain
+  val = [to_next_tier, max_can_gain].min
+  return val
 end
 
-def pbMaxUsesOfELRaisingItem(stat, amt_per_use, pkmn)
-  max_per_stat = (no_ev_cap) ? Pokemon::EV_STAT_LIMIT : 100
-  amt_can_gain = max_per_stat - pkmn.ev[stat]
-  ev_total = 0
-  GameData::Stat.each_main { |s| ev_total += pkmn.ev[s.id] }
-  amt_can_gain = [amt_can_gain, Pokemon::EV_LIMIT - ev_total].min
-  return [(amt_can_gain.to_f / amt_per_use).ceil, 1].max
-end
-
-def pbUseELRaisingItem(stat, amt_per_use, qty, pkmn, happiness_type, scene)
+def pbUseELRaisingItem(stat, min_el, max_el, qty, pkmn, happiness_type, scene)
   ret = true
   qty.times do |i|
-    if pbRaiseEffortValues(pkmn, stat, amt_per_use, no_ev_cap) > 0
+    if pbRaiseEffortLevels(pkmn, stat, min_el, max_el) > 0
       pkmn.changeHappiness(happiness_type)
     else
       ret = false if i == 0
@@ -42,7 +47,7 @@ def pbUseELRaisingItem(stat, amt_per_use, qty, pkmn, happiness_type, scene)
 end
 
 def pbMaxUsesOfELLoweringBerry(stat, pkmn)
-  ret = (pkmn.ev[stat].to_f / 10).ceil
+  ret = pkmn.el[stat]
   happiness = pkmn.happiness
   uses = 0
   if happiness < 255
@@ -64,7 +69,8 @@ end
 
 def pbRaiseHappinessAndLowerEL(pkmn, scene, stat, qty, messages)
   h = pkmn.happiness < 255
-  e = pkmn.ev[stat] > 0
+  els = pkmn.el
+  e = els[stat] > 0
   if !h && !e
     scene.pbDisplay(_INTL("It won't have any effect."))
     return false
@@ -73,8 +79,8 @@ def pbRaiseHappinessAndLowerEL(pkmn, scene, stat, qty, messages)
     qty.times { |i| pkmn.changeHappiness("evberry") }
   end
   if e
-    pkmn.ev[stat] -= 10 * qty
-    pkmn.ev[stat] = 0 if pkmn.ev[stat] < 0
+    qty.times { |i| els[stat] -= 1 if els[stat] > 0 }
+    pkmn.el = els
     pkmn.calc_stats
   end
   scene.pbRefresh
@@ -83,18 +89,20 @@ def pbRaiseHappinessAndLowerEL(pkmn, scene, stat, qty, messages)
 end
 
 if Supplementals::USE_EFFORT_LEVELS
-  [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED].each do |stat|
-    for i in 0...Supplementals::EFFORT_LEVEL_TIERS.length
+  GameData::Stat.each_main do |s|
+    stat = s.id
+    (0...Supplementals::EFFORT_LEVEL_TIERS.length).each do |i|
+      tier_min_level = (i == 0) ? 0 : (Supplementals::EFFORT_LEVEL_TIERS[i - 1])
       tier_max_level = Supplementals::EFFORT_LEVEL_TIERS[i]
 
       tier_item = Supplementals::EFFORT_LEVEL_INCREASE_ITEMS[stat][i]
 
       ItemHandlers::UseOnPokemonMaximum.add(tier_item, proc { |item, pkmn|
-        next pbMaxUsesOfELRaisingItem(stat, tier_max_level, pkmn)
+        next pbMaxUsesOfELRaisingItem(stat, tier_min_level, tier_max_level, pkmn)
       })
 
       ItemHandlers::UseOnPokemon.add(tier_item, proc { |item, qty, pkmn, scene|
-        next pbUseELRaisingItem(stat, tier_max_level, qty, pkmn, "vitamin", scene)
+        next pbUseELRaisingItem(stat, tier_min_level, tier_max_level, qty, pkmn, "vitamin", scene)
       })
     end
 
@@ -107,9 +115,9 @@ if Supplementals::USE_EFFORT_LEVELS
     ItemHandlers::UseOnPokemon.add(decrease_item, proc { |item, qty, pkmn, scene|
       next pbRaiseHappinessAndLowerEL(
         pkmn, scene, stat, qty, [
-          _INTL("{1} adores you! Its base {2} fell!", pkmn.name, stat.to_s),
-          _INTL("{1} became more friendly. Its base {2} can't go lower.", pkmn.name),
-          _INTL("{1} became more friendly. However, its base {2} fell!", pkmn.name)
+          _INTL("{1} adores you! Its base {2} fell!", pkmn.name, GameData::Stat.get(stat).name),
+          _INTL("{1} became more friendly. Its base {2} can't go lower.", pkmn.name, GameData::Stat.get(stat).name),
+          _INTL("{1} became more friendly. However, its base {2} fell!", pkmn.name, GameData::Stat.get(stat).name)
         ]
       )
     })

@@ -61,17 +61,21 @@ module Supplementals
 
   # The number of effort levels, and what IVs and EVs correspond to them
   MAX_EFFORT_LEVEL = 10
+  # The total number of effort levels you can go above IGNORE_TOTAL_EFFORT_LEVELS
+  MAX_TOTAL_EFFORT_LEVEL = 14
+  # Only the levels above this number will be counted towards the total
+  IGNORE_TOTAL_EFFORT_LEVELS = 3
   EFFORT_LEVEL_IVS = [  0,  10,  20,  31,  31,  31,  31,  31,  31,  31,  31]
   EFFORT_LEVEL_EVS = [  0,   0,   0,   0,  36,  72, 108, 144, 180, 216, 252]
 
   # Whether or not Pokemon gain EVs during battle. Disable this to only level ELs with items
-  GAIN_EVS = false
+  GAIN_EVS = !USE_EFFORT_LEVELS
 
   # When the level reaches a new tier, the next increasing item is required
   EFFORT_LEVEL_TIERS = [3, 10]
 
   EFFORT_LEVEL_INCREASE_ITEMS = {
-    :HP              => [:HEALTHFEATHER, :HPUP]
+    :HP              => [:HEALTHFEATHER, :HPUP],
     :ATTACK          => [:MUSCLEFEATHER, :PROTEIN],
     :DEFENSE         => [:RESISTFEATHER, :IRON],
     :SPECIAL_ATTACK  => [:GENIUSFEATHER, :CALCIUM],

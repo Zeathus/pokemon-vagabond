@@ -1189,6 +1189,9 @@ class Pokemon
       @iv[s.id]       = rand(IV_STAT_LIMIT + 1)
       @ev[s.id]       = 0
     end
+    if Supplementals::USE_EFFORT_LEVELS
+      self.align_el
+    end
     case owner
     when Owner
       @owner = owner
