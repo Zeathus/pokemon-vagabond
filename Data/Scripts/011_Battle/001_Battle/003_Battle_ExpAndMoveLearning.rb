@@ -52,6 +52,7 @@ class Battle
   end
 
   def pbGainEVsOne(idxParty, defeatedBattler)
+    return if !Supplementals::GAIN_EVS
     pkmn = pbParty(0)[idxParty]   # The Pokémon gaining EVs from defeatedBattler
     evYield = defeatedBattler.pokemon.evYield
     # Num of effort points pkmn already has
