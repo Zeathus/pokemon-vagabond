@@ -779,7 +779,7 @@ def pbEndSurf(_xOffset, _yOffset)
   return false if !$PokemonGlobal.surfing
   x = $game_player.x
   y = $game_player.y
-  if $game_map.terrain_tag(x, y).can_surf
+  if $game_map.terrain_tag(x, y).can_surf && (!$game_player.pbFacingTerrainTag.can_surf || $game_player.pbFacingTerrainTag.water_edge)
     if $game_player.pbFacingTerrainTag.water_edge
       up = false
       if Supplementals::HIGH_WATER_EDGES
@@ -796,6 +796,7 @@ def pbEndSurf(_xOffset, _yOffset)
         result=$game_player.check_event_trigger_here([1,2])
         pbOnStepTaken(result)
       end
+      return true
     else
       $game_temp.surf_base_coords = [x, y]
       up = false

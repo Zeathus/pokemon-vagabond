@@ -2,7 +2,7 @@ DIALOG_FILES = [
   "general"
 ]
 
-def pbDialog(name, index=0)
+def pbDialog(name, index = 0, msgwindows = nil)
 
   name = _INTL("{1}_{2}", name.upcase, index)
   dialog = $GameDialog[name]
@@ -11,13 +11,15 @@ def pbDialog(name, index=0)
     raise _INTL("Did not find a dialog with the name [{1}]", name)
   end
 
-  msgwindows = TalkMessageWindows.new
+  create_windows = msgwindows.nil?
+
+  msgwindows = TalkMessageWindows.new if create_windows
 
   ret = pbRunDialogFeed(dialog, msgwindows)
   Graphics.update
   Input.update
 
-  msgwindows.dispose
+  msgwindows.dispose if create_windows
 
   $game_system.message_position = 2
   $game_system.message_frame = 0
@@ -268,9 +270,9 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         end
       when "dialog"
         if args[1]
-          pbDialog(args[0], args[1])
+          pbDialog(args[0], args[1], msgwindows)
         else
-          pbDialog(args[0])
+          pbDialog(args[0], 0, msgwindows)
         end
       end
     when Dialog::If

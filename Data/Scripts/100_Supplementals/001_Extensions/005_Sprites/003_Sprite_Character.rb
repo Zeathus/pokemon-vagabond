@@ -16,6 +16,10 @@ class Sprite_Character
     @dropshadow.update
   end
 
+  def set_text_bubble(value)
+    @text_bubble = value
+  end
+
   def dispose
     @dropshadow&.dispose
     @marker&.dispose
@@ -25,6 +29,12 @@ class Sprite_Character
 
   def update
     sup_update
+    if @text_bubble
+      @text_bubble.update
+      if @text_bubble.disposed?
+        @text_bubble = nil
+      end
+    end
     @dropshadow&.update
     if @marker_id != @character.marker_id
       @marker_id = @character.marker_id
@@ -57,17 +67,17 @@ class Sprite_Character
         end
         @marker.src_rect = Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48) if !@marker_text
         @marker.ox = @marker_text ? (@marker.bitmap.width / 2) : 16
-        if @ch
-          @marker.oy = @ch + 40
-        else
-          @marker.oy = 40
-        end
       end
     end
     if @marker && !@marker.disposed?
       @marker.x = self.x
       @marker.y = self.y
       @marker.z = self.z
+      if @ch
+        @marker.oy = @ch + 40
+      else
+        @marker.oy = 40
+      end
       @marker&.update
     end
   end

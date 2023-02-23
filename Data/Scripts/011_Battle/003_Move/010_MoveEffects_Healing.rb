@@ -438,7 +438,7 @@ class Battle::Move::StartLeechSeedTarget < Battle::Move
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Settings::LEECH_SEED_TYPE_EFFECT && statusMove? && user.pbHasType?(:GRASS))
+    return (Supplementals::LEECH_SEED_TYPE_EFFECT && statusMove? && user.pbHasType?(:GRASS))
   end
 end
 

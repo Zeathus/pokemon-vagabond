@@ -50,7 +50,7 @@ class CraftAdapter
   end
 
   def removeItem(item)
-    return $bag.pbDeleteItem(item)
+    return $bag.remove(item)
   end
 end
 
@@ -243,7 +243,7 @@ class Window_Craft < Window_DrawableCommand
     rect=drawCursor(index,rect)
     ypos=rect.y
     if index==count-1
-      textpos.push([_INTL("CANCEL"),rect.x,ypos-4,false,
+      textpos.push([_INTL("CANCEL"),rect.x,ypos,false,
          self.baseColor,self.shadowColor])
     else
       #item=@stock[index]
@@ -251,7 +251,7 @@ class Window_Craft < Window_DrawableCommand
       #qty=@adapter.getDisplayPrice(item)
       #sizeQty=self.contents.text_size(qty).width
       #xQty=rect.x+rect.width-sizeQty-2-16
-      textpos.push([itemname,rect.x,ypos-4,false,self.baseColor,self.shadowColor])
+      textpos.push([itemname,rect.x,ypos,false,self.baseColor,self.shadowColor])
       #textpos.push([qty,xQty,ypos+2,false,self.baseColor,self.shadowColor])
     end
     pbDrawTextPositions(self.contents,textpos)
@@ -273,6 +273,10 @@ class CraftScene
       textpos=[]
       @sprites["itemtextwindow"].text=(itemwindow.item==0) ? _INTL("Exit menu.") :
         (itemwindow.item[3] ? itemwindow.item[3] : @adapter.getDescription(itemwindow.item[2][0]))
+      valid_base = Color.new(80, 80, 88)
+      valid_shadow = Color.new(160, 160, 168)
+      invalid_base = Color.new(150, 0, 0)
+      invalid_shadow = Color.new(255, 160, 160)
       for i in 0..2
         itemid = itemwindow.item[1][i * 2]
         itemid = nil if itemid == 0
@@ -283,15 +287,23 @@ class CraftScene
           if itemid == :PAY
             @sprites[_INTL("item{1}text",i+1)].text = 
               _INTL("${1}", pbFormatNumber(quantity))
+            if $player.money >= quantity
+              @sprites[_INTL("item{1}text",i+1)].baseColor = valid_base
+              @sprites[_INTL("item{1}text",i+1)].shadowColor = valid_shadow
+            else
+              @sprites[_INTL("item{1}text",i+1)].baseColor = invalid_base
+              @sprites[_INTL("item{1}text",i+1)].shadowColor = invalid_shadow
+            end
           else
             @sprites[_INTL("item{1}text",i+1)].text = 
               _INTL("{1} ({2}/{3})", @adapter.getName(itemid), $bag.quantity(itemid), quantity)
-          end
-          itemhint = pbItemHint(itemid)
-          if itemhint
-            textpos.push([
-              itemhint,@item_x-24,@item_1_y+18+i*90,0,Color.new(80, 80, 88),Color.new(160, 160, 168),false
-            ])
+            if $bag.quantity(itemid) >= quantity
+              @sprites[_INTL("item{1}text",i+1)].baseColor = valid_base
+              @sprites[_INTL("item{1}text",i+1)].shadowColor = valid_shadow
+            else
+              @sprites[_INTL("item{1}text",i+1)].baseColor = invalid_base
+              @sprites[_INTL("item{1}text",i+1)].shadowColor = invalid_shadow
+            end
           end
         else
           @sprites[_INTL("icon{1}",i+1)].visible = false
@@ -305,6 +317,8 @@ class CraftScene
         end
       end
       for i in 0..1
+        @sprites[_INTL("item{1}text",i+4)].baseColor = valid_base
+        @sprites[_INTL("item{1}text",i+4)].shadowColor = valid_shadow
         itemid = itemwindow.item[2][i * 2]
         itemid = nil if itemid == 0
         quantity = itemwindow.item[2][i * 2 + 1]
@@ -344,15 +358,15 @@ class CraftScene
     @sprites={}
     @sprites["background"]=IconSprite.new(0,0,@viewport)
     @sprites["background"].setBitmap("Graphics/Pictures/Craft/bg")
-    @item_x = 314
+    @item_x = 246
     @item_text_x = @item_x + 24
-    @item_1_y = 52
-    @item_2_y = 348
-    @sprites["icon1"]=ItemIconSprite.new(@item_x,@item_1_y,-1,@viewport)
-    @sprites["icon2"]=ItemIconSprite.new(@item_x,@item_1_y+90,-1,@viewport)
-    @sprites["icon3"]=ItemIconSprite.new(@item_x,@item_1_y+180,-1,@viewport)
-    @sprites["icon4"]=ItemIconSprite.new(@item_x,@item_2_y,-1,@viewport)
-    @sprites["icon5"]=ItemIconSprite.new(@item_x,@item_2_y+60,-1,@viewport)
+    @item_1_y = 40
+    @item_2_y = 200
+    @sprites["icon1"]=ItemIconSprite.new(@item_x,@item_1_y,nil,@viewport)
+    @sprites["icon2"]=ItemIconSprite.new(@item_x,@item_1_y+46,nil,@viewport)
+    @sprites["icon3"]=ItemIconSprite.new(@item_x,@item_1_y+92,nil,@viewport)
+    @sprites["icon4"]=ItemIconSprite.new(@item_x,@item_2_y,nil,@viewport)
+    @sprites["icon5"]=ItemIconSprite.new(@item_x,@item_2_y+46,nil,@viewport)
     @sprites["item1text"]=Window_UnformattedTextPokemon.new("")
     @sprites["item2text"]=Window_UnformattedTextPokemon.new("")
     @sprites["item3text"]=Window_UnformattedTextPokemon.new("")
@@ -369,13 +383,13 @@ class CraftScene
     @sprites["item1text"].x=@item_text_x
     @sprites["item1text"].y=@item_1_y - 32
     @sprites["item2text"].x=@item_text_x
-    @sprites["item2text"].y=@item_1_y - 32 + 90
+    @sprites["item2text"].y=@item_1_y - 32 + 46
     @sprites["item3text"].x=@item_text_x
-    @sprites["item3text"].y=@item_1_y - 32 + 180
+    @sprites["item3text"].y=@item_1_y - 32 + 92
     @sprites["item4text"].x=@item_text_x
     @sprites["item4text"].y=@item_2_y - 32
     @sprites["item5text"].x=@item_text_x
-    @sprites["item5text"].y=@item_2_y - 32 + 60
+    @sprites["item5text"].y=@item_2_y - 32 + 46
     for i in 1..5
       @sprites[_INTL("item{1}text",i)].width = 300
       @sprites[_INTL("item{1}text",i)].height = 128
@@ -614,7 +628,7 @@ class CraftScreen
             if it == :PAY
               $player.money -= qt
             else
-               $bag.pbDeleteItem(it,qt)
+               $bag.remove(it,qt)
             end
           end
         end
@@ -638,9 +652,16 @@ end
 
 
 
-def pbItemCraft(stock,speech=nil)
-  #stock.compact!
+def pbItemCraft(stock, speech=nil)
   scene=CraftScene.new
   screen=CraftScreen.new(scene,stock)
   screen.pbCraftScreen
 end 
+
+def pbExampleCrafts
+  trades = [
+    ["Berry Juice",[:ORANBERRY,3],[:BERRYJUICE,2]],
+    ["Mystic Water",[:SHOALSHELL,1,:BLUESHARD,1],[:MYSTICWATER,1]]
+  ]
+  return trades
+end
