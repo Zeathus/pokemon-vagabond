@@ -1,7 +1,5 @@
 def pbLargeBoulder(event_id)
-  if $game_variables[RIDE_CURRENT]!=PBRides::Strength
-    return
-  end
+  return
   event = false
   holes = []
   boulders = []
@@ -69,7 +67,7 @@ def pbLargeBoulder(event_id)
         end
         for e in events
           if e.direction==6 || e.direction==8
-            $scene.spriteset.addUserAnimation(DUST_ANIMATION_ID,e.x,e.y,true,e)
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,e.x,e.y,true,e)
           end
           e.through=true
           e.move_down
@@ -87,7 +85,7 @@ def pbLargeBoulder(event_id)
         end
         for e in events
           if e.direction==8
-            $scene.spriteset.addUserAnimation(DUST_ANIMATION_ID,e.x,e.y,true,e)
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,e.x,e.y,true,e)
           end
           e.through=true
           e.move_left
@@ -105,7 +103,7 @@ def pbLargeBoulder(event_id)
         end
         for e in events
           if e.direction==6
-            $scene.spriteset.addUserAnimation(DUST_ANIMATION_ID,e.x,e.y,true,e)
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,e.x,e.y,true,e)
           end
           e.through=true
           e.move_right
@@ -123,7 +121,7 @@ def pbLargeBoulder(event_id)
         end
         for e in events
           if e.direction==6 || e.direction==8
-            $scene.spriteset.addUserAnimation(DUST_ANIMATION_ID,e.x,e.y,true,e)
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,e.x,e.y,true,e)
           end
           e.through=true
           e.move_up

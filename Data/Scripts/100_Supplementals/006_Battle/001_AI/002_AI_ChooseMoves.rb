@@ -530,7 +530,7 @@ class Battle
           # Try to make use of abilities activated on switch-in
           party = pbParty(battler.index)
           for p in 0...party.length
-            if pbCanSwitch?(i, p, false)
+            if pbCanSwitch?(i, p, nil)
               pkmn = party[p]
               if (pkmn.hasAbility?(:DROUGHT) && pbWeather != :Sun) ||
                   (pkmn.hasAbility?(:DRIZZLE) && pbWeather != :Rain) ||
@@ -578,7 +578,7 @@ class Battle
           rocks = battler.pbOwnSide.effects[PBEffects::StealthRock]
 
           for p in 0...party.length
-            if pbCanSwitch?(i, p, false) && p != prev_switch
+            if pbCanSwitch?(i, p, nil) && p != prev_switch
               pkmn = party[p]
               can_switch[p] = true
 

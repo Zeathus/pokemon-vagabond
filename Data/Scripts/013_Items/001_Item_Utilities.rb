@@ -602,7 +602,7 @@ def pbLearnMove(pkmn, move, ignore_if_known = false, by_machine = false, &block)
     screen = PokemonSummary.new(scene)
     screen.pbStartScreen([pkmn], 0, move)
   else
-    pbMessage(_INTL("\\se[]{2} was added to {1}'s move list!\\se[Pkmn move learnt]", pkmnname, movename))
+    pbMessage(_INTL("\\se[]{2} was added to {1}'s move list!\\se[Pkmn move learnt]", pkmn_name, move_name))
   end
   return false
   pbMessage(_INTL("{1} wants to learn {2}, but it already knows {3} moves.\1",

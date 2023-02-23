@@ -72,15 +72,15 @@ module Supplementals
   GAIN_EVS = !USE_EFFORT_LEVELS
 
   # When the level reaches a new tier, the next increasing item is required
-  EFFORT_LEVEL_TIERS = [3, 10]
+  EFFORT_LEVEL_TIERS = [3, 9, 10]
 
   EFFORT_LEVEL_INCREASE_ITEMS = {
-    :HP              => [:HEALTHFEATHER, :HPUP],
-    :ATTACK          => [:MUSCLEFEATHER, :PROTEIN],
-    :DEFENSE         => [:RESISTFEATHER, :IRON],
-    :SPECIAL_ATTACK  => [:GENIUSFEATHER, :CALCIUM],
-    :SPECIAL_DEFENSE => [:CLEVERFEATHER, :ZINC],
-    :SPEED           => [:SWIFTFEATHER,  :CARBOS]
+    :HP              => [:HEALTHWING, :HPUP,    :HEMATITEGEMSTONE],
+    :ATTACK          => [:MUSCLEWING, :PROTEIN, :HELIODORGEMSTONE],
+    :DEFENSE         => [:RESISTWING, :IRON,    :AEGIRINEGEMSTONE],
+    :SPECIAL_ATTACK  => [:GENIUSWING, :CALCIUM, :AMETRINEGEMSTONE],
+    :SPECIAL_DEFENSE => [:CLEVERWING, :ZINC,    :HOWLITEGEMSTONE],
+    :SPEED           => [:SWIFTWING,  :CARBOS,  :PHENACITEGEMSTONE]
   }
   EFFORT_LEVEL_DECREASE_ITEMS = {
     :HP              => :POMEGBERRY,

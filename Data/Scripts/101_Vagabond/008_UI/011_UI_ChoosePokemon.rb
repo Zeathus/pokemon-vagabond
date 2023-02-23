@@ -53,7 +53,7 @@ class ChoosePokemonSprite < IconSprite
       return if @size == 0
 
       pbDrawTextPositions(@overlay.bitmap,[[
-          @pokemon.name, 74, 0, 0, Color.new(252, 252, 252), Color.new(0, 0, 0)
+          @pokemon.name, 74, 12, 0, Color.new(252, 252, 252), Color.new(0, 0, 0)
       ]])
       bar_width = 78
       hpzone=0
@@ -209,7 +209,7 @@ class ChoosePokemonScreen
   end
 
   def refreshCursor
-      @sprites["cursor"].y = 206 + 68 * @index
+      @sprites["cursor"].y = 196 + 68 * @index
       for y in 0...3
           @sprites[_INTL("pokemon_1_{1}", y)].selected = (@index == y)
       end
@@ -245,7 +245,7 @@ class ChoosePokemonScreen
 
   def pbStartScreen
       @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-      @viewport.z = 99999
+      @viewport.z = 99990
 
       @sprites = {}
 
@@ -254,7 +254,7 @@ class ChoosePokemonScreen
       @sprites["bg"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0, 128))
 
       x_pos = [178, 268, 462]
-      y_pos = 140
+      y_pos = 130
       for x in 0...3
           member = ChooseMemberSprite.new(x % 2, @viewport)
           member.x = x_pos[x]

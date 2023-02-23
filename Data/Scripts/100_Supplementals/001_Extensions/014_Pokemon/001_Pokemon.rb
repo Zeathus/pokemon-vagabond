@@ -1,5 +1,9 @@
 class Pokemon
 
+  def clampEL
+    self.el = self.el
+  end
+
   def el
     ret = {}
     GameData::Stat.each_main do |s|

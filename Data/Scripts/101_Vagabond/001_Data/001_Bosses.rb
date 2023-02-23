@@ -26,8 +26,14 @@ end
 
 def pbBossGeneral
   setBattleRule("2v1")
+  setBattleRule("smartwildbattle")
+  setBattleRule("outcomevar", 1)
   pbPokemonBossBGM
-  $game_variables[WILD_AI_LEVEL] = 100
+end
+
+def pbBossRuinGeneral
+  pbBossGeneral
+  setBattleRule("disablepokeballs")
 end
 
 def pbBossGiratina1
@@ -61,7 +67,7 @@ end
 
 # --- Dunsparce ---
 def pbBossRuinNormal
-  pbBossGeneral
+  pbBossRuinGeneral
   pbModifier.optimize
   pbModifier.hpmult = 3.0
   pbModifier.moves = [
@@ -95,7 +101,7 @@ end
 
 # --- Primeape ---
 def pbBossRuinFighting
-  pbBossGeneral
+  pbBossRuinGeneral
   pbModifier.hpmult = 2.0
 
   # Start: Gets +4 Attack/Speed
@@ -122,7 +128,7 @@ end
 
 # --- Skarmory ---
 def pbBossRuinSteel
-  pbBossGeneral
+  pbBossRuinGeneral
   pbModifier.hpmult = 3.0
   pbModifier.moves = [
     :SPIKES,
@@ -149,7 +155,7 @@ end
 
 # --- Spiritomb ---
 def pbBossRuinGhost
-  pbBossGeneral
+  pbBossRuinGeneral
   pbModifier.hpmult = 3.0
   pbModifier.hpmult += ($game_variables[RUINS_DONE] / 4.0).floor
   pbModifier.moves = [
@@ -171,7 +177,7 @@ end
 
 # --- Darmanitan ---
 def pbBossRuinFire
-  pbBossGeneral
+  pbBossRuinGeneral
   pbModifier.hpmult = 1.0
   pbModifier.moves = [
     :BULKUP
@@ -451,7 +457,7 @@ def pbMiniBossCarnivine
   pbModifier.moves = [
     :INGRAIN,
     :VINEWHIP,
-    :BITE,
+    ($PokemonSystem.difficulty > 1 ? :BITE : :BIND),
     :LEECHSEED
   ]
 end
@@ -462,7 +468,7 @@ def pbMiniBossAbsol
   pbModifier.nature = :MODEST
   pbModifier.moves = [
     :SLASH,
-    :KNOCKOFF,
+    ($PokemonSystem.difficulty > 1 ? :KNOCKOFF : :TAUNT),
     :QUICKATTACK,
     :LEER
   ]

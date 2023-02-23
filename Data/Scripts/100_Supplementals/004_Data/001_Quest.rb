@@ -21,7 +21,11 @@ class QuestList
         unlocked += 1
       end
     }
-    pbDisplayQuestAvailable(unlocked) if unlocked > 0
+    if unlocked == 1
+      pbToast(TopWindowToast.new(_INTL("A new quest is available!")))
+    elsif unlocked > 1
+      pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
+    end
   end
 
   def do_auto_finishes
@@ -58,7 +62,7 @@ class QuestList
   end
 end
 
-EventHandlers.add(:on_step_taken, :grass_rustling,
+EventHandlers.add(:on_step_taken, :quest_update,
   proc { |event|
     next if event != $game_player
     $quests.update
@@ -241,7 +245,7 @@ class QuestState
         if self.type == PBQuestType::Main
           pbTitleDisplay("Main Quest", self.display_name)
         else
-          pbDisplayQuestDiscovery(self)
+          pbToast(TopWindowToast.new(_INTL("Quest Discovered!\n{1}", GameData::Quest.get(@quest_id).name))) if !silent
         end
       end
       @status = 1
@@ -256,7 +260,7 @@ class QuestState
   def advance(silent=false)
     if @status == 1
       @step = [@step+1, self.steps.length-1].min
-      pbDisplayQuestProgress(self) if !silent
+      pbToast(TopWindowToast.new(_INTL("Quest Updated!\n{1}", GameData::Quest.get(@quest_id).name))) if !silent
       $quests.update
       pbUpdateMarkers
       return true
@@ -360,7 +364,7 @@ class QuestState
   end
 
   def real_exp
-    level = pbPlayerLevel
+    level = $game_variables[Supplementals::PLAYER_LEVEL]
     exp_need = (((level+1)**3) - (level**3))
     return ((self.exp * 1.0) * exp_need / 100).ceil
   end

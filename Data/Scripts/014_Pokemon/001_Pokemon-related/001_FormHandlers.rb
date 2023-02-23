@@ -230,6 +230,11 @@ MultipleForms.register(:ROTOM, {
     # Determine which new move to learn (if any)
     new_move_id = (form > 0) ? form_moves[form - 1] : nil
     new_move_id = nil if !GameData::Move.exists?(new_move_id)
+    if old_move_index != -1
+      if pkmn.moves[old_move_index].id == new_move_id
+        next
+      end
+    end
     if new_move_id.nil? && old_move_index >= 0 && pkmn.numMoves == 1
       new_move_id = :THUNDERSHOCK
       new_move_id = nil if !GameData::Move.exists?(new_move_id)

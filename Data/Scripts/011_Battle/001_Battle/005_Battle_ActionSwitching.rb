@@ -363,7 +363,7 @@ class Battle
       # Berry check, status-curing ability check
       b.pbHeldItemTriggerCheck
       b.pbAbilityStatusCureCheck
-      pbBoss.checkTriggers(@battle, :Start, b)
+      pbBoss.checkTriggers(self, :Start, b)
     end
     # Check for triggering of Emergency Exit/Wimp Out/Eject Pack (only one will
     # be triggered)

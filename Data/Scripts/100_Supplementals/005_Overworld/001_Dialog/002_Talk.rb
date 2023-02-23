@@ -109,6 +109,8 @@ end
 #end
 
 def pbShowUnownText(text)
+  has_dictionary = true
+
   text.gsub!("\n","")
   showtext = ""
   alpha = "abcdefghijklmnopqrstuvwxyz!?"
@@ -124,7 +126,11 @@ def pbShowUnownText(text)
       length += 16 if size2.include?(char)
       length += 20 if size3.include?(char)
       char = "qmark" if char == "?"
-      showtext += _INTL("<icon=unown_{1}>",char)
+      if has_dictionary
+        showtext += _INTL("<icon=unown2_{1}>",char)
+      else
+        showtext += _INTL("<icon=unown_{1}>",char)
+      end
     else
       if char == " " && length >= 340
         showtext += " \n"
@@ -137,5 +143,6 @@ def pbShowUnownText(text)
     end
   end
   showtext += " "
+  showtext = "\\w[speech vb unown]" + showtext
   pbMessage(showtext)
 end

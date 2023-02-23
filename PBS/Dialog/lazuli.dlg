@@ -101,8 +101,7 @@
 ?/>
 > As you may have discerned, Lapis Lazuli City is mainly powered by the river flowing through it.
 > In fact, I am the engineer that assembled these machines.
-/eval pbTextEffect("wave", 12, 24)
-> Some pesky, electrifying, Rotom decided to enter the machinery, causing it to malfunction.
+> Some pesky, <wave>electrifying</wave>, Rotom decided to enter the machinery, causing it to malfunction.
 > You will have to excuse me, but I have no choice but to deal with them before I can accept challengers.
 > ...However.
 > There are two more maintenance rooms like this in the Lapis District to the south.
@@ -170,6 +169,11 @@
 ?/>
 > For you to challenge me, I should head back to my gym now. I am looking forward to our battle.
 
+[LAPIS_LAZULI_GYM_LEROY]
+/speaker Leroy
+/portrait 0
+> My currents shall wash you away!
+
 [LAZULI_GYM_LEROY,0]
 /speaker Leroy
 > 'Twas no problem for you to solve my puzzle!<br>You have quite the engineer in you.
@@ -177,7 +181,6 @@
 > You may be expecting Electric-types, but for this battle I will use mainly Water-types.
 ?> Are you ready to battle?
     /choice Yes
-        > My currents shall wash you away!
         /return true
     /cancelchoice No
         /dialog LAZULI_GYM_LEROY 2
@@ -188,7 +191,6 @@
 /speaker Leroy
 ?> Have you come back prepared for a battle?
     /choice Yes
-        > My currents shall wash you away!
         /return true
     /cancelchoice No
         /dialog LAZULI_GYM_LEROY 2
@@ -208,7 +210,7 @@
 [LAZULI_GYM_LEROY,4]
 > \ts[5]<PLAYER> got the [B]Shell Badge[/]!\wtnp[60]
 /speaker Leroy
-> You deserve this as well.
+> \ts[1]You deserve this as well.
 
 [LAZULI_GYM_LEROY,5]
 /speaker Leroy
@@ -228,28 +230,28 @@
 /event Leroy exclaim
 > Oh! Sorry! I was simply lost in thought.
 
-[LAZULI_GYM_GERALD,0]
+[LAPIS_LAZULI_GYM_GERALD,0]
 /speaker Gerald
 > You know what's wet like my mop? Water-types!
 > ...I don't think that landed as well as I hoped.
 
-[LAZULI_GYM_GERALD,1]
+[LAPIS_LAZULI_GYM_GERALD,1]
 /speaker Gerald
 > I really need to tip toe to not get electrocuted around here.
 
-[LAZULI_GYM_BOBBY,0]
+[LAPIS_LAZULI_GYM_BOBBY,0]
 /speaker Bobby
 > You're not getting to that button on my watch!
 
-[LAZULI_GYM_BOBBY,1]
+[LAPIS_LAZULI_GYM_BOBBY,1]
 /speaker Bobby
 > Have you figured out the puzzle yet?<br>Leroy deployed it himself.
 
-[LAZULI_GYM_BEATRICE,0]
+[LAPIS_LAZULI_GYM_BEATRICE,0]
 /speaker Beatrice
 > Why am I carrying this parasol inside?<br>I think it's stylish, wouldn't you agree?
 
-[LAZULI_GYM_BEATRICE,1]
+[LAPIS_LAZULI_GYM_BEATRICE,1]
 /speaker Beatrice
 > I guess style doesn't win you battles.
 
@@ -276,10 +278,8 @@
 
 [LAZULI_MUSICIAN]
 /speaker Musician
-/eval pbTextEffect("wave")
-> \ts[2]$ A lone musician on the street<br>$ Has no idea who they'll meet
-/eval pbTextEffect("wave")
-> \ts[2]$ Some pass by, some say hi<br>$ The guitar I play, they are why
+> \ts[2]<wave>§ A lone musician on the street<br>§ Has no idea who they'll meet</wave>
+> \ts[2]<wave>§ Some pass by, some say hi<br>§ The guitar I play, they are why</wave>
 
 [LAZULI_WAITRESS]
 /speaker Waitress
@@ -297,46 +297,6 @@
 > Different movies play each day of the week.
 > Sadly they are closed for maintenance right now though, so you can't see any movies.
 # > You can easily check what weekday it is on your [B]phone[/].
-
-[LAZULI_RIVER_SUSIE,0]
-/speaker Susie
-> Both me and my Pokémon love to be out in the fresh air. Let's start some winds with a Pokémon battle!
-
-[LAZULI_RIVER_SUSIE,1]
-/speaker Susie
-> A good battle is such a pleasant breeze.
-
-[LAZULI_RIVER_REVALI,0]
-/speaker Revali
-> My Pokémon always win competitions!<br>You don't stand a chance!
-
-[LAZULI_RIVER_REVALI,1]
-/speaker Revali
-> Have you tried archery before?<br>It can be hard to hit even a single arrow, but I can hit three at once!
-
-[LAZULI_RIVER_ROBIN,0]
-/speaker Robin
-> Just a few more battles and I'm sure I can challenge the Gym!
-
-[LAZULI_RIVER_ROBIN,1]
-/speaker Robin
-> I'll keep on training until I can defeat a Gym!
-
-[LAZULI_RIVER_RIKI,0]
-/speaker Riki
-> Riki like round Pokémon. They go boing-boing!
-
-[LAZULI_RIVER_RIKI,1]
-/speaker Riki
-> Meh meh meh. Riki will go play splish-splash with my Pokémon.
-
-[LAZULI_RIVER_SANDRA,0]
-/speaker Sandra
-> I like to touch Mareep's wool. It's so fluffy!
-
-[LAZULI_RIVER_SANDRA,1]
-/speaker Sandra
-> Have you battled my boyfriend? He loves camping all over the place!
 
 [LAZULI_RIVER_DOOR]
 > The door is locked.<br>Deep inside, you feel you should come back once you are ready to take on a job.
@@ -360,11 +320,15 @@
 
 [LAZULI_FINN,2]
 /speaker Finn
-?> Say something cool!
+?> Think of something cool to say!
     /choice Stop right there!
+        /eval $game_variables[1] = 0
     /choice You won't get past me!
+        /eval $game_variables[1] = 1
     /choice We shall do battle!
+        /eval $game_variables[1] = 2
     /choice Prepare to be defeated!
+        /eval $game_variables[1] = 3
 ?/>
 /speaker Eric
 > Dang!<br>Right before I got to the next city too!
@@ -395,6 +359,19 @@
 [LAZULI_FINN,6]
 /speaker Finn
 > Hmmm, where should I will wait for my next prey...
+
+[LAZULI_FINN_CHALLENGE_0]
+/speaker PLAYER
+> Stop right there!
+[LAZULI_FINN_CHALLENGE_1]
+/speaker PLAYER
+> You won't get past me!
+[LAZULI_FINN_CHALLENGE_2]
+/speaker PLAYER
+> We shall do battle!
+[LAZULI_FINN_CHALLENGE_3]
+/speaker PLAYER
+> Prepare to be defeated!
 
 [LAZULI_MALL_DRINK_SHOP]
 /speaker Shopkeep

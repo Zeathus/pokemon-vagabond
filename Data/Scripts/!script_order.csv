@@ -489,6 +489,7 @@
 @@003_Pokemon
 001_CustomPokemon
 002_PokemonLists
+003_PokemonUtils
 @@004_Overworld
 001_Traveler
 002_Forecast
@@ -537,6 +538,7 @@
 014_UI_CustomPokemon
 015_UI_Commands
 016_UI_Battle
+017_UI_BattleAnim
 @@009_Graphics
 001_ParticleEffects
 002_Utils

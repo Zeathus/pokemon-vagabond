@@ -225,6 +225,24 @@ class PokemonSummaryScene
       sprite.z = 10
       @sprites[_INTL("stats_keybinds_{1}", i)] = sprite
     end
+    sprite = KeybindSprite.new(Input::USE, "Edit Effort", 190, 8+28*(keybinds.length-1), @viewport)
+    sprite.z = 10
+    @sprites[_INTL("stats_keybinds_{1}", keybinds.length)] = sprite
+
+    keybinds = [
+      [[Input::UP, Input::DOWN], "Choose Stat"]
+    ]
+    keybinds.push([[Input::LEFT, Input::RIGHT], "Edit Effort"]) if @party.length > 1
+    keybinds.push([Input::BACK, "Back"])
+    for i in 0...keybinds.length
+      sprite = KeybindSprite.new(keybinds[i][0], keybinds[i][1], 116, 8+28*i, @viewport)
+      sprite.z = 10
+      @sprites[_INTL("effort_keybinds_{1}", i)] = sprite
+    end
+    sprite = KeybindSprite.new(Input::USE, "Confirm", 194, 8+28*(keybinds.length-1), @viewport)
+    sprite.z = 10
+    @sprites[_INTL("effort_keybinds_{1}", keybinds.length)] = sprite
+
     keybinds = [
       [[Input::LEFT, Input::RIGHT], "Go to Stats"]
     ]
@@ -238,6 +256,7 @@ class PokemonSummaryScene
     sprite = KeybindSprite.new(Input::USE, "Edit Moves", 190, 8+28*(keybinds.length-1), @viewport)
     sprite.z = 10
     @sprites[_INTL("moves_keybinds_{1}", keybinds.length)] = sprite
+
     keybinds = [
       [[Input::LEFT, Input::RIGHT, Input::UP, Input::DOWN], "Choose"]
     ]
@@ -251,6 +270,7 @@ class PokemonSummaryScene
     sprite = KeybindSprite.new(Input::USE, "Select Move", 190, 8+28*(keybinds.length-1), @viewport)
     sprite.z = 10
     @sprites[_INTL("editmoves_keybinds_{1}", keybinds.length)] = sprite
+
     if @machinemove
       @page=1
       @sprites["movesel"].page = 1
@@ -367,10 +387,13 @@ class PokemonSummaryScene
     end
   end
 
-  def drawPageInfo(pokemon)
+  def drawPageInfo(pokemon, edit_effort=false)
     for i in 0...5
       if @sprites[_INTL("stats_keybinds_{1}", i)]
-        @sprites[_INTL("stats_keybinds_{1}", i)].visible = true
+        @sprites[_INTL("stats_keybinds_{1}", i)].visible = !edit_effort
+      end
+      if @sprites[_INTL("effort_keybinds_{1}", i)]
+        @sprites[_INTL("effort_keybinds_{1}", i)].visible = edit_effort
       end
       if @sprites[_INTL("moves_keybinds_{1}", i)]
         @sprites[_INTL("moves_keybinds_{1}", i)].visible = false
@@ -496,6 +519,7 @@ class PokemonSummaryScene
       smalltextpos.push([GameData::Nature.get(pokemon.nature).name,678,294,2,base,shadow])
       basestats=pokemon.baseStats
       statshadows = getNatureStatColors(pokemon)
+      els = pokemon.el
       smalltextpos += [
         [_INTL("HP"),126,116+256,2,base,shadow],
         [sprintf("%3d/%3d",pokemon.hp,pokemon.totalhp),220,116+256,2,base2,shadow2],
@@ -515,17 +539,17 @@ class PokemonSummaryScene
         [sprintf("%d",basestats[:SPECIAL_ATTACK]),318,200+256,2,Color.new(64,64,64),Color.new(176,176,176)],
         [sprintf("%d",basestats[:SPECIAL_DEFENSE]),318,228+256,2,Color.new(64,64,64),Color.new(176,176,176)],
         [sprintf("%d",basestats[:SPEED]),318,256+256,2,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:HP]),386,116+256,1,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:ATTACK]),386,144+256,1,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:DEFENSE]),386,172+256,1,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:SPECIAL_ATTACK]),386,200+256,1,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:SPECIAL_DEFENSE]),386,228+256,1,Color.new(64,64,64),Color.new(176,176,176)],
-        [sprintf("%d",pokemon.ev[:SPEED]),386,256+256,1,Color.new(64,64,64),Color.new(176,176,176)]
+        [sprintf("%d",els[:HP]),374,116+256,2,Color.new(64,64,64),Color.new(176,176,176)],
+        [sprintf("%d",els[:ATTACK]),374,144+256,2,Color.new(64,64,64),Color.new(176,176,176)],
+        [sprintf("%d",els[:DEFENSE]),374,172+256,2,Color.new(64,64,64),Color.new(176,176,176)],
+        [sprintf("%d",els[:SPECIAL_ATTACK]),374,200+256,2,Color.new(64,64,64),Color.new(176,176,176)],
+        [sprintf("%d",els[:SPECIAL_DEFENSE]),374,228+256,2,Color.new(64,64,64),Color.new(176,176,176)],
+        [sprintf("%d",els[:SPEED]),374,256+256,2,Color.new(64,64,64),Color.new(176,176,176)]
       ]
-      effort_y = 126+256
+      effort_y = 376
       for i in [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED]
-        effort = [pokemon.ev[i], 252].min
-        effort_width = ((effort * 30.0) / 252.0).floor * 2
+        effort = [els[i], Supplementals::MAX_EFFORT_LEVEL].min
+        effort_width = ((effort * 30.0) / Supplementals::MAX_EFFORT_LEVEL).floor * 2
         effort_rect = Rect.new(0, 0, effort_width, @effortbitmap.bitmap.height)
         overlay.blt(392,effort_y,@effortbitmap.bitmap,effort_rect)
         effort_y += 28
@@ -718,6 +742,9 @@ class PokemonSummaryScene
     for i in 0...5
       if @sprites[_INTL("stats_keybinds_{1}", i)]
         @sprites[_INTL("stats_keybinds_{1}", i)].visible = false
+      end
+      if @sprites[_INTL("effort_keybinds_{1}", i)]
+        @sprites[_INTL("effort_keybinds_{1}", i)].visible = false
       end
       if @sprites[_INTL("moves_keybinds_{1}", i)]
         @sprites[_INTL("moves_keybinds_{1}", i)].visible = true
@@ -992,6 +1019,9 @@ class PokemonSummaryScene
       if @sprites[_INTL("stats_keybinds_{1}", i)]
         @sprites[_INTL("stats_keybinds_{1}", i)].visible = false
       end
+      if @sprites[_INTL("effort_keybinds_{1}", i)]
+        @sprites[_INTL("effort_keybinds_{1}", i)].visible = false
+      end
       if @sprites[_INTL("moves_keybinds_{1}", i)]
         @sprites[_INTL("moves_keybinds_{1}", i)].visible = false
       end
@@ -1061,6 +1091,262 @@ class PokemonSummaryScene
       statshadows[natdn] = [Color.new(150,0,0), Color.new(255,160,160)] if natdn
     end
     return statshadows
+  end
+
+  def pbEffortItemsNeeded(cur_level, new_level)
+    ret = [0, 0, 0, 0]
+    if new_level < cur_level
+      ret[0] = cur_level - new_level
+    elsif cur_level < new_level
+      if cur_level < 3
+        ret[1] = [new_level, 3].min - cur_level
+      end
+      if cur_level < 9 && new_level > 3
+        ret[2] = [new_level, 9].min - [cur_level, 3].max
+      end
+      ret[3] = 1 if cur_level < 10 && new_level >= 10
+    end
+    return ret
+  end
+
+  def pbSetEffortItems(stat, cur_level, new_level)
+    bitmap = @sprites["effort_item_counts"].bitmap
+    bitmap.clear
+    base_dark = Color.new(64,64,64)
+    shadow_dark = Color.new(176,176,176)
+    base_white = Color.new(248,248,248)
+    shadow_white = Color.new(104,104,104)
+    base_red = Color.new(150,0,0)
+    shadow_red = Color.new(255,160,160)
+    textpos = []
+    items = []
+    items.push(Supplementals::EFFORT_LEVEL_DECREASE_ITEMS[stat])
+    items += Supplementals::EFFORT_LEVEL_INCREASE_ITEMS[stat]
+    qty_needed = pbEffortItemsNeeded(cur_level, new_level)
+    for i in 0...items.length
+      @sprites[_INTL("effort_item_{1}", i)].setBitmap(GameData::Item.icon_filename(items[i]))
+      qty = $bag.quantity(items[i])
+      base = (qty >= qty_needed[i]) ? base_dark : base_red
+      shadow = (qty >= qty_needed[i]) ? shadow_dark : shadow_red
+      text = [sprintf("%2d/%2d", qty, qty_needed[i]), 60 + 94 * i, 8, 2, base, shadow]
+      textpos.push(text)
+    end
+    textpos.push([sprintf("%2d/%2d", @pokemon.total_counting_els, Supplementals::MAX_TOTAL_EFFORT_LEVEL), 362, 64, 1, base_dark, shadow_dark])
+    pbSetSmallestFont(bitmap)
+    pbDrawTextPositions(bitmap, textpos)
+    pbSetSmallFont(bitmap)
+    pbDrawTextPositions(bitmap, [["Specialization", 312, 64, 1, base_white, shadow_white]])
+  end
+
+  def pbChangeEffortLevels
+    if @inbattle
+      pbMessage("You cannot edit effort levels while in battle.")
+      return
+    end
+    pbPlayDecisionSE
+    drawPageInfo(@pokemon, true)
+    stat_index = 0
+    new_stat_index = 0
+    stat_order = [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED]
+    @sprites["effort_overlay"] = IconSprite.new(92, 336, @viewport)
+    @sprites["effort_overlay"].setBitmap("Graphics/Pictures/Summary/effort_levelling")
+    @sprites["effort_overlay"].z = 100
+    for i in 0...4
+      @sprites[_INTL("effort_item_{1}", i)] = IconSprite.new(98 + 94 * i, 340, @viewport)
+      @sprites[_INTL("effort_item_{1}", i)].z = 101
+      @sprites[_INTL("effort_item_{1}", i)].zoom_x = 0.5
+      @sprites[_INTL("effort_item_{1}", i)].zoom_y = 0.5
+    end
+    @sprites["effort_item_counts"] = Sprite.new(@viewport)
+    @sprites["effort_item_counts"].bitmap = Bitmap.new(380, 96)
+    @sprites["effort_item_counts"].x = 92
+    @sprites["effort_item_counts"].y = 336
+    @sprites["effort_item_counts"].z = 102
+    @rightarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @rightarrow.x = 446
+    @rightarrow.y = 366
+    @rightarrow.z = 103
+    @rightarrow.play
+    @rightarrow.visible = false
+    @leftarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @leftarrow.x = 374
+    @leftarrow.y = 366
+    @leftarrow.z = 103
+    @leftarrow.zoom_x = -1
+    @leftarrow.play
+    @leftarrow.visible = false
+    @uparrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @uparrow.x = 246
+    @uparrow.y = 356
+    @uparrow.z = 103
+    @uparrow.angle = 90
+    @uparrow.play
+    @downarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @downarrow.x = 274
+    @downarrow.y = 374
+    @downarrow.z = 103
+    @downarrow.angle = 270
+    @downarrow.play
+    pbSetEffortItems(stat_order[stat_index], @pokemon.el[stat_order[stat_index]], @pokemon.el[stat_order[stat_index]])
+    loop do
+      @uparrow.update
+      @downarrow.update
+      Graphics.update
+      Input.update
+      pbUpdate
+      if Input.trigger?(Input::BACK)
+        pbPlayCancelSE
+        break
+      end
+      if Input.repeat?(Input::DOWN)
+        pbPlayCursorSE()
+        new_stat_index += 1
+        new_stat_index = 0 if new_stat_index >= stat_order.length
+      end
+      if Input.repeat?(Input::UP)
+        pbPlayCursorSE()
+        new_stat_index -= 1
+        new_stat_index = stat_order.length - 1 if new_stat_index < 0
+      end
+      if stat_index != new_stat_index
+        stat_index = new_stat_index
+        @sprites["effort_overlay"].y = 336 + 28 * stat_index
+        for i in 0...4
+          @sprites[_INTL("effort_item_{1}", i)].y = 340 + 28 * stat_index
+        end
+        @sprites["effort_item_counts"].y = 336 + 28 * stat_index
+        pbSetEffortItems(stat_order[stat_index], @pokemon.el[stat_order[stat_index]], @pokemon.el[stat_order[stat_index]])
+        @rightarrow.y = 366 + 28 * stat_index
+        @leftarrow.y = 366 + 28 * stat_index
+        @uparrow.y = 356 + 28 * stat_index
+        @downarrow.y = 374 + 28 * stat_index
+      end
+      if Input.trigger?(Input::USE) || Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT)
+        if Input.trigger?(Input::USE)
+          pbPlayDecisionSE
+        end
+        @uparrow.visible = false
+        @downarrow.visible = false
+        @leftarrow.visible = true
+        @rightarrow.visible = true
+        old_els = @pokemon.el
+        new_els = @pokemon.el
+        stat = stat_order[stat_index]
+        if Input.trigger?(Input::LEFT)
+          if new_els[stat] > 0
+            new_els[stat] -= 1
+            changed = true
+            pbSEPlay("GUI storage put down")
+          end
+        end
+        if Input.trigger?(Input::RIGHT)
+          if new_els[stat] < Supplementals::MAX_EFFORT_LEVEL
+            new_els[stat] += 1
+            changed = true
+            pbSEPlay("GUI storage pick up")
+          end
+        end
+        @pokemon.el = new_els
+        @pokemon.calc_stats
+        drawPageInfo(@pokemon, true)
+        pbSetEffortItems(stat, old_els[stat], new_els[stat])
+        loop do
+          changed = false
+          @leftarrow.update
+          @rightarrow.update
+          Graphics.update
+          Input.update
+          pbUpdate
+          if Input.trigger?(Input::BACK)
+            pbPlayCancelSE
+            @pokemon.el = old_els
+            @pokemon.calc_stats
+            drawPageInfo(@pokemon, true)
+            pbSetEffortItems(stat, old_els[stat], old_els[stat])
+            break
+          end
+          if Input.repeat?(Input::LEFT)
+            if new_els[stat] > 0
+              new_els[stat] -= 1
+              if new_els[stat] == 0
+                pbSEPlay("Battle damage weak")
+              else
+                pbSEPlay("GUI storage put down", 100, 75 + new_els[stat] * 5)
+              end
+              changed = true
+            elsif Input.trigger?(Input::LEFT)
+              pbPlayBuzzerSE
+            end
+          end
+          if Input.repeat?(Input::RIGHT)
+            if new_els[stat] < Supplementals::MAX_EFFORT_LEVEL && (
+               new_els[stat] < Supplementals::IGNORE_TOTAL_EFFORT_LEVELS ||
+               @pokemon.total_counting_els < Supplementals::MAX_TOTAL_EFFORT_LEVEL)
+              new_els[stat] += 1
+              if new_els[stat] == Supplementals::MAX_EFFORT_LEVEL
+                pbSEPlay("Pkmn exp full")
+              else
+                pbSEPlay("GUI storage pick up", 100, 75 + new_els[stat] * 5)
+              end
+              changed = true
+            elsif Input.trigger?(Input::RIGHT)
+              pbPlayBuzzerSE
+            end
+          end
+          if changed
+            @pokemon.el = new_els
+            @pokemon.calc_stats
+            drawPageInfo(@pokemon, true)
+            pbSetEffortItems(stat, old_els[stat], new_els[stat])
+          end
+          if Input.trigger?(Input::USE)
+            items = []
+            items.push(Supplementals::EFFORT_LEVEL_DECREASE_ITEMS[stat])
+            items += Supplementals::EFFORT_LEVEL_INCREASE_ITEMS[stat]
+            qty_needed = pbEffortItemsNeeded(old_els[stat], new_els[stat])
+            has_needed = true
+            for i in 0...4
+              if $bag.quantity(items[i]) < qty_needed[i]
+                has_needed = false
+                break
+              end
+            end
+            if has_needed
+              for i in 0...4
+                $bag.remove(items[i], qty_needed[i]) if qty_needed[i] > 0
+                if i == 0
+                  qty_needed[i].times { |i| @pokemon.changeHappiness("evberry") }
+                else
+                  qty_needed[i].times { |i| @pokemon.changeHappiness("vitamin") }
+                end
+              end
+              pbPlayDecisionSE
+              @pokemon.el = new_els
+              @pokemon.calc_stats
+              drawPageInfo(@pokemon, true)
+              pbSetEffortItems(stat, new_els[stat], new_els[stat])
+              break
+            else
+              pbMessage("You do not have the required items to reach this Effort Level.")
+            end
+          end
+        end
+        @uparrow.visible = true
+        @downarrow.visible = true
+        @leftarrow.visible = false
+        @rightarrow.visible = false
+      end
+    end
+    @sprites["effort_overlay"].dispose
+    for i in 0...4
+      @sprites[_INTL("effort_item_{1}", i)].dispose
+    end
+    @sprites["effort_item_counts"].dispose
+    @rightarrow.dispose
+    @leftarrow.dispose
+    @uparrow.dispose
+    @downarrow.dispose
+    drawPageInfo(@pokemon, true)
   end
 
   def pbMoveSelection
@@ -1400,9 +1686,12 @@ class PokemonSummaryScene
       end
       dorefresh=false
       if Input.trigger?(Input::USE) || @machinemove
-        if @page==1
+        if @page == 0
+          pbChangeEffortLevels
+          dorefresh = true
+        elsif @page == 1
           pbMoveSelection
-          dorefresh=true
+          dorefresh = true
         end
       end
       if Input.trigger?(Input::UP) && @partyindex>0

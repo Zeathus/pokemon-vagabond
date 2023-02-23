@@ -7,8 +7,7 @@
         /wait 12
         /event Guitarist switch A true
         /me the_best_guitar 200
-        /eval pbTextEffect("wave")
-        >\ts[3]§ I want to be, the ve\wt[2]ry best<br>§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!\wtnp[60]
+        >\ts[3]<wave>§ I want to be, the ve\wt[2]ry best<br>§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!\wtnp[60]</wave>
         /event Guitarist switch A false
         /wait 4
         ?> What do you think?

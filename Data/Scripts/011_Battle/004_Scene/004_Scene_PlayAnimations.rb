@@ -3,14 +3,17 @@ class Battle::Scene
   # Animates the battle intro
   #=============================================================================
   def pbBattleIntroAnimation
-    # Make everything appear
-    introAnim = Animation::Intro.new(@sprites, @viewport, @battle)
-    loop do
-      introAnim.update
-      pbUpdate
-      break if introAnim.animDone?
+    if false
+      # Make everything appear
+      introAnim = Animation::Intro.new(@sprites, @viewport, @battle)
+      loop do
+        introAnim.update
+        pbUpdate
+        break if introAnim.animDone?
+      end
+      introAnim.dispose
     end
-    introAnim.dispose
+
     # Post-appearance activities
     # Trainer battle: get ready to show the party lineups (they are brought
     # on-screen by a separate animation)

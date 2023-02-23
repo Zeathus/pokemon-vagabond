@@ -133,7 +133,7 @@ class Battle::Move::BadPoisonTarget < Battle::Move::PoisonTarget
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Supplementals::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON))
+    return (Settings::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON))
   end
 end
 

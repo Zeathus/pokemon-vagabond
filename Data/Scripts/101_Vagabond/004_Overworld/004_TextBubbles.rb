@@ -3,8 +3,8 @@ def pbPDialog(member, text)
   $game_temp.partner_text_bubble(member, text)
   return
   if getPartyActive(0) == member
-      $game_player.sprite.say(text)
+    $game_player.sprite.say(text)
   elsif getPartyActive(1) == member
-      $game_player.sprite.partner.say(text)
+    $game_player.sprite.partner.say(text)
   end
 end

@@ -7,7 +7,7 @@ module Dialog
     tint = (tint + 1) % 2 if !haswindow
     name = name.downcase
 
-    if name == "player"
+    if name == "<player>" || name == "player"
       return Color.new(85, 98, 104) if tint == 0
       return Color.new(135, 175, 196) if tint == 1
     elsif name == "kira"
@@ -37,14 +37,14 @@ module Dialog
       return Color.new(235, 50, 0) if tint == 0
       return Color.new(114, 37, 11) if tint == 1
     elsif name == "celebi"
-      return Color.new(164, 222, 82) if tint == 0
-      return Color.new(74, 114, 74) if tint == 1
+      return Color.new(74, 114, 74) if tint == 0
+      return Color.new(164, 222, 82) if tint == 1
     elsif name == "r-celebi"
-      return Color.new(180, 140, 222) if tint == 0
-      return Color.new(92, 32, 172) if tint == 1
+      return Color.new(92, 32, 172) if tint == 0
+      return Color.new(180, 140, 222) if tint == 1
     elsif name == "eliana"
-      return Color.new(146, 146, 146) if tint == 0
-      return Color.new(40, 40, 40) if tint == 1
+      return Color.new(40, 40, 40) if tint == 0
+      return Color.new(146, 146, 146) if tint == 1
     elsif name == "fintan"
       return Color.new(234, 234, 234) if tint == 0
       return Color.new(173, 173, 173) if tint == 1
@@ -67,7 +67,7 @@ module Dialog
     name = name.downcase if name
     if name == "sign"
       return "sign"
-    elsif name == "player"
+    elsif name == "<player>" || name == "player"
       return "speech vb player"
     elsif name == "duke"
       return "speech vb duke"
@@ -96,7 +96,7 @@ module Dialog
   def Dialog.getNameBox(name)
     name = name.downcase if name
     ret = "name_box"
-    if name == "player"
+    if name == "<player>"
       ret = "name_box_player"
     elsif name == "duke"
       ret = "name_box_duke"

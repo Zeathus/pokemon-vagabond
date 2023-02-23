@@ -743,18 +743,16 @@ HiddenMoveHandlers::UseMove.add(:STRENGTH, proc { |move, pokemon|
 # Surf
 #===============================================================================
 def pbSurf(confirm = true, edge = false, down = false)
+  return false if !hasPartyMember(PBParty::Amethyst)
   return false if $game_player.pbFacingEvent
   return false if !$game_player.can_ride_vehicle_with_follower?
-  move = :SURF
-  movefinder = $player.get_pokemon_with_move(move)
-  if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_SURF, false) || (!$DEBUG && !movefinder)
+  if $quests[:UNKNOWNDESTINATION].at_step?(1) && [208,209].include?($game_map.map_id)
+    pbDialog("CH1_NO_SURF")
     return false
   end
-  if !confirm || pbConfirmMessage(_INTL("The water is a deep blue color... Would you like to use Surf on it?"))
-    speciesname = (movefinder) ? movefinder.name : $player.name
-    pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name)) if confirm
+  if !confirm || pbConfirmMessage(_INTL("The water is a deep blue...\nWould you like to surf on it?"))
+    pbMessage(_INTL("Starmie used Surf!")) if confirm
     pbCancelVehicles
-    pbHiddenMoveAnimation(movefinder) if confirm
     surfbgm = GameData::Metadata.get.surf_BGM
     pbCueBGM(surfbgm, 0.5) if surfbgm
     pbStartSurfing(edge, down)
@@ -779,7 +777,7 @@ def pbEndSurf(_xOffset, _yOffset)
   return false if !$PokemonGlobal.surfing
   x = $game_player.x
   y = $game_player.y
-  if $game_map.terrain_tag(x, y).can_surf
+  if $game_map.terrain_tag(x, y).can_surf && (!$game_player.pbFacingTerrainTag.can_surf || $game_player.pbFacingTerrainTag.water_edge)
     if $game_player.pbFacingTerrainTag.water_edge
       up = false
       if Supplementals::HIGH_WATER_EDGES
@@ -796,6 +794,7 @@ def pbEndSurf(_xOffset, _yOffset)
         result=$game_player.check_event_trigger_here([1,2])
         pbOnStepTaken(result)
       end
+      return true
     else
       $game_temp.surf_base_coords = [x, y]
       up = false
@@ -891,7 +890,7 @@ EventHandlers.add(:on_player_interact, :start_surfing,
   proc {
     next if $PokemonGlobal.surfing
     next if $game_map.metadata&.always_bicycle
-    next if !$game_player.pbFacingTerrainTag.can_surf_freely
+    #next if !$game_player.pbFacingTerrainTag.can_surf_freely
     next if !$game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
     pbStartSurf(true)
   }

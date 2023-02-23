@@ -1,3 +1,9 @@
+[EVERGONE_CRATER_???]
+/speaker Amethyst
+/hidename 1
+/portrait 0
+> Show me what you can do!
+
 [CH1_CRATER_AMETHYST,0]
 /speaker Amethyst
 /hidename 1
@@ -10,7 +16,7 @@
 /hidename 1
 > You want to get to the [B]Evergone Mangrove[/]?
 > Ehm, I don't think that's a good idea.
-> We got an anonymous report that told of someone being lost, maybe even unconcious, deep in the woods.
+> We got an anonymous report that told of someone being lost, maybe even unconscious, deep in the woods.
 > The Evergone Mangrove is home to many wild Pokémon. It can be very dangerous.
 > That's why I'm here on a solo mission, to more easily avoid being spotted by the wild Pokémon.
 /speaker Duke
@@ -41,11 +47,6 @@
         /return false
 ?/>
 
-[CH1_CRATER_AMETHYST,2]
-/speaker Amethyst
-/hidename 1
-> Show me what you can do!
-
 [CH1_CRATER_AMETHYST,3]
 /speaker Amethyst
 /hidename 1
@@ -66,9 +67,9 @@
 [CH1_CRATER_AMETHYST,5]
 > \ts[5]Duke has left the party.\wtnp[60]
 /speaker Amethyst
-> He's really got a thing for theatrics.\nI wonder where he's off to so suddenly.
+> \ts[1]He's really got a thing for theatrics.\nI wonder where he's off to so suddenly.
 > Either way, I look forward to working with you!
-> If you're worried about how we can get across the lake, my Starmie will help us with that no problem.
+> If you're worried about how we can get across the lake, my Starmie will help us with that.
 > As long as you're traveling with me, water will be no problem!
 
 [CH1_CRATER_AMETHYST,6]
@@ -85,11 +86,13 @@
 [CH1_RUINS_MEMORY,1]
 /speaker Nekane none
 /hidename 1
+/portrait 0
 > \ts[5]Everything is... falling apart.\wtnp[60]
 
 [CH1_RUINS_MEMORY,2]
 /speaker Nekane none
 /hidename 1
+/portrait 0
 > \ts[5]It... wasn't supposed to end like this.\wtnp[60]
 
 [CH1_RUINS_MEMORY,3]
@@ -234,7 +237,9 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /event set Amethyst 1
 /speaker Amethyst
 > Thank for holding the fort while I've been gone, Weavile.
+/reset
 /dialog POKEMON_WEAVILE
+/speaker Amethyst
 /event Amethyst turn up
 /event Player turn down
 /speaker Amethyst
@@ -245,7 +250,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 [CH1_OFFICE,1]
 /event set Amethyst 1
 /speaker Amethyst
-> Welcome back, Kira!<br>How'd the mission in Scoria City go?
+> Welcome back, [Kira]Kira[/]!<br>How'd the mission in Scoria City go?
 /speaker Kira
 > Everything was handled professionally, but you know that I dislike returning there.
 /speaker Amethyst
@@ -256,7 +261,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 > On a more important matter: Who's this new guy?
 /speaker Amethyst
 > This is <PLAYER>.<br>I met them at Evergone Crater, and they helped me rescue a girl from the woods.
-?> <PLAYER>, this is Kira, my assistant.
+?> <PLAYER>, this is [Kira]Kira[/], my assistant.
     /choice Nice to meet you!
         /speaker Kira
         > I hope it will be "nice to meet you" too.
@@ -276,7 +281,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /speaker Kira
 > I was being sarcastic...
 > Does that not sound [R]too[/] convenient?
-> They could have any type of ulterior motive, and you brought them to the G.P.O. admin area?
+> They could have any type of ulterior motive, and you brought straight into the admin area? The <shake>restricted</shake> area?
 > Do you even know why they wanted to go to the Evergone Ruins in the first place?
 /speaker Amethyst
 > Hmmm... I guess I never actually asked.
@@ -312,13 +317,15 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /windowpos center
 /hidewindow 1
 /speaker PLAYER
-/hidename 1
+/hidename 2
 /textpos middle
 > Oh, hi Eliana.<br>I didn't expect you to be up this late.
 /speaker Eliana
+/hidename 2
 /textpos middle
 > Welcome back!<br>How did the mission to the Evergone Ruins go?
 /speaker PLAYER
+/hidename 2
 /hidename 1
 /textpos middle
 > When I arrived, the target was already gone.
@@ -326,13 +333,16 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 > However, I need to focus on my next mission.<br>It requires much research.
 > How is your mission to Mt. Pegma coming along?
 /speaker Eliana
+/hidename 2
 /textpos middle
 > We are moving out to finish it tomorrow.
-> Luckily, we have been uninterrupted so far,<br>avoiding causing suspicion as best we can.
+> Luckily, we have been uninterrupted so far, avoiding causing suspicion as best we can.
 /speaker PLAYER
+/hidename 2
 /hidename 1
 /textpos middle
 > Good work, and good luck tomorrow.
 /speaker Eliana
+/hidename 2
 /textpos middle
 > Good night!

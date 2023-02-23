@@ -51,7 +51,8 @@ def pbInitTrainers
 
 end
 
-def pbFieldTrainer(trainerid,trainername,endspeech=nil,doublebattle=true,min_lvl=0)
+def pbFieldTrainer(trainerid, trainername, dialog=nil, event_id=nil, min_lvl=0)
+  event_id = @event_id if event_id.nil?
   partyid = 0
   trainers=load_data("Data/trainers.dat")
   for trainer in trainers
@@ -70,6 +71,22 @@ def pbFieldTrainer(trainerid,trainername,endspeech=nil,doublebattle=true,min_lvl
         end
       end
     end
+  end
+  setBattleRule("scalelevel")
+  return pbQuickTrainer(trainerid, trainername, partyid, dialog)
+end
+
+def pbGymTrainer(trainerid, trainername, dialog=nil)
+  partyid = pbGet(BADGE_COUNT)
+  return pbQuickTrainer(trainerid, trainername, partyid, dialog)
+end
+
+def pbQuickTrainer(trainerid, trainername, partyid=0, dialog=nil)
+  pbUpdateSceneMap
+  if !Input.press?(Input::CTRL)
+    $PokemonGlobal.quickBattleAnimation = true
+    $PokemonGlobal.quickBattleDialog = dialog
+    $PokemonGlobal.quickBattleEvent = $game_map.events[@event_id]
   end
   return TrainerBattle.start(trainerid, trainername, partyid)
 end

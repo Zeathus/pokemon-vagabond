@@ -1,3 +1,10 @@
+def pbNextGymLevel(gym=nil)
+  gym = $game_variables[BADGE_COUNT] if !gym
+  levels = [20, 30, 40, 50, 60, 65, 70, 75, 80, 85, 90]
+  gym = [gym, levels.length].min
+  return levels[gym]
+end
+
 module Scaling
 
   # At what rate different variables increase the player level variable
@@ -170,6 +177,8 @@ module Scaling
 
   def Scaling.wild(pokemon)
     species, level = Scaling.wild_core(pokemon.species, pokemon.level)
+
+    echoln _INTL("Scaling: {1} was scaled from level {2} to {3}", pokemon.name, pokemon.level, level)
     
     pokemon.species = species
     pokemon.level = level
@@ -195,13 +204,13 @@ module Scaling
       end
     end
 
-    level = clamp(level, 1, 100).floor
+    level = level.clamp(1, 100).floor
 
     return species, level
   end
 
   def Scaling.evolve(species, level, wild = false)
-    poke = Pokemon.new(species, clamp(level - Supplementals::WILD_POKEMON_EVOLVE_EXTRA_LEVELS, 1, 100), $player)
+    poke = Pokemon.new(species, (level - Supplementals::WILD_POKEMON_EVOLVE_EXTRA_LEVELS).clamp(1, 100), $player)
     new_species = poke.check_evolution_on_level_up
     return new_species if new_species && new_species != species
     if CUSTOM_EVOLUTION_LEVELS.key?(species)
@@ -251,7 +260,7 @@ module Scaling
       if level_base > level
         # Change the level
         original_level = pkmn.level
-        new_level = clamp(level_base + level_dif, 1, 100)
+        new_level = (level_base + level_dif).clamp(1, 100)
         new_level = new_level.round
         pkmn.level = new_level
         # Check for evolutions
@@ -269,11 +278,12 @@ module Scaling
         pkmn.name = GameData::Species.get(pkmn.species).name if species_changed
         pkmn.reset_moves if new_level - original_level > 10 and original_level < 30
         pkmn.calc_stats
+        echoln _INTL("Scaling: {1} was scaled from level {2} to {3}", pkmn.name, original_level, new_level)
       end
     end
   end
 
-  def Scaling.difficulty(pokemon)
+  def Scaling.difficulty(pkmn)
     case $PokemonSystem.difficulty
     when 0 # Easy
       pkmn.level -= 1
@@ -281,7 +291,7 @@ module Scaling
       pkmn.iv = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
       pkmn.calc_stats
     when 1 # Normal
-      
+      pkmn.calc_stats
     when 2 # Hard
       pkmn.level += 1
       pkmn.calc_stats
@@ -289,13 +299,13 @@ module Scaling
   end
 
   # Mainly used for levels, to reset back to the original levels before applying Scaling.update
-  def Scaling.reset_difficulty(pokemon)
+  def Scaling.reset_difficulty(pkmn)
     case $PokemonSystem.difficulty
     when 0 # Easy
       pkmn.level += 1
       pkmn.calc_stats
     when 1 # Normal
-
+      pkmn.calc_stats
     when 2 # Hard
       pkmn.level -= 1
       pkmn.calc_stats

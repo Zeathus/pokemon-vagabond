@@ -8169,7 +8169,7 @@ Name = Metal Claw
 Type = STEEL
 Category = Physical
 Power = 50
-Accuracy = 95
+Accuracy = 100
 TotalPP = 35
 Target = NearOther
 FunctionCode = RaiseUserAttack1
@@ -8984,3 +8984,49 @@ Target = NearOther
 FunctionCode = AffinityBoostSideEffect
 Flags = CanProtect,CanMirrorMove
 Description = The user kindly assists its teammate. Creates misty terrain for two turns if affinity boosted, or by Helping Hand.
+#-------------------------------
+[FLASHFREEZE]
+Name = Flash Freeze
+Type = ICE
+Category = Status
+Accuracy = 85
+TotalPP = 15
+Target = NearOther
+FunctionCode = FreezeTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user cools the target down in an instant, inflicting it with Frostbite.
+#-------------------------------
+[KILLERCOMBO]
+Name = Killer Combo
+Type = POISON
+Category = Physical
+Power = 50
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = FirstHitPoisonGroundTargetSecondHitGround
+Flags = CanProtect,CanMirrorMove,Contact
+Description = The user leaps into the air and knocks the target to the ground with a Poison-type hit, followed up by a Ground-type hit that deals double damage if the target was previously airborne.
+#-------------------------------
+[AFTERME]
+Name = After Me
+Type = DARK
+Category = Physical
+Power = 20
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+Priority = 1
+FunctionCode = AffinityBoostIgnoreAffinity
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user breaks the target's guard to allow its partner to make a follow-up attack. This move can Affinity Boost the user's partner regardless of their Affinity.
+#-------------------------------
+[MORALEBOOST]
+Name = Morale Boost
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = UserAndAllies
+FunctionCode = AffinityBoostNextTurn
+Description = The user thanks its allies for all their support and boosts morale. The user and its allies receive an Affinity Boost for their next move.

@@ -44,6 +44,15 @@ class Battle::Scene::Outer
     # Create targeting window
     @sprites["targetWindow"] = Battle::Scene::TargetMenu.new(@viewport, 200, @battle.sideSizes)
     @sprites["targetWindow"].z = 1
+    for i in 0...3
+      @sprites[_INTL("switch_{1}", i)] = OuterSwitchBox.new(@viewport, i)
+      @sprites[_INTL("switch_{1}", i)].z = 3
+      @sprites[_INTL("switch_{1}", i)].visible = false
+    end
+    @sprites["switch_cursor"] = IconSprite.new(0, 0, @viewport)
+    @sprites["switch_cursor"].setBitmap("Graphics/Pictures/Battle/switch_cursor")
+    @sprites["switch_cursor"].z = 4
+    @sprites["switch_cursor"].visible = false
   end
 
   def pbAddSprite(id,x,y,filename,viewport)
@@ -88,6 +97,100 @@ class Battle::Scene::Outer
 
   def dispose
     @viewport.dispose
+  end
+
+  def pbChooseSwitch(idxBattler, mode=0)
+    partyPos = @battle.pbPartyOrder(idxBattler)
+    partyStart, _partyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
+    pokemon = @battle.pbPlayerDisplayParty(idxBattler)
+
+    @battle.scene.pbShowWindow(BLANK)
+    for i in 0...3
+      @sprites[_INTL("switch_{1}", i)].party_length = pokemon.length
+      @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
+      @sprites[_INTL("switch_{1}", i)].pokemon = pokemon[i]
+      @sprites[_INTL("switch_{1}", i)].active = (i == 0)
+    end
+    @sprites["switch_cursor"].x = 128 + (170 * (3 - pokemon.length) * 0.5)
+    @sprites["switch_cursor"].y = 478
+    @sprites["switch_cursor"].visible = true
+    selected_index = 0
+    new_index = selected_index
+
+    loop do
+      @battle.scene.pbGraphicsUpdate
+      @battle.scene.pbInputUpdate
+      @battle.scene.pbFrameUpdate
+      for i in 0...3
+        @sprites[_INTL("switch_{1}", i)].update if i == selected_index
+      end
+      if Input.trigger?(Input::LEFT)
+        new_index = (new_index - 1) % pokemon.length
+      end
+      if Input.trigger?(Input::RIGHT)
+        new_index = (new_index + 1) % pokemon.length
+      end
+      if new_index != selected_index
+        pbPlayCursorSE
+        selected_index = new_index
+        @sprites["switch_cursor"].x = 128 + 170 * (selected_index + (3 - pokemon.length) * 0.5)
+        for i in 0...3
+          @sprites[_INTL("switch_{1}", i)].active = (i == selected_index)
+        end
+      end
+      if Input.trigger?(Input::BACK)
+        pbPlayDecisionSE
+        break
+      elsif Input.trigger?(Input::USE)
+        pbPlayDecisionSE
+        # Choose a command for the selected Pokémon
+        cmdSwitch  = -1
+        cmdBoxes   = -1
+        cmdSummary = -1
+        commands = []
+        commands[cmdSwitch  = commands.length] = _INTL("Switch In") if mode == 0 && pokemon[selected_index].able?
+        commands[cmdBoxes   = commands.length] = _INTL("Send to Boxes") if mode == 1
+        commands[cmdSummary = commands.length] = _INTL("Summary")
+        commands[commands.length]              = _INTL("Cancel")
+        command = @battle.scene.pbShowCommands("", commands, commands.length)
+        if (cmdSwitch >= 0 && command == cmdSwitch) ||   # Switch In
+           (cmdBoxes >= 0 && command == cmdBoxes)        # Send to Boxes
+          idxPartyRet = -1
+          partyPos.each_with_index do |pos, i|
+            next if pos != selected_index + partyStart
+            idxPartyRet = i
+            break
+          end
+          for i in 0...3
+            @sprites[_INTL("switch_{1}", i)].visible = false
+          end
+          @sprites["switch_cursor"].visible = false
+          break if yield idxPartyRet, @battle.scene
+          for i in 0...3
+            @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
+          end
+          @sprites["switch_cursor"].visible = true
+          @battle.scene.pbShowWindow(BLANK)
+        elsif cmdSummary >= 0 && command == cmdSummary   # Summary
+          pbSummary(pokemon, selected_index)
+        end
+      end
+    end
+
+    for i in 0...3
+      @sprites[_INTL("switch_{1}", i)].visible = false
+    end
+    @sprites["switch_cursor"].visible = false
+
+    @battle.scene.pbShowWindow(COMMAND_BOX)
+  end
+
+  def pbSummary(party, pkmnid)
+    oldsprites=pbFadeOutAndHide(@sprites)
+    scene=PokemonSummaryScene.new(true)
+    screen=PokemonSummary.new(scene)
+    screen.pbStartScreen(party, pkmnid)
+    pbFadeInAndShow(@sprites, oldsprites)
   end
 
 end
@@ -432,6 +535,177 @@ class OuterCommandSprite < IconSprite
   end
 end
 
+class OuterSwitchBox < IconSprite
+
+  def initialize(viewport=nil,pos)
+    super(0, 0, viewport)
+    @pos = pos
+    @party_member = 0
+    @party_length = 3
+    @pokemon = nil
+    @overlay = Sprite.new(viewport)
+    @overlay.bitmap = Bitmap.new(170, 112)
+    setBitmap(_INTL("Graphics/Pictures/Battle/switch"))
+    @pkmnsprite = PokemonIconSprite.new(@pokemon, viewport)
+    @pkmnsprite.setOffset(PictureOrigin::CENTER)
+    @pkmnsprite.active = false
+    @statuses=AnimatedBitmap.new(_INTL("Graphics/Pictures/Party/statuses"))
+    @hpbar = AnimatedBitmap.new("Graphics/Pictures/Battle/switch_overlay_hp")
+    refresh
+  end
+
+  def dispose
+    @overlay.dispose
+    @pkmnsprite.dispose
+    @hpbar.dispose
+    @statuses.dispose
+    super
+  end
+
+  def visible=(value)
+    super(value)
+    @overlay.visible = value
+    @pkmnsprite.visible = value
+  end
+
+  def pokemon=(value)
+    @pokemon = value
+    refresh
+  end
+
+  def active=(value)
+    @pkmnsprite.active = value
+  end
+
+  def party_length=(value)
+    @party_length = value
+  end
+
+  def party_member=(value)
+    @party_member = value
+  end
+
+  def z=(value)
+    super(value)
+    @overlay.z = value + 3
+    @pkmnsprite.z = value + 4
+  end
+
+  def tone=(value)
+    super(value)
+    @overlay.tone = value
+    @pkmnsprite.tone = value
+  end
+
+  def color=(value)
+    super(value)
+    @overlay.color = value
+    @pkmnsprite.color = value
+  end
+
+  def opacity=(value)
+    super(value)
+    @overlay.opacity = value
+    @pkmnsprite.opacity = value
+  end
+  
+  def refresh
+    base   = Color.new(248, 248, 248)
+    shadow = Color.new( 15,  15,  15)
+    self.src_rect = Rect.new(0, @party_member * 96, 172, 96)
+    self.x = 128 + 170 * (@pos + (3 - @party_length) * 0.5)
+    self.y = 478
+
+    @pkmnsprite.pokemon = @pokemon
+    @pkmnsprite.x = self.x + 44
+    @pkmnsprite.y = self.y + 28
+
+    @overlay.x = self.x
+    @overlay.y = self.y
+    @overlay.bitmap.clear
+    if @pokemon
+      pbSetSmallestFont(@overlay.bitmap)
+      textpos = [
+        [_INTL("{1}", @pokemon.level), 24, 52, 2, base, shadow],
+        [@pokemon.name.upcase, 44, 52, 0, base, shadow]
+      ]
+      pbDrawTextPositions(@overlay.bitmap, textpos)
+      imagepos = []
+      for i in 0...@pokemon.types.length
+        imagepos.push(["Graphics/Pictures/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
+      end
+      imagepos.push(["Graphics/Pictures/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
+      pbDrawImagePositions(@overlay.bitmap, imagepos)
+
+      hptextpos = [[_ISPRINTF("{1: 3d}/{2: 3d}", @pokemon.hp, @pokemon.totalhp),
+         @hpX,@hpY,2,base,shadow]]
+      hpgauge=@pokemon.totalhp==0 ? 0 : ((@pokemon.hp * 57 / @pokemon.totalhp).floor * 2)
+      hpgauge=1 if hpgauge==0 && @pokemon.hp>0
+      hpzone=0
+      hpzone=1 if @pokemon.hp<=(@pokemon.totalhp/2).floor
+      hpzone=2 if @pokemon.hp<=(@pokemon.totalhp/4).floor
+      hpcolors=[
+         Color.new(14,152,22),Color.new(24,192,32),   # Green
+         Color.new(202,138,0),Color.new(232,168,0),   # Orange
+         Color.new(218,42,36),Color.new(248,72,56)    # Red
+      ]
+      # fill with HP color
+      @overlay.bitmap.fill_rect(46,80,hpgauge,2,hpcolors[hpzone*2])
+      @overlay.bitmap.fill_rect(46,82,hpgauge,4,hpcolors[hpzone*2+1])
+      @overlay.bitmap.fill_rect(46,86,hpgauge,2,hpcolors[hpzone*2])
+      @overlay.bitmap.blt(4, 76, @hpbar.bitmap, Rect.new(0, @party_member * 16, @hpbar.width, 16))
+      if @pokemon.hp == 0 || @pokemon.status != :NONE
+        status = (@pokemon.hp == 0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position - 1)
+        statusrect=Rect.new(0, 32 * status, 32, 32)
+        @overlay.bitmap.blt(12, 68, @statuses.bitmap, statusrect)
+      end
+    end
+  end
+
+  def draw_hp
+    base   = Color.new(248, 248, 248)
+    shadow = Color.new( 15,  15,  15)
+    return if @pokemon.egg? || (@text && @text.length > 0)
+    # HP numbers
+    hp_text = sprintf("% 3d /% 3d", @pokemon.hp, @pokemon.totalhp)
+    pbDrawTextPositions(@overlay.bitmap,
+                        [[hp_text, 224, 66, 1, base, shadow]])
+    # HP bar
+    if @pokemon.able?
+      w = @pokemon.hp * HP_BAR_WIDTH / @pokemon.totalhp.to_f
+      w = 1 if w < 1
+      w = ((w / 2).round) * 2   # Round to the nearest 2 pixels
+      hpzone = 0
+      hpzone = 1 if @pokemon.hp <= (@pokemon.totalhp / 2).floor
+      hpzone = 2 if @pokemon.hp <= (@pokemon.totalhp / 4).floor
+      hprect = Rect.new(0, hpzone * 8, w, 8)
+      @overlaysprite.bitmap.blt(128, 52, @hpbar.bitmap, hprect)
+    end
+  end
+
+  def draw_status
+    return if @pokemon.egg? || (@text && @text.length > 0)
+    status = -1
+    if @pokemon.fainted?
+      status = GameData::Status.count - 1
+    elsif @pokemon.status != :NONE
+      status = GameData::Status.get(@pokemon.status).icon_position
+    elsif @pokemon.pokerusStage == 1
+      status = GameData::Status.count
+    end
+    return if status < 0
+    statusrect = Rect.new(0, STATUS_ICON_HEIGHT * status, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT)
+    @overlaysprite.bitmap.blt(78, 68, @statuses.bitmap, statusrect)
+  end
+  
+  def update
+    super
+    @overlay.update
+    @pkmnsprite.update
+  end
+
+end
+
 #===============================================================================
 # Data box for regular battles
 #===============================================================================
@@ -705,7 +979,7 @@ class Battle::Scene::PokemonDataBox < Sprite
       s = GameData::Status.get(@battler.status).icon_position
     end
     return if s < 0
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + 24, 36,
+    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), 20,
                                         0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
   end
   
@@ -733,7 +1007,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 8, 36]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 206, 6]])
   end
   
   def refresh

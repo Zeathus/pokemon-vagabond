@@ -46,6 +46,10 @@ class Battle::Battler
       pbEndTurn(choice)
       return false
     end
+    if @effects[PBEffects::AffinityBoostNext]
+      @affinityBooster = @effects[PBEffects::AffinityBoostNext]
+      @effects[PBEffects::AffinityBoostNext] = nil
+    end
     pbAffinityBoost if @affinityBooster
     # Use the move
     PBDebug.log("[Move usage] #{pbThis} started using #{choice[2].name}")
@@ -514,7 +518,7 @@ class Battle::Battler
           user.eachAlly do |partner|
             if !partner.fainted? && !partner.movedThisRound? && @battle.choices[partner.index][0] == :UseMove
               if partner.pokemon.hasAffinity?(move.calcType)
-                partner.affinityBooster = self
+                partner.affinityBooster = user
                 partner.effects[PBEffects::MoveNext] = true
               end
             end

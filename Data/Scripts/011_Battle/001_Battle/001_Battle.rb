@@ -88,6 +88,7 @@ class Battle
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
   attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
+  attr_accessor :playerUseAI      # Whether the player should be AI controlled
   attr_accessor :predictingDamage
 
   def pbRandom(x); return rand(x); end

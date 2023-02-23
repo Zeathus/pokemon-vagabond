@@ -278,6 +278,7 @@ class Battle::Battler
     @effects[PBEffects::Yawn]                = 0
     @effects[PBEffects::CorrosiveAcid]       = false
     @effects[PBEffects::EverlastingFainted]  = 0
+    @effects[PBEffects::AffinityBoostNext]   = nil
   end
 
   #=============================================================================

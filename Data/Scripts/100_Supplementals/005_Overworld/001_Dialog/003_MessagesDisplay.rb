@@ -304,9 +304,11 @@ class NameBoxSprite < IconSprite
       shadow = Dialog::getCharColor(@real_name, 1, true)
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
+      display_name = (@show_name || @real_name)
+      display_name = $player.name if display_name.downcase == "<player>"
+      display_name = "???" if @hide_name == 1
       textpos = [[
-        ((@hide_name == 1) ? "???" : (@show_name || @real_name)),
-        self.bitmap.width / 2, 18, 2, base, shadow
+        display_name, self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end

@@ -12,7 +12,7 @@ class CriticalSprite < SpriteWrapper
     @src_bitmap = RPG::Cache.load_bitmap("",
       _INTL("Graphics/Pictures/Battle/critical_{1}",type.to_s))
     self.bitmap = Bitmap.new(1024,128)
-    self.x = 0
+    self.x = 128
     self.y = 128
     @frame = 0
     update
@@ -38,10 +38,10 @@ class CriticalSprite < SpriteWrapper
     end
     if @opponent
       self.x -= 48
-      self.x = 0 if self.x <= -512
+      self.x = 128 if self.x <= -512 + 128
     else
       self.x += 48
-      self.x = -512 if self.x >= 0
+      self.x = -512 + 128 if self.x >= 128
     end
   end
 

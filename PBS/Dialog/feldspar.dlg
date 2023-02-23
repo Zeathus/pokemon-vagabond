@@ -45,7 +45,7 @@
 /speaker Alister
 > I have not heard a report from Steve yet, he's-\wtnp[60]
 /speaker Raphael
-> Then you should have made sure you got it!<br>I swear, you are all to lax around here.
+> Then you should have made sure you got it! I swear, you are all too lax around here.
 /speaker Alister
 > This is hopeless...
 
@@ -55,8 +55,9 @@
 
 [PEGMA_CITY_GYM,6]
 /speaker Allon
-> Hello again.<br>I figured I should head on down because I had a vague idea how it would go.
-> Raphael can get a bit TOO passionate about his work at times. He also has a somewhat complicated history with Alister.
+> Hello again.<br>I figured I should head on down because I had a vague idea of how it would go.
+> Raphael can get a bit TOO passionate about his work at times.
+> He also has a somewhat complicated history with Alister.
 > Our best bet is to try and solve the problem while he's busy.
 > We are looking for someone called Steve.<br>He's responsible for exports of ore.
 
@@ -69,7 +70,7 @@
 [PEGMA_CITY_GYM,8]
 /speaker Steve
 > Hey! You there!
-> This Graveler has got me trapped inside here for a long time!
+> This Graveler has held me trapped inside here for a long time!
 > I have a very important shipment to take care of, and it has gotten delayed for way too long!
 /speaker 0
 ?> Are you ready to battle?
@@ -113,7 +114,8 @@
 /speaker Raphael
 > ...Yes.
 /speaker Allon
-> That's what I thought.<br>We have fixed the problem. Now please excuse yourself to Alister so we may take our leave.
+> That's what I thought.<br>We have fixed the problem.
+> Now please excuse yourself to Alister so we may take our leave.
 /speaker Raphael
 > Fine...
 
@@ -166,7 +168,7 @@
         /return false
 ?/>
 
-[PEGMA_GYM_ED,0]
+[FELDSPAR_GYM_2F_ED,0]
 /speaker Ed
 > Are you ready to make some bronze?<br>'Cause that's what this puzzle's about!
 
@@ -175,7 +177,7 @@
 > This floor's puzzle is quite simple.<br>It's basically a tutorial.
 > The goal is to get one piece of copper and one piece of tin in a furnace to make bronze.
 
-[PEGMA_GYM_MITCH,0]
+[FELDSPAR_GYM_3F_MITCH,0]
 /speaker Mitch
 > Did you get the gist of it?<br>Now comes the real puzzle!
 
@@ -183,7 +185,7 @@
 /speaker Mitch
 > Let's see if you can figure this one out.<br>Unless you just want to try all 16 combinations like a boring person.
 
-[PEGMA_GYM_PETER,0]
+[FELDSPAR_GYM_3F_PETER,0]
 /speaker Peter
 > To reach Raphael's floor, you'll have to beat me first!
 
@@ -191,13 +193,16 @@
 /speaker Peter
 > Have you solved the puzzle yet?<br>If so, good luck against Raphael!
 
+[FELDSPAR_GYM_4F_RAPHAEL]
+/speaker Raphael
+> Let's get heated!
+
 [PEGMA_GYM_RAPHAEL,0]
 /speaker Raphael
 > Welcome to my combined gym and ore refinery!
 > You'll have to excuse my behavior at the quarry, but thank you for helping out.
-?> Out battle has been long overdue.<br>Are you ready?
+?> Our battle has been long overdue.<br>Are you ready?
     /choice Yes
-        > Let's get heated!
         /return true
     /cancelchoice No
         /dialog PEGMA_GYM_RAPHAEL 2
@@ -206,9 +211,8 @@
 
 [PEGMA_GYM_RAPHAEL,1]
 /speaker Raphael
-?> Out battle has been long overdue.<br>Are you ready?
+?> Our battle has been long overdue.<br>Are you ready?
     /choice Yes
-        > Let's get heated!
         /return true
     /cancelchoice No
         /dialog PEGMA_GYM_RAPHAEL 2
@@ -227,7 +231,7 @@
 [PEGMA_GYM_RAPHAEL,4]
 > \ts[5]<PLAYER> got the [R]Alloy Badge[/]!\wtnp[60]
 /speaker Raphael
-> You deserve this too.
+> \ts[1]You deserve this too.
 
 [PEGMA_GYM_RAPHAEL,5]
 /speaker Raphael

@@ -193,7 +193,7 @@ def pbNoticePlayer(event)
     pbExclaim(event)
   end
   pbTurnTowardEvent($game_player, event)
-  pbMoveTowardPlayer(event)
+  #pbMoveTowardPlayer(event)
 end
 
 

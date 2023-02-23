@@ -65,7 +65,8 @@
 /wait 30
 /fade normal
 /wait 20
-> There we go. It's done! If you head up to Breccia Outlook and let out a good whiff of this incense, a Pokémon is sure to come flying.
+> There we go. It's done!
+> If you head up to Breccia Outlook and let out a good whiff of this incense, a Pokémon is sure to come flying.
 
 [BRECCIA_CITY_GYM,6]
 ?> Do you want to light the Tropical Incense?
@@ -73,6 +74,7 @@
         /fade black
         /wait 20
         > You let out a good whiff of the\nTropical Incense to attract Pokémon...
+        /reset
         /fade normal
         /wait 20
         /return true
@@ -93,6 +95,7 @@
 > Sorry you had to see that.\nAs much as I hate to admit it, this is not the first time this has happened.
 > I planted this bush here for this alone.\nIt's quite prickly, but much better than hitting the ground.
 > Grandpa Pent says he's too old to climb up and finish the fence, and I can't do woodwork for the life of me.
+/reset
 /fade black
 /wait 20
 /event Faunus sprite trainer_LEADER_Faunus down
@@ -157,6 +160,7 @@
 [BRECCIA_PENT,3]
 /speaker Pent
 > What do you know! You're back with a Timburr already!
+/reset
 /eval $game_variables[1] = pbDeliverPokemon(:TIMBURR)
 /if $game_variables[1]
     > This will be a huge help, thank ya so much!
@@ -175,9 +179,9 @@
 /speaker Pent
 > Ya sure got a strong Timburr! This guy might be liftin' an entire tree before I know it!
 > I'll give ya a lil' extra for finding such a fine Timburr.
-/eval $Trainer.money += 2500
+/eval $player.money += 2500
 /speaker 0
-> {Trainer.name} received $2500!
+> {player.name} received $2500!
 
 [BRECCIA_PENT,6] # If the Timburr has a negative Attack nature
 /speaker Pent
@@ -236,40 +240,44 @@
 /speaker Bee-Fearing Man
 > Thanks to you, I no longer live a life of constant fear. I am forever grateful.
 
-[BRECCIA_GYM_ARNOLD,0]
+[BRECCIA_CITY_GYM_ARNOLD,0]
 /speaker Arnold
 > Isn't it peculiar how Grass-type Pokémon lay eggs unlike regular plants?
 
-[BRECCIA_GYM_ARNOLD,1]
+[BRECCIA_CITY_GYM_ARNOLD,1]
 /speaker Arnold
 > Remember that Grass-types have many weaknesses. Use them to win!
 
-[BRECCIA_GYM_PATRICIA,0]
+[BRECCIA_CITY_GYM_PATRICIA,0]
 /speaker Patricia
 > My adorable Pokémon will not lose!
 
-[BRECCIA_GYM_PATRICIA,1]
+[BRECCIA_CITY_GYM_PATRICIA,1]
 /speaker Patricia
 > Grass-type Pokémon are fragile creatures. Maybe that's what makes them cute in a way.
 
-[BRECCIA_GYM_SALLY,0]
+[BRECCIA_CITY_GYM_SALLY,0]
 /speaker Sally
 > Grass-type Pokémon are way cute, but they're also strong!
 
-[BRECCIA_GYM_SALLY,1]
+[BRECCIA_CITY_GYM_SALLY,1]
 /speaker Sally
 > Good luck against Faunus! He's way stronger than all of us Gym trainers.
+
+[BRECCIA_CITY_GYM_FAUNUS,0]
+/speaker Faunus
+> Let the battle bloom!
 
 [BRECCIA_GYM_FAUNUS,0]
 /event set Faunus 125
 /speaker Faunus
-> The leaves of this bush are so soft. The mulch I chose must have been perfect! These will make for a much nicer cushion beneath the outlook.
+> The leaves of this bush are so soft. The mulch I chose must have been perfect!
+> These will make for a much nicer cushion beneath the outlook.
 /event Faunus turn down
 > Oh, pardon me. I didn't see you there.
 > Ah, <PLAYER>! I have been waiting for you ever since that Tropius quite literally knocked me off my feet.
 ?> I understand you want to have a go at the Gym Challenge. Are you ready?
     /choice Yes
-        > Let the battle blossom!
         /return true
     /cancelchoice No
         /dialog BRECCIA_GYM_FAUNUS 2
@@ -280,7 +288,6 @@
 /speaker Faunus
 ?> I see you have returned!\nPerhaps you are ready for our battle?
     /choice Yes
-        > Let the battle blossom!
         /return true
     /cancelchoice No
         /dialog BRECCIA_GYM_FAUNUS 2
@@ -300,11 +307,12 @@
 [BRECCIA_GYM_FAUNUS,4]
 > \ts[5]<PLAYER> got the [G]Fauna Badge[/]!\wtnp[60]
 /speaker Faunus
-> This will also prove useful to you I am sure.
+> \ts[1]This will also prove useful to you I am sure.
 
 [BRECCIA_GYM_FAUNUS,5]
 /speaker Faunus
-> This TM contains the move Grass Pledge. I think you will grow fond of it if you use it with another Pledge move in a double battle.
+> This TM contains the move Grass Pledge.
+> I think you will grow fond of it if you use it with another Pledge move in a double battle.
 /if $quests[:UNKNOWNDESTINATION].complete?
     > If you are free, could you meet me at my house later?
 /else
@@ -315,38 +323,6 @@
 [BRECCIA_GYM_FAUNUS,6]
 /speaker Faunus
 > I look forward to when we can battle again!
-
-[BRECCIA_ALEX,0]
-/speaker Alex
-> I like to take strolls between cities.<br>Especially because I meet people to battle!
-
-[BRECCIA_ALEX,1]
-/speaker Alex
-> This place looks A-M-A-Z-I-N-G!<br>The perfect place for a nice walk!
-
-[BRECCIA_KARINE,0]
-/speaker Karine
-> Pokémon that look like plants are so interesting!
-
-[BRECCIA_KARINE,1]
-/speaker Karine
-> Oddish almost looks like tall grass!
-
-[BRECCIA_JEFF,0]
-/speaker Jeff
-> I like to camp out with my Pokémon to enjoy the scenery. This scenery looks great for a battle!
-
-[BRECCIA_JEFF,1]
-/speaker Jeff
-> Forests are so pretty. I enjoy the scent of the trees.
-
-[BRECCIA_WADE,0]
-/speaker Wade
-> My bees are coming for you! Bzzzzzz!
-
-[BRECCIA_WADE,1]
-/speaker Wade
-> I need more bees.
 
 [QUEST_AYFAO,0]
 /speaker Girl
@@ -366,8 +342,7 @@
 
 [QUEST_AYFAO,3]
 /speaker Girl
-/eval pbTextEffect("wave")
-> § Cute tiny Rowlet, sitting in a treeee~
+> § <wave>Cute tiny Rowlet, sitting in a treeee~</wave>
 
 [QUEST_FIERY_ROBIN,0]
 /speaker Bird_Keeper

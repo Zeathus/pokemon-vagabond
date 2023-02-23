@@ -3283,8 +3283,9 @@ Pokemon = SCRAFTY,40
 [YOUNGSTER,Test]
 Pokemon = VENUSAUR,60
     Moves = SPLASH
-Pokemon = VENUSAUR,60
+Pokemon = SNORLAX,60
     Moves = SPLASH
+    Ability = EFFECTSPORE
 Pokemon = VENUSAUR,60
     Moves = SPLASH
 Pokemon = VENUSAUR,60

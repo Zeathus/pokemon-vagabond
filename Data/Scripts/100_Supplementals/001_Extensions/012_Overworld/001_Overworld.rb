@@ -11,7 +11,7 @@ EventHandlers.add(:on_step_taken, :dust_trail,
 )
 
 # Force cycling/walking.
-EventHandlers.add(:on_enter_map, :force_cycling,
+EventHandlers.add(:on_enter_map, :map_update,
   proc { |_old_map_id|
     $game_switches[Supplementals::MAP_UPDATE] = true
   }

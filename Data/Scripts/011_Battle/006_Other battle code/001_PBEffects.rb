@@ -121,6 +121,7 @@ module PBEffects
   Yawn                = 116
   CorrosiveAcid       = 117
   EverlastingFainted  = 118
+  AffinityBoostNext   = 119
 
   #=============================================================================
   # These effects apply to a battler position

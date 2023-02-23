@@ -27,40 +27,8 @@
 
 [CW_SIGN_PEGMA]
 /textpos middle
-> East to Pegma City<br>Split into two district on each side of the mountain, exporting metals to the region
+> East to Pegma City<br>Split into two districts separated by a mountain, exporting metals to the region
 
 [CW_SIGN_LAPIS_LAZULI]
 /textpos middle
-> South to Lapis Lazuli City<br>The waterway city that serves as a hub for seafaring and renewable power
-
-[CW_TRAINER_BEN,0]
-/speaker Ben
-> I've been busy training!<br>Ready to see my skills?
-
-[CW_TRAINER_BEN,1]
-/speaker Ben
-> I hope we can battle again sometime"
-
-[CW_TRAINER_GEORGE,0]
-/speaker George
-> I'm looking for some ruins I've heard were hidden here.<br>You won't get there before me!
-
-[CW_TRAINER_GEORGE,1]
-/speaker George
-> The ruins have to be close.<br>I can feel it.
-
-[CW_TRAINER_CHLOE,0]
-/speaker Chloe
-> Just looking at you running around the tall grass makes me eager to battle!
-
-[CW_TRAINER_CHLOE,1]
-/speaker Chloe
-> I almost faint when I get to experience such skilled battling.
-
-[CW_TRAINER_TORIEL,0]
-/speaker Toriel
-> The first time you visit a new place, it's lock eyes, then fight!
-
-[CW_TRAINER_TORIEL,1]
-/speaker Toriel
-> Trainers on routes are a great way to train and become stronger!
+> South to Lapis Lazuli City<br>The waterway city that serves as a hub for seafaring and sustainable energy

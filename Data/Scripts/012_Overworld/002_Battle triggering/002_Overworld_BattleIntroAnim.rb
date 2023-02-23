@@ -75,7 +75,11 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   end
   # Play battle music
   bgm = pbGetWildBattleBGM([]) if !bgm
-  pbBGMPlay(bgm)
+  if $PokemonGlobal.quickBattleAnimation
+    pbQuickBattleAnimation(viewport, bgm, foe, $PokemonGlobal.quickBattleDialog)
+  else
+    pbBGMPlay(bgm)
+  end
   # Determine location of battle
   location = 0   # 0=outside, 1=inside, 2=cave, 3=water
   if $PokemonGlobal.surfing || $PokemonGlobal.diving
@@ -119,7 +123,7 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
         anim = "FourBallBurst"
       end
     end
-    pbBattleAnimationCore(anim, viewport, location)
+    pbBattleAnimationCore(anim, viewport, location) if !$PokemonGlobal.quickBattleAnimation
   end
   pbPushFade
   # Yield to the battle scene
@@ -132,6 +136,9 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   end
   $game_temp.memorized_bgm            = nil
   $game_temp.memorized_bgm_position   = 0
+  $PokemonGlobal.quickBattleAnimation = nil
+  $PokemonGlobal.quickBattleDialog    = nil
+  $PokemonGlobal.quickBattleEvent     = nil
   $PokemonGlobal.nextBattleBGM        = nil
   $PokemonGlobal.nextBattleVictoryBGM = nil
   $PokemonGlobal.nextBattleCaptureME  = nil

@@ -1,6 +1,8 @@
 GUIDES = [
   ["The Guide",
     "This is the Guide. It can show you all kinds of useful tips and explanations to help you on your adventure through the game.\nIt is especially useful when learning the mechanics that are new to Pokémon Vagabond.\n\nMore guides will be unlocked as you play through the game and you will be notified whenever you obtain a new guide.\n\nGuides can have several pages, so make sure to check the page number on the bottom right to see how many pages there are to a guide."],
+  ["Changed Mechanics",
+    "There are some game mechanics in Pokémon Vagabond that are changed from the official games. These sections are recommended to read as they explain new or changed mechanics:\n- Statuses (Freeze replaced by Frostbite)\n- Weather (A new weather condition)\n- Effort (IVs and EVs are no more)"],
   ["Partners",
     ""],
   ["Moves",
@@ -9,12 +11,18 @@ GUIDES = [
     "[type_chart]If you are playing a Pokémon Fan Game, I assume you know about weaknesses, resistances and immunities. A table of these can be seen above."],
   ["Stats",
     ""],
+  ["Effort",
+    "Effort Values (EVs) and Individual Values (IVs) are not used in Pokémon Vagabond. Instead a modified version of the Effort Level (EL) system from Pokemon Legends Arceus is used. The primary difference is that stats are upgraded only with items, not through battles.\n\nEffort Levels range from 0 to 10 for each stat and can be changed with these items:\n- Wings: Level up to 3\n- Vitamins: Level from 3 to 9\n- Gemstones: Level from 9 to 10\n- Berries: Lower level by 1\nHowever, all stats cannot be maxed...",
+    "All stats can reach level 3, which is equivalent to an IV of 31. Past this point, stat increases will require Specialization Points (SP). All Pokémon have a total of 14 SP to use, which is enough to max out exactly two stats.\n\nIf you are unfamiliar with or do not care about the details, it is enough to know that raising Effort Levels raises stats, and that it is beneficial to only level a Pokémon's important stats past level 3.\n\nThe next page has direct conversions between ELs and IVs/EVs.",
+    "Effort Level Conversion Table\n  EL  |  IV  |  EV  \n----|----|----\n   0   |   0   |   0\n   1    |  10  |   0\n   2   |  20  |   0\n   3   |  31  |   0\n   4   |  31  |  36\n   5   |  31  |  72\n   6   |  31  | 108\n   7   |  31  | 144\n   8   |  31  | 180\n   9   |  31  | 216\n  10  |  31  | 252"],
   ["Affinity Boosts",
     "All Pokémon have an Affinity listed next to their type. The affinity is determined by the species and form of the Pokémon. This defines what type of move is required to trigger an Affinity Boost. The Affinity of each Pokémon is also easily visible on the status bars during battle. [INSERT SUMMARY SCREEN PICTURE]",
     "How to Affinity Boost\n\nThe Pokémon that moves first on one side of the field can cause an Affinity Boost for other Pokémon on the same side of the field.\nAn Affinity Boost is activated when the faster Pokémon uses a move of the same type as the affinity of the slower Pokémon.\n\nFor the Affinity Boost to trigger, the triggering move needs to hit at least one opposing Pokémon for neutral or super effective damage.",
     "The Effect of Affinity Boosts\n\nWhen a Pokémon receives an Affinity Boost they will use their move directly after the triggering partner, regardless of speed and priority.\nThe move they use will also have its power increased by 30% and will always hit. Moves with less than 50% accuracy will not always hit.",
     "More About Affinity Boosts\n\nThere exists moves and abilities that take advantage of Affinity Boosts to gain various effects. Skiddo, Numel and Krabby all have access to abilities that make their Affinity Boosts stronger than other Pokémon.",
     "Bond Abilities\n\nA group of abilities that benefit from affinity boosts are called Bond abilities.\nThese abilities raise a specific stat whenever an Affinity Boost involving the Pokémon with the ability is triggered.\nIt is the Pokémon that received the Affinity Boost that has its stat raised. The Pokémon with the Bond ability is not the only one that can receive the stat boost from the ability."],
+  ["Statuses",
+    ""],
   ["Weather",
     ""],
   ["Quests",
@@ -25,7 +33,7 @@ GUIDES = [
     ""]
 ]
 
-class KeybindSprite < SpriteWrapper
+class KeybindSprite < SpriteWrapper 
 
   attr_accessor :baseColor
   attr_accessor :shadowColor
@@ -269,9 +277,13 @@ end
 def pbInitGuides
   guides = {}
   guides["The Guide"] = true
+  guides["Changed Mechanics"] = true
   guides["Moves"] = true
   guides["Types"] = true
   guides["Stats"] = true
+  guides["Effort"] = true
+  guides["Statuses"] = true
+  guides["Weather"] = true
   $game_variables[Supplementals::GUIDE_LIST] = guides
 end
 

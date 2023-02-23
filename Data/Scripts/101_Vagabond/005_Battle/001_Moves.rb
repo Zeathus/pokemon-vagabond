@@ -1,19 +1,13 @@
 #===============================================================================
-# Target steel type becomes susceptible to Poison-type moves (Corrosive Acid)
+# Poison moves have normal effectiveness against the Steel-type target. (Corrosive Acid)
 #===============================================================================
 class Battle::Move::StartNegateTargetPoisonImmunity < Battle::Move
-  def pbMoveFailed?(user,targets)
-    if target.effects[PBEffects::CorrosiveAcid] ||
-      !target.pbHasType(:STEEL)
-      @battle.pbDisplay(_INTL("But it failed!")) if !@battle.predictingDamage
-      return true
-    end
-    return false
-  end
+  def ignoresSubstitute?(user); return true; end
+  def canMagicCoat?;            return true; end
 
-  def pbEffectAgainstTarget(user,target)
+  def pbEffectAgainstTarget(user, target)
     target.effects[PBEffects::CorrosiveAcid] = true
-    @battle.pbDisplay(_INTL("{1} became susceptible to Poison-type moves!",target.pbThis))
+    @battle.pbDisplay(_INTL("{1} became susceptible to Poison-type moves!", target.pbThis))
   end
 end
 
@@ -26,6 +20,104 @@ class Battle::Move::StartWindsWeather < Battle::Move::WeatherMove
     @weatherType = :Winds
   end
 end
+
+class Battle::Move::AffinityBoostIgnoreAffinity < Battle::Move
+  def pbEffectAgainstTarget(user, target)
+    return if target.damageState.hpLost <= 0
+    return if !target.opposes?(user)
+    return if target.damageState.unaffected
+    return if !(Effectiveness.normal?(target.damageState.typeMod) || Effectiveness.super_effective?(target.damageState.typeMod))
+    user.eachAlly do |partner|
+      if !partner.fainted? && !partner.movedThisRound? && @battle.choices[partner.index][0] == :UseMove
+        partner.affinityBooster = user
+        partner.effects[PBEffects::MoveNext] = true
+      end
+    end
+  end
+end
+
+#===============================================================================
+# Hits 3 times. Power is multiplied by the hit number. (Triple Kick)
+# An accuracy check is performed for each hit.
+#===============================================================================
+class Battle::Move::FirstHitPoisonGroundTargetSecondHitGround < Battle::Move
+  def hitsFlyingTargets?; return @hitNum == 0; end
+
+  def pbDisplayUseMessage(user)
+    if @hitNum == 1
+      @battle.pbDisplayBrief(_INTL("{1} makes a follow-up attack!", user.pbThis))
+    else
+      super(user)
+    end
+  end
+
+  def pbBaseType(user)
+    return :GROUND if @hitNum == 1
+    return super(user)
+  end
+
+  def pbOnStartUse(user, targets)
+    @calcType = self.pbCalcType(user)
+  end
+
+  def pbBaseDamage(baseDmg, user, target)
+    return baseDmg * 2 if @hitNum == 1 && target.effects[PBEffects::SmackDown]
+    return baseDmg
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    return if @hitNum != 0
+    return if target.fainted?
+    return if target.damageState.unaffected || target.damageState.substitute
+    return if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSkyTargetCannotAct") ||
+              target.effects[PBEffects::SkyDrop] >= 0   # Sky Drop
+    return if !target.airborne? && !target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
+                                                            "TwoTurnAttackInvulnerableInSkyParalyzeTarget")
+    target.effects[PBEffects::SmackDown] = true
+    if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
+                               "TwoTurnAttackInvulnerableInSkyParalyzeTarget")   # NOTE: Not Sky Drop.
+      target.effects[PBEffects::TwoTurnAttack] = nil
+      @battle.pbClearChoice(target.index) if !target.movedThisRound?
+    end
+    target.effects[PBEffects::MagnetRise]  = 0
+    target.effects[PBEffects::Telekinesis] = 0
+    @battle.pbDisplay(_INTL("{1} crashed to the ground!", target.pbThis))
+  end
+
+  def pbChangeUsageCounters(user, specialUsage)
+    @hitNum = specialUsage ? 1 : 0
+  end
+
+  def pbEndOfMoveUsageEffect(user, targets, numHits, switchedBattlers)
+    return if user.fainted?
+    return if user.status == :SLEEP || user.status == :FROZEN
+    return if targets.length < 1
+    target = targets[0]
+    return if target.fainted?
+    user.pbUseMoveSimple(self.id, targets[0].index) if @hitNum == 0
+  end
+end
+
+class Battle::Move::AffinityBoostNextTurn < Battle::Move
+  def pbMoveFailed?(user, targets)
+    if @battle.allSameSideBattlers(user).none? { |b| b.effects[PBEffects::AffinityBoostNext].nil? }
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbFailsAgainstTarget?(user, target, show_message)
+    return !(target.effects[PBEffects::AffinityBoostNext].nil?)
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    target.effects[PBEffects::AffinityBoostNext] = user
+    target.effects[PBEffects::MoveNext] = true
+    @battle.pbDisplay(_INTL("{1} was inspired!", target.pbThis))
+  end
+end
+
 
 ################################################################################
 # Type depends on the user's Personality ID.
@@ -86,13 +178,6 @@ class Battle::Move::SpindaDiversity < Battle::Move
     end
     return ret
   end
-end
-
-#===============================================================================
-# This attack is always a critical hit. (Frost Breath, Storm Throw)
-#===============================================================================
-class Battle::Move::AlwaysCriticalHitWhenAffinityBoosted < Battle::Move
-  def pbCritialOverride(user, target); return !(user.affinityBooster.nil?); end
 end
 
 #===============================================================================

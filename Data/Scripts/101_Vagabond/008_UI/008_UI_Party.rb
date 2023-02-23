@@ -1230,6 +1230,8 @@ end
 
 
 class PokemonScreen_Scene
+  include PokemonDebugMixin
+
   def pbShowCommands(helptext,commands,index=0)
     ret=-1
     helpwindow=@sprites["helpwindow"]
@@ -1400,6 +1402,10 @@ class PokemonScreen_Scene
     pbFadeOutAndHide(@sprites) { update }
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
+  end
+
+  def pbChooseNumber(helptext, maximum, initnum = 1)
+    return UIHelper.pbChooseNumber(@sprites["helpwindow"], helptext, maximum, initnum) { update }
   end
 
   def pbMemberMenuStart(index)
@@ -2383,6 +2389,10 @@ class PokemonScreen
     @scene.pparty=@pparty if @pparty
   end
 
+  def scene
+    return @scene
+  end
+
   def pbHardRefresh
     @scene.pbHardRefresh
   end
@@ -2834,34 +2844,6 @@ class PokemonScreen
     @scene.pbAnnotate(nil)
   end
 
-  def pbPokemonDebug(pkmn, pkmnid, heldpoke = nil, settingUpBattle = false)
-    command = 0
-    commands = CommandMenuList.new
-    PokemonDebugMenuCommands.each do |option, hash|
-      commands.add(option, hash) if !settingUpBattle || hash["always_show"]
-    end
-    loop do
-      command = @scene.pbShowCommands(_INTL("Do what with {1}?", pkmn.name), commands.list, command)
-      if command < 0
-        parent = commands.getParent
-        if parent
-          commands.currentList = parent[0]
-          command = parent[1]
-        else
-          break
-        end
-      else
-        cmd = commands.getCommand(command)
-        if commands.hasSubMenu?(cmd)
-          commands.currentList = cmd
-          command = 0
-        elsif PokemonDebugMenuCommands.call("effect", cmd, pkmn, pkmnid, heldpoke, settingUpBattle, @scene)
-          break
-        end
-      end
-    end
-  end
-
   def pbPokemonScreen
     @party=getActivePokemon(0) if !@party
     @pparty=getActivePokemon(1) if !@pparty
@@ -2878,9 +2860,9 @@ class PokemonScreen
       break if pkmnid<0
       if Input.press?(Input::CTRL) && $DEBUG
         if pkmnid<6
-          pbPokemonDebug(@party[pkmnid],pkmnid)
+          @scene.pbPokemonDebug(@party[pkmnid], pkmnid)
         elsif pkmnid<12
-          pbPokemonDebug(@pparty[pkmnid-6],pkmnid)
+          @scene.pbPokemonDebug(@pparty[pkmnid-6], pkmnid)
         end
         next
       end
@@ -2928,15 +2910,15 @@ class PokemonScreen
             else
               quick = []
               if pkmn.hp<=0
-                revive = pbGetOptimalRevive(pkmn)
+                revive = pbGetSuggestedRevive(pkmn)
                 quick[0]=revive if revive
               end
               if pkmn.hp>0 && pkmn.hp<pkmn.totalhp
-                potion = pbGetOptimalPotion(pkmn)
+                potion = pbGetSuggestedPotion(pkmn)
                 quick[0]=potion if potion
               end
               if pkmn.status != 0
-                medicine = pbGetOptimalMedicine(pkmn)
+                medicine = pbGetSuggestedMedicine(pkmn)
                 quick[1]=medicine if medicine
               end
             end

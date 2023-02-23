@@ -134,7 +134,7 @@ class Battle::Move
   def danceMove?;         return @flags.any? { |f| f[/^Dance$/i] };               end
   def windsBoostedMove?;  return @flags.any? { |f| f[/^WindsBoosted$/i] };        end
   # Causes any side effect to have 100% trigger rate if the move is affinity boosted
-  def affinityBoostGuaranteesEffect? return @flags.any? { |f| f[/^AffinityBoostGuaranteesEffect$/i] }; end
+  def affinityBoostGuaranteesEffect?; return @flags.any? { |f| f[/^AffinityBoostGuaranteesEffect$/i] }; end
   # Causes perfect accuracy and double damage if target used Minimize. Perfect accuracy only with Gen 6+ mechanics.
   def tramplesMinimize?;  return @flags.any? { |f| f[/^TramplesMinimize$/i] };    end
 

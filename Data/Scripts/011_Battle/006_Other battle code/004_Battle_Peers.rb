@@ -55,6 +55,7 @@ class Battle::Peer
     f = MultipleForms.call("getFormOnLeavingBattle", pkmn, battle, usedInBattle, endBattle)
     pkmn.form = f if f && pkmn.form != f
     pkmn.hp = pkmn.totalhp if pkmn.hp > pkmn.totalhp
+    pkmn.hp = 1 if endBattle && pkmn.hp < 1
     MultipleForms.call("changePokemonOnLeavingBattle", pkmn, battle, usedInBattle, endBattle)
   end
 end

@@ -20,6 +20,7 @@ class Battle::Scene
     @lastMove = Array.new(@battle.battlers.length, 0)
     pbInitSprites
     @outer.pbInitInfoSprites
+    pbFadeInAndShow(@sprites)
     pbBattleIntroAnimation
   end
 
@@ -77,7 +78,7 @@ class Battle::Scene
         index = (i * 2) + 1
         pbChangePokemon(index, pkmn)
         pkmnSprite = @sprites["pokemon_#{index}"]
-        pkmnSprite.tone    = Tone.new(-80, -80, -80)
+        pkmnSprite.tone    = Tone.new(0, 0, 0)
         pkmnSprite.visible = true
       end
     end

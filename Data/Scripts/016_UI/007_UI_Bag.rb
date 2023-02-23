@@ -58,14 +58,14 @@ class Window_PokemonBag < Window_DrawableCommand
     else
       cursor_width = (self.width - self.borderX - ((@column_max - 1) * @column_spacing)) / @column_max
       x = item % @column_max * (cursor_width + @column_spacing)
-      y = (item / @column_max * @row_height) - @virtualOy
+      y = (item / @column_max * @row_height) - @virtualOy - 6
       return Rect.new(x, y, cursor_width, @row_height)
     end
   end
 
   def pocketRect(pocket)
-    x = 14 + ((pocket - 1) % 3) * 50
-    y = 50 + ((pocket - 1) / 3).floor * 50
+    x = 142 + ((pocket - 1) % 3) * 50
+    y = 86 + ((pocket - 1) / 3).floor * 50
     return Rect.new(x, y, 60, 60)
   end
 
@@ -119,7 +119,7 @@ class Window_PokemonBag < Window_DrawableCommand
     @item_max = itemCount
     self.update_cursor_rect
     dwidth  = self.width - self.borderX
-    dheight = self.height - self.borderY
+    dheight = self.height - self.borderY - 6
     self.contents = pbDoEnsureBitmap(self.contents, dwidth, dheight)
     self.contents.clear
     @item_max.times do |i|
@@ -147,7 +147,7 @@ class PokemonBag_Scene
   ITEMTEXTSHADOWCOLOR   = Color.new(0, 0, 0)
   POCKETNAMEBASECOLOR   = Color.new(88, 88, 80)
   POCKETNAMESHADOWCOLOR = Color.new(168, 184, 184)
-  ITEMSVISIBLE          = 7
+  ITEMSVISIBLE          = 11
 
   def pbUpdate
     pbUpdateSpriteHash(@sprites)
@@ -193,15 +193,15 @@ class PokemonBag_Scene
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     pbSetSystemFont(@sprites["overlay"].bitmap)
-    @sprites["itemlist"] = Window_PokemonBag.new(@bag, @filterlist, lastpocket, 168, -8, 314, 40 + 32 + (ITEMSVISIBLE * 32))
+    @sprites["itemlist"] = Window_PokemonBag.new(@bag, @filterlist, lastpocket, 296, 8, 314, 40 + 24 + (ITEMSVISIBLE * 32))
     @sprites["itemlist"].viewport    = @viewport
     @sprites["itemlist"].pocket      = lastpocket
     @sprites["itemlist"].index       = @bag.last_viewed_index(lastpocket)
     @sprites["itemlist"].baseColor   = ITEMLISTBASECOLOR
     @sprites["itemlist"].shadowColor = ITEMLISTSHADOWCOLOR
-    @sprites["itemicon"] = ItemIconSprite.new(48, Graphics.height - 48, nil, @viewport)
+    @sprites["itemicon"] = ItemIconSprite.new(112, Graphics.height - 48, nil, @viewport)
     @sprites["itemtext"] = Window_UnformattedTextPokemon.newWithSize(
-      "", 72, 272, Graphics.width - 72 - 24, 128, @viewport
+      "", 140, 464, Graphics.width - 220, 128, @viewport
     )
     @sprites["itemtext"].baseColor   = ITEMTEXTBASECOLOR
     @sprites["itemtext"].shadowColor = ITEMTEXTSHADOWCOLOR
@@ -274,16 +274,16 @@ class PokemonBag_Scene
     # Draw the pocket name
     pbDrawTextPositions(
       overlay,
-      [[PokemonBag.pocket_names[@bag.last_viewed_pocket - 1], 94, 230, 2, POCKETNAMEBASECOLOR, POCKETNAMESHADOWCOLOR]]
+      [[PokemonBag.pocket_names[@bag.last_viewed_pocket - 1], 222, 266, 2, POCKETNAMEBASECOLOR, POCKETNAMESHADOWCOLOR]]
     )
     # Draw slider arrows
     showslider = false
     if itemlist.top_row > 0
-      overlay.blt(470, 16, @sliderbitmap.bitmap, Rect.new(0, 0, 36, 38))
+      overlay.blt(598, 28, @sliderbitmap.bitmap, Rect.new(0, 0, 36, 36))
       showslider = true
     end
     if itemlist.top_item + itemlist.page_item_max < itemlist.itemCount
-      overlay.blt(470, 228, @sliderbitmap.bitmap, Rect.new(0, 38, 36, 38))
+      overlay.blt(598, 408, @sliderbitmap.bitmap, Rect.new(0, 38, 36, 38))
       showslider = true
     end
     pocketRect = itemlist.pocketRect(itemlist.pocket)
@@ -292,20 +292,20 @@ class PokemonBag_Scene
     @sprites["pocketarrow"].visible = !itemlist.in_pocket
     # Draw slider box
     if showslider
-      sliderheight = 174
+      sliderheight = 322
       boxheight = (sliderheight * itemlist.page_row_max / itemlist.row_max).floor
       boxheight += [(sliderheight - boxheight) / 2, sliderheight / 6].min
       boxheight = [boxheight.floor, 38].max
-      y = 54
+      y = 76
       y += ((sliderheight - boxheight) * itemlist.top_row / (itemlist.row_max - itemlist.page_row_max)).floor
-      overlay.blt(470, y, @sliderbitmap.bitmap, Rect.new(36, 0, 36, 4))
+      overlay.blt(598, y, @sliderbitmap.bitmap, Rect.new(36, 0, 36, 4))
       i = 0
       while i * 16 < boxheight - 4 - 18
         height = [boxheight - 4 - 18 - (i * 16), 16].min
-        overlay.blt(470, y + 4 + (i * 16), @sliderbitmap.bitmap, Rect.new(36, 4, 36, height))
+        overlay.blt(598, y + 4 + (i * 16), @sliderbitmap.bitmap, Rect.new(36, 4, 36, height))
         i += 1
       end
-      overlay.blt(470, y + boxheight - 18, @sliderbitmap.bitmap, Rect.new(36, 20, 36, 18))
+      overlay.blt(598, y + boxheight - 18, @sliderbitmap.bitmap, Rect.new(36, 20, 36, 18))
     end
     # Set the selected item's icon
     @sprites["itemicon"].item = itemlist.item

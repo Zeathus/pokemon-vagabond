@@ -1115,6 +1115,7 @@ class Pokemon
 
   # Recalculates this Pokémon's stats.
   def calc_stats
+    self.clampEL if Supplementals::USE_EFFORT_LEVELS
     base_stats = self.baseStats
     this_level = self.level
     this_IV    = self.calcIV

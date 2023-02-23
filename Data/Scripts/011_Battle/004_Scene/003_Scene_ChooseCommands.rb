@@ -144,11 +144,13 @@ class Battle::Scene
   #=============================================================================
   def pbPartyScreen(idxBattler, canCancel = false, mode = 0)
     # Fade out and hide all sprites
-    visibleSprites = pbFadeOutAndHide(@sprites)
+    #visibleSprites = pbFadeOutAndHide(@sprites)
     # Get player's party
-    partyPos = @battle.pbPartyOrder(idxBattler)
-    partyStart, _partyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
-    modParty = @battle.pbPlayerDisplayParty(idxBattler)
+    @outer.pbChooseSwitch(idxBattler, mode) { |idxParty, partyScene|
+      next yield idxParty, partyScene
+    }
+    return
+
     # Start party screen
     scene = PokemonParty_Scene.new
     switchScreen = PokemonPartyScreen.new(scene, modParty)

@@ -1,33 +1,33 @@
 [SICKZAGOON,0]
 /speaker Zigzagoon
-/cry ZIGZAGOON 90 70
+/cry ZIGZAGOON 90 66
 > Zigza.....
 
 [SICKZAGOON,1]
-/speaker PLAYER
-> This Zigzagoon doesn't look well.\nIt must be sick.
-> We should help it. Do you have any ideas Duke?
 /speaker Duke
+?> This Zigzagoon doesn't look well.\nIt must be sick.
+    /choice We should help it
+        > I am glad to see you are as considerate as ever.
+    /choice How can you tell?
+        > The pitch of its cry is down by a third.\nA surefire sign that it is feeling unwell.
+    /choice We should get going
+        > We can't simply leave this Zigzagoon in such a state. We need to help it.
+?/>
 > I knew this moment would come...
 > This is likely to be the first of many occasions where you encounter someone in need.
 > As your heart yearns to help these poor souls, I present to you...
 /expression huzzah
 !> A QUEST LOG!
-/speaker PLAYER
-> A... quest log?
-/speaker Duke
-> Yes, a quest log. It allows you to keep track of the ones that need your help.
+/expression neutral
+> The Quest Log allows you to keep track of the ones that need your help.
 /expression heh
 > It even covers what rewards they may give you, if that's what you're in for.
-/speaker PLAYER
-> Pretty self-explanatory.\nThat will surely come in handy.
-/speaker Duke
-> Your keen eyes surely spotted the doctor back in the Crosswoods. He should be able to help rid this Zigzagoon of their illness.
+/expression neutral
+> Your keen eyes surely spotted the doctor back in the Crosswoods. He should be able to handle the situation.
 
 [SICKZAGOON,2]
-/speaker PLAYER
-> Another sick Zigzagoon? We really need to talk to that doctor.
 /speaker Duke
+> Another sick Zigzagoon? We really need to talk to that doctor.
 > We passed him on the way here.\nDid you simply forget?
 
 [SICKZAGOON,3]
@@ -39,7 +39,7 @@
 [SICKZAGOON,4]
 /speaker Marty
 > Hello there, may I help you?
-/speaker PLAYER
+/speaker Duke
 /if $game_variables[SICKZAGOON] >= 2
     > There are sick Zigzagoon just outside the forest.
 /else
@@ -57,13 +57,13 @@
 
 [SICKZAGOON,5]
 /dialog SICKZAGOON 0
-/speaker PLAYER
+/speaker Duke
 > We need to go find the doctor in the Crosswoods.
 
 [SICKZAGOON,6]
-/speaker PLAYER
+/speaker Duke
 > That Zigzagoon looks ill, we should check it out before we continue.
 
 [SICKZAGOON,7]
-/speaker PLAYER
+/speaker Duke
 > We need to find a doctor for the Zigzagoon before we continue.

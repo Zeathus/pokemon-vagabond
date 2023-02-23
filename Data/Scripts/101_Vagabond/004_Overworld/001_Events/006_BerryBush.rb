@@ -56,7 +56,7 @@ def pbHarvestBerry(item, quantity)
     #text2 = text2.upcase if text2
     #pbCollectNotification(text, text2, title)
 
-    pbJob("botanist").register(item)
+    pbJob("Botanist").register(item)
 
     loot = []
     loot.push([32, :TINYMUSHROOM])

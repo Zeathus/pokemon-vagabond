@@ -17,11 +17,11 @@ class TextBubble
   end
 
   def get_character
-      if partner
+      if @partner
           if getPartyActive(0) == @event_id
-              return $game_player.sprite
+              return $game_player.sprite rescue nil
           elsif getPartyActive(1) == @event_id
-              return $game_player.sprite.partner
+              return $game_player.sprite.partner rescue nil
           end
           return nil
       else
@@ -61,6 +61,7 @@ class TextBubble
 
   def update
       character = self.get_character
+      return if character.nil?
       if @time < 180 && @sprite.busy?
           @time += 1
           @sprite.opacity = @time * 16
