@@ -364,7 +364,7 @@ class CraftScene
     @sprites={}
     @sprites["background"]=IconSprite.new(0,0,@viewport)
     @sprites["background"].setBitmap("Graphics/Pictures/Craft/bg")
-    @item_x = 314
+    @item_x = 246
     @item_text_x = @item_x + 24
     @item_1_y = 52
     @item_2_y = 348
@@ -389,13 +389,13 @@ class CraftScene
     @sprites["item1text"].x=@item_text_x
     @sprites["item1text"].y=@item_1_y - 32
     @sprites["item2text"].x=@item_text_x
-    @sprites["item2text"].y=@item_1_y - 32 + 90
+    @sprites["item2text"].y=@item_1_y - 32 + 46
     @sprites["item3text"].x=@item_text_x
-    @sprites["item3text"].y=@item_1_y - 32 + 180
+    @sprites["item3text"].y=@item_1_y - 32 + 92
     @sprites["item4text"].x=@item_text_x
     @sprites["item4text"].y=@item_2_y - 32
     @sprites["item5text"].x=@item_text_x
-    @sprites["item5text"].y=@item_2_y - 32 + 60
+    @sprites["item5text"].y=@item_2_y - 32 + 46
     for i in 1..5
       @sprites[_INTL("item{1}text",i)].width = 300
       @sprites[_INTL("item{1}text",i)].height = 128
@@ -658,9 +658,16 @@ end
 
 
 
-def pbItemCraft(stock,speech=nil)
-  #stock.compact!
+def pbItemCraft(stock, speech=nil)
   scene=CraftScene.new
   screen=CraftScreen.new(scene,stock)
   screen.pbCraftScreen
 end 
+
+def pbExampleCrafts
+  trades = [
+    ["Berry Juice",[:ORANBERRY,3],[:BERRYJUICE,2]],
+    ["Mystic Water",[:SHOALSHELL,1,:BLUESHARD,1],[:MYSTICWATER,1]]
+  ]
+  return trades
+end
