@@ -10,8 +10,6 @@ class Game_Map
 
   def refresh
     sup_refresh
-    #pbUpdateUI
-    pbGetTimeNow.update if Supplementals::USE_INGAME_TIME
   end
 
   def waterEdge?(x, y)

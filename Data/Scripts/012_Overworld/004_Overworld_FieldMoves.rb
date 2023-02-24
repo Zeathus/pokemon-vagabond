@@ -506,6 +506,7 @@ HiddenMoveHandlers::UseMove.add(:FLASH, proc { |move, pokemon|
 # Fly
 #===============================================================================
 def pbCanFly?(pkmn = nil, show_messages = false)
+  return $game_switches[HAS_TELEPORT]
   return false if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_FLY, show_messages)
   return false if !$DEBUG && !pkmn && !$player.get_pokemon_with_move(:FLY)
   if !$game_player.can_map_transfer_with_follower?
@@ -531,24 +532,36 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
     yield if block_given?
     return false
   end
-  if !pkmn || !pbHiddenMoveAnimation(pkmn)
-    name = pkmn&.name || $player.name
-    pbMessage(_INTL("{1} used {2}!", name, GameData::Move.get(move).name))
-  end
   $stats.fly_count += 1
-  pbFadeOutIn {
-    pbSEPlay("Fly")
-    $game_temp.player_new_map_id    = $game_temp.fly_destination[0]
-    $game_temp.player_new_x         = $game_temp.fly_destination[1]
-    $game_temp.player_new_y         = $game_temp.fly_destination[2]
-    $game_temp.player_new_direction = 2
-    $game_temp.fly_destination = nil
-    $scene.transfer_player
-    $game_map.autoplay
-    $game_map.refresh
-    yield if block_given?
-    pbWait(Graphics.frame_rate / 4)
-  }
+  dir = 0
+  directions = [2, 4, 8, 6]
+  speed = 14
+  while speed > 6
+    $game_player.direction = directions[dir]
+    dir = (dir - 1) % 4
+    pbWait(speed)
+    speed -= 1
+  end
+  pbSEPlay("Flash")
+  $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 10 * Graphics.frame_rate / 20)
+  10.times do
+    $game_player.direction = directions[dir]
+    dir = (dir - 1) % 4
+    pbWait(speed)
+  end
+  pbWait(20)
+  $game_temp.player_new_map_id    = $game_temp.fly_destination[0]
+  $game_temp.player_new_x         = $game_temp.fly_destination[1]
+  $game_temp.player_new_y         = $game_temp.fly_destination[2]
+  $game_temp.player_new_direction = 2
+  $game_temp.fly_destination = nil
+  $scene.transfer_player
+  $game_map.autoplay
+  $game_map.refresh
+  yield if block_given?
+  pbWait(Graphics.frame_rate / 4)
+  $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10 * Graphics.frame_rate / 20)
+  pbWait(30)
   pbEraseEscapePoint
   return true
 end

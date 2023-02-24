@@ -181,7 +181,7 @@
 > I'll give ya a lil' extra for finding such a fine Timburr.
 /eval $player.money += 2500
 /speaker 0
-> {player.name} received $2500!
+> {$player.name} received $2500!
 
 [BRECCIA_PENT,6] # If the Timburr has a negative Attack nature
 /speaker Pent

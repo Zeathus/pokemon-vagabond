@@ -1,7 +1,7 @@
 #===============================================================================
 #
 #===============================================================================
-class MapBottomSprite < Sprite
+class ForecastMapBottomSprite < Sprite
   attr_reader :mapname, :maplocation
 
   TEXT_MAIN_COLOR   = Color.new(248, 248, 248)
@@ -39,7 +39,9 @@ class MapBottomSprite < Sprite
   def refresh
     bitmap.clear
     textpos = [
-      [@mapname,                     160,  34, 0, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+      ["Today",                      224,  34, 2, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+      ["Tomorrow",               224+160,  34, 2, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+      ["In 2 Days",              224+320,  34, 2, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
       [@maplocation,                 160, 394, 0, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
       [@mapdetails, Graphics.width - 160, 394, 1, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR]
     ]
@@ -50,7 +52,7 @@ end
 #===============================================================================
 #
 #===============================================================================
-class PokemonRegionMap_Scene
+class PokemonForecastMap_Scene
   LEFT          = 0
   TOP           = 0
   RIGHT         = 29
@@ -68,6 +70,7 @@ class PokemonRegionMap_Scene
   end
 
   def pbStartScene(as_editor = false, fly_map = false)
+    @day = 0
     @editor   = as_editor
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99998
@@ -104,7 +107,7 @@ class PokemonRegionMap_Scene
       pbMessage(_INTL("The map data cannot be found."))
       return false
     end
-    addBackgroundOrColoredPlane(@sprites, "background", "mapbg", Color.new(0, 0, 0), @viewport)
+    addBackgroundOrColoredPlane(@sprites, "background", "mapbg_forecast", Color.new(0, 0, 0), @viewport)
     @sprites["map"] = IconSprite.new(0, 0, @viewport)
     @sprites["map"].setBitmap("Graphics/Pictures/#{@map[1]}")
     @sprites["map"].x += (Graphics.width - @sprites["map"].bitmap.width) / 2
@@ -121,7 +124,7 @@ class PokemonRegionMap_Scene
         [["Graphics/Pictures/#{graphic[4]}", graphic[2] * SQUARE_WIDTH, graphic[3] * SQUARE_HEIGHT]]
       )
     end
-    @sprites["mapbottom"] = MapBottomSprite.new(@viewport)
+    @sprites["mapbottom"] = ForecastMapBottomSprite.new(@viewport)
     @sprites["mapbottom"].mapname     = pbGetMessage(MessageTypes::RegionNames, mapindex)
     @sprites["mapbottom"].maplocation = pbGetMapLocation(@map_x, @map_y)
     @sprites["mapbottom"].mapdetails  = pbGetMapDetails(@map_x, @map_y)
@@ -131,30 +134,51 @@ class PokemonRegionMap_Scene
       @sprites["player"].x = point_x_to_screen_x(@map_x)
       @sprites["player"].y = point_y_to_screen_y(@map_y)
     end
-    k = 0
-    (LEFT..RIGHT).each do |i|
-      (TOP..BOTTOM).each do |j|
-        healspot = pbGetHealingSpot(i, j)
-        next if !healspot || !$PokemonGlobal.visitedMaps[healspot[0]]
-        @sprites["point#{k}"] = AnimatedSprite.create("Graphics/Pictures/mapTeleport", 2, 16)
-        @sprites["point#{k}"].viewport = @viewport
-        @sprites["point#{k}"].x        = point_x_to_screen_x(i)
-        @sprites["point#{k}"].y        = point_y_to_screen_y(j)
-        @sprites["point#{k}"].visible  = @mode == 1
-        @sprites["point#{k}"].play
-        k += 1
-      end
-    end
+    @sprites["overlay"] = Sprite.new(@viewport)
+    @sprites["overlay"].bitmap = Bitmap.new(@sprites["map"].bitmap.width, @sprites["map"].bitmap.height)
+    @sprites["overlay"].x = @sprites["map"].x
+    @sprites["overlay"].y = @sprites["map"].y
+    pbDrawWeather(0)
     @sprites["cursor"] = AnimatedSprite.create("Graphics/Pictures/mapCursor", 2, 5)
     @sprites["cursor"].viewport = @viewport
     @sprites["cursor"].x        = point_x_to_screen_x(@map_x)
     @sprites["cursor"].y        = point_y_to_screen_y(@map_y)
     @sprites["cursor"].play
+    @sprites["tabcursor"] = AnimatedSprite.create("Graphics/Pictures/mapCursorForecast", 2, 5)
+    @sprites["tabcursor"].viewport = @viewport
+    @sprites["tabcursor"].x = 138
+    @sprites["tabcursor"].y = 18
+    @sprites["tabcursor"].play
+    @sprites["control_tab_left"] = KeybindSprite.new(Input::JUMPUP, "<", 84, 30, @viewport)
+    @sprites["control_tab_right"] = KeybindSprite.new(Input::JUMPDOWN, ">", Graphics.width - 130, 30, @viewport)
     @sprites["help"] = BitmapSprite.new(Graphics.width, 32, @viewport)
     pbSetSystemFont(@sprites["help"].bitmap)
     refresh_fly_screen
     @changed = false
     pbFadeInAndShow(@sprites) { pbUpdate }
+  end
+
+  def pbDrawWeather(day = 0)
+    @sprites["overlay"].bitmap.clear
+    forecast = pbGetForecast(true, day)
+    iconNames = {
+      :None      => nil,
+      :Rain      => "rain",
+      :Sun       => "sun",
+      :Winds     => "winds",
+      :Sandstorm => "sandstorm",
+      :BloodMoon => "blood_moon"
+    }
+    imagepos = []
+    forecast.each do |area|
+      if iconNames[area[1]]
+        area[0].each do |coords|
+          #imagepos.push([_INTL("Graphics/Pictures/Forecast/icon_bg"), coords[0] * 16 - 8, coords[1] * 16 - 8])
+          imagepos.push([_INTL("Graphics/Pictures/Forecast/{1}", iconNames[area[1]]), coords[0] * 16 - 8, coords[1] * 16 - 8])
+        end
+      end
+    end
+    pbDrawImagePositions(@sprites["overlay"].bitmap, imagepos)
   end
 
   def pbEndScene
@@ -265,10 +289,14 @@ class PokemonRegionMap_Scene
     new_x    = 0
     new_y    = 0
     dist_per_frame = 8 * 20 / Graphics.frame_rate
+    flashing_timer = 0
     loop do
       Graphics.update
       Input.update
       pbUpdate
+      flashing_timer += 1
+      flashing_timer = 0 if flashing_timer >= 120
+      @sprites["overlay"].visible = (flashing_timer < 90)
       if x_offset != 0 || y_offset != 0
         x_offset += (x_offset > 0) ? -dist_per_frame : (x_offset < 0) ? dist_per_frame : 0
         y_offset += (y_offset > 0) ? -dist_per_frame : (y_offset < 0) ? dist_per_frame : 0
@@ -307,10 +335,18 @@ class PokemonRegionMap_Scene
         else
           break
         end
-      elsif Input.trigger?(Input::USE) && @mode == 1   # Choosing an area to fly to
+      elsif Input.trigger?(Input::JUMPUP)
+        @day = (@day - 1) % 3
+        @sprites["tabcursor"].x = 138 + 160 * @day
+        pbDrawWeather(@day)
+      elsif Input.trigger?(Input::JUMPDOWN)
+        @day = (@day + 1) % 3
+        @sprites["tabcursor"].x = 138 + 160 * @day
+        pbDrawWeather(@day)
+      elsif Input.trigger?(Input::USE) && @mode == 1 && false   # Choosing an area to fly to
         healspot = pbGetHealingSpot(@map_x, @map_y)
         if healspot && ($PokemonGlobal.visitedMaps[healspot[0]] ||
-           ($DEBUG && Input.press?(Input::CTRL)))
+            ($DEBUG && Input.press?(Input::CTRL)))
           return healspot if @fly_map
           name = pbGetMapNameFromId(healspot[0])
           return healspot if pbConfirmMessage(_INTL("Would you like to use Fly to go to {1}?", name)) { pbUpdate }
@@ -331,7 +367,7 @@ end
 #===============================================================================
 #
 #===============================================================================
-class PokemonRegionMapScreen
+class PokemonForecastMapScreen
   def initialize(scene)
     @scene = scene
   end
@@ -349,16 +385,4 @@ class PokemonRegionMapScreen
     @scene.pbEndScene
     return ret
   end
-end
-
-#===============================================================================
-#
-#===============================================================================
-def pbShowMap(region = -1, wallmap = true)
-  pbFadeOutIn {
-    scene = PokemonRegionMap_Scene.new(region, wallmap)
-    screen = PokemonRegionMapScreen.new(scene)
-    ret = screen.pbStartScreen
-    $game_temp.fly_destination = ret if ret && !wallmap
-  }
 end

@@ -1,11 +1,30 @@
+def pbNextForecast
+  if !$game_variables[DAILY_FORECAST].is_a?(Array)
+    $game_variables[DAILY_FORECAST] = []
+    pbGenerateForecast
+  else
+    $game_variables[DAILY_FORECAST].shift
+    pbGenerateForecast
+  end
+end
+
 def pbGenerateForecast
+  $game_variables[DAILY_FORECAST] = [] if !$game_variables[DAILY_FORECAST].is_a?(Array)
+
+  while $game_variables[DAILY_FORECAST].length < 5
+    $game_variables[DAILY_FORECAST].push(pbGenerateSingleForecast)
+  end
+
+  pbUpdateWeather
+end
+
+def pbGenerateSingleForecast
   areas = [
-    [[[6.5,12],[4.5,11.5]],[:BrecciaPassage,:BrecciaCity,:BrecciaUndergrowth,:DeepBreccia,:BrecciaOutlook]],
-    [[[8,14],[7.5,16]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
-    [[[8,11],[8,9]],[:MicaTown,:FeldsparTown,:MtPegmaHillside,:MtPegmaPeak]],
-    [[[6,8],[4,9]],[:QuartzPassing,:QuartzFalls,:QuartzGrove]],
-    [[[16,15],[18.5,15]],[:WestAndesIsle,:EastAndesIsle]],
-    [[[25,12.5]],[:CanjonValley]]
+    [[[10.5, 5],[7, 5]],[:BrecciaPassage,:BrecciaCity,:BrecciaUndergrowth,:DeepBreccia,:BrecciaOutlook]],
+    [[[14, 7],[14, 9.5]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
+    [[[21, 6]],[:MicaTown,:FeldsparTown,:MtPegmaHillside,:MtPegmaPeak]],
+    [[[17.5, 5]],[:QuartzPassing]],
+    [[[24.5, 15]],[:CanjonValley]]
   ]
 
   desert_areas = [
@@ -32,9 +51,9 @@ def pbGenerateForecast
     :Winds
   ]
 
-  weathers.push(:Sun) if pbGetTimeNow.wday=="Sunday"
-  weathers.push(:Rain) if pbGetTimeNow.wday=="Wednesday"
-  weathers.push(:Winds) if pbGetTimeNow.wday=="Friday"
+  weathers.push(:Sun) if pbGetTimeNow.wday == "Sunday"
+  weathers.push(:Rain) if pbGetTimeNow.wday == "Wednesday"
+  weathers.push(:Winds) if pbGetTimeNow.wday == "Friday"
 
   forecast=[]
   forecast[0]=[] # Array for map ids and weather
@@ -55,26 +74,24 @@ def pbGenerateForecast
   end
 
   bloodmoon = rand(areas.length*7)
-  bloodmoon = rand(areas.length) if pbGetTimeNow.wday=="Friday" && pbGetTimeNow.day % 13 == 0
-  if bloodmoon<areas.length && pbGetTimeNow.day>2
-    Kernel.pbMessage("Blood Moon spawned") if debug_extra?
+  bloodmoon = rand(areas.length) if pbGetTimeNow.wday == "Friday" && pbGetTimeNow.day % 13 == 0
+  if bloodmoon<areas.length && pbGetTimeNow.day > 2
+    echoln "Blood Moon Spawned"
     area=areas[bloodmoon]
     for map in area[1]
-      map = getID(PBMaps,map) if map.is_a?(Symbol)
-      forecast[0][map]=PBFieldWeather::BloodMoon
+      map = getID(PBMaps, map) if map.is_a?(Symbol)
+      forecast[0][map] = :BloodMoon
     end
     for coords in area[0]
       for i in 0...forecast[1].length
         if forecast[1][i][0][0][0]==coords[0] && forecast[1][i][0][0][1]==coords[1]
-          forecast[1][i][1]=PBFieldWeather::BloodMoon
+          forecast[1][i][1] = :BloodMoon
         end
       end
     end
   end
 
-  $game_variables[DAILY_FORECAST]=forecast
-
-  pbUpdateWeather
+  return forecast
 end
 
 def pbUpdateWeather
@@ -105,41 +122,36 @@ def pbUpdateWeather
     end
   end
   if !force_weather
-    forecast = pbGetForecast
+    forecast = pbGetForecast(false, 0)
+    new_weather = :None
     if forecast[$game_map.map_id] && outdoor_map
-      if $game_screen.weather_type != forecast[$game_map.map_id]
-        weather=forecast[$game_map.map_id]
-        if weather==:None
-          $game_screen.weather(0,0,0)
-        elsif weather==:Sun
-          if pbGetTimeNow.hour<=17 && pbGetTimeNow.hour>=5
-            $game_screen.weather(weather,5,200)
-          else
-            $game_screen.weather(0,0,0)
-          end
-        elsif weather==:BloodMoon
-          if pbGetTimeNow.hour>=18
-            $game_screen.weather(weather,5,200)
-          else
-            $game_screen.weather(0,0,0)
-          end
-        else
-          $game_screen.weather(weather,5,200)
+      new_weather = forecast[$game_map.map_id]
+      if new_weather == :BloodMoon
+        if pbGetTimeNow.hour < 18
+          new_weather = :None
         end
       end
-    else
-      $game_screen.weather(0,0,0)
+    end
+    if new_weather != $game_screen.weather_type
+      if new_weather == :None
+        $game_screen.weather(0,0,0)
+      else
+        $game_screen.weather(new_weather, 5, 200)
+      end
     end
   end
   pbUpdateVFX
 end
 
-def pbGetForecast(index=0)
-  if $game_variables[DAILY_FORECAST].is_a?(Array) && !$game_variables[DAILY_FORECAST][index].is_a?(Array)
-    $game_variables[DAILY_FORECAST]=0
-  end
-  pbGenerateForecast if $game_variables[DAILY_FORECAST]==0
-  return $game_variables[DAILY_FORECAST][index]
+EventHandlers.add(:on_enter_map, :update_weather,
+  proc { |_old_map_id|
+    pbUpdateWeather
+  }
+)
+
+def pbGetForecast(map_data = false, index = 0)
+  pbGenerateForecast if !$game_variables[DAILY_FORECAST].is_a?(Array) || !$game_variables[DAILY_FORECAST][index]
+  return $game_variables[DAILY_FORECAST][index][map_data ? 1 : 0]
 end
 
 

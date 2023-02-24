@@ -9030,3 +9030,14 @@ TotalPP = 10
 Target = UserAndAllies
 FunctionCode = AffinityBoostNextTurn
 Description = The user thanks its allies for all their support and boosts morale. The user and its allies receive an Affinity Boost for their next move.
+#-------------------------------
+[CRASHTEST]
+Name = Crash Test
+Type = QMARKS
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = NearOther
+Priority = 5
+FunctionCode = CrashTest
+Description = Test for crashes.

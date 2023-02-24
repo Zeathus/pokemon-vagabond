@@ -70,7 +70,7 @@ class PokemonPokegear_Scene
     @commands = commands
     @index = 0
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99998
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     if $player.female? && pbResolveBitmap(sprintf("Graphics/Pictures/Pokegear/bg_f"))
@@ -162,7 +162,7 @@ MenuHandlers.add(:pokegear_menu, :map, {
   "icon_name" => "map",
   "order"     => 10,
   "effect"    => proc { |menu|
-    pbFadeOutIn {
+    pbFadeOutIn(99998) {
       scene = PokemonRegionMap_Scene.new(-1, false)
       screen = PokemonRegionMapScreen.new(scene)
       ret = screen.pbStartScreen
@@ -173,6 +173,19 @@ MenuHandlers.add(:pokegear_menu, :map, {
       end
     }
     next $game_temp.fly_destination
+  }
+})
+
+MenuHandlers.add(:pokegear_menu, :forecast, {
+  "name"      => _INTL("Forecast"),
+  "icon_name" => "forecast",
+  "order"     => 15,
+  "effect"    => proc { |menu|
+    pbFadeOutIn(99998) {
+      scene = PokemonForecastMap_Scene.new(-1, false)
+      screen = PokemonForecastMapScreen.new(scene)
+      screen.pbStartScreen
+    }
   }
 })
 

@@ -136,7 +136,7 @@ ShowArea = true
 Bicycle = false
 BicycleAlways = false
 MapPosition = 0,4,11
-MapSize = 2,1111
+MapSize = 2,1
 #-------------------------------
 [017]
 # Breccia PokéCenter

@@ -364,7 +364,7 @@ class CraftScene
     @sprites={}
     @sprites["background"]=IconSprite.new(0,0,@viewport)
     @sprites["background"].setBitmap("Graphics/Pictures/Craft/bg")
-    @item_x = 246
+    @item_x = 312
     @item_text_x = @item_x + 24
     @item_1_y = 52
     @item_2_y = 348
@@ -389,13 +389,13 @@ class CraftScene
     @sprites["item1text"].x=@item_text_x
     @sprites["item1text"].y=@item_1_y - 32
     @sprites["item2text"].x=@item_text_x
-    @sprites["item2text"].y=@item_1_y - 32 + 46
+    @sprites["item2text"].y=@item_1_y - 32 + 90
     @sprites["item3text"].x=@item_text_x
-    @sprites["item3text"].y=@item_1_y - 32 + 92
+    @sprites["item3text"].y=@item_1_y - 32 + 180
     @sprites["item4text"].x=@item_text_x
     @sprites["item4text"].y=@item_2_y - 32
     @sprites["item5text"].x=@item_text_x
-    @sprites["item5text"].y=@item_2_y - 32 + 46
+    @sprites["item5text"].y=@item_2_y - 32 + 60
     for i in 1..5
       @sprites[_INTL("item{1}text",i)].width = 300
       @sprites[_INTL("item{1}text",i)].height = 128
@@ -413,7 +413,7 @@ class CraftScene
     @sprites["itemtextwindow"]=Window_UnformattedTextPokemon.new("")
     pbPrepareWindow(@sprites["itemtextwindow"])
     @sprites["itemtextwindow"].x=40
-    @sprites["itemtextwindow"].y=Graphics.height-96-14
+    @sprites["itemtextwindow"].y=Graphics.height-96-16
     @sprites["itemtextwindow"].width=Graphics.width-64
     @sprites["itemtextwindow"].height=128
     @sprites["itemtextwindow"].baseColor=Color.new(248,248,248)

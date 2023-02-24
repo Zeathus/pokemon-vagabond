@@ -148,6 +148,7 @@ GameData::Weather.register({
   :id               => :Sun,
   :id_number        => 7,
   :category         => :Sun,
+  :graphics         => [["sunray", "moonray"]],
   :tone_proc        => proc { |strength|
     next Tone.new(64, 64, 32, 0)
   }

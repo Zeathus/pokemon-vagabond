@@ -343,7 +343,10 @@ def pbRemoveDestination(mapid)
   $game_variables[TELEPORT_LIST]=destinations
 end
 
-def pbTeleportDialog(name="Teleporter", nodialog=false, map=TELEPORT_MAP)
+def pbTeleportDialog(name="Teleporter", nodialog=false)
+  $game_switches[HAS_TELEPORT] = true
+  return
+
   destinations=$game_variables[TELEPORT_LIST]
 
   if destinations.length <= 1

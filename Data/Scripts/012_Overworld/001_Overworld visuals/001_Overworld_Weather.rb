@@ -41,6 +41,7 @@ module RPG
       @sun_magnitude        = 0   # +/- maximum addition to sun tone
       @sun_strength         = 0   # Current addition to sun tone (0 to @sun_magnitude)
       @time_until_flash     = 0
+      @beam_timer           = 0
       @sprites              = []
       @sprite_lifetimes     = []
       @tiles                = []
@@ -166,6 +167,9 @@ module RPG
             sprite.z       = 1000
             sprite.ox      = @ox
             sprite.oy      = @oy
+            sprite.zoom_x  = 1.0
+            sprite.zoom_y  = 1.0
+            sprite.angle   = 0
             sprite.opacity = 0
             @sprites[i] = sprite
           end
@@ -181,6 +185,9 @@ module RPG
             sprite.z       = 1000
             sprite.ox      = @ox
             sprite.oy      = @oy
+            sprite.zoom_x  = 1.0
+            sprite.zoom_y  = 1.0
+            sprite.angle   = 0
             sprite.opacity = 0
             @new_sprites[i] = sprite
           end
@@ -248,6 +255,8 @@ module RPG
         sprite.x = @ox - sprite.bitmap.width + rand(Graphics.width + (sprite.bitmap.width * 2))
         sprite.y = @oy - sprite.bitmap.height + rand(Graphics.height + (sprite.bitmap.height * 2))
         lifetimes[index] = (rand(30...50)) * 0.01   # 0.3-0.5 seconds
+      elsif @weatherTypes[weather_type][0].category == :Sun
+
       else
         x_speed = @weatherTypes[weather_type][0].particle_delta_x
         y_speed = @weatherTypes[weather_type][0].particle_delta_y
@@ -285,6 +294,27 @@ module RPG
       # Update visibility/position/opacity of sprite
       if @weatherTypes[weather_type][0].category == :Rain && index.odd?   # Splash
         sprite.opacity = (lifetimes[index] < 0.2) ? 255 : 0   # 0.2 seconds
+      elsif @weatherTypes[weather_type][0].category == :Sun
+        visible = (index < 10)
+        if visible
+          nighttime = (pbGetTimeNow.hour > 17 || pbGetTimeNow.hour < 5)
+          visible = nighttime == (index % 2 == 1)
+        end
+        if !visible
+          sprite.opacity = 0
+        else
+          cycle = (@beam_timer / (360.0 * 4))
+          position = (index / 2).floor + cycle
+          sprite.opacity = 128 + Math.sin(Math::PI * 2 * @beam_timer / 360) * 64
+          sprite.ox = -100
+          sprite.oy = -80
+          sprite.x = -140
+          sprite.y = -110
+          sprite.angle = -42 + 20 * position
+          zoom = 1.0 - 0.2 * (position - 2).abs
+          sprite.zoom_x = zoom
+          sprite.zoom_y = zoom
+        end
       else
         dist_x = @weatherTypes[weather_type][0].particle_delta_x * delta_t
         dist_y = @weatherTypes[weather_type][0].particle_delta_y * delta_t
@@ -407,7 +437,7 @@ module RPG
         tone_gray = base_tone.gray
       end
       # Modify base tone
-      if weather_type == :Sun
+      if weather_type == :Sun && false
         @sun_magnitude = weather_max if @sun_magnitude != weather_max && @sun_magnitude != -weather_max
         @sun_magnitude *= -1 if (@sun_magnitude > 0 && @sun_strength > @sun_magnitude) ||
                                 (@sun_magnitude < 0 && @sun_strength < 0)
@@ -492,6 +522,7 @@ module RPG
           @time_until_flash = rand(1..12) * 0.5   # 0.5-6 seconds
         end
       end
+      @beam_timer = (@beam_timer + 1) % (360 * 4)
       @viewport.update
       # Update weather particles (raindrops, snowflakes, etc.)
       if @weatherTypes[@type] && @weatherTypes[@type][1].length > 0

@@ -58,6 +58,13 @@ class Battle
       end
       ret.push(t)
     end
+    if [:AllAllies].include?(move.target)
+      t = []
+      user.eachAlly do |b|
+        t.push(b)
+      end
+      ret.push(t)
+    end
     if [:AllNearOthers].include?(move.target)
       t = []
       eachBattler do |b|

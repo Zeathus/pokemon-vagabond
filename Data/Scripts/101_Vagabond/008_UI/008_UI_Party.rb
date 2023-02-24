@@ -2469,7 +2469,7 @@ class PokemonScreen
   def pbTakeMail(pkmn)
     if !pkmn.hasItem?
       pbDisplay(_INTL("{1} isn't holding anything.",pkmn.name))
-    elsif !$bag.pbCanStore?(pkmn.item)
+    elsif !$bag.can_add?(pkmn.item)
       pbDisplay(_INTL("The Bag is full. The Pokémon's item could not be removed."))
     elsif pkmn.mail
       if pbConfirm(_INTL("Send the removed mail to your PC?"))
@@ -2481,12 +2481,12 @@ class PokemonScreen
         end
       elsif pbConfirm(_INTL("If the mail is removed, the message will be lost. OK?"))
         pbDisplay(_INTL("Mail was taken from the Pokémon."))
-        $bag.pbStoreItem(pkmn.item)
+        $bag.add(pkmn.item)
         pkmn.item = nil
         pkmn.mail=nil
       end
     else
-      $bag.pbStoreItem(pkmn.item)
+      $bag.add(pkmn.item)
       itemname=GameData::Item.get(pkmn.item).name
       pbDisplay(_INTL("Received the {1} from {2}.",itemname,pkmn.name))
       pkmn.item = nil
@@ -2508,8 +2508,8 @@ class PokemonScreen
       pbDisplay(_INTL("{1} is already holding {2}.\1",pkmn.name,itemname))
       if pbConfirm(_INTL("Would you like to switch the two items?"))
         $bag.pbDeleteItem(item)
-        if !$bag.pbStoreItem(pkmn.item)
-          if !$bag.pbStoreItem(item) # Compensate
+        if !$bag.add(pkmn.item)
+          if !$bag.add(item) # Compensate
             raise _INTL("Can't re-store deleted item in bag")
           end
           pbDisplay(_INTL("The Bag is full. The Pokémon's item could not be removed."))
@@ -2521,7 +2521,7 @@ class PokemonScreen
               pbDisplay(_INTL("The {1} was taken and replaced with the {2}.",itemname,thisitemname))
               return true
             else
-              if !$bag.pbStoreItem(item) # Compensate
+              if !$bag.add(item) # Compensate
                 raise _INTL("Can't re-store deleted item in bag")
               end
             end

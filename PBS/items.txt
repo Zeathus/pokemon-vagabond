@@ -410,9 +410,9 @@ Price = 5000
 Flags = Fling_100
 Description = The fossil of an ancient Pokémon that once lived in the sea. What it looked like is a mystery.
 #-------------------------------
-[PRETTYFEATHER]
-Name = Pretty Feather
-NamePlural = Pretty Feathers
+[PRETTYWING]
+Name = Pretty Wing
+NamePlural = Pretty Wings
 Pocket = 1
 Price = 1000
 Flags = Fling_20
@@ -6754,8 +6754,8 @@ Flags = Fling_80
 Description = A gemstone that emits an impulsive aura. It can increase a Pokemon's Speed to its limits.
 #-------------------------------
 [TROPICALINCENSE]
-Name = Sea Incense
-NamePlural = Sea Incenses
+Name = Tropical Incense
+NamePlural = Tropical Incenses
 Pocket = 1
 Price = 2000
 Flags = Fling_10

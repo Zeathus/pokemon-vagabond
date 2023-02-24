@@ -477,7 +477,7 @@ class Battle::Move
     # Affinity Boost
     if user.affinityBooster
       if (user.hasActiveAbility?(:AQUAVORTEX) && type == :WATER) ||
-         (user.hasActiveAbility?(:FLAREVORTEX) && type == :FIRE) ||
+         (user.hasActiveAbility?(:FLAMEVORTEX) && type == :FIRE) ||
          (user.hasActiveAbility?(:FLORAVORTEX) && type == :GRASS)
         multipliers[:final_damage_multiplier] *= 1.6
       else

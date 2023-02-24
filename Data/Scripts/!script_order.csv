@@ -475,7 +475,7 @@
 @@001_Data
 001_Bosses
 002_Jobs
-003_Trades
+003_Recipes
 004_Shops
 005_StadiumShops
 006_StadiumCups
@@ -528,7 +528,7 @@
 004_UI_Quest
 005_UI_QuestMini
 006_UI_Stadium
-007_UI_Teleport
+007_UI_Forecast
 008_UI_Party
 009_UI_Summary
 010_UI_Jobs

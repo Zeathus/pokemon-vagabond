@@ -524,8 +524,8 @@ def pbPauseMenu
         }
       else
         pbFadeOutIn {
-          scene = PokemonTrainerCard_Scene.new
-          screen = PokemonTrainerCardScreen.new(scene)
+          scene = PokemonJobs_Scene.new
+          screen = PokemonJobsScreen.new(scene)
           screen.pbStartScreen
         }
       end
@@ -556,15 +556,35 @@ def pbPauseMenu
       end
     when 8 # Phone
       if shortcut
-        pbShowMap(-1,false)
+        pbFadeOutIn(99998) {
+          scene = PokemonRegionMap_Scene.new(-1, false)
+          screen = PokemonRegionMapScreen.new(scene)
+          ret = screen.pbStartScreen
+          if ret
+            $game_temp.fly_destination = ret
+          end
+        }
       else
-        pbFadeOutIn {
+        pbFadeOutIn(99998) {
           scene = PokemonPokegear_Scene.new
           screen = PokemonPokegearScreen.new(scene)
           screen.pbStartScreen
         }
       end
+      if $game_temp.fly_destination
+        break
+      end
     end
   end
   pause_screen.pbEndPauseScreen
+  if $game_temp.fly_destination
+    pkmn = [
+      :ABRA, :KADABRA,
+      :NATU, :XATU,
+      :ELGYEM, :BEHEEYEM,
+      :RALTS, :KIRLIA
+    ]
+    pkmn = Pokemon.new(pkmn.shuffle[0], 10)
+    pbFlyToNewLocation(pkmn)
+  end
 end

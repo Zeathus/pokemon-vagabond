@@ -296,32 +296,20 @@ class Battle::Move::CrashTest < Battle::Move
 
     @battle.battlers[0].item = :LIFEORB
     @battle.battlers[1].item = :LIFEORB
-    @battle.battlers[2].item = 0
-    @battle.battlers[3].item = 0
-    viewport = Viewport.new(0,0,640,480)
-    viewport.z = 999999
-    sprite = Sprite.new(viewport)
-    bitmap = Bitmap.new(512, 200)
-    pbSetSystemFont(bitmap)
-    sprite.bitmap = bitmap
-    sprite.x = Graphics.width / 2 - 256
-    sprite.y = Graphics.height / 2 - 100
-    base = Color.new(252,252,252)
-    shadow = Color.new(0,0,0)
+    @battle.battlers[2].item = nil
+    @battle.battlers[3].item = nil
 
-    for c in cpus[1..1]
+    for c in cpus
 
       @battle.pbDisplay(_INTL("Attacker = {1}", c.name))
 
-      for i in 1..676
+      moves = GameData::Move.keys
 
-        move = self.pbCreateMove(@battle, i)
+      for i in 0...moves.length
 
-        bitmap.clear
-        textpos=[["Move ID: "+i.to_s + " | " + move.name,256,100,2,base,shadow,1]]
-        pbDrawTextPositions(bitmap,textpos)
-        sprite.update
-        viewport.update
+        move = Battle::Move.from_pokemon_move(@battle, Pokemon::Move.new(moves[i]))
+
+        echoln _INTL("({1} / {2}): {3}", i + 1, moves.length, move.name)
         Graphics.update
         Input.update
 
@@ -433,9 +421,6 @@ class Battle::Move::CrashTest < Battle::Move
         end
       end
     end
-
-    sprite.dispose
-    viewport.dispose
 
     @battle.pbDisplay("Finished Unit Test")
 

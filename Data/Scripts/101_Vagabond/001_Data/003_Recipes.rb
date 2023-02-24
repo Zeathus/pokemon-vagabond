@@ -1,4 +1,4 @@
-def pbTrades(id)
+def pbRecipes(id)
 
   id = id.downcase
 
@@ -19,8 +19,10 @@ def pbTrades(id)
     trades = [
       ["Miracle Seed",[:RINDOBERRY,2,:DAMPROCK,1],[:MIRACLESEED,1,:DAMPROCK,1]],
       #-10% grass-type damage
-      ["Nature's Guard",[:MIRACLESEED,1,:RINDOBERRY,3,:TINYMUSHROOM,2],[:NATURESGUARD,1]],
+      ["Carved Rafflesia",[:MIRACLESEED,1,:RINDOBERRY,3,:TINYMUSHROOM,2],[:CARVEDRAFFLESIA,1]],
       ["Beetle Bark",[:SILVERPOWDER,1,:TANGABERRY,3,:HONEY,1],[:BEETLEBARK,1]],
+      ["Face Mask",[:POISONBARB,1,:KEBIABERRY,3,:PECHABERRY,2],[:FACEMASK,1]],
+      ["Gust Fan",[:SHARPBEAK,1,:COBABERRY,3,:PRETTYWING,1],[:GUSTFAN,1]],
       ["Souvenir",[:RAREBONE,1],[:ALOLANSOUVENIR,1]],
       #+25% powder-move accuracy
       ["All-Seeing Totem",[:WIDELENS,1,:SILVERPOWDER,1,:MENTALHERB,1],[:ALLSEEINGTOTEM,1]],
@@ -34,7 +36,7 @@ def pbTrades(id)
       ["Charcoal",[:ENERGYROOT,1,:HEATROCK,1],[:CHARCOAL,1,:HEATROCK,1]],
       ["Heat Medallion",[:CHARCOAL,1,:OCCABERRY,3,:REDSHARD,2],[:HEATMEDALLION,1]],
       ["Draco Shield",[:DRAGONFANG,1,:HABANBERRY,3,:QUICKPOWDER,1],[:DRACOSHIELD,1]],
-      ["Iron Gauntlets",[:METALCOAT,1,:BABIRIBERRY,3,:METALPOWDER,1],[:IRONGAUNTLETS,1]],
+      ["Silver Gauntlets",[:METALCOAT,1,:BABIRIBERRY,3,:METALPOWDER,1],[:SILVERGAUNTLETS,1]],
       ["Rocky Helmet",[:YELLOWSHARD,7,:METALCOAT,1],[:ROCKYHELMET,1]],
       ["Sturdy Helmet",[:GREENSHARD,7,:METALCOAT,1],[:STURDYHELMET,1]],
       ["Heavy Stone",[:HARDSTONE,1,:IRONBALL,1],[:HEAVYSTONE,1]],
@@ -47,8 +49,10 @@ def pbTrades(id)
     trades = [
       ["Mystic Water",[:SHOALSHELL,2,:BLUESHARD,2],[:MYSTICWATER,1]],
       #-20% water-type damage
-      ["Ocean Necklace",[:MYSTICWATER,1,:PASSHOBERRY,3,:BLUESHARD,2],[:OCEANNECKLACE,1]],
-      ["Frost Bracelet",[:NEVERMELTICE,1,:YACHEBERRY,3,:SHOALSHELL,1],[:FROSTBRACELET,1]],
+      ["Scale Necklace",[:MYSTICWATER,1,:PASSHOBERRY,3,:BLUESHARD,2],[:SCALENECKLACE,1]],
+      ["Tundra Torc",[:NEVERMELTICE,1,:YACHEBERRY,3,:SHOALSHELL,1],[:TUNDRATORC,1]],
+      ["Joy Pendant",[:PIXIEDUST,1,:ROSELIBERRY,3,:PEARLSTRING,1],[:JOYPENDANT,1]],
+      ["Eerily Regular Ring",[:SILKSCARF,1,:CHILANBERRY,3,:PEARL,1],[:EERILYREGULARRING,1]],
       ["Pearl String",[:PEARL,3],[:PEARLSTRING,1]],
       ["Amulet Coin",[:BIGNUGGET,1],[:AMULETCOIN,1]],
       ["Shed Shell",[:SHOALSHELL,5,:QUICKPOWDER,1],[:SHEDSHELL,1]],
@@ -79,6 +83,8 @@ def pbTrades(id)
   return trades
 end
 
+def pbPlayerRecipes
 
+end
 
 

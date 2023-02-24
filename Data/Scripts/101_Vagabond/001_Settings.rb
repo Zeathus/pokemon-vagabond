@@ -56,6 +56,7 @@ DEBUG_EXTRA         = 125
 UNSTOPPABLE         = 146
 FINAL_BATTLE        = 147
 POKEPLAYER          = 151
+HAS_TELEPORT        = 152
 FRIENDOFELEMENTS    = 209
 
 # ----------------------------------------------------------------------
