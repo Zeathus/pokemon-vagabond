@@ -123,7 +123,7 @@ module Supplementals
   # Show a splash on the target as they take damage to indicate critical hits and type effectiveness
   CRITICAL_SPLASH = true
   WEAKNESS_SPLASH = true
-  RESISTED_SPLASH = true
+  RESISTED_SPLASH = false
   # Whether or not to show the regular message boxes telling the player about criticals and type effectiveness
   SHOW_CRITICAL_MESSAGE = !CRITICAL_SPLASH
   SHOW_WEAKNESS_MESSAGE = !WEAKNESS_SPLASH
@@ -154,6 +154,35 @@ module Supplementals
   BURN_TYPE_EFFECT = true
   # Grass-types skip accuracy checks for Leech Seed
   LEECH_SEED_TYPE_EFFECT = true
+
+  # Replace Freeze with Frostbite (this option alone does very little, Freeze and Frostbite both exist)
+  # To fully implement Frostbite, replace "Freeze" with "Frostbite" in all function codes in moves.txt
+  FROSTBITE_REPLACE_FREEZE = true
+
+  # Whether or not major status conditions (Burn, Poison, etc.) should disappear after a set number of turns.
+  # You can reapply the same status to refresh the number of turns, but cannot overwrite the status with a different one.
+  # Reapply Toxic to let it build up more damage.
+  FADE_MAJOR_STATUS_CONDITIONS = true
+  # Below you specify how many turns each status effect should last
+  BURN_TURNS      = 5
+  FROSTBITE_TURNS = 5
+  POISON_TURNS    = 5
+  TOXIC_TURNS     = 5
+  PARALYSIS_TURNS = 5
+
+  # Whether or not sleep should always last the same number of turns when infilcted by an opponent.
+  USE_FIXED_SLEEP_TURNS = false
+  FIXED_SLEEP_TURNS = 3  # 3 is the same as Rest
+  # Whether or not a Pokemon will be immune to sleep for a while after waking up.
+  # Immunity lasts for as many turns as the Pokemon was asleep.
+  SLEEP_WAKE_UP_IMMUNITY = false
+  # Whether a Pokémon should wake up from sleep if it is hit by a move (indirect damage does not wake)
+  # Dream Eater is does not wake the target.
+  SLEEP_DAMAGE_WAKE_UP = false
+  
+  # If FADE_MAJOR_STATUS_CONDITIONS is enabled, causes paralysis to always and only trigger its
+  # immobilizing effect the turn it dissipates
+  PARALYZE_ON_PARALYSIS_FADE = false
 
   # Whether or not regular wild Pokemon should be scaled to the player level
   SCALE_WILD_POKEMON = false

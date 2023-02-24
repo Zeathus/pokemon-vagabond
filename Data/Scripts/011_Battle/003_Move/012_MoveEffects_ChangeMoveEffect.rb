@@ -262,7 +262,11 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
     when 0, 1
       target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
     when 9
-      target.pbFreeze if target.pbCanFreeze?(user, false, self)
+      if Supplementals::FROSTBITE_REPLACE_FREEZE
+        target.pbFrostbite if target.pbCanFrostbite?(user, false, self)
+      else
+        target.pbFreeze if target.pbCanFreeze?(user, false, self)
+      end
     when 5
       if target.pbCanLowerStatStage?(:ATTACK, user, self)
         target.pbLowerStatStage(:ATTACK, 1, user)

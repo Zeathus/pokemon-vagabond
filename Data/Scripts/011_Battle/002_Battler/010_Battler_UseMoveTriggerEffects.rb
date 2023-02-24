@@ -99,6 +99,14 @@ class Battle::Battler
           b.pbCureStatus
         end
       end
+      if Supplementals::SLEEP_DAMAGE_WAKE_UP
+        targets.each do |b|
+          next if b.damageState.unaffected || b.damageState.substitute
+          next if b.status != :SLEEP
+          next if !move.wakesTarget?
+          b.pbCureStatus
+        end
+      end
     end
     # Destiny Bond
     # NOTE: Although Destiny Bond is similar to Grudge, they don't apply at

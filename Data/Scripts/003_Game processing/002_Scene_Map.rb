@@ -164,6 +164,7 @@ class Scene_Map
       updateMaps
       $game_system.update
       $game_screen.update
+      pbGetTimeNow.update if Supplementals::USE_INGAME_TIME
       pbUpdateTextBubbles
       break unless $game_temp.player_transferring
       transfer_player(false)

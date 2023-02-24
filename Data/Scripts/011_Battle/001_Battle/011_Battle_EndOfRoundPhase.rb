@@ -205,11 +205,44 @@ class Battle
   # End Of Round deal damage from status problems
   #=============================================================================
   def pbEORStatusProblemDamage(priority)
+    if Supplementals::FADE_MAJOR_STATUS_CONDITIONS
+      # Reduce status turn count
+      priority.each do |battler|
+        next if !([:POISON, :FROSTBITE, :BURN, :PARALYSIS].include?(battler.status))
+        next if battler.statusCount == 0
+        if battler.statusCount > 0
+          battler.statusCount -= 1
+        elsif battler.statusCount < 0
+          battler.statusCount += 1
+        end
+        if battler.statusCount == 0
+          oldStatus = battler.status
+          battler.pbCureStatus(false)
+          case oldStatus
+          when :POISON    then pbDisplay(_INTL("{1}'s poison wore off.", battler.pbThis))
+          when :BURN      then pbDisplay(_INTL("{1}'s burn wore off.", battler.pbThis))
+          when :PARALYSIS then pbDisplay(_INTL("{1}'s paralysis wore off.", battler.pbThis))
+          when :FROSTBITE then pbDisplay(_INTL("{1}'s frostbite wore off.", battler.pbThis))
+          end
+        end
+      end
+    end
+    if Supplementals::SLEEP_WAKE_UP_IMMUNITY
+      # Reduce well rested
+      priority.each do |battler|
+        next if battler.status == :SLEEP
+        next if battler.effects[PBEffects::WellRested] <= 0
+        battler.effects[PBEffects::WellRested] -= 1
+        if battler.effects[PBEffects::WellRested] == 0
+          pbDisplay(_INTL("{1} is no longer well rested.", battler.pbThis))
+        end
+      end
+    end
     # Damage from poisoning
     priority.each do |battler|
       next if battler.fainted?
       next if battler.status != :POISON
-      if battler.statusCount > 0
+      if battler.statusCount < 0
         battler.effects[PBEffects::Toxic] += 1
         battler.effects[PBEffects::Toxic] = 16 if battler.effects[PBEffects::Toxic] > 16
       end
@@ -229,7 +262,7 @@ class Battle
       elsif battler.takesIndirectDamage?
         battler.droppedBelowHalfHP = false
         dmg = battler.totalhp / 8
-        dmg = battler.totalhp * battler.effects[PBEffects::Toxic] / 16 if battler.statusCount > 0
+        dmg = battler.totalhp * battler.effects[PBEffects::Toxic] / 16 if battler.statusCount < 0
         battler.pbContinueStatus { battler.pbReduceHP(dmg, false) }
         battler.pbItemHPHealCheck
         battler.pbAbilitiesOnDamageTaken
@@ -243,6 +276,17 @@ class Battle
       battler.droppedBelowHalfHP = false
       dmg = (Settings::MECHANICS_GENERATION >= 7) ? battler.totalhp / 16 : battler.totalhp / 8
       dmg = (dmg / 2.0).round if battler.hasActiveAbility?(:HEATPROOF)
+      battler.pbContinueStatus { battler.pbReduceHP(dmg, false) }
+      battler.pbItemHPHealCheck
+      battler.pbAbilitiesOnDamageTaken
+      battler.pbFaint if battler.fainted?
+      battler.droppedBelowHalfHP = false
+    end
+    # Damage from frostbite
+    priority.each do |battler|
+      next if battler.status != :FROSTBITE || !battler.takesIndirectDamage?
+      battler.droppedBelowHalfHP = false
+      dmg = (Settings::MECHANICS_GENERATION >= 7) ? battler.totalhp / 16 : battler.totalhp / 8
       battler.pbContinueStatus { battler.pbReduceHP(dmg, false) }
       battler.pbItemHPHealCheck
       battler.pbAbilitiesOnDamageTaken
@@ -640,6 +684,8 @@ class Battle
           pbDisplay(_INTL("{1} gathered all its energy to break through its paralysis so you wouldn't worry!", battler.pbThis))
         when :FROZEN
           pbDisplay(_INTL("{1} melted the ice with its fiery determination so you wouldn't worry!", battler.pbThis))
+        when :FROSTBITE
+          pbDisplay(_INTL("{1} warmed up with its fiery determination so you wouldn't worry!", battler.pbThis))
         end
       end
     end

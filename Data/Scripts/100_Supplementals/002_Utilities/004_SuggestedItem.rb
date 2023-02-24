@@ -77,6 +77,10 @@ def pbGetSuggestedMedicine(pkmn)
     :ICEHEAL,
     :ASPEARBERRY
   ]
+  items[:FROSTBITE] = [
+    :ICEHEAL,
+    :ASPEARBERRY
+  ]
 
   for i in 0...items[pkmn.status].length
     if $bag.quantity(items[pkmn.status][i]) > 0

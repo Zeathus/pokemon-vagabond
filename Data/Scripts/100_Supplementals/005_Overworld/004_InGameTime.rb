@@ -48,8 +48,6 @@ class CustomTime
       self.sec += 30
       self.min += 1 if sec >= 60
       self.hour += 1 if min >= 60
-      pbUpdateWeather if min >= 60
-      pbGenerateForecast if hour >= 24
       self.day += 1 if hour >= 24
       self.sec = 0 if sec >= 60
       self.min = 0 if min >= 60
@@ -86,8 +84,6 @@ class CustomTime
     self.day += 1
     self.hour = h
     self.min = m
-    pbGenerateForecast
-    pbUpdateWeather
   end
 
   def to_i

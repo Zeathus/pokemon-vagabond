@@ -283,7 +283,7 @@ module Battle::DebugMixin
     when :SLEEP
       ret += " " + _INTL("({1} rounds left)", battler.statusCount)
     when :POISON
-      if battler.statusCount > 0
+      if battler.statusCount < 0
         ret += " " + _INTL("(toxic, {1}/16)", battler.effects[PBEffects::Toxic])
       end
     end
@@ -332,7 +332,7 @@ module Battle::DebugMixin
     when :SLEEP
       ret += " " + _INTL("({1} rounds left)", pkmn.statusCount)
     when :POISON
-      ret += " " + _INTL("(toxic)") if pkmn.statusCount > 0
+      ret += " " + _INTL("(toxic)") if pkmn.statusCount < 0
     end
     ret += "\r\n"
     # Ability

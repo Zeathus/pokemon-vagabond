@@ -113,7 +113,10 @@ ItemHandlers::CanUseInBattle.add(:PARALYZEHEAL, proc { |item, pokemon, battler, 
 ItemHandlers::CanUseInBattle.copy(:PARALYZEHEAL, :PARLYZHEAL, :CHERIBERRY)
 
 ItemHandlers::CanUseInBattle.add(:ICEHEAL, proc { |item, pokemon, battler, move, firstAction, battle, scene, showMessages|
-  next pbBattleItemCanCureStatus?(:FROZEN, pokemon, scene, showMessages)
+  if pokemon.status == :FROZEN || pokemon.status == :FROSTBITE
+    next pbBattleItemCanCureStatus?(pokemon.status, pokemon, scene, showMessages)
+  end
+  next false
 })
 
 ItemHandlers::CanUseInBattle.copy(:ICEHEAL, :ASPEARBERRY)

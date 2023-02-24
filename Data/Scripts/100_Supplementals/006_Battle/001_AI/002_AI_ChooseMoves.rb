@@ -554,6 +554,7 @@ class Battle
             healing_switch = 20 if battler.status == :POISON
             healing_switch += 10 * battler.effects[PBEffects::Toxic] if battler.status == :POISON if battler.effects[PBEffects::Toxic] > 0
             healing_switch = 15 if battler.status == :BURN
+            healing_switch = 15 if battler.status == :FROSTBITE
             healing_switch = 15 if battler.status == :PARALYSIS
             healing_switch = 40 if battler.status == :SLEEP
             healing_switch = 40 if battler.status == :FREEZE

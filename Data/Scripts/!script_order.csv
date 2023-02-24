@@ -440,6 +440,7 @@
 001_ScaleLevel
 002_Abilities
 003_Modifier
+004_Moves
 @@@001_AI
 001_AI_EffectScores
 002_AI_ChooseMoves
