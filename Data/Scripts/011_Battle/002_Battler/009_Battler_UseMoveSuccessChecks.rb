@@ -266,10 +266,19 @@ class Battle::Battler
       end
     end
     # Paralysis
-    if @status == :PARALYSIS && @battle.pbRandom(100) < 25
-      pbContinueStatus
-      @lastMoveFailed = true
-      return false
+    if Supplementals::FADE_MAJOR_STATUS_CONDITIONS && Supplementals::PARALYZE_ON_PARALYSIS_FADE
+      if @status == :PARALYSIS && self.statusCount == 1
+        pbContinueStatus
+        pbCureStatus(false)
+        @battle.pbDisplay(_INTL("{1}'s paralysis wore off.", pbThis))
+        return false
+      end
+    else
+      if @status == :PARALYSIS && @battle.pbRandom(100) < 25
+        pbContinueStatus
+        @lastMoveFailed = true
+        return false
+      end
     end
     # Infatuation
     if @effects[PBEffects::Attract] >= 0

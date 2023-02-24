@@ -344,7 +344,7 @@ class Battle
       @battle_log.write(_INTL("    Types:   {1}/{2} - {3}\n", b.types[0], b.types[1], b.pokemon.affinities[0]))
     end
     @battle_log.write(_INTL("    HP:      {1} / {2} ({3}%)\n", b.hp.to_i, b.totalhp, (b.hp * 100 / b.totalhp).to_i))
-    @battle_log.write(_INTL("    Status:  {1} {2}\n", b.status.to_s, (b.statusCount > 0) ? b.statusCount : 0))
+    @battle_log.write(_INTL("    Status:  {1} {2}\n", b.status.to_s, (b.statusCount != 0) ? b.statusCount : 0))
     @battle_log.write(_INTL("    Ability: {1}\n", b.ability.name))
     @battle_log.write(_INTL("    Item:    {1}\n", b.item.to_s))
     @battle_log.write(_INTL("    Moves:  "))

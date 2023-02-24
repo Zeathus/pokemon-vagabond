@@ -95,6 +95,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     # Create other bitmaps
     @numbersBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers")
     @hpBarBitmap   = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_hp")
+    @hpBarExBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_hp_extra")
     @expBarBitmap  = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_exp")
     @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers_white")
     # Create sprite to draw HP numbers on
@@ -105,7 +106,17 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpBar = Sprite.new(viewport)
     @hpBar.bitmap = @hpBarBitmap.bitmap
     @hpBar.src_rect.height = @hpBarBitmap.height / 3
+    @hpBarEx = Sprite.new(viewport)
+    @hpBarEx.bitmap = @hpBarExBitmap.bitmap
+    @hpBarEx.src_rect.height = @hpBarExBitmap.height / 8
+    @hpBarEx.src_rect.width = 0
+    @hpBarEx2 = Sprite.new(viewport)
+    @hpBarEx2.bitmap = @hpBarExBitmap.bitmap
+    @hpBarEx2.src_rect.height = @hpBarExBitmap.height / 8
+    @hpBarEx2.src_rect.width = 0
     @sprites["hpBar"] = @hpBar
+    @sprites["hpBarEx"] = @hpBarEx
+    @sprites["hpBarEx2"] = @hpBarEx2
     # Create sprite wrapper that displays Exp bar
     @expBar = Sprite.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
@@ -123,6 +134,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @databoxBitmap.dispose
     @numbersBitmap.dispose
     @hpBarBitmap.dispose
+    @hpBarExBitmap.dispose
     @expBarBitmap.dispose
     @contents.dispose
     super
@@ -131,6 +143,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def x=(value)
     super
     @hpBar.x     = value + @spriteBaseX + 102
+    @hpBarEx.x   = @hpBar.x
+    @hpBarEx2.x  = @hpBar.x
     @expBar.x    = value + @spriteBaseX + 6
     @hpNumbers.x = value + @spriteBaseX + (@showHP ? 80 : 98)
   end
@@ -138,6 +152,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def y=(value)
     super
     @hpBar.y     = value + 40
+    @hpBarEx.y   = @hpBar.y
+    @hpBarEx2.y  = @hpBar.y
     @expBar.y    = value + 74
     @hpNumbers.y = value + (@showHP ? 52 : 34)
   end
@@ -145,6 +161,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def z=(value)
     super
     @hpBar.z     = value + 1
+    @hpBarEx.z   = @hpBar.z
+    @hpBarEx2.z  = @hpBar.z
     @expBar.z    = value + 1
     @hpNumbers.z = value + 2
   end
@@ -258,7 +276,7 @@ class Battle::Scene::PokemonDataBox < Sprite
 
   def draw_status
     return if @battler.status == :NONE
-    if @battler.status == :POISON && @battler.statusCount > 0   # Badly poisoned
+    if @battler.status == :POISON && @battler.statusCount < 0   # Badly poisoned
       s = GameData::Status.count - 1
     else
       s = GameData::Status.get(@battler.status).icon_position
@@ -338,6 +356,31 @@ class Battle::Scene::PokemonDataBox < Sprite
     hpColor = 1 if self.hp <= @battler.totalhp / 2   # Yellow bar
     hpColor = 2 if self.hp <= @battler.totalhp / 4   # Red bar
     @hpBar.src_rect.y = hpColor * @hpBarBitmap.height / 3
+    if self.hp > @battler.totalhp
+      top_layer = ((self.hp - 1) / @battler.totalhp).floor - 1
+      if top_layer < 0
+        @hpBarEx.src_rect.width = 0
+        @hpBarEx2.src_rect.width = 0
+      else
+        # Resize HP bar
+        w = @hpBarBitmap.width.to_f * (self.hp - (@battler.totalhp * (top_layer + 1))) / @battler.totalhp
+        w = 1 if w < 1
+        # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
+        #       fit in with the rest of the graphics which are doubled in size.
+        w = ((w / 2.0).round) * 2
+        @hpBarEx2.src_rect.width = w
+        @hpBarEx2.src_rect.y = (top_layer % 8) * @hpBarExBitmap.height / 8
+        if top_layer == 0
+          @hpBarEx.src_rect.width = 0
+        else
+          @hpBarEx.src_rect.y = ((top_layer - 1) % 8) * @hpBarExBitmap.height / 8
+          @hpBarEx.src_rect.width = @hpBarExBitmap.width
+        end
+      end
+    else
+      @hpBarEx.src_rect.width = 0
+      @hpBarEx2.src_rect.width = 0
+    end
   end
 
   def refreshExp
@@ -620,11 +663,26 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
     @spriteY          = 0   # Actual y coordinate
     @spriteXExtra     = 0   # Offset due to "bobbing" animation
     @spriteYExtra     = 0   # Offset due to "bobbing" animation
+    @critSplashSprite = IconSprite.new(0, 0, viewport)
+    @critSplashSprite.setBitmap("Graphics/Pictures/Battle/splash_critical")
+    @critSplashSprite.src_rect = Rect.new(0, 0, @critSplashSprite.bitmap.width, @critSplashSprite.bitmap.height / 2)
+    @critSplashSprite.ox = @critSplashSprite.src_rect.width / 2
+    @critSplashSprite.oy = @critSplashSprite.src_rect.height / 2
+    @critSplashSprite.visible = false
+    @weakSplashSprite = IconSprite.new(0, 0, viewport)
+    @weakSplashSprite.setBitmap("Graphics/Pictures/Battle/splash_weakness")
+    @weakSplashSprite.src_rect = Rect.new(0, 0, @weakSplashSprite.bitmap.width, @weakSplashSprite.bitmap.height / 19)
+    @weakSplashSprite.ox = @weakSplashSprite.src_rect.width / 2
+    @weakSplashSprite.oy = @weakSplashSprite.src_rect.height / 2
+    @weakSplashSprite.visible = false
+    @splashTimer      = 0
     @_iconBitmap      = nil
     self.visible      = false
   end
 
   def dispose
+    @critSplashSprite.dispose
+    @weakSplashSprite.dispose
     @_iconBitmap&.dispose
     @_iconBitmap = nil
     self.bitmap = nil if !self.disposed?
@@ -637,11 +695,27 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
   def x=(value)
     @spriteX = value
     super(value + @spriteXExtra)
+    @weakSplashSprite.x = @spriteX + @spriteXExtra
+    @critSplashSprite.x = @spriteX + @spriteXExtra
   end
 
   def y=(value)
     @spriteY = value
     super(value + @spriteYExtra)
+    @weakSplashSprite.y = @spriteY + @spriteYExtra - self.height / 2
+    @critSplashSprite.y = @spriteY + @spriteYExtra - self.height / 2
+  end
+
+  def z=(value)
+    super(value)
+    @weakSplashSprite.z = value + 1
+    @critSplashSprite.z = value + 1
+  end
+
+  def color=(value)
+    super(value)
+    @weakSplashSprite.color = value
+    @critSplashSprite.color = value
   end
 
   def width;  return (self.bitmap) ? self.bitmap.width : 0;  end
@@ -714,6 +788,26 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
     self.x       = self.x
     self.y       = self.y
     self.visible = @spriteVisible
+    if @splashTimer > 0
+      @splashTimer -= 1
+      zoom = [1.0, 2.0 - (60 - @splashTimer) / 8.0].max
+      @critSplashSprite.zoom_x = zoom
+      @critSplashSprite.zoom_y = zoom
+      @weakSplashSprite.zoom_x = zoom
+      @weakSplashSprite.zoom_y = zoom
+      if @splashTimer > 60 - 8
+        @critSplashSprite.opacity += 32
+        @weakSplashSprite.opacity += 32
+      end
+      if @splashTimer <= 32
+        @critSplashSprite.opacity = 8 * @splashTimer
+        @weakSplashSprite.opacity = 8 * @splashTimer
+      end
+      if @splashTimer == 0
+        @critSplashSprite.visible = false
+        @weakSplashSprite.visible = false
+      end
+    end
     # Pokémon sprite blinking when targeted
     if @selected == 2 && @spriteVisible
       case (frameCounter / SIXTH_ANIM_PERIOD).floor
@@ -722,6 +816,20 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
       end
     end
     @updating = false
+  end
+
+  def pbWeaknessSplash(type)
+    @splashTimer = 60
+    @weakSplashSprite.visible = true
+    @weakSplashSprite.opacity = 0
+    @weakSplashSprite.src_rect.y = @weakSplashSprite.src_rect.height * GameData::Type.get(type).icon_position
+  end
+
+  def pbCriticalSplash(category)
+    @splashTimer = 60
+    @critSplashSprite.visible = true
+    @critSplashSprite.opacity = 0
+    @critSplashSprite.src_rect.y = @critSplashSprite.src_rect.height * category
   end
 end
 

@@ -474,6 +474,11 @@ class Battle::Move
        !user.hasActiveAbility?(:GUTS)
       multipliers[:final_damage_multiplier] /= 2
     end
+    # Frostbite
+    if user.status == :FROSTBITE && specialMove? && damageReducedByFrostbite? &&
+       !user.hasActiveAbility?(:GUTS)
+      multipliers[:final_damage_multiplier] /= 2
+    end
     # Affinity Boost
     if user.affinityBooster
       if (user.hasActiveAbility?(:AQUAVORTEX) && type == :WATER) ||

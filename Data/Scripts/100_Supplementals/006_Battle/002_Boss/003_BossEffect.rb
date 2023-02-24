@@ -367,6 +367,8 @@ class BossEff_HealStatus < BossEffect
         battle.pbDisplay(_INTL("{1} thawed itself out!",target.pbThis))
       when :SLEEP
         battle.pbDisplay(_INTL("{1} woke itself up!",target.pbThis))
+      when :FROSTBITE
+        battle.pbDisplay(_INTL("{1} healed its frostbite!",target.pbThis))
       end
     end
   end

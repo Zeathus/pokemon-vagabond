@@ -218,7 +218,7 @@ class Battle::AI
       case thispkmn.status
       when :SLEEP, :FROZEN
         factor += 20
-      when :POISON, :BURN
+      when :POISON, :BURN, :FROSTBITE
         factor += 10
       when :PARALYSIS
         factor += 15

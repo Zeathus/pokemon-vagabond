@@ -35,6 +35,7 @@ class Battle::Battler
         when :BURN      then msg = _INTL("{1} already has a burn!", pbThis)
         when :PARALYSIS then msg = _INTL("{1} is already paralyzed!", pbThis)
         when :FROZEN    then msg = _INTL("{1} is already frozen solid!", pbThis)
+        when :FROSTBITE then msg = _INTL("{1} is already frostbitten!", pbThis)
         end
         @battle.pbDisplay(msg)
       end
@@ -50,6 +51,13 @@ class Battle::Battler
        !selfInflicted
       @battle.pbDisplay(_INTL("It doesn't affect {1}...", pbThis(true))) if showMessages
       return false
+    end
+    # Well Rested
+    if Supplementals::SLEEP_WAKE_UP_IMMUNITY
+      if @effects[PBEffects::WellRested] > 0
+        @battle.pbDisplay(_INTL("{1} is still well rested!", pbThis)) if showMessages
+        return false
+      end
     end
     # Weather immunity
     if newStatus == :FROZEN && [:Sun, :HarshSun].include?(effectiveWeather)
@@ -129,6 +137,7 @@ class Battle::Battler
           when :BURN      then msg = _INTL("{1} cannot be burned!", pbThis)
           when :PARALYSIS then msg = _INTL("{1} cannot be paralyzed!", pbThis)
           when :FROZEN    then msg = _INTL("{1} cannot be frozen solid!", pbThis)
+          when :FROSTBITE then msg = _INTL("{1} cannot be frostbitten!", pbThis)
           end
         elsif immAlly
           case newStatus
@@ -147,6 +156,9 @@ class Battle::Battler
           when :FROZEN
             msg = _INTL("{1} cannot be frozen solid because of {2}'s {3}!",
                         pbThis, immAlly.pbThis(true), immAlly.abilityName)
+          when :FROSTBITE
+            msg = _INTL("{1} cannot be frostbitten because of {2}'s {3}!",
+                        pbThis, immAlly.pbThis(true), immAlly.abilityName)
           end
         else
           case newStatus
@@ -155,6 +167,7 @@ class Battle::Battler
           when :BURN      then msg = _INTL("{1}'s {2} prevents burns!", pbThis, abilityName)
           when :PARALYSIS then msg = _INTL("{1}'s {2} prevents paralysis!", pbThis, abilityName)
           when :FROZEN    then msg = _INTL("{1}'s {2} prevents freezing!", pbThis, abilityName)
+          when :FROSTBITE then msg = _INTL("{1}'s {2} prevents frostbite!", pbThis, abilityName)
           end
         end
         @battle.pbDisplay(msg)
@@ -216,12 +229,38 @@ class Battle::Battler
   # Generalised infliction of status problem
   #=============================================================================
   def pbInflictStatus(newStatus, newStatusCount = 0, msg = nil, user = nil)
+    if Supplementals::FADE_MAJOR_STATUS_CONDITIONS
+      case newStatus
+      when :POISON
+        if newStatusCount > 0
+          newStatusCount = -Supplementals::TOXIC_TURNS
+        else
+          newStatusCount = Supplementals::POISON_TURNS
+        end
+      when :BURN
+        newStatusCount = Supplementals::BURN_TURNS
+      when :PARALYSIS
+        newStatusCount = Supplementals::PARALYSIS_TURNS
+      when :FROSTBITE
+        newStatusCount = Supplementals::FROSTBITE_TURNS
+      end
+    else
+      if newStatus == :POISON && newStatusCount > 0
+        newStatusCount = -1
+      end
+    end
+    if newStatus == :SLEEP && Supplementals::USE_FIXED_SLEEP_TURNS
+      newStatusCount = Supplementals::FIXED_SLEEP_TURNS
+    end
     # Inflict the new status
     self.status      = newStatus
     self.statusCount = newStatusCount
     @effects[PBEffects::Toxic] = 0
+    if newStatus == :SLEEP && Supplementals::SLEEP_WAKE_UP_IMMUNITY
+      @effects[PBEffects::WellRested] += 1
+    end
     # Show animation
-    if newStatus == :POISON && newStatusCount > 0
+    if newStatus == :POISON && newStatusCount < 0
       @battle.pbCommonAnimation("Toxic", self)
     else
       anim_name = GameData::Status.get(newStatus).animation
@@ -246,6 +285,8 @@ class Battle::Battler
         @battle.pbDisplay(_INTL("{1} is paralyzed! It may be unable to move!", pbThis))
       when :FROZEN
         @battle.pbDisplay(_INTL("{1} was frozen solid!", pbThis))
+      when :FROSTBITE
+        @battle.pbDisplay(_INTL("{1} was frostbitten!", pbThis))
       end
     end
     PBDebug.log("[Status change] #{pbThis}'s sleep count is #{newStatusCount}") if newStatus == :SLEEP
@@ -397,10 +438,29 @@ class Battle::Battler
   end
 
   #=============================================================================
+  # Frostbite
+  #=============================================================================
+  def frostbitten?
+    return pbHasStatus?(:FROSTBITE)
+  end
+
+  def pbCanFrostbite?(user, showMessages, move = nil)
+    return pbCanInflictStatus?(:FROSTBITE, user, showMessages, move)
+  end
+
+  def pbCanFrostbiteSynchronize?(target)
+    return pbCanSynchronizeStatus?(:FROSTBITE, target)
+  end
+
+  def pbFrostbite(msg = nil)
+    pbInflictStatus(:FROSTBITE, 0, msg)
+  end
+
+  #=============================================================================
   # Generalised status displays
   #=============================================================================
   def pbContinueStatus
-    if self.status == :POISON && @statusCount > 0
+    if self.status == :POISON && @statusCount < 0
       @battle.pbCommonAnimation("Toxic", self)
     else
       anim_name = GameData::Status.get(self.status).animation
@@ -410,6 +470,10 @@ class Battle::Battler
     case self.status
     when :SLEEP
       @battle.pbDisplay(_INTL("{1} is fast asleep.", pbThis))
+      if Supplementals::SLEEP_WAKE_UP_IMMUNITY
+        @effects[PBEffects::WellRested] += 1
+        @effects[PBEffects::WellRested] += 1 if hasActiveAbility?(:EARLYBIRD)
+      end
     when :POISON
       @battle.pbDisplay(_INTL("{1} was hurt by poison!", pbThis))
     when :BURN
@@ -418,6 +482,8 @@ class Battle::Battler
       @battle.pbDisplay(_INTL("{1} is paralyzed! It can't move!", pbThis))
     when :FROZEN
       @battle.pbDisplay(_INTL("{1} is frozen solid!", pbThis))
+    when :FROSTBITE
+      @battle.pbDisplay(_INTL("{1} was hurt by its frostbite!", pbThis))
     end
     PBDebug.log("[Status continues] #{pbThis}'s sleep count is #{@statusCount}") if self.status == :SLEEP
   end
@@ -432,6 +498,7 @@ class Battle::Battler
       when :BURN      then @battle.pbDisplay(_INTL("{1}'s burn was healed.", pbThis))
       when :PARALYSIS then @battle.pbDisplay(_INTL("{1} was cured of paralysis.", pbThis))
       when :FROZEN    then @battle.pbDisplay(_INTL("{1} thawed out!", pbThis))
+      when :FROSTBITE then @battle.pbDisplay(_INTL("{1}'s frostbite was healed.", pbThis))
       end
     end
     PBDebug.log("[Status change] #{pbThis}'s status was cured") if !showMessages

@@ -12,29 +12,22 @@ class CriticalSprite < SpriteWrapper
     @src_bitmap = RPG::Cache.load_bitmap("",
       _INTL("Graphics/Pictures/Battle/critical_{1}",type.to_s))
     self.bitmap = Bitmap.new(1024,128)
-    self.x = 128
-    self.y = 128
+    self.x = 0
+    self.y = 192
+    self.oy = 64
+    self.zoom_y = 0.0
     @frame = 0
+    refresh
     update
   end
 
   def update
     @frame += 1
     if frame <= 4
-      self.bitmap.clear
-      self.bitmap.stretch_blt(
-        Rect.new(0, 64-(frame*16), 512, frame*32),
-        @src_bitmap,Rect.new(0, 0, 512, 128))
-      self.bitmap.blt(512, 0,
-        self.bitmap, Rect.new(0, 0, 512, 128))
+      self.zoom_y += 0.25
     end
     if frame > 56 && frame <= 60
-      self.bitmap.clear
-      self.bitmap.stretch_blt(
-        Rect.new(0, ((frame-56)*16), 512, 128-((frame-56)*32)),
-        @src_bitmap,Rect.new(0, 0, 512, 128))
-      self.bitmap.blt(512, 0,
-        self.bitmap, Rect.new(0, 0, 512, 128))
+      self.zoom_y -= 0.25
     end
     if @opponent
       self.x -= 48
@@ -46,6 +39,9 @@ class CriticalSprite < SpriteWrapper
   end
 
   def refresh
+    for i in 0...2
+      self.bitmap.blt(512 * i, 0, @src_bitmap, Rect.new(0, 0, @src_bitmap.width, @src_bitmap.height))
+    end
   end
 
   def dispose

@@ -116,9 +116,11 @@ class Battle::Move
   def cannotRedirect?;      return false; end   # For Snipe Shot
   def worksWithNoTargets?;  return false; end   # For Explosion
   def damageReducedByBurn?; return true;  end   # For Facade
+  def damageReducedByFrostbite?; return true;  end   # For Facade
   def triggersHyperMode?;   return false; end
   def canSnatch?;           return false; end
   def canMagicCoat?;        return false; end
+  def wakesTarget?;         return true;  end   # All moves wakes target if Supplementals::SLEEP_DAMAGE_WAKE_UP == true
 
   def contactMove?;       return @flags.any? { |f| f[/^Contact$/i] };             end
   def canProtectAgainst?; return @flags.any? { |f| f[/^CanProtect$/i] };          end

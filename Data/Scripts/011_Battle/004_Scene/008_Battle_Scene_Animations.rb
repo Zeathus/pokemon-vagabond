@@ -619,7 +619,14 @@ class Battle::Scene::Animation::BattlerDamage < Battle::Scene::Animation
     case @effectiveness
     when 0 then battler.setSE(delay, "Battle damage normal")
     when 1 then battler.setSE(delay, "Battle damage weak")
-    when 2 then battler.setSE(delay, "Battle damage super")
+    when 2
+      battler.setSE(delay, "Battle damage super")
+      if Supplementals::WEAKNESS_SPLASH
+        batSprite.pbWeaknessSplash(GameData::Move.get(@move).type) if !@critical
+      end
+    end
+    if Supplementals::CRITICAL_SPLASH
+      batSprite.pbCriticalSplash(GameData::Move.get(@move).category) if @critical
     end
     4.times do   # 4 flashes, each lasting 0.2 (4/20) seconds
       battler.setVisible(delay, false)

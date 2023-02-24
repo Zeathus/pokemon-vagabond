@@ -105,8 +105,8 @@ class Battle
       target_item = nil
       if target
         if target.knownItem
-          if target.hasActiveItem?(:AEGISTALISMAN) #
-            target_item = :AEGISTALISMAN #
+          if target.hasActiveItem?(:AEGISTALISMAN)
+            target_item = :AEGISTALISMAN
           end
         end
         target_speed = target.pbSpeed
@@ -235,9 +235,9 @@ class Battle
         end
       end
 
-      if func == "PoisonTarget" && user.hasActiveItem?(:NOXIOUSCHOKER) #
-        func = "BadPoisonTarget" #
-      end #
+      if func == "PoisonTarget" && user.hasActiveItem?(:NOXIOUSCHOKER)
+        func = "BadPoisonTarget"
+      end
 
       case func
       when "SleepTarget", "SleepTargetIfUserDarkrai", "SleepTargetChangeUserMeloettaForm"
@@ -982,7 +982,7 @@ class Battle
       when "UserTargetAverageHP"
         # Pain Split
         # Calculate as if it's damage and healing points
-        if target_item != :AEGISTALISMAN #
+        if target_item != :AEGISTALISMAN
           ownpercent = user.hp * 100 / user.totalhp
           opppercent = target.hp * 100 / target.totalhp
           splithp = (user.hp + target.hp) / 2
@@ -1421,7 +1421,7 @@ class Battle
         score += self.pbRandom(70)
       when "DisableTargetUsingSameMoveConsecutively"
         # Torment
-        if !target.effects[PBEffects::Torment] && target_item != :AEGISTALISMAN #
+        if !target.effects[PBEffects::Torment] && target_item != :AEGISTALISMAN
           score += 30
           if target.effects[PBEffects::Encore]>0
             score += 50
@@ -1442,7 +1442,7 @@ class Battle
         end
       when "DisableTargetLastMoveUsed"
         # Disable
-        if target.effects[PBEffects::Disable]<=0 && target_item != :AEGISTALISMAN #
+        if target.effects[PBEffects::Disable]<=0 && target_item != :AEGISTALISMAN
           score += 30
           if target.effects[PBEffects::Encore]>0
             score += 50
@@ -2256,8 +2256,8 @@ class Battle
         end
       when "CurseTargetOrLowerUserSpd1RaiseUserAtkDef1"
         # Curse
-        if user.pbHasType?(:GHOST) && !user.hasActiveItem?(:AEGISTALISMAN) #
-          if !target.effects[PBEffects::Curse] && target_item != :AEGISTALISMAN #
+        if user.pbHasType?(:GHOST) && !user.hasActiveItem?(:AEGISTALISMAN)
+          if !target.effects[PBEffects::Curse] && target_item != :AEGISTALISMAN
             if user.hp > user.totalhp * 0.3
               score += 15
               score += 10 if user.hp > user.totalhp * 0.5
@@ -2279,7 +2279,7 @@ class Battle
         end
       when "LowerPPOfTargetLastMoveBy4", "LowerPPOfTargetLastMoveBy3"
         # Spite / Eerie Spell
-        if target.lastMoveUsed && target_item != :AEGISTALISMAN #
+        if target.lastMoveUsed && target_item != :AEGISTALISMAN
           for m in target.moves
             # Prioritize more the less PP the target's move has
             if m.id == target.lastMoveUsed
@@ -2292,7 +2292,7 @@ class Battle
         end
       when "StartDamageTargetEachTurnIfTargetAsleep"
         # Nightmare
-        if target.status == :SLEEP && target.statusCount > 1 && target_item != :AEGISTALISMAN #
+        if target.status == :SLEEP && target.statusCount > 1 && target_item != :AEGISTALISMAN
           score += 20
           score += 20 if target.statusCount > 2
         end
@@ -2304,9 +2304,9 @@ class Battle
       when "AttackTwoTurnsLater"
         # Doom Desire / Future Sight
         if target.opposes?(user)
-          if !user.hasActiveAbility?(:TIMESKIP) && #
-              !user.hasActiveItem?(:ODDSTONE) && # 
-              !user.hasActiveItem?(:TIMESTONE) #
+          if !user.hasActiveAbility?(:TIMESKIP) &&
+              !user.hasActiveItem?(:ODDSTONE) &&
+              !user.hasActiveItem?(:TIMESTONE)
             score -= 20
           end
         end
@@ -2471,12 +2471,12 @@ class Battle
         score += total * 10
       when "AddGhostTypeToTarget"
         # Trick-or-Treat
-        if !target.pbHasType?(:GHOST) && target_item != :AEGISTALISMAN #
+        if !target.pbHasType?(:GHOST) && target_item != :AEGISTALISMAN
           score += 30
         end
       when "AddGrassTypeToTarget"
         # Forest's Curse
-        if !target.pbHasType?(:GRASS) && target_item != :AEGISTALISMAN #
+        if !target.pbHasType?(:GRASS) && target_item != :AEGISTALISMAN
           score += 35
         end
       when "TargetMovesBecomeElectric"

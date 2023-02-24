@@ -108,10 +108,12 @@ class Battle::Battler
 
   def status=(value)
     @effects[PBEffects::Truant] = false if @status == :SLEEP && value != :SLEEP
-    @effects[PBEffects::Toxic]  = 0 if value != :POISON || self.statusCount == 0
+    @effects[PBEffects::Toxic]  = 0 if value != :POISON || self.statusCount >= 0
     @status = value
     @pokemon.status = value if @pokemon
-    self.statusCount = 0 if value != :POISON && value != :SLEEP
+    if !Supplementals::FADE_MAJOR_STATUS_CONDITIONS || value == :FROZEN
+      self.statusCount = 0 if value != :POISON && value != :SLEEP
+    end
     @battle.scene.pbRefreshOne(@index)
   end
 

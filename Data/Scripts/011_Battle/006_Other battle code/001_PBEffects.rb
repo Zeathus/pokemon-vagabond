@@ -119,9 +119,10 @@ module PBEffects
   WaterSport          = 114
   WeightChange        = 115
   Yawn                = 116
-  CorrosiveAcid       = 117
-  EverlastingFainted  = 118
-  AffinityBoostNext   = 119
+  WellRested          = 117
+  CorrosiveAcid       = 118
+  EverlastingFainted  = 119
+  AffinityBoostNext   = 120
 
   #=============================================================================
   # These effects apply to a battler position

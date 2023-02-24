@@ -56,7 +56,7 @@ MenuHandlers.add(:battle_pokemon_debug_menu, :set_status, {
       msg = _INTL("Current status: {1}", GameData::Status.get(pkmn.status).name)
       if pkmn.status == :SLEEP
         msg += " " + _INTL("(turns: {1})", pkmn.statusCount)
-      elsif pkmn.status == :POISON && pkmn.statusCount > 0
+      elsif pkmn.status == :POISON && pkmn.statusCount < 0
         if battler
           msg += " " + _INTL("(toxic, count: {1})", battler.effects[PBEffects::Toxic])
         else

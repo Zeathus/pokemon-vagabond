@@ -438,7 +438,7 @@ ItemHandlers::UseOnPokemon.add(:PARALYZEHEAL, proc { |item, qty, pkmn, scene|
 ItemHandlers::UseOnPokemon.copy(:PARALYZEHEAL, :PARLYZHEAL, :CHERIBERRY)
 
 ItemHandlers::UseOnPokemon.add(:ICEHEAL, proc { |item, qty, pkmn, scene|
-  if pkmn.fainted? || pkmn.status != :FROZEN
+  if pkmn.fainted? || (pkmn.status != :FROZEN && pkmn.status != :FROSTBITE)
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
