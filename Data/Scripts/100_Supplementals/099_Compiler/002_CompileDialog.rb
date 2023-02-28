@@ -59,6 +59,7 @@ def compile_dialog
         compile_dialog_error(file, line_no, "File must start with a [CHAIN_DEFINITION].")
       end
 
+      element = nil
       feed = section
       feed_type = 0
 
@@ -69,8 +70,8 @@ def compile_dialog
         feed = element[1]
       end
 
-      if feed_type == Dialog::Prompt && (line[0...7] != "/choice" || line[0...13] == "/cancelchoice")
-        compile_dialog_error(file, line_no, "?> must be immediately followed by a /choice")
+      if feed_type == Dialog::Prompt && line[0...7] != "/choice" && line[0...13] != "/cancelchoice" && line[0...11] != "/savechoice"
+        compile_dialog_error(file, line_no, "?> must be immediately followed by a /choice, /cancelchoice or /savechoice")
       end
 
       case line[0]
@@ -148,9 +149,9 @@ def compile_dialog
           end
           question = line[(line.index('>')+1)...line.length].strip()
           question = nil if question.length < 2
-          prompt = [Dialog::Prompt, question, variable, []]
+          prompt = [Dialog::Prompt, question, variable, [], nil]
           feed.push(prompt)
-          buffer.push([Dialog::Prompt, prompt[3]])
+          buffer.push([Dialog::Prompt, prompt[3], prompt])
         end
       when '/'
         # Special command
@@ -175,13 +176,22 @@ def compile_dialog
           if feed_type == Dialog::Choice
             a = buffer.pop
             feed = buffer[buffer.length - 1][1]
-            feed_type == Dialog::Prompt
+            feed_type = Dialog::Prompt
           end
           answer = line[line.index(' ')...line.length].strip()
           choice = [Dialog::Choice, answer, []]
           choice.push(true) if command == "cancelchoice"
           feed.push(choice)
           buffer.push([Dialog::Choice, choice[2]])
+        when "savechoice"
+          # Saving a choice to a game variable
+          if feed_type != Dialog::Prompt
+            compile_dialog_error(file, line_no, "/savechoice should be used directly after ?>")
+          elsif !line.include?(' ')
+            compile_dialog_error(file, line_no, "/savechoice requires a parameter")
+          end
+          choice_key = line[line.index(' ')...line.length].strip()
+          element[2][4] = choice_key
         when "focus"
           arg = arguments[0]
           if !("012345678".include?(arg))

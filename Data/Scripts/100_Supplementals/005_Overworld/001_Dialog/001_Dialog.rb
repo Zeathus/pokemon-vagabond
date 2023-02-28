@@ -58,6 +58,7 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
     when Dialog::Prompt
       question = _format(action[1])
       variable = action[2]
+      save_key = action[4]
       cancel = 0
       choices = []
       for i in 0...action[3].length
@@ -75,6 +76,10 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         pbTalk(question, msgwindows)
 
         answer = $game_variables[variable]
+
+        if !(save_key.nil?)
+          pbSetChoice(save_key, answer, choices[answer])
+        end
 
         choice = action[3][answer]
         if choice
