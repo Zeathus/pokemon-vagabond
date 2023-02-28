@@ -9,30 +9,37 @@
 /hidename 1
 > Oh, hello. Do you have any business here?
 /speaker Duke
-> (Perfectly timed...)\wtnp[20]
+> (Perfectly timed...)\wtnp[10]
 > Indeed we do!
-> My friend here happens to long for the woods just across the lake, and I daresay you might need to take them along with you.
+> My friend happens to long for the woods across the lake, and I daresay you might need to take them along with you.
 /speaker Amethyst
 /hidename 1
 > You want to get to the [B]Evergone Mangrove[/]?
+/expression awkward
 > Ehm, I don't think that's a good idea.
+/expression worried
 > We got an anonymous report that told of someone being lost, maybe even unconscious, deep in the woods.
 > The Evergone Mangrove is home to many wild Pokémon. It can be very dangerous.
+/expression neutral
 > That's why I'm here on a solo mission, to more easily avoid being spotted by the wild Pokémon.
 /speaker Duke
 > It is definitely dangerous,<br>without a shred of doubt.
-/speaker Amethyst
+/speaker Amethyst surprised
 /hidename 1
-> How would you...
+> How would you...\wtnp[10]
+/expression neutral
 > Oh, are you a Psychic?
-/speaker Duke
+/speaker Duke point
 > Of course I am!<br>Perhaps even the greatest Psychic!
+/expression neutral
 > That is precisely why I am here before you, presenting you with this prime opportunity.
 > <PLAYER> here has already proven their strength as can be shown from their gym badge.
+/expression heh
 > I foresee a terrible fate upon you if you do not bring <PLAYER> along, and we do not want that now, do we?
-/speaker Amethyst
+/speaker Amethyst confused
 /hidename 1
 > It's hard to argue if a Psychic says so... Hmmmmmmm...
+/expression neutral
 > I guess it's better to be safe than sorry. However...
 
 [CH1_CRATER_AMETHYST,1]
@@ -48,21 +55,24 @@
 ?/>
 
 [CH1_CRATER_AMETHYST,3]
-/speaker Amethyst
+/speaker Amethyst wink
 /hidename 1
 > You're definitely strong enough!
+/expression neutral
 > Sorry for challenging you so spontaneously.
-/hidename 0
 > Anyway, my name is [B]Amethyst[/].\nGlad to meet you!
-> Your name was <PLAYER> if I recall correctly.\nHow about you, Psy-\wtnp[20]
-/speaker Duke
+/hidename 0
+> Your name was <PLAYER> if I recall correctly.
+> How about you, Psy-\wtnp[20]
+/speaker Duke point
 > DUKE! The one and only!
+/expression neutral
 > However, my work here is done, so I will be off.
 > <PLAYER>, I leave you with this. It is very important, so make sure not to lose it.
 
 [CH1_CRATER_AMETHYST,4]
-/speaker Duke
-!> VANISH!\wtnp[60]
+/speaker Duke power
+!> VANISH!\wtnp[30]
 
 [CH1_CRATER_AMETHYST,5]
 > \ts[5]Duke has left the party.\wtnp[60]
@@ -70,6 +80,7 @@
 > \ts[1]He's really got a thing for theatrics.\nI wonder where he's off to so suddenly.
 > Either way, I look forward to working with you!
 > If you're worried about how we can get across the lake, my Starmie will help us with that.
+/expression wink
 > As long as you're traveling with me, water will be no problem!
 
 [CH1_CRATER_AMETHYST,6]
@@ -87,30 +98,32 @@
 /speaker Nekane none
 /hidename 1
 /portrait 0
-> \ts[5]Everything is... falling apart.\wtnp[60]
+> \ts[5]Everything is... falling apart.\wtnp[40]
 
 [CH1_RUINS_MEMORY,2]
 /speaker Nekane none
 /hidename 1
 /portrait 0
-> \ts[5]It... wasn't supposed to end like this.\wtnp[60]
+> \ts[5]It... wasn't supposed to end like this.\wtnp[40]
 
 [CH1_RUINS_MEMORY,3]
 /speaker Nekane unknown
 /hidename 1
-> \ts[5]... ... ...\wtnp[60]
-/wait 30
-> \ts[5]This is the end... isn't it?\wtnp[60]
-/wait 30
-> \ts[5]I'm going to disappear... but...\wtnp[60]
-/wait 30
-> \ts[5]I will remember you...\wtnp[60]
-/wait 30
-> \ts[5]And if you somehow make it...\wtnp[60]
-/wait 30
-> \ts[5]...please remember me too.\wtnp[60]
+> \ts[5]... ... ...\wtnp[40]
+/wait 20
+> \ts[5]This is the end... isn't it?\wtnp[40]
+/wait 20
+> \ts[5]I'm going to disappear... but...\wtnp[40]
+/wait 20
+> \ts[5]I will remember you...\wtnp[40]
+/wait 20
+> \ts[5]And if you somehow make it...\wtnp[40]
+/wait 20
+> \ts[5]...please remember me too.\wtnp[40]
 
 [CH1_RUINS_MEMORY,4]
+/windowpos middle
+/hidewindow 1
 > \ts[5]Remember... Nekane...\wtnp[60]
 
 [CH1_NEKANE,0]
@@ -118,7 +131,7 @@
 /hidename 1
 >... ...
 /speaker 0
-> She's unconcious.
+> She's unconscious.
 
 [CH1_NEKANE,1]
 /speaker Amethyst
@@ -129,27 +142,27 @@
 > Thank goodness, you seem unharmed.
 /speaker Nekane
 /hidename 1
-> Where am I..?<br>Who are you..?
+> \ts[2]Where am I..?<br>Who are you..?
 /speaker Amethyst
-> We got a report of a missing person in these woods.
+> \ts[1]We got a report of a missing person in these woods.
 > What's even weirder is that we got a reading of an odd energy anomaly at the same time.
 > Were you here when it happened?
 /speaker Nekane
 /hidename 1
-> When what happened?<br>All my thoughts are too blurry to make out.
+> \ts[2]When what happened?<br>All my thoughts are too blurry to make out.
 
 [CH1_NEKANE,3]
 /speaker Amethyst
 > She can't think properly right now. We should let her recover before we ask any questions.
 > Let's bring her back to Lapis Lazuli City, south of the Crosswoods.
-> That's where the G.P.O. have their headquarters. She'll be taken care of there.
+> That's where the G[.]P[.]O[.] have their headquarters. She'll be taken care of there.
 
 [CH1_NEKANE,4]
 /speaker Amethyst
 > Please follow us.<br>Don't worry, we mean you no harm.
 /speaker Nekane
 /hidename 1
-> O-.. okay.
+> \ts[2]O-.. okay.
 
 [CH1_NEKANE,5]
 > The unknown girl is now traveling with you.
@@ -160,12 +173,12 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 
 [CH1_GPO,0]
 /speaker Amethyst
-> Welcome to the G.P.O. HQ!<br>I'll show you the way to the healthcare facility.
+> Welcome to the G[.]P[.]O[.] HQ!<br>I'll show you the way to the healthcare facility.
 
 [CH1_GPO,1]
 /event set Amethyst 5
 /speaker Nurse
-> Oh, hello Ms. Amethyst.<br>What brings you here today?
+> Oh, hello Ms[.] Amethyst.<br>What brings you here today?
 /speaker Amethyst
 > We found this girl unconcious in the Evergone Mangrove. Could you inspect her to see if everything is OK?
 /event Amethyst turn down
@@ -245,43 +258,45 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /speaker Amethyst
 > This is my most trusted Pokémon, Weavile.<br>I can always depend on them.
 > My assistant is also out, so I let Weavile keep watch of the place.
-> Speaking of, he should be back anyti-\wtnp[60]
+> Speaking of, he should be back anyti-\wtnp[30]
 
 [CH1_OFFICE,1]
 /event set Amethyst 1
 /speaker Amethyst
-> Welcome back, [Kira]Kira[/]!<br>How'd the mission in Scoria City go?
-/speaker Kira
+> Welcome back, Kira!<br>How'd the mission in Scoria City go?
+/speaker Kira annoyed
 > Everything was handled professionally, but you know that I dislike returning there.
 /speaker Amethyst
 > Any other person would take at least twice as long to finish such a mission.
 > You know as well as me that you are more familiar in Scoria than anyone here.
-/speaker Kira
+/speaker Kira lookaway
 > ...Which will continue to be the case until someone else has missions there.
+/expression annoyed
 > On a more important matter: Who's this new guy?
 /speaker Amethyst
 > This is <PLAYER>.<br>I met them at Evergone Crater, and they helped me rescue a girl from the woods.
-?> <PLAYER>, this is [Kira]Kira[/], my assistant.
+?> <PLAYER>, this is Kira, my assistant.
     /choice Nice to meet you!
-        /speaker Kira
+        /speaker Kira annoyed
         > I hope it will be "nice to meet you" too.
     /choice What was your mission?
         /speaker Kira
         > Had to investigate some shady people doing shady deals.<br>The details are not for you to know.
     /choice Are you a cowboy?
-        /speaker Kira
+        /speaker Kira annoyed
         > Talking about my hat, are you?
         > No, I am not a cowboy, but think what you will.
 ?/>
-/speaker Kira
+/speaker Kira neutral
 > So this guy offered to help you at Evergone Crater?
 > A stranger appearing out of thin air to help you through some dangerous place.<br>Sounds awfully convenient.
 /speaker Amethyst
 > Yeah. A Psychic said I would need their help, and everything went smoothly!
-/speaker Kira
+/speaker Kira lookaway
 > I was being sarcastic...
+/expression annoyed
 > Does that not sound [R]too[/] convenient?
-> They could have any type of ulterior motive, and you brought straight into the admin area? The <shake>restricted</shake> area?
+> They could have any type of ulterior motive, and you brought them straight to the admin area? The <shake>restricted</shake> area?
 > Do you even know why they wanted to go to the Evergone Ruins in the first place?
 /speaker Amethyst
 > Hmmm... I guess I never actually asked.
@@ -293,24 +308,25 @@ U> When the balance of the world is broken, the world itself falls thereafter.
     /choice I had a vision
         /event Player turn up
         /event Amethyst turn up
-        /speaker Kira
+        /speaker Kira annoyed
         > A vision? Now that sounds like the right amount of nonsense.
     /choice I had to find the girl
         /event Player turn up
         /event Amethyst turn up
-        /speaker Kira
+        /speaker Kira annoyed
         > You knew about the lost person?<br>Do you know her?
     /choice Duke told me to
         /event Player turn up
         /event Amethyst turn up
-        /speaker Kira
+        /speaker Kira annoyed
         > That excuse does not help your case, as you just brought the Psychic's integrity into question instead.
 ?/>
-/speaker Amethyst
+/speaker Amethyst worried
 > Leave them be, Kira.
+/expression neutral
 > They offered help when I needed it,<br>and that's enough for now.
 > It's been a long day, and I think we could all use some rest.<br><PLAYER> can use the guest room.
-/speaker Kira
+/speaker Kira annoyed
 > Fine.
 
 [CH1_INTERMISSION,0]
@@ -323,15 +339,14 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /speaker Eliana
 /hidename 2
 /textpos middle
-> Welcome back!<br>How did the mission to the Evergone Ruins go?
+> Welcome back! How did the mission to the Evergone Ruins go?
 /speaker PLAYER
 /hidename 2
-/hidename 1
 /textpos middle
 > When I arrived, the target was already gone.
 > I am not sure where they went,<br>or who may have taken them.
 > However, I need to focus on my next mission.<br>It requires much research.
-> How is your mission to Mt. Pegma coming along?
+> How is your mission to Mt[.] Pegma coming along?
 /speaker Eliana
 /hidename 2
 /textpos middle
@@ -339,7 +354,6 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 > Luckily, we have been uninterrupted so far, avoiding causing suspicion as best we can.
 /speaker PLAYER
 /hidename 2
-/hidename 1
 /textpos middle
 > Good work, and good luck tomorrow.
 /speaker Eliana

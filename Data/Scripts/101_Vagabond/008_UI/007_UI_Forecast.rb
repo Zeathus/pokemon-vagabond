@@ -167,7 +167,8 @@ class PokemonForecastMap_Scene
       :Sun       => "sun",
       :Winds     => "winds",
       :Sandstorm => "sandstorm",
-      :BloodMoon => "blood_moon"
+      :BloodMoon => "blood_moon",
+      :Cloudy    => "cloudy"
     }
     imagepos = []
     forecast.each do |area|

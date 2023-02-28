@@ -170,6 +170,11 @@ class PortraitSprite < IconSprite
     pbUpdateSpriteHash(@parts)
   end
 
+  def reset_parts
+    @parts["eyes"].src_rect.x = 0 if @visibilities["eyes"]
+    @parts["mouth"].src_rect.x = 0 if @visibilities["mouth"]
+  end
+
   def tone=(value)
     super(value)
     @parts.each do |key, part|
@@ -435,6 +440,7 @@ class TalkMessageWindowWrapper
   end
 
   def showCommands
+    @portraits.each { |p| p&.reset_parts }
     $game_variables[@cmdvariable] = pbShowCommands(@msgwindow, @commands, @cmdIfCancel)
   end
 
@@ -848,6 +854,8 @@ class TalkMessageWindowWrapper
         i += 1
       end
     end
+
+    value.gsub!("[.]", ".")
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
 

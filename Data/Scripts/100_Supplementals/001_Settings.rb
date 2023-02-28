@@ -168,21 +168,21 @@ module Supplementals
   FROSTBITE_TURNS = 5
   POISON_TURNS    = 5
   TOXIC_TURNS     = 5
-  PARALYSIS_TURNS = 5
+  PARALYSIS_TURNS = 4
 
   # Whether or not sleep should always last the same number of turns when infilcted by an opponent.
-  USE_FIXED_SLEEP_TURNS = false
+  USE_FIXED_SLEEP_TURNS = true
   FIXED_SLEEP_TURNS = 3  # 3 is the same as Rest
   # Whether or not a Pokemon will be immune to sleep for a while after waking up.
   # Immunity lasts for as many turns as the Pokemon was asleep.
-  SLEEP_WAKE_UP_IMMUNITY = false
+  SLEEP_WAKE_UP_IMMUNITY = true
   # Whether a Pokémon should wake up from sleep if it is hit by a move (indirect damage does not wake)
   # Dream Eater is does not wake the target.
-  SLEEP_DAMAGE_WAKE_UP = false
+  SLEEP_DAMAGE_WAKE_UP = true
   
   # If FADE_MAJOR_STATUS_CONDITIONS is enabled, causes paralysis to always and only trigger its
   # immobilizing effect the turn it dissipates
-  PARALYZE_ON_PARALYSIS_FADE = false
+  PARALYZE_ON_PARALYSIS_FADE = true
 
   # Whether or not regular wild Pokemon should be scaled to the player level
   SCALE_WILD_POKEMON = false

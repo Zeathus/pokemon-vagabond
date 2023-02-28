@@ -791,6 +791,7 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
     if @splashTimer > 0
       @splashTimer -= 1
       zoom = [1.0, 2.0 - (60 - @splashTimer) / 8.0].max
+      zoom *= 1.5 if @index % 2 == 0
       @critSplashSprite.zoom_x = zoom
       @critSplashSprite.zoom_y = zoom
       @weakSplashSprite.zoom_x = zoom

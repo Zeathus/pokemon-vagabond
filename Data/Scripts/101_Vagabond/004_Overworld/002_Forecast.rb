@@ -33,7 +33,7 @@ def pbGenerateSingleForecast
 
   weathers = [
     :None,
-    :None,
+    :Cloudy,
     :Rain,
     :Sun,
     :Winds
@@ -42,7 +42,7 @@ def pbGenerateSingleForecast
   desert_weathers = [
     :None,
     :None,
-    :None,
+    :Cloudy,
     :Sun,
     :Sun,
     :Sandstorm,

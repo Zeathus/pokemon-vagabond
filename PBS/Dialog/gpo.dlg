@@ -1,12 +1,12 @@
 [GPO_RECEPTION,0]
 /event set Receptionist 4
 /speaker Receptionist
-?> Welcome to the G.P.O. headquarters.<br>Do you have any question?
+?> Welcome to the G[.]P[.]O[.] headquarters.<br>Do you have any question?
     /choice What's the G.P.O.?
-        > The G.P.O. is an acronym for "Global Pokémon Organization".
+        > The G[.]P[.]O[.] is an acronym for "Global Pokémon Organization".
         > We do our best to take care of troubles around the globe.
         > Our main headquarters lie here in the Rokk region, but we have branches in other regions as well.
-        > The current leader of the G.P.O. is Amethyst, an aspiring lady who took the duty after her father left.
+        > The current leader of the G[.]P[.]O[.] is Amethyst, an aspiring lady who took the duty after her father left.
         /event Receptionist switch A true
     /choice Where do I go?
         > The headquarters are divided into four main areas.
@@ -22,24 +22,24 @@
 
 [GPO_RECEPTION,1]
 /speaker Receptionist
-> This is where members of the G.P.O. are assigned to various tasks.
+> This is where members of the G[.]P[.]O[.] are assigned to various tasks.
 > You're not a member. Therefore you cannot be assigned to any tasks.
 
 [GPO_MAN,0]
 /speaker Man
 > Building large structures above ground would harm the environment in the area.
-> That's why the G.P.O. headquarters were built underground.
+> That's why the G[.]P[.]O[.] headquarters were built underground.
 
 [GPO_GIRL,0]
 /speaker Girl
-> The G.P.O. really has a large place, don't they?
+> The G[.]P[.]O[.] really has a large place, don't they?
 > Isn't it kind of cool to know that there are lots of people here who help people everyday?
 
 [GPO_EMPLOYEE,0]
 /speaker Employee
 > The guy working across from me was sent from Alola to research how Alolan Pokémon fare in different regions.
 > Half of the time he's telling stories about Alola, while I think half of those are one's he made up on his own.
-> Mysterious beasts from otherwordly portals?<br>Hah! As if I'd believe something that surreal.
+> Mysterious beasts from otherwordly portals? Hah!<br>As if I'd believe something that surreal.
 
 [GPO_EMPLOYEE,1]
 /speaker Employee
@@ -73,7 +73,7 @@
 [GPO_HEALTHCARE_EMPLOYEE,1]
 /speaker Employee
 > The Aether Foundation has its main facility in the Alola region. That is also where our president, Lusamine lives.
-> We were asked if we could help care for Pokémon at the G.P.O. here in the Rokk region.
+> We were asked if we could help care for Pokémon at the G[.]P[.]O[.] here in the Rokk region.
 > President Lusamine couldn't refuse the offer to help more Pokémon, so she accepted.
 
 [GPO_VULPIX]

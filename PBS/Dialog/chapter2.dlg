@@ -2,15 +2,21 @@
 /speaker Amethyst
 ?> Good morning! Did you sleep well?
     /choice Like a rock!
+        /expression wink
         > The guest bed is pretty comfy, right?
+        /expression neutral
         > Let's go check on the girl we found yesterday.
         /return false
     /choice I heard voices
+        /expression confused
         > Voices? Someone named Eliana?
+        /expression neutral
         > We can discuss that in a bit.<br>Let's go check on the girl we found yesterday.
         /return true
     /choice I had a weird dream
+        /expression confused
         > A weird dream? Someone named Eliana?
+        /expression neutral
         > We can discuss that in a bit.<br>Let's go check on the girl we found yesterday.
         /return true
 ?/>
@@ -19,14 +25,160 @@
 /speaker Kira
 > I know Amethyst has taken a liking to you already, but I'll be keeping an eye on you.
 
+[CH2_TO_HEALTHCARE]
+> You head straight to the healthcare facility.
+
+[CH2_LEAVE_HEALTHCARE]
+/speaker Amethyst
+> We need to check on the girl before we leave.
+
 [CH2_NEKANE,0]
 /event set Nurse 3
 /event set Amethyst 5
 /speaker Amethyst
 > Have you had a good look into her condition?
 /speaker Nurse
-> 
-/event Amethyst emote heart
+> We have, but I cannot say we understand much.
+> Her condition is definitely stable, but the test results show the complete opposite of what is considered normal.
+> We have never seen a case like this. I am sorry we cannot be of more help.
+/speaker Amethyst
+> Thank you for your effort either way! The important thing is that she's okay.
+/speaker Nurse
+> It's unlikely that we will be able to discern anything else really, so we can discharge her.
+> Though to keep an eye on her, I think it would be best to let her stay at the living quarters for a while.
+/speaker Amethyst
+> That sounds like a good idea. We can bring her along and show her where she'll be staying.
+> Does that sounds okay with you?
+/speaker Nekane
+/hidename 1
+> \ts[2]Yes. That is fine.
+/speaker Amethyst
+> \ts[1]Great! Then follow our lead.
+
+[CH2_NEKANE,1]
+> The girl is now traveling with you.
+
+[CH2_NEKANE,2]
+/speaker Amethyst
+> We need to show the girl to her room before we go anywhere.\nIt's to the right from here.
+
+[CH2_NEKANE,3]
+/speaker Amethyst
+> The living quarters are along the hall on the opposite side of this floor. She will be staying in the first room.
+
+[CH2_NEKANE,4]
+/speaker Amethyst
+> This is where you'll be staying. Feel free to make yourself at home!
+
+[CH2_NEKANE,5]
+/speaker Amethyst
+> Do you prefer to stay in bed?
+/speaker Nekane
+/hidename 1
+> \ts[2]The bed is soft. It is safe.
+/speaker Amethyst wink
+> \ts[1]I see. Whatever makes you comfortable.
+/expression neutral
+> Speaking of comfortable, are you okay with answering some questions now?
+/speaker Nekane
+/hidename 1
+> \ts[2]Questions? What questions?
+/speaker Amethyst
+> \ts[1]We kinda found you in the middle of nowhere, so just some simple questions about you.
+/speaker Nekane
+> \ts[2]About... me? I think that is... fine?
+/speaker Amethyst
+> \ts[1]Good! Then first of all...
+> What is your name?
+/speaker Nekane
+/hidename 1
+> \ts[2]Name..? I do not recall having any name.\nWhat is a name's purpose?
+/speaker Amethyst surprised
+!> You have no name!?\wtnp[30]
+/expression ahem
+> \ts[1]Ahem!
+/expression confused
+> Excuse me, that just took me off guard.
+/expression neutral
+> We use names to refer to each other.
+> It would be difficult to address you if we had to say "the girl from the Evergone Mangrove" every time.
+/speaker Nekane
+/hidename 1
+> \ts[2]Hmm... I guess that is true. But if I have no name, what happens then?
+/speaker Amethyst awkward
+> \ts[1]That's a... unique predicament.
+/expression neutral
+> I guess we'll just have to come up with a name then!
+> Any ideas <PLAYER>?
+
+[CH2_NEKANE,6]
+/speaker Amethyst
+> Nekane? That's an interesting name.\nI like it!
+
+[CH2_NEKANE,7]
+/speaker Amethyst
+> What do you think of that name?
+/speaker Nekane thought
+/hidename 1
+> ...
+/expression neutral
+> \ts[2]It feels... natural.
+/hidename 0
+> Yes, you can call me Nekane.
+/speaker Amethyst
+> \ts[1]Great! Nice to meet you Nekane!
+> Now, we need to get onto the next question.
+> Do you know anything about what happened in the Evergone Mangrove and why you were there?
+/speaker Nekane thought
+> ...
+/expression neutral
+> \ts[2]Sorry. I cannot seem recall anything about that forest.
+> The only thing I remember is a large shadow of some kind...
+/speaker Amethyst confused
+> \ts[1]A large shadow..?\nThat's not a lot to work with.
+/expression neutral
+> But if you really can't remember anything else, we won't trouble you anymore. At least not until you remember something.
+
+[CH2_NEKANE,8]
+/speaker Amethyst
+> I think that's our cue to head back to my office to meet up with Kira.
+> I'll let you take the lead.
+
+[CH2_GPO_INTRO,0]
+/speaker Amethyst
+> Now that the Nekane situation settled, I can finally give you a proper introduction.
+> As you know, my name is Amethyst, and I am the leader here at the G[.]P[.]O[.]
+> This guy's name is Kira. He may come off a bit cold, but he's super reliable.
+/speaker Kira annoyed
+> ...
+/speaker Amethyst
+> The G.P.O. is short for "Global Pokémon Organization". We have branches in several regions, but our main headquarters are here in Rokk.
+/expression wink
+> If there's ever a problem, it's us you report to!
+/speaker 0
+> Is there something that needs to be reported?
+
+[CH2_GPO_INTRO,1]
+/speaker PLAYER
+/hidename 2
+/textpos middle
+> Oh, hi Eliana.<br>I didn't expect you to be up this late.
+> How is your mission to Mt[.] Pegma coming along?
+/speaker Eliana
+/hidename 2
+/textpos middle
+> We are moving out to finish it tomorrow.
+> Luckily, we have been uninterrupted so far, avoiding causing suspicion as best we can.
+
+[CH2_GPO_INTRO,2]
+/speaker Amethyst
+?> You heard something while you were sleeping? Was it a dream?
+    /choice It felt real
+        > 
+    /choice May have been a vision
+        > You had a vision about those ruins, and now this as well?
+    /choice It can't have been
+?/>
 
 [CH2_PEGMA_ROADBLOCK]
 /speaker Stranger

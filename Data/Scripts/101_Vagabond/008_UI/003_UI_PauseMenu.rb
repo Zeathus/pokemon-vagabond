@@ -98,7 +98,7 @@ class PauseControlsSprite < IconSprite
     @overlay.bitmap.blt(14, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::ACTION))
     @overlay.bitmap.blt(158, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::USE))
     textpos = [
-      [@controls[@index][0],46,18,0,Color.new(252,252,252),Color.new(0,0,0),true],
+      ["Save",46,18,0,Color.new(252,252,252),Color.new(0,0,0),true],
       [@controls[@index][1],190,18,0,Color.new(252,252,252),Color.new(0,0,0),true]
     ]
     pbSetSmallFont(@overlay.bitmap)
@@ -441,6 +441,13 @@ def pbPauseMenu
     shortcut = (option >= 10)
     option -= 10 if shortcut
     break if option == -1
+    if shortcut
+      pause_screen.pbEndPauseScreen
+      scene = PokemonSave_Scene.new
+      screen = PokemonSaveScreen.new(scene)
+      screen.pbSaveScreen
+      return 2
+    end
     case option
     when 0 # Pokemon
       if shortcut
