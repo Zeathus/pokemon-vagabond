@@ -373,7 +373,7 @@ class Battle::Move::GiveUserStatusToTarget < Battle::Move
       target.pbFreeze
       msg = _INTL("{1} was thawed out.", user.pbThis)
     when :FROSTBITE
-      target.pbFrostbite
+      target.pbFrostbite(user)
       msg = _INTL("{1}'s frostbite was healed.", user.pbThis)
     end
     if msg != ""

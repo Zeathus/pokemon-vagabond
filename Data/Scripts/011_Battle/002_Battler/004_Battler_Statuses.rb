@@ -451,8 +451,8 @@ class Battle::Battler
     return pbCanSynchronizeStatus?(:FROSTBITE, target)
   end
 
-  def pbFrostbite(msg = nil)
-    pbInflictStatus(:FROSTBITE, 0, msg)
+  def pbFrostbite(user = nil, msg = nil)
+    pbInflictStatus(:FROSTBITE, 0, msg, user)
   end
 
   #=============================================================================

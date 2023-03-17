@@ -263,7 +263,7 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
       target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
     when 9
       if Supplementals::FROSTBITE_REPLACE_FREEZE
-        target.pbFrostbite if target.pbCanFrostbite?(user, false, self)
+        target.pbFrostbite(user) if target.pbCanFrostbite?(user, false, self)
       else
         target.pbFreeze if target.pbCanFreeze?(user, false, self)
       end
