@@ -11,12 +11,12 @@ class Battle::Move::FrostbiteTarget < Battle::Move
 
   def pbEffectAgainstTarget(user, target)
     return if damagingMove?
-    target.pbFrostbite
+    target.pbFrostbite(user)
   end
 
   def pbAdditionalEffect(user, target)
     return if target.damageState.substitute
-    target.pbFrostbite if target.pbCanFrostbite?(user, false, self)
+    target.pbFrostbite(user) if target.pbCanFrostbite?(user, false, self)
   end
 end
 
@@ -51,7 +51,7 @@ class Battle::Move::FrostbiteFlinchTarget < Battle::Move
     chance = pbAdditionalEffectChance(user, target, 10)
     return if chance == 0
     if target.pbCanFrostbite?(user, false, self) && @battle.pbRandom(100) < chance
-      target.pbFrostbite
+      target.pbFrostbite(user)
     end
     target.pbFlinch(user) if @battle.pbRandom(100) < chance
   end
@@ -65,7 +65,7 @@ class Battle::Move::ParalyzeBurnOrFrostbiteTarget < Battle::Move
     return if target.damageState.substitute
     case @battle.pbRandom(3)
     when 0 then target.pbBurn(user) if target.pbCanBurn?(user, false, self)
-    when 1 then target.pbFrostbite if target.pbCanFrostbite?(user, false, self)
+    when 1 then target.pbFrostbite(user) if target.pbCanFrostbite?(user, false, self)
     when 2 then target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
     end
   end
