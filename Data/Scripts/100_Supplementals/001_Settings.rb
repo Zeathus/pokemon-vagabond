@@ -167,7 +167,7 @@ module Supplementals
   BURN_TURNS      = 5
   FROSTBITE_TURNS = 5
   POISON_TURNS    = 5
-  TOXIC_TURNS     = 5
+  TOXIC_TURNS     = 6
   PARALYSIS_TURNS = 4
 
   # Whether or not sleep should always last the same number of turns when infilcted by an opponent.

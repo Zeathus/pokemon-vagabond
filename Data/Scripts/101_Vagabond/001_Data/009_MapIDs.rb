@@ -4,7 +4,6 @@ module PBMaps
   # Routes
   ShalePath         = 6
   LazuliRiver       = 9
-  BrecciaPassage    = 13
   MtPegmaHillside   = 14
   BrecciaTrail      = 62
   QuartzPassing     = 72
@@ -17,8 +16,8 @@ module PBMaps
   
   # Areas
   Crosswoods        = 7
-  ShaleForest       = 61
-  HalcyonClearing   = 71
+  HalcyonClearing   = 58
+  HalcyonForest     = 61
   DeepBreccia       = 68
   BrecciaOutlook    = 120
   WestAndesIsle     = 25
@@ -27,6 +26,7 @@ module PBMaps
   EvergoneHill      = 209
   EvergoneStairway  = 210
   EvergoneRuins     = 211
+  EvergoneCrater    = 70
   SmokeyForest1     = 129
   SmokeyForest2     = 130
   RangerOutpost     = 219
@@ -50,11 +50,12 @@ module PBMaps
   # Cities
   ShaleTown         = 3
   LazuliDistrict    = 113
-  MicaTown          = 12
+  LapisLazuliPark   = 22
+  MicaDistrict      = 12
   MicaQuarry        = 87
   BrecciaCity       = 8
   BrecciaUndergrowth= 11
-  FeldsparTown      = 21
+  FeldsparDistrict  = 21
   LapisDistrict     = 27
   ScoriaCity        = 198
   AmphiTown         = 221
@@ -91,8 +92,8 @@ module PBMaps
       PBMaps::BrecciaCity,
       PBMaps::LazuliDistrict,
       PBMaps::LapisDistrict,
-      PBMaps::MicaTown,
-      PBMaps::FeldsparTown
+      PBMaps::MicaDistrict,
+      PBMaps::FeldsparDistrict
     ]
     return true if light_maps.include?(map)
     return false

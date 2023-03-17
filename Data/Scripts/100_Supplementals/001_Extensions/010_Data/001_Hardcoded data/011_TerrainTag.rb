@@ -80,6 +80,7 @@ GameData::TerrainTag.register({
   :id                     => :WaterEdge,
   :id_number              => 23,
   :can_surf               => true,
+  :can_fish               => true,
   :water_edge             => true
 })
 

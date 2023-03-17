@@ -1,6 +1,7 @@
 [CH2_MORNING]
 /speaker Amethyst
 ?> Good morning! Did you sleep well?
+    /savechoice ch2 wake up
     /choice Like a rock!
         /expression wink
         > The guest bed is pretty comfy, right?
@@ -146,19 +147,22 @@
 
 [CH2_GPO_INTRO,0]
 /speaker Amethyst
-> Now that the Nekane situation settled, I can finally give you a proper introduction.
+> With the Nekane situation settled, I can finally give you a proper introduction.
 > As you know, my name is Amethyst, and I am the leader here at the G[.]P[.]O[.]
 > This guy's name is Kira. He may come off a bit cold, but he's super reliable.
-/speaker Kira annoyed
+/speaker Kira lookaway
 > ...
 /speaker Amethyst
-> The G.P.O. is short for "Global Pokémon Organization". We have branches in several regions, but our main headquarters are here in Rokk.
+> The G[.]P[.]O[.] is short for "Global Pokémon Organization".
+> We have branches in several regions, but our main headquarters are here in Rokk.
 /expression wink
 > If there's ever a problem, it's us you report to!
 /speaker 0
 > Is there something that needs to be reported?
 
 [CH2_GPO_INTRO,1]
+/windowpos middle
+/hidewindow 1
 /speaker PLAYER
 /hidename 2
 /textpos middle
@@ -171,14 +175,151 @@
 > Luckily, we have been uninterrupted so far, avoiding causing suspicion as best we can.
 
 [CH2_GPO_INTRO,2]
+/event set Amethyst 1
+/event set Kira 2
 /speaker Amethyst
 ?> You heard something while you were sleeping? Was it a dream?
+    /savechoice ch2 explain vision
     /choice It felt real
-        > 
+        /dialog CH2_GPO_INTRO_1 0
     /choice May have been a vision
-        > You had a vision about those ruins, and now this as well?
+        /dialog CH2_GPO_INTRO_1 1
     /choice It can't have been
+        /dialog CH2_GPO_INTRO_1 0
 ?/>
+/speaker Amethyst
+> I think it could be worth checking the situation at Mt[.] Pegma just in case.
+/event Amethyst turn down
+/event Kira turn up
+/speaker Kira annoyed
+> You've got to be kidding me.\nYou can't be taking this seriously.
+> Visions?\nThat sounds like a load of Tauros dung!
+/speaker Amethyst unsatisfied
+> If that's the case, why don't you go check Mt[.] Pegma yourself then?
+/speaker Kira annoyed
+> Are you actively trying to waste my time?
+/expression neutral
+> Well, an order is an order, I guess.
+/event Amethyst turn right
+/event Kira turn right
+/speaker Amethyst
+> <PLAYER>, could you tag along with him?\nIf there really is some operation going on there, a helping hand might be useful.
+/speaker Kira lookaway
+.> This is getting better by the minute...
+
+[CH2_GPO_INTRO_1,0] # Not mentioning a vision the second time
+/speaker Amethyst confused
+> Hmm...\nYou say that with a lot of confidence.
+/if pbGetChoiceValue("ch1 interrogation") == "I had a vision"
+    # Mentioned a vision previously
+    /expression neutral
+    > You did mention you went to the Evergone Mangrove because of a vision...
+    > Maybe it isn't just a coincidence then.
+/else
+    # Did not mention a vision previously
+    /expression neutral
+    > Is this kind of thing a first for you, or has something similar happened before?
+    /dialog CH2_GPO_INTRO_1 2
+    /speaker Amethyst
+    > So this the second time.\nMaybe it isn't just a coincidence then.
+/end
+
+[CH2_GPO_INTRO_1,1] # Mentioning a vision the second time
+/if pbGetChoiceValue("ch1 interrogation") == "I had a vision"
+    # Mentioned a vision both times
+    /speaker Amethyst neutral
+    > You had a vision about those ruins, and now this too?
+    > Maybe it isn't just a coincidence then.
+/else
+    # Vision not mentioned previously
+    /speaker Amethyst confused
+    > A vision? You say that as if it's a common occurence.
+    /dialog CH2_GPO_INTRO_1 2
+    /speaker Amethyst
+    > So this the second time.\nMaybe it isn't just a coincidence then.
+/end
+
+[CH2_GPO_INTRO_1,2]
+/reset
+/fade black
+> You tell Amethyst and Kira about the vision you saw of the Evergone Ruins.
+/reset
+/fade normal
+/wait 10
+
+[CH2_GPO_INTRO,3]
+/event set Amethyst 1
+/event set Kira 2
+/event set Sandslash 6
+/speaker Kira annoyed
+> I'll be keeping an eye on you.\nDon't try anything funny.
+/reset
+/wait 4
+/event Player turn left
+/event Kira turn left
+/event Sandslash turn left
+/wait 4
+/speaker Amethyst
+> There's one last thing that needs doing before you head out, <PLAYER>.
+> It would be amiss if you join a mission like this without being an official G[.]P[.]O[.] member.
+/speaker Kira lookaway
+.> I give up.
+/speaker Amethyst
+> Please follow me to the reception in the lobby, we can register you there.
+> Don't worry though, being registered only means you can do official work if you want to. There are no fixed hours.
+
+[CH2_GPO_INTRO,4]
+/speaker Receptionist
+> Hello Amethyst, what may I do for you today?
+/speaker Amethyst
+> I'd like you to have <PLAYER> here registered as an official G[.]P[.]O[.] member. Could you sort that out?
+/speaker Receptionist
+> No problem at all! They will just have to fill out this form first.
+
+[CH2_GPO_INTRO,5]
+> You carefully fill out the form.
+/speaker Receptionist
+> Thank you. Now we only need to take your ID photo.
+> Please come behind the counter.
+
+[CH2_GPO_INTRO,6]
+/speaker Receptionist
+> Try to look natural and do not cover your face.
+
+[CH2_GPO_INTRO,7]
+/speaker Receptionist
+> That should do it. Give me a couple minutes to get your ID card in order.
+
+[CH2_GPO_INTRO,8]
+/speaker Receptionist
+> Here you go. You are now an official member of the G[.]P[.]O.\nGlad to make your acquaintance.
+/speaker 0
+> \ts[2]You got the job as a G[.]P[.]O[.] member!
+/speaker Amethyst
+> \ts[1]Thank you for your help.\nWe should get going now.
+
+[CH2_GPO_INTRO,9]
+/speaker Amethyst
+> Kira! We're done signing up!
+
+[CH2_GPO_INTRO,10]
+/speaker Kira
+> Took you long enough.
+> Anyway, we should get going. Mt[.] Pegma will stay void of operations if we don't head there to find nothing.
+/speaker Amethyst
+> I will stay here. Nekane is likely still feeling uneasy, so I should be here in case she needs me.
+
+[CH2_GPO_INTRO,11]
+> \ts[5]Kira has joined the party!
+
+[CH2_GPO_INTRO,12]
+> Didn't Raphael say Allister could need my help at the quarry?
+
+[CH2_GPO_INTRO,13]
+> You remember Faunus telling you to meet him at his house later.
+
+[CH2_GPO_INTRO,14]
+> Leroy did mention wanting your help at the G[.]P[.]O...
 
 [CH2_PEGMA_ROADBLOCK]
 /speaker Stranger

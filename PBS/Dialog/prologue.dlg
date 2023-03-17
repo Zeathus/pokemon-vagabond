@@ -80,6 +80,7 @@
 /speaker Duke
 /hidename 1
 ?> I could sense your presence.\nIt is strong as always.
+    /savechoice duke introduction
     /choice Do I know you?
         > There may be a world where you know me, but alas, we are not in that world.
     /choice Have we met?
@@ -152,6 +153,7 @@
 > I am sure you will make great partners, and so will you and I.
 > In the Rokk region, double battles are the custom.
 ?> Therefore, I shall join you on your quest and in battles!
+    /savechoice duke guide offer
     /choice Why?
     /choice Please do!
         > I knew you wouldn't be able to resist my most generous offer.
@@ -183,7 +185,7 @@
 [PROLOGUE_DUKE_JOIN]
 /me Slots win
 > \ts[5]Duke has joined the party!
-> You can now press X to open the menu.
+> \ts[1]You can now press X to open the menu.
 
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,0]
 /speaker Duke

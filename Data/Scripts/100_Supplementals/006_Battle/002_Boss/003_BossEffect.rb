@@ -110,7 +110,8 @@ class BossEff_Ability < BossEffect
       battle.pbDisplay(_INTL("{1} acquired {2}!",target.pbThis,target.abilityName))
       battle.pbHideAbilitySplash(target)
     end
-    target.pbOnAbilityChanged(oldAbil)
+    target.pbOnLosingAbility(oldAbil)
+    target.pbTriggerAbilityOnGainingIt
   end
 end
 

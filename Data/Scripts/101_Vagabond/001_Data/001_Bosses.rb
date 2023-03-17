@@ -349,32 +349,37 @@ def pbBossTropius
     :AIRSLASH
   ]
   pbModifier.hpmult = 8.0
-  pbModifier.ability = 0
+  pbModifier.ability = :CHLOROPHYLL
   pbModifier.item = :SITRUSBERRY
   pbModifier.gender = 1
   pbModifier.nature = :TIMID
-  pbBoss.add(
-    [:Start],
-    [:Message,"The clear skies shine on the outlook."],
-    [:Weather, :Sun],
-    [:Message,"Tropius is speeding up due to its Chlorophyll."]
-  )
-  pbBoss.add(
-    [:Interval, 1],
-    [:If, "battle.field.weather != :Sun"],
-    [:Message,"The clear skies shine on the outlook."],
-    [:Weather, :Sun]
-  )
-  pbBoss.add(
-    [:Timed, 2],
-    [:Message, "Tropius' ability changed to Solar Power!"],
-    [:Ability, :SOLARPOWER]
-  )
-  pbBoss.add(
-    [:HP, 100],
-    [:Message, "Tropius' ability changed to Harvest!"],
-    [:Ability, :HARVEST]
-  )
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "The clear skies shine on the outlook."))
+  t.effect(BossEff_Weather.new(t, :Sun, 999))
+  t.effect(BossEff_Weather.new(t, "Tropius is speeding up due to its Chlorophyll."))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Weather.new(t, :Sun, false))
+  t.effect(BossEff_Message.new(t, "The clear skies shine on the outlook."))
+  t.effect(BossEff_Weather.new(t, :Sun, 999))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Interval.new(t, 3))
+  t.effect(BossEff_Ability.new(t, :SOLARPOWER))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Interval.new(t, 3, 1))
+  t.effect(BossEff_Ability.new(t, :HARVEST))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Interval.new(t, 3, 2))
+  t.effect(BossEff_Ability.new(t, :CHLOROPHYLL))
+  pbBoss.add(t)
 end
 
 def pbPuzzleBossDeino

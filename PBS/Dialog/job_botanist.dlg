@@ -1,0 +1,52 @@
+[JOB_BOTANIST_PRE,0]
+/speaker Faunus
+> Hey <PLAYER>! I still wish to teach you that thing I mentioned, but you should finish what you have to do first.
+
+[JOB_BOTANIST,0]
+/speaker Faunus
+?> Hey <PLAYER>! Are you here because you want me to teach you that useful thing I mentioned?
+    /choice Yes
+        > Great! I am sure you will make good use of this.
+        /return true
+    /cancelchoice No
+        > Ah, some other time then.
+        /return false
+?/>
+
+[JOB_BOTANIST,1]
+/speaker Faunus
+> You see, I'm quite the avid botanist, and I believe everyone could make good use of botany.
+> You've surely found and picked some berries while out traveling, right?
+> What if I told you that with proper technique, you can impact the yield from a berry bush?
+> Please, follow me and I'll show you.
+
+[JOB_BOTANIST,2]
+/speaker Faunus
+> This is a Chesto Berry bush, and it just so happens to be in a prime position for what I wish to show you.
+> A berry bush can be quite fickle, so it actually matters how you approach it when picking berries.
+> Here, let me explain the details to you...
+
+[JOB_BOTANIST,3]
+/speaker Faunus
+> If I were to pick berries from up top, I would be more likely to find items like a Power Herb.
+
+[JOB_BOTANIST,4]
+/speaker Faunus
+> From the side I would get an additional Chesto Berry.
+
+[JOB_BOTANIST,5]
+/speaker Faunus
+> Lastly, from the bottom, I could maybe fetch a good mushroom or an Energy Root.
+
+[JOB_BOTANIST,6]
+/speaker Faunus
+> Of course some berry bushes grow in a spot where they are inaccessible from certain sides.
+> I hope you find this useful when aiming for certain items.
+
+[JOB_BOTANIST,7]
+/speaker Faunus
+> I'd love to teach you more about botany, but I think you require some practice first.
+> Why don't you go try harvesting a variety of different berries? I'm sure that would make you skilled quickly.
+/speaker 0
+> \ts[2]You got the job as a Botanist!
+> \ts[1]You can track your berry collection progress in the Trainer menu.

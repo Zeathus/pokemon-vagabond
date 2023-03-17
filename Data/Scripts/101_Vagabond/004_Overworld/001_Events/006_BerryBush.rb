@@ -1,16 +1,12 @@
 def pbHarvestBerry(item, quantity)
-  pbMessage(_INTL("It's a bush blooming of {1}. Do you want to pick them?{2}",
+  pbMessage(_INTL("The bush holds fresh {1}.\nDo you want to pick them?{2}",
     GameData::Item.get(item).name_plural,"\\ch[1,2,Yes,No]"))
   quantity += 1 if GameData::Weather.get($game_screen.weather_type).category == :Sun
   if pbGet(1)==0
     realqnt = quantity
-    if (pbPartyAbilityCount(:HARVEST)+
-        pbPartyAbilityCount(:CHEEKPOUCH)+
-        pbPartyAbilityCount(:SYMBIOSIS)+
-        pbPartyMoveCount(:NATURALGIFT)+
-        pbPartyMoveCount(:POLLENPUFF)+
-        pbPartyMoveCount(:ROTOTILLER)+
-        pbPartyMoveCount(:WATERSPORT))>0
+    if (pbPartyAbilityCount(:HARVEST) +
+        pbPartyAbilityCount(:CHEEKPOUCH) +
+        pbPartyAbilityCount(:SYMBIOSIS)) > 0
       realqnt = (realqnt * 1.5).floor
     end
     title = "ITEM COLLECTED"
@@ -25,53 +21,41 @@ def pbHarvestBerry(item, quantity)
     else
       text += itemname
     end
-    if realqnt > quantity
-      if pbPartyAbilityPokemon(:HARVEST)
-        pkmn = pbPartyAbilityPokemon(:HARVEST)
-        text2 = pkmn.name + "'s " + "Harvest: +" + (realqnt-quantity).to_s + "x"
-      elsif pbPartyAbilityPokemon(:CHEEKPOUCH)
-        pkmn = pbPartyAbilityPokemon(:CHEEKPOUCH)
-        text2 = pkmn.name + "'s " + "Cheek Pouch: +" + (realqnt-quantity).to_s + "x"
-      elsif pbPartyAbilityPokemon(:SYMBIOSIS)
-        pkmn = pbPartyAbilityPokemon(:SYMBIOSIS)
-        text2 = pkmn.name + "'s " + "Symbiosis: +" + (realqnt-quantity).to_s + "x"
-      elsif pbPartyMovePokemon(:NATURALGIFT)
-        pkmn = pbPartyMovePokemon(:NATURALGIFT)
-        text2 = pkmn.name + "'s " + "Natural Gift: +" + (realqnt-quantity).to_s + "x" 
-      elsif pbPartyMovePokemon(:POLLENPUFF)
-        pkmn = pbPartyMovePokemon(:POLLENPUFF)
-        text2 = pkmn.name + "'s " + "Pollen Puff: +" + (realqnt-quantity).to_s + "x" 
-      elsif pbPartyMovePokemon(:ROTOTILLER)
-        pkmn = pbPartyMovePokemon(:ROTOTILLER)
-        text2 = pkmn.name + "'s " + "Rototiller: +" + (realqnt-quantity).to_s + "x" 
-      elsif pbPartyMovePokemon(:WATERSPORT)
-        pkmn = pbPartyMovePokemon(:WATERSPORT)
-        text2 = pkmn.name + "'s " + "Water Sport: +" + (realqnt-quantity).to_s + "x" 
-      end
+
+    loot = {
+      :TINYMUSHROOM => 64,
+      :BIGMUSHROOM => 128,
+      :BALMMUSHROOM => 256,
+      :MENTALHERB => 128,
+      :POWERHERB => 128,
+      :WHITEHERB => 128,
+      :HONEY => 256,
+      :HEALPOWDER => 128,
+      :ENERGYPOWDER => 128,
+      :ENERGYROOT => 256,
+      :REVIVALHERB => 1024,
+      :BIGROOT => 256,
+      :ABSORBBULB => 256,
+      :LUMINOUSMOSS => 256,
+      :MIRACLESEED => 512,
+      :SILVERPOWDER => 512
+    }
+
+    if pbPartyAbilityCount(:HONEYGATHER) > 0
+      loot[:HONEY] /= 8
     end
-    pbItemBall(item, realqnt)
-    #$bag.pbStoreItem(item,realqnt)
-    #pbSEPlay("ItemGet",100)
-    #text = text.upcase if text
-    #text2 = text2.upcase if text2
-    #pbCollectNotification(text, text2, title)
 
-    pbJob("Botanist").register(item)
+    if pbPartyMoveCount(:ROTOTILLER) > 0
+      loot[:ENERGYROOT] /= 4
+      loot[:BIGROOT] /= 4
+      loot[:MIRACLESEED] /= 4
+    end
 
-    loot = []
-    loot.push([32, :TINYMUSHROOM])
-    loot.push([128, :BIGMUSHROOM])
-    loot.push([256, :BALMMUSHROOM])
-    loot.push([1365, :REVIVALHERB])
-    loot.push([96, :MENTALHERB])
-    loot.push([128, :POWERHERB])
-    loot.push([128, :WHITEHERB])
-
-    # Ability Dependant drops
-    loot.push([32, :HONEY]) if pbPartyAbilityCount(:HONEYGATHER)>0
-    loot.push([pbPartyMoveCount(:ROTOTILLER) ? 48 : 128, :ENERGYROOT])
-    loot.push([pbPartyMoveCount(:ROTOTILLER) ? 64 : 256, :BIGROOT])
-    loot.push([pbPartyMoveCount(:WATERSPORT) ? 64 : 256, :ABSORBBULB])
+    if pbPartyMoveCount(:WATERSPORT) > 0
+      loot[:ABSORBBULB] /= 4
+      loot[:LUMINOUSMOSS] /= 4
+      loot[:SILVERPOWDER] /= 4
+    end
 
     # Nectars (4x the chance if the player has an Oricorio)
     case item
@@ -79,22 +63,22 @@ def pbHarvestBerry(item, quantity)
          :CHESTOBERRY, :CORNNBERRY, :GANLONBERRY,
          :PAMTREBERRY, :PAYAPABERRY, :RAWSTBERRY,
          :WIKIBERRY
-      loot.push([pbHasInParty?(:ORICORIO) ? 32 : 128, :PURPLENECTAR])
+      loot[:PURPLENECTAR] = (pbHasInParty?(:ORICORIO) ? 32 : 128)
     when :COLBURBERRY, :KASIBBERRY, :KEEBERRY,
          :LANSATBERRY, :MAGOBERRY, :MAGOSTBERRY,
          :NANABBERRY, :PECHABERRY, :PERSIMBERRY,
          :PETAYABERRY, :QUALOTBERRY, :SPELONBERRY
-      loot.push([pbHasInParty?(:ORICORIO) ? 32 : 128, :PINKNECTAR])
+      loot[:PINKNECTAR] = (pbHasInParty?(:ORICORIO) ? 32 : 128)
     when :CHERIBERRY, :CHOPLEBERRY, :CUSTAPBERRY,
          :HABANBERRY, :LEPPABERRY, :OCCABERRY,
          :POMEGBERRY, :RAZZBERRY, :ROSELIBERRY,
          :TAMATOBERRY
-      loot.push([pbHasInParty?(:ORICORIO) ? 32 : 128, :REDNECTAR])
+      loot[:REDNECTAR] = (pbHasInParty?(:ORICORIO) ? 32 : 128)
     when :ASPEARBERRY, :CHARTIBERRY, :GREPABERRY,
          :HONDEWBERRY, :JABOCABERRY, :NOMELBERRY,
          :PINAPBERRY, :SHUCABERRY, :SITRUSBERRY,
          :WACANBERRY
-      loot.push([pbHasInParty?(:ORICORIO) ? 32 : 128, :YELLOWNECTAR])
+      loot[:YELLOWNECTAR] = (pbHasInParty?(:ORICORIO) ? 32 : 128)
     end
 
     # Seeds
@@ -102,32 +86,65 @@ def pbHarvestBerry(item, quantity)
     when :APICOTBERRY, :COBABERRY, :CORNNBERRY,
          :KELPSYBERRY, :ROSELIBERRY, :ROWAPBERRY,
          :YACHEBERRY, :WIKIBERRY
-      loot.push([64, :MISTYSEED])
+      loot[:MISTYSEED] = 64
     when :COLBURBERRY, :KASIBBERRY, :KEEBERRY,
          :LANSATBERRY, :MAGOBERRY, :MAGOSTBERRY,
          :NANABBERRY, :PECHABERRY, :PERSIMBERRY,
          :PETAYABERRY, :QUALOTBERRY, :SPELONBERRY
-      loot.push([64, :PSYCHICSEED])
+      loot[:PSYCHICSEED] = 64
     when :AGUAVBERRY, :BABIRIBERRY, :DURINBERRY,
          :HONDEWBERRY, :KEBIABERRY, :LUMBERRY,
          :MICLEBERRY, :RABUTABERRY, :RINDOBERRY,
          :SALACBERRY, :STARFBERRY, :WEPEARBERRY,
          :TANGABERRY
-      loot.push([64, :GRASSYSEED])
+      loot[:GRASSYSEED] = 64
     when :ASPEARBERRY, :CHARTIBERRY, :GREPABERRY,
          :JABOCABERRY, :NOMELBERRY, :PINAPBERRY,
          :SHUCABERRY, :SITRUSBERRY, :WACANBERRY
-      loot.push([64, :ELECTRICSEED])
+      loot[:ELECTRICSEED] = 64
     end
 
-    for bonus in loot
-      rng = rand(bonus[0])
-      if rng < realqnt
-        pbItemBall(bonus[1], 1)
-        #$bag.pbStoreItem(bonus[1], 1)
-        #pbCollectNotification(GameData::Item.get(item).name, "BONUS ITEM!")
+    extra_berries = 0
+    if pbJob("Botanist").level >= 1
+      rate = 8
+      rate = 16 if pbJob("Botanist").level >= 3
+      if $game_player.direction == 2 # Down
+        loot[:MENTALHERB] /= rate
+        loot[:POWERHERB] /= rate
+        loot[:WHITEHERB] /= rate
+        loot[:HEALPOWDER] /= rate
+        loot[:ENERGYPOWDER] /= rate
+        loot[:REVIVALHERB] /= rate
+        loot[:ABSORBBULB] /= rate
+        loot[:SILVERPOWDER] /= rate
+      elsif $game_player.direction == 8 # Up
+        loot[:TINYMUSHROOM] /= rate
+        loot[:BIGMUSHROOM] /= rate
+        loot[:BALMMUSHROOM] /= rate
+        loot[:ENERGYROOT] /= rate
+        loot[:BIGROOT] /= rate
+        loot[:MIRACLESEED] /= rate
+        loot[:LUMINOUSMOSS] /= rate
+        loot[:MISTYSEED] /= rate if loot.key?(:MISTYSEED)
+        loot[:PSYCHICSEED] /= rate if loot.key?(:PSYCHICSEED)
+        loot[:GRASSYSEED] /= rate if loot.key?(:GRASSYSEED)
+        loot[:ELECTRICSEED] /= rate if loot.key?(:ELECTRICSEED)
+      else # Left / Right
+        extra_berries = rate / 8
       end
     end
+
+    pbItemBall(item, realqnt + extra_berries)
+    pbJob("Botanist").register(item)
+
+    loot.each do |item, chance|
+      rng = rand(chance)
+      if rng < realqnt
+        pbItemBall(item, 1)
+      end
+    end
+
+    pbAddGuide("Berry Bushes")
 
     return true
   end

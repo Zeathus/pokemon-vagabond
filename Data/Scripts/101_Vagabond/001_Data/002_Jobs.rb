@@ -32,19 +32,29 @@ end
 
 def pbJob(name)
   if !$game_variables[JOBS].is_a?(Hash)
-      $game_variables[JOBS] = {}
+    $game_variables[JOBS] = {}
   end
   if !$game_variables[JOBS].key?(name)
-      $game_variables[JOBS][name] = pbJobClass(name).new
+    $game_variables[JOBS][name] = pbJobClass(name).new
   end
   return $game_variables[JOBS][name]
 end
 
 def pbJobs
   if !$game_variables[JOBS].is_a?(Hash)
-      $game_variables[JOBS] = {}
+    $game_variables[JOBS] = {}
   end
   return $game_variables[JOBS].values
+end
+
+def pbHasJob(job)
+  if !$game_variables[JOBS].is_a?(Hash)
+    $game_variables[JOBS] = {}
+  end
+  if $game_variables[JOBS].key?(job)
+    return (pbJob(job).level > 0)
+  end
+  return false
 end
 
 class Job
@@ -85,6 +95,10 @@ class Job
           "Level 4",
           "Level 5"
       ]
+  end
+
+  def location
+    return "???"
   end
 
   def progress_text
@@ -129,22 +143,26 @@ class JobGPO < Job
       ]
   end
 
+  def location
+    return "G.P.O. HQ"
+  end
+
   def rewards
       return [
-          "Level 1",
-          "Level 2",
-          "Level 3",
-          "Level 4",
-          "Level 5"
+          "Rookie Tasks",
+          "Intermediate Tasks",
+          "Advanced Tasks",
+          "Expert Tasks",
+          "Master Tasks"
       ]
   end
 
   def progress_text
-      return ""
+      return _INTL("Completed {1} / {2} {3}", self.progress, self.requirement, self.rewards[self.level - 1])
   end
 
   def requirement
-      return 1
+      return 4
   end
 
   def progress
@@ -170,6 +188,10 @@ class JobBotanist < Job
       ]
   end
 
+  def location
+    return "Breccia City"
+  end
+
   def rewards
       return [
           "Directional Harvest",
@@ -190,7 +212,7 @@ class JobBotanist < Job
   end
 
   def requirement
-      return [10,20,30,40,50][@level]
+      return [0,16,24,32,48][@level]
   end
 
   def progress
@@ -220,6 +242,10 @@ class JobMiner < Job
           nil,
           nil
       ]
+  end
+
+  def location
+    return "Pegma Quarry"
   end
 
   def rewards
@@ -262,6 +288,10 @@ class JobDoctor < Job
       ]
   end
 
+  def location
+    return "???"
+  end
+
   def rewards
       return [
           "Level 1",
@@ -300,6 +330,10 @@ class JobCrafter < Job
           nil,
           nil
       ]
+  end
+
+  def location
+    return "???"
   end
 
   def rewards
@@ -342,6 +376,10 @@ class JobProfessor < Job
       ]
   end
 
+  def location
+    return "G.P.O. HQ"
+  end
+
   def rewards
       return [
           "Level 1",
@@ -382,6 +420,10 @@ class JobRanger < Job
       ]
   end
 
+  def location
+    return "???"
+  end
+
   def rewards
       return [
           "Level 1",
@@ -420,6 +462,10 @@ class JobBreeder < Job
           nil,
           nil
       ]
+  end
+
+  def location
+    return "???"
   end
 
   def rewards
@@ -463,37 +509,81 @@ class JobFisher < Job
       ]
   end
 
+  def location
+    return "Lazuli River"
+  end
+
   def rewards
       return [
           "Fishing Rod",
-          "Level 2",
-          "Level 3",
-          "Level 4",
-          "Level 5"
+          "Powerful Hookset",
+          "Quick Move",
+          "Fish Eyes",
+          "???"
       ]
   end
 
   def progress_text
-      if @level == 5
-          return _INTL("Hooked {1} Kinds of Pokémon",
-              self.progress)
-      end
-      return _INTL("Hooked {1} / {2} Kinds of Pokémon",
-          self.progress, self.requirement)
+    case @level
+    when 1
+      return _INTL("Hook Seaking & Poliwhirl ({1} / {2})", self.progress, self.requirement)
+    when 2
+      return _INTL("Gyarados, Dragonair, Whiscash ({1} / {2})", self.progress, self.requirement)
+    when 3
+      return _INTL("Hook Wailord, Milotic, Walrein ({1} / {2})", self.progress, self.requirement)
+    when 4
+      return _INTL("Hook the Master of the Sea")
+    when 5
+      return _INTL("Hooked {1} / {2} Species of Pokémon", self.progress, self.requirement)
+    end
   end
 
   def requirement
-      return [10, 20, 30, 40, 50][@level]
+    case @level
+    when 1
+        return 2
+    when 2
+        return 3
+    when 3
+        return 3
+    when 4
+        return 1
+    when 5
+        return pbFishStats.length
+    end
+    return 0
   end
 
   def progress
-      return @dummy.length
+    total = 0
+    case @level
+    when 1
+        total += 1 if hooked?(:SEAKING)
+        total += 1 if hooked?(:POLIWHIRL)
+    when 2
+        total += 1 if hooked?(:GYARADOS)
+        total += 1 if hooked?(:DRAGONAIR)
+        total += 1 if hooked?(:WHISCASH)
+    when 3
+        total += 1 if hooked?(:WAILORD)
+        total += 1 if hooked?(:MILOTIC)
+        total += 1 if hooked?(:WALREIN)
+    when 4
+        total += 1 if hooked?(:MANAPHY)
+    when 5
+        total = @dummy.length
+    end
+    return total
   end
 
   def register(fish)
       if !@dummy.include?(fish)
           @dummy.push(fish)
       end
+  end
+
+  def hooked?(fish)
+    return @dummy.include?(fish)
   end
 
 end
@@ -512,6 +602,10 @@ class JobRuinManiac < Job
           nil,
           nil
       ]
+  end
+
+  def location
+    return "???"
   end
 
   def rewards
@@ -543,7 +637,7 @@ class JobEngineer < Job
   def initialize
       super("Engineer", "Leroy", "job_engineer")
       @dummy = []
-      @frames = []
+      @frames = [PBFrame::Null]
   end
 
   def quests
@@ -554,6 +648,10 @@ class JobEngineer < Job
           nil,
           nil
       ]
+  end
+
+  def location
+    return "G.P.O. HQ"
   end
 
   def rewards
@@ -567,15 +665,23 @@ class JobEngineer < Job
   end
 
   def progress_text
-      return ""
+      return _INTL("Found {1} / {2} Data Chips", self.progress, self.requirement)
   end
 
   def requirement
-      return 1
+    return [0, 16, 32, 64, 96, 128][@level]
   end
 
   def progress
-      return 0
+    count = $bag.quantity(:DATACHIP)
+    pbAllDataChipMoves.each do |m|
+      count += m[1] if pbHasDataChipMove(m[0])
+    end
+    return count
+  end
+
+  def frames
+    return @frames
   end
 
 end

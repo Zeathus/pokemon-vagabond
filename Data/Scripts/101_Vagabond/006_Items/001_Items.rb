@@ -1,5 +1,5 @@
-ItemHandlers::UseInField.add(:FISHINGROD,proc { |item|
-    notCliff = $game_map.passable?($game_player.x,$game_player.y,$game_player.direction,$game_player)
+ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
+    notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
     if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
         pbMessage(_INTL("Can't use that here."))
         next 0
@@ -18,11 +18,10 @@ ItemHandlers::UseInField.add(:FISHINGROD,proc { |item|
     else
         encounter = $PokemonEncounters.has_encounter_type?(:FishingRod)
         if encounter
-            $PokemonTemp.encounterType = :FishingRod
+            $game_temp.encounter_type = :FishingRod
             encounter = $PokemonEncounters.choose_wild_pokemon(:FishingRod)
-            encounter = EncounterModifier.trigger(encounter)
+            EventHandlers.trigger(:on_wild_species_chosen, encounter)
             if encounter
-                pbScaleWildEncounter(encounter)
                 pbFishingGame(encounter)
             end
         end

@@ -38,18 +38,11 @@ class PokemonJobs_Scene
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = 99999
     @sprites = {}
-    background = pbResolveBitmap(sprintf("Graphics/Pictures/Trainer Card/bg_f"))
-    if ($player.female? || $game_switches[GPO_MEMBER]) && background
-      addBackgroundPlane(@sprites,"bg","Trainer Card/bg_f",@viewport)
-    else
-      addBackgroundPlane(@sprites,"bg","Trainer Card/bg",@viewport)
-    end
+    addBackgroundPlane(@sprites,"bg","Trainer Card/bg",@viewport)
     cardexists = pbResolveBitmap(sprintf("Graphics/Pictures/Trainer Card/card_f"))
     @jobs = ["Trainer"]
-    for job in pbJobs
-      if job.level > 0
-        @jobs.push(job.name)
-      end
+    pbAllJobs.each do |job|
+      @jobs.push(job) if pbHasJob(job)
     end
     @jobs.push("General Stats", "Battle Stats")
     @sprites["listbg"] = IconSprite.new(0,48,@viewport)
@@ -120,14 +113,10 @@ class PokemonJobs_Scene
   end
 
   def pbDrawTrainerCard(card, overlay)
-    if $game_switches[GPO_MEMBER]
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_gpo")
+    if $player.female? && cardexists
+      card.setBitmap("Graphics/Pictures/Trainer Card/card_f")
     else
-      if $player.female? && cardexists
-        card.setBitmap("Graphics/Pictures/Trainer Card/card_f")
-      else
-        card.setBitmap("Graphics/Pictures/Trainer Card/card")
-      end
+      card.setBitmap("Graphics/Pictures/Trainer Card/card")
     end
     return if !overlay
     #@sprites["trainer"].visible=true
@@ -157,30 +146,6 @@ class PokemonJobs_Scene
        [_INTL("Started"),34,262,0,baseColor,shadowColor],
        [starttime,302,262,1,baseColor,shadowColor]
     ]
-    if $game_switches[GPO_MEMBER]
-      count = $game_variables[MINIQUESTCOUNT]
-      name=""
-      if count==0
-        name="Newbie"
-      elsif count==1
-        name="Beginner"
-      elsif count < 6
-        name="Novice"
-      elsif count < 12
-        name="Competent"
-      elsif count < 20
-        name="Proficient"
-      elsif count < 30
-        name="Expert"
-      elsif count < 100
-        name="Elite"
-      elsif count < 1000
-        name="Master"
-      else
-        name="Why?"
-      end
-      textPositions.push([name,424,250,2,baseColor,shadowColor])
-    end
     pbDrawTextPositions(overlay.bitmap,textPositions)
     x = 42
     region = pbGetCurrentRegion(0) # Get the current region
@@ -270,15 +235,21 @@ class PokemonJobs_Scene
         skills[i] = "???"
       end
     end
+    if job.progress > 0
+      bar_width = (192 * [job.progress, job.requirement].min / job.requirement) * 2
+      overlay.bitmap.fill_rect(64, 312, bar_width, 2, Color.new(0, 144, 0))
+      overlay.bitmap.fill_rect(64, 314, bar_width, 24, Color.new(24, 192, 32))
+      overlay.bitmap.fill_rect(64, 338, bar_width, 2, Color.new(0, 144, 0))
+    end
     textPositions = [
-       [job.teacher_title,34,58,0,baseColor,shadowColor],
-       [job.teacher,302,58,1,baseColor,shadowColor],
-       [_INTL("ID No."),332,58,0,baseColor,shadowColor],
-       [sprintf("%05d",$player.public_ID),468,58,1,baseColor,shadowColor]
+       [job.teacher_title,34,70,0,baseColor,shadowColor],
+       [job.teacher,302,70,1,baseColor,shadowColor],
+       [job.location,332,70,0,baseColor,shadowColor],
+       [job.progress_text,254,314,2,baseColor2,shadowColor,true]
     ]
     for i in 0...skills.length
       textPositions.push([
-        skills[i],74,106 + 36*i,0,(job.level <= i) ? baseColor : baseColor2,shadowColor
+        skills[i],74,118 + 36*i,0,(job.level <= i) ? baseColor : baseColor2,shadowColor
       ])
     end
     pbDrawTextPositions(overlay.bitmap,textPositions)

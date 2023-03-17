@@ -1415,9 +1415,16 @@ class PokemonSummaryScene
                 if $game_variables[DATA_CHIP_MOVES].length <= 0
                   pbMessage(_INTL("To unlock moves, you will use Data Chips.\nUnlocked moves will then be permanently available for all compatible Pokémon."))
                 end
-                command = pbMessage(_INTL("Do you want to extract {1}\nfrom {2} Data Chips?",movename,move[1]),["Yes","No"],-1)
+                msgwindow = pbCreateMessageWindow(nil, nil)
+                msgwindow.z += 3
+                command = pbMessageDisplay(msgwindow, _INTL("Do you want to extract {1}\nfrom {2} Data Chips?",movename,move[1]), true,
+                                      proc { |msgwindow|
+                                        next Kernel.pbShowCommands(msgwindow, ["Yes","No"], -1, 0)
+                                      })
+                pbDisposeMessageWindow(msgwindow)
+                Input.update
                 if command == 0
-                  $bag.pbDeleteItem(:DATACHIP,move[1])
+                  $bag.remove(:DATACHIP,move[1])
                   pbAddDataChipMove(move[0])
                   @listMoves[2] = pbGetDataChipMoves(@pokemon)
                   for i in 0...@listMoves[2].length

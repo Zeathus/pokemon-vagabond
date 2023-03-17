@@ -4,6 +4,9 @@ MAX_PARTY_BOX_SIZE   = 6
 # Game Switches
 # ----------------------------------------------------------------------
 GOT_STARTER         = 3
+GYM_RAPHAEL         = 4
+GYM_FAUNUS          = 5
+GYM_LEROY           = 6
 NO_TELEPORT         = 51
 CUSTOM_WILD         = 53
 TAKEN_STEP          = 54
@@ -57,6 +60,7 @@ UNSTOPPABLE         = 146
 FINAL_BATTLE        = 147
 POKEPLAYER          = 151
 HAS_TELEPORT        = 152
+MET_CERISE          = 153
 FRIENDOFELEMENTS    = 209
 
 # ----------------------------------------------------------------------
@@ -131,6 +135,10 @@ PERSISTENT_EVENTS   = 114
 DEBUG_VAR           = 115
 AMPHIWOODSPOS       = 128
 AMPHIWOODSROUTE     = 129
+CERISE_TOTAL        = 130
+CERISE_VIRIZION     = 131
+CERISE_COBALION     = 132
+CERISE_TERRAKION    = 133
 CURRENTMINIQUEST    = 144
 MINIQUESTCOUNT      = 145
 MINIQUESTCOUNT2     = 146

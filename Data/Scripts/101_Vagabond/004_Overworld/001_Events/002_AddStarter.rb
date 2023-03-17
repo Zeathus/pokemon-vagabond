@@ -6,11 +6,11 @@ def pbAddStarter(species)
   pokemon.nature = :BASHFUL
   case species
   when :SKIDDO
-    pokemon.iv = pbStatArrayToHash([31,31,16,5,10,16])
+    pokemon.el = pbStatArrayToHash([3,3,2,0,1,2])
   when :NUMEL
-    pokemon.iv = pbStatArrayToHash([31,16,16,5,31,10])
+    pokemon.el = pbStatArrayToHash([3,2,2,0,3,1])
   when :KRABBY
-    pokemon.iv = pbStatArrayToHash([31,31,16,5,10,16])
+    pokemon.el = pbStatArrayToHash([3,3,2,0,1,2])
   end
 
   pokemon.happiness = 128

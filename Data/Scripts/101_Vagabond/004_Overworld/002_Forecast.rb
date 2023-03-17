@@ -20,9 +20,9 @@ end
 
 def pbGenerateSingleForecast
   areas = [
-    [[[10.5, 5],[7, 5]],[:BrecciaPassage,:BrecciaCity,:BrecciaUndergrowth,:DeepBreccia,:BrecciaOutlook]],
+    [[[10.5, 5],[7, 5]],[:BrecciaTrail,:BrecciaCity,:BrecciaUndergrowth,:BrecciaOutlook]],
     [[[14, 7],[14, 9.5]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
-    [[[21, 6]],[:MicaTown,:FeldsparTown,:MtPegmaHillside,:MtPegmaPeak]],
+    [[[21, 6]],[:MicaDistrict,:FeldsparDistrict,:MtPegmaHillside,:MtPegmaPeak]],
     [[[17.5, 5]],[:QuartzPassing]],
     [[[24.5, 15]],[:CanjonValley]]
   ]

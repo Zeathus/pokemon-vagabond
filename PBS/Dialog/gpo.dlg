@@ -88,7 +88,7 @@
 /speaker Klaus
 > Hello there. Someone came at the perfect time.
 > I really need some help.
-> I was completely focused on developing my story in RPG Maker, and the Vulpix that was resting here ran away somewhere.
+> I was focused on developing my story in RPG Maker, and the Vulpix that was resting here ran away somewhere.
 > It is a special Vulpix from Alola. You can recognize it by its snow-white color.
 > A curious thing, Alolan Pokémon... Raised in a different region to become types almost opposite of their usual variants.
 > Asking the people in the lounge would probably be a good start to find out where Vulpix went.
@@ -199,7 +199,7 @@
 
 [QUEST_LPBC_POST,0]
 /speaker Klaus
-?> Are you ready to test how Vulpix fares in battle?<br>I will use some of my other Pokémon as well.
+?> Are you ready to test how Vulpix fares in battle? I will use some of my other Pokémon as well.
     /choice Yes
         /return true
     /cancelchoice No
@@ -237,3 +237,62 @@
 [GPO_SIGN_INTERROGATION]
 /textpos middle
 > <br>Admin Living Quarters
+
+[GPO_DEVELOPER,0]
+/speaker Developer
+> The map designer told me to clean up these crates, but I swear he was the one who put them there.
+
+[GPO_DEVELOPER,1]
+/speaker Developer
+> I've been up all night trying to fix a single bug, but everytime I think I've fixed it, another five pop up.
+> Need. To. Fix.
+
+[GPO_HABITAT_DEX,0]
+/speaker Charles
+> Welcome to the development facility!
+
+[GPO_HABITAT_DEX,1]
+/speaker Charles
+> Is that a...\wtnp[10]
+
+[GPO_HABITAT_DEX,2]
+> The developer nabbed your Pokédex.
+/speaker Charles
+> Finally I can try out my new software!
+> ...Those 500 lines (+/-1000) of code weren't for nothing after all.
+> Let's see...\wtnp[1]
+> There...\wtnp[1]
+> Transfer that...\wtnp[1]
+> Load the array of areas...\wtnp[1]
+> Turn on switch 109...\wtnp[1]
+
+[GPO_HABITAT_DEX,3]
+/speaker Charles
+> Declare reward variables...\wtnp[1]
+> Initiate receive status to false...\wtnp[1]
+> ...\wtnp[1]
+
+[GPO_HABITAT_DEX,4]
+/speaker Charles
+> Welp, that's an error if I've ever seen one.
+> ...now it's going in a loop.
+> Let's tryyyyyy... copy pasting this from stackoverflow.
+> Eh. I guess it's fine.
+
+[GPO_HABITAT_DEX,5]
+/speaker Charles
+> Here! You're now my first beta tester!
+/speaker 0
+> The developer gave you back your Pokédex.
+/speaker Charles
+> I added a Habitat Pokédex feature that allows you to keep track of Pokémon that can be found in areas you've visited.
+> It SHOULD be working fine now, except maybe a couple visual glitches here and there.
+> I'm sure I'll patch those out later (maybe).
+> Anyhow, as my beta tester, you should be rewarded as well.
+> If you catch every single Pokémon in an area, come see me and I will reward you for it.
+> The Habitat Pokédex will display which Pokémon are caught as well.
+> I look forward to seeing the results!
+
+[GPO_HABITAT_DEX,6]
+/speaker Charles
+> I'm sorry, but my reward script is not finished yet.

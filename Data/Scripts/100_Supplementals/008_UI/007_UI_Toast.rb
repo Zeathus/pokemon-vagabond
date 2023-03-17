@@ -134,7 +134,7 @@ end
 
 class TopWindowToast < WindowToast
   def initialize(text)
-    super(text)
+    super(_INTL("<ac>{1}</ac>", text))
     @window.resizeToFit(text, Graphics.width * 3 / 4)
     @window.x = Graphics.width / 2 - @window.width / 2
     @window.y = -@window.height

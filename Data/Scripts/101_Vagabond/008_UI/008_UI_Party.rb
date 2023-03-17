@@ -1072,11 +1072,11 @@ class LevelUpSprite < SpriteWrapper
     base=Color.new(248,248,248)
     shadow=Color.new(104,104,104)
     textpos = [
-      [sprintf("Max Lv.%3d", @max_level),16,-4,0,base,shadow],
-      [sprintf("Lv.%3d", @pokemon.level),160,-4,0,base,shadow],
-      [sprintf("Lv.%3d", @new_level),160+82,-4,0,base,shadow],
-      [sprintf("Cost:"),@overlay.bitmap.width - 136,-4,0,base,shadow],
-      [sprintf("$%d", self.cost),@overlay.bitmap.width - 16,-4,1,base,shadow]
+      [sprintf("Max Lv.%3d", @max_level),16,8,0,base,shadow],
+      [sprintf("Lv.%3d", @pokemon.level),160,8,0,base,shadow],
+      [sprintf("Lv.%3d", @new_level),160+82,8,0,base,shadow],
+      [sprintf("Cost:"),@overlay.bitmap.width - 136,8,0,base,shadow],
+      [sprintf("$%d", self.cost),@overlay.bitmap.width - 16,8,1,base,shadow]
     ]
     pbSetSmallFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap, textpos)

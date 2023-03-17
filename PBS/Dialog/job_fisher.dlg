@@ -1,0 +1,72 @@
+[JOB_FISHER_BIN]
+> Only paper towels and finely cleaned bones can be seen. Clearly, no meat goes to waste.
+
+[JOB_FISHER_FRIDGE]
+> The odor suggests a highly pescatarian diet.
+
+[JOB_FISHER_BOXES]
+> All the boxes have labels stating different fishing supplies.
+> Hooks.
+> Lines.
+> Sinkers.
+> ...and so on.
+
+[JOB_FISHER_FIREPLACE]
+> Above the fireplace is a picture of a man on a boat holding a very big Seaking.
+
+[JOB_FISHER_LIST]
+> It's a list of many rare fish Pokémon and notes of when and where to capture them. Most of them are checked off.
+
+[JOB_FISHER_1,0]
+/speaker Ivan
+?> Hey there, I'm Fisherman Ivan. Are you interested in learning how to fish?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        > I am here if you ever change your mind.
+        /return false
+?/>
+
+[JOB_FISHER_1,1]
+/speaker Ivan
+> Great! Fishing can be both a relaxing and an intense activity, all depending on what kind of Pokémon you try to hook.
+> Here, I'll give you this Fishing Rod, to set you out on your voyage.
+
+[JOB_FISHER_1,2]
+/speaker Ivan
+> Now that you have a rod, let me explain how to properly hook a fish...
+
+[JOB_FISHER_1,3]
+/speaker Ivan
+> To begin, why don't you try to hook a Magikarp from the lake outside?
+> You don't have to catch the Magikarp with a Pokéball, successfully hooking it is enough to prove yourself.
+> If you can do that, I am willing to tutor you into a master fisherman.
+
+[JOB_FISHER_1,4]
+/speaker Ivan
+> Try hooking a Magikarp in the lake outside. If you can do that, I am willing to tutor you into a master fisherman.
+
+[JOB_FISHER_1,5]
+/speaker Ivan
+> You hooked a Magikarp? Good going!
+
+[JOB_FISHER_1,6]
+/speaker Ivan
+> I'll let you keep that rod, and if you can prove you have raised your skill level, I'll teach you some new techniques.
+> For your next challenge, I want you to try hooking two different Pokémon.
+
+[JOB_FISHER_1,7]
+> \ts[2]You got the job as a Fisher!
+> \ts[1]You can track the Pokémon Ivan requested you to hook in the Trainer menu.
+
+[JOB_FISHER_2,0]
+/speaker Ivan
+> I hope your fishing adventures are going well. Do you remember what Pokémon I tasked you to hook?
+
+[JOB_FISHER_2,1]
+/speaker Ivan
+> The first Pokémon is Seaking, which as you might guess, can be found at sea.
+> The second Pokémon is Poliwhirl. You're more likely to find that one in a lake somewhere.
+> You will have to figure out where to find them yourself, though the Habitat Dex I've heard is in development would help.
+> I believe someone at the G[.]P[.]O[.] could hook you up with it, even though it's still in development.
+> I've heard the fishing encounter list in the Habitat Dex even shows what Pokémon you have previously hooked.

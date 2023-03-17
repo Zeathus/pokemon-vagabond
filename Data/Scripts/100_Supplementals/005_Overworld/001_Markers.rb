@@ -25,7 +25,7 @@ def pbLoadQuestMarkers
     if type != 3 && marker.length > 4 && marker[4]
       quest_id = marker[4].to_sym
       if type == 0
-        active = false if $quests[quest_id].status > 0
+        active = false if $quests[quest_id].status != 0
       else
         active = false if $quests[quest_id].status != 1
       end

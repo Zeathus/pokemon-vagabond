@@ -95,7 +95,7 @@ class Window_CustomMemory < Window_DrawableCommand
     if @commands[index] == pbCustomPokemon.type
       pbCopyBitmap(self.contents,@icon_on.bitmap,rect.x-6,rect.y+8)
     end
-    type_number = GameData::Type.get(@commands[index]).id_number
+    type_number = GameData::Type.get(@commands[index]).icon_position
     type_rect = Rect.new(0, type_number * 28, 64, 28)
     self.contents.blt(rect.x + 22, rect.y+8, @typebitmap.bitmap, type_rect)
     text = "Memory"
@@ -200,7 +200,7 @@ class CustomPokemon_Scene
     @sprites = {}
     @sprites["background"] = IconSprite.new(0,0,@viewport)
     @sprites["infosprite"] = PokemonSprite.new(@viewport)
-    @sprites["infosprite"].setOffset(PictureOrigin::Bottom)
+    @sprites["infosprite"].setOffset(PictureOrigin::BOTTOM)
     @sprites["infosprite"].x = Graphics.width / 2 + 12
     @sprites["infosprite"].y = Graphics.height / 2 + 80
     @sprites["overlay"] = BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
@@ -262,21 +262,31 @@ class CustomPokemon_Scene
       imagepos = []
       species_data = GameData::Species.get_species_form(@species, @custom.form)
       # Write various bits of text
-      indexText = sprintf("%03d", GameData::Species.get(@species).id_number)
+      dexnum = 0
+      dexnumshift = false
+      ($player.pokedex.dexes_count - 1).times do |i|
+        next if !$player.pokedex.unlocked?(i)
+        num = pbGetRegionalNumber(i, @species)
+        next if num <= 0
+        dexnum = num
+        dexnumshift = true if Settings::DEXES_WITH_OFFSETS.include?(i)
+        break
+      end
+      indexText = sprintf("%03d", dexnum)
       smalltextpos = []
       textpos = [
           [_INTL("{1}{2} {3}", indexText, " ", @custom.name),
-            498, 40, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
-          [_INTL("Height"), 564, 454, 0, base, shadow],
-          [_INTL("Weight"), 564, 486, 0, base, shadow]
+            498, 52, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
+          [_INTL("Height"), 564, 466, 0, base, shadow],
+          [_INTL("Weight"), 564, 498, 0, base, shadow]
       ]
       # Draw the type icon(s)
       type1 = @custom.type
       type2 = @custom.type
       affinity = @custom.affinity
-      type1_number = GameData::Type.get(type1).id_number
-      type2_number = GameData::Type.get(type2).id_number
-      affinity_number = GameData::Type.get(affinity).id_number
+      type1_number = GameData::Type.get(type1).icon_position
+      type2_number = GameData::Type.get(type2).icon_position
+      affinity_number = GameData::Type.get(affinity).icon_position
       type1rect = Rect.new(0, type1_number * 28, 64, 28)
       type2rect = Rect.new(0, type2_number * 28, 64, 28)
       affinity_rect = Rect.new(0, affinity_number * 28, 64, 28)
@@ -289,7 +299,7 @@ class CustomPokemon_Scene
       overlay.blt(550+34+48, 152+64, @typebitmap.bitmap, affinity_rect)
 
       basestats = @custom.base_stats
-      posY = 270
+      posY = 282
       smalltextpos += [
         [_INTL("HP"),628,posY,2,base2,shadow2],
         [sprintf("%d",basestats[:HP]),716,posY,2,base,shadow],
@@ -305,18 +315,18 @@ class CustomPokemon_Scene
         [sprintf("%d",basestats[:SPEED]),716,posY+28*5,2,base,shadow]
       ]
       # Write the category
-      textpos.push([_INTL("{1} Pokémon", @custom.category), 498, 72, 0, base, shadow])
+      textpos.push([_INTL("{1} Pokémon", @custom.category), 498, 84, 0, base, shadow])
       # Write the height and weight
       height = @custom.height
       weight = @custom.weight
       if System.user_language[3..4] == "US"   # If the user is in the United States
         inches = (height / 0.254).round
         pounds = (weight / 0.45359).round
-        textpos.push([_ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12), 746, 454, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds / 10.0), 746, 486, 1, base, shadow])
+        textpos.push([_ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12), 746, 466, 1, base, shadow])
+        textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds / 10.0), 746, 498, 1, base, shadow])
       else
-        textpos.push([_ISPRINTF("{1:.1f} m", height / 10.0), 746, 454, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 746, 486, 1, base, shadow])
+        textpos.push([_ISPRINTF("{1:.1f} m", height / 10.0), 746, 466, 1, base, shadow])
+        textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 746, 498, 1, base, shadow])
       end
       # Draw all text
       pbSetSmallFont(overlay)
@@ -352,7 +362,7 @@ class CustomPokemon_Scene
         statstrings.push(statmods[i].to_s)
       end
     end
-    posY = 350
+    posY = 362
     smalltextpos += [
       [_INTL("HP"),76,posY,2,base2,shadow2],
       [sprintf("%s",statstrings[0]),164,posY,2,base,shadow],
@@ -473,7 +483,7 @@ class CustomPokemon_Scene
     smalltextpos = []
     textpos = [
         [_INTL("{1}/{2} Equipped", @custom.total_chips, @custom.max_chips),
-          358, 40, 1, base, shadow]
+          358, 52, 1, base, shadow]
     ]
     statmods = PBChip.getMods(@sprites["choose_chips"].item)
     if @custom.frame == PBFrame::RKS
@@ -491,7 +501,7 @@ class CustomPokemon_Scene
         statstrings.push(statmods[i].to_s)
       end
     end
-    posY = 350
+    posY = 362
     smalltextpos += [
       [_INTL("HP"),76,posY,2,base2,shadow2],
       [sprintf("%s",statstrings[0]),164,posY,2,base,shadow],
@@ -515,6 +525,25 @@ class CustomPokemon_Scene
 
   def pbScene
     Pokemon.play_cry(@species, @form)
+    if pbJob("Engineer").level == 0
+      pbDialog("JOB_ENGINEER_1",9)
+      drawPage(2)
+      Graphics.update
+      Input.update
+      pbUpdate
+      pbDialog("JOB_ENGINEER_1",10)
+      drawPage(3)
+      Graphics.update
+      Input.update
+      pbUpdate
+      pbDialog("JOB_ENGINEER_1",11)
+      drawPage(1)
+      Graphics.update
+      Input.update
+      pbUpdate
+      pbDialog("JOB_ENGINEER_1",12)
+      return -1
+    end
     loop do
       Graphics.update
       Input.update

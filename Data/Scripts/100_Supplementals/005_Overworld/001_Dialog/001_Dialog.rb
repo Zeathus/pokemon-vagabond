@@ -15,6 +15,8 @@ DIALOG_FILES = [
   "quests_minor",
   "gpo",
   "evergone",
+  "job_fisher",
+  "job_botanist",
   "job_engineer",
   "trainers"
 ]

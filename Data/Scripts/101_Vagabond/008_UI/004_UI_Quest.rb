@@ -47,7 +47,7 @@ class QuestBarSprite < Sprite
     @crop = 0
     self.x = x
     self.y = y
-    self.bitmap = Bitmap.new(464,340)
+    self.bitmap = Bitmap.new(@barbitmap.width,@barbitmap.height + @infobitmap.height)
     update
   end
 
@@ -77,13 +77,19 @@ class QuestBarSprite < Sprite
     self.bitmap.clear
     if @quest
       self.bitmap.blt(0,0,@barbitmap,
-        Rect.new(0,@selected ? 38 : 0,464 - @crop,38))
-      textpos = [[@quest.display_name,50,12,0,
+        Rect.new(0,@selected ? 40 : 0,@barbitmap.width - @crop,40))
+      textpos = [[@quest.display_name,50,10,0,
         Color.new(250,250,250),Color.new(100,60,50)],
-                 [@quest.location,458,12,1,
+                 [@quest.location,620,10,1,
         Color.new(250,250,250),Color.new(100,60,50)]]
-      pbSetSmallFont(self.bitmap)
+      pbSetSystemFont(self.bitmap)
       pbDrawTextPositions(self.bitmap,textpos)
+      #if @quest.location.length > 3
+      #  text_width = self.bitmap.text_size(@quest.location).width
+      #  pbSetSmallFont(self.bitmap)
+      #  textpos = [["Found at", 616 - text_width, 14, 1, Color.new(250,250,250),Color.new(100,60,50)]]
+      #  pbDrawTextPositions(self.bitmap, textpos)
+      #end
       imagepos=[
         ["Graphics/Pictures/Quests/status",
          18,4,0,30*(@quest.status+1),30,30]
@@ -104,9 +110,9 @@ class QuestBarSprite < Sprite
     shadow = Color.new(185,89,59)
     color = Color.new(236,150,87)
 
-    content = Bitmap.new(446,220)
-    content.blt(0,0,@infobitmap,Rect.new(0,0,446,220))
-    pbSetSmallestFont(content)
+    content = Bitmap.new(@infobitmap.width,@infobitmap.height)
+    content.blt(0,0,@infobitmap,Rect.new(0,0,@infobitmap.width,@infobitmap.height))
+    pbSetSmallFont(content)
 
     textpos = []
     imagepos = []
@@ -115,66 +121,74 @@ class QuestBarSprite < Sprite
       step = @quest.steps.length - 1
     end
     if @quest.status > 0
-      lines = pbLineBreakText(content,@quest.description.upcase,192)
+      lines = pbLineBreakText(content,@quest.description,220)
       for i in 0...lines.length
         s = lines[i]
-        textpos.push([s,10,24+i*14,0,white,shadow])
+        textpos.push([s,10,26+i*20,0,white,shadow])
       end
-      textpos.push([@quest.money.to_s,38,158,0,white,shadow])
-      textpos.push([_INTL("{1}%",@quest.exp.to_s),148,158,0,white,shadow])
+      textpos.push([@quest.money.to_s,40,158 + 186,0,white,shadow])
+      textpos.push([_INTL("{1}%",@quest.exp.to_s),166,158 + 186,0,white,shadow])
       if @quest.items.length > 0
         if @quest.hide_items
           imagepos.push(
             ["Graphics/Items/000",
-             12,184,0,0,48,48,24,24])
+             12,184 + 186,0,0,48,48,24,24])
           pbDrawTextPositions(content,
-            [["SECRET TO EVERYBODY",40,188,0,white,shadow]])
+            [["SECRET TO EVERYBODY",40,188 + 186,0,white,shadow]])
         else
           imagepos.push(
             [sprintf("Graphics/Items/%s",@quest.items[0][0].to_s),
-             12,190,0,0,48,48,24,24])
+             12,190 + 186,0,0,48,48,24,24])
           pbDrawTextPositions(content,
-            [[GameData::Item.get(@quest.items[0][0]).name.upcase,40,182,0,white,shadow]])
+            [[GameData::Item.get(@quest.items[0][0]).name,40,182 + 186,0,white,shadow]])
         end
       end
-      offset = 0
+      tasks = Bitmap.new(@infobitmap.width,@infobitmap.height - 6)
+      pbSetSmallFont(tasks)
+      task_textpos = []
+      task_imagepos = []
+      offset = 4
       if @quest.status == 2
-        lines = pbLineBreakText(content,@quest.done.upcase,220)
+        lines = pbLineBreakText(tasks,@quest.done,348)
         for s in lines
-          content.fill_rect(210,22+offset,228,20,color)
-          content.fill_rect(208,24+offset,232,16,color)
-          textpos.push([s,214,24+offset,0,white,shadow])
-          offset += 14
+          tasks.fill_rect(244,20+offset,356,24,color)
+          tasks.fill_rect(242,22+offset,360,20,color)
+          task_textpos.push([s,250,24+offset,0,white,shadow])
+          offset += 20
         end
         offset += 10
       end
       for j in 0..step
         i = step - j
         complete = @quest.status == 2 || @quest.step > i
-        lines = pbLineBreakText(content,@quest.steps[i].upcase,
-          complete ? 194 : 220)
+        lines = pbLineBreakText(tasks,@quest.steps[i],
+          complete ? 322 : 348)
         if complete
-          imagepos.push(
+          task_imagepos.push(
             ["Graphics/Pictures/Quests/status",
-             208,10+offset+lines.length*7,0,90,30,30])
+             246,10+offset+lines.length*10,0,90,30,30])
         end
         for s in lines
-          content.fill_rect(210,22+offset,228,20,color)
-          content.fill_rect(208,24+offset,232,16,color)
-          textpos.push([s,complete ? 240 : 214,24+offset,0,white,shadow])
-          offset += 14
+          tasks.fill_rect(244,20+offset,356,24,color)
+          tasks.fill_rect(242,22+offset,360,20,color)
+          task_textpos.push([s,complete ? 280 : 250,24 + offset,0,white,shadow])
+          offset += 20
         end
         offset += 10
       end
+      pbDrawTextPositions(tasks,task_textpos)
+      pbDrawImagePositions(tasks,task_imagepos)
+      content.blt(0, 0, tasks, Rect.new(0, 0, tasks.width, tasks.height))
+      tasks.dispose
     else
-      text = "The location of this quest is unknown.".upcase
+      text = "The location of this quest is unknown."
       if @quest.full_location
-        text = _INTL("This quest can be found {1}.".upcase, @quest.full_location.upcase)
+        text = _INTL("This quest can be found {1}.", @quest.full_location)
       end
-      lines = pbLineBreakText(content, text, 192)
+      lines = pbLineBreakText(content, text, 220)
       for i in 0...lines.length
         s = lines[i]
-        textpos.push([s,10,24+i*14,0,white,shadow])
+        textpos.push([s,10,26+i*20,0,white,shadow])
       end
     end
 
@@ -183,7 +197,7 @@ class QuestBarSprite < Sprite
 
     self.z += 10
     self.y = 92
-    self.bitmap.blt(18,36,content,Rect.new(0,0,446,220))
+    self.bitmap.blt(18,34,content,Rect.new(0,0,content.width,content.height))
     ret = 0
     loop do
       break if Input.trigger?(Input::BACK)
@@ -233,8 +247,8 @@ class QuestScrollSprite < Sprite
     @barbitmap = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/scrollbar")
     @mustrefresh = true
     @scrollpos = 0
-    @scrollmax = 254 - @scrollbitmap.height
-    self.bitmap = Bitmap.new(12,258)
+    @scrollmax = @barbitmap.height - @scrollbitmap.height - 4
+    self.bitmap = Bitmap.new(@barbitmap.width, @barbitmap.height)
     update
   end
 
@@ -257,8 +271,8 @@ class QuestScrollSprite < Sprite
 
   def refresh
     self.bitmap.clear
-    self.bitmap.blt(0,0,@barbitmap,Rect.new(0,0,12,258))
-    self.bitmap.blt(2,2+@scrollpos,@scrollbitmap,Rect.new(0,0,8,30))
+    self.bitmap.blt(0,0,@barbitmap,Rect.new(0,0,@barbitmap.width,@barbitmap.height))
+    self.bitmap.blt(2,2+@scrollpos,@scrollbitmap,Rect.new(0,0,@scrollbitmap.width,@scrollbitmap.height))
   end
 
   def dispose
@@ -289,8 +303,6 @@ def pbShowQuests(show_quest=nil)
   no_prev = true
 
   viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
-  viewport.ox = -128
-  viewport.oy = -96
   viewport.z = 99999
   text_color1 = Color.new(250, 250, 250)
   text_color2 = Color.new(50, 50, 100)
@@ -307,8 +319,8 @@ def pbShowQuests(show_quest=nil)
   sprites["bg"] = IconSprite.new(0,0,viewport)
   sprites["bg"].setBitmap("Graphics/Pictures/Quests/bg")
 
-  sprites["tab1"]=QuestHeaderSprite.new(viewport,22,52,"Main")
-  sprites["tab2"]=QuestHeaderSprite.new(viewport,254,52,"Side")
+  sprites["tab1"]=QuestHeaderSprite.new(viewport,22 + 128,52,"Main")
+  sprites["tab2"]=QuestHeaderSprite.new(viewport,254 + 128,52,"Side")
   sprites["tab1"].z=2
   sprites["tab2"].z=2
   questtab == 0 ?
@@ -317,15 +329,15 @@ def pbShowQuests(show_quest=nil)
 
   barbitmap = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/bar")
   infobitmap = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/details")
-  for i in 0...7
+  for i in 0...11
     sprites[_INTL("quest{1}",i)] = QuestBarSprite.new(
-      viewport,barbitmap,infobitmap,8,92+i*36,quest_list[i])
+      viewport,barbitmap,infobitmap,56,94+i*40,quest_list[i])
     sprites[_INTL("quest{1}",i)].z=4
   end
 
   sprites["quest0"].selected = true
 
-  sprites["scrollbar"]=QuestScrollSprite.new(viewport,472,90)
+  sprites["scrollbar"]=QuestScrollSprite.new(viewport,686,90)
   sprites["scrollbar"].z=20
 
   pbFadeInAndShow(sprites)
@@ -361,11 +373,11 @@ def pbShowQuests(show_quest=nil)
       scroll_timer = 25 if fast_scroll
       scroll_dir = "down"
       selected += 1
-      scroll += 1 if selected > (scroll+6)
+      scroll += 1 if selected > (scroll+10)
       if selected>quest_list.length-1
         if fast_scroll
           selected = quest_list.length-1
-          scroll = quest_list.length-7 if quest_list.length > 6
+          scroll = quest_list.length-11 if quest_list.length > 10
         else
           selected = 0
           scroll = 0
@@ -385,8 +397,8 @@ def pbShowQuests(show_quest=nil)
           scroll = 0
         else
           selected = quest_list.length-1
-          if selected > (scroll+6) && quest_list.length > 6
-            scroll = quest_list.length-7
+          if selected > (scroll+10) && quest_list.length > 10
+            scroll = quest_list.length-11
           else
             scroll = 0
           end
@@ -429,7 +441,7 @@ def pbShowQuests(show_quest=nil)
       while ret != 0
         selquest = sprites[_INTL("quest{1}",selected - scroll)]
         Input.update
-        for i in 0...7
+        for i in 0...11
           q = sprites[_INTL("quest{1}",i)]
           q.quest = quest_list[i + scroll]
           q.selected = false
@@ -457,7 +469,7 @@ def pbShowQuests(show_quest=nil)
         elsif ret == 1
           loop do
             selected += 1
-            scroll += 1 if selected > (scroll+6)
+            scroll += 1 if selected > (scroll+10)
             if selected > quest_list.length-1
               selected = 0
               scroll = 0
@@ -471,7 +483,7 @@ def pbShowQuests(show_quest=nil)
             if selected < 0
               selected = quest_list.length-1
               if selected > (scroll+6) && quest_list.length > 6
-                scroll = quest_list.length-7
+                scroll = quest_list.length-11
               else
                 scroll = 0
               end
@@ -479,7 +491,7 @@ def pbShowQuests(show_quest=nil)
             break if quest_list[selected].status > 0 || $DEBUG
           end
         end
-        for i in 0...7
+        for i in 0...11
           q = sprites[_INTL("quest{1}",i)]
           if q != selquest
             q.shift(-16)
@@ -499,13 +511,15 @@ def pbShowQuests(show_quest=nil)
       end
       sprites["tab1"].selected = (questtab == 0)
       sprites["tab2"].selected = (questtab == 1)
-      sprites["scrollbar"].scroll(scroll,quest_list.length,7)
-      for i in 0...7
+      sprites["scrollbar"].scroll(scroll,quest_list.length,11)
+      for i in 0...11
         sprites[_INTL("quest{1}",i)].quest = quest_list[i + scroll]
         sprites[_INTL("quest{1}",i)].selected = (i == selected - scroll)
       end
     end
   end
+  barbitmap.dispose
+  infobitmap.dispose
   pbFadeOutAndHide(sprites)
   pbDisposeSpriteHash(sprites)
   viewport.dispose

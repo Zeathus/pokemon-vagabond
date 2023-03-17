@@ -21,6 +21,54 @@ class Battle::Move::StartWindsWeather < Battle::Move::WeatherMove
   end
 end
 
+#===============================================================================
+# Inflicts target with Burn or Frostbite if user has it.
+# If not statuses, can also inflict during sun or snowscape/hail (Thermodynamics)
+#===============================================================================
+class Battle::Move::CopyUserStatusToTargetTemperature < Battle::Move
+  def pbMoveFailed?(user, targets)
+    if pbStatusToInflict == :NONE
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbStatusToInflict
+    if user.status == :BURN
+      return :BURN
+    elsif user.status == :FROSTBITE
+      return :FROSTBITE
+    elsif [:Sun, :HarshSun].include?(@battle.pbWeather)
+      return :BURN
+    elsif [:Hail, :Snow].include?(@battle.pbWeather)
+      return :FROSTBITE
+    else
+      return :NONE
+    end
+  end
+
+  def pbFailsAgainstTarget?(user, target, show_message)
+    if !target.pbCanInflictStatus?(pbStatusToInflict, user, false, self)
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    return false
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    case pbStatusToInflict
+    when :BURN
+      target.pbBurn(user)
+    when :FROSTBITE
+      target.pbFrostbite(user)
+    end
+  end
+end
+
+#===============================================================================
+# Affinity boosts partner regardless of affinity (After Me)
+#===============================================================================
 class Battle::Move::AffinityBoostIgnoreAffinity < Battle::Move
   def pbEffectAgainstTarget(user, target)
     return if target.damageState.hpLost <= 0
@@ -37,8 +85,7 @@ class Battle::Move::AffinityBoostIgnoreAffinity < Battle::Move
 end
 
 #===============================================================================
-# Hits 3 times. Power is multiplied by the hit number. (Triple Kick)
-# An accuracy check is performed for each hit.
+# Hits 2 times. First hit is Poison-type and grounds, second hit is Ground-type. (Killer Combo)
 #===============================================================================
 class Battle::Move::FirstHitPoisonGroundTargetSecondHitGround < Battle::Move
   def hitsFlyingTargets?; return @hitNum == 0; end

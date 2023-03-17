@@ -6,6 +6,7 @@ class ShellOSScreen
           "Organize Boxes" => "Move Pokémon around in boxes or your party.",
           "Withdraw Pokémon" => "Insert Pokémon into your party.",
           "Deposit Pokémon" => "Remove Pokémon from your party.",
+          "Customize Silvally" => "Change the traits of your Silvally.",
           "Log Off" => "End your user session."
       }
       @index = 0
@@ -220,6 +221,9 @@ def pbBootShellOS(mode=0)
           "Withdraw Pokémon",
           "Deposit Pokémon"
       ]
+      if pbJob("Engineer").level > 0 || $DEBUG
+        options.push("Customize Silvally")
+      end
   end
 
   options.push("Log Off")
@@ -237,32 +241,34 @@ def pbBootShellOS(mode=0)
       break if !option || (option == "Log Off")
       case option
       when "Organize Boxes"
-          scene = PokemonStorageScene.new
-          screen = PokemonStorageScreen.new(scene,$PokemonStorage)
-          screen.pbStartScreen(0)
-          pbSEPlay("PC close")
+        scene = PokemonStorageScene.new
+        screen = PokemonStorageScreen.new(scene,$PokemonStorage)
+        screen.pbStartScreen(0)
+        pbSEPlay("PC close")
       when "Withdraw Pokémon"
-          if $PokemonStorage.party_full?
-              pbMessage(_INTL("Your party is full!"))
-              next
-          end
-          scene = PokemonStorageScene.new
-          screen = PokemonStorageScreen.new(scene,$PokemonStorage)
-          screen.pbStartScreen(1)
-          pbSEPlay("PC close")
+        if $PokemonStorage.party_full?
+            pbMessage(_INTL("Your party is full!"))
+            next
+        end
+        scene = PokemonStorageScene.new
+        screen = PokemonStorageScreen.new(scene,$PokemonStorage)
+        screen.pbStartScreen(1)
+        pbSEPlay("PC close")
       when "Deposit Pokémon"
-          count=0
-          for p in $PokemonStorage.party
-              count += 1 if p && !p.egg? && p.hp>0
-          end
-          if count<=1
-              pbMessage(_INTL("Can't deposit the last Pokémon!"))
-              next
-          end
-          scene = PokemonStorageScene.new
-          screen = PokemonStorageScreen.new(scene,$PokemonStorage)
-          screen.pbStartScreen(2)
-          pbSEPlay("PC close")
+        count=0
+        for p in $PokemonStorage.party
+            count += 1 if p && !p.egg? && p.hp>0
+        end
+        if count<=1
+            pbMessage(_INTL("Can't deposit the last Pokémon!"))
+            next
+        end
+        scene = PokemonStorageScene.new
+        screen = PokemonStorageScreen.new(scene,$PokemonStorage)
+        screen.pbStartScreen(2)
+        pbSEPlay("PC close")
+      when "Customize Silvally"
+        pbCustomPokemonScreen
       end
   end
 

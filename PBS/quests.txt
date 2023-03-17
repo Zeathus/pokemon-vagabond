@@ -99,31 +99,93 @@ PartyMembers = Amethyst
 [BERRYIMPORTANT]
 Name = Berry Important
 Type = Botanist
-Step1 = Unfinished
+Exp = 50
+Description = Faunus wants to teach you about botany. Meet him at his house below Breccia City.
+Location = Breccia Undergrowth
+FullLocation = in the Breccia Undergrowth
+Step1 = Have Faunus teach you about botany.
+Done = Faunus taught you about harvesting berries more efficiently, and is eager to teach you more.
+Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_FAUNUS]
 
 [DIGGYDIGGYHOLE]
 Name = Diggy Diggy Hole
 Type = Miner
 Step1 = Unfinished
+Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_RAPHAEL]
 
 # [210] Crafter
 
 # [215] Doctor
-
-# [220] Fisher
 
 # [225] Breeder
 
 [NULLPOINTEREXCEPTION]
 Name = Null-Pointer Exception
 Type = Engineer
-Step1 = Unfinished
+Exp = 50
+Description = Leory wants you to help test the prototype for an artificial Pokémon. It will surely be a technological marvel.
+Location = G.P.O. HQ
+FullLocation = at the G.P.O. HQ
+Step1 = Test Leroy's artifical Pokémon prototype.
+Done = You got Silvally from Leroy for further testing. It can be customized at the PC.
+Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_LEROY]
 
 # [235] Professor
 
 # [240] Ranger
 
 # [245] Archeologist
+
+[FISHYBUSINESS]
+Name = Fishy Business
+Type = Fisher
+Exp = 50
+Description = Fisherman Ivan wants to teach you how to fish. He even gave you a brand new Fishing Rod!
+Location = Lazuli River
+FullLocation = at Lazuli River
+Step1 = Hook a Magikarp to show Ivan you have learned how to fish. It can be caught in Lazuli River.
+Done = You learned how to fish!
+Require = $game_switches[GPO_MEMBER]
+
+[SMALLFRY]
+Name = Small Fry
+Type = Fisher
+Exp = 100
+Description = Ivan sees potential in you. He has challenged you to hook a Seaking and a Poliwhirl, but you have to find them yourself.
+Location = Lazuli River
+FullLocation = at Lazuli River
+Step1 = Successfully hook a Seaking (found at sea) and a Poliwhirl (found in lakes).
+Done = ???
+
+[HOOKLINEANDSINKER]
+Name = "Hook, Line and Sinker"
+Type = Fisher
+Exp = 100
+Description = ???
+Location = Lazuli River
+FullLocation = at Lazuli River
+Step1 = Successfully hook a Gyarados, a Dragonair and a Whiscash.
+Done = ???
+
+[BIGFISH]
+Name = Big Fish
+Type = Fisher
+Exp = 100
+Description = ???
+Location = Lazuli River
+FullLocation = at Lazuli River
+Step1 = Successfully hook a Wailord, a Milotic and a Walrein.
+Done = ???
+
+[MASTEROFTHESEA]
+Name = Master of the Sea
+Type = Fisher
+Exp = 100
+Description = ???
+Location = Lazuli River
+FullLocation = at Lazuli River
+Step1 = Successfully hook a Wailord, a Milotic and a Walrein.
+Done = ???
 
 [THEFIRSTGYM]
 Name = The First Gym
@@ -193,4 +255,22 @@ Step2 = Make your way through Evergone Mangrove with Amethyst.
 Step3 = "Head to the G.P.O. HQ in Lapis Lazuli City, south of the Crosswoods."
 Step4 = Go back to the elevator with Amethyst.
 Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
+
+[OPERATIONPEGMA]
+Name = Operation Pegma
+Type = Main
+Exp = 100
+Description = A vision told you that something may be afoot at Mt. Pegma. It would be best to check it out.
+Step1 = Check the situation at Mt. Pegma (east of the Crosswoods).
+Step2 = Make your way through Evergone Mangrove with Amethyst.
+Step3 = "Head to the G.P.O. HQ in Lapis Lazuli City, south of the Crosswoods."
+Step4 = Go back to the elevator with Amethyst.
+Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
+
+[TEST]
+Name = Test
+Type = Main
+Description = Test
+Step1 = Test
+Done = Test
 

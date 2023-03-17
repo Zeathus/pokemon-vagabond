@@ -276,6 +276,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /speaker Amethyst
 > This is <PLAYER>.<br>I met them at Evergone Crater, and they helped me rescue a girl from the woods.
 ?> <PLAYER>, this is Kira, my assistant.
+    /savechoice kira introduction
     /choice Nice to meet you!
         /speaker Kira annoyed
         > I hope it will be "nice to meet you" too.
@@ -305,6 +306,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /event Player turn left
 /wait 2
 ?> Why did you want to go to the Evergone Ruins, <PLAYER>?
+    /savechoice ch1 interrogation
     /choice I had a vision
         /event Player turn up
         /event Amethyst turn up

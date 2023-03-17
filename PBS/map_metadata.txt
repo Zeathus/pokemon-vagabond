@@ -1,13 +1,13 @@
-# See the documentation on the wiki to learn how to edit this file.
+﻿# See the documentation on the wiki to learn how to edit this file.
 #-------------------------------
-[001]
-# ???
+[001]   # ???
+Name = ???
 #-------------------------------
-[002]
-# More Maps
+[002]   # More Maps
+Name = More Maps
 #-------------------------------
-[003]
-# Shale Town
+[003]   # Shale Town
+Name = Shale Town
 Outdoor = true
 ShowArea = true
 Bicycle = true
@@ -15,8 +15,8 @@ BicycleAlways = false
 MapPosition = 0,10,12
 MapSize = 1,1
 #-------------------------------
-[004]
-# \PN's House
+[004]   # \PN's House
+Name = \PN's House
 Outdoor = false
 ShowArea = false
 Bicycle = false
@@ -24,8 +24,8 @@ BicycleAlways = false
 MapPosition = 0,10,12
 MapSize = 1,1
 #-------------------------------
-[005]
-# Shale House
+[005]   # Shale House
+Name = Shale House
 Outdoor = false
 ShowArea = false
 Bicycle = false
@@ -33,8 +33,8 @@ BicycleAlways = false
 MapPosition = 0,10,12
 MapSize = 1,1
 #-------------------------------
-[006]
-# Shale Path
+[006]   # Shale Path
+Name = Shale Path
 Outdoor = true
 ShowArea = true
 Bicycle = true
@@ -42,329 +42,370 @@ BicycleAlways = false
 MapPosition = 0,9,12
 MapSize = 1,1
 #-------------------------------
-[007]
-# Crosswoods
+[007]   # Crosswoods
+Name = Crosswoods
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,12
+MapPosition = 0,14,5
 BattleBack = woodland
 MapSize = 1,1
 #-------------------------------
-[008]
-# Breccia City
+[008]   # Breccia City
+Name = Breccia City
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,7,16
-MapSize = 2,11
+MapPosition = 0,7,5
+MapSize = 1,1
 #-------------------------------
-[009]
-# Lazuli River
+[009]   # Lazuli River
+Name = Lazuli River
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,13
+MapPosition = 0,14,6
 SnapEdges = true
 MapSize = 1,111
 #-------------------------------
-[010]
-# Lapis PokéCenter
+[010]   # Lapis PokéCenter
+Name = Lapis PokéCenter
 Outdoor = false
 ShowArea = false
 Bicycle = false
-MapPosition = 0,8,16
+MapPosition = 0,14,10
 MapSize = 1,1
 #-------------------------------
-[011]
-# Breccia Undergrowth
+[011]   # Breccia Undergrowth
+Name = Breccia Undergrowth
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,4,11
+MapPosition = 0,7,5
 SnapEdges = true
 BattleBack = woodland
-MapSize = 2,1111
+MapSize = 1,1
 #-------------------------------
-[012]
-# Mica District
+[012]   # Mica District
+Name = Mica District
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,10
+MapPosition = 0,21,7
 SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 1,1
 #-------------------------------
-[013]
-# Breccia
+[014]   # Mt. Pegma Hillside
+Name = Mt. Pegma Hillside
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,6,12
-MapSize = 2,11
-#-------------------------------
-[014]
-# Mt. Pegma Hillside
-Outdoor = true
-ShowArea = true
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,8,11
+MapPosition = 0,21,8
 BattleBack = mountain_grass
 MapSize = 1,1
 #-------------------------------
-[015]
-# Mica PokéCenter
+[015]   # Mica PokéCenter
+Name = Mica PokéCenter
 Outdoor = false
 ShowArea = false
 Bicycle = false
 BicycleAlways = false
-MapPosition = 0,8,10
+MapPosition = 0,21,7
 MapSize = 1,1
 #-------------------------------
-[016]
-# Breccia City [OLD]
-Outdoor = true
-ShowArea = true
-Bicycle = false
-BicycleAlways = false
-MapPosition = 0,4,11
-MapSize = 2,1
-#-------------------------------
-[017]
-# Breccia PokéCenter
+[017]   # Breccia PokéCenter
+Name = Breccia PokéCenter
 Outdoor = false
 ShowArea = false
 Bicycle = false
 BicycleAlways = false
-MapPosition = 0,5,11
+MapPosition = 0,7,5
 MapSize = 1,1
 #-------------------------------
-[019]
-# Breccia House
+[019]   # Breccia House
+Name = Breccia House
 Outdoor = false
 ShowArea = false
 Bicycle = false
 BicycleAlways = false
-MapPosition = 0,4,11
-MapSize = 2,1111
+MapPosition = 0,7,5
+MapSize = 1,1
 #-------------------------------
-[020]
-# Mt. Pegma 1F
+[020]   # Mt. Pegma 1F
+Name = Mt. Pegma 1F
 Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,9
+MapPosition = 0,21,6
 MapSize = 1,1
 #-------------------------------
-[021]
-# Feldspar District
+[044]   # Mt. Pegma 1F
+Name = Mt. Pegma 1F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+#-------------------------------
+[045]   # Mt. Pegma 2F
+Name = Mt. Pegma 2F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+#-------------------------------
+[047]   # Mt. Pegma 3F
+Name = Mt. Pegma 3F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+#-------------------------------
+[046]   # Lake Kirrock
+Name = Lake Kirrock
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+#-------------------------------
+[092]   # Pegma Quarry B1F
+Name = Pegma Quarry B1F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[093]   # Pegma Quarry B2F
+Name = Pegma Quarry B2F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[094]   # Pegma Quarry B3F
+Name = Pegma Quarry B3F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[095]   # Pegma Quarry B4F
+Name = Pegma Quarry B4F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[096]   # Pegma Quarry B5F
+Name = Pegma Quarry B5F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[097]   # Pegma Quarry B6F
+Name = Pegma Quarry B6F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[098]   # Pegma Quarry B7F
+Name = Pegma Quarry B7F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[099]   # Pegma Quarry B8F
+Name = Pegma Quarry B8F
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,20,7
+MapSize = 1,1
+#-------------------------------
+[021]   # Feldspar District
+Name = Feldspar District
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,8
+MapPosition = 0,21,5
 SnapEdges = true
 MapSize = 1,1
 #-------------------------------
-[022]
-# Lapis Lazuli Park
+[022]   # Lapis Lazuli Park
+Name = Lapis Lazuli Park
 Outdoor = false
 ShowArea = false
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,8,8
+MapPosition = 0,15,9
 MapSize = 1,1
 #-------------------------------
-[023]
-# Lapis Town [OLD]
+[027]   # Lapis District
+Name = Lapis District
 Outdoor = true
 ShowArea = true
-MapPosition = 0,25,15
-BattleBack = beach
-#-------------------------------
-[025]
-# West Andes Isle
-Outdoor = true
-ShowArea = true
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,16,15
-BattleBack = beach
-MapSize = 2,11
-#-------------------------------
-[026]
-# East Andes Isle
-Outdoor = true
-ShowArea = true
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,18,15
-BattleBack = field
-MapSize = 2,11
-#-------------------------------
-[027]
-# Lapis District
-Outdoor = true
-ShowArea = true
-MapPosition = 0,16,5
+MapPosition = 0,14,10
 SnapEdges = true
-MapSize = 2,11
+MapSize = 1,1
 #-------------------------------
-[048]
-# Mt. Pegma Peak
+[048]   # Mt. Pegma Peak
+Name = Mt. Pegma Peak
 Outdoor = true
 ShowArea = false
-MapPosition = 0,8,9
+MapPosition = 0,21,6
 #-------------------------------
-[056]
-# Pokécare Facility
+[056]   # Pokécare Facility
+Name = Pokécare Facility
 Outdoor = false
 BattleBack = gpo
+MapPosition = 0,14,10
 #-------------------------------
-[058]
-# Halcyon Clearing
+[058]   # Halcyon Clearing
+Name = Halcyon Clearing
 SnapEdges = true
+MapPosition = 0,14,2
 #-------------------------------
-[061]
-# Halcyon Forest
+[061]   # Halcyon Forest
+Name = Halcyon Forest
+Outdoor = true
 SnapEdges = true
+MapPosition = 0,14,3
+MapSize = 1,11
 #-------------------------------
-[062]
-# Breccia Trail
+[062]   # Breccia Trail
+Name = Breccia Trail
 Outdoor = true
 ShowArea = true
-MapPosition = 0,2,11
+MapPosition = 0,8,5
 SnapEdges = true
 BattleBack = field
-MapSize = 2,11
+MapSize = 6,111111
 #-------------------------------
-[063]
-# Halcyon Hollow
+[063]   # Halcyon Hollow
+Name = Halcyon Hollow
 SnapEdges = true
+MapPosition = 0,14,2
 #-------------------------------
-[065]
-# Lapis Lazuli Gym
+[065]   # Lapis Lazuli Gym
+Name = Lapis Lazuli Gym
 SnapEdges = true
+MapPosition = 0,14,9
 #-------------------------------
-[066]
-# Maintenance Room 1
+[066]   # Maintenance Room 1
+Name = Maintenance Room 1
 SnapEdges = true
+MapPosition = 0,14,9
 #-------------------------------
-[067]
-# Maintenance Room 2
+[067]   # Maintenance Room 2
+Name = Maintenance Room 2
 SnapEdges = true
+MapPosition = 0,14,10
 #-------------------------------
-[072]
-# Quartz Passing
+[072]   # Quartz Passing
+Name = Quartz Passing
 Outdoor = true
 ShowArea = true
-MapPosition = 0,5,8
+MapPosition = 0,15,5
 BattleBack = mountain_grass
-MapSize = 3,111
+MapSize = 6,111111
 #-------------------------------
-[073]
-# Quartz Falls
-Outdoor = true
-ShowArea = true
-MapPosition = 0,4,8
-BattleBack = mountain_grass
-MapSize = 1,111
-#-------------------------------
-[074]
-# Quartz Grove
-Outdoor = true
-ShowArea = true
-MapPosition = 0,4,7
-#-------------------------------
-[104]
-# Feldspar Gym 3F
+[104]   # Feldspar Gym 3F
+Name = Feldspar Gym 3F
 SnapEdges = true
+MapPosition = 0,21,5
 #-------------------------------
-[106]
-# Canjon Valley
+[113]   # Lazuli District
+Name = Lazuli District
 Outdoor = true
-ShowArea = true
-MapPosition = 0,25,11
-MapSize = 1,1111
-#-------------------------------
-[107]
-# Lake Canjon
-Outdoor = true
-ShowArea = true
-MapPosition = 0,26,13
+MapPosition = 0,14,9
+SnapEdges = true
 MapSize = 1,1
 #-------------------------------
-[113]
-# Lazuli District
-Outdoor = true
-MapPosition = 0,16,4
+[116]   # Crosswoods Cave Ruins
+Name = Crosswoods Cave Ruins
+BattleBack = ruins
+MapPosition = 0,14,5
+#-------------------------------
+[118]   # Quartz Cave Ruins
+Name = Quartz Cave Ruins
+BattleBack = ruins
+#-------------------------------
+[119]   # Quartz Cave Ruins
+Name = Quartz Cave Ruins
+BattleBack = ruins
+#-------------------------------
+[121]   # Crosswoods Cave Chamber
+Name = Crosswoods Cave Chamber
+BattleBack = ruins_boss
+MapPosition = 0,14,5
+#-------------------------------
+[122]   # Quartz Cave Chamber
+Name = Quartz Cave Chamber
+BattleBack = ruins_boss
+#-------------------------------
+[124]   # Canjon Cave Ruins
+Name = Canjon Cave Ruins
+BattleBack = ruins
+#-------------------------------
+[125]   # Canjon Cave Chamber
+Name = Canjon Cave Chamber
+BattleBack = ruins_boss
+#-------------------------------
+[141]   # Maintenance Room 3
+Name = Maintenance Room 3
 SnapEdges = true
-MapSize = 2,11
+MapPosition = 0,14,10
 #-------------------------------
-[116]
-# Crosswoods Cave Ruins
+[145]   # Amphi Cave Ruins
+Name = Amphi Cave Ruins
 BattleBack = ruins
 #-------------------------------
-[121]
-# Crosswoods Cave Chamber
+[146]   # Smokey Cave Ruins
+Name = Smokey Cave Ruins
+BattleBack = ruins
+#-------------------------------
+[147]   # Smokey Cave Chamber
+Name = Smokey Cave Chamber
 BattleBack = ruins_boss
 #-------------------------------
-[118]
-# Crosswoods Cave Ruins
-BattleBack = ruins
-#-------------------------------
-[119]
-# Crosswoods Cave Ruins
-BattleBack = ruins
-#-------------------------------
-[122]
-# Crosswoods Cave Chamber
-BattleBack = ruins_boss
-#-------------------------------
-[124]
-# Crosswoods Cave Ruins
-BattleBack = ruins
-#-------------------------------
-[125]
-# Crosswoods Cave Chamber
-BattleBack = ruins_boss
-#-------------------------------
-[145]
-# Crosswoods Cave Ruins
-BattleBack = ruins
-#-------------------------------
-[230]
-# Crosswoods Cave Chamber
-BattleBack = ruins_boss
-#-------------------------------
-[146]
-# Crosswoods Cave Ruins
-BattleBack = ruins
-#-------------------------------
-[147]
-# Crosswoods Cave Chamber
-BattleBack = ruins_boss
-#-------------------------------
-[141]
-# Maintenance Room 3
-SnapEdges = true
-#-------------------------------
-[149]
-# Uncanny Valley
+[149]   # Uncanny Valley
+Name = Uncanny Valley
 BattleBack = distortion
 WildBattleBGM = Battle! Distortion World (Stardust).ogg
-#-------------------------------
-[151]
-Dungeon = true
 #-------------------------------
 [152]
 Outdoor = false
@@ -372,106 +413,109 @@ ShowArea = true
 Dungeon = true
 WildBattleBGM = Song of the Void.ogg
 #-------------------------------
-[156]
-# Giratina's Domain
+[156]   # Giratina's Domain
+Name = Giratina's Domain
 BattleBack = distortion
 #-------------------------------
-[162]
-# Breccia City Gym
+[162]   # Breccia City Gym
+Name = Breccia City Gym
 Outdoor = false
 ShowArea = false
 Bicycle = false
 BicycleAlways = false
-MapPosition = 0,4,12
+MapPosition = 0,7,5
 SnapEdges = true
 MapSize = 1,1
 #-------------------------------
-[174]
-# Memory Start 2
-WildVictoryME = silence.ogg
+[174]   # Memory Start 2
+Name = Memory Start 2
 #-------------------------------
-[184]
-# Breccia Thicket
-Outdoor = true
-ShowArea = false
-MapPosition = 0,6,12
-#-------------------------------
-[187]
-# Sanctuary
+[187]   # Sanctuary
+Name = Sanctuary
 ShowArea = false
 #-------------------------------
-[188]
-# ?DarkVoid?
+[188]   # ?DarkVoid?
+Name = ?DarkVoid?
 ShowArea = true
 #-------------------------------
-[198]
-# Scoria City
+[198]   # Scoria City
+Name = Scoria City
 Outdoor = true
 ShowArea = true
 Bicycle = true
-MapPosition = 0,25,9
-MapSize = 2,1111
+MapPosition = 0,23,15
+MapSize = 1,1
 #-------------------------------
-[208]
-# Evergone Mangrove
+[208]   # Evergone Mangrove
+Name = Evergone Mangrove
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,15
+MapPosition = 0,6,3
 SnapEdges = true
 BattleBack = woodland
-MapSize = 1,1
+MapSize = 2,11
 #-------------------------------
-[209]
-# Evergone Hill
+[209]   # Evergone Hill
+Name = Evergone Hill
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,15
+MapPosition = 0,7,3
 SnapEdges = true
 BattleBack = woodland
 MapSize = 1,1
 #-------------------------------
-[210]
-# Evergone Stairway
+[70]   # Evergone Crater
+Name = Evergone Crater
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,15
+MapPosition = 0,7,4
 SnapEdges = true
-BattleBack = woodland
 MapSize = 1,1
 #-------------------------------
-[211]
-# Evergone Ruins
+[210]   # Evergone Stairway
+Name = Evergone Stairway
 Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,14
+MapPosition = 0,6,2
 SnapEdges = true
 BattleBack = woodland
 MapSize = 1,1
 #-------------------------------
-[212]
-# Schist Stadium Battle
+[211]   # Evergone Ruins
+Name = Evergone Ruins
+Outdoor = true
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,6,1
+SnapEdges = true
+BattleBack = woodland
+MapSize = 1,1
+#-------------------------------
+[212]   # Schist Stadium Battle
+Name = Schist Stadium Battle
 Outdoor = false
 ShowArea = false
 BattleBack = indoor_arena
 #-------------------------------
-[216]
-# Scoria Canyon
+[216]   # Scoria Canyon
+Name = Scoria Canyon
 Outdoor = true
 ShowArea = true
 Bicycle = true
 MapPosition = 0,25,7
 MapSize = 1,11
 #-------------------------------
-[219]
-# Ranger Outpost
+[219]   # Ranger Outpost
+Name = Ranger Outpost
 Outdoor = true
 ShowArea = true
 Bicycle = true
@@ -479,72 +523,76 @@ BicycleAlways = false
 MapPosition = 0,25,6
 MapSize = 1,1
 #-------------------------------
-[220]
-# South Gabbro River
+[220]   # South Gabbro River
+Name = South Gabbro River
 Outdoor = true
 ShowArea = true
 MapPosition = 0,24,4
 MapSize = 2,1011
 #-------------------------------
-[221]
-# Amphi Town
+[221]   # Amphi Town
+Name = Amphi Town
 Outdoor = true
 ShowArea = true
 Bicycle = true
 MapPosition = 0,24,3
 #-------------------------------
-[222]
-# Amphi Woods
+[222]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 ShowArea = false
 MapPosition = 0,23,3
 #-------------------------------
-[223]
-# Amphi Woods
+[223]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
 #-------------------------------
-[224]
-# Amphi Woods
+[224]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
 #-------------------------------
-[225]
-# Amphi Woods
+[225]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
 #-------------------------------
-[226]
-# Amphi Woods
+[226]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
 #-------------------------------
-[227]
-# Amphi Woods
+[227]   # Amphi Woods
+Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
 #-------------------------------
-[228]
-# Lake Shiki
+[228]   # Lake Shiki
+Name = Lake Shiki
 Outdoor = true
 ShowArea = true
 MapPosition = 0,22,3
 #-------------------------------
-[231]
-# Training Facility
+[230]   # Amphi Cave Chamber
+Name = Amphi Cave Chamber
+BattleBack = ruins_boss
+#-------------------------------
+[231]   # Training Facility
+Name = Training Facility
 Outdoor = false
 BattleBack = gpo
 #-------------------------------
-[232]
-# Training Facility
+[232]   # Training Facility
+Name = Training Facility
 Outdoor = false
 BattleBack = gpo
 #-------------------------------
-[233]
-# Ranger Outpost Scene
+[233]   # Ranger Outpost Scene
+Name = Ranger Outpost Scene
 Outdoor = true
 #-------------------------------
-[240]
-# Distortion Abode
+[240]   # Distortion Abode
+Name = Distortion Abode
 BattleBack = distortion
 WildBattleBGM = Battle! Distortion World (Stardust).ogg

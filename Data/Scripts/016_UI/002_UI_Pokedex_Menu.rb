@@ -17,16 +17,16 @@ class Window_DexesList < Window_CommandPokemon
   def drawItem(index, count, rect)
     super(index, count, rect)
     if index >= 0 && index < @commands2.length
-      pbDrawShadowText(self.contents, rect.x + 254, rect.y, 64, rect.height,
+      pbDrawShadowText(self.contents, rect.x + 342, rect.y, 64, rect.height,
                        sprintf("%d", @commands2[index][0]), self.baseColor, self.shadowColor, 1)
-      pbDrawShadowText(self.contents, rect.x + 350, rect.y, 64, rect.height,
+      pbDrawShadowText(self.contents, rect.x + 454, rect.y, 64, rect.height,
                        sprintf("%d", @commands2[index][1]), self.baseColor, self.shadowColor, 1)
       allseen = (@commands2[index][0] >= @commands2[index][2])
       allown  = (@commands2[index][1] >= @commands2[index][2])
       pbDrawImagePositions(
         self.contents,
-        [["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 236, rect.y + 6, (allseen) ? 24 : 0, 0, 24, 24],
-         ["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 332, rect.y + 6, (allown) ? 24 : 0, 24, 24, 24]]
+        [["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 348, rect.y + 6, (allseen) ? 24 : 0, 0, 24, 24],
+         ["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 460, rect.y + 6, (allown) ? 24 : 0, 24, 24, 24]]
       )
     end
   end
@@ -48,13 +48,13 @@ class PokemonPokedexMenu_Scene
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_menu"))
     @sprites["headings"] = Window_AdvancedTextPokemon.newWithSize(
-      _INTL("<c3=F8F8F8,C02028>SEEN<r>OBTAINED</c3>"), 286, 136, 208, 64, @viewport
+      _INTL("<c3=F8F8F8,C02028>SEEN<r>OBTAINED</c3>"), 446, 136, 208, 64, @viewport
     )
     @sprites["headings"].windowskin = nil
     @sprites["commands"] = Window_DexesList.new(commands, commands2, Graphics.width - 84)
-    @sprites["commands"].x      = 40
+    @sprites["commands"].x      = 128
     @sprites["commands"].y      = 192
-    @sprites["commands"].height = 192
+    @sprites["commands"].height = 300
     @sprites["commands"].viewport = @viewport
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
@@ -108,17 +108,28 @@ class PokemonPokedexMenuScreen
                       $player.pokedex.owned_count(dex),
                       pbGetRegionalDexLength(dex)])
     end
+    if $game_switches && $game_switches[HAS_HABITAT_DEX]
+      commands.push(_INTL("Habitat Pokédex"))
+    end
     commands.push(_INTL("Exit"))
     @scene.pbStartScene(commands, commands2)
     loop do
       cmd = @scene.pbScene
-      break if cmd < 0 || cmd >= commands2.length   # Cancel/Exit
-      $PokemonGlobal.pokedexDex = $player.pokedex.accessible_dexes[cmd]
-      pbFadeOutIn {
-        scene = PokemonPokedex_Scene.new
-        screen = PokemonPokedexScreen.new(scene)
-        screen.pbStartScreen
-      }
+      break if cmd < 0 || cmd >= commands.length - 1   # Cancel/Exit
+      if $game_switches && $game_switches[HAS_HABITAT_DEX] && cmd == commands.length - 2
+        pbFadeOutIn {
+          scene = PokemonHabitatMapScene.new
+          screen = PokemonHabitatMap.new(scene)
+          screen.pbStartScreen
+        }
+      else
+        $PokemonGlobal.pokedexDex = $player.pokedex.accessible_dexes[cmd]
+        pbFadeOutIn {
+          scene = PokemonPokedex_Scene.new
+          screen = PokemonPokedexScreen.new(scene)
+          screen.pbStartScreen
+        }
+      end
     end
     @scene.pbEndScene
   end

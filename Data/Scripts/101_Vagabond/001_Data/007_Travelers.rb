@@ -35,8 +35,8 @@ def pbInitTrainers
   end
   horton.areas = [
     PBMaps::MtPegmaHillside,
-    PBMaps::MicaTown,
-    PBMaps::FeldsparTown]
+    PBMaps::MicaDistrict,
+    PBMaps::FeldsparDistrict]
   horton.battle = "Hoi fella!WT I hike around selling stuff, but can ye beat me in battle first?"
   horton.after  = "Yer a strong one!"
   horton.leave  = "I'll be heading off now.WT See ya again sometime!"
@@ -44,9 +44,9 @@ def pbInitTrainers
   horton.call   = "Hoi!WT If it ain't PLAYER! I'm over {1} right now. Come visit, eh?"
   horton.phrases[PBMaps::MtPegmaHillside] = 
     "Hoi fella!WT Ain't the view of Mt. Pegma while climbing up just great!"
-  horton.phrases[PBMaps::MicaTown] =
+  horton.phrases[PBMaps::MicaDistrict] =
     "Ain't it nice how Mica Town's a resting point towards Mt. Pegma! A fine town it is!"
-  horton.phrases[PBMaps::FeldsparTown] =
+  horton.phrases[PBMaps::FeldsparDistrict] =
     "Towns built on the side of a mountain, music to my ears!"
 
 end

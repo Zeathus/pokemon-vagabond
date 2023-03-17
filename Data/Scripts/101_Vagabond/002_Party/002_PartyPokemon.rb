@@ -24,10 +24,10 @@ def initPartyPokemon(id)
   when PBParty::Duke
     party.push(createPartyPokemon(
       id,:RIOLU,10,[:QUICKATTACK,:METALCLAW,:VACUUMWAVE,:ENDURE],1,
-      :HASTY,0,[10,31,16,31,16,5]))
+      :HASTY,0,[1,3,2,3,2,0]))
     party.push(createPartyPokemon(
       id,:BRONZOR,9,[:CONFUSION,:TACKLE,:CONFUSERAY,:PAYBACK],0,
-      :CALM,2,[16,5,31,10,16,31]))
+      :CALM,2,[2,0,3,1,2,3]))
   when PBParty::Amethyst
     levels = [18, 18]
     for i in getPartyPokemon(PBParty::Duke)
@@ -38,9 +38,9 @@ def initPartyPokemon(id)
       end
     end
     party.push(createPartyPokemon(
-      id,:MISDREAVUS,levels[0],[],1,:TIMID,1,[16,5,10,31,31,16]))
+      id,:MISDREAVUS,levels[0],[],1,:TIMID,1,[2,0,1,3,3,2]))
     party.push(createPartyPokemon(
-      id,:STARMIE,levels[1],[],0,:MODEST,0,[31,5,10,31,16,16]))
+      id,:STARMIE,levels[1],[],0,:MODEST,0,[3,0,1,3,2,2]))
   when PBParty::Kira
     levels = [20, 20]
     for i in getPartyPokemon(PBParty::Amethyst)
@@ -51,9 +51,11 @@ def initPartyPokemon(id)
       end
     end
     party.push(createPartyPokemon(
-      id,:SANDSHREW,levels[1],[],1,:ADAMANT,2,[16,31,31,16,5,10]))
+      id,:SANDSLASH,levels[1],[],1,:ADAMANT,2,[2,3,3,2,0,1]))
     party.push(createPartyPokemon(
-      id,:LARVESTA,levels[0],[],0,:TIMID,0,[16,5,16,10,31,31]))
+      id,:LARVESTA,levels[0],[],0,:TIMID,0,[2,0,2,1,3,3]))
+    party.push(createPartyPokemon(
+      id,:TYRUNT,levels[0],[],0,:ADAMANT,0,[3,3,2,1,0,2]))
   when PBParty::Eliana
 
   when PBParty::Fintan
@@ -83,7 +85,7 @@ def addTestPokemon2
     PBParty::Amethyst,:STARMIE,50,[],1,:TIMID,0,[31,31,16,10,5,16]))
 end
 
-def createPartyPokemon(id,species,level,moves,ability,nature,gender,ivs=nil)
+def createPartyPokemon(id,species,level,moves,ability,nature,gender,els=nil)
   id = getID(PBParty,id) if id.is_a?(Symbol)
 
   poke = Pokemon.new(species,level)
@@ -109,12 +111,8 @@ def createPartyPokemon(id,species,level,moves,ability,nature,gender,ivs=nil)
   # Nature
   poke.nature = nature
 
-  # IVs
-  if ivs
-    for i in 0...6
-      poke.iv[i] = ivs[i]
-    end
-  end
+  # ELs
+  poke.el = pbStatArrayToHash(els)
 
   poke.calc_stats
 

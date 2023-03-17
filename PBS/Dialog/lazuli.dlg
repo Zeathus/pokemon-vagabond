@@ -39,7 +39,7 @@
     /choice Yes
         > You knock on the manhole.
         /speaker Leroy
-        /expression none
+        /portrait 0
         /hidename 1
         > Who's there? Do you have need of me?
         > One moment, I shall let you down here.
@@ -216,10 +216,11 @@
 /speaker Leroy
 > This TM contains the move Water Pledge.<br>Try to use it with the other Pledge moves to wreak havoc!
 /if $PokemonGlobal.visitedMaps[57] # G.P.O. Admin Area
-    > I also wanted to mention that I work at the G.P.O. science facility, in the admin area.
+    > I also wanted to mention that I work at the G[.]P[.]O[.] science facility, in the admin area.
     > Please do pay me a visit there.<br>I have something to show you.
 /else
     > You look like you have something to do.<br>I am sure we will meet again in due time.
+    > I may have use of your help with something over at the G[.]P[.]O[.]
 /end
 > 'Twas a pleasure to make your acquaintance.
 

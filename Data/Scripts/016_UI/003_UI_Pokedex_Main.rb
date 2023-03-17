@@ -260,6 +260,7 @@ class PokemonPokedex_Scene
   def pbStartScene
     @sliderbitmap       = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_slider")
     @typebitmap         = AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_types"))
+    @typebitmap2        = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
     @shapebitmap        = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_shapes")
     @hwbitmap           = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_hw")
     @selbitmap          = AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_searchsel")
@@ -279,15 +280,19 @@ class PokemonPokedex_Scene
 =end
     addBackgroundPlane(@sprites, "searchbg", "Pokedex/bg_search", @viewport)
     @sprites["searchbg"].visible = false
-    @sprites["pokedex"] = Window_Pokedex.new(206, 30, 276, 364, @viewport)
+    @sprites["pokedex"] = Window_Pokedex.new(416, 26, 296, 524, @viewport)
     @sprites["icon"] = PokemonSprite.new(@viewport)
     @sprites["icon"].setOffset(PictureOrigin::CENTER)
-    @sprites["icon"].x = 112
-    @sprites["icon"].y = 196
+    @sprites["icon"].x = 240
+    @sprites["icon"].y = 292
     @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     pbSetSystemFont(@sprites["overlay"].bitmap)
     @sprites["searchcursor"] = PokedexSearchSelectionSprite.new(@viewport)
     @sprites["searchcursor"].visible = false
+    @sprites["control_exit"] = KeybindSprite.new(Input::BACK, "Exit", 100, Graphics.height - 34, @viewport)
+    @sprites["control_open"] = KeybindSprite.new([Input::USE], "Open Dex Entry", 184, Graphics.height - 34, @viewport)
+    @sprites["control_search"] = KeybindSprite.new([Input::ACTION], "Search", 358, Graphics.height - 34, @viewport)
+    @sprites["control_choose"] = KeybindSprite.new([Input::UP, Input::DOWN], "Change Pokemon", 464, Graphics.height - 34, @viewport)
     @searchResults = false
     @searchParams  = [$PokemonGlobal.pokedexMode, -1, -1, -1, -1, -1, -1, -1, -1, -1]
     pbRefreshDexList($PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
@@ -426,15 +431,28 @@ class PokemonPokedex_Scene
     textpos = [
       [dexname, Graphics.width / 2, 10, 2, Color.new(248, 248, 248), Color.new(0, 0, 0)]
     ]
-    textpos.push([GameData::Species.get(iconspecies).name, 112, 58, 2, base, shadow]) if iconspecies
+    if iconspecies
+      species_data = GameData::Species.get(iconspecies)
+      textpos.push([species_data.name, 240, 58, 2, base, shadow])
+      type1 = GameData::Type.get(species_data.types[0]).icon_position
+      type2 = species_data.types.length == 1 ? nil : GameData::Type.get(species_data.types[1]).icon_position
+      affinity = GameData::Type.get(species_data.extra_types[0]).icon_position
+      if type2.nil?
+        overlay.blt(114 + 34, 112, @typebitmap2.bitmap, Rect.new(0, 28 * type1, 64, 28))
+      else
+        overlay.blt(114, 112, @typebitmap2.bitmap, Rect.new(0, 28*type1, 64, 28))
+        overlay.blt(114 + 68, 112, @typebitmap2.bitmap, Rect.new(0, 28 * type2, 64, 28))
+      end
+      overlay.blt(302, 112, @typebitmap2.bitmap, Rect.new(0, 28 * affinity, 64, 28))
+    end
     if @searchResults
-      textpos.push([_INTL("Search results"), 112, 314, 2, base, shadow])
-      textpos.push([@dexlist.length.to_s, 112, 346, 2, base, shadow])
+      textpos.push([_INTL("Search results"), 236, 466, 2, base, shadow])
+      textpos.push([@dexlist.length.to_s, 236, 496, 2, base, shadow])
     else
-      textpos.push([_INTL("Seen:"), 42, 314, 0, base, shadow])
-      textpos.push([$player.pokedex.seen_count(pbGetPokedexRegion).to_s, 182, 314, 1, base, shadow])
-      textpos.push([_INTL("Owned:"), 42, 346, 0, base, shadow])
-      textpos.push([$player.pokedex.owned_count(pbGetPokedexRegion).to_s, 182, 346, 1, base, shadow])
+      textpos.push([_INTL("Seen:"), 162, 466, 0, base, shadow])
+      textpos.push([$player.pokedex.seen_count(pbGetPokedexRegion).to_s, 302, 466, 1, base, shadow])
+      textpos.push([_INTL("Owned:"), 162, 496, 0, base, shadow])
+      textpos.push([$player.pokedex.owned_count(pbGetPokedexRegion).to_s, 302, 496, 1, base, shadow])
     end
     # Draw all text
     pbDrawTextPositions(overlay, textpos)
@@ -444,29 +462,29 @@ class PokemonPokedex_Scene
     itemlist = @sprites["pokedex"]
     showslider = false
     if itemlist.top_row > 0
-      overlay.blt(468, 48, @sliderbitmap.bitmap, Rect.new(0, 0, 40, 30))
+      overlay.blt(692, 48, @sliderbitmap.bitmap, Rect.new(0, 0, 40, 30))
       showslider = true
     end
     if itemlist.top_item + itemlist.page_item_max < itemlist.itemCount
-      overlay.blt(468, 346, @sliderbitmap.bitmap, Rect.new(0, 30, 40, 30))
+      overlay.blt(692, 498, @sliderbitmap.bitmap, Rect.new(0, 30, 40, 30))
       showslider = true
     end
     # Draw slider box
     if showslider
-      sliderheight = 268
+      sliderheight = 420
       boxheight = (sliderheight * itemlist.page_row_max / itemlist.row_max).floor
       boxheight += [(sliderheight - boxheight) / 2, sliderheight / 6].min
       boxheight = [boxheight.floor, 40].max
       y = 78
       y += ((sliderheight - boxheight) * itemlist.top_row / (itemlist.row_max - itemlist.page_row_max)).floor
-      overlay.blt(468, y, @sliderbitmap.bitmap, Rect.new(40, 0, 40, 8))
+      overlay.blt(692, y, @sliderbitmap.bitmap, Rect.new(40, 0, 40, 8))
       i = 0
       while i * 16 < boxheight - 8 - 16
         height = [boxheight - 8 - 16 - (i * 16), 16].min
-        overlay.blt(468, y + 8 + (i * 16), @sliderbitmap.bitmap, Rect.new(40, 8, 40, height))
+        overlay.blt(692, y + 8 + (i * 16), @sliderbitmap.bitmap, Rect.new(40, 8, 40, height))
         i += 1
       end
-      overlay.blt(468, y + boxheight - 16, @sliderbitmap.bitmap, Rect.new(40, 24, 40, 16))
+      overlay.blt(692, y + boxheight - 16, @sliderbitmap.bitmap, Rect.new(40, 24, 40, 16))
     end
   end
 

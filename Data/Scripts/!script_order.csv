@@ -540,6 +540,7 @@
 015_UI_Commands
 016_UI_Battle
 017_UI_BattleAnim
+018_UI_HabitatDex
 @@009_Graphics
 001_ParticleEffects
 002_Utils

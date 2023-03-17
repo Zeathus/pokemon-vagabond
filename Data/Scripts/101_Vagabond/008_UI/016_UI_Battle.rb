@@ -818,7 +818,17 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpBar = Sprite.new(viewport)
     @hpBar.bitmap = @hpBarBitmap.bitmap
     @hpBar.src_rect.height = @hpBarBitmap.height / 3
+    @hpBarEx = Sprite.new(viewport)
+    @hpBarEx.bitmap = @hpBarExBitmap.bitmap
+    @hpBarEx.src_rect.height = @hpBarExBitmap.height / 8
+    @hpBarEx.src_rect.width = 0
+    @hpBarEx2 = Sprite.new(viewport)
+    @hpBarEx2.bitmap = @hpBarExBitmap.bitmap
+    @hpBarEx2.src_rect.height = @hpBarExBitmap.height / 8
+    @hpBarEx2.src_rect.width = 0
     @sprites["hpBar"] = @hpBar
+    @sprites["hpBarEx"] = @hpBarEx
+    @sprites["hpBarEx2"] = @hpBarEx2
     # Create sprite wrapper that displays Exp bar
     @expBar = Sprite.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
@@ -836,6 +846,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @databoxBitmap.dispose
     @numbersBitmap.dispose
     @hpBarBitmap.dispose
+    @hpBarExBitmap.dispose
     @expBarBitmap.dispose
     @contents.dispose
     super
@@ -844,6 +855,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def x=(value)
     super
     @hpBar.x     = value + @spriteBaseX + (onPlayerSide ? 12 : 38)
+    @hpBarEx.x   = @hpBar.x
+    @hpBarEx2.x  = @hpBar.x
     @expBar.x    = value + @spriteBaseX + 6
     @hpNumbers.x = value + @spriteBaseX + (@showHP ? 40 : 60)
   end
@@ -851,6 +864,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def y=(value)
     super
     @hpBar.y     = value + 28
+    @hpBarEx.y   = @hpBar.y
+    @hpBarEx2.y  = @hpBar.y
     @expBar.y    = value + 74
     @hpNumbers.y = value + 28
   end
@@ -858,6 +873,8 @@ class Battle::Scene::PokemonDataBox < Sprite
   def z=(value)
     super
     @hpBar.z     = value + 1
+    @hpBarEx.z   = @hpBar.z
+    @hpBarEx2.z  = @hpBar.z
     @expBar.z    = value + 1
     @hpNumbers.z = value + 2
   end
@@ -1053,6 +1070,31 @@ class Battle::Scene::PokemonDataBox < Sprite
     hpColor = 1 if self.hp <= @battler.totalhp / 2   # Yellow bar
     hpColor = 2 if self.hp <= @battler.totalhp / 4   # Red bar
     @hpBar.src_rect.y = hpColor * @hpBarBitmap.height / 3
+    if self.hp > @battler.totalhp
+      top_layer = ((self.hp - 1) / @battler.totalhp).floor - 1
+      if top_layer < 0
+        @hpBarEx.src_rect.width = 0
+        @hpBarEx2.src_rect.width = 0
+      else
+        # Resize HP bar
+        w = @hpBarBitmap.width.to_f * (self.hp - (@battler.totalhp * (top_layer + 1))) / @battler.totalhp
+        w = 1 if w < 1
+        # NOTE: The line below snaps the bar's width to the nearest 2 pixels, to
+        #       fit in with the rest of the graphics which are doubled in size.
+        w = ((w / 2.0).round) * 2
+        @hpBarEx2.src_rect.width = w
+        @hpBarEx2.src_rect.y = (top_layer % 8) * @hpBarExBitmap.height / 8
+        if top_layer == 0
+          @hpBarEx.src_rect.width = 0
+        else
+          @hpBarEx.src_rect.y = ((top_layer - 1) % 8) * @hpBarExBitmap.height / 8
+          @hpBarEx.src_rect.width = @hpBarExBitmap.width
+        end
+      end
+    else
+      @hpBarEx.src_rect.width = 0
+      @hpBarEx2.src_rect.width = 0
+    end
   end
   
   def refreshExp

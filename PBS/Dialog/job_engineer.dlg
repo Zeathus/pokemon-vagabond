@@ -5,7 +5,103 @@
 > Hi Leroy! How's your research going?
 /speaker Leroy
 > As fine as ever, I have made great progress recently.
-> As thou can see, <PLAYER>, I work here at the G.P.O. lab.
-> May I assume you are also a member, as thou art in an employee-only area?
-> No? Amethyst allowed thou down here?
-> In that case, please come meet me here again once thou art a member.
+> As you can see, <PLAYER>, I work here at the G.P.O. lab.
+> May I assume you are also a member, as you are in an employee-only area?
+> No? Amethyst allowed you down here?
+> In that case, please come meet me here again once you are a member.
+
+[JOB_ENGINEER_1,0]
+/speaker Leroy
+> We meet again <PLAYER>!\nI'm glad you came.
+> You see, I am in the process of developing an artifical Pokémon, and I am in need of a capable trainer to test it.
+> This is a highly advanced prototype, powered by a sophisticated neural network.
+> However, the neural network has yet to be trained, so it does not know how to battle by itself.
+> This is where you come in.
+
+[JOB_ENGINEER_1,1]
+/speaker Leroy
+?> Would you take command of this Pokémon in battle to help me train it?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        > No? That is not the answer I was expecting.
+        /return false
+?/>
+
+[JOB_ENGINEER_1,2]
+/speaker Leroy
+> You need a free spot in your party to carry the Pokémon.
+> There's a PC right over there if you need to deposit a Pokémon.
+
+[JOB_ENGINEER_1,3]
+/speaker Leroy
+> Marvelous!
+> Of course, the one you will be battling is none other than myself.
+> Here is the Pokémon you will be using.
+/speaker 0
+> Leroy handed you a Pokéball.
+
+[JOB_ENGINEER_1,4]
+/speaker Leroy
+> Now hit me with all you've got!
+
+[JOB_ENGINEER_1,5]
+/speaker Leroy
+> That was a fine battle. I believe my Pokémon really got to optimize its weights too.
+> Oh!\wtnp[8]
+
+[JOB_ENGINEER_1,6]
+/speaker Leroy
+> Incredible! Turns out this exercise was even more effective than I first imagined.
+> Given these results, I believe the optimal way forward is to leave this Pokémon with you.
+
+[JOB_ENGINEER_1,7]
+/speaker Leroy
+> But there is more to this artifical Pokémon than first meets the eye.
+> Please join me over at the PC.
+
+[JOB_ENGINEER_1,8]
+/speaker Leroy
+> Here, I will grant you access to a new menu.
+
+[JOB_ENGINEER_1,9]
+/speaker Leroy
+> You see, this Pokémon has a highly customizable interface. You can tweak it to function to your liking.
+
+[JOB_ENGINEER_1,10]
+/speaker Leroy
+> I have bestowed you with memory for all 18 types. Here you can choose what type you prefer.
+
+[JOB_ENGINEER_1,11]
+/speaker Leroy
+> You can also adjust its stats by use of chips. I have only developed simple chips for now, but more will be available later.
+> Mind that you can only use one chip at a time.
+
+[JOB_ENGINEER_1,12]
+/speaker Leroy
+> You can ignore the frame page for now.
+> Only the Null frame has been researched thus far, but your testing will help me make more.
+
+[JOB_ENGINEER_1,13]
+/speaker Leroy
+> You can access the customization menu from any PC, so feel free to experiment.
+
+[JOB_ENGINEER_1,14]
+/speaker Leroy
+> One more thing before you go.
+> Silvally is unable to learn any moves by leveling up or by TM, and thus only knows Multi-Attack.
+> However, it is able to learn every single move available through Data Chips.
+> I will give you some Data Chips to get started, but you will have to find more yourself.
+
+[JOB_ENGINEER_1,15]
+/speaker Leroy
+> If you are unfamiliar with Data Chips, try changing to the Data Chip page when editing movesets from the Summary.
+> For us to continue developing Silvally further, I need you to help me find more such chips.
+> They can be found just about anywhere, so be on the lookout.
+/speaker 0
+> \ts[2]You got the job as an Engineer!
+> \ts[1]You can track how many Data Chips you have found in the Trainer menu. There it also says how many you need to progress.
+
+[JOB_ENGINEER_2,0]
+/speaker Leroy
+> I hope your Silvally is gaining valuable data. Let me know once you have collected 16 Data Chips total.

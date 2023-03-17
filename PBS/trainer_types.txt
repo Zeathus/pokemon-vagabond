@@ -100,6 +100,7 @@
 109,AETHER_F,Aether Employee,100,,,,Female
 110,AETHERELDER,Elder of Aether,100,,,,Female
 111,CYRUS,Otherworld Inhabitant,200,,,,Male
+112,CERISE,Swordswoman,200,Battle! VS Cerise (Sour Cherry),,,Female
 130,HOOPARING,Mysterious,200,cameo_2,,,Mixed,0,
 131,AURA,,0,Battle Aura,,,Mixed,200,
 200,JANUS,Friend,0,,,,Male
