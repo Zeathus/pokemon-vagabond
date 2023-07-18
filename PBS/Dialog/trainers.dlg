@@ -141,3 +141,87 @@
 [QUARTZ_PASSING_AGNOL,1]
 /speaker Agnol
 > I will have you know I ran a colosseum once.<br>Now begone from my sight.
+
+[MT._PEGMA_HILLSIDE_KENSHI,0]
+/speaker Kenshi
+> My eyes cannot see, so I have trained my with my Pokémon to develop my mind's eye. Can you withstand it?
+
+[MT._PEGMA_HILLSIDE_KENSHI,1]
+/speaker Kenshi
+> Existing in a world with no sight naturally heightened my other senses.
+
+[MT._PEGMA_HILLSIDE_RICO,0]
+/speaker Rico
+> I'm headed for a hike on Mt[.] Pegma, what about you?
+
+[MT._PEGMA_HILLSIDE_RICO,1]
+/speaker Rico
+> I have always wanted to hike on Mt[.] Pumice, but it's just too cold!
+
+[MT._PEGMA_HILLSIDE_EDDIE,0]
+/speaker Eddie
+> Hey, I like your clothes. They look comfy and easy to wear!
+
+[MT._PEGMA_HILLSIDE_EDDIE,1]
+/speaker Eddie
+> I like shorts, they're comfy and easy to wear!
+
+[PEGMA_YANG_0]
+/speaker Yang
+> The Yin set to guard the entrance let TWO people get through? He's utterly useless!
+
+[PEGMA_YANG_0,1]
+/speaker Yang
+> I see why he had such trouble...
+
+[PEGMA_YANG_1]
+/speaker Yang
+> We will show you the power our unified forced grant us!
+
+[PEGMA_YANG_1,1]
+/speaker Yang
+> Balance broken, just like that...
+
+[PEGMA_YANG_2]
+/speaker Yang
+> Our leader spoke to us about the truths of this world.
+
+[PEGMA_YANG_3]
+/speaker Yang
+> The truth can be harsh, but Eliana remind us of the dreams we pursue.
+
+[PEGMA_YANG_3,1]
+/speaker Yang
+> The truth can be harsh, but it won't be like that for long.
+
+[PEGMA_YANG_4]
+/speaker Yang
+> We cannot only have truth. Without ideals, we would remain at a standstill.
+
+[PEGMA_YIN_0]
+/speaker Yin
+> Ghost, Normal... When opposites like these unite, they can't possibly lose!
+
+[PEGMA_YIN_0,1]
+/speaker Yin
+> How could you? Balance keeps this world from falling apart.
+
+[PEGMA_YIN_1]
+/speaker Yin
+> You've taken the wrong turn if you're here to sightsee!
+
+[PEGMA_YIN_1,1]
+/speaker Yin
+> You're definitely no tourist.
+
+[PEGMA_YIN_2]
+/speaker Yin
+> What is an ideal world like to you?\nHave you even given it any thought?
+
+[PEGMA_YIN_3]
+/speaker Yin
+> We work for an ideal world brought forth by our leader's vision.
+
+[PEGMA_YIN_4]
+/speaker Yin
+> Ideals alone would also go to far without the boundaries of truth.

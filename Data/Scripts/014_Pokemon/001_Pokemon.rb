@@ -312,6 +312,29 @@ class Pokemon
   # @return [Array<Symbol>] an array of this Pokémon's types
   def types
     return [pbCustomPokemon.type] if @species == :SILVALLY
+    if [:EARTHADEPT, :WINDADEPT, :FIREADEPT, :WATERADEPT].include?(self.ability.id)
+      types = species_data.types.clone
+      counts = [0, 0, 0, 0]
+      elements = [:GROUND, :FLYING, :FIRE, :WATER]
+      @moves.each do |m|
+        (0...4).each do |i|
+          counts[i] += 1 if m.type == elements[i]
+        end
+      end
+      (0...4).each do |i|
+        if counts[i] >= 2
+          if types.length == 1
+            types.push(elements[i])
+          else
+            types[0] = elements[i]
+          end
+        end
+      end
+      if types.length == 2 && types[0] == types[1]
+        types = [types[0]]
+      end
+      return types
+    end
     return species_data.types.clone
   end
 
@@ -329,7 +352,7 @@ class Pokemon
 
   def affinities
     return [pbCustomPokemon.affinity] if @species == :SILVALLY
-    return species_data.extra_types
+    return species_data.extra_types.compact
   end
 
   def affinity
@@ -1087,6 +1110,22 @@ class Pokemon
     this_base_stats = (@species == :SILVALLY) ? pbCustomPokemon.base_stats : species_data.base_stats
     ret = {}
     GameData::Stat.each_main { |s| ret[s.id] = this_base_stats[s.id] }
+    if [:EARTHADEPT, :WINDADEPT, :FIREADEPT, :WATERADEPT].include?(self.ability.id)
+      @moves.each do |m|
+        case m.type
+        when :GROUND
+          ret[:HP] += 30
+        when :FLYING
+          ret[:SPEED] += 30
+        when :FIRE
+          ret[:ATTACK] += 25
+          ret[:DEFENSE] += 25
+        when :WATER
+          ret[:SPECIAL_ATTACK] += 25
+          ret[:SPECIAL_DEFENSE] += 25
+        end
+      end
+    end
     return ret
   end
 

@@ -1,0 +1,272 @@
+[CH3_INTRO,0]
+/speaker Amethyst
+/portrait 0
+!> Nekane is gone!
+
+[CH3_INTRO,1]
+/speaker Amethyst worried
+> Have you seen Nekane!?
+> ...
+> Ah, you just woke up...
+> Sorry for waking you up like that.
+
+[CH3_INTRO,2]
+/speaker Kira annoyed
+> What is going on here exactly?
+/speaker Amethyst worried
+> I didn't find Nekane in her room this morning...
+> She must have left the G[.]P[.]O[.] HQ and wandered off somewhere.
+> Could you two help me ask around the city if anyone has seen her?
+/speaker Kira lookaway
+> I guess you are dragging me along as well.
+
+[CH3_INTRO,3]
+> Amethyst has rejoined your party!
+
+[CH3_LOCATE_GIRL]
+/speaker Girl
+> A girl with long black hair?
+> If you're talking about the one who wore purplish clothes, I saw her go to the northern part of the city.
+
+[CH3_LOCATE_OLD_MAN]
+/speaker Old Man
+> A young girl with dark hair?
+> I can't say I remember seeing someone like that. I am not as perceptive as I once was.
+
+[CH3_LOCATE_WAITRESS]
+/speaker Waitress
+> A black-haired girl?
+> I think I saw someone like that come through the south gate. Though I must admit I wasn't paying close attention.
+
+[CH3_LOCATE_BUSINESS_MAN]
+/speaker Business_Man
+> A girl with black hair passing by?
+> Sorry, but seeing her has not been part of my daily business.
+
+[CH3_LOCATE_MUSICIAN]
+/speaker Musician
+> \ts[2]<wave>§ A lone musician on the street<br>§ Has no idea who they'll meet</wave>
+> \ts[2]<wave>§ A young girl might pass by<br>§ [R]Long black hair[/] catch my eye</wave>
+> \ts[2]<wave>§ Going east through the gate<br>§ I do wonder, to what fate</wave>
+
+[CH3_LOCATE_TECH_GUY]
+/speaker Tech_Guy
+> A girl with black hair?
+> I was too fascinated by the waterworks to look around for such a person.
+> However, the musician right by probably knows the goings here the best of anyone.
+
+[CH3_OLD_LADY,0]
+/speaker Old_Lady
+> Tales are told of the forest ahead being haunted by evil spirits.
+
+[CH3_OLD_LADY,1]
+/speaker Old_Lady
+> They say... that those who enter... never return.
+
+[CH3_OLD_LADY,2]
+/speaker Old_Lady
+> It's too late to turn back now.
+> \ts[2]<wave>...are you next?</wave>
+
+[CH3_EXIT_FOREST]
+/speaker Amethyst
+> According to the musician, Nekane should be somewhere in that forest.
+> We should make sure we search it thoroughly.
+
+[CH3_SEPARATED,0]
+/event Player emote confused
+/wait 20
+/event Player turn down
+/speaker Azelf
+> We seem to have been separated from the others.
+> Let us to check for Nekane here first before we look for them.
+/speaker 0
+> \ts[2]Azelf is now available as a party member!
+
+[CH3_CLEARING_TRAP]
+> You should check for Nekane here before leaving.
+
+[CH3_NEKANE,0]
+/speaker Nekane
+> \ts[2]Oh, <PLAYER>, it is you.
+?> Why are you here?
+  /choice We were looking for you
+    > Looking for me?\nIs something the matter?
+    > ...
+    > You wanted to make sure I was safe?\nSuch strange things make you do what you do...
+  /choice I just happened to come
+    > That sounds... unusual.
+    > From what I have perceived, you always have some reason you do what you do...
+  /choice I could ask the same thing
+    > You would ask why I am here?
+    > It makes sense you would propose such a riddle. You always have some reason you do what you do...
+?/>
+> The same with Amethyst and Kira.\nIt puzzles me where you get this [B]motivation[/] from. It is something I lack.
+/speaker Azelf
+> \ts[1]She is... correct.\nI sense no [B]willpower[/] emanating from her.\nThat is highly unusual.
+> [B]Willpower[/] is a common trait that all humans should possess... It is what grants us [B]goals and desires[/].
+> <PLAYER>, please relay my thoughts to her, as she cannot hear me.
+/speaker 0
+> You tell Nekane what Azelf told you.
+/speaker Nekane
+> \ts[2][B]Goals and desires[/]... I can only say I go along with what I am told, to see where it leads me.
+> I see you express yourselves when you do things, and I get curious if I can do the same if I follow along...
+/speaker Azelf
+> \ts[1]<PLAYER>, I have an idea.
+> Let us bring Nekane to the city and show her the desires of the people there.
+> Maybe that will help her get a clearer picture.
+/speaker Nekane
+?> \ts[2]Hmm?
+  /choice Let's ask people in the city
+    > Ask people in the city about their desires?
+  /choice Azelf has an idea
+    > Azelf suggested we ask others about their desires?
+  /choice Maybe you need an example
+    > An example of what sorts of desires people have?
+?/>
+> Yes, that will hopefully be informative.
+
+[CH3_NEKANE,1]
+> You head out of the forest directly back to Lapis Lazuli City.
+
+[CH3_NEKANE,2]
+/speaker Azelf
+> <PLAYER>. As you may have already deduced, I have an affinity for [B]willpower[/]. This is why only some people can hear me.
+> While all humans possess willpower, only those with [R]a particular affinity[/] for it can hear me, like you and Kira.
+> I am not the best at explaining this phenomenon. That is best left to [Uxie]Uxie[/] or [Mesprit]Mesprit[/], should you meet with them.
+> However, regardless of a person's affinity for willpower, I am able to read their motivations from their aura alone.
+> Please use this to identify the desires of the people in this area, so we may tell Nekane about them.
+
+[CH3_NEKANE,3]
+/speaker Azelf
+> I believe that should be enough.
+
+[CH3_NEKANE,4]
+/speaker Azelf
+?> <PLAYER>, what should we mention first?
+  /choice The Musician
+    /dialog CH3_NEKANE 5
+  /choice The Construction Worker
+    /dialog CH3_NEKANE 6
+  /choice The Business Man
+    /dialog CH3_NEKANE 7
+?/>
+/speaker Azelf
+?> \ts[1]That example did not seem to get through to her. Any other ideas?
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[0] The Musician
+    /dialog CH3_NEKANE 5
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[1] The Construction Worker
+    /dialog CH3_NEKANE 6
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[2] The Business Man
+    /dialog CH3_NEKANE 7
+?/>
+/speaker Azelf
+?> \ts[1]That one did not work either. We are left with only one more person.
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[0] The Musician
+    /dialog CH3_NEKANE 5
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[1] The Construction Worker
+    /dialog CH3_NEKANE 6
+  /ifchoice !$quests[:NEKANEGONEMISSING].dummy[2] The Business Man
+    /dialog CH3_NEKANE 7
+?/>
+/speaker Nekane
+> I am still no closer to understanding what you mean by [B]willpower[/]. Even after you went out of your way.
+/speaker Azelf
+> \ts[1]This has proven more difficult than I anticipated. Nekane seems to have no capacity for [B]willpower[/] at all.
+> I did not want to believe it when I first felt her complete lack of [B]willpower[/], but this proves it. It is deeply concerning...
+> While it is within my power to grant [B]willpower[/] to those that do not possess it, there is something that puzzles me...
+> Not only did she not understand their motivations. She didn't understand their [Mesprit]feelings[/] either.
+?> <PLAYER>, could you do me a favor and ask her what she thinks [Mesprit]happiness[/] is?
+  /choice Are you happy?
+    /speaker Nekane
+    > \ts[2]Am I [P]happy[/]? If that is what the musician talked about, I cannot say I know or ever knew how to be happy.
+  /choice Do you know what happiness is?
+    /speaker Nekane
+    > \ts[2][P]Happiness[/]? If that is what the musician talked about, I cannot say I am familiar.
+  /choice What do you think of happiness?
+    /speaker Nekane
+    > \ts[2][P]Happiness[/]? If that is what the musician talked about, I cannot say I am familiar.
+?/>
+?> What does it mean to be... [P]happy[/]?
+  /savechoice ch3 happiness
+  /choice To laugh
+    > Laughing..? I will try to "laugh".
+    > Hahaha..!
+  /choice To smile
+    > Smiling..? I will try to "smile".
+    /expression happy
+    > How is this?
+    /expression neutral
+  /choice Warm and fuzzy
+    > Warm and... fuzzy?
+    > Are you describing some kind of Pokémon?
+?/>
+> Hmm... I am not sure I see what you mean.
+/speaker Azelf
+> \ts[1]It is as I thought. Nekane lacks not only [B]willpower[/], but [Mesprit]emotion[/] as well. That is where we encounter a problem.
+> You see, one cannot have [B]willpower[/] by itself. [B]Willpower[/] is intrinsically fueled by [Mesprit]emotions[/].
+> When you [Mesprit]feel[/] strongly about something, it creates the [B]will[/] to act upon said [Mesprit]emotions[/].
+> That is why [Mesprit]emotions[/] are a prerequisite for [B]willpower[/], and granting emotions is not part of my resume.
+
+[CH3_NEKANE,5]
+/eval $quests[:NEKANEGONEMISSING].dummy[0]=true
+/speaker 0
+> You explain to Nekane the musician's wish to make those passing by happy.
+/speaker Nekane
+> \ts[2]Why would someone decide to dedicate so much of their time to strangers?\nI do not understand.
+
+[CH3_NEKANE,6]
+/eval $quests[:NEKANEGONEMISSING].dummy[1]=true
+/speaker 0
+> You explain to Nekane the construction worker's wish to confess his feelings.
+/speaker Nekane
+> \ts[2]Confess his feelings..?\nI cannot say I grasp that concept.
+
+[CH3_NEKANE,7]
+/eval $quests[:NEKANEGONEMISSING].dummy[2]=true
+/speaker 0
+> You explain to Nekane the business man's want to support his family.
+/speaker Nekane
+> \ts[2]I have gathered that money is a basic necessity, but why work so hard?
+
+[CH3_NEKANE,8]
+/speaker Amethyst smile
+> Ah, there you are!
+
+[CH3_NEKANE,9]
+/speaker Amethyst
+> <PLAYER>, you found Nekane!\nI'm so relieved...
+> What have you been up to around here while we were gone?
+/reset
+/fade black
+> You explain what you learned about Nekane to Amethyst and Kira.
+/reset
+/fade normal
+/speaker Amethyst confused
+> Wow, there's a lot to unpack there...
+> It's hard to imagine how it would be to have neither [B]willpower[/] nor [P]emotions[/].
+/expression awkward
+> I may have been taking those for granted.
+/expression neutral
+> But there's always a solution to every problem, right?
+> If Nekane can't be granted willpower unless she has emotions, don't we just have to go see [P]Mesprit[/]?
+/speaker Azelf
+> Yes. That is what I would also suggest. After all, [Mesprit]Mesprit[/] has the command over [Mesprit]emotions[/] that I have for [B]willpower[/].
+/speaker Kira
+> Azelf agrees with you.
+/speaker Amethyst
+> Great! Let's get some rest back at HQ and discuss our plan in the morning.
+/speaker Kira
+> Sounds like a plan.
+
+[CH3_NEKANE,10]
+/speaker Azelf
+> <PLAYER>, from this point on, you may use my willpower reading any time you need.\nI hope this will prove useful.
+
+[CH3_LAZULI_TRAP,0]
+/speaker Azelf
+> I am certain Amethyst and Kira can handle themselves and will return soon. We must focus on helping Nekane.
+
+[CH3_LAZULI_TRAP,1]
+/speaker Azelf
+> We should not leave this area for now.\nWe must focus on helping Nekane.

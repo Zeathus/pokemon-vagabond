@@ -5,15 +5,17 @@ def pbAllDataChipMoves
     [:SHOCKWAVE,1],
     [:MAGICALLEAF,1],
     [:FORESIGHT,1],
+    [:ROUND,1],
+    [:THIEF,1],
     [:ANCIENTPOWER,2],
+    [:OMINOUSWIND,2],
+    [:SILVERWIND,2],
     [:HELPINGHAND,2],
-    [:ROUND,2],
-    [:THIEF,2],
     [:CURSE,2],
     [:PSYCHUP,2],
+    [:THERMODYNAMICS,2],
     [:FLY,3],
     [:STRENGTH,3],
-    [:THERMODYNAMICS,3],
     [:STEALTHROCK,3],
     [:SEISMICTOSS,3],
     [:SUBSTITUTE,4]
@@ -24,29 +26,31 @@ def pbAllDataChipMoves
       [:ROOST,3],
       [:TERRAINPULSE,3],
       [:WEATHERBALL,3],
-      [:FUTURESIGHT,3],
       [:BOUNCE,3],
+      [:SMARTSTRIKE,3],
+      [:DRILLRUN,3],
+      [:LIQUIDATION,3],
       [:FREEZEDRY,4],
-      [:LIQUIDATION,4],
-      [:PLAYROUGH,4],
-      [:GIGADRAIN,4],
-      [:DYNAMICPUNCH,5],
-      [:PERMAFROST,5],
-      [:INFERNO,5],
-      [:ZAPCANNON,5]
+      [:SLUDGEWAVE,4],
+      [:DYNAMICPUNCH,4],
+      [:INFERNO,4],
+      [:ZAPCANNON,4],
+      [:PERMAFROST,4],
     ]
   end
 
   if $bag.quantity(:DATARECOVERYDEVICEV2)>0
     moves += [
+      [:EXPANDINGFORCE,4],
       [:BODYPRESS,4],
       [:EXPLOSION,4],
-      [:FLAREBLITZ,5],
-      [:HURRICANE,5],
+      [:HYPERBEAM,4],
+      [:GIGAIMPACT,4],
+      [:OVERHEAT,5],
       [:MEGAHORN,5],
       [:DRACOMETEOR,5],
       [:SKYATTACK,5],
-      [:METRONOME,8]  
+      [:METRONOME,6],
     ]
   end
 

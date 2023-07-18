@@ -225,6 +225,7 @@ end
 #===============================================================================
 class Battle::Move::SwitchOutTargetDamagingMove < Battle::Move
   def pbEffectAgainstTarget(user, target)
+    return if @battle.smartWildBattle
     if @battle.wildBattle? && target.level <= user.level && @battle.canRun &&
        (target.effects[PBEffects::Substitute] == 0 || ignoresSubstitute?(user))
       @battle.decision = 3
@@ -232,7 +233,7 @@ class Battle::Move::SwitchOutTargetDamagingMove < Battle::Move
   end
 
   def pbSwitchOutTargetEffect(user, targets, numHits, switched_battlers)
-    return if @battle.wildBattle? || !switched_battlers.empty?
+    return if (@battle.wildBattle? || !switched_battlers.empty?) && !@battle.smartWildBattle
     return if user.fainted? || numHits == 0
     targets.each do |b|
       next if b.fainted? || b.damageState.unaffected || b.damageState.substitute

@@ -63,3 +63,27 @@
 [DRINK_LOVER_NO_THANKS]
 /speaker Drink_Lover
 > You don't believe me, do you?
+
+[NO_TELEPORT]
+> You cannot teleport at this time.
+
+[NOT_ENOUGH_PARTY_MEMBERS]
+> You need at least two party members to open this menu.
+
+[NO_PAUSE_MENU]
+> You cannot open the Pause Menu at this time.
+
+[AURA_AZELF]
+/speaker Azelf
+/portrait 0
+/hidename 2
+
+[AURA_UXIE]
+/speaker Uxie
+/portrait 0
+/hidename 2
+
+[AURA_MESPRIT]
+/speaker Mesprit
+/portrait 0
+/hidename 2

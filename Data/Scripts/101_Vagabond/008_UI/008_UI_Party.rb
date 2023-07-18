@@ -145,7 +145,7 @@ class PokeSelectionMenuItemSprite < SpriteWrapper
 
   def refresh
     @bgsprite.changeBitmap((@selected) ? "selbitmap" : "deselbitmap")
-    @bgsprite.src_rect=Rect.new(0,@selected ? 0 : 32*@otherid,134,32)
+    @bgsprite.src_rect=Rect.new(0,@selected ? 0 : [32*@otherid, @bgsprite.bitmap.height - 32].min,134,32)
     if @bgsprite && !@bgsprite.disposed?
       @bgsprite.x=self.x
       @bgsprite.y=self.y
@@ -454,7 +454,7 @@ class PartyMemberSprite < SpriteWrapper
     if @refreshBitmap
       @refreshBitmap=false
       self.bitmap.clear
-      tmp_y = @otherid * 68
+      tmp_y = [@otherid * 68, @barbitmap.bitmap.height - 68].min
       self.bitmap.blt(0,0,@barbitmap.bitmap,Rect.new(0,tmp_y,56,68))
     end
     self.z = 15
@@ -841,18 +841,18 @@ class PokeSelectionSprite < SpriteWrapper
       self.bitmap.clear if self.bitmap
       tmp_x = @other ? 320 : 0
       tmp_x = 0 if @hasother && @index % 6 >= 3
-      tmp_y = 64 * @otherid
+      tmp_y = [64 * @otherid, @barbitmap.bitmap.height - 64].min
       if @teampos >= 0
         self.bitmap.blt(0,0,@barbitmap.bitmap,Rect.new(tmp_x,tmp_y,320,64))
         self.bitmap.blt(0,0,@switchbitmap.bitmap,Rect.new(0,@other ? 64 : 0,320,64))
-        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*@teampos,32*@otherid,32,32))
+        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*@teampos,[32*@otherid,@numberbitmap.height-32].min,32,32))
       elsif self.preselected
         self.bitmap.blt(0,0,@barbitmap.bitmap,Rect.new(tmp_x,tmp_y,320,64))
         self.bitmap.blt(0,0,@switchbitmap.bitmap,Rect.new(0,@other ? 64 : 0,320,64))
-        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*(@index%6),32*@otherid,32,32))
+        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*(@index%6),[32*@otherid,@numberbitmap.height-32].min,32,32))
       else
         self.bitmap.blt(0,0,@barbitmap.bitmap,Rect.new(tmp_x,tmp_y,320,64))
-        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*(@index%6),32*@otherid,32,32))
+        self.bitmap.blt(@numberX,@numberY,@numberbitmap.bitmap,Rect.new(32*(@index%6),[32*@otherid,@numberbitmap.height-32].min,32,32))
       end
       base=Color.new(248,248,248)
       shadow=Color.new(40,40,40)
@@ -878,7 +878,8 @@ class PokeSelectionSprite < SpriteWrapper
           self.bitmap.fill_rect(@gaugeX,@gaugeY,hpgauge,2,hpcolors[hpzone*2])
           self.bitmap.fill_rect(@gaugeX,@gaugeY+2,hpgauge,4,hpcolors[hpzone*2+1])
           self.bitmap.fill_rect(@gaugeX,@gaugeY+6,hpgauge,2,hpcolors[hpzone*2])
-          self.bitmap.blt(@hpbarX,@hpbarY,@hpbar.bitmap,Rect.new(0,@otherid*32,@hpbar.width,32))
+          self.bitmap.blt(@hpbarX,@hpbarY,@hpbar.bitmap,
+            Rect.new(0,[@otherid*32, @hpbar.bitmap.height-32].min,@hpbar.width,32))
           if @pokemon.hp==0 || @pokemon.status != :NONE
             status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position - 1)
             statusrect=Rect.new(0,32*status,32,32)
@@ -945,7 +946,7 @@ class PokeSelectionPlaceholderSprite < SpriteWrapper
     self.bitmap=@pbitmap.bitmap
     self.x=@xvalues[index]
     self.y=@yvalues[index]
-    self.src_rect = Rect.new(@other ? 320 : 0,64*@otherid,320,64)
+    self.src_rect = Rect.new(@other ? 320 : 0,[64*@otherid, self.bitmap.height - 64].min,320,64)
     self.tone = Tone.new(-100,-100,-100)
     @text=nil
   end
@@ -1960,7 +1961,18 @@ class PokemonScreen_Scene
       end
       if Input.trigger?(Input::USE)
         choice = @sprites["memchange"].selected
-        break
+        member = @sprites["memchange"].member
+        if left && PBParty.secondOnly(member)
+          pbDisplay(_INTL("{1} cannot be set as a leader, only as a follower.",
+            PBParty.getName(member)))
+          choice = -1
+        elsif member == partnerid && PBParty.secondOnly(otherid)
+          pbDisplay(_INTL("This would place {1} in the leader position.\n{1} cannot be set as a leader, only as a follower.",
+            PBParty.getName(otherid)))
+          choice = -1
+        else
+          break
+        end
       elsif Input.trigger?(Input::BACK)
         break
       end
@@ -1971,6 +1983,7 @@ class PokemonScreen_Scene
     @sprites["memchange"].cursor_visible=false
 
     member = @sprites["memchange"].member
+
     if choice >= 0 && member != otherid
       setPartyActive(member,left ? 0 : 1)
       @tid=getPartyActive(0)
@@ -2273,6 +2286,12 @@ class PokemonScreen_Scene
       pkmnid = pkmnid % 6
     end
     screen.pbStartScreen(party,pkmnid)
+    @sprites["summary"].pokemon = nil
+    if pkmnid < 6
+      @sprites["summary"].pokemon = @party[pkmnid]
+    elsif pkmnid < 12
+      @sprites["summary"].pokemon = @pparty[pkmnid-6]
+    end
     pbFadeInAndShow(@sprites,oldsprites)
   end
 

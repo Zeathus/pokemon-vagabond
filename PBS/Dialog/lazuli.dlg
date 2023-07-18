@@ -74,7 +74,7 @@
 ?/>
 
 [LAZULI_MANHOLE_ROTOM,2]
-?> It sounds as if there is a loud engine inside the machine... which makes sense really.<br>Inspect the machine closely anyway?
+?> It sounds as if there is a loud engine inside the machine... which makes sense.<br>Inspect the machine closely anyway?
     /choice Yes
         /return true
     /cancelchoice No
@@ -127,7 +127,7 @@
 
 [LAPIS_LAZULI_GYM,4]
 /speaker Leroy
-> I did not give you the key to access the other maintenance rooms. 'Twould be quite difficult to access them without one.
+> I did not give you the key to access the maintenance rooms. 'Twould be quite difficult to access them without one.
 /speaker 0
 /se ItemGet 100 100
 > \ts[3]<PLAYER> received a maintenance room access key!\wtnp[60]
@@ -272,6 +272,17 @@
 > We're awaiting more girders from Pegma City soon.
 > Their quarry is quite impressive.<br>I've never seen a hole that big!
 
+[LAZULI_WORKER_WILLPOWER,1]
+/dialog AURA_AZELF
+/event set CH3 44
+> I have decided. I will confess my feelings to him tomorrow!
+/if $quests[:NEKANEGONEMISSING].at_step?(3)
+    /eval $quests[:NEKANEGONEMISSING].dummy[2]=1
+    /if $quests[:NEKANEGONEMISSING].dummy.min==1
+        /event CH3 switch B true
+    /end
+/end
+
 [LAZULI_TECH_GUY]
 /speaker Tech_Guy
 > This city is powered self-sufficiently by water power from this stream.
@@ -282,6 +293,21 @@
 > \ts[2]<wave>§ A lone musician on the street<br>§ Has no idea who they'll meet</wave>
 > \ts[2]<wave>§ Some pass by, some say hi<br>§ The guitar I play, they are why</wave>
 
+[LAZULI_MUSICIAN_WILLPOWER]
+/dialog AURA_AZELF
+/event set CH3 44
+> As long as my music is able to make at least one person have a better day, it is all worth it.
+/if $quests[:NEKANEGONEMISSING].at_step?(3)
+    /eval $quests[:NEKANEGONEMISSING].dummy[0]=1
+    /if $quests[:NEKANEGONEMISSING].dummy.min==1
+        /event CH3 switch B true
+    /end
+/end
+
+[LAZULI_MUSICIAN_EMOTION]
+/dialog AURA_MESPRIT
+> I am very thankful for my guitar. Before my grandfather gifted it to me, I didn't know what to do with myself.
+
 [LAZULI_WAITRESS]
 /speaker Waitress
 > I work at the cafeteria inside the Department Store.
@@ -291,6 +317,17 @@
 /speaker Business_Man
 > Let's talk business. I do business in fact. That is how my family earns a living.
 > Do you like business? I really like business. After all, I am a business man.
+
+[LAZULI_BUSINESS_MAN_WILLPOWER]
+/dialog AURA_AZELF
+/event set CH3 44
+> I need to stay on top of my business. That way I can earn the money that will let my family live happily.
+/if $quests[:NEKANEGONEMISSING].at_step?(3)
+    /eval $quests[:NEKANEGONEMISSING].dummy[1]=1
+    /if $quests[:NEKANEGONEMISSING].dummy.min==1
+        /event CH3 switch B true
+    /end
+/end
 
 [LAZULI_MOVIEGOER]
 /speaker Moviegoer
@@ -362,16 +399,16 @@
 > Hmmm, where should I will wait for my next prey...
 
 [LAZULI_FINN_CHALLENGE_0]
-/speaker PLAYER
+/speaker <PLAYER>
 > Stop right there!
 [LAZULI_FINN_CHALLENGE_1]
-/speaker PLAYER
+/speaker <PLAYER>
 > You won't get past me!
 [LAZULI_FINN_CHALLENGE_2]
-/speaker PLAYER
+/speaker <PLAYER>
 > We shall do battle!
 [LAZULI_FINN_CHALLENGE_3]
-/speaker PLAYER
+/speaker <PLAYER>
 > Prepare to be defeated!
 
 [LAZULI_MALL_DRINK_SHOP]

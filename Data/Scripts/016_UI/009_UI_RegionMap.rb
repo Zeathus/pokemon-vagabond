@@ -311,9 +311,13 @@ class PokemonRegionMap_Scene
         healspot = pbGetHealingSpot(@map_x, @map_y)
         if healspot && ($PokemonGlobal.visitedMaps[healspot[0]] ||
            ($DEBUG && Input.press?(Input::CTRL)))
-          return healspot if @fly_map
-          name = pbGetMapNameFromId(healspot[0])
-          return healspot if pbConfirmMessage(_INTL("Would you like to use Fly to go to {1}?", name)) { pbUpdate }
+          if $game_switches[NO_TELEPORT]
+            pbDialog("NO_TELEPORT")
+          else
+            return healspot if @fly_map
+            name = pbGetMapNameFromId(healspot[0])
+            return healspot if pbConfirmMessage(_INTL("Would you like to teleport to {1}?", name)) { pbUpdate }
+          end
         end
       elsif Input.trigger?(Input::USE) && @editor   # Intentionally after other USE input check
         pbChangeMapLocation(@map_x, @map_y)

@@ -1,0 +1,123 @@
+[JOB_ARCHEOLOGIST_1,0]
+/speaker Asako
+> Hello there strange fellow!
+> The name's Asako and I specialize in exploring ruins.\nI am quite the maniac in fact!
+> I located some just ahead actually.\nAncient ruins that is.
+> You look like you have quite the sharp wit. Why don't you come along?
+> Two heads are better than one after all.
+
+[JOB_ARCHEOLOGIST_1,1]
+/speaker Asako
+> Please follow me to the ruins. They are hidden behind some trees just ahead.
+
+[JOB_ARCHEOLOGIST_1,2]
+/speaker Asako
+> How curious...
+
+[JOB_ARCHEOLOGIST_1,3]
+/speaker Asako
+> I am certain the writings on this tablet holds the secret of these ruins.
+> Please, have a look.
+
+[JOB_ARCHEOLOGIST_1,4]
+/speaker Asako
+> Allow me to translate this for you.
+
+[JOB_ARCHEOLOGIST_1,5]
+/speaker Asako
+> It speaks of "a creature's essence"...
+> I wonder if that means we have to bring a specific kind of Pokémon.\nThe question is what Pokémon.
+> My gut tells me the hieroglyphs on the wall have our answer, but I do not know how to read them.
+> Surely these ruins contain the clues necessary to read these glyphs.
+
+[JOB_ARCHEOLOGIST_1,6]
+/speaker Asako
+> In case you forgot, the tablet reads as such:
+
+[JOB_ARCHEOLOGIST_1,7]
+/speaker Asako
+> You solved the riddle, impressive!
+
+[JOB_ARCHEOLOGIST_1,8]
+/speaker Asako
+> I see. The hieroglyphs on the wall spelled out "Hoppip" and you had to bring a Hoppip to open the hidden entrance.
+
+[JOB_ARCHEOLOGIST_1,9]
+/speaker Asako
+> You are the one who solved the puzzle.\nI believe that gives you the honor of exploring the inner chamber first.
+
+[JOB_ARCHEOLOGIST_1,10]
+/speaker Asako
+> I was almost certain there would be a stone tablet here, not an entrance to an inner chamber.
+
+[JOB_ARCHEOLOGIST_1,11]
+/speaker Asako
+> May I assume you already discovered the secret of the ruins before I arrived?\nIf so, that's most impressive!
+
+[JOB_ARCHEOLOGIST_1,12]
+/speaker Asako
+> So within the chamber you found a rare TM related to Affinity Boosts, protected by a strong Pokémon.
+> Then you were the right person for the job, as I am no fighter.
+> That TM is a most curious find. I am sure this is not the last of its kind.
+> What do you say we work together to find the rest of these ruins?
+> I can research where they may be located, then you can prove your strength to the protectors of each one.
+> Those TMs will surely prove useful for you too.
+/speaker 0
+> \ts[2]You got the job as an Archeologist!
+> \ts[1]After finding more ruins, Asako can provide more clues for you.
+> You can track your progress towards more clues from the Trainer Card.
+/speaker Asako
+> My estimate is that there are eighteen ruins total. I will retreat back to do more research on their locations.
+> You may find me at the main floor at the G[.]P[.]O[.] HQ. Come visit me if you need clues for the whereabouts of other ruins.
+> Before I go, I will give you this.
+
+[JOB_ARCHEOLOGIST_1,13]
+/speaker Asako
+> What did you find in there?
+> ...
+
+[JOB_ARCHEOLOGIST_1,14]
+/speaker Asako
+> This dictionary allows you to easily translate the ancient texts at any time. I hope you find it useful.
+
+[JOB_ARCHEOLOGIST_HINT]
+/speaker Asako
+?> I hope your search is going well.\nWhat ruin would you like a clue for?
+  /ifchoice $bag.quantity(:TM80)==0 Normal
+    > My research suggests the Normal-type ruins are somewhere in the Crosswoods.
+  /ifchoice $bag.quantity(:TM89)==0 Fire
+    > My research suggests the Fire-type ruins are somewhere at Mt[.] Pegma Hillside.
+  /ifchoice $bag.quantity(:TM90)==0 Water
+    > My research suggests the Water-type ruins are somewhere along Lazuli River.
+  /ifchoice $bag.quantity(:TM91)==0 Grass
+    > My research suggests the Grass-type ruins are somewhere in the Breccia Undergrowth.
+  /ifchoice $bag.quantity(:TM82)==0 Flying
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice $bag.quantity(:TM94)==0 Ice
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice $bag.quantity(:TM85)==0 Rock
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM92)==0 Electric
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM93)==0 Psychic
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM97)==0 Fairy
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM81)==0 Fighting
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM83)==0 Poison
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM84)==0 Ground
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM88)==0 Steel
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM86)==0 Bug
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM87)==0 Ghost
+    > My research suggests that these ruins are somewhere in the Smokey Forest.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM96)==0 Dark
+    > My research suggests that these ruins are not implemented yet.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM95)==0 Dragon
+    > My research suggests that these ruins are not implemented yet.
+  /cancelchoice Never mind
+?/>

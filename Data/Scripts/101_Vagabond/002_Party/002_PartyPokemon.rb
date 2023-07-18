@@ -51,7 +51,7 @@ def initPartyPokemon(id)
       end
     end
     party.push(createPartyPokemon(
-      id,:SANDSLASH,levels[1],[],1,:ADAMANT,2,[2,3,3,2,0,1]))
+      id,:SANDSLASH,levels[1],[],1,:ADAMANT,0,[2,3,3,2,0,1]))
     party.push(createPartyPokemon(
       id,:LARVESTA,levels[0],[],0,:TIMID,0,[2,0,2,1,3,3]))
     party.push(createPartyPokemon(
@@ -64,6 +64,15 @@ def initPartyPokemon(id)
 
   when PBParty::Ziran
 
+  when PBParty::Azelf
+    party.push(createPartyPokemon(
+      id,:AZELF,35,[],0,:ADAMANT,2,[1,3,2,3,3,2]))
+  when PBParty::Uxie
+    party.push(createPartyPokemon(
+      id,:UXIE,35,[],0,:CALM,2,[3,2,3,1,2,3]))
+  when PBParty::Mesprit
+    party.push(createPartyPokemon(
+      id,:MESPRIT,35,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
   end
   parties[id]=party
 end
@@ -117,4 +126,45 @@ def createPartyPokemon(id,species,level,moves,ability,nature,gender,els=nil)
   poke.calc_stats
 
   return poke
+end
+
+def addPartyPokemon(owner, pokemon)
+  owner = getID(PBParty,owner) if owner.is_a?(Symbol)
+  party = getPartyPokemon(owner)
+  case pokemon
+  when :WEAVILE
+    pokemon = createPartyPokemon(
+      owner,:WEAVILE,24,[],0,:JOLLY,1,[0,3,2,3,1,2])
+  end
+  party.push(pokemon)
+end
+
+def alignMemberLevels(source, target)
+  source = getID(PBParty,source) if source.is_a?(Symbol)
+  target = getID(PBParty,target) if target.is_a?(Symbol)
+  levels = [18, 18]
+
+  pokemon = {
+    PBParty::Duke => [[:RIOLU, :LUCARIO], [:BRONZOR, :BRONZONG], []],
+    PBParty::Amethyst => [[:WEAVILE], [:MISDREAVUS, :MISMAGIUS], [:STARMIE]],
+    PBParty::Kira => [[:SANDSHREW, :SANDSLASH, :SANDOLIN], [:LARVESTA, :VOLCARONA], [:TYRUNT, :TYRANTRUM]],
+    PBParty::Eliana => [[:LUXIO, :LUXRAY], [:MIMIKYU], []]
+  }
+
+  getPartyPokemon(target).each do |target_pkmn|
+    index = -1
+    for i in 0...3
+      index = i if pokemon[target][i].include?(target_pkmn.species)
+    end
+    next if index == -1
+    getPartyPokemon(source).each do |source_pkmn|
+      if pokemon[source][index].include?(source_pkmn.species)
+        if target_pkmn.level < source_pkmn.level
+          target_pkmn.level = source_pkmn.level
+          target_pkmn.calc_stats
+        end
+        next
+      end
+    end
+  end
 end

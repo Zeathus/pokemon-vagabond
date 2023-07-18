@@ -425,5 +425,5 @@ module PBQuestType
   Engineer     = 11
   Professor    = 12
   Ranger       = 13
-  Archeologist = 14
+  RuinManiac   = 14
 end

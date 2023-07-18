@@ -410,6 +410,7 @@ class Battle::Move
       return 0
     end
     dmg = pbCalcDamage(user, target, numTargets)
+    dmg = 0 if dmg.nil?
     if boost
       dmg *= 1.3
     end

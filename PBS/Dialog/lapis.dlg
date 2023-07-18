@@ -56,9 +56,9 @@
 
 [LAPIS_GPO_RECEPTIONIST]
 /speaker Receptionist
-> Welcome.<br>If you are here to visit the G.P.O., it is at the bottom floor.
+> Welcome.<br>If you are here to visit the G[.]P[.]O[.], it is at the bottom floor.
 > Enjoy your stay.
 
 [LAPIS_GPO_MAN]
 /speaker Man
-> This building is best known for the G.P.O. HQ which is on the bottom floor.
+> This building is best known for the G[.]P[.]O[.] HQ which is on the bottom floor.

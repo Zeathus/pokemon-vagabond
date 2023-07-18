@@ -57,8 +57,11 @@ def pbItemPickupAnimation(item, quantity=1)
   sprites["item"].zoom_y = 1.5
 
   timer = 0.0
-  meName = (item.is_key_item?) ? "Key item get" : "Item get"
-  pbMEPlay(meName,100)
+  if item.is_key_item?
+    pbMEPlay("Key item get",100)
+  else
+    pbSEPlay("Item get",100)
+  end
 
   (item.is_key_item? ? 160 : 80).times do
       timer += 1.0

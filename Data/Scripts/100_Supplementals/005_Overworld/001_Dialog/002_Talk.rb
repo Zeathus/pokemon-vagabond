@@ -109,7 +109,7 @@ end
 #end
 
 def pbShowUnownText(text)
-  has_dictionary = true
+  has_dictionary = $bag && $bag.quantity(:UNOWNDICTIONARY) > 0
 
   text.gsub!("\n","")
   showtext = ""

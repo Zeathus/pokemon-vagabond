@@ -568,10 +568,7 @@ end
 def pbGetPlayerCharset(charset, trainer = nil, force = false, follower = false)
   trainer = $player if !trainer
   outfit = (trainer) ? trainer.outfit : 0
-  member_id = ($game_variables) ? getPartyActive(follower ? 1 : 0) : 0
-  if $game_switches && $game_switches[FORCE_VISUAL_LEADER]
-    member_id = $game_variables[FORCED_VISUAL_LEADER]
-  end
+  member_id = getPartyActiveSprite(follower ? 1 : 0)
   charsets = ["walk", "run", "surf"]
   return nil if !force && $game_player&.charsetData &&
                 $game_player.charsetData[0] == trainer.character_ID &&

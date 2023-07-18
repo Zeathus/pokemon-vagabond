@@ -108,6 +108,7 @@ ShowArea = true
 Bicycle = true
 BicycleAlways = false
 MapPosition = 0,21,8
+SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 1,1
 #-------------------------------
@@ -147,6 +148,33 @@ BicycleAlways = false
 MapPosition = 0,21,6
 MapSize = 1,1
 #-------------------------------
+[021]   # Feldspar District
+Name = Feldspar District
+Outdoor = true
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,5
+SnapEdges = true
+MapSize = 1,1
+#-------------------------------
+[022]   # Lapis Lazuli Park
+Name = Lapis Lazuli Park
+Outdoor = false
+ShowArea = false
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,15,9
+MapSize = 1,1
+#-------------------------------
+[027]   # Lapis District
+Name = Lapis District
+Outdoor = true
+ShowArea = true
+MapPosition = 0,14,10
+SnapEdges = true
+MapSize = 1,1
+#-------------------------------
 [044]   # Mt. Pegma 1F
 Name = Mt. Pegma 1F
 Outdoor = false
@@ -165,6 +193,15 @@ BicycleAlways = false
 MapPosition = 0,21,6
 MapSize = 1,1
 #-------------------------------
+[046]   # Lake Kirrock
+Name = Lake Kirrock
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+#-------------------------------
 [047]   # Mt. Pegma 3F
 Name = Mt. Pegma 3F
 Outdoor = false
@@ -174,13 +211,86 @@ BicycleAlways = false
 MapPosition = 0,21,6
 MapSize = 1,1
 #-------------------------------
-[046]   # Lake Kirrock
-Name = Lake Kirrock
+[048]   # Mt. Pegma Peak
+Name = Mt. Pegma Peak
+Outdoor = true
+ShowArea = false
+MapPosition = 0,21,6
+SnapEdges = true
+#-------------------------------
+[056]   # Pokécare Facility
+Name = Pokécare Facility
 Outdoor = false
+MapPosition = 0,14,10
+BattleBack = gpo
+#-------------------------------
+[058]   # Halcyon Clearing
+Name = Halcyon Clearing
+MapPosition = 0,14,2
+SnapEdges = true
+#-------------------------------
+[061]   # Halcyon Forest
+Name = Halcyon Forest
+Outdoor = true
+MapPosition = 0,14,3
+SnapEdges = true
+MapSize = 1,11
+#-------------------------------
+[062]   # Breccia Trail
+Name = Breccia Trail
+Outdoor = true
+ShowArea = true
+MapPosition = 0,8,5
+SnapEdges = true
+BattleBack = field
+MapSize = 6,111111
+#-------------------------------
+[063]   # Halcyon Hollow
+Name = Halcyon Hollow
+MapPosition = 0,14,2
+SnapEdges = true
+#-------------------------------
+[065]   # Lapis Lazuli Gym
+Name = Lapis Lazuli Gym
+MapPosition = 0,14,9
+SnapEdges = true
+#-------------------------------
+[066]   # Maintenance Room 1
+Name = Maintenance Room 1
+MapPosition = 0,14,9
+SnapEdges = true
+#-------------------------------
+[067]   # Maintenance Room 2
+Name = Maintenance Room 2
+MapPosition = 0,14,10
+SnapEdges = true
+#-------------------------------
+[070]   # Evergone Crater
+Name = Evergone Crater
+Outdoor = true
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,21,6
+MapPosition = 0,7,4
+SnapEdges = true
+MapSize = 1,1
+#-------------------------------
+[072]   # Quartz Passing
+Name = Quartz Passing
+Outdoor = true
+ShowArea = true
+MapPosition = 0,15,5
+BattleBack = mountain_grass
+MapSize = 6,111111
+#-------------------------------
+[073]   # Mt. Pegma Falls
+Name = Mt. Pegma Falls
+Outdoor = true
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,8
+SnapEdges = true
 MapSize = 1,1
 #-------------------------------
 [092]   # Pegma Quarry B1F
@@ -255,98 +365,10 @@ BicycleAlways = false
 MapPosition = 0,20,7
 MapSize = 1,1
 #-------------------------------
-[021]   # Feldspar District
-Name = Feldspar District
-Outdoor = true
-ShowArea = true
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,21,5
-SnapEdges = true
-MapSize = 1,1
-#-------------------------------
-[022]   # Lapis Lazuli Park
-Name = Lapis Lazuli Park
-Outdoor = false
-ShowArea = false
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,15,9
-MapSize = 1,1
-#-------------------------------
-[027]   # Lapis District
-Name = Lapis District
-Outdoor = true
-ShowArea = true
-MapPosition = 0,14,10
-SnapEdges = true
-MapSize = 1,1
-#-------------------------------
-[048]   # Mt. Pegma Peak
-Name = Mt. Pegma Peak
-Outdoor = true
-ShowArea = false
-MapPosition = 0,21,6
-#-------------------------------
-[056]   # Pokécare Facility
-Name = Pokécare Facility
-Outdoor = false
-BattleBack = gpo
-MapPosition = 0,14,10
-#-------------------------------
-[058]   # Halcyon Clearing
-Name = Halcyon Clearing
-SnapEdges = true
-MapPosition = 0,14,2
-#-------------------------------
-[061]   # Halcyon Forest
-Name = Halcyon Forest
-Outdoor = true
-SnapEdges = true
-MapPosition = 0,14,3
-MapSize = 1,11
-#-------------------------------
-[062]   # Breccia Trail
-Name = Breccia Trail
-Outdoor = true
-ShowArea = true
-MapPosition = 0,8,5
-SnapEdges = true
-BattleBack = field
-MapSize = 6,111111
-#-------------------------------
-[063]   # Halcyon Hollow
-Name = Halcyon Hollow
-SnapEdges = true
-MapPosition = 0,14,2
-#-------------------------------
-[065]   # Lapis Lazuli Gym
-Name = Lapis Lazuli Gym
-SnapEdges = true
-MapPosition = 0,14,9
-#-------------------------------
-[066]   # Maintenance Room 1
-Name = Maintenance Room 1
-SnapEdges = true
-MapPosition = 0,14,9
-#-------------------------------
-[067]   # Maintenance Room 2
-Name = Maintenance Room 2
-SnapEdges = true
-MapPosition = 0,14,10
-#-------------------------------
-[072]   # Quartz Passing
-Name = Quartz Passing
-Outdoor = true
-ShowArea = true
-MapPosition = 0,15,5
-BattleBack = mountain_grass
-MapSize = 6,111111
-#-------------------------------
 [104]   # Feldspar Gym 3F
 Name = Feldspar Gym 3F
-SnapEdges = true
 MapPosition = 0,21,5
+SnapEdges = true
 #-------------------------------
 [113]   # Lazuli District
 Name = Lazuli District
@@ -355,10 +377,10 @@ MapPosition = 0,14,9
 SnapEdges = true
 MapSize = 1,1
 #-------------------------------
-[116]   # Crosswoods Cave Ruins
+[116]   # Crosswoods Ruins
 Name = Crosswoods Cave Ruins
-BattleBack = ruins
 MapPosition = 0,14,5
+BattleBack = ruins
 #-------------------------------
 [118]   # Quartz Cave Ruins
 Name = Quartz Cave Ruins
@@ -368,10 +390,10 @@ BattleBack = ruins
 Name = Quartz Cave Ruins
 BattleBack = ruins
 #-------------------------------
-[121]   # Crosswoods Cave Chamber
+[121]   # Crosswoods Ruins Chamber
 Name = Crosswoods Cave Chamber
-BattleBack = ruins_boss
 MapPosition = 0,14,5
+BattleBack = ruins_boss
 #-------------------------------
 [122]   # Quartz Cave Chamber
 Name = Quartz Cave Chamber
@@ -387,18 +409,50 @@ BattleBack = ruins_boss
 #-------------------------------
 [141]   # Maintenance Room 3
 Name = Maintenance Room 3
-SnapEdges = true
 MapPosition = 0,14,10
+SnapEdges = true
 #-------------------------------
-[145]   # Amphi Cave Ruins
+[145]   # Pegma Hillside Ruins
 Name = Amphi Cave Ruins
 BattleBack = ruins
 #-------------------------------
-[146]   # Smokey Cave Ruins
+[129] # Smokey Forest
+#DarkMap = true
+#-------------------------------
+[130] # Smokey Forest
+SnapEdges = true
+DarkMap = true
+Outdoor = true
+#-------------------------------
+[128] # Smokey Forest
+DarkMap = true
+SnapEdges = true
+#-------------------------------
+[136] # Smokey Forest Shrine
+DarkMap = true
+SnapEdges = true
+Outdoor = true
+#-------------------------------
+[133] # Smokey Forest Shrine
+SnapEdges = true
+Outdoor = true
+#-------------------------------
+[126] # Smokey Forest Trail
+SnapEdges = true
+Outdoor = true
+#-------------------------------
+[137] # Smokey Forest Clearing
+SnapEdges = true
+Outdoor = true
+#-------------------------------
+[139] # Deep Smokey Forest
+SnapEdges = true
+#-------------------------------
+[146]   # Smokey Forest Ruins
 Name = Smokey Cave Ruins
 BattleBack = ruins
 #-------------------------------
-[147]   # Smokey Cave Chamber
+[147]   # Smokey Forest Ruins Chamber
 Name = Smokey Cave Chamber
 BattleBack = ruins_boss
 #-------------------------------
@@ -407,11 +461,10 @@ Name = Uncanny Valley
 BattleBack = distortion
 WildBattleBGM = Battle! Distortion World (Stardust).ogg
 #-------------------------------
-[152]
+[152]   # D.A.O. Living Quarters
+Name = D.A.O. Living Quarters
 Outdoor = false
-ShowArea = true
-Dungeon = true
-WildBattleBGM = Song of the Void.ogg
+SnapEdges = true
 #-------------------------------
 [156]   # Giratina's Domain
 Name = Giratina's Domain
@@ -426,6 +479,13 @@ BicycleAlways = false
 MapPosition = 0,7,5
 SnapEdges = true
 MapSize = 1,1
+#-------------------------------
+[173]   # Lazuli River
+Name = Lazuli River
+Outdoor = true
+MapPosition = 0,10,6
+SnapEdges = true
+MapSize = 3,111111
 #-------------------------------
 [174]   # Memory Start 2
 Name = Memory Start 2
@@ -443,7 +503,8 @@ Name = Scoria City
 Outdoor = true
 ShowArea = true
 Bicycle = true
-MapPosition = 0,23,15
+MapPosition = 0,23,13
+SnapEdges = true
 MapSize = 1,1
 #-------------------------------
 [208]   # Evergone Mangrove
@@ -466,16 +527,6 @@ BicycleAlways = false
 MapPosition = 0,7,3
 SnapEdges = true
 BattleBack = woodland
-MapSize = 1,1
-#-------------------------------
-[70]   # Evergone Crater
-Name = Evergone Crater
-Outdoor = true
-ShowArea = true
-Bicycle = true
-BicycleAlways = false
-MapPosition = 0,7,4
-SnapEdges = true
 MapSize = 1,1
 #-------------------------------
 [210]   # Evergone Stairway
@@ -512,6 +563,7 @@ Outdoor = true
 ShowArea = true
 Bicycle = true
 MapPosition = 0,25,7
+SnapEdges = true
 MapSize = 1,11
 #-------------------------------
 [219]   # Ranger Outpost
@@ -574,7 +626,7 @@ Outdoor = true
 ShowArea = true
 MapPosition = 0,22,3
 #-------------------------------
-[230]   # Amphi Cave Chamber
+[230]   # Pegma Hillside Ruins Chamber
 Name = Amphi Cave Chamber
 BattleBack = ruins_boss
 #-------------------------------

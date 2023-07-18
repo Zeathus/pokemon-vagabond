@@ -7,7 +7,7 @@ U> Its true nature within these rooms lie concealed
 ?> The Dunsparce looks like it wants to test your strength. Are you ready?
     /choice Yes
         /return true
-    /choice No
+    /cancelchoice No
         /return false
 ?/>
 
@@ -18,6 +18,82 @@ U> Its true nature within these rooms lie concealed
 ?> Would you like to challenge Dunsparce again?
     /choice Yes
         /return true
-    /choice No
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_LAZULI_RIVER,0]
+?> The Corsola looks like it wants to test your strength. Are you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_LAZULI_RIVER,1]
+> The Corsola gives you a rejuvenating cheer, and lets you pass.
+
+[RUINS_LAZULI_RIVER,2]
+?> Would you like to challenge Corsola again?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_BRECCIA,0]
+?> The Shiinotic looks like it wants to test your strength. Are you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_BRECCIA,1]
+> The Shiinotic gives you a silent look of approval, and lets you pass.
+
+[RUINS_BRECCIA,2]
+?> Would you like to challenge Shiinotic again?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_PEGMA_HILLSIDE,0]
+?> The Darmanitan looks like it wants to test your strength. Are you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_PEGMA_HILLSIDE,1]
+> The Darmanitan grunts at you approvingly, and lets you pass.
+
+[RUINS_PEGMA_HILLSIDE,2]
+?> Would you like to challenge Darmanitan again?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_SMOKEY_FOREST,0]
+?> The Spiritomb looks like it wants to test your strength. Are you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[RUINS_SMOKEY_FOREST,1]
+> The Spiritomb gives off a sinister cackle, and lets you pass.
+
+[RUINS_SMOKEY_FOREST,2]
+?> Would you like to challenge Spiritomb again?
+    /choice Yes
+        /return true
+    /cancelchoice No
         /return false
 ?/>

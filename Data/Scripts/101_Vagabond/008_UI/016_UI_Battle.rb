@@ -991,13 +991,18 @@ class Battle::Scene::PokemonDataBox < Sprite
   def draw_status
     return if @battler.status == :NONE
     if @battler.status == :POISON && @battler.statusCount > 0   # Badly poisoned
-      s = GameData::Status.count - 1
+      s = GameData::Status.count - 2
     else
       s = GameData::Status.get(@battler.status).icon_position
     end
     return if s < 0
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), 20,
-                                        0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
+    pbDrawImagePositions(self.bitmap, [
+      ["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), 20,
+       0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
+    pbSetSmallFont(self.bitmap)
+    pbDrawTextPositions(self.bitmap, [
+      [_INTL("{1}", @battler.statusCount),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+    pbSetSystemFont(self.bitmap)
   end
   
   def draw_shiny_icon
@@ -1051,9 +1056,9 @@ class Battle::Scene::PokemonDataBox < Sprite
       pbDrawNumber(-1, @hpNumbers.bitmap, 54, 2)   # / char
       pbDrawNumber(@battler.totalhp, @hpNumbers.bitmap, 70, 2)
     elsif Supplementals::SHOW_OPPOSING_HP_PERCENT
-      hpPercent = [(self.hp * 100.0 / @battler.totalhp), 0.1].max
-      hpPercent = 0.1 if self.hp == 1
-      hpText = self.hp >= @battler.totalhp ? sprintf("%d%%", hpPercent.round) : sprintf("%.1f%%", hpPercent)
+      hpPercent = [(self.hp * 100.0 / @battler.totalhp), 1].max
+      hpPercent = 0 if self.hp <= 0
+      hpText = sprintf("%d%%", hpPercent.round)
       pbDrawNumber(hpText, @hpNumbers.bitmap, 54, 2, 2)
     end
     # Resize HP bar

@@ -1,18 +1,3 @@
-def pbBossDefeated?(boss)
-  if $game_variables[BOSSES_DEFEATED].is_a?(Numeric)
-    $game_variables[BOSSES_DEFEATED] = {}
-  end
-  return false if !$game_variables[BOSSES_DEFEATED].key?(boss)
-  return $game_variables[BOSSES_DEFEATED][boss]
-end
-
-def pbSetBossDefeated(boss)
-  if $game_variables[BOSSES_DEFEATED].is_a?(Numeric)
-    $game_variables[BOSSES_DEFEATED] = {}
-  end
-  return $game_variables[BOSSES_DEFEATED][boss] = true
-end
-
 def pbPokemonBossBGM
   $PokemonGlobal.nextBattleBGM="Battle! VS Wild Strong Pokemon (Hero Encore)"
 end
@@ -78,6 +63,7 @@ def pbBossRuinNormal
   # Start: Gets +2 Defense/Sp.Def
   # If hit by a Physical attack, +Defense/-Sp.Def
   # If hit by a Special attack, +Sp.Def/-Defense
+  # Counters: Clear Smog
 
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "Dunsparce is preparing for your attacks."))
@@ -107,6 +93,7 @@ def pbBossRuinFighting
   # Start: Gets +4 Attack/Speed
   # Each Turn: -1 Defense/Sp.Def
   # Goes back to +4 Attack/Speed when at -2 Attack/Speed
+  # Counters: Clear Smog
 
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "Primeape is full of energy and charges ahead!"))
@@ -139,6 +126,7 @@ def pbBossRuinSteel
 
   # Start: Lays Stealth Rock and 3 spike layers
   # Each Turn: Uses Whirlwind
+  # Counters: Suction Cups, Ingrain, Rapid Spin, Defog
 
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "Skarmory laid rocks and spikes on your side of the field!"))
@@ -164,15 +152,40 @@ def pbBossRuinGhost
     :FOULPLAY,
     :SHADOWSNEAK
   ]
+  pbModifier.ability = :PRESSURE
 
-  # Each Turn: Uses Spite
-  pbBoss.add(
-    [:Start],
-    [:Message,"NAME emits an aura that sends shivers down your spine."],
-    [:Message,"Be mindful of your PP."])
-  pbBoss.add(
-    [:Interval,1],
-    [:UseMove,:SPITE])
+  # Each Turn: Lowers all moves by 2 PP (3 on hard)
+  # Counters: Leppa Berry, Recycle
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "Spiritomb emits an aura that sends shivers down your spine."))
+  pbBoss.add(t)
+
+  t = BossTrigger.new([:Start, :EndOfTurn])
+  t.effect(BossEff_Message.new(t,
+    _INTL("Spiritomb's aura lowered the PP of all your Pokémon's moves by {1}!",
+      ($PokemonSystem.difficulty < 2) ? 2 : 3)))
+  pbBoss.add(t)
+
+  if $PokemonSystem.difficulty < 2
+    t = BossTrigger.new([:Start, :EndOfTurn])
+    t.requires(BossReq_BattlerFainted.new(t, 0, false))
+    t.effect(BossEff_Eval.new(t, "target.moves.each do |m|; m.pp = [m.pp - 2, 0].max; end").set_target(0))
+    pbBoss.add(t)
+    t = BossTrigger.new([:Start, :EndOfTurn])
+    t.requires(BossReq_BattlerFainted.new(t, 2, false))
+    t.effect(BossEff_Eval.new(t, "target.moves.each do |m|; m.pp = [m.pp - 2, 0].max; end").set_target(2))
+    pbBoss.add(t)
+  else
+    t = BossTrigger.new([:Start, :EndOfTurn])
+    t.requires(BossReq_BattlerFainted.new(t, 0, false))
+    t.effect(BossEff_Eval.new(t, "target.moves.each do |m|; m.pp = [m.pp - 3, 0].max; end").set_target(0))
+    pbBoss.add(t)
+    t = BossTrigger.new([:Start, :EndOfTurn])
+    t.requires(BossReq_BattlerFainted.new(t, 2, false))
+    t.effect(BossEff_Eval.new(t, "target.moves.each do |m|; m.pp = [m.pp - 3, 0].max; end").set_target(2))
+    pbBoss.add(t)
+  end
 end
 
 # --- Darmanitan ---
@@ -183,11 +196,12 @@ def pbBossRuinFire
     :BULKUP
   ]
   pbModifier.item = :ZENCHARM
-  pbModifier.ability = 2
+  pbModifier.ability = :ZENMODE
 
   # Start: Increases defenses and is in Zen forme
   # Each Turn: Has only Bulk Up
   # When at low HP, turns aggressive and changes moves
+  # Counters: Clear Smog
 
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "Darmanitan is taking a defensive position."))
@@ -207,25 +221,92 @@ def pbBossRuinFire
   pbBoss.add(t)
 end
 
+# --- Corsola ---
+def pbBossRuinWater
+  pbBossRuinGeneral
+  pbModifier.hpmult = 3.0
+  pbModifier.moves = [
+    :RECOVER,
+    :SANDSTORM,
+    :SCREECH,
+    :ROCKTOMB
+  ]
+  pbModifier.item = :BIGROOT
+  if $PokemonSystem.difficulty > 1
+    pbModifier.ability = :REGENERATOR
+  else
+    pbModifier.ability = :HUSTLE
+  end
+
+  # Start: Sets both Aqua Ring and Ingrain for recovery
+  # Lowers player defense to threaten them to switch out,
+  # but switching out also means Corsola gets time to regenerate.
+  # Counters: Heal Block, damage over time
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "Corsola's body is regenerating quickly!"))
+  t.effect(BossEff_UseMove.new(t, :AQUARING, [1]))
+  t.effect(BossEff_UseMove.new(t, :INGRAIN, [1]))
+  if $PokemonSystem.difficulty > 1
+    t.effect(BossEff_Message.new(t, "Corsola is honing its accuracy!"))
+    t.effect(BossEff_ChangeStat.new(t, :ACCURACY, 2))
+  end
+  pbBoss.add(t)
+end
+
+# --- Shiinotic ---
+def pbBossRuinGrass
+  pbBossRuinGeneral
+  pbModifier.hpmult = ($PokemonSystem.difficulty > 1) ? 3.0 : 2.0
+  pbModifier.moves = [
+    :STRENGTHSAP,
+    ($PokemonSystem.difficulty > 1) ? :GIGADRAIN : :MEGADRAIN,
+    :SPORE,
+    :DRAININGKISS
+  ]
+  pbModifier.item = :BIGROOT if $PokemonSystem.difficulty > 1
+  pbModifier.ability = :EFFECTSPORE
+
+  # Lowers all the player's stats every turn, eventually forcing switchouts
+  # Counters: Mist, Clear Body, Topsy-Turvy, Contrary, Defiant, Competitive
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "TRIGGERER is periodically releasing numbing spores!"))
+  t.effect(BossEff_ChangeStatQuick.new(t, [:ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED], -1).set_target([0, 2]))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.effect(BossEff_Message.new(t, "TRIGGERER is releasing numbing spores!"))
+  t.effect(BossEff_ChangeStatQuick.new(t, [:ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED], -1).set_target([0, 2]))
+  pbBoss.add(t)
+end
+
 # --- Chimecho ---
 def pbBossSmokeyForest
   pbBossGeneral
+  pbModifier.hpmult = [2.0, 3.0, 4.0, 4.0][$PokemonSystem.difficulty]
+  pbModifier.item = :AEGISTALISMAN
+  pbModifier.moves = [:ECHOEDVOICE]
+
   # Start: Sets infinite Misty Terrain and gains Pixilate
   # Each Turn: Powers up Echoed Voice one turn
-  pbBoss.add(
-    [:Start],
-    [:Terrain,:MistyTerrain,999],
-    [:Message,"The forest is covered in mist."],
-    [:Ability,:PIXILATE],
-    [:Message,"What's this?"],
-    [:Message,"The Chimecho has Pixilate!"])
-  pbBoss.add(
-    [:Interval,1],
-    [:Message,"Chimecho's voice echoes through the forest."],
-    [:AddField,:EchoedVoiceCounter,1])
-  pbBoss.add(
-    [:Timed,1],
-    [:Message,"Echoed Voice grows in power."])
+  # Counters: Protect, Soundproof
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Terrain.new(t, :Misty, 999))
+  t.effect(BossEff_Ability.new(t, :PIXILATE))
+  t.effect(BossEff_Message.new(t, "What's this?\nThe Chimecho has the Pixilate ability!"))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Terrain.new(t, :Misty, false))
+  t.effect(BossEff_Terrain.new(t, :Misty, 999))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.effect(BossEff_Message.new(t, "Chimecho's voice echoes through the forest."))
+  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::EchoedVoiceCounter] += 1"))
+  pbBoss.add(t)
 end
 
 def pbBossVespiquen
@@ -243,6 +324,11 @@ def pbBossVespiquen
     :STRUGGLEBUG
   ]
   pbModifier.next.next.gender = 0
+
+  # Start: Vespiquen +4 Defense/Sp.Def
+  # Start: Combees +2 Speed
+  # When a Combee dies, -2 Defense/Sp.Def on Vespiquen
+  # When both Combees die, +2 Attack/Sp.Atk on Vespiquen
 
   t = BossTrigger.new(:Start, 3)
   t.effect(BossEff_Message.new(t, "The Combee protect their queen!"))
@@ -354,6 +440,9 @@ def pbBossTropius
   pbModifier.gender = 1
   pbModifier.nature = :TIMID
 
+  # Always keeps sun up
+  # Alternates between Solar Power, Harvest and Chlorophyll
+
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "The clear skies shine on the outlook."))
   t.effect(BossEff_Weather.new(t, :Sun, 999))
@@ -386,32 +475,28 @@ def pbPuzzleBossDeino
   pbBossGeneral
   pbModifier.gender=0
   pbModifier.hpmult=0.20
-  pbBoss.add(
-    [:Start],
-    [:Message, "NAME is weak and afraid."]
-  )
-  pbBoss.add(
-    [:Sturdy, 1]
-  )
-  pbBoss.add(
-    [:HP, 10],
-    [:WinBattle]
-  )
-  pbBoss.add(
-    [:Damaged],
-    [:If, "boss.hp<=boss.totalhp/10"],
-    [:WinBattle]
-  )
-  pbBoss.add(
-    [:Custom, "boss.hp>=boss.totalhp/3"],
-    [:Custom, "$game_variables[2]=1"],
-    [:WinBattle]
-  )
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "The Deino is weak and afraid."))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:Any)
+  t.requires(BossReq_HP.new(t, :>=, 30))
+  t.effect(BossEff_Eval.new(t, "$game_variables[2] = 1"))
+  t.effect(BossEff_WinBattle.new(t))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:Any)
+  t.requires(BossReq_HP.new(t, :<=, 5))
+  t.effect(BossEff_WinBattle.new(t))
+  pbBoss.add(t)
+
+  pbBoss.add_sturdy(0)
 end
 
 def pbMiniBossRotom(form=0)
   pbBossGeneral
-  pbModifier.hpmult = 2.0
+  pbModifier.hpmult = $PokemonSystem.difficulty == 0 ? 1.0 : 2.0
   moveset = [
     :THUNDERSHOCK,
     :UPROAR,
@@ -509,4 +594,11 @@ def pbTestBoss
   pbWildBattle(:MAGIKARP, 10)
 end
 
-
+def pbStoryBossElianaAzelf
+  t = BossTrigger.new(:Start, 1)
+  t.max_activations = 1
+  t.effect(BossEff_Message.new(t, "Azelf is holding back against you!"))
+  levels = ($PokemonSystem.difficulty == 0) ? -2 : -1
+  t.effect(BossEff_ChangeStat.new(t, [:ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED], levels))
+  pbBoss.add(t)
+end

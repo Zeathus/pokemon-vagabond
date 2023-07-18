@@ -107,3 +107,8 @@ GameData::TerrainTag.register({
   :battle_environment     => :Grass,
   :land4_wild_encounters  => true
 })
+
+GameData::TerrainTag.register({
+  :id                     => :Overhang,
+  :id_number              => 27
+})

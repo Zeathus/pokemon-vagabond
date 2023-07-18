@@ -61,6 +61,11 @@ FINAL_BATTLE        = 147
 POKEPLAYER          = 151
 HAS_TELEPORT        = 152
 MET_CERISE          = 153
+HIDE_CERISE         = 154
+MET_RANGERS         = 155
+HAS_AZELF           = 156
+HAS_UXIE            = 157
+HAS_MESPRIT         = 158
 FRIENDOFELEMENTS    = 209
 
 # ----------------------------------------------------------------------
@@ -69,7 +74,9 @@ FRIENDOFELEMENTS    = 209
 PARTY_ACTIVE        = 23
 PARTY_POKEMON       = 24
 PARTY               = 25
-FORCED_VISUAL_LEADER= 26
+VISUAL_PARTY        = 26
+SAVED_PARTY         = 27
+SAVED_PARTY_ACTIVE  = 28
 STARTER             = 34
 STARTER_ID          = 35
 BATTLE_SIM_AI       = 36

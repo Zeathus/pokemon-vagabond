@@ -85,9 +85,20 @@
 /speaker Layer_1_Worker
 > Thank you for rescuing Steve.<br>Your temporary access has been revoked though.
 
+[MICA_LAYER_1_WORKER,4]
+/speaker Layer_1_Worker
+> Alister gave you a Miner's Kit?\nThen you're free to enter here again.
+> Welcome to the operation!
+
 [MICA_STEVE,0]
 /speaker Steve
 > Thank you for rescuing me.<br>I was finally able to get a huge shipment going.
 
 [MICA_RESTRICTED]
 > This area is restricted.
+
+[MICA_QUARRY_TABLET,0]
+> It's some sort of ancient tablet. The inscriptions are undecipherable.
+
+[MICA_QUARRY_TABLET,1]
+> According to Edward, the relic depicts a beautiful and vast underground river the ancient people called "Arakawa River".

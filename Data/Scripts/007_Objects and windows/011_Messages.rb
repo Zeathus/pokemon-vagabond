@@ -745,9 +745,9 @@ def pbMessageChooseNumber(message, params, &block)
   return ret
 end
 
-def pbShowCommands(msgwindow, commands = nil, cmdIfCancel = 0, defaultCmd = 0)
+def pbShowCommands(msgwindow, commands = nil, cmdIfCancel = 0, defaultCmd = 0, center = true)
   return 0 if !commands
-  return pbCenterCommands(msgwindow, commands, cmdIfCancel, defaultCmd)
+  return pbCenterCommands(msgwindow, commands, cmdIfCancel, defaultCmd) if center
   cmdwindow = Window_CommandPokemonEx.new(commands)
   cmdwindow.z = 99999
   cmdwindow.visible = true

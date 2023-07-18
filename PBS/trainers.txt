@@ -585,22 +585,28 @@ Pokemon = STARAPTOR,55
     Moves = DOUBLEEDGE,BRAVEBIRD,CLOSECOMBAT,ROOST
 #--------------
 [BLACKBELT,Kenshi] #Mt. Pegma Hillside
+LoseText = "Your aura is indeed powerful."
 Pokemon = RIOLU,6
+    AbilityIndex = 0
+Pokemon = MEDITITE,7
     AbilityIndex = 0
 #--------------
 [BLACKBELT,Kenshi,1] #Mt. Pegma Hillside
+LoseText = "Your aura is indeed powerful."
 Pokemon = RIOLU,16
     AbilityIndex = 0
 Pokemon = MEDITITE,17
     AbilityIndex = 0
 #--------------
 [BLACKBELT,Kenshi,2] #Mt. Pegma Hillside
+LoseText = "Your aura is indeed powerful."
 Pokemon = RIOLU,25
     AbilityIndex = 0
 Pokemon = MEDITITE,25
     AbilityIndex = 0
 #--------------
 [BLACKBELT,Kenshi,3] #Mt. Pegma Hillside
+LoseText = "Your aura is indeed powerful."
 Pokemon = LUCARIO,37
     AbilityIndex = 0
 Pokemon = MEDICHAM,37
@@ -813,17 +819,23 @@ Pokemon = SCIZOR,40
     Moves = IRONHEAD,ROOST,UTURN,KNOCKOFF
 #--------------
 [DAO_Eliana,Eliana] #Mt. Pegma Admin
-Pokemon = AZELF,40
+LoseText = Azelf... held back against you?
+Pokemon = AZELF,35
     Moves = CONFUSION,SWIFT,UPROAR
     AbilityIndex = 0
     IV = 20,20,20,20,20,20
-Pokemon = LUXIO,17
+Pokemon = LUXIO,27
     Gender = F
-    Moves = SPARK,BITE
+    Moves = SPARK,BITE,ROAR,CHARGE
     IV = 20,20,20,20,20,20
-Pokemon = SABLEYE,16
+Pokemon = MIMIKYU,26
     Gender = F
-    Moves = FEINTATTACK,ASTONISH
+    Moves = SHADOWSNEAK,ASTONISH,SCRATCH,TOUGHHUG
+    AbilityIndex = 0
+    IV = 20,20,20,20,20,20
+Pokemon = SHELLOS,26
+    Gender = F
+    Moves = WATERPULSE,ANCIENTPOWER,BODYSLAM,RECOVER
     AbilityIndex = 0
     IV = 20,20,20,20,20,20
 #--------------
@@ -1084,12 +1096,16 @@ Pokemon = CONKELDURR,35
     AbilityIndex = 0
 #--------------
 [HIKER,Rico] #Mt. Pegma Hillside
+LoseText = "You must be able to hike anywhere!"
 Pokemon = GEODUDE,5
     AbilityIndex = 0
 Pokemon = ROGGENROLA,5
     AbilityIndex = 0
+Pokemon = NOSEPASS,6
+    AbilityIndex = 0
 #--------------
 [HIKER,Rico,1] #Mt. Pegma Hillside
+LoseText = "You must be able to hike anywhere!"
 Pokemon = GEODUDE,16
     AbilityIndex = 0
 Pokemon = ROGGENROLA,16
@@ -1098,6 +1114,7 @@ Pokemon = NOSEPASS,17
     AbilityIndex = 0
 #--------------
 [HIKER,Rico,2] #Mt. Pegma Hillside
+LoseText = "You must be able to hike anywhere!"
 Pokemon = GOLEM,32
     AbilityIndex = 0
 Pokemon = GIGALITH,32
@@ -2752,17 +2769,19 @@ Pokemon = URSARING,50
     AbilityIndex = 0
 #--------------
 [TEAM_DAO_YANG,Yang] #Mt. Pegma #1
-Pokemon = FLABEBE,13
+LoseText = I see why he had such trouble...
+Pokemon = FLOETTE,22
     Gender = F
     Moves = MAGICALLEAF,FAIRYWIND,LUCKYCHANT
     AbilityIndex = 0
     IV = 15,15,15,15,15,15
-Pokemon = RALTS,14
+Pokemon = KIRLIA,23
     Gender = F
-    Moves = DISARMINGVOICE,DOUBLETEAM,CONFUSION
+    Moves = DISARMINGVOICE,DOUBLETEAM,PSYBEAM
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YANG,Yang,1] #Mt. Pegma #2 (Double)
+LoseText = Balance broken, just like that...
 Pokemon = JIGGLYPUFF,14
     Gender = F
     Moves = ROUND,DISARMINGVOICE,DISABLE,SING
@@ -2770,6 +2789,7 @@ Pokemon = JIGGLYPUFF,14
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YANG,Yang,2] #Mt. Pegma #4 (With Kira)
+LoseText = We lost, that's the truth.
 Pokemon = KADABRA,15
     Gender = F
     Moves = CONFUSION,DISABLE,MIRACLEEYE
@@ -2777,6 +2797,7 @@ Pokemon = KADABRA,15
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YANG,Yang,3] #Mt. Pegma #4 (With Kira)
+LoseText = If we get stronger, we can change that reality!
 Pokemon = SKITTY,15
     Gender = F
     Moves = TACKLE,DISARMINGVOICE,FEINTATTACK,COPYCAT
@@ -2784,7 +2805,8 @@ Pokemon = SKITTY,15
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YANG,Yang,4] #Mt. Pegma #6 (With Kira)
-Pokemon = GIRAFARIG,15
+LoseText = Truthfully, we lost.
+Pokemon = GIRAFARIG,23
     Gender = F
     Moves = PSYBEAM,STOMP,ASSURANCE,CONFUSION
     AbilityIndex = 0
@@ -2904,16 +2926,22 @@ Pokemon = NUZLEAF,23
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin] #Mt. Pegma Guarding Entrance
-Pokemon = PANCHAM,14
+LoseText = I'm sorry Eliana...
+Pokemon = PANCHAM,21
     Gender = M
     Moves = KARATECHOP,COMETPUNCH,WORKUP,SLASH
     IV = 15,15,15,15,15,15
-Pokemon = POOCHYENA,13
+Pokemon = ELECTRIKE,21
+    Gender = M
+    Moves = SPARK,QUICKATTACK,TACKLE,HOWL
+    IV = 15,15,15,15,15,15
+Pokemon = POOCHYENA,22
     Gender = M
     Moves = TACKLE,BITE,HOWL,THUNDERFANG
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,1] #Mt. Pegma #2 (Double)
+LoseText = How could you? Balance keeps this world from falling apart.
 Pokemon = GASTLY,14
     Gender = M
     Moves = NIGHTSHADE,CURSE,CONFUSERAY,LICK
@@ -2921,6 +2949,7 @@ Pokemon = GASTLY,14
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,2] #Mt. Pegma #3 (Optional)
+LoseText = You're definitely no tourist!
 Pokemon = SHINX,14
     Gender = M
     Moves = SPARK,BITE,CHARGE,TACKLE
@@ -2933,11 +2962,13 @@ Pokemon = SHUPPET,14
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,3] #Mt. Pegma #5 (With Kira)
+LoseText = Not the ideal result.
 Pokemon = ELECTRIKE,15
     Moves = SPARK,QUICKATTACK,HOWL,THUNDERWAVE
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,4] #Mt. Pegma #5 (With Kira)
+LoseText = We will still strive towards the future!
 Pokemon = MANKEY,15
     Gender = M
     Moves = KARATECHOP,PURSUIT,FURYSWIPES,FOCUSENERGY
@@ -2945,7 +2976,8 @@ Pokemon = MANKEY,15
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,5] #Mt. Pegma #6 (With Kira)
-Pokemon = SCRAGGY,15
+LoseText = Ideally, we will keep trying.
+Pokemon = SCRAGGY,23
     Gender = M
     Moves = LOWKICK,PAYBACK,FEINTATTACK,SWAGGER
     AbilityIndex = 0
@@ -3126,6 +3158,7 @@ Pokemon = DODRIO,40
     AbilityIndex = 0
 #--------------
 [YOUNGSTER,Eddie] #Mt. Pegma Hillside
+LoseText = "I'm not good enough yet."
 Pokemon = RATTATA,4
     AbilityIndex = 0
 Pokemon = SENTRET,4
@@ -3138,6 +3171,7 @@ Pokemon = PATRAT,4
     AbilityIndex = 0
 #--------------
 [YOUNGSTER,Eddie,1] #Mt. Pegma Hillside
+LoseText = "I'm not good enough yet."
 Pokemon = RATICATE,20
     AbilityIndex = 0
 Pokemon = FURRET,20
@@ -3152,6 +3186,7 @@ Pokemon = MUNCHLAX,20
     AbilityIndex = 0
 #--------------
 [YOUNGSTER,Eddie,2] #Mt. Pegma Hillside
+LoseText = "I'm not good enough yet."
 Pokemon = RATICATE,33
     Item = LIFEORB
     Moves = FACADE,SUCKERPUNCH,SUPERFANG,PROTECT
@@ -3790,9 +3825,19 @@ Pokemon = SCORRUPT,36
 [YOUNGSTER,Eric] # Lazuli River Event
 Pokemon = RATTATA,12
 Pokemon = BIDOOF,12
-
-
-
+[CERISE,Cerise] # 1st Battle
+Pokemon = SCYTHER,20
+    Ability = TECHNICIAN
+    Moves = BRUTALSWING,FURYCUTTER,WINGATTACK
+    Nature = JOLLY
+Pokemon = GROWLITHE,20
+    Ability = JUSTIFIED
+    Moves = FLAMEWHEEL,HELPINGHAND,BITE,ROCKTOMB
+    Nature = BOLD
+Pokemon = ROSELIA,20
+    Ability = POISONPOINT
+    Moves = MAGICALLEAF,LEECHSEED,STUNSPORE,MEGADRAIN
+    Nature = MODEST
 
 
 

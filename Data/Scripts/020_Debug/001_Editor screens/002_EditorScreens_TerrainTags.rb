@@ -63,7 +63,7 @@ class PokemonTilesetScene
     (1...@tilesets_data.length).each do |i|
       commands.push(sprintf("%03d %s", i, @tilesets_data[i].name))
     end
-    ret = pbShowCommands(nil, commands, -1)
+    ret = pbShowCommands(nil, commands, -1, 0, false)
     load_tileset(ret + 1) if ret >= 0
   end
 
@@ -186,7 +186,7 @@ class PokemonTilesetScene
           _INTL("Change tileset"),
           _INTL("Cancel")
         ]
-        case pbShowCommands(nil, commands, -1)
+        case pbShowCommands(nil, commands, -1, 0, false)
         when 0
           update_cursor_position(0, 99_999)
         when 1

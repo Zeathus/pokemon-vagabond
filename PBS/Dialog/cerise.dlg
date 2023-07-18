@@ -1,0 +1,167 @@
+[CERISE_ENCOUNTER_0,0]
+/speaker Cerise
+/hidename 1
+> This should be the general area.
+
+[CERISE_ENCOUNTER_0,1]
+/speaker Cerise
+/hidename 1
+> Who are you?
+> I bet you're also looking to challenge [R]them[/].
+> However, they are my quarry, and I will prove why it is so!
+
+[CERISE_ENCOUNTER_0,2]
+/speaker Cerise
+/hidename 1
+> You're strong...
+> Fine, you have proven yourself. I will share with you the information you seek.
+/hidename 0
+> My name is [R]Cerise[/]. I will challenge [R]the swords[/] to prove my strength.
+
+[CERISE_ENCOUNTER_1,0]
+/speaker Cerise
+> We meet again.
+> Do you intend to make the hunt for [R]the swords[/] into a race?
+> If that is what you wish, I promise I will not make it easy for you!
+
+[CERISE_ENCOUNTER_1,1]
+/speaker Cerise
+> You have me beat once again.
+> As a sign of respect, I will share with you the information you seek.
+
+[CERISE_ENCOUNTER_2,0]
+/speaker Cerise
+> Yet again you find me.
+> Maybe this contest of ours will prove interesting after all.
+> However, I will not let up easily!
+
+[CERISE_ENCOUNTER_2,1]
+/speaker Cerise
+> You really are a strong opponent.
+> I will share with you what information I have.
+
+[CERISE_ENCOUNTER_3,0]
+/speaker Cerise
+> You truly have a knack for stumbling across me.
+> I trust you know the deal by now. Defeat me in battle if you want information!
+
+[CERISE_ENCOUNTER_3,1]
+/speaker Cerise
+> I concede. Here is your information.
+
+[CERISE_ENCOUNTER_4,0]
+/speaker Cerise
+> Your appearance surprises me no longer, so let's get straight to the point!
+
+[CERISE_ENCOUNTER_4,1]
+/speaker Cerise
+> As per usual, I will share what I've gathered.
+
+[CERISE_ENCOUNTER_5,0]
+/speaker Cerise
+> You truly are a relentless one.
+> Luckily for you, that makes us two!
+
+[CERISE_ENCOUNTER_5,1]
+/speaker Cerise
+> I've begun to enjoy this contest of ours. There are few sources of growth as good as a rivalry.
+> However, I know what you're here for, and I can provide.
+
+[CERISE_ENCOUNTER_6,0]
+/speaker Cerise
+> You ready?
+
+[CERISE_ENCOUNTER_6,1]
+/speaker Cerise
+> You ready for more information too?
+
+[CERISE_ENCOUNTER_7,0]
+/speaker Cerise
+> I have almost gathered all the information I need to find and challenge all [R]the swords[/].
+> If you want in, you'd better make me believe it!
+
+[CERISE_ENCOUNTER_7,1]
+/speaker Cerise
+> When I started my journey to challenge [R]the swords[/], I was expecting it to be a lonesome one.
+> How you proved me wrong.
+> I do however appreciate it, and as such will share my information with you.
+
+[CERISE_ENCOUNTER_8,0]
+/speaker Cerise
+> This is the final location I needed to investigate.
+> For the last time, I challenge you to a battle for the information I have!
+
+[CERISE_ENCOUNTER_8,1]
+/speaker Cerise
+> Somehow, you have unexpectedly been along for this whole journey.
+> Perhaps you found the same leads I did, or you really were just at the right place at the right time.
+> Either way, it has made things more interesting.
+> I will share with you my final piece of information.
+
+[CERISE_COBALION_???]
+/speaker Cerise
+> Something
+
+[CERISE_TERRAKION_FELDSPAR]
+/speaker Cerise
+> Whilst traveling, I heard folktales about [R]the maroon sword[/] protecting the Pokémon of this area.
+> According to the stories, this lake served as a spot for wild Pokémon to socialize in a peaceful manner.
+> However, this peace was intercepted...
+> Large and aggressive Pokémon arrived from afar and made the lake their own, pushing away all others.
+> This is when [R]the maroon sword[/] appeared from the cliffs of Mt[.] Pegma.
+> They challenged the aggressive Pokémon to a contest of strength, and made quick work of them at that.
+> After an overwhelming loss, the invaders promptly left the area.
+> From that point on, the wild Pokémon could once again socialize in peace, protected by [R]the maroon sword[/].
+
+[CERISE_VIRIZION_???]
+/speaker Cerise
+> I caught wind of a rumor that [G]the verdant sword[/]...
+> It has the duty of protecting the grassland creatures
+
+[CERISE_COBALION,0]
+/speaker Cerise
+> I've exhausted what I can gather from this area. I need more information before I can find [R]the azure sword[/].
+> Maybe we'll meet again.
+
+[CERISE_COBALION,1]
+/speaker Cerise
+> I know I am close to finding [R]the azure sword[/]. I just need to find one last lead.
+> May our paths cross again.
+
+[CERISE_COBALION,2]
+/speaker Cerise
+> Finally, I have all the information I need to find [R]the azure sword[/].
+> However, I will put our contest aside and ask you to join me for this encounter.
+> Please meet me at...
+
+[CERISE_TERRAKION,0]
+/speaker Cerise
+> I've exhausted what I can gather from this area. I need more information before I can find [R]the maroon sword[/].
+> Maybe we'll meet again.
+
+[CERISE_TERRAKION,1]
+/speaker Cerise
+> I know I am close to finding [R]the maroon sword[/]. I just need to find one last lead.
+> May our paths cross again.
+
+[CERISE_TERRAKION,2]
+/speaker Cerise
+> Finally, I have all the information I need to find [R]the maroon sword[/].
+> However, I will put our contest aside and ask you to join me for this encounter.
+> Please meet me at...
+
+[CERISE_VIRIZION,0]
+/speaker Cerise
+> I've exhausted what I can gather from this area. I need more information before I can find [R]the verdant sword[/].
+> Maybe we'll meet again.
+
+[CERISE_VIRIZION,1]
+/speaker Cerise
+> I know I am close to finding [R]the verdant sword[/]. I just need to find one last lead.
+> May our paths cross again.
+
+[CERISE_VIRIZION,2]
+/speaker Cerise
+> Finally, I have all the information I need to find [R]the verdant sword[/].
+> However, I will put our contest aside and ask you to join me for this encounter.
+> Please meet me at...

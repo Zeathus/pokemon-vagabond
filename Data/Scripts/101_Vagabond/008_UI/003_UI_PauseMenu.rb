@@ -433,7 +433,10 @@ class PauseScreen
 end
 
 def pbPauseMenu
-  return if !$game_switches || $game_switches[LOCK_PAUSE_MENU]
+  if !$game_switches || $game_switches[LOCK_PAUSE_MENU]
+    pbDialog("NO_PAUSE_MENU")
+    return
+  end
   pause_screen = PauseScreen.new
   pause_screen.pbStartPauseScreen
   loop do
@@ -453,13 +456,19 @@ def pbPauseMenu
       if shortcut
 
       else
+        if pbGet(PARTY_ACTIVE).length < 2 ||
+           pbGet(PARTY_ACTIVE)[0] == -1 ||
+           pbGet(PARTY_ACTIVE)[1] == -1
+          pbDialog("NOT_ENOUGH_PARTY_MEMBERS")
+          next
+        end
         sscene=PokemonScreen_Scene.new
         sscreen=PokemonScreen.new(sscene,getActivePokemon(0))
         hiddenmove=nil
         pbFadeOutIn(99999) { 
           hiddenmove=sscreen.pbPokemonScreen
           if hiddenmove
-            pbPauseMenuClose(toDispose)
+            pause_screen.pbEndPauseScreen
           end
         }
         if hiddenmove
@@ -480,13 +489,19 @@ def pbPauseMenu
       if shortcut
 
       else
+        if pbGet(PARTY_ACTIVE).length < 2 ||
+           pbGet(PARTY_ACTIVE)[0] == -1 ||
+           pbGet(PARTY_ACTIVE)[1] == -1
+          pbDialog("NOT_ENOUGH_PARTY_MEMBERS")
+          next
+        end
         item=0
         scene=PokemonBag_Scene.new
         screen=PokemonBagScreen.new(scene,$bag)
         pbFadeOutIn(99999) { 
           item=screen.pbStartScreen 
           if item
-            pbPauseMenuClose(toDispose)
+            pause_screen.pbEndPauseScreen
           end
         }
         if item

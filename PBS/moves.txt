@@ -4592,6 +4592,16 @@ Target = BothSides
 FunctionCode = StartHailWeather
 Description = The user summons a hail storm lasting five turns. It damages all Pokémon except the Ice type.
 #-------------------------------
+[SNOWSCAPE]
+Name = Snowscape
+Type = ICE
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = BothSides
+FunctionCode = StartHailWeather
+Description = The user summons a hail storm lasting five turns. It damages all Pokémon except the Ice type.
+#-------------------------------
 [HAZE]
 Name = Haze
 Type = ICE
@@ -8735,6 +8745,19 @@ FunctionCode = None
 Flags = Contact,CanProtect,CanMirrorMove
 Description = The target is gripped and squeezed from both sides to inflict damage.
 #-------------------------------
+[CHILLINGWATER]
+Name = Chilling Water
+Type = WATER
+Category = Special
+Power = 50
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = LowerTargetAttack1
+Flags = CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat.
+#-------------------------------
 [TOUGHHUG]
 Name = Tough Hug
 Type = FAIRY
@@ -9051,9 +9074,19 @@ Category = Status
 Accuracy = 100
 TotalPP = 15
 Target = NearOther
-FunctionCode = GiveUserStatusToTarget
+FunctionCode = CopyUserStatusToTargetTemperature
 Flags = CanProtect,CanMirrorMove
-Description = Using its psychic power of suggestion, the user transfers its status problems to the target.
+Description = The user conducts its temperature to the target. If the user has a Frostbite or Burn, the status is shared with the target. Sun and snow also apply, but the user's status has priority.#-------------------------------
+[RAGINGFURY]
+Name = Raging Fury
+Type = FIRE
+Category = Status
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = CopyUserStatusToTargetTemperature
+Flags = CanProtect,CanMirrorMove
+Description = Not implemented
 #-------------------------------
 [CRASHTEST]
 Name = Crash Test

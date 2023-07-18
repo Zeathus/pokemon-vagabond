@@ -759,9 +759,23 @@ def pbSurf(confirm = true, edge = false, down = false)
   return false if !hasPartyMember(PBParty::Amethyst)
   return false if $game_player.pbFacingEvent
   return false if !$game_player.can_ride_vehicle_with_follower?
-  if $quests[:UNKNOWNDESTINATION].at_step?(1) && [208,209].include?($game_map.map_id)
-    pbDialog("CH1_NO_SURF")
-    return false
+  if $quests[:UNKNOWNDESTINATION].active?
+    if $quests[:UNKNOWNDESTINATION].at_step?(1) && [208,209].include?($game_map.map_id)
+      pbDialog("CH1_NO_SURF", 0)
+      return false
+    end
+    if $quests[:UNKNOWNDESTINATION].at_step?(1) && [27, 14].include?($game_map.map_id)
+      pbDialog("CH1_NO_SURF", 1)
+      return false
+    end
+    if $quests[:UNKNOWNDESTINATION].at_step?(2) && [14].include?($game_map.map_id)
+      pbDialog("CH1_NO_SURF", 2)
+      return false
+    end
+    if $quests[:UNKNOWNDESTINATION].at_step?(2) && [27].include?($game_map.map_id)
+      pbDialog("CH1_NO_SURF", 3)
+      return false
+    end
   end
   if !confirm || pbConfirmMessage(_INTL("The water is a deep blue...\nWould you like to surf on it?"))
     pbMessage(_INTL("Starmie used Surf!")) if confirm

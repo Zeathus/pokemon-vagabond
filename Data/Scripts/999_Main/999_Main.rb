@@ -28,6 +28,7 @@ def mainFunctionDebug
     PluginManager.runPlugins
     Compiler.main
     Compiler.pbLoadMarkerComments(true)
+    Compiler.pbLoadMindReadComments(true)
     Game.initialize
     Game.set_up_system
     Graphics.update

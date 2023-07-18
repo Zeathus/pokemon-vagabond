@@ -197,6 +197,114 @@ class BossEff_ChangeStat < BossEffect
   end
 end
 
+class BossEff_ChangeStatQuick < BossEffect
+  def initialize(trigger, stats, stages, showAnim=true)
+    super(trigger)
+    stats = [stats] if !stats.is_a?(Array)
+    if !stages.is_a?(Array)
+      stages = [stages] * stats.length
+    end
+    @stats = stats
+    @stages = stages
+    @showAnim = showAnim
+  end
+  def activate(battle, triggerer, target)
+    raise_stats = []
+    lower_stats = []
+    reset_stats = []
+    total_raise = 0
+    total_lower = 0
+    for i in 0...@stats.length
+      stat = @stats[i]
+      stage = @stages[i]
+      if stage > 0
+        amount = target.pbRaiseStatStageBasic(stat, stage)
+        if amount != 0
+          raise_stats.push(stat)
+        end
+      elsif stage < 0
+        amount = target.pbLowerStatStageBasic(stat, -stage)
+        if amount != 0
+          lower_stats.push(stat)
+        end
+      else
+        target.stages[stat] = stage
+        reset_stats.push(stat)
+      end
+    end
+    for i in 0...2
+      stats = [raise_stats, lower_stats][i]
+      if stats.length == 0
+        next
+      end
+      total = [total_raise, total_lower][i]
+      type = ["rose", "fell"]
+      adjectives = [["sharply", "drastically"], ["harshly", "severely"]]
+      animation = ["StatUp", "StatDown"][i]
+      battle.pbCommonAnimation(animation, target) if @showAnim
+      if stats.length == 7
+        if total.abs / stats.length >= 3
+          battle.pbDisplay(_INTL("All of {1}'s stats {2} {3}!", target.pbThis, type[i], adjectives[i][1]))
+        elsif total.abs / stats.length >= 2
+          battle.pbDisplay(_INTL("All of {1}'s stats {2} {3}!", target.pbThis, type[i], adjectives[i][0]))
+        else
+          battle.pbDisplay(_INTL("All of {1}'s stats {2}!", target.pbThis, type[i]))
+        end
+      elsif stats.length == 5 && (!stats.include?(:EVASION)) && (!stats.include?(:ACCURACY))
+        if total.abs / stats.length >= 3
+          battle.pbDisplay(_INTL("All of {1}'s primary stats {2} {3}!", target.pbThis, type[i], adjectives[i][1]))
+        elsif total.abs / stats.length >= 2
+          battle.pbDisplay(_INTL("All of {1}'s primary stats {2} {3}!", target.pbThis, type[i], adjectives[i][0]))
+        else
+          battle.pbDisplay(_INTL("All of {1}'s primary stats {2}!", target.pbThis, type[i]))
+        end
+      elsif stats.length == 1
+        if total.abs / stats.length >= 3
+          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][1]), GameData::Stat.get(stats[0]).name)
+        elsif total.abs / stats.length >= 2
+          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][0]), GameData::Stat.get(stats[0]).name)
+        else
+          battle.pbDisplay(_INTL("{1}'s {3} {2}!", target.pbThis, type[i]), GameData::Stat.get(stats[0]).name)
+        end
+      else
+        message = _INTL("{1}'s", target.pbThis)
+        for j in 0...stats.length
+          if j == stats.length - 1
+            message += _INTL(" and {1} ", GameData::Stat.get(stats[j]).name)
+          elsif j == stats.length - 2
+            message += _INTL(" {1}", GameData::Stat.get(stats[j]).name)
+          else
+            message += _INTL(" {1},", GameData::Stat.get(stats[j]).name)
+          end
+        end
+        message += type[i]
+        if total.abs / stats.length >= 3
+          message += " "
+          message += adjectives[i][1]
+        elsif total.abs / stats.length >= 2
+          message += " "
+          message += adjectives[i][0]
+        end
+        message += "!"
+        battle.pbDisplay(message)
+      end
+      if i == 0
+        if target.abilityActive?
+          stats.each do |stat|
+            Battle::AbilityEffects.triggerOnStatGain(target.ability, target, stats, triggerer)
+          end
+        end
+      elsif i == 1
+        if target.abilityActive?
+          stats.each do |stat|
+            Battle::AbilityEffects.triggerOnStatLoss(target.ability, target, stats, triggerer)
+          end
+        end
+      end
+    end
+  end
+end
+
 class BossEff_SetStat < BossEffect
   def initialize(trigger, stats, stages)
     super(trigger)

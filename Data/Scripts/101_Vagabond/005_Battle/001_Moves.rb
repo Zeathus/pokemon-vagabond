@@ -145,6 +145,9 @@ class Battle::Move::FirstHitPoisonGroundTargetSecondHitGround < Battle::Move
   end
 end
 
+################################################################################
+# All allies (including self) are affinity boosted for their next move (Morale Boost)
+################################################################################
 class Battle::Move::AffinityBoostNextTurn < Battle::Move
   def pbMoveFailed?(user, targets)
     if @battle.allSameSideBattlers(user).none? { |b| b.effects[PBEffects::AffinityBoostNext].nil? }
@@ -269,6 +272,7 @@ class Battle::Move::AffinityBoostSideEffect < Battle::Move
     return if target.fainted? || target.damageState.substitute
     return if !(user.affinityBooster || user.effects[PBEffects::HelpingHand])
     stat = pbGetTypeLowerStat(@type)
+    return if stat.nil?
     if target.pbCanLowerStatStage?(stat, user, self)
       target.pbLowerStatStage(stat, 1, user)
     end

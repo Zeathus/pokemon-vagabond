@@ -248,6 +248,7 @@ module Scaling
     min_level = 100
     max_level = 1
     trainer.party.each do |pkmn|
+      next if pkmn.species == :AZELF
       min_level = [pkmn.level, min_level].min
       max_level = [pkmn.level, max_level].max
     end
@@ -255,6 +256,7 @@ module Scaling
 
     # Change pokemon levels
     trainer.party.each do |pkmn|
+      next if pkmn.species == :AZELF
       level = pkmn.level
       level_dif = level - mid_level
       if level_base > level

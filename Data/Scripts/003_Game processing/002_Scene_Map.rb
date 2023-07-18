@@ -79,6 +79,7 @@ class Scene_Map
     when 8 then $game_player.turn_up
     end
     $game_player.straighten
+    $game_player.on_ladder = false
     $game_temp.followers.map_transfer_followers
     $game_map.update
     disposeSpritesets

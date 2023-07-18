@@ -127,21 +127,21 @@
 /speaker Duke
 ?> Do you want Numel, the Fire-type Pokémon?
     /choice Yes
-    /choice No
+    /cancelchoice No
 ?/>
 
 [PROLOGUE_STARTER_KRABBY]
 /speaker Duke
 ?> Do you want Krabby, the Water-type Pokémon?
     /choice Yes
-    /choice No
+    /cancelchoice No
 ?/>
 
 [PROLOGUE_STARTER_SKIDDO]
 /speaker Duke
 ?> Do you want Skiddo, the Grass-type Pokémon?
     /choice Yes
-    /choice No
+    /cancelchoice No
 ?/>
 
 [PROLOGUE_STARTER_DUKE]
@@ -185,7 +185,7 @@
 [PROLOGUE_DUKE_JOIN]
 /me Slots win
 > \ts[5]Duke has joined the party!
-> \ts[1]You can now press X to open the menu.
+> \ts[1]You can now press Z to open the menu.
 
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,0]
 /speaker Duke
@@ -208,4 +208,13 @@
 > You successfully defeated your first Gym. As promised, I will show you the way to the Evergone Mangrove.
 > I will have you meet a woman with hair of amethyst. She will help you along the way.
 > To meet up with her, we must go to the lake adjacent to the Evergone Mangrove.
-> That is to the north of Breccia City. You can check your map if you are unsure of the way.
+> That is to the north of Breccia City. You can check the map on your phone if you are unsure of the way.
+> I would also like to remind you that you can teleport to previously visited places from your map too.
+
+[PROLOGUE_DUKE_QUICK_LEVEL]
+/speaker Duke
+> Before we continue, there's something I'd like to inform you about.
+> The Gym Leader you just defeated was at level 20. As such, you can now [R]Quick Level[/] your Pokémon up to that level.
+> However, leveling your Pokémon this way comes at the cost of money.\n$1 per Exp. Point to be exact.
+> You can do this at any time from the party screen if you need to boost a weaker party member.
+> Your trainer card details what level each gym is, and thus what [R]Quick Level[/] thresholds they unlock.

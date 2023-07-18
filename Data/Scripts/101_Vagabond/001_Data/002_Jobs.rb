@@ -9,7 +9,7 @@ def pbJobClass(name)
       "Fisher" => JobFisher,
       "Botanist" => JobBotanist,
       "Miner" => JobMiner,
-      "Ruin Maniac" => JobRuinManiac,
+      "RuinManiac" => JobRuinManiac,
       "Engineer" => JobEngineer
   }[name]
 end
@@ -22,7 +22,7 @@ def pbAllJobs
       "Fisher",
       "Crafter",
       "Engineer",
-      "Ruin Maniac",
+      "RuinManiac",
       "Ranger",
       "Doctor",
       "Professor",
@@ -232,6 +232,7 @@ class JobMiner < Job
 
   def initialize
       super("Miner", "Alister", "job_miner", "Supervisor")
+      @mined = {}
   end
 
   def quests
@@ -250,24 +251,85 @@ class JobMiner < Job
 
   def rewards
       return [
-          "Level 1",
-          "Level 2",
-          "Level 3",
-          "Level 4",
-          "Level 5"
+          "B2F Access",
+          "B3F Access + New Tool",
+          "B4F Access",
+          "B5F Access + New Tool",
+          "Full Access"
       ]
   end
-
+  
   def progress_text
-      return ""
+    case @level
+    when 1
+        return _INTL("Mine Sun Stone & Moon Stone ({1} / {2})", self.progress, self.requirement)
+    when 2
+        return _INTL("Mine Dawn, Dusk & Shiny Stone ({1} / {2})", self.progress, self.requirement)
+    when 3
+        return _INTL("??? ({1} / {2})", self.progress, self.requirement)
+    when 4
+        return _INTL("???")
+    when 5
+        return _INTL("Mined {1} kinds of items", self.progress)
+    end
   end
 
   def requirement
-      return 1
+    case @level
+    when 1
+        return 2
+    when 2
+        return 3
+    when 3
+        return 3
+    when 4
+        return 1
+    when 5
+        return 0
+    end
+    return 0
   end
 
   def progress
-      return 0
+    total = 0
+    case @level
+    when 1
+        total += 1 if mined?(:SUNSTONE)
+        total += 1 if mined?(:MOONSTONE)
+    when 2
+        total += 1 if mined?(:DAWNSTONE)
+        total += 1 if mined?(:DUSKSTONE)
+        total += 1 if mined?(:SHINYSTONE)
+    when 3
+        total += 1 if mined?(nil)
+        total += 1 if mined?(nil)
+        total += 1 if mined?(nil)
+    when 4
+        total += 1 if mined?(nil)
+    when 5
+        total = @dummy.length
+    end
+    return total
+  end
+
+  def register(item)
+    if @mined.key?(item)
+      @mined[item] += 1
+    else
+      @mined[item] = 1
+    end
+  end
+
+  def mined?(item)
+    return false if !@mined.key?(item)
+    return (@mined[item] > 0)
+  end
+
+  def mined_any?
+    @mined.each_key do |i|
+      return true if @mined[i] > 0
+    end
+    return false
   end
 
 end
@@ -407,12 +469,12 @@ end
 class JobRanger < Job
 
   def initialize
-      super("Ranger", "???", "job_ranger")
+      super("Ranger", "Ranger Assoc.", "job_ranger", "Lead by")
   end
 
   def quests
       return [
-          nil,
+          :WILDLIFEPROTECTORS,
           nil,
           nil,
           nil,
@@ -421,29 +483,29 @@ class JobRanger < Job
   end
 
   def location
-    return "???"
+    return "Outposts"
   end
 
   def rewards
       return [
-          "Level 1",
-          "Level 2",
-          "Level 3",
-          "Level 4",
-          "Level 5"
+          "Registered Ranger",
+          "???",
+          "???",
+          "???",
+          "???"
       ]
   end
 
   def progress_text
-      return ""
+      return _INTL("{1} / {2} Field Bosses Defeated", self.progress, self.requirement)
   end
 
   def requirement
-      return 1
+      return 10
   end
 
   def progress
-      return 0
+      return pbTotalBossesDefeated()
   end
 
 end
@@ -591,43 +653,71 @@ end
 class JobRuinManiac < Job
 
   def initialize
-      super("Ruin Maniac", "Asako", "job_ruin_maniac")
+      super("Archeologist", "Asako", "job_ruin_maniac")
   end
 
   def quests
       return [
-          nil,
-          nil,
-          nil,
-          nil,
-          nil
+          :CURIOUSRUINS,
+          :ANAFFINITYFORRUINS,
+          :ANAFFINITYFORRUINS,
+          :ANAFFINITYFORRUINS,
+          :ANAFFINITYFORRUINS
       ]
   end
 
   def location
-    return "???"
+    return "G.P.O. HQ"
   end
 
   def rewards
       return [
-          "Level 1",
-          "Level 2",
-          "Level 3",
-          "Level 4",
-          "Level 5"
+          "Unown Dictionary",
+          "Clues for More Ruins",
+          "Clues for All Ruins",
+          "Improved Ruin Clues",
+          "The Nineteenth Ruin"
       ]
   end
 
   def progress_text
-      return ""
+    if @level < 5
+        return _INTL("Found {1} / {2} Treasures", self.progress, self.requirement)
+    else
+        return _INTL("Found {1} / {2} Plates", self.progress, self.requirement)
+    end
   end
 
   def requirement
-      return 1
+      return [1, 5, 9, 13, 18, 18][@level]
   end
 
   def progress
-      return 0
+    count = 0
+    if @level < 5
+        [
+            :TM80, :TM81, :TM82,
+            :TM83, :TM84, :TM85,
+            :TM86, :TM87, :TM88,
+            :TM89, :TM90, :TM91,
+            :TM92, :TM93, :TM94,
+            :TM95, :TM96, :TM97
+        ].each do |i|
+            count += 1 if $bag.quantity(i) > 0
+        end
+    else
+        [
+            :NORMALPLATE, :FLAMEPLATE, :SPLASHPLATE,
+            :ZAPPLATE, :MEADOWPLATE, :ICICLEPLATE,
+            :FISTPLATE, :TOXICPLATE, :EARTHPLATE,
+            :SKYPLATE, :MINDPLATE, :INSECTPLATE,
+            :STONEPLATE, :SPOOKYPLATE, :DRACOPLATE,
+            :DREADPLATE, :IRONPLATE, :PIXIEPLATE
+        ].each do |i|
+            count += 1 if $bag.quantity(i) > 0
+        end
+    end
+    return count
   end
 
 end
@@ -635,7 +725,7 @@ end
 class JobEngineer < Job
 
   def initialize
-      super("Engineer", "Leroy", "job_engineer")
+      super("Engineer", "Leroy", "job_engineer", "Tech Lead")
       @dummy = []
       @frames = [PBFrame::Null]
   end

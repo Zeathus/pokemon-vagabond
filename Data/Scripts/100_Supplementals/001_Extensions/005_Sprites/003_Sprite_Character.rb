@@ -33,8 +33,7 @@ class Sprite_Character
       @partner.dispose
     end
     @partner = Sprite_Character.new(
-      self.viewport, _INTL("member{1}",
-        $game_variables ? getPartyActive(1) : ""))
+      self.viewport, _INTL("member{1}", getPartyActiveSprite(1)))
     @partner.setRealXY(@character.real_x, @character.real_y)
   end
 

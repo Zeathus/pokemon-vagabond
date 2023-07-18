@@ -21,7 +21,8 @@ class ReadyMenuButton < Sprite
     self.bitmap = @contents
     pbSetSystemFont(self.bitmap)
     if @command[2]
-      @icon = PokemonIconSprite.new($player.party[@command[3]], viewport)
+      species = (@command[3] == -1) ? Pokemon.new(command[0], 1) : $player.party[@command[3]]
+      @icon = PokemonIconSprite.new(species, viewport)
       @icon.setOffset(PictureOrigin::CENTER)
     else
       @icon = ItemIconSprite.new(0, 0, @command[0], viewport)
@@ -239,12 +240,19 @@ class PokemonReadyMenu
     @scene.pbShowMenu
   end
 
-  def pbStartReadyMenu(moves, items)
+  def pbStartReadyMenu(moves, items, special=[])
     commands = [[], []]   # Moves, items
     moves.each do |i|
       commands[0].push([i[0], GameData::Move.get(i[0]).name, true, i[1]])
     end
     commands[0].sort! { |a, b| a[1] <=> b[1] }
+    special.each do |i|
+      name = "N/A"
+      name = "Willpower" if i[0] == :AZELF
+      name = "Knowledge" if i[0] == :UXIE
+      name = "Emotion" if i[0] == :MESPRIT
+      commands[0].push([i[0], name, true, -1])
+    end
     items.each do |i|
       commands[1].push([i, GameData::Item.get(i).name, false])
     end
@@ -255,30 +263,36 @@ class PokemonReadyMenu
       break if command == -1
       if command[0] == 0   # Use a move
         move = commands[0][command[1]][0]
-        user = $player.party[commands[0][command[1]][3]]
-        if move == :FLY
-          ret = nil
-          pbFadeOutInWithUpdate(99999, @scene.sprites) {
-            pbHideMenu
-            scene = PokemonRegionMap_Scene.new(-1, false)
-            screen = PokemonRegionMapScreen.new(scene)
-            ret = screen.pbStartFlyScreen
-            pbShowMenu if !ret
-          }
-          if ret
-            $game_temp.fly_destination = ret
-            $game_temp.in_menu = false
-            pbUseHiddenMove(user, move)
-            break
-          end
-        else
+        if commands[0][command[1]][3] == -1   # Special Move
           pbHideMenu
-          if pbConfirmUseHiddenMove(user, move)
-            $game_temp.in_menu = false
-            pbUseHiddenMove(user, move)
-            break
+          pbSpecialFieldSkill(move)
+          break
+        else
+          user = $player.party[commands[0][command[1]][3]]
+          if move == :FLY
+            ret = nil
+            pbFadeOutInWithUpdate(99999, @scene.sprites) {
+              pbHideMenu
+              scene = PokemonRegionMap_Scene.new(-1, false)
+              screen = PokemonRegionMapScreen.new(scene)
+              ret = screen.pbStartFlyScreen
+              pbShowMenu if !ret
+            }
+            if ret
+              $game_temp.fly_destination = ret
+              $game_temp.in_menu = false
+              pbUseHiddenMove(user, move)
+              break
+            end
           else
-            pbShowMenu
+            pbHideMenu
+            if pbConfirmUseHiddenMove(user, move)
+              $game_temp.in_menu = false
+              pbUseHiddenMove(user, move)
+              break
+            else
+              pbShowMenu
+            end
           end
         end
       else   # Use an item
@@ -300,9 +314,10 @@ end
 # Using a registered item
 #===============================================================================
 def pbUseKeyItem
-  moves = [:CUT, :DEFOG, :DIG, :DIVE, :FLASH, :FLY, :HEADBUTT, :ROCKCLIMB,
-           :ROCKSMASH, :SECRETPOWER, :STRENGTH, :SURF, :SWEETSCENT, :TELEPORT,
-           :WATERFALL, :WHIRLPOOL]
+  moves = []
+           #:CUT, :DEFOG, :DIG, :DIVE, :FLASH, :FLY, :HEADBUTT, :ROCKCLIMB,
+           #:ROCKSMASH, :SECRETPOWER, :STRENGTH, :SURF, :SWEETSCENT, :TELEPORT,
+           #:WATERFALL, :WHIRLPOOL]
   real_moves = []
   moves.each do |move|
     $player.party.each_with_index do |pkmn, i|
@@ -315,14 +330,28 @@ def pbUseKeyItem
     itm = GameData::Item.get(i).id
     real_items.push(itm) if $bag.has?(itm)
   end
-  if real_items.length == 0 && real_moves.length == 0
-    pbMessage(_INTL("An item in the Bag can be registered to this key for instant use."))
+  special = []
+  if $game_switches[HAS_AZELF] && pbGuardianMindReadNPC(:AZELF)
+    special.push([:AZELF, -1])
+  end
+  if $game_switches[HAS_UXIE] && pbGuardianMindReadNPC(:UXIE)
+    special.push([:UXIE, -1])
+  end
+  if $game_switches[HAS_MESPRIT] && pbGuardianMindReadNPC(:MESPRIT)
+    special.push([:MESPRIT, -1])
+  end
+  if real_items.length == 0 && real_moves.length == 0 && special.length == 0
+    if $game_switches[HAS_AZELF] || $game_switches[HAS_UXIE] || $game_switches[HAS_MESPRIT]
+      pbMessage(_INTL("There's no action to do here."))
+    else
+      pbMessage(_INTL("An item in the Bag can be registered to this key for instant use."))
+    end
   else
     $game_temp.in_menu = true
     $game_map.update
     sscene = PokemonReadyMenu_Scene.new
     sscreen = PokemonReadyMenu.new(sscene)
-    sscreen.pbStartReadyMenu(real_moves, real_items)
+    sscreen.pbStartReadyMenu(real_moves, real_items, special)
     $game_temp.in_menu = false
   end
 end

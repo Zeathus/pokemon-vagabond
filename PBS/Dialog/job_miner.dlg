@@ -1,0 +1,74 @@
+[JOB_MINER_WALL_COLLAPSE]
+> You revealed a crack in the wall that caused it to collapse, opening a new part of the mine!
+
+[JOB_MINER_1,0]
+/speaker Alister
+> You came after all. I am glad to see you <PLAYER>.
+> The Pegma Quarry operation needs capable individuals like yourself to be a success.
+> I will let you borrow this Miner's Kit.
+
+[JOB_MINER_1,1]
+/speaker Alister
+> That kit gives you access to the top layer of the quarry, the same layer you rescued Steve from.
+> If you successfully excavate an item and show it to me, consider yourself in.
+
+[JOB_MINER_1,2]
+/speaker Alister
+> Has my request been fulfilled?
+> Good. I was expecting as much from you.\nConsider yourself in on the quarry operation.
+
+[JOB_MINER_1,3]
+/speaker Alister
+> However, I will not grant you access to the entire quarry that easily.
+
+[JOB_MINER_1,4]
+/speaker Alister
+> If you want access to the deeper areas, I would like you to excavate certain items to prove your skill.
+> How about this... I want you to excavate a Sun Stone and a Moon Stone.
+> Do that, and I'll not only give you access to the next level, but even give you a new mining tool.
+
+[JOB_MINER_1,5]
+> \ts[2]You got the job as a Miner!
+> \ts[1]You can track the items Alister requested you to excavate in the Trainer menu.
+
+[JOB_MINER_2,0]
+/speaker Alister
+> You managed to excavate a Sun Stone AND a Moon Stone?
+..> (I thought there were no such stones at layer 2...)
+> Well, I must congratulate you for your contribution. I will, of course, uphold my end of the bargain.
+
+[JOB_MINER_2,1]
+/speaker Alister
+> I will grant you access to the third layer, as well as providing you with a new mining tool.
+> This spelunky tool will tell you if an item exists wherever you hit with it, leaving almost no damage to the wall itself.
+> I am sure you will find it very useful.
+
+[JOB_MINER_2,2]
+> \ts[2]Your Miner rank increased to level 2!
+> \ts[1]You can now access layer 3 and use a new mining tool!
+
+[JOB_MINER_2,3]
+/speaker Alister
+> While this is all well and good, you will not be allowed to layer 4 just yet.
+> Let's see...
+> How about you mine a Dawn Stone, a Dusk Stone AND a Shiny Stone to prove your capabilities.
+..> (That ought to keep them busy for a while...)
+
+[JOB_MINER_EDWARD,0]
+/speaker Edward
+/hidename 1
+> What could be the meaning of these old relics?
+
+[JOB_MINER_EDWARD,1]
+/speaker Edward
+/hidename 1
+> Oh, hello! I was just trying to decipher the meaning of the inscriptions on this relic.
+> I believe it is a depiction of a beautiful and vast underground river that the ancient people called "Arakawa River".
+/hidename 0
+> My name is Edward by the way, nice to meet you.
+> They will probably be removing this relic from the wall soon, so I had to come check it out when I could.
+> Alister, he who administers the quarry doesn't care much for relics.
+> He seeks something much grander to grant him a fortune.
+> If you were to find any old shards or othe relics while mining, would you mind bringing them to me?
+> I will see to it that they are well preserved, and I will of course pay you handsomely as well.
+> I live in the house north-eastern house in the Mica District of Pegma City. I look forward to see you there.

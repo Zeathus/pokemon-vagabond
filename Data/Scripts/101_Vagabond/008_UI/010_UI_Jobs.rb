@@ -25,6 +25,9 @@ class Window_Jobs < Window_DrawableCommand
     rect=drawCursor(index,rect)
     ypos=rect.y
     itemname=@items[index]
+    if !["Trainer", "General Stats", "Battle Stats"].include?(itemname)
+      itemname = pbJob(itemname).name
+    end
     textpos.push([itemname,rect.x,ypos+2,false,self.baseColor,self.shadowColor])
     pbDrawTextPositions(self.contents,textpos)
   end

@@ -327,12 +327,21 @@ module BattleCreationHelperMethods
       end
     end
     if [2, 5].include?(outcome) && (can_lose || start_over)   # if loss or draw
-      $player.party.each { |pkmn| pkmn.heal }
+      $player.heal_party
       (Graphics.frame_rate / 4).times { Graphics.update }
       if start_over
-        pbMessage("Do you want to retry the battle?\\ch[1,0,Retry the battle,Return to Pokémon Center]")
+        msgwindow = pbCreateMessageWindow(nil, nil)
+        msgwindow.z = 1000000
+        message = "Do you want to retry the battle?"
+        commands = ["Retry the battle", "Return to Pokémon Center"]
+        pbMessageDisplay(msgwindow, message, true,
+          proc { |msgwindow|
+            next Kernel.pbShowCommands(msgwindow, commands, 1, 0)
+          })
+        pbDisposeMessageWindow(msgwindow)
+        Input.update
         if pbGet(1)==0
-          canLose = true
+          can_lose = true
           pbCancelVehicles
           $game_temp.player_new_map_id = start_over[0]
           $game_temp.player_new_x = start_over[1]

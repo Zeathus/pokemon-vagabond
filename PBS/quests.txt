@@ -42,7 +42,7 @@ Description = The clumsy Klaus has managed to lose sight of an Alolan Vulpix he 
 Location = G.P.O. HQ
 FullLocation = at the G.P.O. HQ
 Step1 = Ask the people in the G.P.O. lounge if they saw where the Alolan Vulpix went.
-Step2 = Find the Alolan Vulpix in the Lapis District and bring it back to the employee, Klaus.
+Step2 = "Find the Alolan Vulpix in the Lapis District and bring it back to the employee, Klaus."
 Done = Vulpix returned back to Klaus after running away. You found it standing in the park.
 # G.P.O. HQ
 RequireMaps = 35
@@ -104,14 +104,39 @@ Description = Faunus wants to teach you about botany. Meet him at his house belo
 Location = Breccia Undergrowth
 FullLocation = in the Breccia Undergrowth
 Step1 = Have Faunus teach you about botany.
-Done = Faunus taught you about harvesting berries more efficiently, and is eager to teach you more.
+Done = "Faunus taught you about harvesting berries more efficiently, and is eager to teach you more."
 Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_FAUNUS]
 
 [DIGGYDIGGYHOLE]
 Name = Diggy Diggy Hole
 Type = Miner
-Step1 = Unfinished
+Exp = 50
+Description = Alister wants you to join the Pegma Quarry operation.
+Location = Pegma Quarry
+FullLocation = at the Pegma Quarry
+Step1 = Excavate any item from layer 1 to prove your worth to Alister.
+Done = You proved your worth to Alister and joined the Pegma Quarry operation!
 Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_RAPHAEL]
+
+[DIGGINGDEEPER]
+Name = Digging Deeper
+Type = Miner
+Exp = 100
+Description = Alister promised you a new mining tool and access to the next level of the quarry if you can excavate a Sun Stone and a Moon Stone.
+Location = Pegma Quarry
+FullLocation = at the Pegma Quarry
+Step1 = Excavate a Sun Stone and a Moon Stone.
+Done = "Thanks to your efforts, you gained access to floor B3F of the quarry, and got a new spelunky tool!"
+
+[DAWNOFTHEDEEPSTONES]
+Name = Dawn of the Deep Stones
+Type = Miner
+Exp = 150
+Description = Alister will keep you away from layer 4 unless you can excavate a Dawn Stone, a Dusk Stone and a Shiny Stone. Show him what you can do!
+Location = Pegma Quarry
+FullLocation = at the Pegma Quarry
+Step1 = "Excavate a Dawn Stone, a Dusk Stone and a Shiny Stone."
+Done = Thanks to your skill, you gained access to floor B4F of the quarry!
 
 # [210] Crafter
 
@@ -132,9 +157,49 @@ Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_LEROY]
 
 # [235] Professor
 
-# [240] Ranger
+[WILDLIFEPROTECTORS]
+Name = Wildlife Protectors
+Type = Ranger
+Exp = 50
+Description = The Pokémon Ranger Association has need of experienced trainers to help them maintain peace among the wildlife.
+Location = Various
+FullLocation = at various locations
+Step1 = Defeat a considerably strong wild Pokémon to register yourself as a Pokémon Ranger.
+Done = You got registered as a Pokémon Ranger and agreed to help defeat field bosses across the region.
+Require = $game_switches[GPO_MEMBER]
 
-# [245] Archeologist
+[CURIOUSRUINS]
+Name = Curious Ruins
+Type = RuinManiac
+Exp = 50
+Description = "The ruin maniac, Asako, is investigating ruins found in caves around the region. He wants help finding the secrets of the ruins in the Crosswoods.
+Location = Crosswoods
+FullLocation = in the Crosswoods
+Step1 = Meet with Asako inside of the ruins in the Crosswoods.
+Step2 = Find out the meaning of the hieroglyphs in the ruins.
+Step3 = Obtain the treasure within the hidden chamber.
+Done = Asako wants your help researching more ruins after your help in the Crosswoods. He even gave you a dictionary to read ancient glyphs easily!
+Require = $game_switches[GPO_MEMBER]
+
+[ANAFFINITYFORRUINS]
+Name = An Affinity for Ruins
+Type = RuinManiac
+Exp = 500
+Description = "Asako has tasked you with finding all the ruins in the region, estimated at 18 total. Their treasures will prove invaluable for his research."
+Location = Everywhere
+FullLocation = across the region
+Step1 = Find all the 18 ruins scattered across the region and collect their treasures. Asako at G.P.O. HQ can provide clues for where to look for ruins.
+Done = Temp
+
+#[TALESOFTHENINETEENTHRUIN]
+#Name = Tales of the Nineteenth Ruin
+#Type = RuinManiac
+#Exp = 500
+#Description = "Find all the 18 ruins scattered across the region and collect their treasures."
+#Location = Everywhere
+#FullLocation = across the region
+#Step1 = Find all the 18 ruins scattered across the region and collect their treasures.
+#Done = Temp
 
 [FISHYBUSINESS]
 Name = Fishy Business
@@ -262,9 +327,19 @@ Type = Main
 Exp = 100
 Description = A vision told you that something may be afoot at Mt. Pegma. It would be best to check it out.
 Step1 = Check the situation at Mt. Pegma (east of the Crosswoods).
-Step2 = Make your way through Evergone Mangrove with Amethyst.
-Step3 = "Head to the G.P.O. HQ in Lapis Lazuli City, south of the Crosswoods."
-Step4 = Go back to the elevator with Amethyst.
+Step2 = Something suspicious is going on. Get through Mt. Pegma with Kira.
+Step3 = You defeated Eliana atop Mt. Pegma and rescued Azelf. Report back to Amethyst at HQ.
+Done = "You rescued Azelf atop Mt. Pegma. To keep Azelf safe, they are now traveling with you."
+
+[NEKANEGONEMISSING]
+Name = Nekane Gone Missing
+Type = Main
+Exp = 100
+Description = Nekane was nowhere to be found at the G.P.O. HQ when you woke up. Make sure she's safe.
+Step1 = Ask around the city if anyone has seen Nekane.
+Step2 = Nekane went out to the east of the Lazuli District. Go look for her.
+Step3 = Azelf suggested you ask people in the city about their desires. Head back to the city.
+Step4 = Use Azelf's willpower readings to provide examples for Nekane.
 Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
 
 [TEST]

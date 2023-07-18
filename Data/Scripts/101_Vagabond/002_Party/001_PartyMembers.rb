@@ -8,9 +8,13 @@ module PBParty
   Nekane    = 6
   Cerise    = 7
   Ziran     = 8
+  Azelf     = 9
+  Uxie      = 10
+  Mesprit   = 11
+  Player2   = 12
 
   def PBParty.len
-    return 9
+    return 13
   end
 
   def PBParty.getName(id)
@@ -36,6 +40,14 @@ module PBParty
       return "Cerise"   # French word for Cherry
     when PBParty::Ziran
       return "Ziran"    # Chinese, refers to a point of view in Daoist belief
+    when PBParty::Azelf
+      return "Azelf"
+    when PBParty::Uxie
+      return "Uxie"
+    when PBParty::Mesprit
+      return "Mesprit"
+    when PBParty::Player2
+      return $player ? $player.name : "Player"
     end
     return "n/a"
   end
@@ -61,6 +73,14 @@ module PBParty
       return :CERISE
     when PBParty::Ziran
       return :DAO_Ziran
+    when PBParty::Azelf
+      return :AZELF
+    when PBParty::Uxie
+      return :UXIE
+    when PBParty::Mesprit
+      return :MESPRIT
+    when PBParty::Player2
+      return :ANTAGONIST
     end
     return -1
   end
@@ -86,6 +106,14 @@ module PBParty
       return 153298 # Keldeo's regional DEX# in BW followed by B2W2
     when PBParty::Ziran
       return 65829 # Mirrorable, balanced
+    when PBParty::Azelf
+      return -1
+    when PBParty::Uxie
+      return -1
+    when PBParty::Mesprit
+      return -1
+    when PBParty::Player2
+      return $player ? $player.id : 0
     end
     return 0
   end
@@ -111,8 +139,15 @@ module PBParty
       return 1
     when PBParty::Ziran
       return 0
+    when PBParty::Player2
+      return $player ? $player.gender : 2
     end
     return 2
+  end
+
+  def PBParty.secondOnly(id)
+    id = getID(PBParty,id) if id.is_a?(Symbol)
+    return [9, 10, 11].include?(id)
   end
 end
 
@@ -191,8 +226,7 @@ def setPartyActive(id,pos)
       members[pos] = id
     end
   end
-  $game_player.sprite.partner.character = _INTL("member{1}", members[1])
-  $game_player.sprite.update
+  pbUpdatePartySprites
 end
 
 def getPartyActive(pos=nil)
@@ -206,17 +240,53 @@ def getPartyActive(pos=nil)
   end
 end
 
-def pbSetPartnerVisibility(value)
-  $game_player.sprite.partner.visibility=value
+def getPartyActiveSprite(pos)
+  return -1 if !$game_variables
+  if $game_variables[VISUAL_PARTY] == 0
+    member_id = getPartyActive(pos)
+  else
+    member_id = $game_variables[VISUAL_PARTY][pos]
+  end
 end
 
-def pbForceVisualPartyLeader(value)
-  if value == -1
-    $game_variables[FORCED_VISUAL_LEADER] = 0
-    $game_switches[FORCE_VISUAL_LEADER] = false
-  else
-    id = getID(PBParty,id) if id.is_a?(Symbol)
-    $game_variables[FORCED_VISUAL_LEADER] = id
-    $game_switches[FORCE_VISUAL_LEADER] = true
+def pbStartTempParty(member1, member2=-1)
+  member1 = -1 if member1.nil?
+  member2 = -1 if member2.nil?
+  member1 = getID(PBParty,member1) if member1.is_a?(Symbol)
+  member2 = getID(PBParty,member2) if member2.is_a?(Symbol)
+  if $game_variables[SAVED_PARTY] == 0
+    $game_variables[SAVED_PARTY] = $game_variables[PARTY]
+    $game_variables[SAVED_PARTY_ACTIVE] = $game_variables[PARTY_ACTIVE]
   end
+  $game_variables[PARTY] = [false]
+  $game_variables[PARTY_ACTIVE] = [member1, member2]
+  addPartyMember(member1)
+  addPartyMember(member2)
+  pbUpdatePartySprites
+end
+
+def pbEndTempParty
+  $game_variables[PARTY] = $game_variables[SAVED_PARTY]
+  $game_variables[PARTY_ACTIVE] = $game_variables[SAVED_PARTY_ACTIVE]
+  pbUpdatePartySprites
+end
+
+def pbStartVisualParty(member1, member2=-1)
+  member1 = -1 if member1.nil?
+  member2 = -1 if member2.nil?
+  member1 = getID(PBParty,member1) if member1.is_a?(Symbol)
+  member2 = getID(PBParty,member2) if member2.is_a?(Symbol)
+  $game_variables[VISUAL_PARTY] = [member1, member2]
+  pbUpdatePartySprites
+end
+
+def pbEndVisualParty
+  $game_variables[VISUAL_PARTY] = 0
+  pbUpdatePartySprites
+end
+
+def pbUpdatePartySprites
+  $game_player.sprite.partner.character = _INTL("member{1}", getPartyActiveSprite(1))
+  $game_player.refresh_charset
+  $game_player.sprite.update
 end

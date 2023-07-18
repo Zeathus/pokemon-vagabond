@@ -491,11 +491,13 @@
 001_CustomPokemon
 002_PokemonLists
 003_PokemonUtils
+004_FormHandlers
 @@004_Overworld
 001_Traveler
 002_Forecast
 003_MiniQuest
 004_TextBubbles
+005_FieldSkills
 @@@001_Events
 001_Inn
 002_AddStarter
@@ -504,6 +506,8 @@
 005_Boulder
 006_BerryBush
 007_Mining
+008_RangerOutpost
+009_Ladder
 @@@002_Puzzles
 001_AmphiWoods
 002_LightMirrors

@@ -145,7 +145,23 @@ Land,21
     5,NIDORANmA,5,7
     5,NIDORANfE,5,7
 #-------------------------------
-[116] # Crosswoods Cave Ruins
+[116] # Crosswoods Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[145] # Pegma Hillside Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[146] # Smokey Forest Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[168] # Breccia Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[171] # Lazuli River Ruins
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
@@ -157,7 +173,7 @@ FishingRod
     45,TYMPOLE,5,15
 #-------------------------------
 [14] # Mt. Pegma Hillside
-Cave,5
+Land,5
     100,FLETCHLING,7,9
 #-------------------------------
 [20] # Mt. Pegma 1F
@@ -303,3 +319,21 @@ Cave,5
     10,BIDOOF,5,8
     10,FLABEBE,5,8,3
     20,AZURILL,4,7
+#-------------------------------
+[173] # Lazuli River
+Land,21
+    20,BUIZEL,5,8
+    20,BUDEW,5,8
+    20,BIDOOF,5,8
+    20,PIDOVE,5,8
+    10,BOUNSWEET,4,7
+    10,SOBBLE,5,8,3
+Water,2
+    30,SURSKIT,10,13
+    20,DUCKLETT,10,13
+    20,PSYDUCK,10,13
+    30,BUIZEL,11,14
+FishingRod
+    40,MAGIKARP,5,10
+    30,POLIWAG,5,10
+    30,FINNEON,5,10

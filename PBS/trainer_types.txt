@@ -75,11 +75,11 @@
 79,FORETELLER,Foreteller,200,,,,Male,255,
 80,KIRA_Kid,Trainer,50,Battle! VS Kira (Sick),,,Male,50,
 83,NEKANE,Mystery Girl,50,Battle! VS Nekane (My Turn),,,Female,100,
-84,TEAM_DAO_YIN,Team Dao,48,Battle! VS Team Dao (Here I Come!),,,Male,100,
-85,TEAM_DAO_YANG,Team Dao,48,Battle! VS Team Dao (Here I Come!),,,Female,100,
-86,DAO_Eliana,Dao Admin,200,Battle! VS Eliana (Fever Dream),,,Female,,
-87,DAO_Fintan,Dao Admin,200,Battle! VS Fintan (Only the Strongest),,,Male,,
-88,DAO_Ziran,Dao Boss,255,Battle! VS Ziran (Lost in Time),,,Male,,
+84,TEAM_DAO_YIN,D.A.O.,48,Battle! VS Team Dao (Here I Come!),,,Male,100,
+85,TEAM_DAO_YANG,D.A.O.,48,Battle! VS Team Dao (Here I Come!),,,Female,100,
+86,DAO_Eliana,D.A.O. Admin,200,Battle! VS Eliana (Fever Dream),,,Female,,
+87,DAO_Fintan,D.A.O. Admin,200,Battle! VS Fintan (Only the Strongest),,,Male,,
+88,DAO_Ziran,D.A.O. Boss,255,Battle! VS Ziran (Lost in Time),,,Male,,
 89,SHADOW,Shadow,0,Battle Shadow,silence,,Mixed,255,
 90,GUARDIAN,Guardian,0,Battle Guardian,,,Mixed,255,
 91,CULPRIT,Trainer,80,,,,Male,255,
@@ -101,6 +101,9 @@
 110,AETHERELDER,Elder of Aether,100,,,,Female
 111,CYRUS,Otherworld Inhabitant,200,,,,Male
 112,CERISE,Swordswoman,200,Battle! VS Cerise (Sour Cherry),,,Female
+113,AZELF,Lake Guardian,200,,,,Mixed
+114,UXIE,Lake Guardian,200,,,,Mixed
+115,MESPRIT,Lake Guardian,200,,,,Mixed
 130,HOOPARING,Mysterious,200,cameo_2,,,Mixed,0,
 131,AURA,,0,Battle Aura,,,Mixed,200,
 200,JANUS,Friend,0,,,,Male

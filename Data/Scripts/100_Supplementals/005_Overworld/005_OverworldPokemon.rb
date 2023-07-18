@@ -241,6 +241,10 @@ class OverworldPokemon
     return @sprite.y + Game_Map::TILE_HEIGHT
   end
 
+  def away
+    @time = @lifetime - rand(16) * 2
+  end
+
 end
 
 class SpawnArea
@@ -445,6 +449,12 @@ class SpawnArea
     @pokemon = []
   end
 
+  def despawnPokemonNatural
+    for p in @pokemon
+      p.away
+    end
+  end
+
 end
 
 class Spriteset_Map
@@ -452,6 +462,12 @@ class Spriteset_Map
   def despawnPokemon
     for area in @spawn_areas
       area.despawnPokemon
+    end
+  end
+
+  def despawnPokemonNatural
+    for area in @spawn_areas
+      area.despawnPokemonNatural
     end
   end
 
@@ -572,7 +588,9 @@ end
 class PokemonEncounters
 
   def pbSpawnType(terrain)
-    if self.has_water_encounters? && terrain.can_surf_freely
+    if self.has_cave_encounters? && terrain == -1
+      return :Cave
+    elsif self.has_water_encounters? && terrain.can_surf_freely
       return :Water
     elsif self.has_cave_encounters?
       return :Cave

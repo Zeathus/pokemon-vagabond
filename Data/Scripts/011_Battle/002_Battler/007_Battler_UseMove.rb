@@ -513,7 +513,7 @@ class Battle::Battler
       targets.each { |b| move.pbEffectAfterAllHits(user, b) }
       # Affinity Boosts
       targets.each { |b|
-        if b.opposes?(user) && !b.damageState.unaffected &&
+        if b.opposes?(user) && !b.damageState.unaffected && b.damageState.hpLost > 0 &&
           (Effectiveness.normal?(b.damageState.typeMod) || Effectiveness.super_effective?(b.damageState.typeMod))
           user.eachAlly do |partner|
             if !partner.fainted? && !partner.movedThisRound? && @battle.choices[partner.index][0] == :UseMove

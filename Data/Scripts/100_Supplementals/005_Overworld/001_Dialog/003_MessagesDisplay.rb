@@ -311,6 +311,7 @@ class NameBoxSprite < IconSprite
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       display_name = (@show_name || @real_name)
       display_name = $player.name if display_name.downcase == "<player>"
+      display_name = _INTL("{1}?", $player.name) if display_name.downcase == "<player2>"
       display_name = "???" if @hide_name == 1
       textpos = [[
         display_name, self.bitmap.width / 2, 18, 2, base, shadow

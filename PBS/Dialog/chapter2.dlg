@@ -163,7 +163,7 @@
 [CH2_GPO_INTRO,1]
 /windowpos middle
 /hidewindow 1
-/speaker PLAYER
+/speaker <PLAYER2>
 /hidename 2
 /textpos middle
 > Oh, hi Eliana.<br>I didn't expect you to be up this late.
@@ -313,7 +313,7 @@
 > \ts[5]Kira has joined the party!
 
 [CH2_GPO_INTRO,12]
-> Didn't Raphael say Allister could need my help at the quarry?
+> Didn't Raphael say Allister could need your help at the quarry?
 
 [CH2_GPO_INTRO,13]
 > You remember Faunus telling you to meet him at his house later.
@@ -324,3 +324,268 @@
 [CH2_PEGMA_ROADBLOCK]
 /speaker Stranger
 > There's an excavation going on through here. We can't have anyone entering at the moment.
+
+[CH2_GUARD_YIN,0]
+/speaker Kira
+> ...And do you have a permit for that?
+/speaker Stranger
+> A p-permit..? Uhm... Well...\nO-Of course we do!
+> I-I'm sure the boss has one anyway!\nI wouldn't be in charge of that kind of stuff... heh heh...
+/speaker Kira
+> Then would you mind me meeting this so-called boss of yours? Who are they?
+/speaker Stranger
+> Th-that is... confidential I am sorry to say...
+> No can do!
+/speaker Kira
+> Well... You leave me no choice.
+
+[CH2_GUARD_YIN,1]
+/speaker Stranger
+> F-fine! I'll let you pass!
+
+[CH2_GUARD_YIN,2]
+/speaker Kira
+> As much as I hate to admit it, something suspicious is definitely going on here.
+> Let's investigate.
+
+[CH2_GUARD_YIN,3]
+/speaker Stranger
+> I'll let you pass!
+.> Please leave me be...
+
+[CH2_LAKE_BLOCKADE]
+/speaker Kira
+> Of course there'd be water. If only Amethyst had joined us.
+> We'll have to find another way around.
+
+[CH2_JUMP]
+?> It looks like you can land safely below.\nWill you jump?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[CH2_ELIANA,0]
+/newwindow top
+/hold
+/speaker Eliana happy
+/hidename 1
+> Oh, <PLAYER>!\nDid you come to help out?
+/focus 1
+/speaker Azelf
+/hidename 1
+> They came! Just like [R]he[/] told me...
+/start
+/reset
+/focus 1
+/speaker Kira annoyed
+> We most definitely did not.
+> <PLAYER>, do you know this woman?
+/speaker Eliana surprised
+/hidename 1
+> You brought Kira from the G[.]P[.]O[.]!?
+/expression sad
+> ...How could you betray me like this?
+> I just caught Azelf too!
+/speaker Kira
+> So you were after the Legendary Pokémon, huh?
+> Guess I'll have to handle this one by force.
+> <PLAYER>. I hope for your sake you didn't set me up.
+/speaker Eliana sad
+> Contain yourself Eliana...\nI'm sure this is just a misunderstanding...
+/expression shout
+> You won't take Azelf from me!\nI caught it fair and square!
+
+[CH2_ELIANA,1]
+/speaker Eliana sad
+> Come on Azelf, work with me here!
+> I thought you would be able to understand [R]our desire[/].
+/cry AZELF 100 100
+
+[CH2_ELIANA,2]
+/speaker Azelf
+> I can sense that your will is pure...\nBut I was told that we can absolutely not let you succeed.
+> If only you could actually hear me tell you that...
+/speaker Eliana hurt
+> And <PLAYER>!
+> How could you do this to me!?
+> I have to report back that the mission failed... I can't believe this...
+
+[CH2_AZELF,0]
+/speaker Azelf
+> Thank you for your help. I was starting to be worried you would not show up.
+> ...
+> Though your will tells me you did not even know I was in trouble?
+> Either way, I thank you.
+/speaker Kira
+> It's all part of the job.
+> I take it you're using telepathy?
+/speaker Azelf
+> Yes, that is the short version, but not everyone can hear me.
+> It is not safe here anymore, may I join you?
+> While I do not know their intentions, I am sure they will target my siblings Uxie and Mesprit next.
+> I wish to make sure they are safe.\nYou did say that was "part of the job", correct?
+/speaker Kira
+> I sure did.
+> We'll look into the matter. But first we need to report to Amethyst.
+
+[CH2_AZELF,1]
+> Azelf is now traveling with you!
+/speaker Kira
+/expression annoyed
+> We can't get past the water by the entrance, but remember you can teleport from the map on your phone.
+> You will be thoroughly questioned when we're back.
+
+[CH2_REPORT,0]
+/speaker Amethyst
+> Ah, you're back!
+> Please just let me wrap things up with Nekane here before we do the report.
+/speaker Kira annoyed
+> ...What are you two up to exactly?
+/speaker Amethyst
+> Well, Nekane was growling restless, having nothing to do and all.
+/expression awkward
+> That's when I learned she didn't know how to read or write.
+/expression wink
+> So I took it upon myself to teach her!
+/speaker Nekane
+> \ts[2]The books in my room...\nWith strange glyphs...
+> \ts[2]I wanted to know what they were.
+/speaker Kira lookaway
+..> \ts[1](...Always going that extra mile, huh.)
+/speaker Amethyst
+> I'll get Nekane back to her room, gimme a second.
+
+[CH2_REPORT,1]
+/speaker Amethyst
+> Now, how did the mission go?
+/speaker Kira
+> We handled it.
+/speaker Amethyst
+> Something was actually something going on at Mt[.] Pegma then?
+> It looks like <PLAYER> was trustworthy all along!
+/expression wink
+> I guess you owe them a little apology?
+/speaker Kira lookaway
+> Don't test your luck.
+/expression annoyed
+> It was those D[.]A[.]O[.] folks again.
+> Our friend here may feign ignorance, but their admin, Eliana, clearly knew them.
+> When we arrived, she even assumed <PLAYER> was coming to help.
+> Though the sight of me made her conclude that <PLAYER> had betrayed her.
+/speaker Amethyst confused
+?> But <PLAYER>, do you know Eliana at all?
+    /choice I don't know
+        > You... don't know if you know her?
+    /choice Not at all
+        > So you didn't recognize her at all.
+    /choice I must have forgotten
+        > Ah, it could have been a long time ago.
+?/>
+/speaker Kira lookaway
+> To be fair, <PLAYER> really did seem completely oblivious to who she was...
+/speaker Amethyst
+> You sure are full of mysteries, <PLAYER>. But the fact remains that you did help us.
+> I don't know much about your past, but I won't pry too much into it.
+> Kira, could you continue the report please?
+/speaker Kira annoyed
+> Of course.
+> It looks like the D[.]A[.]O[.] are stepping up their game.
+> They are targeting legendary Pokémon, like the one we saved just now.
+
+[CH2_REPORT,2]
+/speaker Amethyst surprised
+> They were after Azelf!?
+/expression confused
+> Whatever could their motive be for capturing one of the Lake Guardians?
+/speaker Azelf
+> I do not know their exact motives. All I know is that they must not succeed.
+> They are likely also going after the other Lake Guardians, Uxie and Mesprit.
+/speaker Kira
+> And how can you be so sure of that?
+/speaker Azelf
+> While I cannot divulge the source of this information yet, please know that it is most credible.
+/speaker Kira
+> There's not much reason to doubt one of the Lake Guardians, so I'll take you at your word.
+/speaker Amethyst
+> ...\wtnp[10]
+/expression awkward
+> I can't hear Azelf, so what's the rundown Kira?
+/speaker Kira
+> Basically, the D[.]A[.]O[.] are after the other Lake Guardians, and stopping them is a necessity.
+/speaker Amethyst
+> Sounds simple enough. I say we discuss how to proceed further tomorrow morning.
+> We could all use some sleep.
+
+[CH2_INTERMISSION,0]
+/windowpos center
+/hidewindow 1
+/speaker <PLAYER2>
+/hidename 2
+/textpos middle
+> ...What's with this sudden headache.\nIt really hinders my research.
+
+[CH2_INTERMISSION,1]
+/speaker <PLAYER2>
+/hidename 1
+> Anyway, Eliana should be back soon.\nI'll go greet her.
+
+[CH2_INTERMISSION,2]
+/speaker Eliana shout
+> You're back before me!?
+/speaker <PLAYER2>
+/hidename 1
+> I was... never out today?
+/speaker Eliana shout
+> How could you do this!?\nI thought you were my friend!
+/speaker <PLAYER2>
+/hidename 1
+> Please, please.\nJust tell me what happened.
+/speaker Eliana sad
+> You... you... you don't know..?
+/expression crying
+> You came to Mt[.] Pegma...\nStopped me from capturing Azelf...
+/speaker <PLAYER2>
+/hidename 1
+> You know I'd never do that.\nWhy WOULD I do that..?
+/speaker Eliana sad
+> ...I-I don't know.
+
+[CH2_INTERMISSION,3]
+/speaker Fintan
+/expression none
+/hidename 1
+/portrait 0
+> What is all this commotion about?
+
+[CH2_INTERMISSION,4]
+/speaker Fintan
+/hidename 1
+> You two are making an awful lot of noise.
+/speaker Eliana sad
+> I met <PLAYER> at Mt[.] Pegma...
+> They stopped me from capturing Azelf...
+/speaker Fintan
+/hidename 1
+> I can assure you that <PLAYER> has been here the entire time.
+/speaker Eliana sad
+> But...
+> They looked completely alike...\nExcept for the clothes that is...
+/speaker Fintan
+/hidename 1
+> From my knowledge, <PLAYER> does not have any identical twins.
+> But I can assure you that they did not interfere with your mission.
+/speaker Eliana sad
+> I see...
+
+[CH2_INTERMISSION,5]
+/speaker Eliana sad
+> I'm sorry for lashing out at you...
+> I'm also relieved that this is just a big misunderstanding...
+> I'm also also very very tired now...
+/speaker <PLAYER2>
+> This must have really been weighing on your mind, huh?
+> Fintan, could you help me get her to her room to rest?
+/speaker Fintan
+> Of course.

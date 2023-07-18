@@ -2,12 +2,13 @@ module Dialog
 
   def Dialog.getCharColor(name, tint, haswindow = true, force = false)
 
-    return nil if haswindow && !force
-
-    tint = (tint + 1) % 2 if !haswindow
     name = name.downcase
 
-    if name == "<player>" || name == "player"
+    return nil if haswindow && !force && !["azelf", "mesprit", "uxie", "fintan"].include?(name)
+
+    tint = (tint + 1) % 2 if !haswindow
+
+    if name == "<player>" || name == "player" || name == "<player2>" || name == "player2" 
       return Color.new(85, 98, 104) if tint == 0
       return Color.new(135, 175, 196) if tint == 1
     elsif name == "kira"
@@ -25,7 +26,7 @@ module Dialog
       #return Color.new(120, 170, 140) if tint == 0
       #return Color.new(70, 100, 80) if tint == 1
     elsif name == "mesprit"
-      return Color.new(113, 60, 86) if tint == 0
+      return Color.new(200, 104, 139) if tint == 0
       return Color.new(249, 204, 218) if tint == 1
     elsif name == "azelf"
       return Color.new(54, 108, 135) if tint == 0
@@ -46,8 +47,8 @@ module Dialog
       return Color.new(40, 40, 40) if tint == 0
       return Color.new(146, 146, 146) if tint == 1
     elsif name == "fintan"
-      return Color.new(234, 234, 234) if tint == 0
-      return Color.new(173, 173, 173) if tint == 1
+      return Color.new(40, 40, 40) if tint == 0
+      return Color.new(146, 146, 146) if tint == 1
     else
       return nil
     end
@@ -67,7 +68,7 @@ module Dialog
     name = name.downcase if name
     if name == "sign"
       return "sign"
-    elsif name == "<player>" || name == "player"
+    elsif name == "<player>" || name == "player" || name == "<player2>" || name == "player2" 
       return "speech vb player"
     elsif name == "duke"
       return "speech vb duke"
@@ -96,7 +97,7 @@ module Dialog
   def Dialog.getNameBox(name)
     name = name.downcase if name
     ret = "name_box"
-    if name == "<player>"
+    if name == "<player>" || name == "player" || name == "<player2>" || name == "player2" 
       ret = "name_box_player"
     elsif name == "duke"
       ret = "name_box_duke"

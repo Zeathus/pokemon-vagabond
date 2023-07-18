@@ -4131,8 +4131,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = WATERFALL
-Description = The user charges at the target and may make it flinch. It can also be used to climb a waterfall.
+Move = CHILLINGWATER
+Description = The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat.
 #-------------------------------
 [TM46]
 Name = TM46
@@ -4141,8 +4141,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = SCALD
-Description = The user shoots boiling hot water at its target. It may also leave the target with a burn.
+Move = WATERFALL
+Description = The user charges at the target and may make it flinch. It can also be used to climb a waterfall.
 #-------------------------------
 [TM47]
 Name = TM47
@@ -6760,6 +6760,22 @@ Pocket = 1
 Price = 2000
 Flags = Fling_10
 Description = An item to be held by a Pokémon. It has a curious aroma that boosts the power of Water-type moves.
+#-------------------------------
+[MINERKIT]
+Name = Miner's Kit
+NamePlural = Miner's Kits
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A set of mining tools that allow you to mine at Pegma Quarry.
+#-------------------------------
+[UNOWNDICTIONARY]
+Name = Unown Dictionary
+NamePlural = Unown Dictionaries
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A dictionary that allows you to easily translate ancient Unown texts.
 
 
 

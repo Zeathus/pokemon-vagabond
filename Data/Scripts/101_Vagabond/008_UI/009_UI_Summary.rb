@@ -569,6 +569,7 @@ class PokemonSummaryScene
       overlay.fill_rect(202,140,eggbarlen,4,Color.new(96,255,132))
     end
     idno=(pokemon.owner.name=="" || pokemon.egg?) ? "" : sprintf("%05d",publicID)
+    idno="-" if publicID < 0
     smalltextpos.push(["ID No.",224,260,0,base,shadow])
     smalltextpos.push([idno,320,284,1,Color.new(64,64,64),Color.new(176,176,176)])
     if pokemon.egg?
@@ -1469,6 +1470,10 @@ class PokemonSummaryScene
                   pbPlayCursorSE()
                   move = Pokemon::Move.new(moveid)
                   @pokemon.moves.push(move)
+                  last_hp = @pokemon.hp
+                  @pokemon.calc_stats
+                  @pokemon.hp = last_hp
+                  @sprites["pokemon"].setPokemonBitmap(@pokemon)
                   drawSelectedMove(@pokemon,0,moveid,[true,false,true,false])
                   next
                 end
@@ -1485,6 +1490,10 @@ class PokemonSummaryScene
                 tmpmove=@pokemon.moves[oldselmove]
                 @pokemon.moves[oldselmove]=@pokemon.moves[selmove]
                 @pokemon.moves[selmove]=tmpmove
+                last_hp = @pokemon.hp
+                @pokemon.calc_stats
+                @pokemon.hp = last_hp
+                @sprites["pokemon"].setPokemonBitmap(@pokemon)
               else
                 indices = [@sprites["movesel"].index, @sprites["movepresel"].index]
                 moveslot = (@sprites["movesel"].side == 0) ? indices[0] : indices[1]
@@ -1496,6 +1505,10 @@ class PokemonSummaryScene
                   next
                 end
                 @pokemon.moves[moveslot] = move
+                last_hp = @pokemon.hp
+                @pokemon.calc_stats
+                @pokemon.hp = last_hp
+                @sprites["pokemon"].setPokemonBitmap(@pokemon)
               end
               @sprites["movepresel"].visible=false
               switching = false

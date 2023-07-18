@@ -49,7 +49,7 @@
 ?> Are you ready to battle?\n(Single battle with only your own Party)
     /choice Yes
         /return true
-    /choice No
+    /cancelchoice No
         > Not ready? I will wait here until you are, but please be quick.
         /return false
 ?/>
@@ -86,10 +86,23 @@
 [CH1_CRATER_AMETHYST,6]
 > \ts[5]Amethyst has joined the party!\wtnp[60]
 
-[CH1_NO_SURF]
+[CH1_NO_SURF,0]
 /speaker Amethyst
 > We want to avoid alerting the wild Pokémon as best we can.
 > I'm afraid surfing would cause too much noise.
+
+[CH1_NO_SURF,1]
+/speaker Amethyst
+> Let's not stray too far from out from the mission in Evergone Mangrove.
+
+[CH1_NO_SURF,2]
+/speaker Amethyst
+> We need to bring the girl to the G[.]P[.]O[.] to keep her safe.
+> Let's not stray too far out for now.
+
+[CH1_NO_SURF,3]
+/speaker Amethyst
+> The G[.]P[.]O[.] is right by, let's not stray off for now.
 
 [CH1_RUINS_MEMORY,0]
 > This place... It's somewhat familiar.
@@ -247,9 +260,9 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 > Could we head to my office first?<br>It's straight ahead from here.
 
 [CH1_OFFICE,0]
-/event set Amethyst 1
+/event set Amethyst 1 
 /speaker Amethyst
-> Thank for holding the fort while I've been gone, Weavile.
+> Thanks for holding the fort while I've been gone, Weavile.
 /reset
 /dialog POKEMON_WEAVILE
 /speaker Amethyst
@@ -258,9 +271,12 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /speaker Amethyst
 > This is my most trusted Pokémon, Weavile.<br>I can always depend on them.
 > My assistant is also out, so I let Weavile keep watch of the place.
-> Speaking of, he should be back anyti-\wtnp[30]
 
 [CH1_OFFICE,1]
+/speaker Amethyst
+> Speaking of, he should be back anyti-\wtnp[30]
+
+[CH1_OFFICE,2]
 /event set Amethyst 1
 /speaker Amethyst
 > Welcome back, Kira!<br>How'd the mission in Scoria City go?
@@ -334,7 +350,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 [CH1_INTERMISSION,0]
 /windowpos center
 /hidewindow 1
-/speaker PLAYER
+/speaker <PLAYER2>
 /hidename 2
 /textpos middle
 > Oh, hi Eliana.<br>I didn't expect you to be up this late.
@@ -342,7 +358,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /hidename 2
 /textpos middle
 > Welcome back! How did the mission to the Evergone Ruins go?
-/speaker PLAYER
+/speaker <PLAYER2>
 /hidename 2
 /textpos middle
 > When I arrived, the target was already gone.
@@ -354,7 +370,7 @@ U> When the balance of the world is broken, the world itself falls thereafter.
 /textpos middle
 > We are moving out to finish it tomorrow.
 > Luckily, we have been uninterrupted so far, avoiding causing suspicion as best we can.
-/speaker PLAYER
+/speaker <PLAYER2>
 /hidename 2
 /textpos middle
 > Good work, and good luck tomorrow.

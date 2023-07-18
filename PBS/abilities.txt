@@ -138,7 +138,7 @@ Description = Boosts the Pokémon's Speed in sunshine.
 #-------------------------------
 [ILLUMINATE]
 Name = Illuminate
-Description = Raises the likelihood of meeting wild Pokémon.
+Description = Halves damage taken by Dark-type moves.
 #-------------------------------
 [TRACE]
 Name = Trace
@@ -1146,3 +1146,19 @@ Description = Affinity boosted Fire-type moves deal 60% more damage rather than 
 [MAINFRAME]
 Name = Mainframe
 Description = The Pokémon can be heavily customized.
+#-------------------------------
+[EARTHADEPT]
+Name = Earth Adept
+Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
+#-------------------------------
+[WINDADEPT]
+Name = Wind Adept
+Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
+#-------------------------------
+[FIREADEPT]
+Name = Fire Adept
+Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
+#-------------------------------
+[WATERADEPT]
+Name = Water Adept
+Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.

@@ -1,5 +1,7 @@
 class Game_Player < Game_Character
 
+  attr_accessor :under_overhang
+
   def sprite
     if $scene.is_a?(Scene_Map) && $scene.spriteset
       return $scene.spritesetGlobal.playersprite

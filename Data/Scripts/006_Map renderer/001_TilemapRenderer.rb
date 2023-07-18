@@ -243,6 +243,7 @@ class TilemapRenderer
     attr_accessor :priority
     attr_accessor :shows_reflection
     attr_accessor :bridge
+    attr_accessor :overhang
     attr_accessor :need_refresh
 
     def set_bitmap(filename, tile_id, autotile, animated, priority, bitmap)
@@ -257,6 +258,7 @@ class TilemapRenderer
       @priority         = priority
       @shows_reflection = false
       @bridge           = false
+      @overhang         = false
       self.visible      = !bitmap.nil?
       @need_refresh     = true
     end
@@ -278,6 +280,7 @@ class TilemapRenderer
     @viewport               = (viewport) ? viewport : @self_viewport
     @old_viewport_ox        = 0
     @old_viewport_oy        = 0
+    @overhang               = 255
     # NOTE: The extra tiles horizontally/vertically hang off the left and top
     #       edges of the screen, because the pixel_offset values are positive
     #       and are added to the tile sprite coordinates.
@@ -395,6 +398,13 @@ class TilemapRenderer
       tile.bridge           = terrain_tag_data&.bridge
     end
     refresh_tile_src_rect(tile, tile_id)
+    if terrain_tag_data&.id != :Overhang
+      tile.opacity = 255
+      tile.overhang = false
+    else
+      tile.opacity = @overhang
+      tile.overhang = true
+    end
   end
 
   def refresh_tile_src_rect(tile, tile_id)
@@ -565,6 +575,14 @@ class TilemapRenderer
       visited[i] = []
       @tiles_vertical_count.times { |j| visited[i][j] = false }
     end
+    old_overhang = @overhang
+    if $game_player&.under_overhang
+      @overhang -= 12
+      @overhang = 0 if @overhang < 0
+    else
+      @overhang += 12
+      @overhang = 255 if @overhang > 255
+    end
     $map_factory.maps.each do |map|
       # Calculate x/y ranges of tile sprites that represent them
       map_display_x = (map.display_x.to_f / Game_Map::X_SUBPIXELS).round
@@ -587,6 +605,9 @@ class TilemapRenderer
           tile_y = j + map_display_y_tile
           @tiles[i][j].each_with_index do |tile, layer|
             tile_id = map.data[tile_x, tile_y, layer]
+            if tile.overhang && @overhang != old_overhang
+              tile.need_refresh = true
+            end
             if do_full_refresh || tile.need_refresh || tile.tile_id != tile_id
               refresh_tile(tile, i, j, map, layer, tile_id)
             else

@@ -50,6 +50,7 @@ class DarknessSprite < Sprite
     super(viewport)
     @darkness = BitmapWrapper.new(Graphics.width, Graphics.height)
     @radius = radiusMin
+    @color = 128
     self.bitmap = @darkness
     self.z      = 99998
     refresh
@@ -60,8 +61,8 @@ class DarknessSprite < Sprite
     super
   end
 
-  def radiusMin; return 64;  end   # Before using Flash
-  def radiusMax; return 176; end   # After using Flash
+  def radiusMin; return 256; end   # Before using Flash
+  def radiusMax; return 384; end   # After using Flash
 
   def radius=(value)
     @radius = value
@@ -69,16 +70,16 @@ class DarknessSprite < Sprite
   end
 
   def refresh
-    @darkness.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0, 255))
+    @darkness.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(@color, @color, @color, 255))
     cx = Graphics.width / 2
     cy = Graphics.height / 2
     cradius = @radius
-    numfades = 5
+    numfades = 16
     (1..numfades).each do |i|
       (cx - cradius..cx + cradius).each do |j|
         diff2 = (cradius * cradius) - ((j - cx) * (j - cx))
         diff = Math.sqrt(diff2)
-        @darkness.fill_rect(j, cy - diff, 1, diff * 2, Color.new(0, 0, 0, 255.0 * (numfades - i) / numfades))
+        @darkness.fill_rect(j, cy - diff, 1, diff * 2, Color.new(@color, @color, @color, 255.0 * (numfades - i) / numfades))
       end
       cradius = (cradius * 0.9).floor
     end

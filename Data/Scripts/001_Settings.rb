@@ -352,6 +352,8 @@ module Settings
   # is on the map (for new plant growth mechanics only).
   PLANT_SPARKLE_ANIMATION_ID   = 7
 
+  SURF_RIPPLE_ANIMATION_ID = 22
+
   #=============================================================================
 
   # The default screen width (at a scale of 1.0).
