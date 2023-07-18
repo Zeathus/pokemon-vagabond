@@ -1866,9 +1866,9 @@ end
 # Averages the user's and target's current HP. (Pain Split)
 #===============================================================================
 class Battle::Move::UserTargetAverageHP < Battle::Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     if target.hp > target.totalhp
-      @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis))
+      @battle.pbDisplay(_INTL("{1}'s HP is too high!",target.pbThis)) if show_message
       return true
     end
     return false

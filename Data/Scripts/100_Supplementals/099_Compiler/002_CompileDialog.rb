@@ -70,7 +70,8 @@ def compile_dialog
         feed = element[1]
       end
 
-      if feed_type == Dialog::Prompt && line[0...7] != "/choice" && line[0...13] != "/cancelchoice" && line[0...11] != "/savechoice"
+      if feed_type == Dialog::Prompt && line[0...7] != "/choice" && line[0...13] != "/cancelchoice" &&
+        line[0...11] != "/savechoice" && line[0...9] != "/ifchoice"
         compile_dialog_error(file, line_no, "?> must be immediately followed by a /choice, /cancelchoice or /savechoice")
       end
 
@@ -168,7 +169,7 @@ def compile_dialog
         end
 
         case command
-        when "choice", "cancelchoice"
+        when "choice", "cancelchoice", "ifchoice"
           # Adding choices to a ?> action
           if feed_type != Dialog::Prompt && feed_type != Dialog::Choice
             compile_dialog_error(file, line_no, "Cannot use /choice outside of ?>")
@@ -178,11 +179,20 @@ def compile_dialog
             feed = buffer[buffer.length - 1][1]
             feed_type = Dialog::Prompt
           end
-          answer = line[line.index(' ')...line.length].strip()
-          choice = [Dialog::Choice, answer, []]
-          choice.push(true) if command == "cancelchoice"
-          feed.push(choice)
-          buffer.push([Dialog::Choice, choice[2]])
+          if command == "ifchoice"
+            condition = line[line.index(' ')...line.length].strip()
+            answer = condition[condition.index(' ')...condition.length].strip()
+            condition = condition[0...condition.index(' ')].strip()
+            choice = [Dialog::Choice, answer, [], false, condition]
+            feed.push(choice)
+            buffer.push([Dialog::Choice, choice[2]])
+          else
+            answer = line[line.index(' ')...line.length].strip()
+            choice = [Dialog::Choice, answer, []]
+            choice.push(true) if command == "cancelchoice"
+            feed.push(choice)
+            buffer.push([Dialog::Choice, choice[2]])
+          end
         when "savechoice"
           # Saving a choice to a game variable
           if feed_type != Dialog::Prompt

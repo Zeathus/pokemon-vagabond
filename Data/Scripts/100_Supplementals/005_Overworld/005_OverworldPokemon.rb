@@ -572,7 +572,9 @@ end
 class PokemonEncounters
 
   def pbSpawnType(terrain)
-    if self.has_water_encounters? && terrain.can_surf_freely
+    if self.has_cave_encounters? && terrain == -1
+      return :Cave
+    elsif self.has_water_encounters? && terrain.can_surf_freely
       return :Water
     elsif self.has_cave_encounters?
       return :Cave

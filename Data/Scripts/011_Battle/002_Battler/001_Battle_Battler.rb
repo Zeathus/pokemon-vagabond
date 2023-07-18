@@ -592,7 +592,7 @@ class Battle::Battler
   end
 
   def canHeal?
-    return false if fainted? || @hp >= @totalhp
+    return false if fainted? || @hp % @totalhp == 0
     return false if @effects[PBEffects::HealBlock] > 0
     return true
   end

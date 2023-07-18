@@ -61,7 +61,11 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       save_key = action[4]
       cancel = 0
       choices = []
+      choice_indexes = []
       for i in 0...action[3].length
+        if action[3][i].length == 5
+          next if !eval(action[3][i][4])
+        end
         choices.push(_format(action[3][i][1]))
         cancel = i+1 if action[3][i][3]
       end
@@ -76,6 +80,10 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         pbTalk(question, msgwindows)
 
         answer = $game_variables[variable]
+        if choice_indexes[answer]
+          answer = choice_indexes[answer]
+          $game_variables[variable] = answer
+        end
 
         if !(save_key.nil?)
           pbSetChoice(save_key, answer, choices[answer])
@@ -265,7 +273,12 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
             event.pattern = args[3]
           end
         when "switch"
-          pbSetSelfSwitch(args[3], args[1], args[2])
+          mapid = $game_map.map_id
+          old_value = $game_self_switches[[mapid, args[3], args[1]]]
+          $game_self_switches[[mapid, args[3], args[1]]] = args[2]
+          if args[2] != old_value && $map_factory.hasMap?(mapid)
+            $map_factory.getMap(mapid, false).need_refresh = true
+          end
         when "exclaim"
           event = get_character(args[args.length - 1])
           pbExclaim(event)
