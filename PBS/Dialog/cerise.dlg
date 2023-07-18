@@ -98,9 +98,14 @@
 > Either way, it has made things more interesting.
 > I will share with you my final piece of information.
 
-[CERISE_COBALION_???]
+[CERISE_COBALION_SCORIA_VALLEY]
 /speaker Cerise
-> Something
+> The mark you see in the wall behind me is said to have been left by [R]the azure sword[/].
+> This valley marks the transition between two biomes, the mountains to the north and the drylands to the south.
+> The mountain Pokémon were supposedly encroaching on the dryland Pokémon's territory, causing a feud between them.
+> It is believed this dispute was resolved by [R]the azure sword[/], negotiating peace between both parties.
+> This slash mark is thought to be [R]the azure sword[/]'s way to put the peace treaty into stone, quite literally.
+> No major conflicts between the Pokémon in this area has been documented since.
 
 [CERISE_TERRAKION_FELDSPAR]
 /speaker Cerise
@@ -113,10 +118,12 @@
 > After an overwhelming loss, the invaders promptly left the area.
 > From that point on, the wild Pokémon could once again socialize in peace, protected by [R]the maroon sword[/].
 
-[CERISE_VIRIZION_???]
+[CERISE_VIRIZION_LAZULI_RIVER]
 /speaker Cerise
-> I caught wind of a rumor that [G]the verdant sword[/]...
-> It has the duty of protecting the grassland creatures
+> I caught wind of a rumor that [R]the verdant sword[/] had been sighted by Lazuli River.
+> The witness told of a quadrupedal figure guiding a group of lost infant Pokémon back to their parents.
+> This behavior matches [R]the verdant sword[/]. Its duty is to keep the grassland creatures safe.
+> It must have already been absorbed by other duties, as there's no longer any trace of it here.
 
 [CERISE_COBALION,0]
 /speaker Cerise
