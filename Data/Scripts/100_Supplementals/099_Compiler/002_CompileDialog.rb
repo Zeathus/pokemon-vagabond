@@ -71,7 +71,7 @@ def compile_dialog
       end
 
       if feed_type == Dialog::Prompt && line[0...7] != "/choice" && line[0...13] != "/cancelchoice" &&
-         line[0...11] != "/savechoice" && line[0...9] != "/ifchoice"
+        line[0...11] != "/savechoice" && line[0...9] != "/ifchoice"
         compile_dialog_error(file, line_no, "?> must be immediately followed by a /choice, /cancelchoice or /savechoice")
       end
 
