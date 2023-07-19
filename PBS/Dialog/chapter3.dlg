@@ -270,3 +270,63 @@
 [CH3_LAZULI_TRAP,1]
 /speaker Azelf
 > We should not leave this area for now.\nWe must focus on helping Nekane.
+
+[CH3_INTERMISSION,0]
+/speaker <PLAYER2>
+/hidename 1
+> There's that headache again...\nIt must be time for bed soon.
+> I should go check on Eliana and Fintan first though.
+
+[CH3_INTERMISSION,1]
+/speaker Eliana
+/portrait 0
+/hidename 2
+!><PLAYER>!
+
+[CH3_INTERMISSION,2]
+/speaker Eliana smile
+> I have something to show you!\nYou've got to see this!
+
+[CH3_INTERMISSION,3]
+/speaker Eliana
+> Look what I can do!\nKeep your eyes on the spoon!
+
+[CH3_INTERMISSION,4]
+/speaker Eliana
+?> Cool right!?
+  /choice Are you a psychic!?
+    > Yes! It's me, <wave>Psychic Eliana~</wave>
+  /choice Cool.
+    > Yeah! I'll never have to lift a finger again!
+  /choice I'm not that easily fooled
+    > Aww... I should've known you'd be smarter than that.
+?/>
+
+[CH3_INTERMISSION,5]
+/speaker Eliana
+> Hehe, thanks for helping me with that little trick Alakazam.
+/speaker Fintan
+> What have I told you about making my Alakazam participate in such unproductive behavior?
+/speaker Eliana
+> Come on Fintan, there's more to life than just being productive!
+/speaker Fintan
+> ...I guess there is a benefit to simple sources of amusement from time to time.
+> Helps with morale.
+/speaker Eliana
+> There you go again. Just have some fun for fun's sake!
+/speaker Fintan
+> Sorry to break it to you, but I have more important matters to attend to right now.
+/speaker <PLAYER2>
+> Have you not finished preparing for the [R]Mesprit mission[/] tomorrow?
+/speaker Fintan
+> I have to prepare additional manpower, as we apparently did not send enough people to Mt[.] Pegma to capture Azelf successfully.
+> In addition, I have some other means planned to ensure a smooth [R]capture of Mesprit[/].
+> This includes keeping Eliana up-to-date back here at HQ so she can send reinforcements if necessary.
+/speaker <PLAYER2>
+> Sounds like you two have got things under control.
+> What are we planning to do about losing Azelf however?
+/speaker Fintan
+> We'll figure that out when the time comes. One cannot operate at 100% effiency if other issues are plaguing their mind.
+/speaker <PLAYER2>
+> Fair fair. I wish you both the best of luck on your mission.
+> I apologize that I'm not able to come. There's still a lot of research to be done for my next mission, it's been a real elusive one.
