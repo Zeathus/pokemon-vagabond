@@ -851,6 +851,7 @@ end
 def pbStartSurf(confirm = true)
   return false if $PokemonGlobal.surfing
   terrain = $game_player.pbFacingTerrainTag
+  return false if $game_player.can_move_in_direction?($game_player.direction))
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction)
   if terrain.can_surf && !$PokemonGlobal.surfing && notCliff
     if terrain.water_edge
