@@ -1162,3 +1162,7 @@ Description = Stats and type change depending on the number of Ground (HP), Flyi
 [WATERADEPT]
 Name = Water Adept
 Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
+#-------------------------------
+[RELENTLESS]
+Name = Relentless
+Description = If the Pokémon is Affinity Boosted, the boosted move will not cause the user to recharge (Hyper Beam, Gigaton Hammer, etc.).
