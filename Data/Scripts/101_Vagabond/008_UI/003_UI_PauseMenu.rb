@@ -261,7 +261,7 @@ class PausePokemonBox < IconSprite
       elsif @pokemon.status == :NONE
         @status_icon.visible = false
       else
-        id = GameData::Status.get(@pokemon.status).icon_position - 1
+        id = GameData::Status.get(@pokemon.status).icon_position
         @status_icon.src_rect = Rect.new(0, 32*id, 32, 32)
       end
       hpzone=0

@@ -421,7 +421,7 @@ class PokemonSummaryScene
     imagepos=[]
     if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status!=:None
       status=6 if pbPokerus(pokemon)==1
-      status=(GameData::Status.get(@pokemon.status).icon_position - 1) if @pokemon.status!=:None
+      status=(GameData::Status.get(@pokemon.status).icon_position) if @pokemon.status!=:None
       status=5 if pokemon.hp==0
       imagepos.push(["Graphics/Pictures/Party/statuses",334,276,0,32*status,32,32])
     end

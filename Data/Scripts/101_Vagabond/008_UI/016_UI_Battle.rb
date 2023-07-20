@@ -655,7 +655,7 @@ class OuterSwitchBox < IconSprite
       @overlay.bitmap.fill_rect(46,86,hpgauge,2,hpcolors[hpzone*2])
       @overlay.bitmap.blt(4, 76, @hpbar.bitmap, Rect.new(0, @party_member * 16, @hpbar.width, 16))
       if @pokemon.hp == 0 || @pokemon.status != :NONE
-        status = (@pokemon.hp == 0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position - 1)
+        status = (@pokemon.hp == 0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position)
         statusrect=Rect.new(0, 32 * status, 32, 32)
         @overlay.bitmap.blt(12, 68, @statuses.bitmap, statusrect)
       end

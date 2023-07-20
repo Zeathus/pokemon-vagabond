@@ -881,7 +881,7 @@ class PokeSelectionSprite < SpriteWrapper
           self.bitmap.blt(@hpbarX,@hpbarY,@hpbar.bitmap,
             Rect.new(0,[@otherid*32, @hpbar.bitmap.height-32].min,@hpbar.width,32))
           if @pokemon.hp==0 || @pokemon.status != :NONE
-            status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position - 1)
+            status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position)
             statusrect=Rect.new(0,32*status,32,32)
             self.bitmap.blt(@statusX,@statusY,@statuses.bitmap,statusrect)
           end
