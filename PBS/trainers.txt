@@ -827,16 +827,17 @@ Pokemon = AZELF,35
 Pokemon = LUXIO,27
     Gender = F
     Moves = SPARK,BITE,ROAR,CHARGE
-    IV = 20,20,20,20,20,20
-Pokemon = MIMIKYU,26
-    Gender = F
-    Moves = SHADOWSNEAK,ASTONISH,SCRATCH,TOUGHHUG
     AbilityIndex = 0
     IV = 20,20,20,20,20,20
-Pokemon = SHELLOS,26
+Pokemon = SABLEYE,26
     Gender = F
-    Moves = WATERPULSE,ANCIENTPOWER,BODYSLAM,RECOVER
-    AbilityIndex = 0
+    Moves = SHADOWSNEAK,FAKEOUT,NIGHTSHADE,DISABLE
+    AbilityIndex = 2
+    IV = 20,20,20,20,20,20
+Pokemon = TINKATUFF,26
+    Gender = F
+    Moves = TOUGHHUG,ROCKSMASH,BRUTALSWING,SLAM
+    AbilityIndex = 2
     IV = 20,20,20,20,20,20
 #--------------
 [DAO_Fintan,Fintan] #Canjon Cavern
