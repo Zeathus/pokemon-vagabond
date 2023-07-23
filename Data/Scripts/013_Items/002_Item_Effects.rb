@@ -72,8 +72,6 @@ ItemHandlers::UseFromBag.addIf(proc { |item| GameData::Item.get(item).is_machine
     move = item_data.move
     next 0 if !move
     pbMessage(_INTL("\\se[PC access]You booted up {1}.\1", item_data.name))
-    next 0 if !pbConfirmMessage(_INTL("Do you want to teach {1} to a Pokémon?",
-                                      GameData::Move.get(move).name))
     next 1 if pbMoveTutorChoose(move, nil, true, item_data.is_TR?)
     next 0
   }

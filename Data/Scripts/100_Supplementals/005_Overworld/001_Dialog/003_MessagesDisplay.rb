@@ -146,7 +146,7 @@ class PortraitSprite < IconSprite
     if @visibilities["mouth"]
       part = @parts["mouth"]
       timer = @timers["mouth"]
-      speed = 6
+      speed = 5 + @msgwindow.textspeed
       speaking = true
       frame = ((timer / speed).floor + 1) % 4
       if !@msgwindow.busy? || @msgwindow.waitcount > 0

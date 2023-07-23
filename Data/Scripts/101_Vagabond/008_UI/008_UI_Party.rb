@@ -1183,7 +1183,7 @@ class QuickSummarySprite < SpriteWrapper
       textpos = []
       imagepos = []
       if @pokemon.hasItem?
-        textpos.push([GameData::Item.get(@pokemon.item).name,478+32,40+58*2,2,base2,shadow2])
+        textpos.push([GameData::Item.get(@pokemon.item).name,478+32,46+58*2,2,base2,shadow2])
       else
         textpos.push([_INTL("No Item"),478+32,46+58*2,2,Color.new(208,208,200),Color.new(120,144,184)])
       end

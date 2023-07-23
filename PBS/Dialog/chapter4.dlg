@@ -1,3 +1,6 @@
+[CH4_WAKE_UP]
+> You'd best go meet up with the others right away.
+
 [CH4_MEETING,0]
 /speaker Amethyst
 > Let's get right to the point. We currently know two things...
@@ -5,15 +8,17 @@
 > 2. The D[.]A[.]O[.] are likely going to attempt capturing Mesprit at any moment.
 /expression wink
 > Sounds like we've got a two-for-one deal here, where we can handle both issues at once!
+/expression neutral
 > Got any input on this?
 /reset
 /fade black
 > You tell the others about what you saw in your sleep.
+/reset
 /fade normal
 /speaker Amethyst
 > You've had a good track record with your visions thus far. This further confirms that they are going after Mesprit.
 /speaker Kira
-> I have my doubts about where you obtained this information, but I will leave it... for now.
+> I have my doubts about where you obtained this information,\nbut I will leave it be... for now.
 /speaker Amethyst
 ?> By the way <PLAYER>. Are you familiar with [R]the Lake Guardians[/]?
   /choice Yes
@@ -21,14 +26,18 @@
       /choice Yes
         /dialog CH4_MEETING_LAKE_GUARDIANS
       /cancelchoice No
-        > Good, so you know of [B]Azelf[/], [P]Mesprit[/] and [Y]Uxie[/]'s ties to [B]willpower[/], [P]emotion[/] and [Y]knowledge[/].
+        > Good, so you know [B]Azelf[/], [P]Mesprit[/] and [Y]Uxie[/]'s ties to [B]willpower[/], [P]emotion[/] and [Y]knowledge[/].
+    ?/>
   /cancelchoice No
     /dialog CH4_MEETING_LAKE_GUARDIANS
 ?/>
+> Mesprit's domain is to the southeast, through the desert past Scoria City.
+> With that, I believe we should get going.\nThere's no telling how much time we have.
+> We'll take Nekane with us so she can meet Mesprit as well.
 
 [CH4_MEETING_LAKE_GUARDIANS]
 /speaker Amethyst
 > You see, [B]Azelf[/], [P]Mesprit[/] and [Y]Uxie[/] have close ties to specific human attributes.
-> [B]Azelf[/]'s attribute is [B]willpower[/] for example. Meanwhile, [P]Mesprit[/]'s is [P]emotion[/] and [Y]Uxie[/]'s is knowledge.
-> Some folklore even believe they are the original source of these attributes in humans.
+> [B]Azelf[/]'s attribute is [B]willpower[/] for example. Meanwhile, [P]Mesprit[/]'s is [P]emotion[/] and [Y]Uxie[/]'s is [Y]knowledge[/].
+> Some folklore even say they're the original source of these attributes in humans.
 > They each have a lake as their domain, which is why they are called [R]the Lake Guardians[/].

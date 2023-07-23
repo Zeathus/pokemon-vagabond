@@ -73,6 +73,9 @@
 [NO_PAUSE_MENU]
 > You cannot open the Pause Menu at this time.
 
+[NO_QUEST_LIST]
+> You don't have access to this yet.
+
 [AURA_AZELF]
 /speaker Azelf
 /portrait 0
@@ -87,3 +90,6 @@
 /speaker Mesprit
 /portrait 0
 /hidename 2
+
+[GIVE_ITEM]
+> 

@@ -84,14 +84,14 @@ Exp = 150
 Items = CHOICESCARF
 HideName = true
 HideItem = true
-Description = A couple living at the Breccia Passage has lost their Zorua. Where could it have gone off to?
-Location = Breccia Passage
-FullLocation = at Breccia Passage
+Description = A couple living at the Breccia Trail has lost their Zorua. Where could it have gone off to?
+Location = Breccia Trail
+FullLocation = at Breccia Trail
 Step1 = Ask if anyone knows where Zorua went.
-Step2 = You were told the woman's husband died half a year ago. Go visit her again at Tuff Trail.
+Step2 = You were told the woman's husband died half a year ago. Go visit her again at Breccia Trail.
 Step3 = The woman's husband has gone for a walk. Find him and talk to him.
 Step4 = Zorua is disguising itself as the husband. Should you tell the woman about it?
-Done = You helped the woman at Tuff Trail come to terms with the loss of her husband.
+Done = You helped the woman at Breccia Trail come to terms with the loss of her husband.
 # Breccia Trail
 RequireMaps = 62
 PartyMembers = Amethyst
@@ -337,6 +337,17 @@ Type = Main
 Exp = 100
 Description = Nekane was nowhere to be found at the G.P.O. HQ when you woke up. Make sure she's safe.
 Step1 = Ask around the city if anyone has seen Nekane.
+Step2 = Nekane went out to the east of the Lazuli District. Go look for her.
+Step3 = Azelf suggested you ask people in the city about their desires. Head back to the city.
+Step4 = Use Azelf's willpower readings to provide examples for Nekane.
+Done = You found Nekane in the Smokey Forest east of Lapis Lazuli City. You learned that she knows neither willpower nor emotion.
+
+[GUARDIANOFEMOTION]
+Name = Guardian of Emotion
+Type = Main
+Exp = 100
+Description = Nekane needs to see Mesprit to understand emotions. The D.A.O. are also after Mesprit. Save Mesprit and help Nekane at the same time!
+Step1 = Further main story quests have not been implemented yet.
 Step2 = Nekane went out to the east of the Lazuli District. Go look for her.
 Step3 = Azelf suggested you ask people in the city about their desires. Head back to the city.
 Step4 = Use Azelf's willpower readings to provide examples for Nekane.

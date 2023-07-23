@@ -73,6 +73,9 @@ def initPartyPokemon(id)
   when PBParty::Mesprit
     party.push(createPartyPokemon(
       id,:MESPRIT,35,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
+  when PBParty::Player2
+    party.push(createPartyPokemon(
+      id,:VICTINI,70,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
   end
   parties[id]=party
 end

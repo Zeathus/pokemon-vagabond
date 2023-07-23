@@ -49,20 +49,20 @@ class Battle
       faintedStart[b.index] = false
     end
 
-    myChoices = []
     if !trainerBattle? && !@smartWildBattle
       # If wild battle
       # Random moves
+      opposing_pokemon = allOtherSideBattlers(idxBattlers[0])
       eachMoveIndexCombo(idxBattlers) do |i0,i1,i2|
         next if !pbCanChooseMove?(idxBattlers[0],i0,false)
         next if i1 && !pbCanChooseMove?(idxBattlers[1],i1,false)
         next if i2 && !pbCanChooseMove?(idxBattlers[2],i2,false)
-        scores[i0] = 100 if single
-        scores[i0][i1] = 100 if double
-        scores[i0][i1][i2] = 100 if triple
-        myChoices.push([i0]) if single
-        myChoices.push([i0,i1]) if double
-        myChoices.push([i0,i1,i2]) if triple
+        scores[i0] = rand(100) if single
+        scores[i0][i1] = rand(100) if double
+        scores[i0][i1][i2] = rand(100) if triple
+        targets[i0][0] = opposing_pokemon.shuffle[0].index if single
+        targets[i0][i1][0] = opposing_pokemon.shuffle[0].index if double
+        targets[i0][i1][i2][0] = opposing_pokemon.shuffle[0].index if triple
       end
     else
 
@@ -331,7 +331,7 @@ class Battle
               end
               if score + kills * 80 > high_score
                 high_target_group = g
-                high_score = score
+                high_score = score + kills * 80
                 high_damage = all_damage
               end
             end

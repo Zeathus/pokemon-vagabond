@@ -175,7 +175,7 @@
 > \ts[1]This has proven more difficult than I anticipated. Nekane seems to have no capacity for [B]willpower[/] at all.
 > I did not want to believe it when I first felt her complete lack of [B]willpower[/], but this proves it. It is deeply concerning...
 > While it is within my power to grant [B]willpower[/] to those that do not possess it, there is something that puzzles me...
-> Not only did she not understand their motivations. She didn't understand their [Mesprit]feelings[/] either.
+> Not only did she not understand their motivations. She did not understand their [Mesprit]feelings[/] either.
 ?> <PLAYER>, could you do me a favor and ask her what she thinks [Mesprit]happiness[/] is?
   /choice Are you happy?
     /speaker Nekane
@@ -272,20 +272,20 @@
 > We should not leave this area for now.\nWe must focus on helping Nekane.
 
 [CH3_INTERMISSION,0]
+/windowpos center
+/hidewindow 1
 /speaker <PLAYER2>
-/hidename 1
+/hidename 2
+/textpos middle
 > There's that headache again...\nIt must be time for bed soon.
-> I should go check on Eliana and Fintan first though.
 
 [CH3_INTERMISSION,1]
-/speaker Eliana
-/portrait 0
-/hidename 2
-!><PLAYER>!
+/speaker <PLAYER2>
+> I should go check on Eliana and Fintan first though.
 
 [CH3_INTERMISSION,2]
 /speaker Eliana smile
-> I have something to show you!\nYou've got to see this!
+> <PLAYER>!\nYou've got to see this!
 
 [CH3_INTERMISSION,3]
 /speaker Eliana
@@ -304,7 +304,9 @@
 
 [CH3_INTERMISSION,5]
 /speaker Eliana
-> Hehe, thanks for helping me with that little trick Alakazam.
+> Hehe, thanks for helping me with that little party trick Alakazam.
+
+[CH3_INTERMISSION,6]
 /speaker Fintan
 > What have I told you about making my Alakazam participate in such unproductive behavior?
 /speaker Eliana
@@ -315,11 +317,11 @@
 /speaker Eliana
 > There you go again. Just have some fun for fun's sake!
 /speaker Fintan
-> Sorry to break it to you, but I have more important matters to attend to right now.
+> Sorry to break it to you, but I have more important matters to attend to.
 /speaker <PLAYER2>
 > Have you not finished preparing for the [R]Mesprit mission[/] tomorrow?
 /speaker Fintan
-> I have to prepare additional manpower, as we apparently did not send enough people to Mt[.] Pegma to capture Azelf successfully.
+> I have to prepare additional manpower, as we clearly did not send enough people to Mt[.] Pegma to capture Azelf successfully.
 > In addition, I have some other means planned to ensure a smooth [R]capture of Mesprit[/].
 > This includes keeping Eliana up-to-date back here at HQ so she can send reinforcements if necessary.
 /speaker <PLAYER2>
@@ -329,4 +331,5 @@
 > We'll figure that out when the time comes. One cannot operate at 100% effiency if other issues are plaguing their mind.
 /speaker <PLAYER2>
 > Fair fair. I wish you both the best of luck on your mission.
-> I apologize that I'm not able to come. There's still a lot of research to be done for my next mission, it's been a real elusive one.
+> I apologize that I'm not able to come.
+> There's still a lot of research to be done for my next mission.\nIt's a really elusive one.

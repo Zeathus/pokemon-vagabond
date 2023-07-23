@@ -427,7 +427,7 @@ def pbMoveTutorChoose(move, movelist = nil, bymachine = false, oneusemachine = f
   if movelist.is_a?(Array)
     movelist.map! { |m| GameData::Move.get(m).id }
   end
-  choice = pbChoosePokemonScreen(0) { |member, pkmn|
+  choice = pbChoosePokemonScreen(0, 99999) { |member, pkmn|
     if !member && !pkmn
       true
     else

@@ -5,8 +5,8 @@ module PBParty
   Kira      = 3
   Eliana    = 4
   Fintan    = 5
-  Nekane    = 6
-  Cerise    = 7
+  Cerise    = 6
+  Nekane    = 7
   Ziran     = 8
   Azelf     = 9
   Uxie      = 10

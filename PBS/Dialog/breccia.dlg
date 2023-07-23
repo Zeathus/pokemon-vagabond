@@ -219,6 +219,10 @@
 > Big brother Faunus often read me books about plants.
 > He shows me many Grass-type Pokémon. They're so cool!
 
+[BRECCIA_CITY_OLD_LADY]
+/speaker Old_Lady
+> Welcome to Breccia City! I hope you're not afraid of heights, he he.
+
 [BRECCIA_QUEEN_BEE,0]
 /speaker Bee-Fearing Man
 > I can never show my face around Breccia Trail anymore.
@@ -368,3 +372,202 @@
 /speaker Bird_Keeper
 > Fletchling is getting along perfectly with my other birds.
 > No other Fletchling could have been better!
+
+[SORROWFUL_ZORUA_MAN,0]
+/speaker Man
+> ...
+
+[SORROWFUL_ZORUA,0]
+/speaker Woman
+> My husband has been so quiet ever since our Zorua left...
+> I love him very much. I don't know what I would do without him now that Zorua is gone.
+?> Would you like to hear about when I found Zorua? That story means so much to me.
+    /choice Yes
+        > It happened while I was coming home one evening.
+        /return true
+    /cancelchoice No
+        > Maybe some other time.
+        /return false
+?/>
+
+[SORROWFUL_ZORUA,1]
+/speaker Woman
+> What was that noise?
+
+[SORROWFUL_ZORUA,2]
+/speaker Woman
+> What are you doing here all by yourself?
+/cry ZORUA 100 100
+/speaker Zorua
+> Zorru!
+/speaker Woman
+> Have you lost your mom?
+/cry ZORUA 90 75
+/speaker Zorua
+> Zorru...
+/speaker Woman
+> It must be tough being all alone.\nCome with me, my husband and I will give you company and somewhere to stay.
+
+[SORROWFUL_ZORUA,3]
+/speaker Woman
+> We took care of it ever since.\nI'm glad we could make Zorua feel less lonely.
+> It's been half a year now since Zorua went missing.
+> If only I knew where it went...
+
+[SORROWFUL_ZORUA,4]
+/speaker Woman
+> I wonder where Zorua went...
+
+[SORROWFUL_ZORUA,5]
+/speaker Old_Lady
+> The couple living at Breccia Trail lost their Zorua?
+> That sounds odd. Her husband died from illness half a year ago.
+> But I have not seen the Zorua, sorry.
+
+[SORROWFUL_ZORUA,6]
+/speaker Old_Lady
+> I do hope the girl is doing well.
+
+[SORROWFUL_ZORUA,7]
+/speaker Woman
+> My husband was ill?\nI can't remember him being ill.
+> He's out for a walk right now.
+
+[SORROWFUL_ZORUA,8]
+/speaker Woman
+> My husband will be back soon. He goes for walks occasionally.
+
+[SORROWFUL_ZORUA,9]
+/speaker Woman
+> My husband has returned now.\nHe is as healthy as can be.
+/reset
+?> Tell her about Zorua?
+    /choice Yes
+        > ... ... ...
+        /return true
+    /cancelchoice No
+        > Maybe some things are best kept secret.
+        /return false
+?/>
+
+[SORROWFUL_ZORUA,10]
+/speaker Woman
+> ...Zorua is ...disguised as my husband?
+> That can't be. Zorua has been missing, and my husband has always been here.
+> ...That can't possibly... be true...
+
+[SORROWFUL_ZORUA,11]
+/speaker Boy
+> Uhmm... excuse me?
+
+[SORROWFUL_ZORUA,12]
+/speaker Girl
+> Oh, hi there!\nDo you need something?
+/speaker Boy
+> I just... couldn't seem to get my eyes off of you.
+> Would you... like to go out with me?
+/speaker Girl
+> That sounds lovely!
+
+[SORROWFUL_ZORUA,13]
+/speaker Woman
+> It's been so long since we first met.
+> These last years have been wonderful.
+/speaker Man
+> I'm very glad I asked you out all those years ago.
+> Now I have one more thing to ask of you.
+
+[SORROWFUL_ZORUA,14]
+/speaker Woman
+> Oh?
+/speaker Man
+> Will you... marry me?
+
+[SORROWFUL_ZORUA,15]
+/speaker Woman
+> I found this Zorua all alone in the woods.
+> I think it lost its mother.
+/speaker Man
+> Poor thing. We will make a good home for it with us.
+/cry ZORUA 100 110
+
+[SORROWFUL_ZORUA,16]
+/speaker Man
+> I don't think... I will last much longer...
+/speaker Woman
+> No... *sob*
+/cry Zorua 90 75
+/speaker Zorua
+> Ruuuuu...
+
+[SORROWFUL_ZORUA,17]
+/speaker Woman
+> ...
+
+[SORROWFUL_ZORUA,18]
+/speaker Woman
+> ...I remember now.
+
+[SORROWFUL_ZORUA,19]
+/speaker Woman
+> Zorua...
+> ...I'm sorry.
+/cry ZORUA 100 90
+/speaker Zorua
+> Zoru.
+/speaker Woman
+> All those years ago... when I first found you.
+> I promised you that I would help you feel less lonely...
+> But in the end... it was you who made me feel less lonely...
+/cry ZORUA 100 100
+/speaker Zorua
+> Ruuu!
+/speaker Woman
+> Thank you, Zorua...\n...for everything.
+
+[SORROWFUL_ZORUA,20]
+/speaker Woman
+> Strangers, I don't even know you, yet you have helped me realize so much.
+> All these years I have been supressing the loss of my husband from my memory, only to cause Zorua pain.
+/cry ZORUA 95 80
+/speaker Zorua
+> Ruuu...
+/speaker Woman
+> I want you to have this.\nConsider it a thank you gift.
+
+[SORROWFUL_ZORUA,21]
+/speaker Woman
+> I made this for my husband, but considering he's not here anymore, you can have it.
+> ...
+> One more thing before you go.
+
+[SORROWFUL_ZORUA,22]
+/speaker Woman
+> Zorua. Would you like to travel alongside these nice people?
+/cry ZORUA 95 80
+/speaker Zorua
+> Ruuu...
+/speaker Woman
+> Don't worry. I will be fine.
+/cry ZORUA 100 110
+
+[SORROWFUL_ZORUA,23]
+/speaker Woman
+> Then it's settled!
+> Please take good care of Zorua.
+
+[SORROWFUL_ZORUA,24]
+/speaker Woman
+> Good luck on your travels!
+
+[SORROWFUL_ZORUA,25]
+/speaker Woman
+> Is Zorua doing well?
+> I hope they find joy in travelling with you.
+
+[SORROWFUL_ZORUA_THICKET,0]
+/cry ZORUA 90 75
+/speaker Zorua
+> Zoruuu...
+/reset
+> Zorua looks sad.

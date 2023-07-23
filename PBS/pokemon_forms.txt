@@ -73,6 +73,7 @@ Generation = 6
 [RATTATA,1]
 FormName = Alolan
 Types = DARK,NORMAL
+Affinities = NORMAL
 Abilities = GLUTTONY,HUSTLE
 HiddenAbilities = THICKFAT
 Moves = 1,TACKLE
@@ -88,6 +89,7 @@ Evolutions = RATICATE,LevelNight,20
 [RATICATE,1]
 FormName = Alolan
 Types = DARK,NORMAL
+Affinities = NORMAL
 BaseStats = 75,71,70,77,40,80
 Abilities = GLUTTONY,HUSTLE
 HiddenAbilities = THICKFAT
@@ -102,6 +104,7 @@ WildItemUncommon = PECHABERRY
 [RAICHU,1]
 FormName = Alolan
 Types = ELECTRIC,PSYCHIC
+Affinities = WATER
 BaseStats = 60,85,50,110,95,85
 Abilities = SURGESURFER
 HiddenAbilities = SURGESURFER
@@ -114,6 +117,7 @@ Generation = 7
 [SANDSHREW,1]
 FormName = Alolan
 Types = ICE,STEEL
+Affinities = GROUND
 BaseStats = 50,75,90,40,10,35
 Abilities = SNOWCLOAK
 HiddenAbilities = SLUSHRUSH
@@ -128,6 +132,7 @@ Evolutions = SANDSLASH,Item,ICESTONE
 [SANDSLASH,1]
 FormName = Alolan
 Types = ICE,STEEL
+Affinities = GROUND
 BaseStats = 75,100,120,65,25,65
 Abilities = SNOWCLOAK
 HiddenAbilities = SLUSHRUSH
@@ -141,6 +146,7 @@ Flags = InheritFormWithEverStone
 [VULPIX,1]
 FormName = Alolan
 Types = ICE
+Affinities = FIRE
 Abilities = SNOWCLOAK
 HiddenAbilities = SNOWWARNING
 Color = White
@@ -153,6 +159,7 @@ Evolutions = NINETALES,Item,ICESTONE
 [NINETALES,1]
 FormName = Alolan
 Types = ICE,FAIRY
+Affinities = FIRE
 BaseStats = 73,67,75,109,81,100
 EVs = SPEED,2
 Abilities = SNOWCLOAK
@@ -166,6 +173,7 @@ WildItemUncommon = SNOWBALL
 [DIGLETT,1]
 FormName = Alolan
 Types = GROUND,STEEL
+Affinities = FIRE
 BaseStats = 10,55,30,90,35,45
 Abilities = SANDVEIL,TANGLINGHAIR
 Weight = 1.0
@@ -176,6 +184,7 @@ Flags = InheritFormWithEverStone
 [DUGTRIO,1]
 FormName = Alolan
 Types = GROUND,STEEL
+Affinities = FIRE
 BaseStats = 35,100,60,110,50,70
 EVs = ATTACK,2
 Abilities = SANDVEIL,TANGLINGHAIR
@@ -187,6 +196,7 @@ Flags = InheritFormWithEverStone
 [MEOWTH,1]
 FormName = Alolan
 Types = DARK
+Affinities = NORMAL
 BaseStats = 40,35,35,90,50,40
 HiddenAbilities = RATTLED
 Color = Blue
@@ -198,6 +208,7 @@ Evolutions = PERSIAN,Happiness,
 [MEOWTH,2]
 FormName = Galarian
 Types = STEEL
+Affinities = FIGHTING
 BaseStats = 50,65,55,40,40,40
 Abilities = PICKUP,TOUGHCLAWS
 Weight = 7.5
@@ -211,6 +222,7 @@ Evolutions = PERRSERKER,Level,28
 [PERSIAN,1]
 FormName = Alolan
 Types = DARK
+Affinities = NORMAL
 BaseStats = 65,60,60,115,75,65
 Abilities = FURCOAT,TECHNICIAN
 HiddenAbilities = RATTLED
@@ -235,6 +247,7 @@ Generation = 6
 [GEODUDE,1]
 FormName = Alolan
 Types = ROCK,ELECTRIC
+Affinities = GROUND
 Abilities = MAGNETPULL,STURDY
 HiddenAbilities = GALVANIZE
 Weight = 20.3
@@ -247,6 +260,7 @@ WildItemUncommon = CELLBATTERY
 [GRAVELER,1]
 FormName = Alolan
 Types = ROCK,ELECTRIC
+Affinities = GROUND
 Abilities = MAGNETPULL,STURDY
 HiddenAbilities = GALVANIZE
 Weight = 110.0
@@ -259,6 +273,7 @@ WildItemUncommon = CELLBATTERY
 [GOLEM,1]
 FormName = Alolan
 Types = ROCK,ELECTRIC
+Affinities = GROUND
 Abilities = MAGNETPULL,STURDY
 HiddenAbilities = GALVANIZE
 Height = 1.7
@@ -272,6 +287,7 @@ WildItemCommon = CELLBATTERY
 [PONYTA,1]
 FormName = Galarian
 Types = PSYCHIC
+Affinities = NORMAL
 Abilities = RUNAWAY,PASTELVEIL
 HiddenAbilities = ANTICIPATION
 Height = 0.8
@@ -285,6 +301,7 @@ Flags = InheritFormWithEverStone
 [RAPIDASH,1]
 FormName = Galarian
 Types = PSYCHIC,FAIRY
+Affinities = NORMAL
 Abilities = RUNAWAY,PASTELVEIL
 HiddenAbilities = ANTICIPATION
 Weight = 80.0
@@ -297,6 +314,7 @@ Flags = InheritFormWithEverStone
 [SLOWPOKE,1]
 FormName = Galarian
 Types = PSYCHIC
+Affinities = WATER
 Abilities = GLUTTONY,OWNTEMPO
 Pokedex = Although this Pokémon is normally zoned out, its expression abruptly sharpens on occasion. The cause for this seems to lie in Slowpoke's diet.
 Generation = 8
@@ -306,6 +324,7 @@ Evolutions = SLOWBRO,Item,GALARICACUFF,SLOWKING,Item,GALARICAWREATH
 [SLOWBRO,1]
 FormName = Galarian
 Types = POISON,PSYCHIC
+Affinities = WATER
 BaseStats = 95,100,95,30,100,70
 Abilities = QUICKDRAW,OWNTEMPO
 Weight = 70.5
@@ -329,8 +348,9 @@ Generation = 6
 [FARFETCHD,1]
 FormName = Galarian
 Types = FIGHTING
+Affinities = FLYING
 BaseStats = 52,95,55,55,58,62
-Abilities = STEADFAST
+Abilities = STEADFAST,RELENTLESS
 HiddenAbilities = SCRAPPY
 Weight = 42.0
 Pokedex = The stalks of leeks are thicker and longer in the Galar region. Farfetch'd that adapted to these stalks took on a unique form.
@@ -342,6 +362,7 @@ Evolutions = SIRFETCHD,BattleDealCriticalHit,3
 [GRIMER,1]
 FormName = Alolan
 Types = POISON,DARK
+Affinities = POISON
 Abilities = POISONTOUCH,GLUTTONY
 HiddenAbilities = POWEROFALCHEMY
 Height = 0.7
@@ -354,6 +375,7 @@ Flags = InheritFormWithEverStone
 [MUK,1]
 FormName = Alolan
 Types = POISON,DARK
+Affinities = POISON
 Abilities = POISONTOUCH,GLUTTONY
 HiddenAbilities = POWEROFALCHEMY
 Height = 1.0
@@ -377,6 +399,7 @@ Generation = 6
 [EXEGGUTOR,1]
 FormName = Alolan
 Types = GRASS,DRAGON
+Affinities = NORMAL
 BaseStats = 95,105,85,45,125,75
 Abilities = FRISK
 Height = 10.9
@@ -391,6 +414,7 @@ Evolutions = MAROWAK,LevelNight,28
 [MAROWAK,1]
 FormName = Alolan
 Types = FIRE,GHOST
+Affinities = GROUND
 Abilities = CURSEDBODY,LIGHTNINGROD
 HiddenAbilities = ROCKHEAD
 Weight = 34.0
@@ -401,6 +425,7 @@ Generation = 7
 [WEEZING,1]
 FormName = Galarian
 Types = POISON,FAIRY
+Affinities = FIRE
 HiddenAbilities = MISTYSURGE
 Height = 3.0
 Weight = 16.0
@@ -423,6 +448,7 @@ Generation = 6
 [MRMIME,1]
 FormName = Galarian
 Types = ICE,PSYCHIC
+Affinities = FAIRY
 BaseStats = 50,65,65,100,90,90
 EVs = SPEED,2
 Abilities = VITALSPIRIT,SCREENCLEANER
@@ -477,6 +503,7 @@ Generation = 6
 [ARTICUNO,1]
 FormName = Galarian
 Types = PSYCHIC,FLYING
+Affinities = ICE
 BaseStats = 90,85,85,95,125,100
 EVs = SPECIAL_ATTACK,3
 Abilities = COMPETITIVE
@@ -490,6 +517,7 @@ Generation = 8
 [ZAPDOS,1]
 FormName = Galarian
 Types = FIGHTING,FLYING
+Affinities = ELECTRIC
 BaseStats = 90,125,90,100,85,90
 EVs = ATTACK,3
 Abilities = DEFIANT
@@ -502,6 +530,7 @@ Generation = 8
 [MOLTRES,1]
 FormName = Galarian
 Types = DARK,FLYING
+Affinities = FIRE
 BaseStats = 90,85,90,90,100,125
 EVs = SPECIAL_DEFENSE,3
 Abilities = BERSERK
@@ -556,6 +585,7 @@ Generation = 6
 [SLOWKING,1]
 FormName = Galarian
 Types = POISON,PSYCHIC
+Affinities = WATER
 BaseStats = 95,65,80,30,110,110
 Abilities = CURIOUSMEDICINE,OWNTEMPO
 Height = 1.8
@@ -685,6 +715,7 @@ Generation = 6
 [CORSOLA,1]
 FormName = Galarian
 Types = GHOST
+Affinities = WATER
 BaseStats = 60,55,100,30,65,100
 Abilities = WEAKARMOR
 HiddenAbilities = CURSEDBODY
@@ -752,6 +783,7 @@ Generation = 6
 [ZIGZAGOON,1]
 FormName = Galarian
 Types = DARK,NORMAL
+Affinities = ELECTRIC
 Color = White
 Pokedex = Its restlessness has it constantly running around. If it sees another Pokémon, it will purposely run into them in order to start a fight.
 Generation = 8
@@ -760,6 +792,7 @@ Flags = InheritFormWithEverStone
 [LINOONE,1]
 FormName = Galarian
 Types = DARK,NORMAL
+Affinities = ELECTRIC
 Pokedex = It uses its long tongue to taunt opponents. Once the opposition is enraged, this Pokémon hurls itself at the opponent, tackling them forcefully.
 Generation = 8
 Flags = InheritFormWithEverStone
@@ -865,18 +898,21 @@ Generation = 6
 [CASTFORM,1]
 FormName = Sunny Form
 Types = FIRE
+Affinities = FIRE
 Color = Red
 Pokedex = This is the form Castform takes on the brightest of days. Its skin is unexpectedly hot to the touch, so approach with care.
 #-------------------------------
 [CASTFORM,2]
 FormName = Rainy Form
 Types = WATER
+Affinities = WATER
 Color = Blue
 Pokedex = This is the form Castform takes when soaked with rain. When its body is compressed, water will seep out as if from a sponge.
 #-------------------------------
 [CASTFORM,3]
 FormName = Snowy Form
 Types = ICE
+Affinities = ICE
 Color = White
 Pokedex = This is the form Castform takes when covered in snow. Its body becomes an ice-like material, with a temperature near -5 degrees Celsius.
 #-------------------------------
@@ -1243,6 +1279,7 @@ WildItemUncommon = DEEPSEASCALE
 [DARUMAKA,2]
 FormName = Galarian
 Types = ICE
+Affinities = FIRE
 Height = 0.7
 Weight = 40.0
 Color = White
@@ -1263,6 +1300,7 @@ Pokedex = When wounded, it stops moving. It goes as still as stone to meditate, 
 [DARMANITAN,2]
 FormName = Galarian Standard Mode
 Types = ICE
+Affinities = FIRE
 Abilities = GORILLATACTICS
 Height = 1.7
 Weight = 120.0
@@ -1275,6 +1313,7 @@ Flags = InheritFormWithEverStone
 [DARMANITAN,3]
 FormName = Galarian Zen Mode
 Types = ICE,FIRE
+Affinities = FIRE
 BaseStats = 105,160,55,135,30,55
 BaseExp = 189
 EVs = SPECIAL_ATTACK,2
@@ -1289,6 +1328,7 @@ Generation = 8
 [YAMASK,1]
 FormName = Galarian
 Types = GROUND,GHOST
+Affinities = ROCK
 BaseStats = 38,55,85,30,30,65
 Abilities = WANDERINGSPIRIT
 Pokedex = A clay slab with cursed engravings took possession of a Yamask. The slab is said to be absorbing the Yamask's dark power.
@@ -1310,16 +1350,20 @@ Color = Brown
 #-------------------------------
 [SAWSBUCK,1]
 FormName = Summer Form
+Affinities = FIRE
 #-------------------------------
 [SAWSBUCK,2]
 FormName = Autumn Form
+Affinities = WATER
 #-------------------------------
 [SAWSBUCK,3]
 FormName = Winter Form
+Affinities = ICE
 #-------------------------------
 [STUNFISK,1]
 FormName = Galarian
 Types = GROUND,STEEL
+Affinities = GROUND
 BaseStats = 109,81,99,32,66,84
 Abilities = MIMICRY
 HiddenAbilities = MIMICRY
@@ -2108,11 +2152,13 @@ Pokedex = Its ability to deflect any attack led to it being known as the Fightin
 [URSHIFU,1]
 FormName = Rapid Strike Style
 Types = FIGHTING,WATER
+Affinities = FIGHTING
 Pokedex = It's believed that this Pokémon modeled its fighting style on the flow of a river—sometimes rapid, sometimes calm.
 #-------------------------------
 [CALYREX,1]
 FormName = Ice Rider
 Types = PSYCHIC,ICE
+Affinities = PSYCHIC
 BaseStats = 100,165,150,50,85,130
 BaseExp = 340
 EVs = ATTACK,3
@@ -2127,6 +2173,7 @@ Pokedex = According to lore, this Pokémon showed no mercy to those who got in i
 [CALYREX,2]
 FormName = Shadow Rider
 Types = PSYCHIC,GHOST
+Affinities = PSYCHIC
 BaseStats = 100,85,80,150,165,100
 BaseExp = 340
 EVs = SPECIAL_ATTACK,3
@@ -2141,6 +2188,7 @@ Pokedex = Legend says that by using its power to see all events from past to fut
 [GOLURK,1]
 FormName = Elemental
 Types = GROUND
+Affinities = GROUND
 BaseStats = 100,60,60,60,60,60
 GenderRatio = Genderless
 BaseExp = 170
@@ -2157,6 +2205,7 @@ Pokedex = A golem composed of the element of earth, guarding the northern Amphi 
 [RIBOMBEE,1]
 FormName = Elemental
 Types = FLYING
+Affinities = FLYING
 BaseStats = 60,60,60,100,60,60
 GenderRatio = Genderless
 BaseExp = 170
@@ -2173,6 +2222,7 @@ Pokedex = A sylph composed of the element of wind, guiding lost Pokémon in the 
 [SALAZZLE,1]
 FormName = Elemental
 Types = FIRE
+Affinities = FIRE
 BaseStats = 60,80,80,60,60,60
 GenderRatio = Genderless
 BaseExp = 170
@@ -2189,6 +2239,7 @@ Pokedex = A lizard composed of the element of fire, aiding troubled Pokémon in 
 [PRIMARINA,1]
 FormName = Elemental
 Types = WATER
+Affinities = WATER
 BaseStats = 60,60,60,60,80,80
 GenderRatio = Genderless
 GrowthRate = Medium

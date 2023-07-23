@@ -540,12 +540,10 @@ class PokemonBagScreen
         elsif itm.is_important?
           @scene.pbDisplay(_INTL("The {1} can't be held.", itemname))
         else
-          pbFadeOutIn {
-            sscene = PokemonParty_Scene.new
-            sscreen = PokemonPartyScreen.new(sscene, $player.party)
-            sscreen.pbPokemonGiveScreen(item)
-            @scene.pbRefresh
+          pbChoosePokemonScreen(0, 99999) { |member_id, party_idx|
+            pbGiveItemToPokemon(item, getPartyPokemon(member_id)[party_idx], @scene)
           }
+          @scene.pbRefresh
         end
       elsif cmdToss >= 0 && command == cmdToss   # Toss item
         qty = @bag.quantity(item)

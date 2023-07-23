@@ -23,6 +23,7 @@ MAP_UPDATE          = 67
 HIDE_MARKERS        = 68
 LOCK_PAUSE_MENU     = 69
 QUEST_TUTORIAL      = 70
+HAS_QUEST_LOG       = 71
 TEMP_1              = 72
 TEMP_2              = 73
 TEMP_3              = 74

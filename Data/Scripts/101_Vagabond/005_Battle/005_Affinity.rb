@@ -21,48 +21,28 @@ class Battle::Battler
         end
       elsif ally.hasActiveAbility?(:FIERCEBOND)
         if pbCanRaiseStatStage?(:ATTACK,self,false)
-          if ally == self
-            @battle.pbDisplay(_INTL("{1}'s Fierce Bond increased its Attack!", pbThis))
-          else
-            @battle.pbDisplay(_INTL("{1}'s Fierce Bond increased {2}'s Attack!", ally.pbThis, pbThis))
-          end
-          pbRaiseStatStage(:ATTACK,1,self,false)
+          pbRaiseStatStageByCause(:ATTACK, 1, ally,
+            GameData::Ability.get(:FIERCEBOND).name, true)
         end
       elsif ally.hasActiveAbility?(:GUARDINGBOND)
         if pbCanRaiseStatStage?(:DEFENSE,self,false)
-          if ally == self
-            @battle.pbDisplay(_INTL("{1}'s Guarding Bond increased its Defense!", pbThis))
-          else
-            @battle.pbDisplay(_INTL("{1}'s Guarding Bond increased {2}'s Defense!", ally.pbThis, pbThis))
-          end
-          pbRaiseStatStage(:DEFENSE,1,self,false)
+          pbRaiseStatStageByCause(:DEFENSE, 1, ally,
+            GameData::Ability.get(:GUARDINGBOND).name, true)
         end
       elsif ally.hasActiveAbility?(:RADIANTBOND)
         if pbCanRaiseStatStage?(:SPECIAL_ATTACK,self,false)
-          if ally == self
-            @battle.pbDisplay(_INTL("{1}'s Radiant Bond increased its Sp. Atk!", pbThis))
-          else
-            @battle.pbDisplay(_INTL("{1}'s Radiant Bond increased {2}'s Sp. Atk!", ally.pbThis, pbThis))
-          end
-          pbRaiseStatStage(:SPECIAL_ATTACK,1,self,false)
+          pbRaiseStatStageByCause(:SPECIAL_ATTACK, 1, ally,
+            GameData::Ability.get(:RADIANTBOND).name, true)
         end
       elsif ally.hasActiveAbility?(:SPIRITUALBOND)
         if pbCanRaiseStatStage?(:SPECIAL_DEFENSE,self,false)
-          if ally == self
-            @battle.pbDisplay(_INTL("{1}'s Spiritual Bond increased its Sp. Def!", pbThis))
-          else
-            @battle.pbDisplay(_INTL("{1}'s Spiritual Bond increased {2}'s Sp. Def!", ally.pbThis, pbThis))
-          end
-          pbRaiseStatStage(:SPECIAL_DEFENSE,1,self,false)
+          pbRaiseStatStageByCause(:SPECIAL_DEFENSE, 1, ally,
+            GameData::Ability.get(:SPIRITUALBOND).name, true)
         end
       elsif ally.hasActiveAbility?(:LIVELYBOND)
         if pbCanRaiseStatStage?(:SPEED,self,false)
-          if ally == self
-            @battle.pbDisplay(_INTL("{1}'s Lively Bond increased its Speed!", pbThis))
-          else
-            @battle.pbDisplay(_INTL("{1}'s Lively Bond increased {2}'s Speed!", ally.pbThis, pbThis))
-          end
-          pbRaiseStatStage(:SPEED,1,self,false)
+          pbRaiseStatStageByCause(:SPEED, 1, ally,
+            GameData::Ability.get(:LIVELYBOND).name, true)
         end
       end
     end

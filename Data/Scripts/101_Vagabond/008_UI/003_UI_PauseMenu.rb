@@ -41,7 +41,11 @@ class PauseOptionSprite < SpriteWrapper
       @sprite_bg.angle = 0
     end
     @sprite_bg.src_rect = Rect.new(@index * 128, @selected ? 128 : 0, 128, 128)
-    @sprite_fg.src_rect = Rect.new(@index * 128, 256, 128, 128)
+    if @index == 1 && !($quests.enabled)
+      @sprite_fg.src_rect = Rect.new(4 * 128, 256, 128, 128)
+    else
+      @sprite_fg.src_rect = Rect.new(@index * 128, 256, 128, 128)
+    end
     @sprite_bg.update
     @sprite_fg.update
   end
@@ -481,9 +485,13 @@ def pbPauseMenu
       if shortcut
 
       else
-        pbFadeOutIn {
-          pbShowQuests
-        }
+        if $quests.enabled
+          pbFadeOutIn {
+            pbShowQuests
+          }
+        else
+          pbDialog("NO_QUEST_LIST")
+        end
       end
     when 2 # Items
       if shortcut

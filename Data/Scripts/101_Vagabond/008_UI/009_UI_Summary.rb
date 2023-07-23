@@ -419,9 +419,10 @@ class PokemonSummaryScene
     imagepos.push([circleFile,360,108,0,0,-1,-1])
     pbDrawImagePositions(@sprites["bg2"].bitmap,imagepos)
     imagepos=[]
-    if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status!=:None
+    if pbPokerus(pokemon) == 1 || pokemon.hp == 0 || @pokemon.status != :NONE
       status=6 if pbPokerus(pokemon)==1
-      status=(GameData::Status.get(@pokemon.status).icon_position) if @pokemon.status!=:None
+      echoln @pokemon.status.to_s
+      status=(GameData::Status.get(@pokemon.status).icon_position) if @pokemon.status != :NONE
       status=5 if pokemon.hp==0
       imagepos.push(["Graphics/Pictures/Party/statuses",334,276,0,32*status,32,32])
     end
@@ -633,9 +634,9 @@ class PokemonSummaryScene
     updatePokeIcons
     @sprites["background"].setBitmap("Graphics/Pictures/Summary/bg_2")
     imagepos=[]
-    if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status!=:None
+    if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status!=:NONE
       status=6 if pbPokerus(pokemon)==1
-      status=GameData::Status.get(@pokemon.status).icon_position if @pokemon.status!=:None
+      status=GameData::Status.get(@pokemon.status).icon_position if @pokemon.status!=:NONE
       status=5 if pokemon.hp==0
       #imagepos.push(["Graphics/Pictures/statuses",124,100,0,16*status,44,16])
     end

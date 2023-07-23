@@ -188,10 +188,11 @@ end
 
 class ChoosePokemonScreen
 
-  def initialize(mode)
+  def initialize(mode, z = nil)
       @mode = mode
       @member = 0
       @index = 0
+      @z = z || 99990
       has_members = []
       has_members.append(0)
       has_members.append(-1) if ![2, 3].include?(@mode)
@@ -245,7 +246,7 @@ class ChoosePokemonScreen
 
   def pbStartScreen
       @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-      @viewport.z = 99990
+      @viewport.z = @z
 
       @sprites = {}
 
@@ -325,8 +326,8 @@ end
 # 3 = Any Active Pokemon
 # Returns:
 # - List: [<Member ID>, <Pkmn Index>]
-def pbChoosePokemonScreen(mode=0)
-  screen = ChoosePokemonScreen.new(mode)
+def pbChoosePokemonScreen(mode=0,z=nil)
+  screen = ChoosePokemonScreen.new(mode, z)
   screen.pbStartScreen
   choice = nil
   if block_given?

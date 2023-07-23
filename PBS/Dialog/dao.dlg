@@ -1,0 +1,11 @@
+[DAO_ROOM_FINTAN]
+/textpos middle
+> <br>Fintan's Room
+
+[DAO_ROOM_ELIANA]
+/textpos middle
+> <br>Eliana's Room
+
+[DAO_ROOM_PLAYER]
+/textpos middle
+> <br><PLAYER>'s Room

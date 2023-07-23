@@ -49,6 +49,7 @@ ShowArea = true
 Bicycle = true
 BicycleAlways = false
 MapPosition = 0,14,5
+SnapEdges = true
 BattleBack = woodland
 MapSize = 1,1
 #-------------------------------
@@ -280,6 +281,7 @@ Name = Quartz Passing
 Outdoor = true
 ShowArea = true
 MapPosition = 0,15,5
+SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 6,111111
 #-------------------------------
@@ -407,6 +409,45 @@ BattleBack = ruins
 Name = Canjon Cave Chamber
 BattleBack = ruins_boss
 #-------------------------------
+[126]   # Smokey Forest Trail
+Name = Smokey Forest Trail
+Outdoor = true
+SnapEdges = true
+#-------------------------------
+[128]   # Smokey Forest
+Name = Smokey Forest
+DarkMap = true
+SnapEdges = true
+#-------------------------------
+[129]   # D.A.O. HQ 1F
+Name = D.A.O. HQ 1F
+#-------------------------------
+[130]   # Smokey Forest
+Name = Smokey Forest
+Outdoor = true
+DarkMap = true
+SnapEdges = true
+#-------------------------------
+[133]   # Smokey Forest Shrine
+Name = Smokey Forest Shrine
+Outdoor = true
+SnapEdges = true
+#-------------------------------
+[136]   # Smokey Forest Shrine
+Name = Smokey Forest Shrine
+Outdoor = true
+DarkMap = true
+SnapEdges = true
+#-------------------------------
+[137]   # Smokey Forest Clearing
+Name = Smokey Forest Clearing
+Outdoor = true
+SnapEdges = true
+#-------------------------------
+[139]   # Deep Smokey Forest
+Name = Deep Smokey Forest
+SnapEdges = true
+#-------------------------------
 [141]   # Maintenance Room 3
 Name = Maintenance Room 3
 MapPosition = 0,14,10
@@ -415,38 +456,6 @@ SnapEdges = true
 [145]   # Pegma Hillside Ruins
 Name = Amphi Cave Ruins
 BattleBack = ruins
-#-------------------------------
-[129] # Smokey Forest
-#DarkMap = true
-#-------------------------------
-[130] # Smokey Forest
-SnapEdges = true
-DarkMap = true
-Outdoor = true
-#-------------------------------
-[128] # Smokey Forest
-DarkMap = true
-SnapEdges = true
-#-------------------------------
-[136] # Smokey Forest Shrine
-DarkMap = true
-SnapEdges = true
-Outdoor = true
-#-------------------------------
-[133] # Smokey Forest Shrine
-SnapEdges = true
-Outdoor = true
-#-------------------------------
-[126] # Smokey Forest Trail
-SnapEdges = true
-Outdoor = true
-#-------------------------------
-[137] # Smokey Forest Clearing
-SnapEdges = true
-Outdoor = true
-#-------------------------------
-[139] # Deep Smokey Forest
-SnapEdges = true
 #-------------------------------
 [146]   # Smokey Forest Ruins
 Name = Smokey Cave Ruins
@@ -489,6 +498,13 @@ MapSize = 3,111111
 #-------------------------------
 [174]   # Memory Start 2
 Name = Memory Start 2
+#-------------------------------
+[184]   # Breccia Thicket
+Name = Breccia Thicket
+Outdoor = true
+MapPosition = 0,11,4
+SnapEdges = true
+MapSize = 1,1
 #-------------------------------
 [187]   # Sanctuary
 Name = Sanctuary

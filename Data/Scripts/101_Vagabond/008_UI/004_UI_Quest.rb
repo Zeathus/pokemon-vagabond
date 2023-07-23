@@ -78,7 +78,7 @@ class QuestBarSprite < Sprite
     if @quest
       self.bitmap.blt(0,0,@barbitmap,
         Rect.new(0,@selected ? 40 : 0,@barbitmap.width - @crop,40))
-      textpos = [[@quest.display_name,50,10,0,
+      textpos = [[@quest.display_name(@quest.status),50,10,0,
         Color.new(250,250,250),Color.new(100,60,50)],
                  [@quest.location,620,10,1,
         Color.new(250,250,250),Color.new(100,60,50)]]
@@ -572,7 +572,7 @@ def pbSortQuests(list)
       (a.status<0 ? 3 : i[a.status])<=>(b.status<0 ? 3 : i[b.status])}
   when 1 # Alphabetical
     list.sort!{|a,b|
-      a.display_name<=>b.display_name}
+      a.display_name(a.status)<=>b.display_name(b.status)}
   when 2 # Location
     list.sort!{|a,b|
       a.location<=>b.location}

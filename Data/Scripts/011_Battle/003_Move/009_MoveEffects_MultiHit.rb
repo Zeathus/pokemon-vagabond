@@ -200,7 +200,7 @@ class Battle::Move::AttackAndSkipNextTurn < Battle::Move
   def pbEffectGeneral(user)
     if user.hasActiveAbility?(:RELENTLESS) && user.affinityBooster
       @battle.pbShowAbilitySplash(user)
-      @battle.pbDisplay("The Affinity Boost made {1} not have to recharge!", user.pbThis);
+      @battle.pbDisplay(_INTL("The Affinity Boost made {1} not have to recharge!", user.pbThis))
       @battle.pbHideAbilitySplash(user)
       return
     end
