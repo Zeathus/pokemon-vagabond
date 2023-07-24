@@ -23,7 +23,10 @@ class Battle
         expshare = true
       end
       # Add EXP to final pools
-      exp = (b.level * b.pokemon.base_exp).floor
+      real_level = b.level
+      real_level += 1 if $PokemonSystem.difficulty == 0
+      real_level -= 1 if $PokemonSystem.difficulty == 2
+      exp = (real_level * b.pokemon.base_exp).floor
       next if exp <= 0
 
       exp = (exp*1.5).floor if trainerBattle?

@@ -91,5 +91,17 @@
 /portrait 0
 /hidename 2
 
-[GIVE_ITEM]
-> 
+[DIFFICULTY_EASY]
+> For those not as familiar with Pokémon battle mechanics, or those who prefer to explore or read the story.
+> Opposing Pokémon are one level lower than usual, and have no special stat investments.
+> You still receive the same amount of experience as in Normal Mode.
+
+[DIFFICULTY_NORMAL]
+> For those who are fairly familiar with Pokémon battle mechanics and want a moderate challenge.
+> Opposing Pokémon have their default levels.
+
+[DIFFICULTY_HARD]
+> For those who are familiar with battle mechanics and are seeking a challenge.
+> Opposing Pokémon are one level higher than usual, and some have stronger moves than usual.
+> You still receive the same amount of experience as in Normal Mode.
+> For major battles your Pokémon will be temporarily lowered to match your opponent's level (prior to level increase).

@@ -290,7 +290,7 @@ module Scaling
     when 0 # Easy
       pkmn.level -= 1
       pkmn.natureflag = PBNatures::SERIOUS
-      pkmn.iv = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
+      pkmn.el = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
       pkmn.calc_stats
     when 1 # Normal
       pkmn.calc_stats

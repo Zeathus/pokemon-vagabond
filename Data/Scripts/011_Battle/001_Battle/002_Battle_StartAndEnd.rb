@@ -466,6 +466,12 @@ class Battle
         return @decision
       end
     end
+    if @levelSync != 0
+      for i in 0...@party1.length
+        @party1[i].exp = $game_temp.original_exp[i] if $game_temp.original_exp[i]
+        @party1[i].calc_stats
+      end
+    end
     case oldDecision
     ##### WIN #####
     when 1

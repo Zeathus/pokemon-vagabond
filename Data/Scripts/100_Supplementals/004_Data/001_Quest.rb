@@ -154,8 +154,6 @@ module GameData
     def display_name(status=0)
       if status <= 0 && @hide_name
         return "?????"
-      elsif status == -1
-        return "Unavailable"
       else
         return @name
       end

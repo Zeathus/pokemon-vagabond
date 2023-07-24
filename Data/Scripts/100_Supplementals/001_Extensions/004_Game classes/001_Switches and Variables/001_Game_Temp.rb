@@ -2,6 +2,7 @@ class Game_Temp
   attr_accessor :text_bubble_queue
   attr_accessor :toast_queue
   attr_accessor :no_saving
+  attr_accessor :original_exp
 
   alias sup_initialize initialize
 
@@ -10,6 +11,7 @@ class Game_Temp
     @text_bubble_queue = []
     @toast_queue       = []
     @no_saving         = false
+    @original_exp      = nil
   end
 
   def queue_toast(toast)

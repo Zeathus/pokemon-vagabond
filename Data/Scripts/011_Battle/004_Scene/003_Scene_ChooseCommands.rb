@@ -140,7 +140,7 @@ class Battle::Scene
   # Opens the party screen to choose a Pokémon to switch in (or just view its
   # summary screens)
   # mode: 0=Pokémon command, 1=choose a Pokémon to send to the Boxes, 2=view
-  #       summaries only
+  #       summaries only, 3=using item or just selecting, 4=inactive Pokemon to boxes
   #=============================================================================
   def pbPartyScreen(idxBattler, canCancel = false, mode = 0)
     # Fade out and hide all sprites
@@ -219,6 +219,7 @@ class Battle::Scene
                            }, false)
     # Loop while in Bag screen
     wasTargeting = false
+    used_item_on_pokemon = false
     loop do
       # Select an item
       item = itemScene.pbChooseItem
@@ -240,6 +241,7 @@ class Battle::Scene
       # 3 = use on battler (X items, Persim Berry, Red/Yellow Flutes)
       # 4 = use on opposing battler (Poké Balls)
       # 5 = use no target (Poké Doll, Guard Spec., Poké Flute, Launcher items)
+      used_item_on_pokemon = false
       case useType
       when 1, 2, 3   # Use on Pokémon/Pokémon's move/battler
         # Auto-choose the Pokémon/battler whose action is being decided if they
@@ -261,37 +263,66 @@ class Battle::Scene
         partyPos = @battle.pbPartyOrder(idxBattler)
         partyStart, _partyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
         modParty = @battle.pbPlayerDisplayParty(idxBattler)
-        # Start party screen
-        pkmnScene = PokemonParty_Scene.new
-        pkmnScreen = PokemonPartyScreen.new(pkmnScene, modParty)
-        pkmnScreen.pbStartScene(_INTL("Use on which Pokémon?"), @battle.pbNumPositions(0, 0))
-        idxParty = -1
-        # Loop while in party screen
-        loop do
-          # Select a Pokémon
-          pkmnScene.pbSetHelpText(_INTL("Use on which Pokémon?"))
-          idxParty = pkmnScreen.pbChoosePokemon
-          break if idxParty < 0
-          idxPartyRet = -1
-          partyPos.each_with_index do |pos, i|
-            next if pos != idxParty + partyStart
-            idxPartyRet = i
-            break
+        pbFadeInAndShow(@sprites, visibleSprites)
+        # Choose a Pokémon
+        @outer.pbChooseSwitch(idxBattler, 3) { |idxParty, partyScene|
+          if useType == 2
+            movenames=[]
+            party[idxParty].moves.each do |i|
+              break if i.nil?
+              if i.totalpp==0
+                movenames.push(_INTL("{1} (PP: ---)",i.name,i.pp,i.totalpp))
+              else
+                movenames.push(_INTL("{1} (PP: {2}/{3})",i.name,i.pp,i.totalpp))
+              end
+            end
+            idxMove = pbShowCommandsWithHelp(nil, movenames,
+              ["Restore which move?", "Restore which move?", "Restore which move?", "Restore which move?"], -1)
+            if idxMove >= 0
+              used_item_on_pokemon = yield item.id, useType, idxParty, idxMove, itemScene
+            end
+          else
+            used_item_on_pokemon = yield item.id, useType, idxParty, -1, itemScene
           end
-          next if idxPartyRet < 0
-          pkmn = party[idxPartyRet]
-          next if !pkmn || pkmn.egg?
-          idxMove = -1
-          if useType == 2   # Use on Pokémon's move
-            idxMove = pkmnScreen.pbChooseMove(pkmn, _INTL("Restore which move?"))
-            next if idxMove < 0
-          end
-          break if yield item.id, useType, idxPartyRet, idxMove, pkmnScene
-        end
-        pkmnScene.pbEndScene
-        break if idxParty >= 0
-        # Cancelled choosing a Pokémon; show the Bag screen again
+
+          used_item_on_pokemon
+        }
+        break if used_item_on_pokemon
         itemScene.pbFadeInScene
+        
+        if false
+          # Start party screen
+          pkmnScene = PokemonParty_Scene.new
+          pkmnScreen = PokemonPartyScreen.new(pkmnScene, modParty)
+          pkmnScreen.pbStartScene(_INTL("Use on which Pokémon?"), @battle.pbNumPositions(0, 0))
+          idxParty = -1
+          # Loop while in party screen
+          loop do
+            # Select a Pokémon
+            pkmnScene.pbSetHelpText(_INTL("Use on which Pokémon?"))
+            idxParty = pkmnScreen.pbChoosePokemon
+            break if idxParty < 0
+            idxPartyRet = -1
+            partyPos.each_with_index do |pos, i|
+              next if pos != idxParty + partyStart
+              idxPartyRet = i
+              break
+            end
+            next if idxPartyRet < 0
+            pkmn = party[idxPartyRet]
+            next if !pkmn || pkmn.egg?
+            idxMove = -1
+            if useType == 2   # Use on Pokémon's move
+              idxMove = pkmnScreen.pbChooseMove(pkmn, _INTL("Restore which move?"))
+              next if idxMove < 0
+            end
+            break if yield item.id, useType, idxPartyRet, idxMove, pkmnScene
+          end
+          pkmnScene.pbEndScene
+          break if idxParty >= 0
+          # Cancelled choosing a Pokémon; show the Bag screen again
+          itemScene.pbFadeInScene
+        end
       when 4   # Use on opposing battler (Poké Balls)
         idxTarget = -1
         if @battle.pbOpposingBattlerCount(idxBattler) == 1
@@ -323,9 +354,13 @@ class Battle::Scene
     $bag.last_viewed_pocket     = oldLastPocket
     $bag.last_pocket_selections = oldChoices
     # Close Bag screen
-    itemScene.pbEndScene
-    # Fade back into battle screen (if not already showing it)
-    pbFadeInAndShow(@sprites, visibleSprites) if !wasTargeting
+    if used_item_on_pokemon
+      itemScene.dispose
+    else
+      itemScene.pbEndScene
+      # Fade back into battle screen (if not already showing it)
+      pbFadeInAndShow(@sprites, visibleSprites) if !wasTargeting
+    end
   end
 
   #=============================================================================

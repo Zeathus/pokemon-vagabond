@@ -88,6 +88,7 @@ class Battle
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
   attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
+  attr_accessor :levelSync        # If the player's level should be scaled down
   attr_accessor :playerUseAI      # Whether the player should be AI controlled
   attr_accessor :predictingDamage
 
@@ -177,6 +178,7 @@ class Battle
     @mega_rings = []
     GameData::Item.each { |item| @mega_rings.push(item.id) if item.has_flag?("MegaRing") }
     @smartWildBattle   = false
+    @levelSync         = 0
     @playerUseAI       = false
     @predictingDamage  = false
   end

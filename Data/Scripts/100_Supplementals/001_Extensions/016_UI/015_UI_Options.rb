@@ -13,6 +13,10 @@ class PokemonSystem
     @auto_surf       = true   # Text input mode (0=cursor, 1=keyboard)
     @bag_mode        = 0
   end
+
+  def level_sync?
+    return @difficulty >= 2
+  end
 end
 
 class ButtonOption

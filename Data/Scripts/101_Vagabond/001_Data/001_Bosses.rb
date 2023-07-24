@@ -17,6 +17,7 @@ def pbBossGeneral
 end
 
 def pbBossRuinGeneral
+  setBattleRule("levelsync", pbRuinBossLevel)
   pbBossGeneral
   setBattleRule("disablepokeballs")
 end

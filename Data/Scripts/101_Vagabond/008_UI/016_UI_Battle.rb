@@ -103,6 +103,12 @@ class Battle::Scene::Outer
     partyPos = @battle.pbPartyOrder(idxBattler)
     partyStart, _partyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
     pokemon = @battle.pbPlayerDisplayParty(idxBattler)
+    if mode == 1 || mode == 2
+      pokemon = @battle.pbPlayer.party
+    elsif mode == 4
+      pokemon = @battle.pbPlayer.inactive_party
+      mode = 1
+    end
 
     @battle.scene.pbShowWindow(BLANK)
     for i in 0...3
@@ -143,36 +149,40 @@ class Battle::Scene::Outer
         break
       elsif Input.trigger?(Input::USE)
         pbPlayDecisionSE
-        # Choose a command for the selected Pokémon
-        cmdSwitch  = -1
-        cmdBoxes   = -1
-        cmdSummary = -1
-        commands = []
-        commands[cmdSwitch  = commands.length] = _INTL("Switch In") if mode == 0 && pokemon[selected_index].able?
-        commands[cmdBoxes   = commands.length] = _INTL("Send to Boxes") if mode == 1
-        commands[cmdSummary = commands.length] = _INTL("Summary")
-        commands[commands.length]              = _INTL("Cancel")
-        command = @battle.scene.pbShowCommands("", commands, commands.length)
-        if (cmdSwitch >= 0 && command == cmdSwitch) ||   # Switch In
-           (cmdBoxes >= 0 && command == cmdBoxes)        # Send to Boxes
-          idxPartyRet = -1
-          partyPos.each_with_index do |pos, i|
-            next if pos != selected_index + partyStart
-            idxPartyRet = i
-            break
-          end
-          for i in 0...3
-            @sprites[_INTL("switch_{1}", i)].visible = false
-          end
-          @sprites["switch_cursor"].visible = false
+        idxPartyRet = -1
+        partyPos.each_with_index do |pos, i|
+          next if pos != selected_index + partyStart
+          idxPartyRet = i
+          break
+        end
+        if mode == 3
           break if yield idxPartyRet, @battle.scene
-          for i in 0...3
-            @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
+        else
+          # Choose a command for the selected Pokémon
+          cmdSwitch  = -1
+          cmdBoxes   = -1
+          cmdSummary = -1
+          commands = []
+          commands[cmdSwitch  = commands.length] = _INTL("Switch In") if mode == 0 && pokemon[selected_index].able?
+          commands[cmdBoxes   = commands.length] = _INTL("Send to Boxes") if mode == 1
+          commands[cmdSummary = commands.length] = _INTL("Summary")
+          commands[commands.length]              = _INTL("Cancel")
+          command = @battle.scene.pbShowCommands("", commands, commands.length)
+          if (cmdSwitch >= 0 && command == cmdSwitch) ||   # Switch In
+            (cmdBoxes >= 0 && command == cmdBoxes)        # Send to Boxes
+            for i in 0...3
+              @sprites[_INTL("switch_{1}", i)].visible = false
+            end
+            @sprites["switch_cursor"].visible = false
+            break if yield idxPartyRet, @battle.scene
+            for i in 0...3
+              @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
+            end
+            @sprites["switch_cursor"].visible = true
+            @battle.scene.pbShowWindow(BLANK)
+          elsif cmdSummary >= 0 && command == cmdSummary   # Summary
+            pbSummary(pokemon, selected_index)
           end
-          @sprites["switch_cursor"].visible = true
-          @battle.scene.pbShowWindow(BLANK)
-        elsif cmdSummary >= 0 && command == cmdSummary   # Summary
-          pbSummary(pokemon, selected_index)
         end
       end
     end
@@ -186,9 +196,9 @@ class Battle::Scene::Outer
   end
 
   def pbSummary(party, pkmnid)
-    oldsprites=pbFadeOutAndHide(@sprites)
-    scene=PokemonSummaryScene.new(true)
-    screen=PokemonSummary.new(scene)
+    oldsprites = pbFadeOutAndHide(@sprites)
+    scene = PokemonSummaryScene.new(true)
+    screen = PokemonSummary.new(scene)
     screen.pbStartScreen(party, pkmnid)
     pbFadeInAndShow(@sprites, oldsprites)
   end

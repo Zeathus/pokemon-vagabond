@@ -14,14 +14,15 @@ module Battle::CatchAndStoreMixin
     # Store the Pokémon
     if pbPlayer.party_full? && (@sendToBoxes == 0 || @sendToBoxes == 2)   # Ask/must add to party
       cmds = [_INTL("Add to your party"),
+              _INTL("Add to inactive party"),
               _INTL("Send to a Box"),
               _INTL("See {1}'s summary", pkmn.name),
               _INTL("Check party")]
-      cmds.delete_at(1) if @sendToBoxes == 2
+      cmds.delete_at(2) if @sendToBoxes == 2
       loop do
         cmd = pbShowCommands(_INTL("Where do you want to send {1} to?", pkmn.name), cmds, 99)
         break if cmd == 99   # Cancelling = send to a Box
-        cmd += 1 if cmd >= 1 && @sendToBoxes == 2
+        cmd += 1 if cmd >= 2 && @sendToBoxes == 2
         case cmd
         when 0   # Add to your party
           pbDisplay(_INTL("Choose a Pokémon in your party to send to your Boxes."))
@@ -61,15 +62,61 @@ module Battle::CatchAndStoreMixin
             end
           end
           break
-        when 1   # Send to a Box
+        when 1   # Add to inactive party
+          if pbPlayer.inactive_party.length < Settings::MAX_PARTY_SIZE
+            pbPlayer.inactive_party.push(pkmn)
+            pbDisplayPaused(_INTL("{1} has been added to your inactive party.", pkmn.name))
+            return
+          else
+            pbDisplay(_INTL("Choose a Pokémon in your inactive party to send to your Boxes."))
+            party_index = -1
+            @scene.pbPartyScreen(0, true, 4) { |idxParty, _partyScene|
+              party_index = idxParty
+              next true
+            }
+            next if party_index < 0   # Cancelled
+            party_size = pbPlayer.inactive_party.length
+            # Send chosen Pokémon to storage
+            # NOTE: This doesn't work properly if you catch multiple Pokémon in
+            #       the same battle, because the code below doesn't alter the
+            #       contents of pbParty(0), only pbPlayer.party. This means that
+            #       viewing the party in battle after replacing a party Pokémon
+            #       with a caught one (which is possible if you've caught a second
+            #       Pokémon) will not show the first caught Pokémon in the party
+            #       but will still show the boxed Pokémon in the party. Correcting
+            #       this would take a surprising amount of code, and it's very
+            #       unlikely to be needed anyway, so I'm ignoring it for now.
+            send_pkmn = pbPlayer.inactive_party[party_index]
+            box_name = @peer.pbStorePokemon(pbPlayer, send_pkmn)
+            pbPlayer.inactive_party.delete_at(party_index)
+            pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, box_name))
+            # Rearrange all remembered properties of party Pokémon
+            (party_index...party_size).each do |idx|
+              if idx < party_size - 1
+                @initialItems[0][idx] = @initialItems[0][idx + 1]
+                $game_temp.party_levels_before_battle[idx] = $game_temp.party_levels_before_battle[idx + 1]
+                $game_temp.party_critical_hits_dealt[idx] = $game_temp.party_critical_hits_dealt[idx + 1]
+                $game_temp.party_direct_damage_taken[idx] = $game_temp.party_direct_damage_taken[idx + 1]
+              else
+                @initialItems[0][idx] = nil
+                $game_temp.party_levels_before_battle[idx] = nil
+                $game_temp.party_critical_hits_dealt[idx] = nil
+                $game_temp.party_direct_damage_taken[idx] = nil
+              end
+            end
+            pbPlayer.inactive_party.push(pkmn)
+            pbDisplayPaused(_INTL("{1} has been added to your inactive party.", pkmn.name))
+            return
+          end
+        when 2   # Send to a Box
           break
-        when 2   # See X's summary
+        when 3   # See X's summary
           pbFadeOutIn {
-            summary_scene = PokemonSummary_Scene.new
-            summary_screen = PokemonSummaryScreen.new(summary_scene, true)
+            summary_scene = PokemonSummaryScene.new(true)
+            summary_screen = PokemonSummary.new(summary_scene)
             summary_screen.pbStartScreen([pkmn], 0)
           }
-        when 3   # Check party
+        when 4   # Check party
           @scene.pbPartyScreen(0, true, 2)
         end
       end
