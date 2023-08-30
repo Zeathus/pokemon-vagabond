@@ -234,4 +234,26 @@ class Sprite_Character
     return y
   end
 
+  def snapPartner
+    @partner&.snapToLeader(self)
+  end
+
+  def snapToLeader(owner)
+    @real_x = owner.character.real_x
+    @real_y = owner.character.real_y
+    distance = Game_Map::TILE_WIDTH * 4
+    case $game_player.direction
+    when 2
+      @real_y -= distance
+    when 4
+      @real_x += distance
+    when 6
+      @real_x -= distance
+    when 8
+      @real_y += distance
+    end
+    self.x = screen_x(@real_x)
+    self.y = screen_y(@real_y)
+  end
+
 end

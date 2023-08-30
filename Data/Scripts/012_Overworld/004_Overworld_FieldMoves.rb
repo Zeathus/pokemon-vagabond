@@ -363,8 +363,8 @@ def pbSurfacing
       $PokemonGlobal.diving  = false
       pbUpdateVehicle
       $scene.transfer_player(false)
-      surfbgm = GameData::Metadata.get.surf_BGM
-      (surfbgm) ? pbBGMPlay(surfbgm) : $game_map.autoplayAsCue
+      #surfbgm = GameData::Metadata.get.surf_BGM
+      #(surfbgm) ? pbBGMPlay(surfbgm) : $game_map.autoplayAsCue
       $game_map.refresh
     }
     return true
@@ -558,6 +558,7 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
   $scene.transfer_player
   $game_map.autoplay
   $game_map.refresh
+  $game_player.always_on_top = false
   yield if block_given?
   pbWait(Graphics.frame_rate / 4)
   $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10 * Graphics.frame_rate / 20)
@@ -703,6 +704,7 @@ HiddenMoveHandlers::UseMove.add(:ROCKSMASH, proc { |move, pokemon|
 # Strength
 #===============================================================================
 def pbStrength
+  return false
   if $PokemonMap.strengthUsed
     pbMessage(_INTL("Strength made it possible to move boulders around."))
     return false
@@ -780,8 +782,8 @@ def pbSurf(confirm = true, edge = false, down = false)
   if !confirm || pbConfirmMessage(_INTL("The water is a deep blue...\nWould you like to surf on it?"))
     pbMessage(_INTL("Starmie used Surf!")) if confirm
     pbCancelVehicles
-    surfbgm = GameData::Metadata.get.surf_BGM
-    pbCueBGM(surfbgm, 0.5) if surfbgm
+    #surfbgm = GameData::Metadata.get.surf_BGM
+    #pbCueBGM(surfbgm, 0.5) if surfbgm
     pbStartSurfing(edge, down)
     return true
   end
@@ -952,8 +954,8 @@ HiddenMoveHandlers::UseMove.add(:SURF, proc { |move, pokemon|
   if !pbHiddenMoveAnimation(pokemon)
     pbMessage(_INTL("{1} used {2}!", pokemon.name, GameData::Move.get(move).name))
   end
-  surfbgm = GameData::Metadata.get.surf_BGM
-  pbCueBGM(surfbgm, 0.5) if surfbgm
+  #surfbgm = GameData::Metadata.get.surf_BGM
+  #pbCueBGM(surfbgm, 0.5) if surfbgm
   pbStartSurfing
   next true
 })

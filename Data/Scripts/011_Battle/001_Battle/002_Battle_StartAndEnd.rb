@@ -341,6 +341,7 @@ class Battle
       if trainerBattle? && @player.length >= 2
         if [:KRABBY, :SKIDDO, :NUMEL].include?(pbGetChoiceValue(:Starter))
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 0)
+          pbAddGuide("Affinity Extras", true)
           pbGuide("Affinity Boosts")
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 1)
         end
@@ -507,7 +508,7 @@ class Battle
         # Breccia Trail - Vespiquen Boss
         if $game_map.map_id == 62
           $game_self_switches[[62, 34, "A"]] = true
-          $MapFactory.getMap($game_map.map_id, false).need_refresh = true
+          $game_map.need_refresh = true
         end
       end
       # Gain money from winning a trainer battle, and from Pay Day

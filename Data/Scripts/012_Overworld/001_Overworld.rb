@@ -450,7 +450,7 @@ end
 
 def pbAutoplayOnTransition
   surfbgm = GameData::Metadata.get.surf_BGM
-  if $PokemonGlobal.surfing && surfbgm
+  if false && $PokemonGlobal.surfing && surfbgm
     pbBGMPlay(surfbgm)
   else
     $game_map.autoplayAsCue
@@ -459,7 +459,7 @@ end
 
 def pbAutoplayOnSave
   surfbgm = GameData::Metadata.get.surf_BGM
-  if $PokemonGlobal.surfing && surfbgm
+  if false && $PokemonGlobal.surfing && surfbgm
     pbBGMPlay(surfbgm)
   else
     $game_map.autoplay

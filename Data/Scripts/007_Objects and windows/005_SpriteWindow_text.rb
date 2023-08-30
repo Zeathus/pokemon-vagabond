@@ -411,7 +411,7 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     return pos
   end
 
-  def skipAhead
+  def skipAhead(skip_pauses = false)
     return if !busy?
     return if @textchars[@curchar] == "\n"
     resume
@@ -425,10 +425,13 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
         refresh
         break
       end
-      break if @textchars[@curchar] != "\n"    # Skip past newlines only
+      break if !skip_pauses && @textchars[@curchar] != "\n"
+      next if @textchars[@curchar] == "\2"
+      break if @textchars[@curchar].nil?
       break if @linesdrawn >= visiblelines - 1   # No more empty lines to continue to
       @linesdrawn += 1
     end
+    @waitcount = 0 if skip_pauses
   end
 
   def allocPause

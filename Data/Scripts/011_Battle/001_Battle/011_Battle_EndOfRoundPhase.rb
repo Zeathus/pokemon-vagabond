@@ -605,7 +605,12 @@ class Battle
           anyNear = allOtherSideBattlers(battler).any? { |other| nearBattlers?(other.index, battler.index) }
           break if anyNear
         end
-        break if anyNear
+        anyOpposingWithNoTargets = false
+        allOtherSideBattlers(side).each do |battler|
+          anyOpposingWithNoTargets = allOtherSideBattlers(battler).all? { |other| !nearBattlers?(other.index, battler.index) }
+          break if anyOpposingWithNoTargets
+        end
+        next if anyNear && !anyOpposingWithNoTargets
         # No battlers on this side are near any battlers on the other side; try
         # to move them
         # NOTE: If we get to here (assuming both sides are of size 3 or less),
@@ -633,12 +638,7 @@ class Battle
       swaps.each do |pair|
         next if pbSideSize(pair[0]) == 2 && swaps.length > 1
         next if !pbSwapBattlers(pair[0], pair[1])
-        case pbSideSize(side)
-        when 2
-          pbDisplay(_INTL("{1} moved across!", @battlers[pair[1]].pbThis))
-        when 3
-          pbDisplay(_INTL("{1} moved to the center!", @battlers[pair[1]].pbThis))
-        end
+        pbDisplay(_INTL("{1} moved to the center!", @battlers[pair[1]].pbThis))
       end
     end
   end

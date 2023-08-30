@@ -120,14 +120,9 @@ class QuestBarSprite < Sprite
     if @quest.step >= quest.steps.length || @quest.status == 2
       step = @quest.steps.length - 1
     end
-    if @quest.status > 0
-      lines = pbLineBreakText(content,@quest.description,220)
-      for i in 0...lines.length
-        s = lines[i]
-        textpos.push([s,10,26+i*20,0,white,shadow])
-      end
+    if @quest.status >= 0
       textpos.push([@quest.money.to_s,40,158 + 186,0,white,shadow])
-      textpos.push([_INTL("{1}%",@quest.exp.to_s),166,158 + 186,0,white,shadow])
+      textpos.push([_INTL("{1}",@quest.exp.to_s),174,158 + 186,0,white,shadow])
       if @quest.items.length > 0
         if @quest.hide_items
           imagepos.push(
@@ -142,6 +137,13 @@ class QuestBarSprite < Sprite
           pbDrawTextPositions(content,
             [[GameData::Item.get(@quest.items[0][0]).name,40,182 + 186,0,white,shadow]])
         end
+      end
+    end
+    if @quest.status > 0
+      lines = pbLineBreakText(content,@quest.description,220)
+      for i in 0...lines.length
+        s = lines[i]
+        textpos.push([s,10,26+i*20,0,white,shadow])
       end
       tasks = Bitmap.new(@infobitmap.width,@infobitmap.height - 6)
       pbSetSmallFont(tasks)
@@ -339,6 +341,12 @@ def pbShowQuests(show_quest=nil)
 
   sprites["scrollbar"]=QuestScrollSprite.new(viewport,686,90)
   sprites["scrollbar"].z=20
+  
+  sprites["control_exit"] = KeybindSprite.new(Input::BACK, "Exit", 80, Graphics.height - 36, viewport)
+  sprites["control_details"] = KeybindSprite.new(Input::USE, "Details", 156, Graphics.height - 36, viewport)
+  sprites["control_sort"] = KeybindSprite.new(Input::ACTION, "Sort", 258, Graphics.height - 36, viewport)
+  sprites["control_select"] = KeybindSprite.new([Input::UP, Input::DOWN], "Select Quest", 338, Graphics.height - 36, viewport)
+  sprites["control_page"] = KeybindSprite.new([Input::LEFT, Input::RIGHT], "Change Page", 518, Graphics.height - 36, viewport)
 
   pbFadeInAndShow(sprites)
 
@@ -421,20 +429,21 @@ def pbShowQuests(show_quest=nil)
     elsif Input.trigger?(Input::BACK)
       break
     elsif Input.trigger?(Input::ACTION)
-      method=[
-        "Status",
-        "Alphabetical",
-        "Location"][$game_variables[QUEST_SORTING]]
-      Kernel.pbMessage(_INTL("What to sort by?\nCurrently: {1}{2}",method,
-        "\\ch[1,4,Status,Alphabetical,Location,Cancel]"))
-      if pbGet(1)<=2
-        $game_variables[QUEST_SORTING]=pbGet(1)
+      methods = ["Status", "Alphabetical", "Location"]
+      method = methods[$game_variables[QUEST_SORTING]]
+      help_text = _INTL("What to sort by?\nCurrently: {1}", method)
+      choice = pbShowCommandsWithHelp(nil,
+        methods + ["Cancel"],
+        [help_text, help_text, help_text, help_text],
+        999, $game_variables[QUEST_SORTING])
+      if choice <= 2
+        $game_variables[QUEST_SORTING] = choice
         pbSortQuests(main_quests)
         pbSortQuests(side_quests)
         update = true
       end
     elsif Input.trigger?(Input::USE)
-      if quest_list[selected].status < 1 && !$DEBUG
+      if quest_list[selected].status < 0 && !$DEBUG
         next
       end
       ret = -1
@@ -474,7 +483,7 @@ def pbShowQuests(show_quest=nil)
               selected = 0
               scroll = 0
             end
-            break if quest_list[selected].status > 0 || $DEBUG
+            break if quest_list[selected].status >= 0 || $DEBUG
           end
         elsif ret == -1
           loop do
@@ -488,7 +497,7 @@ def pbShowQuests(show_quest=nil)
                 scroll = 0
               end
             end
-            break if quest_list[selected].status > 0 || $DEBUG
+            break if quest_list[selected].status >= 0 || $DEBUG
           end
         end
         for i in 0...11
@@ -569,13 +578,17 @@ def pbSortQuests(list)
   when 0 # Status
     i=[1,0,2]
     list.sort!{|a,b|
-      (a.status<0 ? 3 : i[a.status])<=>(b.status<0 ? 3 : i[b.status])}
+      (a.status == b.status ?
+        (a.display_name(a.status)<=>b.display_name(b.status)) :
+        (a.status<0 ? 3 : i[a.status])<=>(b.status<0 ? 3 : i[b.status]))}
   when 1 # Alphabetical
     list.sort!{|a,b|
       a.display_name(a.status)<=>b.display_name(b.status)}
   when 2 # Location
     list.sort!{|a,b|
-      a.location<=>b.location}
+      a.location == b.location ?
+        (a.display_name(a.status)<=>b.display_name(b.status)) :
+        (a.location<=>b.location)}
   end
 
   return list

@@ -27,6 +27,7 @@ class Game_Character
   attr_reader   :move_speed
   attr_accessor :walk_anime
   attr_writer   :bob_height
+  attr_accessor :always_on_top
 
   def initialize(map = nil)
     @map                       = map

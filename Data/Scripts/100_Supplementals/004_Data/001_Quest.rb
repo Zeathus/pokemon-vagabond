@@ -363,8 +363,7 @@ class QuestState
 
   def real_exp
     level = $game_variables[Supplementals::PLAYER_LEVEL]
-    exp_need = (((level+1)**3) - (level**3))
-    return ((self.exp * 1.0) * exp_need / 100).ceil
+    return (self.exp * level).ceil
   end
 
   def money

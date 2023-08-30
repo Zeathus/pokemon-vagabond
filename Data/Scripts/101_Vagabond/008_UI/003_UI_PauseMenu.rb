@@ -101,9 +101,11 @@ class PauseControlsSprite < IconSprite
     @overlay.bitmap.clear
     @overlay.bitmap.blt(14, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::ACTION))
     @overlay.bitmap.blt(158, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::USE))
+    @overlay.bitmap.blt(302, 14, @keybind_icons.bitmap, $Keybinds.rect(Input::SPECIAL))
     textpos = [
       ["Save",46,18,0,Color.new(252,252,252),Color.new(0,0,0),true],
-      [@controls[@index][1],190,18,0,Color.new(252,252,252),Color.new(0,0,0),true]
+      [@controls[@index][1],190,18,0,Color.new(252,252,252),Color.new(0,0,0),true],
+      ["Map",334,18,0,Color.new(252,252,252),Color.new(0,0,0),true]
     ]
     pbSetSmallFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap, textpos)
@@ -165,9 +167,19 @@ class PauseInfoBox < IconSprite
       textpos = [[text, 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     when 2 # Weather
-      @value = pbGetForecast[$game_map.map_id]
-      text = "[WIP]"
-      textpos = [[text, 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
+      @value = $game_screen.weather_type
+      weather_names = {
+        :None      => "Clear",
+        :Rain      => "Raining",
+        :Sun       => "Sunny",
+        :Winds     => "Windy",
+        :Sandstorm => "Sandstorm",
+        :BloodMoon => "Blood Moon",
+        :Snow      => "Snowing",
+        :Hail      => "Hailing",
+        :Cloudy    => "Cloudy"
+      }
+      textpos = [[weather_names[@value], 82, 34, 0, Color.new(252,252,252), Color.new(0,0,0), true]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
   end
@@ -373,6 +385,28 @@ class PauseScreen
     for i in 0...6
       @sprites[_INTL("pokemon_{1}", i)] = PausePokemonBox.new(@viewport, i)
     end
+    focus_quest = nil
+    focus_quest_priority = -999
+    $quests.each { |quest|
+      if quest.type == PBQuestType::Main && quest.active?
+        priority = MAIN_QUEST_DISPLAY_PRIORITY.index(quest.quest_id)
+        if priority > focus_quest_priority
+          focus_quest = quest
+          focus_quest_priority = priority
+        end
+      end
+    }
+    if focus_quest
+      quest_title = focus_quest.display_name(focus_quest.status)
+      quest_text = focus_quest.steps[focus_quest.step]
+      full_text = _INTL("<ac><c2=3aff043c><u>{1}</u></c2>\n{2}</ac>", quest_title, quest_text)
+      @sprites["focus_quest"] = Window_AdvancedTextPokemon.new("", 1)
+      @sprites["focus_quest"].setSkin("Graphics/Windowskins/pause_menu")
+      @sprites["focus_quest"].resizeToFit(full_text, Graphics.width * 3 / 5)
+      @sprites["focus_quest"].text = full_text
+      @sprites["focus_quest"].y = -12
+      @sprites["focus_quest"].x = Graphics.width / 2 - @sprites["focus_quest"].width / 2
+    end
     pbFadeInAndShow(@sprites)
   end
 
@@ -398,6 +432,8 @@ class PauseScreen
         return @index
       elsif Input.trigger?(Input::ACTION)
         return @index + 10
+      elsif Input.trigger?(Input::SPECIAL)
+        return 30
       elsif Input.repeat?(Input::RIGHT)
         if @index % 3 == 2
           @index -= 2
@@ -445,6 +481,20 @@ def pbPauseMenu
   pause_screen.pbStartPauseScreen
   loop do
     option = pause_screen.pbChooseOption
+    if option == 30
+      pbFadeOutIn(99998) {
+        scene = PokemonRegionMap_Scene.new(-1, false)
+        screen = PokemonRegionMapScreen.new(scene)
+        ret = screen.pbStartScreen
+        if ret
+          $game_temp.fly_destination = ret
+        end
+      }
+      if $game_temp.fly_destination
+        break
+      end
+      next
+    end
     shortcut = (option >= 10)
     option -= 10 if shortcut
     break if option == -1

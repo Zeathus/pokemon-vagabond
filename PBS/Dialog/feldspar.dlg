@@ -37,13 +37,13 @@
 > This issue affects our entire supply chain, it is of utmost importance!
 /speaker Alister
 > I know, I know. But I am not responsible for these shipments.
-> You need to-\wtnp[60]
+> You need to-\wtnp[20]
 /speaker Raphael
 > You are the supervisor here, should this not go through you?
 > Do you know how many people rely on the metals I process from the ore you provide?
 > There's ongoing construction work in Lapis Lazuli City as we speak, and they have no material!
 /speaker Alister
-> I have not heard a report from Steve yet, he's-\wtnp[60]
+> I have not heard a report from Steve yet, he's-\wtnp[20]
 /speaker Raphael
 > Then you should have made sure you got it! I swear, you are all too lax around here.
 /speaker Alister
@@ -225,7 +225,7 @@
 
 [PEGMA_GYM_RAPHAEL,3]
 /speaker Raphael
-> I now see how you were able to fend of that Graveler. Your skills are impressive.
+> I now see how you were able to fend off that Graveler. Your skills are impressive.
 > To honor your skills, I present to you the [R]Alloy Badge[/]!
 
 [PEGMA_GYM_RAPHAEL,4]
@@ -239,11 +239,17 @@
 /if $quests[:UNKNOWNDESTINATION].complete?
     > By the way, I'm pretty sure Alister would like some assistance at the quarry.
     > You should give him a visit when you have the time.
+    /return true
 /else
     > From what I gathered, you have somewhere you need to go right now.
     > Once you are done with that, you should go visit Alister at the quarry.<br>I'm sure he could use your help.
+    /return false
 /end
 
 [PEGMA_GYM_RAPHAEL,6]
 /speaker Raphael
 > Just wait for our next match.<br>I'll make you build up quite the sweat!
+
+[FELDSPAR_TUNNEL_SIGN]
+/textpos middle
+> Mt[.] Pegma<br>Tunnel to the Mica District

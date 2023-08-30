@@ -79,7 +79,7 @@
 /event Player turn down
 /speaker Azelf
 > We seem to have been separated from the others.
-> Let us to check for Nekane here first before we look for them.
+> Let us check for Nekane here first before we look for the others.
 /speaker 0
 > \ts[2]Azelf is now available as a party member!
 
@@ -131,7 +131,8 @@
 
 [CH3_NEKANE,2]
 /speaker Azelf
-> <PLAYER>. As you may have already deduced, I have an affinity for [B]willpower[/]. This is why only some people can hear me.
+> <PLAYER>. As you may have already deduced, I have an affinity for [B]willpower[/].
+> This is also why only some people can hear me.
 > While all humans possess willpower, only those with [R]a particular affinity[/] for it can hear me, like you and Kira.
 > I am not the best at explaining this phenomenon. That is best left to [Uxie]Uxie[/] or [Mesprit]Mesprit[/], should you meet with them.
 > However, regardless of a person's affinity for willpower, I am able to read their motivations from their aura alone.
@@ -204,7 +205,7 @@
 > Hmm... I am not sure I see what you mean.
 /speaker Azelf
 > \ts[1]It is as I thought. Nekane lacks not only [B]willpower[/], but [Mesprit]emotion[/] as well. That is where we encounter a problem.
-> You see, one cannot have [B]willpower[/] by itself. [B]Willpower[/] is intrinsically fueled by [Mesprit]emotions[/].
+> You see, one cannot have [B]willpower[/] on its own. By nature, [B]willpower[/] is fueled by [Mesprit]emotions[/].
 > When you [Mesprit]feel[/] strongly about something, it creates the [B]will[/] to act upon said [Mesprit]emotions[/].
 > That is why [Mesprit]emotions[/] are a prerequisite for [B]willpower[/], and granting emotions is not part of my resume.
 

@@ -101,6 +101,7 @@
 /event Faunus sprite trainer_LEADER_Faunus down
 /fade normal
 /wait 20
+/speaker Faunus
 > Wasn't that Tropius amazing though?\nDefinitely worth the fall if you ask me.\nIt got so close to me!
 > The amazement really got me in the mood for a good Pokémon battle.
 > I'm going back to the Gym now.\nI'll be waiting for you!
@@ -224,24 +225,24 @@
 > Welcome to Breccia City! I hope you're not afraid of heights, he he.
 
 [BRECCIA_QUEEN_BEE,0]
-/speaker Bee-Fearing Man
+/speaker Bee-Fearer
 > I can never show my face around Breccia Trail anymore.
-> Please forgive me Queen Bee, I shall never target weak wild Combee to train again. *shiver*
+> Please forgive me Queen Bee, I shall never [R]target wild Combee[/] to train again. *shiver*
 
 [BRECCIA_QUEEN_BEE,1]
-/speaker Bee-Fearing Man
+/speaker Bee-Fearer
 > YOU BROUGHT FORTH THE QUEEN? ARE YOU MAD!?
 > Now what am I gonna do... It's all over for me... I'd better write my will before it's too late.
 
 [BRECCIA_QUEEN_BEE,2]
-/speaker Bee-Fearing Man
+/speaker Bee-Fearer
 > I swear I can feel the Queen Bee buzzing all the way from Breccia Trail...<br>I'm finished before soon...
 > WHAT!? You... defeated her?
 > THANK YOU!!!<br>I thought I would never live a peaceful day for the rest of my life.
 > Please, accept this as a token of gratitude.
 
 [BRECCIA_QUEEN_BEE,3]
-/speaker Bee-Fearing Man
+/speaker Bee-Fearer
 > Thanks to you, I no longer live a life of constant fear. I am forever grateful.
 
 [BRECCIA_CITY_GYM_ARNOLD,0]
@@ -319,10 +320,14 @@
 > I think you will grow fond of it if you use it with another Pledge move in a double battle.
 /if $quests[:UNKNOWNDESTINATION].complete?
     > If you are free, could you meet me at my house later?
+    > I believe I can teach you something that will be useful during your travels.
+    /return true
 /else
-    > It looks like you have somewhere you need to go right now. Could you spare some time to meet me at my house when you are done?
+    > It looks like you have somewhere you need to go right now.
+    > Could you spare some time to meet me at my house when you are done?
+    > I believe I can teach you something that will be useful during your travels.
+    /return false
 /end
-> I believe I can teach you something that will be useful during your travels.
 
 [BRECCIA_GYM_FAUNUS,6]
 /speaker Faunus

@@ -1,5 +1,19 @@
 class Game_Temp
   attr_accessor :textSize
+
+  def dialog_log
+    # Dialog log is a list of [speaker, text]
+    @dialog_log = [] if !@dialog_log
+    return @dialog_log
+  end
+
+  def log_dialog(type, speaker, text, window_skin)
+    log = self.dialog_log
+    log.push([type, speaker, text, window_skin])
+    if log.length > 32
+      log.shift
+    end
+  end
 end
 
 def pbTalk(text, msgwindows = nil)

@@ -247,7 +247,7 @@ class Battle
       end
       return
     end
-    pbDisplay(_INTL("{2} was added to {1}'s move list!", pkmnName, moveName)) { pbSEPlay("Pkmn move learnt") }
+    pbDisplay(_INTL("{1} can now learn {2}!", pkmnName, moveName)) { pbSEPlay("Pkmn move learnt") }
     return
     # Pokémon already knows the maximum number of moves; try to forget one to learn the new move
     pbDisplayPaused(_INTL("{1} wants to learn {2}, but it already knows {3} moves.",

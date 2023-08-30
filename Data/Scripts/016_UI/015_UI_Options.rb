@@ -467,6 +467,16 @@ MenuHandlers.add(:options_menu, :battle_style, {
   "set_proc"    => proc { |value, _scene| $PokemonSystem.battlestyle = value }
 })
 
+MenuHandlers.add(:options_menu, :show_exp_gain, {
+  "name"        => _INTL("Show Exp. Gain"),
+  "order"       => 55,
+  "type"        => EnumOption,
+  "parameters"  => [_INTL("Show"), _INTL("Don't show")],
+  "description" => _INTL("Choose whether you see exp. gained after battles and quests. Does not affect level ups."),
+  "get_proc"    => proc { next $PokemonSystem.showexpgain },
+  "set_proc"    => proc { |value, _scene| $PokemonSystem.showexpgain = value }
+})
+
 MenuHandlers.add(:options_menu, :movement_style, {
   "name"        => _INTL("Default Movement"),
   "order"       => 60,

@@ -3,6 +3,7 @@ class PokemonSystem
   attr_accessor :lock_difficulty
   attr_accessor :auto_surf
   attr_accessor :bag_mode
+  attr_accessor :showexpgain
 
   alias sup_initialize initialize
 
@@ -12,10 +13,15 @@ class PokemonSystem
     @lock_difficulty = false  # Volume of sound effects
     @auto_surf       = true   # Text input mode (0=cursor, 1=keyboard)
     @bag_mode        = 0
+    @showexpgain     = 0     # Show exp gained after battle
   end
 
   def level_sync?
     return @difficulty >= 2
+  end
+
+  def showexpgain
+    return @showexpgain || 0
   end
 end
 

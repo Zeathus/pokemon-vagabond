@@ -99,14 +99,14 @@ class Battle::Scene::Outer
     @viewport.dispose
   end
 
-  def pbChooseSwitch(idxBattler, mode=0)
+  def pbChooseSwitch(idxBattler, canCancel = false, mode=0)
     partyPos = @battle.pbPartyOrder(idxBattler)
     partyStart, _partyEnd = @battle.pbTeamIndexRangeFromBattlerIndex(idxBattler)
     pokemon = @battle.pbPlayerDisplayParty(idxBattler)
     if mode == 1 || mode == 2
-      pokemon = @battle.pbPlayer.party
+      pokemon = $player.party
     elsif mode == 4
-      pokemon = @battle.pbPlayer.inactive_party
+      pokemon = $player.inactive_party
       mode = 1
     end
 
@@ -144,16 +144,20 @@ class Battle::Scene::Outer
           @sprites[_INTL("switch_{1}", i)].active = (i == selected_index)
         end
       end
-      if Input.trigger?(Input::BACK)
+      if Input.trigger?(Input::BACK) && canCancel
         pbPlayDecisionSE
         break
       elsif Input.trigger?(Input::USE)
         pbPlayDecisionSE
         idxPartyRet = -1
-        partyPos.each_with_index do |pos, i|
-          next if pos != selected_index + partyStart
-          idxPartyRet = i
-          break
+        if mode == 1 || mode == 2
+          idxPartyRet = selected_index
+        else
+          partyPos.each_with_index do |pos, i|
+            next if pos != selected_index + partyStart
+            idxPartyRet = i
+            break
+          end
         end
         if mode == 3
           break if yield idxPartyRet, @battle.scene
@@ -780,6 +784,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @databoxBitmap&.dispose
     @databoxBitmap = AnimatedBitmap.new(bgFilename)
     # Determine the co-ordinates of the data box and the left edge padding width
+    @spriteBaseY = 4
     if onPlayerSide
       @spriteX = self.viewport.rect.width - 244
       @spriteY = self.viewport.rect.height - 112
@@ -873,11 +878,11 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def y=(value)
     super
-    @hpBar.y     = value + 28
+    @hpBar.y     = value + @spriteBaseY + 28
     @hpBarEx.y   = @hpBar.y
     @hpBarEx2.y  = @hpBar.y
-    @expBar.y    = value + 74
-    @hpNumbers.y = value + 28
+    @expBar.y    = value + @spriteBaseY + 74
+    @hpNumbers.y = value + @spriteBaseY + 28
   end
   
   def z=(value)
@@ -966,17 +971,17 @@ class Battle::Scene::PokemonDataBox < Sprite
   end
   
   def draw_background
-    self.bitmap.blt(0, 0, @databoxBitmap.bitmap, Rect.new(0, 0, @databoxBitmap.width, @databoxBitmap.height))
+    self.bitmap.blt(0, @spriteBaseY, @databoxBitmap.bitmap, Rect.new(0, 0, @databoxBitmap.width, @databoxBitmap.height))
   end
   
   def draw_name
     if onPlayerSide
       pbDrawTextPositions(self.bitmap,
-        [[@battler.name, @spriteBaseX + 10, 0, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
+        [[@battler.name, @spriteBaseX + 10, @spriteBaseY, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
       )
     else
       pbDrawTextPositions(self.bitmap,
-        [[@battler.name, @spriteBaseX + 202, 0, 1, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
+        [[@battler.name, @spriteBaseX + 202, @spriteBaseY, 1, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
       )
     end
   end
@@ -986,7 +991,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     lvl_text = _INTL("{1}", @battler.level)
     lvl_x = onPlayerSide ? 174 : 16
     pbDrawTextPositions(self.bitmap,
-      [[lvl_text, @spriteBaseX + lvl_x, 0, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+      [[lvl_text, @spriteBaseX + lvl_x, @spriteBaseY, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
   end
   
   def draw_gender
@@ -995,7 +1000,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     gender_text = ["♂", "♀", "⚲"][gender]
     base_color   = [MALE_BASE_COLOR, FEMALE_BASE_COLOR, NONBINARY_BASE_COLOR][gender]
     shadow_color = [MALE_SHADOW_COLOR, FEMALE_SHADOW_COLOR, NONBINARY_SHADOW_COLOR][gender]
-    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + gender_x, 2, false, base_color, shadow_color, true]])
+    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + gender_x, @spriteBaseY + 2, false, base_color, shadow_color, true]])
   end
   
   def draw_status
@@ -1007,24 +1012,24 @@ class Battle::Scene::PokemonDataBox < Sprite
     end
     return if s < 0
     pbDrawImagePositions(self.bitmap, [
-      ["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), 20,
+      ["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), @spriteBaseY + 20,
        0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
     pbSetSmallFont(self.bitmap)
     pbDrawTextPositions(self.bitmap, [
-      [_INTL("{1}", @battler.statusCount),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+      [_INTL("{1}", @battler.statusCount),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, @spriteBaseY + 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
     pbSetSystemFont(self.bitmap)
   end
   
   def draw_shiny_icon
     return if !@battler.shiny?
     shiny_x = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/shiny", @spriteBaseX + shiny_x, 36]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/shiny", @spriteBaseX + shiny_x, @spriteBaseY + 36]])
   end
   
   def draw_special_form_icon
     # Mega Evolution/Primal Reversion icon
     if @battler.mega?
-      pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_mega", @spriteBaseX + 8, 34]])
+      pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_mega", @spriteBaseX + 8, @spriteBaseY + 34]])
     elsif @battler.primal?
       filename = nil
       if @battler.isSpecies?(:GROUDON)
@@ -1039,7 +1044,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 206, 6]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 206, @spriteBaseY + 6]])
   end
   
   def refresh

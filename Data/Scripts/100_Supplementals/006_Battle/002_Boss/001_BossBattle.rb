@@ -36,12 +36,18 @@ class BossTrigger
         @enabled = false
       end
     end
-    for e in @effects
-      if e.target_idx.nil?
-        e.activate(battle, battler, battler)
-      else
-        for target in e.target_idx
-          e.activate(battle, battler, battle.battlers[target])
+    @effects.each do |e|
+      targets = e.target_idx.nil? ? [battler.index] : e.target_idx
+      targets.each do |target|
+        t = battle.battlers[target]
+        if !t.fainted?
+          e.activate(battle, battler, t)
+          t.pbItemHPHealCheck
+          if t.fainted?
+            t.pbFaint
+            battle.pbGainExp
+            battle.pbJudge
+          end
         end
       end
     end

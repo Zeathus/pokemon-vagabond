@@ -114,6 +114,13 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           $game_variables[variable] = answer
         end
 
+        $game_temp.log_dialog(
+          1,
+          $player.name,
+          choices[answer],
+          nil
+        )
+
         if !(save_key.nil?)
           pbSetChoice(save_key, answer, choices[answer])
         end

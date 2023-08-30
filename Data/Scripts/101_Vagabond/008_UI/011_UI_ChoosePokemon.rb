@@ -252,7 +252,7 @@ class ChoosePokemonScreen
 
       @sprites["bg"] = Sprite.new(@viewport)
       @sprites["bg"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
-      @sprites["bg"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0, 128))
+      #@sprites["bg"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0, 128))
 
       x_pos = [178, 268, 462]
       y_pos = 130

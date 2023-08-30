@@ -62,9 +62,12 @@ class Battle::Battler
 end
 
 class Battle
-
     def pbGetEffectScore(move,damage,user,target,actionable,fainted,chosen=false)
       score = 0
+
+      if @battleAI.pbCheckMoveImmunity(1, move, user, target, PBTrainerAI.bestSkill)
+        return score
+      end
 
       ### Get opponent statistics
       physical_opponents = 0
@@ -206,7 +209,7 @@ class Battle
 
       # Return here if no extra effect is needed
       func = move.function
-      return score if func == "None" || func == "DoesNothingUnusableInGravity" || func == "Struggle" || (target && target.damageState.substitute)
+      return score if func == "None" || func == "DoesNothingUnusableInGravity" || func == "Struggle" || (target && target.damageState.substitute && !move.soundMove?)
 
       effscore = 0
 

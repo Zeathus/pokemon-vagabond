@@ -17,7 +17,9 @@ def pbBossGeneral
 end
 
 def pbBossRuinGeneral
-  setBattleRule("levelsync", pbRuinBossLevel)
+  if $PokemonSystem.level_sync?
+    setBattleRule("levelsync", pbRuinBossLevel)
+  end
   pbBossGeneral
   setBattleRule("disablepokeballs")
 end
@@ -366,7 +368,7 @@ def pbBossRotomGroupEasy
   pbModifier.next.next.nature = :MODEST
 
   pbModifier.moves = [
-    :HYDROPUMP,
+    :LEAFSTORM,
     :SHOCKWAVE,
     :THUNDERWAVE,
     :HEX
@@ -378,15 +380,15 @@ def pbBossRotomGroupEasy
     :CHARGE
   ]
   pbModifier.next.next.moves = [
-    :LEAFSTORM,
+    :HYDROPUMP,
     :SHOCKWAVE,
     :THUNDERWAVE,
     :HEX
   ]
   pbModifier.next.next.item = :WHITEHERB
 
-  pbModifier.form = 2
-  pbModifier.next.next.form = 5
+  pbModifier.form = 5
+  pbModifier.next.next.form = 2
 end
 
 def pbBossRotomGroupHard

@@ -7,10 +7,10 @@
         /wait 12
         /event Guitarist switch A true
         /me the_best_guitar 200
-        >\ts[3]<wave>§ I want to be, the ve\wt[2]ry best<br>§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!\wtnp[60]</wave>
+        >\ts[3]<wave>§ I want to be, the ve\wt[2]ry best<br>\wt[8]§ gui\wt[8]tar\wt[6] pla-a-yeeeeeer!\wtnp[60]</wave>
         /event Guitarist switch A false
         /wait 4
-        ?> What do you think?
+        ?> \ts[1]What do you think?
             /choice Good
                 > Yes! Looks like I'm getting places!
             /choice Bad
@@ -66,27 +66,27 @@
 > Thank you for saving Steve. We can finally start sending shipments again.
 
 [MICA_LAYER_1_WORKER,0]
-/speaker Layer_1_Worker
+/speaker Worker
 > You cannot enter the mining areas without permission.
 
 [MICA_LAYER_1_WORKER,1]
-/speaker Layer_1_Worker
+/speaker Worker
 > Steve has not been reporting properly?
 > He went into this mining area a good while ago. Maybe something happened.
 > I will grant you temporary permission to enter the area.
 > Hopefully you can find Steve.
 
 [MICA_LAYER_1_WORKER,2]
-/speaker Layer_1_Worker
+/speaker Worker
 > I've granted you temporary permission to enter this mining area.
 > Hopefully you can find Steve.
 
 [MICA_LAYER_1_WORKER,3]
-/speaker Layer_1_Worker
+/speaker Worker
 > Thank you for rescuing Steve.<br>Your temporary access has been revoked though.
 
 [MICA_LAYER_1_WORKER,4]
-/speaker Layer_1_Worker
+/speaker Worker
 > Alister gave you a Miner's Kit?\nThen you're free to enter here again.
 > Welcome to the operation!
 
@@ -102,3 +102,11 @@
 
 [MICA_QUARRY_TABLET,1]
 > According to Edward, the relic depicts a beautiful and vast underground river the ancient people called "Arakawa River".
+
+[MICA_TUNNEL_SIGN]
+/textpos middle
+> Mt[.] Pegma<br>Tunnel to the Feldspar District
+
+[PEGMA_QUARRY_SIGN]
+/textpos middle
+> Pegma Quarry\nDirector's Office

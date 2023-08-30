@@ -196,6 +196,10 @@ class PortraitSprite < IconSprite
     end
   end
 
+  def contents_opacity=(value)
+    super(value)
+  end
+
   def visible=(value)
     super(value)
     @parts.each do |key, part|
@@ -298,6 +302,16 @@ class NameBoxSprite < IconSprite
     self.refresh
   end
 
+  def display_name
+    return nil if @hide_name == 2
+    display_name = (@show_name || @real_name)
+    return nil if display_name.nil?
+    display_name = $player.name if display_name.downcase == "<player>"
+    display_name = _INTL("{1}?", $player.name) if display_name.downcase == "<player2>"
+    display_name = "???" if @hide_name == 1
+    return display_name
+  end
+
   def refresh(redraw = false)
     self.visible = (!(@real_name.nil?)) && @msgwindow.visible && (@hide_name != 2)
     @overlay.visible = self.visible
@@ -309,12 +323,8 @@ class NameBoxSprite < IconSprite
       shadow = Dialog::getCharColor(@real_name, 1, true)
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
-      display_name = (@show_name || @real_name)
-      display_name = $player.name if display_name.downcase == "<player>"
-      display_name = _INTL("{1}?", $player.name) if display_name.downcase == "<player2>"
-      display_name = "???" if @hide_name == 1
       textpos = [[
-        display_name, self.bitmap.width / 2, 18, 2, base, shadow
+        self.display_name, self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
@@ -382,6 +392,7 @@ class TalkMessageWindowWrapper
     @coinwindow = nil
     @battlepointswindow&.dispose
     @battlepointswindow = nil
+    @hasAutoClose = false
     if full
       if !@message_position || @message_position <= 2
         if $game_system
@@ -437,6 +448,7 @@ class TalkMessageWindowWrapper
     else
       skin = MessageConfig.pbGetSpeechFrame
     end
+    @window_skin = skin
     @msgwindow.setSkin(skin)
   end
 
@@ -561,6 +573,7 @@ class TalkMessageWindowWrapper
         end
       when "wtnp", "^"
         text = text.sub(/\001\z/, "")   # fix: '$' can match end of line as well
+        @hasAutoClose = true
       when "se"
         if @controls[i][2] == 0
           @startSE = param
@@ -724,15 +737,26 @@ class TalkMessageWindowWrapper
     @text = value
   end
 
+  def text
+    return @text
+  end
+
+  def format_name(value)
+    value = value + ""
+    symbols = [".", "!", "?", ",", ":", ";"]
+    symbols.each do |i|
+      value.gsub!(i, _INTL("[{1}]", i))
+    end
+    value.gsub!("<", "(")
+    value.gsub!(">", ")")
+    value.gsub!("\\", "/")
+    return value
+  end
+
   def format_text(value)
     value = _format(value)
 
     value.gsub!("\\n", "\n")
-
-    # Insert player information
-    if $player
-      value.gsub!("<PLAYER>", $player.name)
-    end
 
     # Colors
     for i in ["R", "G", "B", "Y", "P", "O", "W", "RBOW", "RBOW2"]
@@ -832,20 +856,36 @@ class TalkMessageWindowWrapper
       end
     end
 
+    # Insert player information
+    if $player
+      value.gsub!("<PLAYER>", self.format_name($player.name))
+    end
+
     if @add_pauses
       i = 1
       brackets = 0
-      while i < value.length
+      while i < value.length - 1
         if value[i] == "["
           brackets += 1
         elsif value[i] == "]"
           brackets -= 1
         elsif brackets == 0 && value[i - 1] != "\\"
+          next_char = value[i + 1]
           case value[i]
-          when ".", "!", "?"
-            add = "\\wt[8]"
+          when "."
+            if ".!?)".include?(next_char)
+              add = "\\wt[4]"
+            else
+              add = "\\wt[8]"
+            end
             value = (value[0..i] + add + value[(i+1)...value.length])
             i += add.length
+          when "!", "?"
+            if next_char != "!" && next_char != "?"
+              add = "\\wt[8]"
+              value = (value[0..i] + add + value[(i+1)...value.length])
+              i += add.length
+            end
           when ",", ":", ";"
             add = "\\wt[6]"
             value = (value[0..i] + add + value[(i+1)...value.length])
@@ -857,6 +897,11 @@ class TalkMessageWindowWrapper
     end
 
     value.gsub!("[.]", ".")
+    value.gsub!("[!]", ".")
+    value.gsub!("[?]", ".")
+    value.gsub!("[,]", ".")
+    value.gsub!("[:]", ".")
+    value.gsub!("[;]", ".")
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
 
@@ -883,8 +928,13 @@ class TalkMessageWindowWrapper
     return @namebox
   end
 
+  def window_skin
+    return @window_skin || MessageConfig.pbGetSpeechFrame
+  end
+
   def window_skin=(value)
     value = MessageConfig.pbGetSpeechFrame if value.nil?
+    @window_skin = value
     @msgwindow.setSkin(value)
   end
 
@@ -906,6 +956,34 @@ class TalkMessageWindowWrapper
 
   def busy?
     return @msgwindow.busy?
+  end
+
+  def pausing?
+    return @msgwindow.pausing?
+  end
+
+  def skipAhead
+    if !@msgwindow.pausing?
+      if !@hasAutoClose && @msgwindow.position > 1
+        @msgwindow.skipAhead(true)
+        @controls.length.times do |i|
+          next if !@controls[i]
+          next if @controls[i][2] > @msgwindow.position
+          control = @controls[i][0]
+          param = @controls[i][1]
+          case control
+          when "ts"     # Change text speed
+            @msgwindow.textspeed = (param == "") ? -999 : param.to_i
+          when "se"     # Play SE
+            pbSEPlay(pbStringToAudioFile(param))
+          when "me"     # Play ME
+            pbMEPlay(pbStringToAudioFile(param))
+          end
+          @controls[i] = nil
+        end
+      end
+      Input.update
+    end
   end
 
   def reposition
@@ -953,6 +1031,15 @@ class TalkMessageWindows
     @msgwindows = [
       TalkMessageWindowWrapper.new(@viewport)
     ]
+    @control_skip = KeybindSprite.new(
+      Input::USE, "Skip", Graphics.width - 120, Graphics.height - 40, @viewport)
+    @control_next = KeybindSprite.new(
+      Input::USE, "Next", Graphics.width - 120, Graphics.height - 40, @viewport)
+    @control_log = KeybindSprite.new(
+      Input::SPECIAL, "Log", Graphics.width - 120, Graphics.height - 80, @viewport)
+    @control_skip.visible = false
+    @control_next.visible = false
+    @control_log.visible = false
     @holding = false # Collect messages to display simultaneously
     @queue = [] # Queue in holding
     @queue_shout = false
@@ -1034,7 +1121,27 @@ class TalkMessageWindows
     else
       window.text = text
       window.start
+      i = 0
+      show_log = $game_temp.dialog_log.length > 0
       loop do
+        if (window.pausing? || !window.busy?)
+          @control_skip.visible = false
+          @control_next.visible = true
+          if show_log
+            if Input.trigger?(Input::SPECIAL)
+              pbShowDialogLog
+            end
+            @control_log.visible = true
+          else
+            @control_log.visible = false
+          end
+        else
+          @control_skip.visible = true
+          @control_next.visible = false
+        end
+        if window.busy? && Input.trigger?(Input::USE)
+          window.skipAhead
+        end
         break if window.refresh
         Graphics.update
         Input.update
@@ -1045,6 +1152,15 @@ class TalkMessageWindows
         window.showCommands()
         $game_map.need_refresh = true if $game_map
       end
+      @control_skip.visible = false
+      @control_next.visible = false
+      @control_log.visible = false
+      $game_temp.log_dialog(
+        0,
+        window.namebox.display_name,
+        window.text,
+        window.window_skin
+      )
       window.finish
       window.close
     end
@@ -1116,6 +1232,7 @@ class TalkMessageWindows
 
   def dispose
     @msgwindows.each { |w| w.dispose }
+    @control_log.dispose
     @viewport.dispose
   end
 
@@ -1136,5 +1253,199 @@ class TalkMessageWindows
     msgwindow.reposition
     @msgwindows.push(msgwindow)
   end
+
+end
+
+def pbShowDialogLog
+
+  viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+  viewport.z = 999999
+
+  sprites = {}
+
+  sprites["background"] = Sprite.new(viewport)
+  sprites["background"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
+  sprites["background"].bitmap.fill_rect(
+    0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0))
+  sprites["background"].opacity = 0
+
+  sprites["uparrow"] = AnimatedSprite.new("Graphics/Pictures/uparrow", 8, 28, 40, 2, viewport)
+  sprites["uparrow"].x = Graphics.width - 48
+  sprites["uparrow"].y = 32
+  sprites["uparrow"].play
+  sprites["uparrow"].visible = false
+  sprites["uparrow"].opacity = 0
+  sprites["downarrow"] = AnimatedSprite.new("Graphics/Pictures/downarrow", 8, 28, 40, 2, viewport)
+  sprites["downarrow"].x = Graphics.width - 48
+  sprites["downarrow"].y = Graphics.height - 192
+  sprites["downarrow"].play
+  sprites["downarrow"].visible = false
+  sprites["downarrow"].opacity = 0
+
+  def make_message_box(viewport, sprites, log, index, y)
+    if sprites[_INTL("window_{1}", index)]
+      return sprites[_INTL("window_{1}", index)]
+    end
+    type = log[index][0]
+    name = log[index][1]
+    text = log[index][2]
+    skin = log[index][3]
+    if type == 0 # Normal message
+      window = Window_AdvancedTextPokemon.new("")
+      window.setSkin(skin) 
+      window.resizeHeightToFit(text, Supplementals::MESSAGE_WINDOW_WIDTH)
+      window.text = text
+      window.viewport = viewport
+      window.x = (Graphics.width - Supplementals::MESSAGE_WINDOW_WIDTH * 3 / 4) / 2
+      window.y = y - window.height
+      window.opacity = 0
+      window.contents_opacity = 0
+      sprites[_INTL("window_{1}", index)] = window
+      if name
+        nametext = Sprite.new(viewport)
+        nametext.bitmap = Bitmap.new(Graphics.width / 4, 32)
+        nametext.x = 0
+        nametext.y = y - window.height / 2 - 18
+        pbDrawTextPositions(nametext.bitmap,
+          [[_INTL("{1}", name), Graphics.width / 4 - 8, -2, 1,
+          Color.new(252, 252, 252), Color.new(0, 0, 0), true]])
+        sprites[_INTL("name_{1}", index)] = nametext
+      end
+    elsif type == 1 # Player choice
+      window = Window_AdvancedTextPokemon.new("")
+      window.resizeHeightToFit(text, Supplementals::MESSAGE_WINDOW_WIDTH * 3 / 4)
+      window.text = text
+      window.viewport = viewport
+      window.x = (Graphics.width - Supplementals::MESSAGE_WINDOW_WIDTH) / 2
+      window.y = y - window.height
+      window.opacity = 0
+      window.contents_opacity = 0
+      sprites[_INTL("window_{1}", index)] = window
+      rightarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow", 8, 40, 28, 2, viewport)
+      rightarrow.x = (Graphics.width - Supplementals::MESSAGE_WINDOW_WIDTH) / 2 - 48
+      rightarrow.y = y - (window.height / 2) - 14
+      rightarrow.opacity = 0
+      sprites[_INTL("arrow_{1}", index)] = rightarrow
+    end
+    return window
+  end
+
+  log = $game_temp.dialog_log
+  bottom_index = log.length - 1
+  top_box_index = bottom_index
+  top_box = nil
+  index = bottom_index
+  y = Graphics.height - 128
+  while index >= 0 && y > 0
+    box = make_message_box(viewport, sprites, log, index, y)
+    y -= box.height
+    top_box_index = index
+    top_box = box
+    index -= 1
+  end
+
+  if top_box_index > 0 || top_box.y < 0
+    sprites["uparrow"].visible = true
+  end
+
+  16.times do
+    sprites.each do |key, value|
+      if key == "background"
+        value.opacity += 8
+      else
+        value.opacity += 16
+      end
+      if key[/window/]
+        value.contents_opacity += 16
+      end
+    end
+    Graphics.update
+    Input.update
+    viewport.update
+    pbUpdateSpriteHash(sprites)
+  end
+
+  loop do
+    Graphics.update
+    Input.update
+    viewport.update
+    pbUpdateSpriteHash(sprites)
+    if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK) || Input.trigger?(Input::SPECIAL)
+      break
+    end
+    redraw = false
+    if Input.repeat?(Input::UP)
+      if top_box_index > 0 || top_box.y < 0
+        bottom_index -= 1
+        redraw = true
+      end
+    end
+    if Input.repeat?(Input::DOWN)
+      if bottom_index < log.length - 1
+        bottom_index += 1
+        redraw = true
+      end
+    end
+    if redraw
+      for index in 0...log.length
+        if sprites[_INTL("window_{1}", index)]
+          sprites[_INTL("window_{1}", index)].visible = false
+        end
+        if sprites[_INTL("name_{1}", index)]
+          sprites[_INTL("name_{1}", index)].visible = false
+        end
+        if sprites[_INTL("arrow_{1}", index)]
+          sprites[_INTL("arrow_{1}", index)].visible = false
+        end
+      end
+      index = bottom_index
+      y = Graphics.height - 128
+      while index >= 0 && y > 0
+        box = make_message_box(viewport, sprites, log, index, 0)
+        box.y = y - box.height
+        box.visible = true
+        box.opacity = 255
+        box.contents_opacity = 255
+        if sprites[_INTL("name_{1}", index)]
+          sprites[_INTL("name_{1}", index)].visible = true
+          sprites[_INTL("name_{1}", index)].opacity = 255
+          sprites[_INTL("name_{1}", index)].y = y - box.height / 2 - 18
+        end
+        if sprites[_INTL("arrow_{1}", index)]
+          sprites[_INTL("arrow_{1}", index)].visible = true
+          sprites[_INTL("arrow_{1}", index)].opacity = 255
+          sprites[_INTL("arrow_{1}", index)].y = y - box.height / 2 - 14
+        end
+        y -= box.height
+        top_box_index = index
+        top_box = box
+        index -= 1
+      end
+      sprites["uparrow"].visible = (top_box_index > 0 || top_box.y < 0)
+      sprites["downarrow"].visible = (bottom_index < log.length - 1)
+    end
+  end
+
+  16.times do
+    sprites.each do |key, value|
+      if key == "background"
+        value.opacity -= 8
+      else
+        value.opacity -= 16
+      end
+      if key[/window/]
+        value.contents_opacity -= 16
+      end
+    end
+    Graphics.update
+    Input.update
+    viewport.update
+    pbUpdateSpriteHash(sprites)
+  end
+
+  Input.update
+
+  pbDisposeSpriteHash(sprites)
+  viewport.dispose
 
 end

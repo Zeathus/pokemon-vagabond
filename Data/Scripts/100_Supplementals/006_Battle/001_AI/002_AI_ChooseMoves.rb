@@ -57,12 +57,21 @@ class Battle
         next if !pbCanChooseMove?(idxBattlers[0],i0,false)
         next if i1 && !pbCanChooseMove?(idxBattlers[1],i1,false)
         next if i2 && !pbCanChooseMove?(idxBattlers[2],i2,false)
+        possible_targets0 = pbPossibleTargets(@battlers[idxBattlers[0]], @battlers[idxBattlers[0]].moves[i0])
+        possible_targets1 = pbPossibleTargets(@battlers[idxBattlers[1]], @battlers[idxBattlers[1]].moves[i1]) if i1
+        possible_targets2 = pbPossibleTargets(@battlers[idxBattlers[2]], @battlers[idxBattlers[2]].moves[i2]) if i2
+        next if possible_targets0.length == 0
+        next if i1 && possible_targets1.length == 0
+        next if i2 && possible_targets2.length == 0
         scores[i0] = rand(100) if single
         scores[i0][i1] = rand(100) if double
         scores[i0][i1][i2] = rand(100) if triple
-        targets[i0][0] = opposing_pokemon.shuffle[0].index if single
-        targets[i0][i1][0] = opposing_pokemon.shuffle[0].index if double
-        targets[i0][i1][i2][0] = opposing_pokemon.shuffle[0].index if triple
+        targets[i0][0] = possible_targets0.shuffle[0][0].index if single
+        targets[i0][i1][0] = possible_targets1.shuffle[0][0].index if double
+        targets[i0][i1][i2][0] = possible_targets2.shuffle[0][0].index if triple
+        targets[i0][0] = 0 if single && targets[i0][0].nil?
+        targets[i0][i1][0] = 0 if double && targets[i0][i1][0].nil?
+        targets[i0][i1][i2][0] = 0 if triple && targets[i0][i1][i2][0].nil?
       end
     else
 

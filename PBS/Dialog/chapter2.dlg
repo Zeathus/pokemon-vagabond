@@ -49,7 +49,7 @@
 > Though to keep an eye on her, I think it would be best to let her stay at the living quarters for a while.
 /speaker Amethyst
 > That sounds like a good idea. We can bring her along and show her where she'll be staying.
-> Does that sounds okay with you?
+> Does that sound okay?
 /speaker Nekane
 /hidename 1
 > \ts[2]Yes. That is fine.
@@ -69,7 +69,7 @@
 
 [CH2_NEKANE,4]
 /speaker Amethyst
-> This is where you'll be staying. Feel free to make yourself at home!
+> This is where you'll be staying.\nMake yourself at home!
 
 [CH2_NEKANE,5]
 /speaker Amethyst
@@ -87,6 +87,7 @@
 /speaker Amethyst
 > \ts[1]We kinda found you in the middle of nowhere, so just some simple questions about you.
 /speaker Nekane
+/hidename 1
 > \ts[2]About... me? I think that is... fine?
 /speaker Amethyst
 > \ts[1]Good! Then first of all...
@@ -133,7 +134,7 @@
 /speaker Nekane thought
 > ...
 /expression neutral
-> \ts[2]Sorry. I cannot seem recall anything about that forest.
+> \ts[2]Sorry. I cannot recall anything about that forest.
 > The only thing I remember is a large shadow of some kind...
 /speaker Amethyst confused
 > \ts[1]A large shadow..?\nThat's not a lot to work with.
@@ -444,7 +445,7 @@
 /speaker Kira annoyed
 > ...What are you two up to exactly?
 /speaker Amethyst
-> Well, Nekane was growling restless, having nothing to do and all.
+> Well, Nekane was growing restless, having nothing to do and all.
 /expression awkward
 > That's when I learned she didn't know how to read or write.
 /expression wink
@@ -463,7 +464,7 @@
 /speaker Kira
 > We handled it.
 /speaker Amethyst
-> Something was actually something going on at Mt[.] Pegma then?
+> Something was actually going on at Mt[.] Pegma then?
 > It looks like <PLAYER> was trustworthy all along!
 /expression wink
 > I guess you owe them a little apology?

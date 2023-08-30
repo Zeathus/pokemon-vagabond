@@ -260,11 +260,11 @@ class BossEff_ChangeStatQuick < BossEffect
         end
       elsif stats.length == 1
         if total.abs / stats.length >= 3
-          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][1]), GameData::Stat.get(stats[0]).name)
+          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][1], GameData::Stat.get(stats[0]).name))
         elsif total.abs / stats.length >= 2
-          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][0]), GameData::Stat.get(stats[0]).name)
+          battle.pbDisplay(_INTL("{1}'s {4} {2} {3}!", target.pbThis, type[i], adjectives[i][0], GameData::Stat.get(stats[0]).name))
         else
-          battle.pbDisplay(_INTL("{1}'s {3} {2}!", target.pbThis, type[i]), GameData::Stat.get(stats[0]).name)
+          battle.pbDisplay(_INTL("{1}'s {3} {2}!", target.pbThis, type[i], GameData::Stat.get(stats[0]).name))
         end
       else
         message = _INTL("{1}'s", target.pbThis)
@@ -370,7 +370,7 @@ class BossEff_Damage < BossEffect
     if !target.fainted?
       losehp = (@damage * target.totalhp / 100.0).floor
       losehp = target.hp if losehp > target.hp
-      battle.scene.pbDamageAnimation(target)
+      pbSEPlay("Battle damage normal")
       target.pbReduceHP(losehp)
     end
   end
@@ -385,7 +385,7 @@ class BossEff_FixedDamage < BossEffect
     if !target.fainted?
       losehp = @damage
       losehp = target.hp if losehp > target.hp
-      battle.scene.pbDamageAnimation(target)
+      pbSEPlay("Battle damage normal")
       target.pbReduceHP(losehp)
     end
   end
@@ -398,9 +398,8 @@ class BossEff_Faint < BossEffect
   def activate(battle, triggerer, target)
     if !target.fainted?
       losehp = target.hp
-      battle.scene.pbDamageAnimation(target)
+      pbSEPlay("Battle damage super")
       target.pbReduceHP(losehp)
-      target.pbFaint
     end
   end
 end
@@ -527,7 +526,9 @@ class BossEff_UseMove < BossEffect
   def activate(battle, triggerer, target)
     if @move_target_idx == -1
       target.effects[PBEffects::Instructed] = true
+      oldLastRoundMoved = target.lastRoundMoved
       target.pbUseMoveSimple(@move,-1,-1,false)
+      target.lastRoundMoved = oldLastRoundMoved
       target.effects[PBEffects::Instructed] = false
     else
       possible_targets = []
@@ -544,7 +545,9 @@ class BossEff_UseMove < BossEffect
       end
       move_target = possible_targets.shuffle[0]
       target.effects[PBEffects::Instructed] = true
+      oldLastRoundMoved = target.lastRoundMoved
       target.pbUseMoveSimple(@move,move_target.index,-1,false)
+      target.lastRoundMoved = oldLastRoundMoved
       target.effects[PBEffects::Instructed] = false
     end
   end

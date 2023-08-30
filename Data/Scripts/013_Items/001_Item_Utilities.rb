@@ -602,7 +602,7 @@ def pbLearnMove(pkmn, move, ignore_if_known = false, by_machine = false, &block)
     screen = PokemonSummary.new(scene)
     screen.pbStartScreen([pkmn], 0, move)
   else
-    pbMessage(_INTL("\\se[]{2} was added to {1}'s move list!\\se[Pkmn move learnt]", pkmn_name, move_name))
+    pbMessage(_INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]", pkmn_name, move_name))
   end
   return false
   pbMessage(_INTL("{1} wants to learn {2}, but it already knows {3} moves.\1",
@@ -664,6 +664,37 @@ def pbUseItem(bag, item, bagscene = nil)
         annot.push((elig) ? _INTL("ABLE") : _INTL("NOT ABLE"))
       end
     end
+    ret = false
+    pbChoosePokemonScreen(0, 99999) { |member, pkmnidx|
+      if !member && !pkmnidx
+        true
+      else
+        pkmn = getPartyPokemon(member)[pkmnidx]
+        if pbCheckUseOnPokemon(item, pkmn, nil)
+          qty = 1
+          max_at_once = ItemHandlers.triggerUseOnPokemonMaximum(item, pkmn)
+          max_at_once = [max_at_once, $bag.quantity(item)].min
+          if max_at_once > 1
+            qty = pbChooseNumber(
+              _INTL("How many {1} do you want to use?", GameData::Item.get(item).name), max_at_once
+            )
+          end
+          if qty > 0
+            ret = ItemHandlers.triggerUseOnPokemon(item, qty, pkmn, bagscene)
+            if ret && itm.consumed_after_use?
+              bag.remove(item, qty)
+              if !bag.has?(item)
+                pbMessage(_INTL("You used your last {1}.", itm.name))
+              end
+            end
+            ret
+          else
+            false
+          end
+        end
+      end
+    }
+    return (ret) ? 1 : 0
     pbFadeOutIn {
       scene = PokemonScreen_Scene.new
       screen = PokemonScreen.new(scene, getActivePokemon(0))

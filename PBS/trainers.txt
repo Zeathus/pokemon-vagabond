@@ -1217,14 +1217,14 @@ Pokemon = GLACEON,38
     AbilityIndex = 0
 #--------------
 [LASS,Karine] #Breccia Passage
-LoseText = "Now I know how it feels for plants decay..."
+LoseText = "Now I know how it feels for plants to decay..."
 Pokemon = ODDISH,7
     AbilityIndex = 0
 Pokemon = BELLSPROUT,7
     AbilityIndex = 0
 #--------------
 [LASS,Karine,1] #Breccia Passage
-LoseText = "Now I know how it feels for plants decay..."
+LoseText = "Now I know how it feels for plants to decay..."
 Pokemon = ODDISH,14
     AbilityIndex = 0
 Pokemon = BELLSPROUT,15
@@ -1233,7 +1233,7 @@ Pokemon = PIDGEOTTO,18
     AbilityIndex = 0
 #--------------
 [LASS,Karine,2] #Breccia Passage
-LoseText = "Now I know how it feels for plants decay..."
+LoseText = "Now I know how it feels for plants to decay..."
 Pokemon = GLOOM,24
     AbilityIndex = 0
 Pokemon = WEEPINBELL,24
@@ -1242,7 +1242,7 @@ Pokemon = PIDGEOTTO,25
     AbilityIndex = 0
 #--------------
 [LASS,Karine,3] #Breccia Passage
-LoseText = "Now I know how it feels for plants decay..."
+LoseText = "Now I know how it feels for plants to decay..."
 Pokemon = BELLOSSOM,35
     Item = BIGROOT
     AbilityIndex = 0
@@ -1271,27 +1271,36 @@ Pokemon = IVYSAUR,19
 #--------------
 [LASS,Sally,1] #Breccia Gym
 LoseText = "They have many weaknesses though..."
-Pokemon = BAYLEEF,19
+Pokemon = BAYLEEF,28
     AbilityIndex = 0
-Pokemon = IVYSAUR,20
+Pokemon = IVYSAUR,29
     AbilityIndex = 0
 #--------------
 [LASS,Sally,2] #Breccia Gym
 LoseText = "They have many weaknesses though..."
-Pokemon = BAYLEEF,26
+Pokemon = MEGANIUM,38
     AbilityIndex = 0
-Pokemon = DEERLING,26
+Pokemon = SAWSBUCK,38
     AbilityIndex = 0
-Pokemon = IVYSAUR,27
+Pokemon = VENUSAUR,39
     AbilityIndex = 0
 #--------------
 [LASS,Sally,3] #Breccia Gym
 LoseText = "They have many weaknesses though..."
-Pokemon = MEGANIUM,35
+Pokemon = MEGANIUM,48
     AbilityIndex = 0
-Pokemon = SAWSBUCK,35
+Pokemon = SAWSBUCK,48
     AbilityIndex = 0
-Pokemon = VENUSAUR,36
+Pokemon = VENUSAUR,49
+    AbilityIndex = 0
+#--------------
+[LASS,Sally,4] #Breccia Gym
+LoseText = "They have many weaknesses though..."
+Pokemon = MEGANIUM,58
+    AbilityIndex = 0
+Pokemon = SAWSBUCK,58
+    AbilityIndex = 0
+Pokemon = VENUSAUR,59
     AbilityIndex = 0
 #--------------
 [LASS,Sandra] #Breccia Passage
@@ -1992,11 +2001,79 @@ Pokemon = MANTYKE,18
 Pokemon = WOOPER,17
     AbilityIndex = 0
 #--------------
+[JANITOR,Gerald,1] #Lapis Lazuli Gym
+LoseText = "I must be washed up..."
+Pokemon = MANTYKE,28
+    AbilityIndex = 0
+Pokemon = QUAGSIRE,27
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,2] #Lapis Lazuli Gym
+LoseText = "I must be washed up..."
+Pokemon = MANTINE,38
+    AbilityIndex = 0
+Pokemon = QUAGSIRE,37
+    AbilityIndex = 0
+Pokemon = AZUMARILL,37
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,3] #Lapis Lazuli Gym
+LoseText = "I must be washed up..."
+Pokemon = MANTINE,48
+    AbilityIndex = 0
+Pokemon = QUAGSIRE,47
+    AbilityIndex = 0
+Pokemon = AZUMARILL,47
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,4] #Lapis Lazuli Gym
+LoseText = "I must be washed up..."
+Pokemon = MANTINE,58
+    AbilityIndex = 0
+Pokemon = QUAGSIRE,57
+    AbilityIndex = 0
+Pokemon = AZUMARILL,57
+    AbilityIndex = 0
+#--------------
 [ENGINEER,Bobby] #Lapis Lazuli Gym
 LoseText = "The button is yours!"
 Pokemon = TENTACOOL,18
     AbilityIndex = 0
 Pokemon = CHINCHOU,18
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,1] #Lapis Lazuli Gym
+LoseText = "The button is yours!"
+Pokemon = TENTACOOL,28
+    AbilityIndex = 0
+Pokemon = LANTURN,28
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,2] #Lapis Lazuli Gym
+LoseText = "The button is yours!"
+Pokemon = TENTACRUEL,38
+    AbilityIndex = 0
+Pokemon = LANTURN,38
+    AbilityIndex = 0
+Pokemon = HUNTAIL,38
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,3] #Lapis Lazuli Gym
+LoseText = "The button is yours!"
+Pokemon = TENTACRUEL,48
+    AbilityIndex = 0
+Pokemon = LANTURN,48
+    AbilityIndex = 0
+Pokemon = HUNTAIL,48
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,4] #Lapis Lazuli Gym
+LoseText = "The button is yours!"
+Pokemon = TENTACRUEL,58
+    AbilityIndex = 0
+Pokemon = LANTURN,58
+    AbilityIndex = 0
+Pokemon = HUNTAIL,58
     AbilityIndex = 0
 #--------------
 [PARASOLLADY,Beatrice] #Lapis Lazuli Gym
@@ -2006,11 +2083,79 @@ Pokemon = MUDKIP,18
 Pokemon = WARTORTLE,19
     AbilityIndex = 0
 #--------------
+[PARASOLLADY,Beatrice,1] #Lapis Lazuli Gym
+LoseText = "I must've been distracted..."
+Pokemon = MARSHTOMP,28
+    AbilityIndex = 0
+Pokemon = WARTORTLE,29
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,2] #Lapis Lazuli Gym
+LoseText = "I must've been distracted..."
+Pokemon = SWAMPERT,38
+    AbilityIndex = 0
+Pokemon = BLASTOISE,39
+    AbilityIndex = 0
+Pokemon = SAMUROTT,39
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,3] #Lapis Lazuli Gym
+LoseText = "I must've been distracted..."
+Pokemon = SWAMPERT,48
+    AbilityIndex = 0
+Pokemon = BLASTOISE,49
+    AbilityIndex = 0
+Pokemon = SAMUROTT,49
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,4] #Lapis Lazuli Gym
+LoseText = "I must've been distracted..."
+Pokemon = SWAMPERT,58
+    AbilityIndex = 0
+Pokemon = BLASTOISE,59
+    AbilityIndex = 0
+Pokemon = SAMUROTT,59
+    AbilityIndex = 0
+#--------------
 [ENGINEER,Ed] #Pegma Gym
 LoseText = "Remember, copper plus tin equals bronze!"
 Pokemon = SLUGMA,18
     AbilityIndex = 0
 Pokemon = DARUMAKA,17
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,1] #Pegma Gym
+LoseText = "Remember, copper plus tin equals bronze!"
+Pokemon = MAGCARGO,28
+    AbilityIndex = 0
+Pokemon = DARUMAKA,27
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,2] #Pegma Gym
+LoseText = "Remember, copper plus tin equals bronze!"
+Pokemon = MAGCARGO,38
+    AbilityIndex = 0
+Pokemon = DARMANITAN,37
+    AbilityIndex = 0
+Pokemon = RAPIDASH,37
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,3] #Pegma Gym
+LoseText = "Remember, copper plus tin equals bronze!"
+Pokemon = MAGCARGO,48
+    AbilityIndex = 0
+Pokemon = DARMANITAN,47
+    AbilityIndex = 0
+Pokemon = RAPIDASH,47
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,4] #Pegma Gym
+LoseText = "Remember, copper plus tin equals bronze!"
+Pokemon = MAGCARGO,58
+    AbilityIndex = 0
+Pokemon = DARMANITAN,57
+    AbilityIndex = 0
+Pokemon = RAPIDASH,57
     AbilityIndex = 0
 #--------------
 [MINER,Mitch] #Pegma Gym
@@ -2020,11 +2165,79 @@ Pokemon = SHIELDON,18
 Pokemon = SALANDIT,18
     AbilityIndex = 0
 #--------------
+[MINER,Mitch,1] #Pegma Gym
+LoseText = "You'll have four switches this time. Good luck!"
+Pokemon = SHIELDON,28
+    AbilityIndex = 0
+Pokemon = SALAZZLE,28
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,2] #Pegma Gym
+LoseText = "You'll have four switches this time. Good luck!"
+Pokemon = BASTIODON,38
+    AbilityIndex = 0
+Pokemon = SALAZZLE,38
+    AbilityIndex = 0
+Pokemon = LAMPENT,38
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,3] #Pegma Gym
+LoseText = "You'll have four switches this time. Good luck!"
+Pokemon = BASTIODON,48
+    AbilityIndex = 0
+Pokemon = SALAZZLE,48
+    AbilityIndex = 0
+Pokemon = CHANDELURE,48
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,4] #Pegma Gym
+LoseText = "You'll have four switches this time. Good luck!"
+Pokemon = BASTIODON,58
+    AbilityIndex = 0
+Pokemon = SALAZZLE,58
+    AbilityIndex = 0
+Pokemon = CHANDELURE,58
+    AbilityIndex = 0
+#--------------
 [GENTLEMAN,Peter] #Pegma Gym
 LoseText = "Raphael talked about you when he returned. He's looking forward to this."
 Pokemon = CHIMCHAR,18
     AbilityIndex = 0
 Pokemon = CHARMELEON,19
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,1] #Pegma Gym
+LoseText = "Raphael talked about you when he returned. He's looking forward to this."
+Pokemon = MONFERNO,28
+    AbilityIndex = 0
+Pokemon = CHARMELEON,29
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,2] #Pegma Gym
+LoseText = "Raphael talked about you when he returned. He's looking forward to this."
+Pokemon = INFERNAPE,38
+    AbilityIndex = 0
+Pokemon = CHARIZARD,39
+    AbilityIndex = 0
+Pokemon = EMBOAR,39
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,3] #Pegma Gym
+LoseText = "Raphael talked about you when he returned. He's looking forward to this."
+Pokemon = INFERNAPE,48
+    AbilityIndex = 0
+Pokemon = CHARIZARD,49
+    AbilityIndex = 0
+Pokemon = EMBOAR,49
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,4] #Pegma Gym
+LoseText = "Raphael talked about you when he returned. He's looking forward to this."
+Pokemon = INFERNAPE,58
+    AbilityIndex = 0
+Pokemon = CHARIZARD,59
+    AbilityIndex = 0
+Pokemon = EMBOAR,59
     AbilityIndex = 0
 #--------------
 [MINER,Rex] #Stadium Aegis Cup 5
@@ -2132,29 +2345,40 @@ Pokemon = COTTONEE,17
 #--------------
 [PKMNBREEDER_M,Arnold,1] #Breccia Gym
 LoseText = "You're strong!"
-Pokemon = PALMINO,19
+Pokemon = PALMINO,28
     AbilityIndex = 0
-Pokemon = COTTONEE,19
+Pokemon = WHIMSICOTT,27
     AbilityIndex = 0
 #--------------
 [PKMNBREEDER_M,Arnold,2] #Breccia Gym
 LoseText = "You're strong!"
-Pokemon = PALMINO,26
+Pokemon = TROPIUS,38
     AbilityIndex = 0
-Pokemon = COTTONEE,26
+Pokemon = WHIMSICOTT,37
     AbilityIndex = 0
-Pokemon = GLOOM,26
+Pokemon = BELLOSSOM,37
     AbilityIndex = 0
 #--------------
 [PKMNBREEDER_M,Arnold,3] #Breccia Gym
 LoseText = "You're strong!"
-Pokemon = PALMINO,26
+Pokemon = TROPIUS,48
     AbilityIndex = 0
-Pokemon = VILEPLUME,35
+Pokemon = VILEPLUME,47
     AbilityIndex = 0
-Pokemon = WHIMSICOTT,35
+Pokemon = WHIMSICOTT,47
     AbilityIndex = 0
-Pokemon = SIMISAGE,35
+Pokemon = SIMISAGE,47
+    AbilityIndex = 0
+#--------------
+[PKMNBREEDER_M,Arnold,4] #Breccia Gym
+LoseText = "You're strong!"
+Pokemon = TROPIUS,58
+    AbilityIndex = 0
+Pokemon = VILEPLUME,57
+    AbilityIndex = 0
+Pokemon = WHIMSICOTT,57
+    AbilityIndex = 0
+Pokemon = SIMISAGE,57
     AbilityIndex = 0
 #--------------
 [PKMNFAN_F,Patricia] #Breccia Gym
@@ -2166,25 +2390,34 @@ Pokemon = SKIPLOOM,18
 #--------------
 [PKMNFAN_F,Patricia,1] #Breccia Gym
 LoseText = "My adorable Pokemon, defeated..."
-Pokemon = SWADLOON,19
+Pokemon = SWADLOON,28
     AbilityIndex = 0
-Pokemon = SKIPLOOM,19
+Pokemon = JUMPLUFF,28
     AbilityIndex = 0
 #--------------
 [PKMNFAN_F,Patricia,2] #Breccia Gym
 LoseText = "My adorable Pokemon, defeated..."
-Pokemon = SWADLOON,26
+Pokemon = LEAVANNY,38
     AbilityIndex = 0
-Pokemon = JUMPLUFF,26
+Pokemon = JUMPLUFF,38
     AbilityIndex = 0
 #--------------
 [PKMNFAN_F,Patricia,3] #Breccia Gym
 LoseText = "My adorable Pokemon, defeated..."
-Pokemon = LEAVANNY,35
+Pokemon = LEAVANNY,48
     AbilityIndex = 0
-Pokemon = JUMPLUFF,35
+Pokemon = JUMPLUFF,48
     AbilityIndex = 0
-Pokemon = CHERRIM,35
+Pokemon = CHERRIM,48
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia,4] #Breccia Gym
+LoseText = "My adorable Pokemon, defeated..."
+Pokemon = LEAVANNY,58
+    AbilityIndex = 0
+Pokemon = JUMPLUFF,58
+    AbilityIndex = 0
+Pokemon = CHERRIM,58
     AbilityIndex = 0
 #--------------
 [PRESCHOOLER_M,Riki] #Lazuli River
@@ -2521,43 +2754,6 @@ Pokemon = PACHIRISU,26
     Gender = F
     Moves = NUZZLE,SWIFT,ELECTROBALL
 #--------------
-[SCHOOLGIRL,Nowi]
-Pokemon = DRATINI,10
-    Gender = F
-    Moves = DRAGONBREATH,THUNDERWAVE,WRAP
-    AbilityIndex = 0
-Pokemon = SWABLU,10
-    Gender = F
-    AbilityIndex = 0
-#--------------
-[SCHOOLGIRL,Nowi,1]
-Pokemon = DRAGONAIR,30
-    Gender = F
-    Moves = FLAMETHROWER,DRAGONBREATH,THUNDERWAVE
-    AbilityIndex = 0
-Pokemon = ALTARIA,30
-    Gender = F
-    Moves = FLAMETHROWER,DRAGONBREATH,COTTONGUARD,DAZZLINGGLEAM
-    AbilityIndex = 0
-Pokemon = VIBRAVA,30
-    Gender = F
-    Moves = DRAGONBREATH,EARTHPOWER,BUGBUZZ,ROCKSLIDE
-    AbilityIndex = 0
-#--------------
-[SCHOOLGIRL,Nowi,2]
-Pokemon = ALTARIA,45
-    Gender = F
-    Moves = DRAGONPULSE,FIREBLAST,MOONBLAST,COTTONGUARD
-    AbilityIndex = 0
-Pokemon = FLYGON,45
-    Gender = F
-    Moves = EARTHQUAKE,DRAGONCLAW,BUGBUZZ,FIREBLAST
-    AbilityIndex = 0
-Pokemon = DRAGONAIR,45
-    Gender = F
-    Moves = AQUATAIL,IRONTAIL,DRAGONRUSH,DRAGONDANCE
-    AbilityIndex = 0
-#--------------
 [SCIENTIST_F,Employee] #GPO Membership #2
 Pokemon = SEADRA,27
     Gender = F
@@ -2792,7 +2988,7 @@ Pokemon = KIRLIA,23
 #--------------
 [TEAM_DAO_YANG,Yang,1] #Mt. Pegma #2 (Double)
 LoseText = Balance broken, just like that...
-Pokemon = JIGGLYPUFF,14
+Pokemon = JIGGLYPUFF,23
     Gender = F
     Moves = ROUND,DISARMINGVOICE,DISABLE,SING
     AbilityIndex = 0
@@ -2800,7 +2996,7 @@ Pokemon = JIGGLYPUFF,14
 #--------------
 [TEAM_DAO_YANG,Yang,2] #Mt. Pegma #4 (With Kira)
 LoseText = We lost, that's the truth.
-Pokemon = KADABRA,15
+Pokemon = KADABRA,23
     Gender = F
     Moves = CONFUSION,DISABLE,MIRACLEEYE
     AbilityIndex = 0
@@ -2808,7 +3004,7 @@ Pokemon = KADABRA,15
 #--------------
 [TEAM_DAO_YANG,Yang,3] #Mt. Pegma #4 (With Kira)
 LoseText = If we get stronger, we can change that reality!
-Pokemon = SKITTY,15
+Pokemon = SKITTY,23
     Gender = F
     Moves = TACKLE,DISARMINGVOICE,FEINTATTACK,COPYCAT
     AbilityIndex = 0
@@ -2816,7 +3012,7 @@ Pokemon = SKITTY,15
 #--------------
 [TEAM_DAO_YANG,Yang,4] #Mt. Pegma #6 (With Kira)
 LoseText = Truthfully, we lost.
-Pokemon = GIRAFARIG,23
+Pokemon = GIRAFARIG,24
     Gender = F
     Moves = PSYBEAM,STOMP,ASSURANCE,CONFUSION
     AbilityIndex = 0
@@ -2952,7 +3148,7 @@ Pokemon = POOCHYENA,22
 #--------------
 [TEAM_DAO_YIN,Yin,1] #Mt. Pegma #2 (Double)
 LoseText = How could you? Balance keeps this world from falling apart.
-Pokemon = GASTLY,14
+Pokemon = GASTLY,22
     Gender = M
     Moves = NIGHTSHADE,CURSE,CONFUSERAY,LICK
     AbilityIndex = 0
@@ -2960,12 +3156,12 @@ Pokemon = GASTLY,14
 #--------------
 [TEAM_DAO_YIN,Yin,2] #Mt. Pegma #3 (Optional)
 LoseText = You're definitely no tourist!
-Pokemon = SHINX,14
+Pokemon = SHINX,22
     Gender = M
     Moves = SPARK,BITE,CHARGE,TACKLE
     AbilityIndex = 0
     IV = 15,15,15,15,15,15
-Pokemon = SHUPPET,14
+Pokemon = SHUPPET,22
     Gender = M
     Moves = KNOCKOFF,NIGHTSHADE,SHADOWSNEAK,WILLOWISP
     AbilityIndex = 0
@@ -2973,13 +3169,13 @@ Pokemon = SHUPPET,14
 #--------------
 [TEAM_DAO_YIN,Yin,3] #Mt. Pegma #5 (With Kira)
 LoseText = Not the ideal result.
-Pokemon = ELECTRIKE,15
+Pokemon = ELECTRIKE,23
     Moves = SPARK,QUICKATTACK,HOWL,THUNDERWAVE
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,4] #Mt. Pegma #5 (With Kira)
 LoseText = We will still strive towards the future!
-Pokemon = MANKEY,15
+Pokemon = MANKEY,23
     Gender = M
     Moves = KARATECHOP,PURSUIT,FURYSWIPES,FOCUSENERGY
     AbilityIndex = 0
@@ -2987,19 +3183,19 @@ Pokemon = MANKEY,15
 #--------------
 [TEAM_DAO_YIN,Yin,5] #Mt. Pegma #6 (With Kira)
 LoseText = Ideally, we will keep trying.
-Pokemon = SCRAGGY,23
+Pokemon = SCRAGGY,24
     Gender = M
     Moves = LOWKICK,PAYBACK,FEINTATTACK,SWAGGER
     AbilityIndex = 0
     IV = 15,15,15,15,15,15
 #--------------
 [TEAM_DAO_YIN,Yin,6] #Mt. Pegma #7
-Pokemon = SANDILE,16
+Pokemon = SANDILE,24
     Gender = M
     Moves = BITE,SANDTOMB,ASSURANCE,SANDATTACK
     AbilityIndex = 0
     IV = 15,15,15,15,15,15
-Pokemon = TIMBURR,16
+Pokemon = TIMBURR,24
     Gender = M
     Moves = WAKEUPSLAP,ROCKTHROW,LOWKICK,BIDE
     AbilityIndex = 0
@@ -3326,19 +3522,8 @@ Pokemon = SCRAFTY,40
     AbilityIndex = 0
 #--------------
 [YOUNGSTER,Test]
-Pokemon = VENUSAUR,60
-    Moves = SPLASH
-Pokemon = SNORLAX,60
-    Moves = SPLASH
-    Ability = EFFECTSPORE
-Pokemon = VENUSAUR,60
-    Moves = SPLASH
-Pokemon = VENUSAUR,60
-    Moves = SPLASH
-Pokemon = VENUSAUR,60
-    Moves = SPLASH
-Pokemon = VENUSAUR,60
-    Moves = SPLASH
+Pokemon = BLISSEY,50
+    Moves = HELPINGHAND
 #--------------
 [VETERAN_M,Kazuyuki Tsuji] #VGC Cup 2009
 Pokemon = EMPOLEON,50

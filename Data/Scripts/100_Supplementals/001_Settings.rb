@@ -192,7 +192,7 @@ module Supplementals
   WILD_POKEMON_MAX_SCALING = 10
   # The change for a Pokémon to evolve when scaled to a level where it could have evolved
   # Can make the Pokémon evolve multiple times
-  WILD_POKEMON_EVOLVE_CHANCE = 0.5
+  WILD_POKEMON_EVOLVE_CHANCE = 0.0
   # How many levels a wild Pokémon must be above its required evolution level to evolve during scaling
   WILD_POKEMON_EVOLVE_EXTRA_LEVELS = 0
 

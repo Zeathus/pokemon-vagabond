@@ -192,7 +192,7 @@ module Scaling
     # Update level if player level is at least 10 above
     if level <= player_level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
       level_dif = player_level - level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
-      level = [level + level_dif / 2, level_old + Supplementals::WILD_POKEMON_MAX_SCALING].max
+      level = [level + level_dif / 2, old_level + Supplementals::WILD_POKEMON_MAX_SCALING].max
     end
 
     evolve = (rand < Supplementals::WILD_POKEMON_EVOLVE_CHANCE)
@@ -289,7 +289,7 @@ module Scaling
     case $PokemonSystem.difficulty
     when 0 # Easy
       pkmn.level -= 1
-      pkmn.natureflag = PBNatures::SERIOUS
+      pkmn.nature = :SERIOUS
       pkmn.el = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
       pkmn.calc_stats
     when 1 # Normal

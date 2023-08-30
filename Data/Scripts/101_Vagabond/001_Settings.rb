@@ -57,6 +57,10 @@ INITIALIZED_SHELLOS = 118
 MANHOLE_KEY         = 119
 SHOW_COLLISION      = 124
 DEBUG_EXTRA         = 125
+SUMMARY_TUTORIAL    = 126
+MOVES_TUTORIAL      = 127
+TELEPORT_TUTORIAL   = 128
+INACTIVE_PARTY_TUTORIAL = 129
 UNSTOPPABLE         = 146
 FINAL_BATTLE        = 147
 POKEPLAYER          = 151
@@ -78,6 +82,7 @@ PARTY               = 25
 VISUAL_PARTY        = 26
 SAVED_PARTY         = 27
 SAVED_PARTY_ACTIVE  = 28
+INACTIVE_POKEMON    = 29
 STARTER             = 34
 STARTER_ID          = 35
 BATTLE_SIM_AI       = 36
@@ -161,3 +166,17 @@ CHAIN_SPECIES       = 201
 CHAIN_LENGTH        = 202
 CUSTOM_POKEMON      = 203
 CHANGE_BATTLE_INTRO = 204
+
+# ----------------------------------------------------------------------
+# Misc.
+# ----------------------------------------------------------------------
+MAIN_QUEST_DISPLAY_PRIORITY = [
+  :THEFIRSTGYM,
+  :BRECCIAGYM,
+  :LAPISLAZULIGYM,
+  :PEGMAGYM,
+  :UNKNOWNDESTINATION,
+  :OPERATIONPEGMA,
+  :NEKANEGONEMISSING,
+  :GUARDIANOFEMOTION
+]

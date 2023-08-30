@@ -24,6 +24,7 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
             if encounter
                 pbFishingGame(encounter)
             end
+            $game_temp.encounter_type = nil
         end
     end
     next 1

@@ -219,6 +219,16 @@ ShowArea = false
 MapPosition = 0,21,6
 SnapEdges = true
 #-------------------------------
+[049]   # Kirrock Cavern
+Name = Kirrock Cavern
+Outdoor = false
+ShowArea = false
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,21,6
+MapSize = 1,1
+SnapEdges = true
+#-------------------------------
 [056]   # Pokécare Facility
 Name = Pokécare Facility
 Outdoor = false
@@ -295,13 +305,49 @@ MapPosition = 0,21,8
 SnapEdges = true
 MapSize = 1,1
 #-------------------------------
+[087]   # Pegma Quarry
+Name = Pegma Quarry
+Outdoor = true
+ShowArea = true
+Bicycle = true
+BicycleAlways = false
+MapPosition = 0,19,7
+MapSize = 1,1
+#-------------------------------
+[091]   # Pegma Quarry HQ
+Name = Pegma Quarry HQ
+Outdoor = false
+ShowArea = false
+Bicycle = false
+BicycleAlways = false
+MapPosition = 0,19,7
+MapSize = 1,1
+#-------------------------------
+[088]   # Cable Car Station
+Name = Cable Car Station
+Outdoor = false
+ShowArea = false
+Bicycle = false
+BicycleAlways = false
+MapPosition = 0,19,7
+MapSize = 1,1
+#-------------------------------
+[089]   # Cable Car Station
+Name = Cable Car Station
+Outdoor = false
+ShowArea = false
+Bicycle = false
+BicycleAlways = false
+MapPosition = 0,19,7
+MapSize = 1,1
+#-------------------------------
 [092]   # Pegma Quarry B1F
 Name = Pegma Quarry B1F
 Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [093]   # Pegma Quarry B2F
@@ -310,7 +356,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [094]   # Pegma Quarry B3F
@@ -319,7 +365,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [095]   # Pegma Quarry B4F
@@ -328,7 +374,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [096]   # Pegma Quarry B5F
@@ -337,7 +383,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [097]   # Pegma Quarry B6F
@@ -346,7 +392,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [098]   # Pegma Quarry B7F
@@ -355,7 +401,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [099]   # Pegma Quarry B8F
@@ -364,7 +410,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 BicycleAlways = false
-MapPosition = 0,20,7
+MapPosition = 0,19,7
 MapSize = 1,1
 #-------------------------------
 [104]   # Feldspar Gym 3F

@@ -624,6 +624,10 @@ class PokemonSummaryScene
       overlay.fill_rect(260,138,(pokemon.happiness+1)/8*2,2,Color.new(214,86,172))
       overlay.fill_rect(260,140,(pokemon.happiness+1)/8*2,4,Color.new(255,96,232))
     end
+    if $game_switches && !$game_switches[SUMMARY_TUTORIAL]
+      $game_switches[SUMMARY_TUTORIAL] = true
+      pbDialog("SUMMARY_TUTORIAL")
+    end
   end
 
   def drawPageStats(pokemon)
@@ -952,6 +956,10 @@ class PokemonSummaryScene
     pbDrawTextPositions(overlay,smalltextpos)
     pbSetSystemFont(overlay)
     pbDrawTextPositions(overlay,textpos)
+    if $game_switches && !$game_switches[MOVES_TUTORIAL]
+      $game_switches[MOVES_TUTORIAL] = true
+      pbDialog("MOVES_TUTORIAL")
+    end
   end
 
   def drawSelectedMove(pokemon,moveToLearn,moveid,refresh_zones=nil)
@@ -996,7 +1004,7 @@ class PokemonSummaryScene
           text_x+xdif,text_y,2,textcolor[1],textshadow[1]],
         [effectch==0 ? "---" : sprintf("%d",effectch)+"%",
           text_x,text_y+48,2,textcolor[2],textshadow[2]],
-        [priority==0 ? "---" : sprintf("%s%d",priority>0 ? "+" : "-",priority),
+        [priority==0 ? "---" : sprintf("%s%d",priority>0 ? "+" : "",priority),
           text_x+xdif,text_y+48,2,textcolor[3],textshadow[3]]
     ]
     pbSetSmallFont(overlay)
@@ -1357,11 +1365,14 @@ class PokemonSummaryScene
     if !@machinemove
       @sprites["movesel"].index=0
       @sprites["movesel"].side=0
-      @sprites["editmoves_keybinds_1"].name = "Remove Move"
     else
-      @sprites["editmoves_keybinds_1"].name = "Switch to Data Chips"
       selmove = @sprites["movesel"].index
     end
+    @sprites["editmoves_keybinds_1"].name = [
+      "Switch to TMs",
+      "Switch to Data Chips",
+      "Switch to Level Up"
+    ][@sprites["movesel"].page]
     switching=false
     forceleft=false
     up_frames = 0
@@ -1576,7 +1587,6 @@ class PokemonSummaryScene
           side = @sprites["movesel"].side
           side = (side + 1) % 2
           if side == 0
-            @sprites["editmoves_keybinds_1"].name = "Remove Move"
             selmove = @sprites["movesel"].index - @sprites["movesel"].scroll
             selmove = @pokemon.numMoves - 1 if selmove >= @pokemon.numMoves
             @sprites["movesel"].side = side
@@ -1596,6 +1606,23 @@ class PokemonSummaryScene
         end
       end
       if Input.trigger?(Input::ACTION)
+        page = @sprites["movesel"].page
+        page = (page + 1) % 3
+        @sprites["movesel"].page = page
+        @sprites["editmoves_keybinds_1"].name = [
+          "Switch to TMs",
+          "Switch to Data Chips",
+          "Switch to Level Up"
+        ][page]
+        if @sprites["movesel"].side == 1 && @listMoves[page].length == 0
+          @sprites["movesel"].side = 0
+          @sprites["movesel"].index = 0
+        end
+        selmove = @sprites["movesel"].index
+        refresh_zones[1] = true
+        newmove = true
+      end
+      if Input.trigger?(Input::SPECIAL)
         if @sprites["movesel"].side == 0
           if @inbattle
             pbMessage("You cannot edit movesets while in battle.")
@@ -1614,25 +1641,6 @@ class PokemonSummaryScene
             refresh_zones[0] = true
             newmove = true
           end
-        else
-          page = @sprites["movesel"].page
-          page = (page + 1) % 3
-          while @listMoves[page].length == 0
-            page = (page + 1) % 3
-          end
-          @sprites["movesel"].page = page
-          @sprites["editmoves_keybinds_1"].name = [
-            "Switch to TMs",
-            "Switch to Data Chips",
-            "Switch to Level Up"
-          ][page]
-          if @sprites["movesel"].side == 1 && @listMoves[page].length == 0
-            @sprites["movesel"].side = 0
-            @sprites["movesel"].index = 0
-          end
-          selmove = @sprites["movesel"].index
-          refresh_zones[1] = true
-          newmove = true
         end
       end
       if newmove
@@ -1713,6 +1721,22 @@ class PokemonSummaryScene
           pbMoveSelection
           dorefresh = true
         end
+      end
+      if Input.trigger?(Input::ACTION) && @page == 1
+        page = @sprites["movesel"].page
+        page = (page + 1) % 3
+        @sprites["movesel"].page = page
+        @sprites["editmoves_keybinds_1"].name = [
+          "Switch to TMs",
+          "Switch to Data Chips",
+          "Switch to Level Up"
+        ][page]
+        if @sprites["movesel"].side == 1 && @listMoves[page].length == 0
+          @sprites["movesel"].side = 0
+          @sprites["movesel"].index = 0
+        end
+        selmove = @sprites["movesel"].index
+        dorefresh = true
       end
       if Input.trigger?(Input::UP) && @partyindex>0
         oldindex=@partyindex

@@ -128,6 +128,7 @@ class OverworldPokemon
   end
 
   def encounter
+    setBattleRule("scalelevel")
     pbModifier.form = @form
     WildBattle.start(@species, @lvl)
   end
@@ -371,7 +372,7 @@ class SpawnArea
       if $game_player.map_id != @map.map_id
         pos = getConnectedMapPlayerPos($game_player.x, $game_player.y, @map.map_id)
         return if !pos
-        return if (pos[0] - x).abs <= 1 && (pos[1] - y).abs <= 1
+        return if (pos[0] - x).abs <= 2 && (pos[1] - y).abs <= 2
       else
         return if ($game_player.x - x).abs <= 1 && ($game_player.y - y).abs <= 1
       end

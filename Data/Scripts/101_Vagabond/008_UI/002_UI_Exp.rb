@@ -24,7 +24,7 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
     levelups_active = []
     levelups_inactive = []
 
-    shared_factor = fulltoall ? 0.5 : 0.3
+    shared_factor = fulltoall ? 0.5 : 0.4
     shared_mul = (0.5 * active.length) + (shared_factor * inactive.length)
     shared_mul = (shared_mul / (active.length + inactive.length)).ceil
 
@@ -33,25 +33,39 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       highest_level = i.level if i.level > highest_level
     end
 
+    active_exp = exp = ((expgain * 0.5) + (sharedexp * shared_mul)).ceil
+    inactive_exp = ((expgain * 0.4) + (sharedexp * shared_mul)).ceil
+    min_low_level_mod = -1
+    max_low_level_mod = -1
+    total_lucky_egg_bonus = 0
+
     #### Active Party level up calcs
     levelup = false
     for i in 0...active.length
       party = getPartyPokemon(active[i])
+      inactive_start = party.length
+      party += getInactivePartyPokemon(active[i])
       newexp_active[i] = []
       levelups = [i]
       for j in 0...party.length
         thispoke = party[j]
         growth_rate = thispoke.growth_rate
 
-        exp = ((expgain * 0.5) + (sharedexp * shared_mul)).ceil
+        exp = (j < inactive_start) ? active_exp : inactive_exp
 
         if thispoke.item == :LUCKYEGG
-          exp = (exp * 1.5).ceil
+          lucky_egg_bonus += (exp * 0.5).ceil
+          exp = lucky_egg_bonus
+          total_lucky_egg_bonus += lucky_egg_bonus
         end
 
         # Boost exp for underleveled Pokemon in Player's party
-        if thispoke.level < (highest_level - 2) && $player.party.include?(thispoke)
-          exp = (exp * 1.5).ceil
+        if thispoke.level < (highest_level - 2)
+          low_level_mod = [10, highest_level - thispoke.level - 1].min * 0.1
+          min_low_level_mod = low_level_mod if low_level_mod < min_low_level_mod || min_low_level_mod == -1
+          max_low_level_mod = low_level_mod if low_level_mod > max_low_level_mod || max_low_level_mod == -1
+          low_level_bonus = (exp * low_level_mod).ceil
+          exp += low_level_bonus
         end
 
         newexp = growth_rate.add_exp(thispoke.exp, exp)
@@ -72,17 +86,28 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
 
     #### Inactive Party level up calcs
     for i in 0...inactive.length
-      party = getPartyPokemon(inactive[i])
+      party = getAllPartyPokemon(inactive[i])
       newexp_inactive[i] = []
       levelups = [i+active.length]
       for j in 0...party.length
         thispoke = party[j]
         growth_rate = thispoke.growth_rate
 
-        exp = ((expgain * 0.3) + (sharedexp * shared_mul)).ceil
+        exp = inactive_exp
 
         if thispoke.item == :LUCKYEGG
-          exp = (exp * 1.5).ceil
+          lucky_egg_bonus += (exp * 0.5).ceil
+          exp = lucky_egg_bonus
+          total_lucky_egg_bonus += lucky_egg_bonus
+        end
+
+        # Boost exp for underleveled Pokemon in Player's party
+        if thispoke.level < (highest_level - 2)
+          low_level_mod = [10, highest_level - thispoke.level - 1].min * 0.1
+          min_low_level_mod = low_level_mod if low_level_mod < min_low_level_mod || min_low_level_mod == -1
+          max_low_level_mod = low_level_mod if low_level_mod > max_low_level_mod || max_low_level_mod == -1
+          low_level_bonus = (exp * low_level_mod).ceil
+          exp += low_level_bonus
         end
 
         newexp = growth_rate.add_exp(thispoke.exp, exp)
@@ -101,7 +126,90 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       end
     end
 
+    # Text colors
+    base = Color.new(252,252,252)
+    shadow = Color.new(0,0,0)
+
+    if $PokemonSystem.showexpgain == 0
+      exp_gain_text = []
+      if active_exp > 0
+        if inactive.length == 0
+          exp_gain_text.push(_INTL("{1} Exp. -> All Pokémon.", active_exp.to_s_formatted))
+        else
+          exp_gain_text.push(_INTL("{1} Exp. -> Active Pokémon.", active_exp.to_s_formatted))
+        end
+      end
+      if inactive.length > 0 && inactive_exp > 0
+        exp_gain_text.push(_INTL("{1} Exp. -> Inactive Pokémon", inactive_exp.to_s_formatted))
+      end
+      if min_low_level_mod >= 0 && max_low_level_mod >= 0
+        if min_low_level_mod == max_low_level_mod
+          exp_gain_text.push(_INTL("{1}% Bonus Exp. -> Low-Level Pokémon",
+            (min_low_level_mod * 100).round))
+        else
+          exp_gain_text.push(_INTL("{1}% to {2}% Bonus Exp. -> Low-Level Pokémon",
+            (min_low_level_mod * 100).round, (max_low_level_mod * 100).round))
+        end
+      end
+      if total_lucky_egg_bonus > 0
+        exp_gain_text.push("{1}% Bonus Exp. -> Lucky Egg Pokémon", 50)
+      end
+
+      if exp_gain_text.length > 0
+        20.times do
+          Graphics.update
+          Input.update
+        end
+
+        total_exp_sprites = {}
+        exp_gain_text.each do |text|
+          sprite = Sprite.new(viewport)
+          sprite.x = 128
+          sprite.y = Graphics.height / 2 + 32
+          sprite.bitmap = Bitmap.new(Graphics.width, 32)
+          sprite.z = 10
+          sprite.opacity = 0
+          pbSetSmallFont(sprite.bitmap)
+          pbDrawTextPositions(sprite.bitmap, [[text, 12, 4, 0, base, shadow, 1]])
+          total_exp_sprites[text.to_s] = sprite
+          for j in 0...32
+            if j < 16
+              total_exp_sprites.each do |key, value|
+                value.y -= 2
+              end
+              sprite.opacity += 16
+            end
+            Graphics.update
+            Input.update
+            viewport.update
+            pbUpdateSpriteHash(total_exp_sprites)
+          end
+        end
+
+        20.times do
+          Graphics.update
+          Input.update
+        end
+
+        for j in 0...16
+          total_exp_sprites.each do |key, value|
+            value.y -= 2
+            value.opacity -= 16
+          end
+          Graphics.update
+          Input.update
+          viewport.update
+          pbUpdateSpriteHash(total_exp_sprites)
+        end
+        pbDisposeSpriteHash(total_exp_sprites)
+      end
+    end
+
     if levelup
+      20.times do
+        Graphics.update
+        Input.update
+      end
 
       #### Title
       sprites = {}
@@ -109,10 +217,6 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       sprites["levelup"].setBitmap("Graphics/Pictures/Exp Screen/levelup")
       sprites["levelup"].src_rect=Rect.new(0,0,768,148)
       sprites["levelup"].z=10
-
-      # Text colors
-      base = Color.new(252,252,252)
-      shadow = Color.new(0,0,0)
 
       # Speed up hint
       sprites["hint"] = Sprite.new(viewport)
@@ -126,11 +230,6 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
                ["Forward",30,28,0,base,shadow,1]]
       pbSetSmallFont(sprites["hint"].bitmap)
       pbDrawTextPositions(sprites["hint"].bitmap,textpos)
-
-      20.times do
-        Graphics.update
-        Input.update
-      end
 
       pbSEPlay("Up")
       28.times do |i|
@@ -222,7 +321,7 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
         for j in 1...party.length
           # Get pokemon
           pkmnindex = party[j]
-          thispoke = getPartyPokemon(active_all[partyindex])[pkmnindex]
+          thispoke = getAllPartyPokemon(active_all[partyindex])[pkmnindex]
 
           # Get pokemon icon sprite
           filename = GameData::Species.icon_filename_from_pokemon(thispoke)

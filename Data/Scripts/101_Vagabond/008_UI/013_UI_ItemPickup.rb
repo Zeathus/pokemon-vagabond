@@ -40,6 +40,7 @@ def pbItemPickupAnimation(item, quantity=1)
 
   while timer * 0.08 < 3.14 * 0.5
       timer += 1.0
+      timer += 1.0 if Input.press?(Input::B)
       zoom = Math.sin(timer * 0.08) * 1.5
       sprites["item"].zoom_x = zoom
       sprites["item"].zoom_y = zoom
@@ -63,13 +64,18 @@ def pbItemPickupAnimation(item, quantity=1)
     pbSEPlay("Item get",100)
   end
 
-  (item.is_key_item? ? 160 : 80).times do
+  to_do = (item.is_key_item? ? 160 : 80)
+  i = 0
+  while i < to_do
       timer += 1.0
+      timer += 1.0 if Input.press?(Input::B)
       sprites["item"].angle = -Math.sin(timer * 0.05) * 12
       Graphics.update
       Input.update
       viewport.update
       pbUpdateSpriteHash(sprites)
+      i += 1
+      i += 1 if Input.press?(Input::B)
   end
 
   sprites["bag"] = IconSprite.new(
@@ -100,15 +106,21 @@ def pbItemPickupAnimation(item, quantity=1)
 
   timer2 = 0.0
 
-  16.times do
+  to_do = 16
+  i = 0
+  while i < to_do
       timer += 1.0
+      timer += 1.0 if Input.press?(Input::B)
       timer2 += 1.0
+      timer2 += 1.0 if Input.press?(Input::B)
       sprites["item"].angle = -Math.sin(timer * 0.05) * 12
       sprites["bag"].opacity = timer2 * 256.0 / 16.0
       Graphics.update
       Input.update
       viewport.update
       pbUpdateSpriteHash(sprites)
+      i += 1
+      i += 1 if Input.press?(Input::B)
   end
 
   sprites["bagoverlay"].opacity = 255
@@ -116,7 +128,23 @@ def pbItemPickupAnimation(item, quantity=1)
   x_mod = [-2, -2,  0,  0,  2,  4, 6, 4, 4, 4, 4, 2, 2, 2, 0, 0]
   y_mod = [-2, -4, -6, -6, -4, -2, 0, 2, 4, 6, 6, 6, 6, 6, 6, 8]
 
-  for i in 0...x_mod.length * 3
+  i = 0
+  while i < x_mod.length * 3
+    if Input.press?(Input::B)
+      timer += 2.0
+      sprites["item"].angle -= 0.05 * 24 * 2
+      for j in i...(i+2)
+        sprites["item"].x += x_mod[j / 3]
+        sprites["item"].y += y_mod[j / 3]
+      end
+      zoom -= 0.04
+      sprites["item"].zoom_x = zoom
+      sprites["item"].zoom_y = zoom
+      if sprites["text"].opacity > 0
+        sprites["text"].opacity -= 32
+      end
+      i += 2
+    else
       timer += 1.0
       sprites["item"].angle -= 0.05 * 24
       sprites["item"].x += x_mod[i / 3]
@@ -125,12 +153,14 @@ def pbItemPickupAnimation(item, quantity=1)
       sprites["item"].zoom_x = zoom
       sprites["item"].zoom_y = zoom
       if sprites["text"].opacity > 0
-          sprites["text"].opacity -= 16
+        sprites["text"].opacity -= 16
       end
-      Graphics.update
-      Input.update
-      viewport.update
-      pbUpdateSpriteHash(sprites)
+      i += 1
+    end
+    Graphics.update
+    Input.update
+    viewport.update
+    pbUpdateSpriteHash(sprites)
   end
 
   sprites["item"].opacity = 0
@@ -138,6 +168,7 @@ def pbItemPickupAnimation(item, quantity=1)
 
   while sprites["bag"].opacity > 0
       sprites["bag"].opacity -= 16
+      sprites["bag"].opacity -= 48 if Input.press?(Input::B)
       Graphics.update
       Input.update
       viewport.update

@@ -79,7 +79,7 @@ def pbShopGeneral
     :REVIVE,:ANTIDOTE,
     :PARALYZEHEAL,:AWAKENING,
     :BURNHEAL,:ICEHEAL,
-    :FULLHEAL,:ESCAPEROPE,
+    :FULLHEAL,
     :REPEL,:SUPERREPEL,:MAXREPEL
   ]
 end
@@ -98,14 +98,12 @@ def pbShopMall(type="general")
   when "field"
     return [
       :POKEBALL, :GREATBALL, :ULTRABALL,
-      :REPEL, :SUPERREPEL, :MAXREPEL,
-      :ESCAPEROPE
+      :REPEL, :SUPERREPEL, :MAXREPEL
     ]
   when "vitamins"
     return [
-      :HPUP, :PROTEIN, :IRON, :CALCIUM, :ZINC, :CARBOS,
-      :XATTACK, :XDEFENSE, :XSPATK, :XSPDEF, :XSPEED,
-      :GUARDSPEC, :DIREHIT
+      :HEALTHWING, :MUSCLEWING, :RESISTWING, :GENIUSWING, :CLEVERWING, :SWIFTWING,
+      :HPUP, :PROTEIN, :IRON, :CALCIUM, :ZINC, :CARBOS
     ]
   when "powerup"
     return [

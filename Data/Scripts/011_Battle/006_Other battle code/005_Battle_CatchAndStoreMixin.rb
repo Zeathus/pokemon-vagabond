@@ -19,6 +19,10 @@ module Battle::CatchAndStoreMixin
               _INTL("See {1}'s summary", pkmn.name),
               _INTL("Check party")]
       cmds.delete_at(2) if @sendToBoxes == 2
+      if !$game_switches[INACTIVE_PARTY_TUTORIAL]
+        $game_switches[INACTIVE_PARTY_TUTORIAL] = true
+        pbDialog("INACTIVE_PARTY_TUTORIAL")
+      end
       loop do
         cmd = pbShowCommands(_INTL("Where do you want to send {1} to?", pkmn.name), cmds, 99)
         break if cmd == 99   # Cancelling = send to a Box
@@ -44,9 +48,9 @@ module Battle::CatchAndStoreMixin
           #       this would take a surprising amount of code, and it's very
           #       unlikely to be needed anyway, so I'm ignoring it for now.
           send_pkmn = pbPlayer.party[party_index]
-          box_name = @peer.pbStorePokemon(pbPlayer, send_pkmn)
+          stored_box = @peer.pbStorePokemon(pbPlayer, send_pkmn)
           pbPlayer.party.delete_at(party_index)
-          pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, box_name))
+          pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, @peer.pbBoxName(stored_box)))
           # Rearrange all remembered properties of party Pokémon
           (party_index...party_size).each do |idx|
             if idx < party_size - 1
@@ -87,9 +91,9 @@ module Battle::CatchAndStoreMixin
             #       this would take a surprising amount of code, and it's very
             #       unlikely to be needed anyway, so I'm ignoring it for now.
             send_pkmn = pbPlayer.inactive_party[party_index]
-            box_name = @peer.pbStorePokemon(pbPlayer, send_pkmn)
+            stored_box = @peer.pbStorePokemon(pbPlayer, send_pkmn)
             pbPlayer.inactive_party.delete_at(party_index)
-            pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, box_name))
+            pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, @peer.pbBoxName(stored_box)))
             # Rearrange all remembered properties of party Pokémon
             (party_index...party_size).each do |idx|
               if idx < party_size - 1

@@ -1485,6 +1485,7 @@ class Battle::Move::TypeDependsOnUserMemory < Battle::Move
   end
 
   def pbBaseType(user)
+    return user.types[0]
     ret = :NORMAL
     if user.itemActive?
       @itemTypes.each do |item, itemType|

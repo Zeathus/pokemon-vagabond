@@ -3089,7 +3089,7 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base HP of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the HP Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [PROTEIN]
 Name = Protein
@@ -3098,7 +3098,7 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base Attack stat of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the Attack Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [IRON]
 Name = Iron
@@ -3107,7 +3107,7 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base Defense stat of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the Defense Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [CALCIUM]
 Name = Calcium
@@ -3116,7 +3116,7 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base Sp. Atk (Special Attack) stat of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the Sp. Atk Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [ZINC]
 Name = Zinc
@@ -3125,7 +3125,7 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base Sp. Def (Special Defense) stat of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the Sp. Def Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [CARBOS]
 Name = Carbos
@@ -3134,61 +3134,61 @@ Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It raises the base Speed stat of a single Pokémon.
+Description = A nutritious drink for Pokémon. It increases the Speed Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [HEALTHWING]
 Name = Health Wing
 NamePlural = Health Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base HP of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the HP Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [MUSCLEWING]
 Name = Muscle Wing
 NamePlural = Muscle Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base Attack stat of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the Attack Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [RESISTWING]
 Name = Resist Wing
 NamePlural = Resist Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base Defense stat of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the Defense Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [GENIUSWING]
 Name = Genius Wing
 NamePlural = Genius Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base Sp. Atk stat of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the Sp. Atk Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [CLEVERWING]
 Name = Clever Wing
 NamePlural = Clever Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base Sp. Def stat of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the Sp. Def Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [SWIFTWING]
 Name = Swift Wing
 NamePlural = Swift Wings
 Pocket = 2
-Price = 300
+Price = 1000
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It slightly increases the base Speed stat of a single Pokémon.
+Description = An item for use on a Pokémon. It increases the Speed Effort Level of a single Pokémon by 1 while the level is below 3.
 #-------------------------------
 [LONELYMINT]
 Name = Lonely Mint
@@ -6351,7 +6351,7 @@ NamePlural = Odd Stones
 Pocket = 4
 Price = 0
 Flags = Fling_100
-Description = 
+Description = An item to be held by a Pokémon. Its effects are unknown.
 #-------------------------------
 [TIMESTONE]
 Name = Time Stone
@@ -6359,7 +6359,7 @@ NamePlural = Time Stones
 Pocket = 4
 Price = 0
 Flags = Fling_100
-Description = 
+Description = An item to be held by a Pokémon. It allows Future Sight to hit the same turn it was used.
 #-------------------------------
 [LUMBERRYSOUP]
 Name = Lum Berry Soup
@@ -6369,7 +6369,7 @@ Price = 100
 FieldUse = OnPokemon
 BattleUse = OnPokemon
 Flags = Fling_30
-Description = 
+Description = Plum's homemade Lum Berry Soup. It cures any status condition, including fainted.
 #-------------------------------
 [MUSHROOMMUFFIN]
 Name = Mushroom Muffin
@@ -6379,7 +6379,7 @@ Price = 500
 FieldUse = OnPokemon
 BattleUse = OnPokemon
 Flags = Fling_30
-Description = 
+Description = Plum's homemade Mushroom Muffin. Restores a Pokémon's HP by 100.
 #-------------------------------
 [BAKEDBALM]
 Name = Baked Balm
@@ -6389,7 +6389,7 @@ Price = 1500
 FieldUse = OnPokemon
 BattleUse = OnPokemon
 Flags = Fling_30
-Description = 
+Description = Plum's homemade Baked Balm. Restores a Pokémon's HP completely.
 #-------------------------------
 [PECHERIPASTRY]
 Name = Pecheri Pastry
@@ -6399,7 +6399,7 @@ Price = 100
 FieldUse = OnPokemon
 BattleUse = OnPokemon
 Flags = Fling_30
-Description = 
+Description = Plum's homemade Pecheri Pastry. Heals more HP if the Pokémon likes its trainer.
 #-------------------------------
 [HONEYEDBERRY]
 Name = Honeyed Berry
@@ -6408,7 +6408,7 @@ Pocket = 2
 Price = 200
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = 
+Description = Plum's homemade Honeyed Berry. Increases a Pokémon's happiness a lot.
 #-------------------------------
 [PIXIEDUST]
 Name = Pixie Dust 
@@ -6417,7 +6417,7 @@ Pocket = 4
 Price = 3000
 SellPrice = 500
 Flags = Fling_30
-Description = 
+Description = An item to be held by a Pokémon. It is a sparkly dust that ups the power of Fairy-type moves.
 #-------------------------------
 [ALOLANSOUVENIR]
 Name = Alolan Souvenir
@@ -6425,7 +6425,7 @@ NamePlural = Alolan Souvenirs
 Pocket = 1
 Price = 1000
 Flags = Fling_120
-Description = 
+Description = A replica of a souvenir from Alola. It depicts a mysterious Pokémon that's regarded as a guardian deity.
 #-------------------------------
 [ALLSEEINGTOTEM]
 Name = All-Seeing Totem
@@ -6433,7 +6433,7 @@ NamePlural = All-Seeing Totems
 Pocket = 4
 Price = 500
 Flags = Fling_80
-Description = 
+Description = A miniature totem sculpture with a single staring eye. It increases the holders' powder-move accuracy by 25%.
 #-------------------------------
 [MENTALWARD]
 Name = Mental Ward
@@ -6441,7 +6441,7 @@ NamePlural = Mental Ward
 Pocket = 4
 Price = 500
 Flags = Fling_80
-Description = 
+Description = An oddly shaped sculpture with a feather that blows calmly with the wind. Foes cannot confuse the holder.
 #-------------------------------
 [STURDYHELMET]
 Name = Sturdy Helmet
@@ -6449,7 +6449,7 @@ NamePlural = Sturdy Helmets
 Pocket = 4
 Price = 500
 Flags = Fling_80
-Description = 
+Description = A protective helmet to be worn by a Pokémon. The holder's recoil damage is halved (rounded down).
 #-------------------------------
 [HEAVYSTONE]
 Name = Heavy Stone
@@ -6457,7 +6457,7 @@ NamePlural = Heavy Stones
 Pocket = 4
 Price = 500
 Flags = Fling_110
-Description = 
+Description = An excessively heavy stone. Doubles the holder's weight.
 #-------------------------------
 [FIREELEMENT]
 Name = Fire Element
@@ -6465,7 +6465,7 @@ NamePlural = Fire Elements
 Pocket = 1
 Price = 500
 Flags = Fling_60
-Description = 
+Description = A shard radiating a fiery aura. It is one of three pieces to something bigger.
 #-------------------------------
 [WATERELEMENT]
 Name = Water Element
@@ -6473,7 +6473,7 @@ NamePlural = Water Elements
 Pocket = 1
 Price = 500
 Flags = Fling_60
-Description = 
+Description = A shard radiating a damp aura. It is one of three pieces to something bigger.
 #-------------------------------
 [GRASSELEMENT]
 Name = Grass Element
@@ -6481,7 +6481,7 @@ NamePlural = Grass Elements
 Pocket = 1
 Price = 500
 Flags = Fling_60
-Description = 
+Description = A shard radiating a flowery aura. It is one of three pieces to something bigger.
 #-------------------------------
 [TRINITYORB]
 Name = Trinity Orb
@@ -6489,7 +6489,7 @@ NamePlural = Trinity Orbs
 Pocket = 4
 Price = 5000
 Flags = Fling_120
-Description = 
+Description = Increases the potency of type matchups by 50% when the holder attacks or is attacked.
 #-------------------------------
 [VELVETYROCK]
 Name = Velvety Rock
@@ -6497,7 +6497,7 @@ NamePlural = Velvety Rocks
 Pocket = 4
 Price = 4000
 Flags = Fling_40
-Description = 
+Description = A Pokémon held item that extends the duration of the move Winds used by the holder.
 #-------------------------------
 [BEETLEBARK]
 Name = Beetle Bark
@@ -6759,7 +6759,7 @@ NamePlural = Tropical Incenses
 Pocket = 1
 Price = 2000
 Flags = Fling_10
-Description = An item to be held by a Pokémon. It has a curious aroma that boosts the power of Water-type moves.
+Description = An item to be held by a Pokémon. It has a curious aroma that boosts the power of Grass-type moves.
 #-------------------------------
 [MINERKIT]
 Name = Miner's Kit

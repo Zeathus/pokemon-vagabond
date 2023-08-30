@@ -120,7 +120,7 @@ class Battle::Scene
       sprites["pkmn2"].z = 103
       sprites["pkmn2"].x = 506 + 32
       sprites["pkmn2"].y = 120 + 32
-      sprites["pkmn2"].setOffset(PictureOrigin::CENTER)
+      sprites["pkmn2"].setOffset(PictureOrigin::CENTER) if partner
     end
 
     if rand < 5

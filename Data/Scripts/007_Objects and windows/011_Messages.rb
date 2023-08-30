@@ -827,7 +827,7 @@ def pbShowCommandsWithHelp(msgwindow, commands, help, cmdIfCancel = 0, defaultCm
     Input.update
   end
   msgwin.letterbyletter = oldlbl
-  msgwin.dispose if !msgwindow
+  pbDisposeMessageWindow(msgwin) if !msgwindow
   return ret
 end
 

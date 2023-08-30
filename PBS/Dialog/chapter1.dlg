@@ -9,7 +9,7 @@
 /hidename 1
 > Oh, hello. Do you have any business here?
 /speaker Duke
-> (Perfectly timed...)\wtnp[10]
+.> (Perfectly timed...)\wtnp[10]
 > Indeed we do!
 > My friend happens to long for the woods across the lake, and I daresay you might need to take them along with you.
 /speaker Amethyst
@@ -75,7 +75,7 @@
 !> VANISH!\wtnp[30]
 
 [CH1_CRATER_AMETHYST,5]
-> \ts[5]Duke has left the party.\wtnp[60]
+> \ts[4]Duke has left the party.\wtnp[60]
 /speaker Amethyst
 > \ts[1]He's really got a thing for theatrics.\nI wonder where he's off to so suddenly.
 > Either way, I look forward to working with you!
@@ -84,7 +84,7 @@
 > As long as you're traveling with me, water will be no problem!
 
 [CH1_CRATER_AMETHYST,6]
-> \ts[5]Amethyst has joined the party!\wtnp[60]
+> \ts[4]Amethyst has joined the party!\wtnp[60]
 
 [CH1_NO_SURF,0]
 /speaker Amethyst
@@ -111,33 +111,33 @@
 /speaker Nekane none
 /hidename 1
 /portrait 0
-> \ts[5]Everything is... falling apart.\wtnp[40]
+> \ts[4]Everything is... falling apart.\wtnp[40]
 
 [CH1_RUINS_MEMORY,2]
 /speaker Nekane none
 /hidename 1
 /portrait 0
-> \ts[5]It... wasn't supposed to end like this.\wtnp[40]
+> \ts[4]It... wasn't supposed to end like this.\wtnp[40]
 
 [CH1_RUINS_MEMORY,3]
 /speaker Nekane unknown
 /hidename 1
-> \ts[5]... ... ...\wtnp[40]
+> \ts[4]... ... ...\wtnp[40]
 /wait 20
-> \ts[5]This is the end... isn't it?\wtnp[40]
+> \ts[4]This is the end... isn't it?\wtnp[40]
 /wait 20
-> \ts[5]I'm going to disappear... but...\wtnp[40]
+> \ts[4]I'm going to disappear... but...\wtnp[40]
 /wait 20
-> \ts[5]I will remember you...\wtnp[40]
+> \ts[4]I will remember you...\wtnp[40]
 /wait 20
-> \ts[5]And if you somehow make it...\wtnp[40]
+> \ts[4]And if you somehow make it...\wtnp[40]
 /wait 20
-> \ts[5]...please remember me too.\wtnp[40]
+> \ts[4]...please remember me too.\wtnp[40]
 
 [CH1_RUINS_MEMORY,4]
 /windowpos middle
 /hidewindow 1
-> \ts[5]Remember... Nekane...\wtnp[60]
+> \ts[4]Remember... Nekane...\wtnp[60]
 
 [CH1_NEKANE,0]
 /speaker Nekane sleep
@@ -181,8 +181,8 @@
 > The unknown girl is now traveling with you.
 
 [CH1_TABLET]
-U> Order is balanced by disorder. Good is balanced by evil.
-U> When the balance of the world is broken, the world itself falls thereafter.
+U> Order is balanced by disorder Good is balanced by evil
+U> When the balance of the world is broken the world itself falls thereafter
 
 [CH1_GPO,0]
 /speaker Amethyst

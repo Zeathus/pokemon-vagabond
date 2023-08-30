@@ -146,7 +146,7 @@ class Battle::Scene
     # Fade out and hide all sprites
     #visibleSprites = pbFadeOutAndHide(@sprites)
     # Get player's party
-    @outer.pbChooseSwitch(idxBattler, mode) { |idxParty, partyScene|
+    @outer.pbChooseSwitch(idxBattler, canCancel, mode) { |idxParty, partyScene|
       next yield idxParty, partyScene
     }
     return
@@ -212,11 +212,7 @@ class Battle::Scene
     end
     # Start Bag screen
     itemScene = PokemonBag_Scene.new
-    itemScene.pbStartScene($bag, true,
-                           proc { |item|
-                             useType = GameData::Item.get(item).battle_use
-                             next useType && useType > 0
-                           }, false)
+    itemScene.pbStartScene($bag, false, nil, false)
     # Loop while in Bag screen
     wasTargeting = false
     used_item_on_pokemon = false
@@ -265,7 +261,7 @@ class Battle::Scene
         modParty = @battle.pbPlayerDisplayParty(idxBattler)
         pbFadeInAndShow(@sprites, visibleSprites)
         # Choose a Pokémon
-        @outer.pbChooseSwitch(idxBattler, 3) { |idxParty, partyScene|
+        @outer.pbChooseSwitch(idxBattler, true, 3) { |idxParty, partyScene|
           if useType == 2
             movenames=[]
             party[idxParty].moves.each do |i|

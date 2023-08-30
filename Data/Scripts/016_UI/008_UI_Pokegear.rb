@@ -200,16 +200,16 @@ MenuHandlers.add(:pokegear_menu, :phone, {
   }
 })
 
-MenuHandlers.add(:pokegear_menu, :jukebox, {
-  "name"      => _INTL("Jukebox"),
-  "icon_name" => "jukebox",
-  "order"     => 30,
-  "effect"    => proc { |menu|
-    pbFadeOutIn {
-      scene = PokemonJukebox_Scene.new
-      screen = PokemonJukeboxScreen.new(scene)
-      screen.pbStartScreen
-    }
-    next false
-  }
-})
+#MenuHandlers.add(:pokegear_menu, :jukebox, {
+#  "name"      => _INTL("Jukebox"),
+#  "icon_name" => "jukebox",
+#  "order"     => 30,
+#  "effect"    => proc { |menu|
+#    pbFadeOutIn {
+#      scene = PokemonJukebox_Scene.new
+#      screen = PokemonJukeboxScreen.new(scene)
+#      screen.pbStartScreen
+#    }
+#    next false
+#  }
+#})

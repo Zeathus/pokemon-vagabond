@@ -1,7 +1,7 @@
 [SICKZAGOON]
 Name = Sickzagoon
 Type = Basic
-Exp = 100
+Exp = 40
 Description = A sick Zigzagoon is blocking the path ahead. Find a doctor to help cure it.
 Location = Crosswoods
 FullLocation = near the Crosswoods
@@ -12,12 +12,12 @@ ShowAvailable = true
 [THEFIERYROBIN]
 Name = The Fiery Robin
 Type = Basic
-Exp = 125
+Exp = 50
 Items = SHARPBEAK
 Description = The Bird Keeper in Breccia City really wants to add a Fletchling to his collection.
 Location = Breccia City
 FullLocation = in Breccia City
-Step1 = Catch a Fletchling on Route 4 and deliver it to the Bird Keeper in Breccia City.
+Step1 = Catch a Fletchling on Breccia Trail and deliver it to the Bird Keeper in Breccia City.
 Done = "You caught a Fletchling for the Bird Keeper, and now they enjoy each other's company."
 # Breccia City
 RequireMaps = 8
@@ -25,7 +25,7 @@ RequireMaps = 8
 [ANEYEFORANOWL]
 Name = An Eye for an Owl
 Type = Basic
-Exp = 75
+Exp = 40
 Description = A young girl in Breccia City reeeaaalllyyy wants to see a cute owl.
 Location = Breccia City
 FullLocation = in Breccia City
@@ -37,7 +37,7 @@ RequireMaps = 8
 [LITTLEPOKEMONBIGCITY]
 Name = "Little Pokémon, Big City"
 Type = Basic
-Exp = 150
+Exp = 60
 Description = The clumsy Klaus has managed to lose sight of an Alolan Vulpix he was caring for.
 Location = G.P.O. HQ
 FullLocation = at the G.P.O. HQ
@@ -50,12 +50,12 @@ RequireMaps = 35
 [LUMBERLESSCARPENTER]
 Name = Lumberless Carpenter
 Type = Feature
-Exp = 150
+Exp = 50
 Items = RAREBONE
 Description = "The carpenter in Breccia City, Pent, has trouble gathering woods for his workshop. He needs a Pokémon to help him out."
 Location = Breccia City
 FullLocation = in Breccia City
-Step1 = Help Pent get his carpenter business up and running again by getting him a Timburr.
+Step1 = "Help Pent get his carpenter business up and running again by getting him a Timburr from Quartz Passing, east of the Crosswoods."
 Step2 = Catch a Timburr for Pent. You can find it east of the Crosswoods.
 Done = Pent has got his shop up and running again! He can now craft you various items.
 # Breccia City
@@ -64,7 +64,7 @@ RequireMaps = 8
 [NEEDFORINSPIRATION]
 Name = Need for Inspiration
 Type = Feature
-Exp = 150
+Exp = 60
 Description = "The jeweler in Lapis Lazuli City, Channelle, has a severe lack of motivation for her craft."
 Location = Lapis Lazuli City
 FullLocation = in Lapis Lazuli City
@@ -80,7 +80,7 @@ RequireMaps = 27
 [SORROWFULZORUA]
 Name = Sorrowful Zorua
 Type = Story
-Exp = 150
+Exp = 60
 Items = CHOICESCARF
 HideName = true
 HideItem = true
@@ -100,28 +100,27 @@ PartyMembers = Amethyst
 Name = Berry Important
 Type = Botanist
 Exp = 50
-Description = Faunus wants to teach you about botany. Meet him at his house below Breccia City.
+Description = Faunus said he had something to teach you. Meet him at his house below Breccia City.
 Location = Breccia Undergrowth
 FullLocation = in the Breccia Undergrowth
-Step1 = Have Faunus teach you about botany.
+Step1 = Talk to Faunus in his house below Breccia City.
 Done = "Faunus taught you about harvesting berries more efficiently, and is eager to teach you more."
-Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_FAUNUS]
 
 [DIGGYDIGGYHOLE]
 Name = Diggy Diggy Hole
 Type = Miner
 Exp = 50
-Description = Alister wants you to join the Pegma Quarry operation.
+Description = Alister wants your help with something at the Pegma Quarry.
 Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
-Step1 = Excavate any item from layer 1 to prove your worth to Alister.
+Step1 = Talk to Alister at the Pegma Quarry to see how you can help.
+Step2 = Excavate any item from layer 1 to prove your worth to Alister.
 Done = You proved your worth to Alister and joined the Pegma Quarry operation!
-Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_RAPHAEL]
 
 [DIGGINGDEEPER]
 Name = Digging Deeper
 Type = Miner
-Exp = 100
+Exp = 70
 Description = Alister promised you a new mining tool and access to the next level of the quarry if you can excavate a Sun Stone and a Moon Stone.
 Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
@@ -131,7 +130,7 @@ Done = "Thanks to your efforts, you gained access to floor B3F of the quarry, an
 [DAWNOFTHEDEEPSTONES]
 Name = Dawn of the Deep Stones
 Type = Miner
-Exp = 150
+Exp = 90
 Description = Alister will keep you away from layer 4 unless you can excavate a Dawn Stone, a Dusk Stone and a Shiny Stone. Show him what you can do!
 Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
@@ -148,12 +147,12 @@ Done = Thanks to your skill, you gained access to floor B4F of the quarry!
 Name = Null-Pointer Exception
 Type = Engineer
 Exp = 50
-Description = Leory wants you to help test the prototype for an artificial Pokémon. It will surely be a technological marvel.
+Description = Leory wants your help with something at the G.P.O. HQ.
 Location = G.P.O. HQ
 FullLocation = at the G.P.O. HQ
-Step1 = Test Leroy's artifical Pokémon prototype.
+Step1 = Meet Leroy in the Admin Area of the G.P.O. HQ.
+Step2 = Test Leroy's artifical Pokémon prototype.
 Done = You got Silvally from Leroy for further testing. It can be customized at the PC.
-Require = $game_switches[GPO_MEMBER] && $game_switches[GYM_LEROY]
 
 # [235] Professor
 
@@ -171,7 +170,7 @@ Require = $game_switches[GPO_MEMBER]
 [CURIOUSRUINS]
 Name = Curious Ruins
 Type = RuinManiac
-Exp = 50
+Exp = 100
 Description = "The ruin maniac, Asako, is investigating ruins found in caves around the region. He wants help finding the secrets of the ruins in the Crosswoods.
 Location = Crosswoods
 FullLocation = in the Crosswoods
@@ -184,7 +183,7 @@ Require = $game_switches[GPO_MEMBER]
 [ANAFFINITYFORRUINS]
 Name = An Affinity for Ruins
 Type = RuinManiac
-Exp = 500
+Exp = 300
 Description = "Asako has tasked you with finding all the ruins in the region, estimated at 18 total. Their treasures will prove invaluable for his research."
 Location = Everywhere
 FullLocation = across the region
@@ -215,7 +214,7 @@ Require = $game_switches[GPO_MEMBER]
 [SMALLFRY]
 Name = Small Fry
 Type = Fisher
-Exp = 100
+Exp = 70
 Description = Ivan sees potential in you. He has challenged you to hook a Seaking and a Poliwhirl, but you have to find them yourself.
 Location = Lazuli River
 FullLocation = at Lazuli River
@@ -235,7 +234,7 @@ Done = ???
 [BIGFISH]
 Name = Big Fish
 Type = Fisher
-Exp = 100
+Exp = 150
 Description = ???
 Location = Lazuli River
 FullLocation = at Lazuli River
@@ -245,7 +244,7 @@ Done = ???
 [MASTEROFTHESEA]
 Name = Master of the Sea
 Type = Fisher
-Exp = 100
+Exp = 200
 Description = ???
 Location = Lazuli River
 FullLocation = at Lazuli River
@@ -255,7 +254,7 @@ Done = ???
 [THEFIRSTGYM]
 Name = The First Gym
 Type = Main
-Exp = 100
+Exp = 65
 Description = Duke has tasked you to prove your strength by defeating a Gym Leader.
 Step1 = Defeat your first Pokémon Gym. Gyms can be challenged in any order.
 Done = "You defeated a Gym just as Duke suggested, a new quest is now available."
@@ -264,7 +263,7 @@ AutoFinish = $game_variables[BADGE_COUNT] >= 1
 [BRECCIAGYM]
 Name = Breccia Gym
 Type = Main
-Exp = 200
+Exp = 60
 Description = The Gym Leader of Breccia City is away from his Gym. Find him and get him to return for a challenge.
 Step1 = Find the Gym Leader of Breccia City. He's supposedly visiting an area north of the city.
 Step2 = "Faunus wishes to see something astounding, but doesn't specify what. Maybe someone close to him has an idea."
@@ -276,20 +275,20 @@ Done = "After being witness to a Tropius in flight, you managed to both astound 
 [LAPISLAZULIGYM]
 Name = Lapis Lazuli Gym
 Type = Main
-Exp = 200
+Exp = 60
 Description = The Gym Leader of Lapis Lazuli City is off performing some maintenance on the city waterways.
 Step1 = Check the maintenance manholes throughout the city to find the Gym Leader.
-Step2 = Handle the Rotom messing with the machinery in the Lapis District.
+Step2 = Inspect the machinery and handle all the Rotom (3) messing with it in the Lapis District (south).
 Step3 = Report back to Leroy in the maintenance room in the Lazuli District.
 Done = The waterways have been restored to proper order thanks to you and Leroy defeating the Rotom.
 
 [PEGMAGYM]
 Name = Pegma Gym
 Type = Main
-Exp = 200
+Exp = 60
 Description = The transportation of ore from the Mica District to the Feldspar District in Pegma City has reached a halt. Gym Leader Raphael is looking into it.
 Step1 = Meet with Raphael at the Blacksmith's house.
-Step2 = Follow Raphael to meet the supervisor of Pegma Quarry.
+Step2 = Follow Raphael through the tunnel to the east to the Mica District to meet the supervisor of Pegma Quarry.
 Step3 = Raphael got heated.
 Step4 = Research the supply issue with Allon.
 Step5 = Find Steve in the first layer quarry zone.
@@ -313,7 +312,7 @@ Done = You rescued Steve and successfully fixed the ore shortage.
 [UNKNOWNDESTINATION]
 Name = Unknown Destination
 Type = Main
-Exp = 100
+Exp = 70
 Description = It's time to head to the ruins you had a vision of before you came to your senses.
 Step1 = Meet with someone with hair of amethyst north of Breccia City.
 Step2 = Make your way through Evergone Mangrove with Amethyst.
@@ -324,7 +323,7 @@ Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brough
 [OPERATIONPEGMA]
 Name = Operation Pegma
 Type = Main
-Exp = 100
+Exp = 80
 Description = A vision told you that something may be afoot at Mt. Pegma. It would be best to check it out.
 Step1 = Check the situation at Mt. Pegma (east of the Crosswoods).
 Step2 = Something suspicious is going on. Get through Mt. Pegma with Kira.
@@ -334,7 +333,7 @@ Done = "You rescued Azelf atop Mt. Pegma. To keep Azelf safe, they are now trave
 [NEKANEGONEMISSING]
 Name = Nekane Gone Missing
 Type = Main
-Exp = 100
+Exp = 90
 Description = Nekane was nowhere to be found at the G.P.O. HQ when you woke up. Make sure she's safe.
 Step1 = Ask around the city if anyone has seen Nekane.
 Step2 = Nekane went out to the east of the Lazuli District. Go look for her.

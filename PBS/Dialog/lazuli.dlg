@@ -215,7 +215,7 @@
 [LAZULI_GYM_LEROY,5]
 /speaker Leroy
 > This TM contains the move Water Pledge.<br>Try to use it with the other Pledge moves to wreak havoc!
-/if $PokemonGlobal.visitedMaps[57] # G.P.O. Admin Area
+/if $quests[:UNKNOWNDESTINATION].complete?
     > I also wanted to mention that I work at the G[.]P[.]O[.] science facility, in the admin area.
     > Please do pay me a visit there.<br>I have something to show you.
 /else
@@ -396,7 +396,7 @@
 
 [LAZULI_FINN,6]
 /speaker Finn
-> Hmmm, where should I will wait for my next prey...
+> Hmmm, where should I wait for my next prey...
 
 [LAZULI_FINN_CHALLENGE_0]
 /speaker <PLAYER>

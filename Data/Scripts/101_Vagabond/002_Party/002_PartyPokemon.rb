@@ -15,6 +15,23 @@ def getPartyPokemon(id)
   return pbGet(PARTY_POKEMON)[id]
 end
 
+def getInactivePartyPokemon(id)
+  pbSet(INACTIVE_POKEMON,[]) if !pbGet(INACTIVE_POKEMON).is_a?(Array)
+  id = getID(PBParty,id) if id.is_a?(Symbol)
+  if id == PBParty::Player
+    return $player.inactive_party
+  end
+  inactive_pokemon = pbGet(INACTIVE_POKEMON)
+  if inactive_pokemon[id].nil?
+    inactive_pokemon[id] = []
+  end
+  return inactive_pokemon[id]
+end
+
+def getAllPartyPokemon(id)
+  return getPartyPokemon(id) + getInactivePartyPokemon(id)
+end
+
 def initPartyPokemon(id)
   pbSet(PARTY_POKEMON,[]) if !pbGet(PARTY_POKEMON).is_a?(Array)
   id = getID(PBParty,id) if id.is_a?(Symbol)
