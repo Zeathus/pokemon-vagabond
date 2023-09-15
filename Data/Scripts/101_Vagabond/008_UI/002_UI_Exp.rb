@@ -1,5 +1,5 @@
 def pbEXPScreen(expgain,sharedexp,fulltoall=false)
-
+  
   return if $game_switches[DISABLE_EXP]
 
   if expgain > 0 || sharedexp > 0

@@ -33,6 +33,7 @@ def pbRangerClerk(area)
         if pbTotalBossesDefeated() > 0
           pbDialog("RANGER_CLERK_RECRUIT_ME", 5)
           $quests[:WILDLIFEPROTECTORS].finish
+          pbJob("Ranger").level = 1
         end
       elsif $game_switches[GPO_MEMBER]
         pbDialog("RANGER_CLERK_RECRUIT_ME", 1)

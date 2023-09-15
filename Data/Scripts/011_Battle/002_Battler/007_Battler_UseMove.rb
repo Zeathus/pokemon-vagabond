@@ -420,6 +420,7 @@ class Battle::Battler
       numHits.times do |i|
         break if magicCoater >= 0 || magicBouncer >= 0
         success = pbProcessMoveHit(move, user, targets, i, skipAccuracyCheck)
+        @battle.scene.outer.update(nil, true)
         if !success
           if i == 0 && targets.length > 0
             hasFailed = false
@@ -488,6 +489,7 @@ class Battle::Battler
           newTargets.compact!
         end
         pbProcessMoveHit(move, b, newTargets, 0, false) if success
+        @battle.scene.outer.update(nil, true)
         b.lastMoveFailed = true if !success
         targets.each { |otherB| otherB.pbFaint if otherB&.fainted? }
         user.pbFaint if user.fainted?
@@ -503,6 +505,7 @@ class Battle::Battler
           success = false
           if !move.pbMoveFailed?(mc, [])
             success = pbProcessMoveHit(move, mc, [], 0, false)
+            @battle.scene.outer.update(nil, true)
           end
           mc.lastMoveFailed = true if !success
           targets.each { |b| b.pbFaint if b&.fainted? }

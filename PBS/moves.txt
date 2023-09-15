@@ -8864,8 +8864,8 @@ FunctionCode = AffinityBoostSideEffect
 Flags = CanProtect,CanMirrorMove
 Description = The user braces itself to aid its teammate. Creates a sandstorm for two turns if affinity boosted, or by Helping Hand.
 #-------------------------------
-[VERMINBOOST]
-Name = Vermin Boost
+[MORPHOBOOST]
+Name = Morpho Boost
 Type = BUG
 Category = Special
 Power = 70
@@ -9077,6 +9077,42 @@ Target = NearOther
 FunctionCode = CopyUserStatusToTargetTemperature
 Flags = CanProtect,CanMirrorMove
 Description = The user conducts its temperature to the target. If the user has a Frostbite or Burn, the status is shared with the target. Sun and snow also apply, but the user's status has priority.
+#-------------------------------
+[FRUITFLOURISH]
+Name = Fruit Flourish
+Type = GRASS
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = FrostbiteTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user gathers energy from the fruits growing off its body to strike the target. If affinity boosted, restores a consumed berry.
+#-------------------------------
+[BLOWOUTBLAST]
+Name = Blowout Blast
+Type = FIRE
+Category = Special
+Power = 120
+Accuracy = 100
+TotalPP = 10
+Target = AllNearFoes
+FunctionCode = BurnTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user detonates all the explosive material in its shell to damage opposing Pokémon. The user must rest on the next turn to regain its energy, unless it was affinity boosted.
+#-------------------------------
+[BOREALBEAM]
+Name = Boreal Beam
+Type = ICE
+Category = Special
+Power = 90
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = FrostbiteTarget
+Flags = CanProtect,CanMirrorMove
+Description = The target is hit with a beam reminiscent of the northern lights. If affinity boosted, halves the damage taken by allies for the rest of the turn.
 #-------------------------------
 [RAGINGFURY]
 Name = Raging Fury

@@ -21,7 +21,7 @@ class OverworldPokemon
   attr_accessor :map_y
   attr_accessor :new_x
   attr_accessor :new_y
-  attr_reader   :time
+  attr_accessor :time
   attr_reader   :lifetime
   attr_reader   :dead
 
@@ -363,9 +363,9 @@ class SpawnArea
     return (xdist.abs <= xmax && ydist.abs <= ymax)
   end
 
-  def updateSpawns
+  def updateSpawns(initial = false)
     return if !$player || $player.party.length <= 0
-    if Graphics.frame_count % 6 == 0 && @pokemon.length < @max_pkmn
+    if (Graphics.frame_count % 6 == 0 || initial) && @pokemon.length < @max_pkmn
       tile = @tiles[rand(@tiles.length)]
       x = tile[0]
       y = tile[1]
@@ -392,6 +392,11 @@ class SpawnArea
       end
       pkmn = OverworldPokemon.new(@viewport,@map,encounter[0],encounter[1],encounter[2],
         x,y,@terrain,@pokemon,self)
+      if initial
+        30.times do
+          pkmn.update(false)
+        end
+      end
       @pokemon.push(pkmn)
     end
   end
@@ -541,6 +546,17 @@ class Spriteset_Map
         end
       end
     end
+    initialSpawns
+  end
+
+  def initialSpawns
+    20.times do
+      @spawn_areas.each do |area|
+        if area.inRange(13,11)
+          area.updateSpawns(true)
+        end
+      end
+    end
   end
 
   def updateOverworldPokemon
@@ -554,7 +570,7 @@ class Spriteset_Map
       end
       return
     end
-    for area in @spawn_areas
+    @spawn_areas.each do |area|
       if area.inRange(13,11)
         area.updateSpawns
         if area.inRange(9,7)
@@ -570,6 +586,7 @@ class Spriteset_Map
               @wild_battle_pending = false
               @in_wild_battle = false
               @wild_battle_pkmn = false
+              break
             end
           else
             @wild_battle_pending = false

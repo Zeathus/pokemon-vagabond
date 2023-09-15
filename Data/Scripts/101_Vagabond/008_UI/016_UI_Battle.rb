@@ -53,6 +53,17 @@ class Battle::Scene::Outer
     @sprites["switch_cursor"].setBitmap("Graphics/Pictures/Battle/switch_cursor")
     @sprites["switch_cursor"].z = 4
     @sprites["switch_cursor"].visible = false
+    @sprites["lineupPlayer"] = OuterTeamLineup.new(@viewport, @battle.pbParty(0), true, true)
+    @sprites["lineupPlayer"].z = 5
+    @sprites["lineupPlayer"].x = 0
+    @sprites["lineupOpponent"] = OuterTeamLineup.new(@viewport, @battle.pbParty(1), false, false)
+    @sprites["lineupOpponent"].z = 5
+    @sprites["lineupOpponent"].x = Graphics.width / 2 + 8
+    @sprites["vs"] = IconSprite.new(0, 0, @viewport)
+    @sprites["vs"].setBitmap("Graphics/Pictures/Battle/vs")
+    @sprites["vs"].ox = @sprites["vs"].bitmap.width / 2
+    @sprites["vs"].x = Graphics.width / 2
+    @sprites["vs"].y = 20
   end
 
   def pbAddSprite(id,x,y,filename,viewport)
@@ -85,14 +96,23 @@ class Battle::Scene::Outer
     @sprites["moveInfo"].visible = (windowType==FIGHT_BOX)
   end
 
-  def update(cw=nil)
+  def update(cw=nil, mustRefresh=false)
     for i in 0...4
       @sprites[_INTL("command_{1}",i)].update
     end
     for i in 0...4
-      @sprites[_INTL("info_{1}",i)].update if @sprites[_INTL("info_{1}",i)]
+      @sprites[_INTL("info_{1}",i)].update(mustRefresh) if @sprites[_INTL("info_{1}",i)]
     end
     @sprites["moveInfo"].update
+    @battle.allBattlers.each do |b|
+      if b.index % 2 == 0
+        @sprites["lineupPlayer"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
+      else
+        @sprites["lineupOpponent"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
+      end
+    end
+    @sprites["lineupPlayer"].update if !([0, 2, 4].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
+    @sprites["lineupOpponent"].update if !([1, 3, 5].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
   end
 
   def dispose
@@ -272,6 +292,156 @@ class OuterMoveBox < IconSprite
   end
 end
 
+class OuterTeamLineup < Sprite
+
+  HP_BAR_WIDTH = 40
+  HP_BAR_Y = 70
+
+  def initialize(viewport, party, rightAlign = false, showAll = false)
+    super(viewport)
+    @viewport = viewport
+    @party = party
+    @hp = []
+    @status = []
+    @party.each do |pkmn|
+      @hp.push(pkmn.hp)
+      @status.push(pkmn.status)
+    end
+    @shown = [showAll] * 6
+    @rightAlign = rightAlign
+    @statusBitmap = AnimatedBitmap.new("Graphics/Pictures/Party/statuses_small")
+    @hpcolors=[
+       Color.new(14,152,22),Color.new(24,192,32),   # Green
+       Color.new(202,138,0),Color.new(232,168,0),   # Orange
+       Color.new(218,42,36),Color.new(248,72,56)    # Red
+    ]
+    initSprites
+    self.bitmap = Bitmap.new(Graphics.width, Graphics.height / 4)
+    self.refresh
+  end
+
+  def initSprites
+    @sprites = {}
+    @ball_sprites = []
+    @poke_sprites = []
+    for i in 0...@party.length
+      ball_sprite = IconSprite.new(0, 0, @viewport)
+      ball_sprite.setBitmap("Graphics/Pictures/Battle/icon_ball")
+      ball_sprite.ox = ball_sprite.bitmap.width / 2
+      ball_sprite.oy = ball_sprite.bitmap.height / 2
+      @ball_sprites.push(ball_sprite)
+      @sprites[_INTL("ball_{1}", i)] = ball_sprite
+      poke_sprite = PokemonIconSprite.new(@party[i], @viewport)
+      poke_sprite.setOffset(PictureOrigin::CENTER)
+      poke_sprite.mirror = true if @rightAlign
+      @poke_sprites.push(poke_sprite)
+      @sprites[_INTL("poke_{1}", i)] = poke_sprite
+    end
+    self.x = self.x
+    self.y = self.y
+  end
+
+  def setShown(idx)
+    return if @shown[idx]
+    @shown[idx] = true
+    self.refresh
+  end
+
+  def refresh
+    xPos = 24
+    xPos += Graphics.width / 2 - 8 if @rightAlign
+    xPos += @rightAlign ? -16 - 56 : 16
+    for i in 0...@party.length
+      pkmn = @party[i]
+      @ball_sprites[i].visible = !@shown[i]
+      @poke_sprites[i].visible = @shown[i]
+      next if !@shown[i]
+      self.bitmap.fill_rect(xPos - (HP_BAR_WIDTH + 4) / 2, HP_BAR_Y, HP_BAR_WIDTH + 4, 12, Color.new(0, 0, 0))
+      self.bitmap.fill_rect(xPos - HP_BAR_WIDTH / 2, HP_BAR_Y + 2, HP_BAR_WIDTH, 8, Color.new(40, 40, 40))
+      hpzone = 0
+      hpzone = 1 if pkmn.hp <= (pkmn.totalhp / 2).floor
+      hpzone = 2 if pkmn.hp <= (pkmn.totalhp / 4).floor
+      hpfill = ((pkmn.hp * HP_BAR_WIDTH / pkmn.totalhp) / 2).floor
+      hpfill = 1 if hpfill <= 0 && pkmn.hp > 0
+      hpfill = HP_BAR_WIDTH / 2 if pkmn.hp >= pkmn.totalhp
+      self.bitmap.fill_rect(xPos - HP_BAR_WIDTH / 2, HP_BAR_Y + 2, hpfill * 2, 8, @hpcolors[hpzone * 2])
+      self.bitmap.fill_rect(xPos - HP_BAR_WIDTH / 2, HP_BAR_Y + 4, hpfill * 2, 4, @hpcolors[hpzone * 2 + 1])
+      if pkmn.status == :NONE
+        self.bitmap.fill_rect(xPos + 10, 52, 14, 14, Color.new(0, 0, 0, 0))
+      else
+        status_idx = GameData::Status.get(pkmn.status).icon_position
+        self.bitmap.blt(xPos + 10, 52, @statusBitmap.bitmap, Rect.new(0, status_idx * 14, 14, 14))
+      end
+      @poke_sprites[i].tone = (pkmn.hp == 0) ? Tone.new(0, 0, 0, 255) : Tone.new(0, 0, 0, 0)
+      xPos += @rightAlign ? -56 : 56
+    end
+  end
+
+  def opacity=(value)
+    super(value)
+    @sprites.each do |key, sprite|
+      sprite.opacity = value
+    end
+  end
+
+  def color=(value)
+    super(value)
+    @sprites.each do |key, sprite|
+      sprite.color = value
+    end
+  end
+
+  def x=(value)
+    super(value)
+    xPos = value + 24
+    xPos += Graphics.width / 2 - 8 if @rightAlign
+    xPos += @rightAlign ? -16 - 56 : 16
+    for i in 0...@party.length
+      @ball_sprites[i].x = xPos
+      @poke_sprites[i].x = xPos
+      xPos += @rightAlign ? -56 : 56
+    end
+  end
+
+  def y=(value)
+    super(value)
+    for i in 0...@party.length
+      @ball_sprites[i].y = value + 46
+      @poke_sprites[i].y = value + 42
+    end
+  end
+
+  def z=(value)
+    super(value)
+    @sprites.each do |key, sprite|
+      sprite.z = value - 1
+    end
+  end
+
+  def update
+    super
+    mustRefresh = false
+    for i in 0...@party.length
+      if @party[i].hp != @hp[i]
+        @hp[i] = @party[i].hp
+        mustRefresh = true
+      end
+      if @party[i].status != @status[i]
+        @status[i] = @party[i].status
+        mustRefresh = true
+      end
+    end
+    self.refresh if mustRefresh
+  end
+
+  def dispose
+    super
+    @statusBitmap.dispose
+    pbDisposeSpriteHash(@sprites)
+  end
+
+end
+
 class OuterMoveInfo < IconSprite
 
   def initialize(viewport,parent)
@@ -381,16 +551,19 @@ class OuterDataBox < RPG::Sprite
     super(viewport)
     @frame = 0
     @contents = BitmapWrapper.new(Graphics.width,Graphics.height)
-    self.bitmap  = @contents
+    @pages = [@contents]
+    @numPages = 0
+    @curPage = 0
+    self.bitmap  = @pages[0]
     pbSetSmallestFont(self.bitmap)
     @parent = parent
     pos = (pos + 2) % 4 if pos % 2 == 0 && boxCount >= 3
     pos = (pos + 2) % 4 if pos % 2 == 1 && boxCount >= 4
     @pos = pos
-    @statX = [96,674,96,674][pos]
-    @statY = [484,26,26,484][pos]
-    @affinityX = (pos % 2 == 1) ? @statX - 2 : @statX - 66
-    @affinityY = (pos != 1 && pos != 2) ? @statY - 60 : @statY + 120
+    @statX = [96,674+64,96,674+64][pos]
+    @statY = [364,192,120,436][pos]
+    @affinityX = @statX - 66
+    @affinityY = @statY + 102
     @battler = parent.battler
     @stages = {}
     for i in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
@@ -401,8 +574,9 @@ class OuterDataBox < RPG::Sprite
     @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
     @pkmnSprite = PokemonIconSprite.new(@battler.pokemon,viewport)
     @pkmnSprite.visible = false
-    @pkmnX = (pos % 2 == 1) ? @statX - 2 : @statX - 66
-    @pkmnY = (pos != 1 && pos != 2) ? @statY - 170 : @statY + 170
+    @pkmnSprite.mirror = true if pos % 2 == 0
+    @pkmnX = @statX - 66
+    @pkmnY = (pos % 2 == 1) ? @statY - 96 : @statY + 136
     @pkmnSprite.x = @pkmnX
     @pkmnSprite.y = @pkmnY
     refresh
@@ -424,17 +598,17 @@ class OuterDataBox < RPG::Sprite
   end
 
   def refresh
-    self.bitmap.clear
     @pkmnSprite.visible = @parent.visible
     return if !@parent.visible || !@battler || @battler.fainted?
     colors=[
       Color.new(248,248,248),Color.new(33,29,29),
       Color.new(160,160,168),Color.new(80,80,80),
-      Color.new(140,225,140),Color.new(0,150,0),
-      Color.new(225,140,140),Color.new(150,0,0)]
+      Color.new(140,225,140),Color.new(0,100,0),
+      Color.new(225,140,140),Color.new(100,0,0)]
     pokemon=@parent.battler
     textPos=[]
-    i = 0; j = 0
+    textPosPages = []
+    i = 0; j = 0; yOffset = 0
     statNames = ["ATTACK","DEFENSE","SP.ATK","SP.DEF","SPEED","ACC.","EVASION"]
     for s in [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED,:ACCURACY,:EVASION]
       stage=pokemon.stages[s]
@@ -465,28 +639,148 @@ class OuterDataBox < RPG::Sprite
           end
         end
         statNameX = @statX
-        statNameX += (@pos&1 == 1) ? 59 : -61
-        textPos.push([stageStr,@statX,@statY+18*i,2,c[0],c[1]])
-        textPos.push([statNames[j],statNameX,@statY+18*i,2,c[0],c[1]])
-        i+=1
-        break if i > 4
+        statNameX -= 61
+        textPos.push([stageStr,@statX,@statY+18*yOffset,2,c[0],c[1]])
+        textPos.push([statNames[j],statNameX,@statY+18*yOffset,2,c[0],c[1]])
+        i += 1
+        yOffset += 1
+        if i % 4 == 0
+          textPosPages.push(textPos)
+          textPos = []
+          yOffset = 0
+        end
       end
-      j+=1
+      j += 1
     end
-    pbDrawTextPositions(self.bitmap,textPos)
-    self.bitmap.blt(@affinityX,@affinityY,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(@battler.pokemon.affinities[0]).icon_position,64,28))
+    for e in self.positivePokemonEffects
+      c = [colors[4],colors[5]]
+      e_id = getID(PBEffects, e[0])
+      val = pokemon.effects[e_id]
+      next if val.nil?
+      if (val != e[2])
+        textPos.push([e[1].upcase,@statX - 32,@statY+18*yOffset,2,c[0],c[1]])
+        i += 1
+        yOffset += 1
+        if i % 4 == 0
+          textPosPages.push(textPos)
+          textPos = []
+          yOffset = 0
+        end
+      end
+    end
+    for e in self.negativePokemonEffects
+      c = [colors[6],colors[7]]
+      e_id = getID(PBEffects, e[0])
+      echoln e.to_s
+      val = pokemon.effects[e_id]
+      next if val.nil?
+      if (val != e[2])
+        textPos.push([e[1].upcase,@statX - 32,@statY+18*yOffset,2,c[0],c[1]])
+        i += 1
+        yOffset += 1
+        if i % 4 == 0
+          textPosPages.push(textPos)
+          textPos = []
+          yOffset = 0
+        end
+      end
+    end
+    textPosPages.push(textPos) if textPos.length > 0
+    @numPages = textPosPages.length
+    while @pages.length < @numPages
+      @pages.push(BitmapWrapper.new(Graphics.width,Graphics.height))
+      pbSetSmallestFont(@pages[@pages.length - 1])
+    end
+    for i in 0...@numPages
+      @pages[i].clear
+      pbDrawTextPositions(@pages[i], textPosPages[i])
+      @pages[i].blt(@affinityX,@affinityY,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(@battler.pokemon.affinities[0]).icon_position,64,28))
+    end
+    if @numPages == 0
+      @pages[0].clear
+      @pages[0].blt(@affinityX,@affinityY,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(@battler.pokemon.affinities[0]).icon_position,64,28))
+      self.bitmap = @pages[0]
+    end
+  end
+
+  def positivePokemonEffects
+    return [
+      [:AquaRing, "Aqua Ring", false],
+      [:Bide, "Bide", 0],
+      [:Charge, "Charged", 0],
+      [:DestinyBond, "Destiny Bond", false],
+      [:Endure, "Endure", false],
+      [:FlashFire, "Flash Fire", false],
+      [:FocusEnergy, "Focus Energy", 0],
+      [:FollowMe, "Follow Me", 0],
+      [:Grudge, "Grudge", false],
+      [:HelpingHand, "Has Help", false],
+      [:Ingrain, "Ingrained", false],
+      [:LaserFocus, "Laser Focused", 0],
+      [:LockOn, "Locked On", 0],
+      [:MagicCoat, "Magic Coat", false],
+      [:MagnetRise, "Levitating", 0],
+      [:Minimize, "Minimized", false],
+      [:MudSport, "Mud Sport", false],
+      [:PowerTrick, "Power Trick", false],
+      [:Rage, "Raging", false],
+      [:RagePowder, "Rage Powder", false],
+      [:ShellTrap, "Shell Trap", false],
+      [:Substitute, "Substitute", 0],
+      [:Unburden, "Unburden", false],
+      [:Uproar, "Uproar", 0],
+      [:WaterSport, "Water Sport", false],
+      [:WellRested, "Well Rested", 0]
+    ]
+  end
+
+  def negativePokemonEffects
+    return [
+      [:Attract, "Attracted", -1],
+      [:Confusion, "Confused", 0],
+      [:Curse, "Cursed", false],
+      [:Disable, "Disabled", 0],
+      [:Encore, "Encored", 0],
+      [:Flinch, "Flinched", false],
+      [:Foresight, "Identified", false],
+      [:GastroAcid, "Nullified", false],
+      [:HealBlock, "Heal Blocked", 0],
+      [:HyperBeam, "Recharging", 0],
+      [:JawLock, "Jaw Locked", -1],
+      [:LeechSeed, "Seeded", -1],
+      [:MeanLook, "Cannot Escape", -1],
+      [:Nightmare, "Nightmare", false],
+      [:NoRetreat, "No Retreat", false],
+      [:Obstruct, "Obstructed", false],
+      [:Octolock, "Octolocked", -1],
+      [:PerishSong, "Perishing", 0],
+      [:Powder, "Powdered", false],
+      [:Quash, "Quashed", 0],
+      [:SlowStart, "Slow Start", 0],
+      [:SmackDown, "Grounded", false],
+      [:TarShot, "Tar Covered", false],
+      [:Taunt, "Taunted", 0],
+      [:Telekinesis, "Telekinesis", 0],
+      [:ThroatChop, "Silenced", 0],
+      [:Torment, "Tormented", false],
+      [:Trapping, "Trapped", 0],
+      [:Yawn, "Drowsy", 0],
+      [:CorrosiveAcid, "Corroded", false]
+    ]
   end
 
   def dispose
     @pkmnSprite.dispose
     @typeBitmap.dispose
     super
+    @pages.each do |bitmap|
+      bitmap.dispose if !bitmap.disposed?
+    end
   end
 
-  def update
-    super
+  def update(mustRefresh=false)
+    super()
     @frame = (@frame + 1) % 2
-    mustRefresh = false
     if @battler != @parent.battler || @fainted != @battler.fainted? || @boxVisible != @parent.visible
       mustRefresh = true
     elsif 
@@ -508,6 +802,14 @@ class OuterDataBox < RPG::Sprite
       refresh
     end
     @pkmnSprite.update if (@parent.selected==1 || @parent.selected==2) && @frame == 0
+    if @numPages > 1
+      if Graphics.frame_count % 180 == 0
+        @curPage = (@curPage + 1) % @numPages
+        self.bitmap = @pages[@curPage]
+      end
+    else
+      @pageTimer = 0
+    end
   end
 
 end

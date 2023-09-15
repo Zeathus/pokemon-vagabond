@@ -685,6 +685,9 @@ def pbUseItem(bag, item, bagscene = nil)
               bag.remove(item, qty)
               if !bag.has?(item)
                 pbMessage(_INTL("You used your last {1}.", itm.name))
+                ret = true
+              else
+                ret = false
               end
             end
             ret

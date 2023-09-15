@@ -28,11 +28,28 @@
 > It speaks of "a creature's essence"...
 > I wonder if that means we have to bring a specific kind of Pokémon.\nThe question is what Pokémon.
 > My gut tells me the hieroglyphs on the wall have our answer, but I do not know how to read them.
-> Surely these ruins contain the clues necessary to read these glyphs.
+> Surely these ruins contain the clues necessary to read these glyphs. 
+> I will continue to investigate this tablet. Let me know if you need any of my insights.
 
 [JOB_ARCHEOLOGIST_1,6]
 /speaker Asako
-> In case you forgot, the tablet reads as such:
+?> I hope your investigation is going well.\nDo you need any of my insights?
+  /choice Tablet writings
+    > The tablet reads as such...
+    > "Through a creature's essence, a new path is revealed"
+    > "It's true nature within these rooms lie concealed"
+    > I believe it wants us to bring a specific kind of Pokémon.\nThe question is what Pokémon.
+  /choice Glyphs
+    > The hieroglyphs on the wall must have a clue to what "essence" we need.
+    > There are four different types of glyphs on the wall forming a sequence of six.
+    > I saw each of these glyphs displayed in each of the four rooms.\nI wonder what that means...
+  /choice Unown
+    > The Unown are ancient Pokémon that resemble our modern alphabet. They are shrouded in mystery.
+    > I noticed that the four rooms within these ruins have only one type of Unown each.
+    > Maybe that is some kind of clue for us to decipher each glyph?
+  /cancelchoice Never mind
+?/>
+> I am sure we can figure this out together.
 
 [JOB_ARCHEOLOGIST_1,7]
 /speaker Asako

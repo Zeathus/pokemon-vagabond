@@ -4541,7 +4541,7 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = VERMINBOOST
+Move = MORPHOBOOST
 Description = The user agressively nibbles the target for its teammate. Lowers target special attack if affinity boosted, or by Helping Hand.
 #-------------------------------
 [TM87]

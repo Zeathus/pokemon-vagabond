@@ -371,15 +371,19 @@ class Battle
         break
       end
       PBDebug.log("")
+      @scene.outer.update(nil, true)
       # Command phase
       PBDebug.logonerr { pbCommandPhase }
       break if @decision > 0
+      @scene.outer.update(nil, true)
       # Attack phase
       PBDebug.logonerr { pbAttackPhase }
       break if @decision > 0
+      @scene.outer.update(nil, true)
       # End of round phase
       PBDebug.logonerr { pbEndOfRoundPhase }
       break if @decision > 0
+      @scene.outer.update(nil, true)
       @turnCount += 1
     end
     pbEndOfBattle

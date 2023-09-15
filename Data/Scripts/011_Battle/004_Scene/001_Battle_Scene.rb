@@ -3,6 +3,7 @@ class Battle::Scene
   attr_accessor :abortable   # For non-interactive battles, can quit immediately
   attr_reader   :viewport
   attr_reader   :sprites
+  attr_reader   :outer
 
   BATTLE_VIEW_WIDTH    = 512
   BATTLE_VIEW_HEIGHT   = 384
