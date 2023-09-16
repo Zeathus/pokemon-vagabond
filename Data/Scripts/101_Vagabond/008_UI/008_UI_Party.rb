@@ -2813,7 +2813,7 @@ class PokemonScreen_Scene
     pbFadeOutIn {
       scene = PokemonBag_Scene.new
       screen = PokemonBagScreen.new(scene,bag)
-      ret = screen.pbChooseItemScreen(Proc.new { |item| GameData::Item.get(item).can_hold? })
+      ret = screen.pbChooseItemScreen(Proc.new { |item| GameData::Item.get(item).can_hold? }, 4)
       yield if block_given?
     }
     return ret
@@ -3542,7 +3542,16 @@ class PokemonScreen
                 @scene.pbPreSelect(oldpkmnid)
                 newpkmnid=@scene.pbChoosePokemon(true,pkmnid)
                 break if newpkmnid<0
-                newpkmn = (newpkmnid >= 6) ? @pparty[newpkmnid - 6] : @party[newpkmnid]
+                newpkmn = nil
+                if newpkmnid < 3
+                  newpkmn = @party[newpkmnid]
+                elsif newpkmnid < 6
+                  newpkmn = @inactive_party[newpkmnid - 3]
+                elsif newpkmnid < 9
+                  newpkmn = @pparty[newpkmnid - 6]
+                elsif newpkmnid < 12
+                  newpkmn = @inactive_pparty[newpkmnid - 9]
+                end
                 if newpkmnid==oldpkmnid
                   break
                 elsif newpkmn.egg?

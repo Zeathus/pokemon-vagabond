@@ -417,7 +417,7 @@ class Battle::Scene
     return idxBattler   # Target the user initially
   end
 
-  def pbChooseTarget(idxBattler, target_data, visibleSprites = nil)
+  def pbChooseTarget(idxBattler, target_data, visibleSprites = nil, move = nil)
     pbShowWindow(TARGET_BOX)
     cw = @sprites["targetWindow"]
     # Create an array of battler names (only valid targets are named)
@@ -425,6 +425,7 @@ class Battle::Scene
     # Determine mode based on target_data
     mode = (target_data.num_targets == 1) ? 0 : 1
     cw.setDetails(texts, mode)
+    cw.setAffinityBoost(@battle.battlers[idxBattler], move)
     cw.index = pbFirstTarget(idxBattler, target_data)
     pbSelectBattler((mode == 0) ? cw.index : texts, 2)   # Select initial battler/data box
     pbFadeInAndShow(@sprites, visibleSprites) if visibleSprites

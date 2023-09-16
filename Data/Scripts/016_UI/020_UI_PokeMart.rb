@@ -467,8 +467,8 @@ class PokemonMart_Scene
       numwindow.viewport = @viewport
       numwindow.width = 224
       numwindow.height = 64
-      numwindow.baseColor = Color.new(88, 88, 80)
-      numwindow.shadowColor = Color.new(168, 184, 184)
+      numwindow.baseColor = Color.new(248, 248, 248)
+      numwindow.shadowColor = Color.new(72, 80, 88)
       numwindow.text = _INTL("x{1}<r>$ {2}", curnumber, (curnumber * itemprice).to_s_formatted)
       pbBottomRight(numwindow)
       numwindow.y -= helpwindow.height

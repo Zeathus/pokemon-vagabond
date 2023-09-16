@@ -91,7 +91,7 @@ class Battle
 
   def pbChooseTarget(battler, move)
     target_data = move.pbTarget(battler)
-    idxTarget = @scene.pbChooseTarget(battler.index, target_data)
+    idxTarget = @scene.pbChooseTarget(battler.index, target_data, nil, move)
     return false if idxTarget < 0
     pbRegisterTarget(battler.index, idxTarget)
     return true

@@ -473,6 +473,9 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     #       0=select 1 button (@index), 1=select all buttons with text
     # Create bitmaps
     @buttonBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/cursor_target")
+    @boost_icons = []
+    @boost_icon_timer = 0
+    @can_affinity_boost = []
     # Create target buttons
     @buttons = Array.new(maxIndex + 1) do |i|
       numButtons = @sideSizes[i % 2]
@@ -491,9 +494,14 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
         button.x    = self.x + 138 - [0, 116][numButtons - 1]
       end
       button.x += (button.src_rect.width - 4) * inc
-      button.y = self.y + 6
-      button.y += (BUTTON_HEIGHT - 4) * ((i + 1) % 2)
+      button.y = self.y + 2
+      button.y += (BUTTON_HEIGHT) * ((i + 1) % 2)
       addSprite("button_#{i}", button)
+      @boost_icons[i] = IconSprite.new(0, 0, viewport)
+      @boost_icons[i].setBitmap("Graphics/Pictures/Battle/affinityboost_text_small")
+      @boost_icons[i].x = button.x + button.src_rect.width - 96
+      @boost_icons[i].y = button.y - 6
+      @boost_icons[i].opacity = 0
       next button
     end
     # Create overlay (shows target names)
@@ -506,20 +514,87 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     refresh
   end
 
+  def update
+    super
+    for i in 0...@boost_icons.length
+      icon = @boost_icons[i]
+      next if !icon
+      if self.visible && @can_affinity_boost[i]
+        if @boost_icon_timer < 32
+          icon.opacity += 8
+        elsif @boost_icon_timer >= 48 && @boost_icon_timer < 80
+          icon.opacity -= 8
+        end
+        @boost_icon_timer = 0 if @boost_icon_timer >= 88
+      else
+        icon.opacity = 0
+      end
+    end
+    if self.visible
+      @boost_icon_timer += 1
+    else
+      @boost_icon_timer = 0
+    end
+  end
+
   def dispose
     super
     @buttonBitmap&.dispose
+    @boost_icons.each do |icon|
+      icon&.dispose
+    end
+  end
+
+  def visible=(value)
+    super
+    @boost_icons.each do |icon|
+      next if !icon
+      icon.visible = value
+      icon.opacity = 0
+    end
+    @boost_icon_timer = 0
   end
 
   def z=(value)
     super
     @overlay.z += 5 if @overlay
+    @boost_icons.each do |icon|
+      next if !icon
+      icon.z = self.z + 10
+    end
   end
 
   def setDetails(texts, mode)
     @texts = texts
     @mode  = mode
     refresh
+  end
+
+  def setAffinityBoost(battler, move)
+    return if !battler || !move
+    @can_affinity_boost = []
+    @boost_icons.each_with_index do |icon, i|
+      next if !icon
+      ret = false
+      battler.eachAlly do |partner|
+        ret = true if partner.pokemon.hasAffinity?(move.type)
+      end
+      if ret
+        ret = false
+        target = nil
+        battler.eachOpposing do |b|
+          target = b if b.index == i
+        end
+        if target
+          bTypes = target.pbTypes(true)
+          typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+          if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
+            ret = true
+          end
+        end
+      end
+      @can_affinity_boost[i] = ret
+    end
   end
 
   def refreshButtons
@@ -537,6 +612,8 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       button.src_rect.x = (sel) ? @buttonBitmap.width / 2 : 0
       button.src_rect.y = buttonType * BUTTON_HEIGHT
       button.z          = self.z + ((sel) ? 3 : 2)
+      @boost_icons[i].x = button.x + button.src_rect.width - 96
+      @boost_icons[i].y = button.y - 6
     end
     # Draw target names onto overlay
     @overlay.bitmap.clear

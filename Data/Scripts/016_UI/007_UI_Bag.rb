@@ -166,11 +166,11 @@ class PokemonBag_Scene
       numfilledpockets = 0
       if @filterlist.nil?
         (1...@bag.pockets.length).each do |i|
-          numfilledpockets += 1 if @bag.pockets[i].length > 0
+          numfilledpockets += 1 #if @bag.pockets[i].length > 0
         end
       else
         (1...@bag.pockets.length).each do |i|
-          numfilledpockets += 1 if @filterlist[i].length > 0
+          numfilledpockets += 1 #if @filterlist[i].length > 0
         end
       end
       lastpocket = (resetpocket) ? 1 : @bag.last_viewed_pocket
@@ -387,12 +387,7 @@ class PokemonBag_Scene
               newpocket = itemwindow.pocket
               loop do
                 newpocket = (newpocket % 3 == 1) ? newpocket + 2 : newpocket - 1
-                break if !@choosing || newpocket == itemwindow.pocket
-                if @filterlist
-                  break if @filterlist[newpocket].length > 0
-                elsif @bag.pockets[newpocket].length > 0
-                  break
-                end
+                break
               end
               if itemwindow.pocket != newpocket
                 itemwindow.pocket = newpocket
@@ -405,12 +400,7 @@ class PokemonBag_Scene
               newpocket = itemwindow.pocket
               loop do
                 newpocket = (newpocket % 3 == 0) ? newpocket - 2 : newpocket + 1
-                break if !@choosing || newpocket == itemwindow.pocket
-                if @filterlist
-                  break if @filterlist[newpocket].length > 0
-                elsif @bag.pockets[newpocket].length > 0
-                  break
-                end
+                break
               end
               if itemwindow.pocket != newpocket
                 itemwindow.pocket = newpocket
@@ -423,12 +413,7 @@ class PokemonBag_Scene
               newpocket = itemwindow.pocket
               loop do
                 newpocket = (newpocket <= 3) ? newpocket + 6 : newpocket - 3
-                break if !@choosing || newpocket == itemwindow.pocket
-                if @filterlist
-                  break if @filterlist[newpocket].length > 0
-                elsif @bag.pockets[newpocket].length > 0
-                  break
-                end
+                break
               end
               if itemwindow.pocket != newpocket
                 itemwindow.pocket = newpocket
@@ -441,12 +426,7 @@ class PokemonBag_Scene
               newpocket = itemwindow.pocket
               loop do
                 newpocket = (newpocket >= 7) ? newpocket - 6 : newpocket + 3
-                break if !@choosing || newpocket == itemwindow.pocket
-                if @filterlist
-                  break if @filterlist[newpocket].length > 0
-                elsif @bag.pockets[newpocket].length > 0
-                  break
-                end
+                break
               end
               if itemwindow.pocket != newpocket
                 itemwindow.pocket = newpocket
@@ -614,11 +594,12 @@ class PokemonBagScreen
   end
 
   # UI logic for the item screen for choosing an item.
-  def pbChooseItemScreen(proc = nil)
+  def pbChooseItemScreen(proc = nil, default_pocket = -1)
     oldlastpocket = @bag.last_viewed_pocket
     oldchoices = @bag.last_pocket_selections.clone
     @bag.reset_last_selections if proc
-    @scene.pbStartScene(@bag, true, proc)
+    @bag.last_viewed_pocket = default_pocket if default_pocket != -1
+    @scene.pbStartScene(@bag, true, proc, default_pocket == -1)
     item = @scene.pbChooseItem
     @scene.pbEndScene
     @bag.last_viewed_pocket = oldlastpocket

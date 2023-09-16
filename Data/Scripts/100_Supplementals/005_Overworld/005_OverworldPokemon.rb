@@ -130,6 +130,9 @@ class OverworldPokemon
   def encounter
     setBattleRule("scalelevel")
     pbModifier.form = @form
+    if @species == :UNOWN
+      pbModifier.name = _INTL("Unown {1}", GameData::Species.get_species_form(@species, @form).form_name)
+    end
     WildBattle.start(@species, @lvl)
   end
 
@@ -258,7 +261,6 @@ class SpawnArea
   attr_reader :height
   attr_reader :pokemon
   attr_reader :terrain
-  attr_reader :max_pkmn
 
   def initialize(viewport,map,terrain,x,y)
     @viewport= viewport
@@ -286,6 +288,13 @@ class SpawnArea
       divisor = 24.0
     end
     @max_pkmn = (@tiles.length / divisor).ceil
+    @repel_active = false
+  end
+
+  def max_pkmn
+    ret = @max_pkmn
+    ret = (ret / 4.0).ceil if $PokemonGlobal.repel > 0
+    return ret
   end
 
   def BFS(x,y)
@@ -365,7 +374,13 @@ class SpawnArea
 
   def updateSpawns(initial = false)
     return if !$player || $player.party.length <= 0
-    if (Graphics.frame_count % 6 == 0 || initial) && @pokemon.length < @max_pkmn
+    if ($PokemonGlobal.repel > 0) != @repel_active
+      @repel_active = ($PokemonGlobal.repel > 0)
+      if @repel_active
+        despawnPokemonNatural(true)
+      end
+    end
+    if (Graphics.frame_count % 6 == 0 || initial) && @pokemon.length < self.max_pkmn
       tile = @tiles[rand(@tiles.length)]
       x = tile[0]
       y = tile[1]
@@ -455,9 +470,20 @@ class SpawnArea
     @pokemon = []
   end
 
-  def despawnPokemonNatural
-    for p in @pokemon
-      p.away
+  def despawnPokemonNatural(repel = false)
+    if repel
+      idx = []
+      for i in 0...@pokemon.length
+        idx.push(i)
+      end
+      idx = idx.shuffle
+      for i in 0...idx.length
+        @pokemon[i].away if i >= self.max_pkmn
+      end
+    else
+      for p in @pokemon
+        p.away
+      end
     end
   end
 
@@ -507,10 +533,12 @@ class Spriteset_Map
               @map.passable?(x,y,4) &&
               @map.passable?(x,y,6) &&
               @map.passable?(x,y,8)
-            count+=1
-            area = SpawnArea.new(@@viewport1,@map,-1,x,y)
-            if area.tiles.length > 6
-              @spawn_areas.push(area)
+            if !($game_map.events.any? { |id, event| event.x == x && event.y == y })
+              count+=1
+              area = SpawnArea.new(@@viewport1,@map,-1,x,y)
+              if area.tiles.length > 6
+                @spawn_areas.push(area)
+              end
             end
           elsif tag.land_wild_encounters && $PokemonEncounters.has_land_encounters?
             count+=1

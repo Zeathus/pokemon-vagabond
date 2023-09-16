@@ -22,6 +22,15 @@ U> Its true nature within these rooms lie concealed
         /return false
 ?/>
 
+[RUINS_CROSSWOODS,3]
+> The Dunsparce is waiting for you to accept your reward.
+
+[RUINS_CROSSWOODS,4]
+> The Dunsparce offers you a rematch, but would like you to meet with Asako first.
+
+[RUINS_CROSSWOODS,5]
+> The tablet has a symbol similar to those in the main room.
+
 [RUINS_LAZULI_RIVER,0]
 ?> The Corsola looks like it wants to test your strength. Are you ready?
     /choice Yes
@@ -40,6 +49,9 @@ U> Its true nature within these rooms lie concealed
     /cancelchoice No
         /return false
 ?/>
+
+[RUINS_LAZULI_RIVER,3]
+> The Corsola is waiting for you to accept your reward.
 
 [RUINS_BRECCIA,0]
 ?> The Shiinotic looks like it wants to test your strength. Are you ready?
@@ -60,6 +72,9 @@ U> Its true nature within these rooms lie concealed
         /return false
 ?/>
 
+[RUINS_BRECCIA,3]
+> The Shiinotic is waiting for you to accept your reward.
+
 [RUINS_PEGMA_HILLSIDE,0]
 ?> The Darmanitan looks like it wants to test your strength. Are you ready?
     /choice Yes
@@ -79,6 +94,9 @@ U> Its true nature within these rooms lie concealed
         /return false
 ?/>
 
+[RUINS_PEGMA_HILLSIDE,3]
+> The Darmanitan is waiting for you to accept your reward.
+
 [RUINS_SMOKEY_FOREST,0]
 ?> The Spiritomb looks like it wants to test your strength. Are you ready?
     /choice Yes
@@ -97,3 +115,6 @@ U> Its true nature within these rooms lie concealed
     /cancelchoice No
         /return false
 ?/>
+
+[RUINS_SMOKEY_FOREST,3]
+> The Spiritomb is waiting for you to accept your reward.

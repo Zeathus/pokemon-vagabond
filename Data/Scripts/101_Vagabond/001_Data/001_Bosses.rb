@@ -2,9 +2,9 @@ def pbPokemonBossBGM
   $PokemonGlobal.nextBattleBGM="Battle! VS Wild Strong Pokemon (Hero Encore)"
 end
 
-def pbRuinBossLevel
+def pbRuinBossLevel(mod = 0)
   level = 14
-  level += pbGet(RUINS_DONE)*6
+  level += (pbGet(RUINS_DONE) + mod)*6
   level = 80 if level > 80
   return level
 end

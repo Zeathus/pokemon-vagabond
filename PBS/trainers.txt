@@ -3522,7 +3522,13 @@ Pokemon = SCRAFTY,40
     AbilityIndex = 0
 #--------------
 [YOUNGSTER,Test]
-Pokemon = BLISSEY,50
+Pokemon = GEODUDE,20
+    Moves = HELPINGHAND
+Pokemon = GEODUDE,20
+    Moves = HELPINGHAND
+Pokemon = BLISSEY,20
+    Moves = HELPINGHAND
+Pokemon = BLISSEY,20
     Moves = HELPINGHAND
 #--------------
 [VETERAN_M,Kazuyuki Tsuji] #VGC Cup 2009

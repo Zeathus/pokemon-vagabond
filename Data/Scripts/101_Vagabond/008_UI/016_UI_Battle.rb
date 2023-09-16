@@ -1,5 +1,7 @@
 class Battle::Scene::Outer
 
+  attr_reader :viewport
+
   BLANK       = 0
   MESSAGE_BOX = 1
   COMMAND_BOX = 2
@@ -241,11 +243,23 @@ class OuterMoveBox < IconSprite
     super(x,y,viewport)
     setBitmap("Graphics/Pictures/Battle/move_buttons")
     self.src_rect = Rect.new(0,0,182,42)
+    @cursor = IconSprite.new(0, 0, viewport)
+    @cursor.setBitmap("Graphics/Pictures/Battle/move_cursor")
+    @cursor.x = self.x - 2
+    @cursor.y = self.y - 2
+    @cursor.z = self.z + 1
+    @cursor.visible = false
     @overlay = SpriteWrapper.new(viewport)
     @overlay.bitmap = Bitmap.new(self.src_rect.width,self.src_rect.height)
     @overlay.x = self.x
     @overlay.y = self.y
-    @overlay.z = self.z + 1
+    @overlay.z = self.z + 2
+    @boost_icon = IconSprite.new(0, 0, viewport)
+    @boost_icon.setBitmap("Graphics/Pictures/Battle/affinityboost_text_small")
+    @boost_icon.x = self.x + 96
+    @boost_icon.y = self.y - 6
+    @boost_icon.z = self.z + 3
+    @boost_icon_timer = 0
   end
 
   def refresh(move,selected=false)
@@ -255,39 +269,79 @@ class OuterMoveBox < IconSprite
       self.src_rect.y = -42
       return
     end
+    @cursor.visible = selected
     type_id = GameData::Type.get(move.type).icon_position
     self.src_rect.x = selected ? 182 : 0
     self.src_rect.y = type_id * 42
     #moveNameBase = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
     moveNameBase = self.bitmap.get_pixel(2,self.src_rect.y+2)
     moveNameShadow = Battle::Scene::MESSAGE_SHADOW_COLOR
+    @can_affinity_boost = false
+    @parent.battler.eachAlly do |partner|
+      @can_affinity_boost = true if partner.pokemon.hasAffinity?(move.type)
+    end
+    if @can_affinity_boost
+      @can_affinity_boost = false
+      @parent.battler.eachOpposing do |target|
+        bTypes = target.pbTypes(true)
+        typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+        if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
+          @can_affinity_boost = true
+        end
+      end
+    end
     textPos = [[move.name,92,12,2,moveNameBase,moveNameShadow]]
     pbSetSystemFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap,textPos)
   end
 
+  def update
+    super
+    if self.visible && @can_affinity_boost
+      if @boost_icon_timer < 32
+        @boost_icon.opacity += 8
+      elsif @boost_icon_timer >= 48 && @boost_icon_timer < 80
+        @boost_icon.opacity -= 8
+      end
+      @boost_icon_timer += 1
+      @boost_icon_timer = 0 if @boost_icon_timer >= 88
+    else
+      @boost_icon_timer = 0
+      @boost_icon.opacity = 0
+    end
+  end
+
   def opacity=(value)
     super(value)
     @overlay.opacity = value
+    @cursor.opacity = value
   end
 
   def color=(value)
     super(value)
     @overlay.color = value
+    @boost_icon.color = value
+    @cursor.color = value
   end
 
   def visible=(value)
     super(value)
     @overlay.visible = value
+    @boost_icon.visible = value
+    @cursor.visible = false if !value
   end
 
   def z=(value)
     super(value)
-    @overlay.z = self.z + 1
+    @cursor.z = self.z + 1
+    @overlay.z = self.z + 2
+    @boost_icon.z = self.z + 3
   end
 
   def dispose
+    @cursor.dispose
     @overlay.dispose
+    @boost_icon.dispose
     super
   end
 end
@@ -1115,7 +1169,7 @@ class Battle::Scene::PokemonDataBox < Sprite
       @spriteY += [-20, -34, 34, 20][@battler.index]
     when 3
       @spriteX += [-12,  12, -6,  6,  0,  0][@battler.index]
-      @spriteY += [-42, -46,  4,  0, 50, 46][@battler.index]
+      @spriteY += [-42, -42,  6,  6, 54, 54][@battler.index]
     end
   end
   
@@ -1276,32 +1330,55 @@ class Battle::Scene::PokemonDataBox < Sprite
   end
   
   def draw_name
-    if onPlayerSide
-      pbDrawTextPositions(self.bitmap,
-        [[@battler.name, @spriteBaseX + 10, @spriteBaseY, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
-      )
+    name_x = onPlayerSide ? 10 : 202
+    name_y = 0
+    align = onPlayerSide ? 0 : 1
+    if @smallLevel
+      pbSetSmallFont(self.bitmap)
+      name_x -= 2
+      name_y += 4
     else
-      pbDrawTextPositions(self.bitmap,
-        [[@battler.name, @spriteBaseX + 202, @spriteBaseY, 1, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
-      )
+      pbSetSystemFont(self.bitmap)
     end
+    pbDrawTextPositions(self.bitmap,
+      [[@battler.name, @spriteBaseX + name_x, @spriteBaseY + name_y, align, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]]
+    )
+    pbSetSystemFont(self.bitmap)
   end
   
   def draw_level
     # Level number
     lvl_text = _INTL("{1}", @battler.level)
     lvl_x = onPlayerSide ? 174 : 16
+    lvl_y = 0
+    if @smallLevel
+      pbSetSmallFont(self.bitmap)
+      lvl_x += 2
+      lvl_y += 4
+    else
+      pbSetSystemFont(self.bitmap)
+    end
     pbDrawTextPositions(self.bitmap,
-      [[lvl_text, @spriteBaseX + lvl_x, @spriteBaseY, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+      [[lvl_text, @spriteBaseX + lvl_x, @spriteBaseY + lvl_y, 0, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+    pbSetSystemFont(self.bitmap)
   end
   
   def draw_gender
     gender = @battler.displayGender
     gender_x = onPlayerSide ? 140 : (24 + self.bitmap.text_size(_INTL("{1}", @battler.level)).width)
+    gender_y = 2
+    if @smallLevel
+      pbSetSmallFont(self.bitmap)
+      gender_x -= 2
+      gender_y += 4
+    else
+      pbSetSystemFont(self.bitmap)
+    end
     gender_text = ["♂", "♀", "⚲"][gender]
     base_color   = [MALE_BASE_COLOR, FEMALE_BASE_COLOR, NONBINARY_BASE_COLOR][gender]
     shadow_color = [MALE_SHADOW_COLOR, FEMALE_SHADOW_COLOR, NONBINARY_SHADOW_COLOR][gender]
-    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + gender_x, @spriteBaseY + 2, false, base_color, shadow_color, true]])
+    pbDrawTextPositions(self.bitmap, [[gender_text, @spriteBaseX + gender_x, @spriteBaseY + gender_y, false, base_color, shadow_color, true]])
+    pbSetSystemFont(self.bitmap)
   end
   
   def draw_status

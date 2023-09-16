@@ -281,7 +281,13 @@ class MiningGameScene
     @sprites["tool"].src_rect.set(68 * @sprites["cursor"].mode, 0, 68, 100)
     unique_items = []
     @all_items.each do |item|
-      unique_items.push(item[0]) if !NON_ITEMS.include?(item[0]) && !unique_items.include?(item[0])
+      if !unique_items.include?(item[0])
+        if NON_ITEMS.include?(item[0])
+          unique_items.push(item[0])
+        else
+          unique_items.push(item[0])
+        end
+      end
     end
     item_preview_x = 28
     item_preview_y = 160
@@ -303,6 +309,10 @@ class MiningGameScene
         ["Items:", 8, 114, 0, MessageConfig::LIGHT_TEXT_MAIN_COLOR, MessageConfig::DARK_TEXT_MAIN_COLOR, true]
       ]
     )
+    @sprites["control_mine"] = KeybindSprite.new(Input::USE, "Mine", 128, Graphics.height - 44, @viewport)
+    @sprites["control_exit"] = KeybindSprite.new([Input::BACK], "Exit", 212, Graphics.height - 44, @viewport)
+    @sprites["control_tool"] = KeybindSprite.new([Input::ACTION], "Change Tool", 294, Graphics.height - 44, @viewport)
+    @sprites["control_move"] = KeybindSprite.new([Input::UP, Input::DOWN, Input::LEFT, Input::RIGHT], "Move", 440, Graphics.height - 44, @viewport)
     update
     pbFadeInAndShow(@sprites)
   end

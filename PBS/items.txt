@@ -7,7 +7,7 @@ Pocket = 1
 Price = 400
 FieldUse = Direct
 Flags = Repel,Fling_30
-Description = An item that prevents weak wild Pokémon from appearing for 100 steps after its use.
+Description = Lowers the amount of wild Pokémon by 75% for 100 steps after its use.
 #-------------------------------
 [SUPERREPEL]
 Name = Super Repel
@@ -16,7 +16,7 @@ Pocket = 1
 Price = 700
 FieldUse = Direct
 Flags = Repel,Fling_30
-Description = An item that prevents weak wild Pokémon from appearing for 200 steps after its use.
+Description = Lowers the amount of wild Pokémon by 75% for 200 steps after its use.
 #-------------------------------
 [MAXREPEL]
 Name = Max Repel
@@ -25,7 +25,7 @@ Pocket = 1
 Price = 900
 FieldUse = Direct
 Flags = Repel,Fling_30
-Description = An item that prevents weak wild Pokémon from appearing for 250 steps after its use.
+Description = Lowers the amount of wild Pokémon by 75% for 250 steps after its use.
 #-------------------------------
 [BLACKFLUTE]
 Name = Black Flute
