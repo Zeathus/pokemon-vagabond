@@ -122,9 +122,9 @@ class Game_Player < Game_Character
       x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
       y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
       return if pbStairs(x_offset, y_offset)
+      return if pbEndSurf(x_offset, y_offset)
       if can_move_in_direction?(dir)
         return if pbLedge(x_offset, y_offset)
-        return if pbEndSurf(x_offset, y_offset)
         turn_generic(dir, true)
         if !$game_temp.encounter_triggered
           @x += x_offset

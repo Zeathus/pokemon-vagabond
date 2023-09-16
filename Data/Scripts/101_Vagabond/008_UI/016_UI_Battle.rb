@@ -671,7 +671,6 @@ class OuterDataBox < RPG::Sprite
     for e in self.negativePokemonEffects
       c = [colors[6],colors[7]]
       e_id = getID(PBEffects, e[0])
-      echoln e.to_s
       val = pokemon.effects[e_id]
       next if val.nil?
       if (val != e[2])
