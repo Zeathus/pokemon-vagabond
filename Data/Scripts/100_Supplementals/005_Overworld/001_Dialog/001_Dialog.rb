@@ -13,6 +13,7 @@ DIALOG_FILES = [
   "feldspar",
   "mica",
   "pegma",
+  "scoria",
   "general",
   "pokemon",
   "ruins",
@@ -24,10 +25,13 @@ DIALOG_FILES = [
   "job_miner",
   "job_engineer",
   "job_ranger",
+  "job_ranger_notices",
   "job_archeologist",
   "trainers",
   "cerise",
-  "dao"
+  "dao",
+  "stadium",
+  "stadium_trainers"
 ]
 
 def pbDialog(name, index = 0, msgwindows = nil)
@@ -58,6 +62,20 @@ def pbDialog(name, index = 0, msgwindows = nil)
     return nil
   end
 
+end
+
+def pbTryDialog(name, index = 0, msgwindows = nil)
+  full_name = _INTL("{1}_{2}", name.upcase, index)
+  dialog = $GameDialog[full_name]
+
+  if !dialog
+    echoln _INTL("No such dialog: '{1}'", full_name)
+    return false
+  end
+
+  pbDialog(name, index, msgwindows)
+
+  return true
 end
 
 def pbRunDialogFeed(dialog, msgwindows = nil)

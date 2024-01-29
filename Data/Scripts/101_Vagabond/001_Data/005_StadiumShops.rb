@@ -1,89 +1,87 @@
 def pbStadiumShop1
-  items = []
+  items = [
+    [:TM03, 160], # Facade
+    [:TM07, 320], # Power-Up Punch
+    [:TM11, 320], # Acrobatics
+    [:TM22, 1280], # Earthquake
+    [:TM24, 960], # Rock Slide
+    [:TM30, 640], # Pollen Puff
+    [:TM34, 320], # Phantom Force
+    [:TM38, 1280], # Steel Beam
+    [:TM40, 160], # Flame Charge
+    [:TM50, 640], # Leaf Blade
+    [:TM59, 640], # Psyshock
+    [:TM63, 480], # Icy Wind
+    [:TM68, 480], # Dragon Tail
+    [:TM75, 640], # Throat Chop
+    [:TM78, 960], # Play Rough
+    [:TM104, 160], # Hone Claws
+    [:TM107, 160], # Agility
+    [:TM110, 320], # Taunt
+    [:TM116, 640] # Defog
+  ]
 
-  # TM Roar
-  items.push(:TM05)
-  setPrice(:TM05,400)
-  # TM Smack Down
-  items.push(:TM23)
-  setPrice(:TM23,400)
-  # TM Quash
-  items.push(:TM60)
-  setPrice(:TM60,400)
-  # TM Taunt
-  items.push(:TM12)
-  setPrice(:TM12,800)
-  # TM Sky Drop
-  items.push(:TM58)
-  setPrice(:TM58,800)
-  # TM Rock Polish
-  items.push(:TM69)
-  setPrice(:TM69,800)
-  # TM Acrobatics
-  items.push(:TM62)
-  setPrice(:TM62,1400)
-  # TM Gyro Ball
-  items.push(:TM74)
-  setPrice(:TM74,1400)
-  # TM U-Turn
-  items.push(:TM89)
-  setPrice(:TM89,2000)
-  # TM Surf
-  items.push(:TM94)
-  setPrice(:TM94,2000)
-  # TM Earthquake
-  items.push(:TM26)
-  setPrice(:TM26,3000)
+  items = items.sort_by { |k| k[1] }
 
-  pbStadiumShop(items)
+  items.each do |i|
+    if $bag.quantity(i[0]) == 0
+      pbStadiumShop(items)
+      bought_all = true
+      items.each do |i|
+        if $bag.quantity(i[0]) == 0
+          bought_all = false
+          break
+        end
+      end
+      if bought_all
+        pbDialog("STADIUM_SHOP_UPGRADE")
+      else
+        return
+      end
+    end
+  end
+
+  pbStadiumShop2
 end
 
 def pbStadiumShop2
-  items = []
-
-  # Oval Charm
-  items.push(:OVALCHARM)
-  setPrice(:OVALCHARM,800)
-  # DNA Splicers
-  if $player.owned[:KYUREM]
-    items.push(:DNASPLICERS)
-    setPrice(:DNASPLICERS,1600)
-  end
-  # Reveal Glass
-  if $player.owned[:TORNADUS] ||
-     $player.owned[:THUNDURUS] ||
-     $player.owned[:LANDORUS]
-    items.push(:REVEALGLASS)
-    setPrice(:REVEALGLASS,1600)
-  end
-
-  megaRings=[:MEGARING,:MEGABRACELET,:MEGACUFF,:MEGACHARM,:ZRING]
-  hasRing = false
-  for i in megaRings
-    next if !hasConst?(PBItems,i)
-    hasRing = true if $bag.quantity(i)>0
-  end
-  if hasRing
-    items.push(:DECIDIUMZ)
-    setPrice(:DECIDIUMZ,1600)
-    items.push(:INCINIUMZ)
-    setPrice(:INCINIUMZ,1600)
-    items.push(:PRIMARIUMZ)
-    setPrice(:PRIMARIUMZ,1600)
-    items.push(:SNORLIUMZ)
-    setPrice(:SNORLIUMZ,1600)
-    items.push(:PIKANIUMZ)
-    setPrice(:PIKANIUMZ,1600)
-    items.push(:ALORAICHIUMZ)
-    setPrice(:ALORAICHIUMZ,1600)
-    items.push(:EEVEEIUMZ)
-    setPrice(:EEVEEIUMZ,1600)
-  end
+  items = [
+    [:ULTRABALL,5],
+    [:MAXREPEL,5],
+    [:HEALTHWING,10],
+    [:MUSCLEWING,10],
+    [:RESISTWING,10],
+    [:GENIUSWING,10],
+    [:CLEVERWING,10],
+    [:SWIFTWING,10],
+    [:HPUP,40],
+    [:PROTEIN,40],
+    [:IRON,40],
+    [:CALCIUM,40],
+    [:ZINC,40],
+    [:CARBOS,40],
+    [:HEMATITEGEMSTONE,120],
+    [:HELIODORGEMSTONE,120],
+    [:AEGIRINEGEMSTONE,120],
+    [:AMETRINEGEMSTONE,120],
+    [:HOWLITEGEMSTONE,120],
+    [:PHENACITEGEMSTONE,120],
+    [:PPUP,80],
+    [:PPMAX,200],
+    [:ABILITYCAPSULE,80],
+    [:ABILITYPATCH,160],
+    [:NUGGET,80]
+  ]
 
   pbStadiumShop(items)
 end
 
-def pbStadiumShop(items)
+def pbStadiumShop(items_and_prices)
+  items = []
+  items_and_prices.each do |i|
+    setPrice(i[0], i[1])
+    items.push(i[0])
+  end
   money = $player.money
   $player.money = $game_variables[STADIUM_POINTS]
   $game_switches[STADIUM_POINT_SHOP]=true

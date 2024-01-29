@@ -28,6 +28,7 @@ class Game_Character
   attr_accessor :walk_anime
   attr_writer   :bob_height
   attr_accessor :always_on_top
+  attr_accessor :always_on_bottom
 
   def initialize(map = nil)
     @map                       = map
@@ -69,6 +70,7 @@ class Game_Character
     @step_anime                = false   # Whether character should animate while still
     @direction_fix             = false
     @always_on_top             = false
+    @always_on_bottom          = false
     @anime_count               = 0
     @stop_count                = 0
     @jump_peak                 = 0   # Max height while jumping
@@ -343,6 +345,7 @@ class Game_Character
 
   def screen_z(height = 0)
     return 999 if @always_on_top
+    return 0 if @always_on_bottom
     z = screen_y_ground
     if @tile_id > 0
       begin

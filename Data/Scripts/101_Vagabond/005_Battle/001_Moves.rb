@@ -247,7 +247,7 @@ class Battle::Move::AffinityBoostSideEffect < Battle::Move
     return if !(user.affinityBooster || user.effects[PBEffects::HelpingHand])
     weather = pbGetTypeWeather(@type)
     if weather
-      if !([:HarshSun, :HeavyRain, :StrongWinds, weather].include?(@battle.field.weather))
+      if !([:HarshSun, :HeavyRain, :StrongWinds, :NoxiousStorm, weather].include?(@battle.field.weather))
         @battle.pbStartWeather(user, weather, true, false, 2)
       end
       return

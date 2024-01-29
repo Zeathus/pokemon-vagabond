@@ -508,6 +508,7 @@
 007_Mining
 008_RangerOutpost
 009_Ladder
+010_Quicksand
 @@@002_Puzzles
 001_AmphiWoods
 002_LightMirrors
@@ -545,6 +546,7 @@
 016_UI_Battle
 017_UI_BattleAnim
 018_UI_HabitatDex
+019_UI_StarterChoice
 @@009_Graphics
 001_ParticleEffects
 002_Utils

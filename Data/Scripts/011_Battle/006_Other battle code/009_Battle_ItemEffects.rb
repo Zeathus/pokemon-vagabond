@@ -1876,6 +1876,13 @@ Battle::ItemEffects::EndOfRoundEffect.add(:FLAMEORB,
   }
 )
 
+Battle::ItemEffects::EndOfRoundEffect.add(:FROSTORB,
+  proc { |item, battler, battle|
+    next if !battler.pbCanFrostbite?(battler, false)
+    battler.pbFrostbite(nil, _INTL("{1} was frostbitten by the {2}!", battler.pbThis, battler.itemName))
+  }
+)
+
 Battle::ItemEffects::EndOfRoundEffect.add(:STICKYBARB,
   proc { |item, battler, battle|
     next if !battler.takesIndirectDamage?

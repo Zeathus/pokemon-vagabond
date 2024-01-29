@@ -437,6 +437,8 @@ class Battle::Move::ThrowUserItemAtTarget < Battle::Move
       target.pbPoison(user, nil, true) if target.pbCanPoison?(user, false, self)
     when :FLAMEORB
       target.pbBurn(user) if target.pbCanBurn?(user, false, self)
+    when :FROSTORB
+      target.pbFrostbite(user) if target.pbCanFrostbite?(user, false, self)
     when :LIGHTBALL
       target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
     when :KINGSROCK, :RAZORFANG

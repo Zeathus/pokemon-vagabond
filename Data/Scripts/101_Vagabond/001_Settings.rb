@@ -14,10 +14,12 @@ FORCED_RUNNING      = 55
 ATTACKS_ONLY_BATTLE = 56
 AI_TAKEOVER         = 57
 FORCE_VISUAL_LEADER = 58
+NO_WILD_POKEMON     = 59
 CATCH_BLOCK         = 60
 MUDAMUDA            = 61
 LETHAL_LOSSES       = 62
 MESPRIT_AID         = 63
+CANNOT_OPEN_MENUS   = 65
 SPIN_PLAYER         = 66
 MAP_UPDATE          = 67
 HIDE_MARKERS        = 68
@@ -71,6 +73,8 @@ MET_RANGERS         = 155
 HAS_AZELF           = 156
 HAS_UXIE            = 157
 HAS_MESPRIT         = 158
+HAS_SECRET_MARKET   = 159
+HAS_STRENGTH        = 160
 FRIENDOFELEMENTS    = 209
 
 # ----------------------------------------------------------------------
@@ -180,3 +184,9 @@ MAIN_QUEST_DISPLAY_PRIORITY = [
   :NEKANEGONEMISSING,
   :GUARDIANOFEMOTION
 ]
+
+def pbPlayerPseudonym
+  ret = $player.name[0].upcase
+  ret += "2" if "AKN".include?(ret)
+  return ret
+end

@@ -773,11 +773,13 @@ class Battle
         end
       when "FlinchTargetFailsIfNotUserFirstTurn"
         # Fake Out
-        if user.turnCount < 1 && !target.hasActiveAbility?(:INNERFOCUS)
-          score += 50
-          actionable[target.index] = false if chosen
+        if user.turnCount <= 1
+          if !target.hasActiveAbility?(:INNERFOCUS) && actionable[target.index]
+            score += 50
+            actionable[target.index] = false if chosen
+          end
         elsif target.opposes?(user)
-          score -= 100
+          return 0
         end
       when "CureUserBurnPoisonParalysis"
         # Refresh
@@ -1493,7 +1495,7 @@ class Battle
           else
             score += 20
           end
-        elsif !target.hasActiveAbility?(:JUSTIFIED)
+        elsif target.hasActiveAbility?(:JUSTIFIED)
           score -= 20 * self.pbParty(user.index).length
         else
           score += 3 * self.pbParty(user.index).length
@@ -1900,6 +1902,7 @@ class Battle
            !target.hasActiveAbility?(:SUCTIONCUPS)
           if target.item != user.item &&
              target.item != :FLAMEORB &&
+             target.item != :FROSTORB &&
              target.item != :TOXICORB &&
              target.item != :STICKYBARB &&
              target.item != :CHOICESPECS &&
@@ -2529,7 +2532,7 @@ class Battle
            user.pbCanRaiseStatStage?(:SPECIAL_DEFENSE,user,move,false,true) &&
            user.pbCanRaiseStatStage?(:SPEED,user,move,false,true)
           if user.hasActiveItem?(:POWERHERB) || user.hasActiveAbility?(:TIMESKIP) 
-            score += 120
+            score += 200
           else
             score += 35
           end

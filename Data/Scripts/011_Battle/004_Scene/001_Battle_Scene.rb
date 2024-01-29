@@ -104,6 +104,7 @@ class Battle::Scene
     Graphics.update
     @frameCounter += 1
     @frameCounter = @frameCounter % (Graphics.frame_rate * 12 / 20)
+    @sprites["weather"].update
   end
 
   def pbInputUpdate
@@ -377,7 +378,7 @@ class Battle::Scene
     @abortable = false
     pbShowWindow(BLANK)
     # Fade out all sprites
-    pbBGMFade(1.0)
+    pbBGMFade(1.0) if !@battle.keepBGM
     pbFadeOutAndHide(@sprites)
     pbDisposeSprites
   end
@@ -426,5 +427,12 @@ class Battle::Scene
   def pbTrainerBattleSuccess
     @battleEnd = true
     pbBGMPlay(pbGetTrainerVictoryBGM(@battle.opponent))
+  end
+
+  def pbStartWeather(weather, power = 5)
+    weather = :WindsBattle if weather == :Winds
+    weather = :SunBattle if weather == :Sun
+    power = (power + 1) * RPG::Weather::MAX_SPRITES / 10
+    @sprites["weather"].fade_in(weather, power, 200)
   end
 end

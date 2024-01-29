@@ -16,8 +16,10 @@ class Battle
       when :Hail      then pbDisplay(_INTL("The hail stopped."))
       when :Winds     then pbDisplay(_INTL("The wind stopped."))
       when :ShadowSky then pbDisplay(_INTL("The shadow sky faded."))
+      when :NoxiousStorm then pbDisplay(_INTL("The noxious sandstorm subsided."))
       end
       @field.weather = :None
+      @scene.pbStartWeather(@field.weather)
       # Check for form changes caused by the weather changing
       allBattlers.each { |battler| battler.pbCheckFormOnWeatherChange }
       # Start up the default weather
@@ -26,7 +28,7 @@ class Battle
     end
     # Weather continues
     weather_data = GameData::BattleWeather.try_get(@field.weather)
-    pbCommonAnimation(weather_data.animation) if weather_data
+    #pbCommonAnimation(weather_data.animation) if weather_data
     case @field.weather
 #    when :Sun         then pbDisplay(_INTL("The sunlight is strong."))
 #    when :Rain        then pbDisplay(_INTL("Rain continues to fall."))
@@ -37,6 +39,7 @@ class Battle
 #    when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
 #    when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
     when :ShadowSky   then pbDisplay(_INTL("The shadow sky continues."))
+    when :NoxiousStorm then pbDisplay(_INTL("The noxious sandstorm is raging."))
     end
     # Effects due to weather
     priority.each do |battler|
@@ -66,6 +69,15 @@ class Battle
       return if !battler.takesShadowSkyDamage?
       pbDisplay(_INTL("{1} is hurt by the shadow sky!", battler.pbThis))
       amt = battler.totalhp / 16
+    when :NoxiousStorm
+      if battler.status != :POISON
+        battler.pbPoison(nil, _INTL("{1} was badly poisoned by the noxious sandstorm!", battler.pbThis), true)
+      end
+      divisor = 4
+      divisor += 2 if !battler.takesSandstormDamage?
+      divisor += 2 if battler.pbHasType?(:POISON) || battler.pbHasType?(:STEEL)
+      pbDisplay(_INTL("{1} is buffeted by the noxious sandstorm!", battler.pbThis))
+      amt = battler.totalhp / divisor
     end
     return if amt < 0
     @scene.pbDamageAnimation(battler)

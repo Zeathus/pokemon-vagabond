@@ -474,6 +474,16 @@ Outdoor = true
 DarkMap = true
 SnapEdges = true
 #-------------------------------
+[132]   # Scoria Desert
+Name = Scoria Desert
+Outdoor = true
+SnapEdges = true
+#-------------------------------
+[135]   # Underground Desert
+Name = Underground Desert
+Outdoor = false
+SnapEdges = true
+#-------------------------------
 [133]   # Smokey Forest Shrine
 Name = Smokey Forest Shrine
 Outdoor = true
@@ -619,6 +629,12 @@ Outdoor = false
 ShowArea = false
 BattleBack = indoor_arena
 #-------------------------------
+[213]   # Lake Canjon
+Name = Lake Canjon
+ShowArea = true
+Outdoor = true
+SnapEdges = true
+#-------------------------------
 [216]   # Scoria Canyon
 Name = Scoria Canyon
 Outdoor = true
@@ -627,6 +643,11 @@ Bicycle = true
 MapPosition = 0,25,7
 SnapEdges = true
 MapSize = 1,11
+#-------------------------------
+[218]   # Secret Market
+Name = Secret Market
+ShowArea = true
+SnapEdges = true
 #-------------------------------
 [219]   # Ranger Outpost
 Name = Ranger Outpost
@@ -710,3 +731,13 @@ Outdoor = true
 Name = Distortion Abode
 BattleBack = distortion
 WildBattleBGM = Battle! Distortion World (Stardust).ogg
+#-------------------------------
+[245]   # Scoria Desert Passage
+Name = Scoria Desert Passage
+Outdoor = false
+SnapEdges = false
+#-------------------------------
+[246]   # Dodge the Bombs
+Name = Scoria Desert Passage
+Outdoor = false
+SnapEdges = true

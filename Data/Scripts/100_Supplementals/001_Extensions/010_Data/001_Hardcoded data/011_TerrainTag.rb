@@ -29,6 +29,15 @@ module GameData
       @stair_up               = hash[:stair_up]               || false
     end
 
+    def has_land_encounters?
+      return @land_wild_encounters ||
+        @land2_wild_encounters ||
+        @land3_wild_encounters ||
+        @land4_wild_encounters ||
+        @swamp_wild_encounters ||
+        @flowers_wild_encounters
+    end
+
     def can_surf_freely
       return sup_can_surf_freely && !@water_edge
     end

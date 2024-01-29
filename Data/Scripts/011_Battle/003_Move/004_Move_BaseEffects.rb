@@ -497,6 +497,9 @@ class Battle::Move::WeatherMove < Battle::Move
     when :StrongWinds
       @battle.pbDisplay(_INTL("The mysterious air current blows on regardless!"))
       return true
+    when :NoxiousStorm
+      @battle.pbDisplay(_INTL("The noxious sandstorm will not give in!"))
+      return true
     when @weatherType
       @battle.pbDisplay(_INTL("But it failed!"))
       return true

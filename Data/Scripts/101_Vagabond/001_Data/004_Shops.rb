@@ -1,72 +1,52 @@
-def pbShopScoriaStatBerries
-  items = [
-    :POMEGBERRY,
-    :KELPSYBERRY,
-    :QUALOTBERRY,
-    :HONDEWBERRY,
-    :GREPABERRY,
-    :TAMATOBERRY
-  ]
-  for i in items
-    setPrice(i,200)
+def pbShopScoria(type)
+  case type
+  when "organics"
+    return [
+      :LEFTOVERS,
+      :LAVACOOKIE,
+      :RAGECANDYBAR,
+      :BERRYJUICE,
+      :SHOALSALT
+    ]
+  when "accessories"
+    return [
+      :FOCUSSASH,
+      :EXPERTBELT,
+      :MUSCLEBAND,
+      :WISEGLASSES,
+      :BINDINGBAND
+    ]
+  when "orbs"
+    return [
+      :LIFEORB,
+      :FLAMEORB,
+      :FROSTORB,
+      :TOXICORB,
+      :ADRENALINEORB
+    ]
+  when "misc"
+    return [
+      :BLACKSLUDGE,
+      :FLOATSTONE,
+      :DESTINYKNOT,
+      :RINGTARGET,
+      :THICKCLUB
+    ]
   end
-  return items
+  return [:POKEBALL]
 end
 
-def pbShopScoriaSeeds
-  items = [
-    :ELECTRICSEED,
-    :GRASSYSEED,
-    :MISTYSEED,
-    :PSYCHICSEED,
-    :MIRACLESEED,
-    :ABSORBBULB,
-    #:LUMINOUSMOSS
-  ]
-  for i in items
-    setPrice(i,400)
-  end
-  setPrice(:MIRACLESEED,1000)
-  setPrice(:ABSORBBULB,300)
-  return items
-end
-
-def pbShopScoriaBerries
-  items = [
-    :BABIRIBERRY,
-    :CHARTIBERRY,
-    :CHILANBERRY,
-    :CHOPLEBERRY,
-    :COBABERRY,
-    :COLBURBERRY,
-    :HABANBERRY,
-    :KASIBBERRY,
-    :KEBIABERRY,
-    :OCCABERRY,
-    :PASSHOBERRY,
-    :PAYAPABERRY,
-    :RINDOBERRY,
-    :ROSELIBERRY,
-    :SHUCABERRY,
-    :TANGABERRY,
-    :WACANBERRY,
-    :YACHEBERRY
-  ]
-  for i in items
-    setPrice(i,400)
-  end
-  return items
-end
-
-def pbShopScoriaHerbs
+def pbShopSecretMarket
   return [
-    :ENERGYPOWDER,
-    :ENERGYROOT,
-    :HEALPOWDER,
-    :REVIVALHERB,
-    :MENTALHERB,
-    :POWERHERB,
-    :WHITEHERB
+    :ABILITYCAPSULE,
+    :ABILITYPATCH,
+    :CHOICEBAND,
+    :CHOICESPECS,
+    :CHOICESCARF,
+    :SAFETYGOGGLES,
+    :TERRAINEXTENDER,
+    :WEAKNESSPOLICY,
+    :DUBIOUSDISC
   ]
 end
 
@@ -121,7 +101,7 @@ def pbShopMall(type="general")
     ]
   when "tech"
     return [
-      :UPGRADE, :DUBIOUSDISC,
+      :UPGRADE,
       :ELECTIRIZER, :MAGMARIZER,
       :CELLBATTERY, :EJECTBUTTON,
       :MAGNET, :METRONOME, #:METALCOAT,

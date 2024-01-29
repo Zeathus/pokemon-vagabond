@@ -41,3 +41,669 @@
 > [B]Azelf[/]'s attribute is [B]willpower[/] for example. Meanwhile, [P]Mesprit[/]'s is [P]emotion[/] and [Y]Uxie[/]'s is [Y]knowledge[/].
 > Some folklore even say they're the original source of these attributes in humans.
 > They each have a lake as their domain, which is why they are called [R]the Lake Guardians[/].
+
+[CH4_SCORIA_CITY,0]
+/speaker Kira
+> Of course this had to be difficult.
+/speaker Amethyst
+?> It looks like we can't persuade the guard. They're only doing their job.
+  /choice Shouldn't people from the G.P.O. be allowed?
+    /expression unsatisfied
+    > While we do get some privileges from people, we can't do anything we want.
+  /choice Maybe there's another way in?
+    > That would be useful, but the gate is there for a reason. It's supposed to be the only way in and out.
+    /speaker Kira lookaway
+    > ...
+    /speaker Amethyst
+  /choice We could try to bribe him?
+    /expression awkward
+    > Given how serious he was about his orders, I doubt we could hand him some nice tea and be on our way.
+?/>
+/expression neutral
+> What are your thoughts Kira? You are by far the most familiar with this place.
+/speaker Kira lookaway
+> It was truly inevitable that the question would go to me in the end.
+/expression annoyed
+> I'd rather avoid a reunion with certain people if possible, so I say we ask around the city center if anyone knows a way.
+/speaker Amethyst
+> Sure! Let's hope we can get some useful information.
+
+[CH4_SCORIA_CITY,1]
+/speaker Amethyst
+> Okay, let's summarize what we've learned.
+> The hiker said some people in black and white entered the desert. That's definitely the D[.]A[.]O[.] people.
+/expression confused
+> Otherwise I think the only thing we learned was that we really shouldn't be going into the desert.
+/speaker Kira
+> Not without proper goggles at least.\nI'd rather keep my eyesight if possible.
+/speaker Amethyst confused
+> With that we now have two problems.\nNo entry AND no goggles...
+/speaker Kira lookaway
+> Well, about that...
+/expression neutral
+> I have a solution for both our problems, even if it's not my first choice.
+> Follow me.
+
+[CH4_SCORIA_CITY,2]
+/speaker Kira
+> You see these two sandstone rocks next to the edge?
+> I need you to jump off between them.
+/speaker Amethyst awkward
+> Isn't that... dangerous?
+/speaker Kira
+> Just trust me. We're going [R]there[/].
+/speaker Amethyst
+> OH! [R]There[/], I see.
+
+[CH4_SCORIA_CITY,3]
+/speaker Amethyst
+/speaker Amethyst wink
+> Don't worry <PLAYER>, I promise it's safe.
+
+[CH4_SCORIA_CITY_INFO,0]
+/speaker Old_Man
+> I heard the rangers are still looking into the cause of the fumes in Scoria Desert.
+> Sadly, they haven't found a strong clue yet, so we just have to wait out the storms when they happen.
+
+[CH4_SCORIA_CITY_INFO,1]
+/speaker Breeder
+> I was in the desert once when the noxious fumes started filling the air.
+> My Pokémon got hurt pretty badly by it, and my skin was itchy for days after.
+> The doctor said that I could've gone blind if I was in there much longer without goggles.
+
+[CH4_SCORIA_CITY_INFO,2]
+/speaker Hiker
+> You're looking for a way into the desert while the storm is going on? Are you crazy!?
+> I've seen some of the wild Pokémon the rangers have been treating. That storm is no joke.
+> Some people in black and white uniforms went in before the storm. I hope they're okay.
+
+[CH4_SCORIA_CITY_INFO,3]
+/speaker Youngster
+> You need to get into the desert? Well, I can't say I haven't tried myself before.
+> You see, I'm a "see it to believe it" kinda guy, so I tried to find a way in myself.
+> Because of the ravine between the city and the desert gate, you can't get up on the cliffs around the gate.
+> I honestly think there's no other way in than the gate.
+
+[CH4_SECRET_MARKET,0]
+/speaker Roughneck
+> What do we have here but some new customers?
+/speaker G
+> Call me G. At my shop you can get stuff you won't find anywhere else. If you've got the money for it that is.
+> Just remember rule number one. If you speak of this place after you leave, you won't speak for much longer.
+
+[CH4_SECRET_MARKET,1]
+/speaker Kira
+> Welcome to the Scoria Secret Market.\nDon't be fooled if anyone is kind to you.
+/speaker Amethyst
+> You've told me about this market before, but this is my first time coming here.
+/expression confused
+> The atmosphere is weirdly foreboding and welcoming at the same time.
+/speaker Kira
+> This place welcomes criminals with nowhere else to go, but only the most underhanded have a real future here.
+> Anonymity is key to these people, hence the pseudonym, G.
+> While we're here, we'll be going by K, A, N and {pbPlayerPseudonym}, got it?
+/if pbPlayerPseudonym.length > 1
+  > <PLAYER> is {pbPlayerPseudonym}, to be clear.
+/end
+> We're looking for a guy known as J.\nHe likely has the goggles we're after.
+/speaker Amethyst wink
+> Got it, K!
+/speaker Kira lookaway
+> You're having fun with this, aren't you..?
+
+[CH4_SECRET_MARKET,2]
+/speaker J
+/hidename 1
+> K, is that you!?
+/speaker Kira
+> Sounds like J is still around.
+
+[CH4_SECRET_MARKET,3]
+/event set J 3
+/speaker J
+> Boy, I haven't seen you in AGES!
+> You're even wearing that funny cowboy hat still. You must really be yearning for the good old days!
+/speaker Kira lookaway
+> ...Good to see you too, J.
+/speaker J
+> Sorry, I got a bit overexcited.
+> Who're your new companions?
+/speaker Kira
+> From my left to your left, it's A, N and {pbPlayerPseudonym}.\nThe latter two are companions by happenstance.
+/speaker J
+/if pbPlayerPseudonym == "J"
+  > Not often I see another J come around. Nice to meet you guys!
+/elsif pbPlayerPseudonym == "L"
+  > One of your companions goes by L?\nMan, that must give you mixed feelings.
+  > Anyway, I'm J. Nice to meet you guys!
+/else
+  > And I'm J. Nice to meet you guys!
+/end
+> Why are you here anyway?
+/speaker Kira
+> We simply needed a way into Scoria Desert while it's off-limits, and this was our only option.
+> Not only that, but we also needed to find some goggles to protect ourselves from the storm.
+/speaker J
+> Goggles you say?\nBoy, do I have a deal for you!
+> These prototype Go-Goggles were smuggled from Hoenn. They're super rare and not officially released yet.
+> It's said that you can see better with them in a sandstorm than you can without them in clear weather!
+/speaker Kira
+> You can drop the act, J.\nI know your game already.
+?> Those goggles are regular Go-Goggles, acquired legally. You just say they aren't to ramp up the prices.
+  /choice So he's scamming people?
+    > Yeah, but he's scamming criminals, so I don't particularly care.
+  /choice That's pretty smart
+    > I can respect him for scamming a bunch of criminals with his methods.
+?/>
+/speaker J
+> K's right, that's my business model.
+> I was going to give you the goggles for free anyway. Anything for my old pal!
+
+[CH4_SECRET_MARKET,4]
+/speaker Kira
+> Thanks J, I knew I could count on you.
+/speaker J
+> Man, it's really been a long time, huh?
+> It feels like yesterday that you were off doing L's dirty work.
+/speaker Kira lookaway
+> We're in a hurry, so I don't have much time to reminisce. Not that I really want to either.
+/speaker J
+> No worries, K. I understand.\nGlad to see you're doing well.
+> If you're ever in the area, come by my shop!
+> I'll even give you extra special [R]<wave>suggested retail prices</wave>[/] for my stuff!
+/speaker Kira
+> Sounds like a plan. See you around, J.
+
+[CH4_SECRET_MARKET,5]
+/speaker Kira
+> With the goggles settled, it's about time we head for Scoria Desert.
+> There's a cave entrance south of here that will get us there.
+> You can check out J's stock first too. I'm sure he has some useful stuff.
+/speaker Amethyst wink
+> Let's show that storm who's boss!
+
+[CH4_PASSAGE,0]
+# Spying ruffians talk after you enter the passage
+/event set B1 11
+/speaker B1
+> Look who's back and all grown up.
+/event B1 turn left
+> That's definitely K, right B2?
+/speaker B2
+> For sure.\nHis hat gives him away instantly.
+> This is a golden opportunity.\nWhat's the plan, B3?
+/speaker B3
+> We have our chance at payback for what he did to us. We can't let it slip by.
+> For plan A, I say we go with the direct approach...
+> We'll show K what the B Gang is made of!
+
+[CH4_PASSAGE,1] # First encounter with the B gang
+/speaker B3
+> Stop right there!
+# The ruffians jump and gather in front of you
+
+[CH4_PASSAGE,2]
+/speaker B1
+> You've had it easy for too long, K!
+/speaker B2
+> After we're done with you, you'll regret ruining the bright future we had ahead of us!
+/speaker B3
+> This is for L!
+# Battle start
+
+[CH4_PASSAGE,3]
+/speaker Amethyst confused
+> K, do you know these ruffians?
+/speaker Kira
+> I've got no clue who they are. There are too many of these kinda guys to count.
+# They turn towards each other
+
+[CH4_PASSAGE,4]
+/speaker B2
+> Did you hear that B1!?\nHe doesn't even remember us!
+/speaker B1
+> I've never been so insulted in my entire life, and that's saying a lot given how many people hate me.
+/speaker B3
+> This disrespect just gives us more reason to enact our revenge.\nWe'll show him!
+# They turn towards the party
+
+[CH4_PASSAGE,5]
+/speaker B3
+> You haven't seen the last of us, K!\nYou'd best be prepared!
+# They skedaddle
+
+[CH4_PASSAGE,6]
+/speaker Amethyst confused
+> Should we be worried?
+/speaker Kira
+> They couldn't even beat us three on two. I doubt they'll be a big hinderance.
+
+[CH4_PASSAGE,7] # Plays after progressing a little bit past the battle
+/speaker B1
+> We should've known that would never work. K was known for his strength, and he even had allies!
+/speaker B2
+> Remember B1, we always fail plan A.\nPlan B is where we really shine.
+/speaker B3
+> That's the spirit B3!\nThat's why I saved these for Plan B...
+# B3 places a bundle of dynamite in front of B2 and B1 before the camera fades to black
+
+[CH4_PASSAGE,8] # Second encounter with the B gang, they push a boulder trapping you in a large room
+/speaker B2
+> We've got you this time, K!
+/speaker B3
+> That's not the only thing we've got either. We also have dynamite!
+# B3 throws a stick of dynamite that starts moving
+
+[CH4_PASSAGE,9]
+/speaker Amethyst
+> Watch out!\wtnp[4]
+# Kira and Amethyst jumps out of the way
+
+[CH4_PASSAGE,10]
+/speaker Kira
+> We might have a problem on our hands...
+
+[CH4_PASSAGE,11]
+/speaker Amethyst
+> Hey! Be careful where you throw those things!
+/speaker B2
+> This time you've got nowhere to run!
+/speaker Amethyst confused
+> But we didn't even run last time?
+/speaker B1
+> Your semantics are useless.\nWe've got you cornered!
+
+[CH4_PASSAGE,12]
+/speaker B3
+> They can't dodge if we all keep throwing. Make it rain!
+# Minigame where you dodge dynamite. If you get hit, it restarts.
+# A row of dynamite on the ledge with them slowly depletes, showing how long you have to go.
+
+[CH4_PASSAGE,13]
+/event set Amethyst 3
+/event set B2 6
+/speaker B1
+> Hey, B2. I think we're out of dynamite.
+/speaker B2
+> I told you we should've bought them in bulk!
+/event Amethyst move up
+/speaker Amethyst
+> Excuse me, may I have a word?
+/event B2 turn right
+/speaker B2
+> But B2, we couldn't even carry that much if we tried.
+
+[CH4_PASSAGE,14]
+# Amethyst jumps before this starts
+/event set B1 5
+/event set B2 6
+/event set B3 7
+/speaker Amethyst
+> <wave>HELLOOOOO!!!</wave>
+/event B2 turn left
+/speaker B1
+> Uhm, B2, I think the woman is talking to you.
+/speaker B2
+> She is? Okay, I can handle this.
+/event B1 turn down
+/event B2 turn down
+/event B3 turn down
+> Yes! How may I help you?
+/event B2 turn right
+/event B3 turn left
+/speaker B3
+> Too nice! You need to be more threatening!
+/speaker B2
+> Right, sorry. I'll try again.
+/event B2 turn down
+/event B3 turn down
+> Ahem...\nNo, we will not answer to you!
+/event B1 turn right
+/event B2 turn left
+/speaker B1
+> Well, that was just mean, don't you think? Let her ask her question.
+/speaker B2
+> Ugh, this is why I can't talk to women...
+/event B1 turn down
+/event B2 turn down
+> AHEM...\nYou can ask your question, but be quick.
+/speaker Amethyst confused
+> Okay...
+/expression neutral
+> What vendetta do you have against K anyway?
+/speaker B2
+> Oh, don't even get us started...\nK took everything from us!
+/speaker B3
+> We were L's priced underlings. We did all his dirty work, and he promised us a great future in return.
+/speaker B1
+> That was until K came along and ruined everything!
+> He did all his tasks so effortlessly that there was no room for us anymore.
+> Because of K, we were thrown away, no longer of use to L.
+/speaker Amethyst confused
+> Sounds more like you should have a problem with L, not K...
+/speaker B2
+> Don't you dare insult L! He will see our value again once we eliminate K for good.
+> We will get you next time!
+# They skedaddle
+
+[CH4_PASSAGE,15] # After the B gang has left
+/speaker Amethyst confused
+> They really think you were the one who wronged them, huh.
+/speaker Kira
+?> L had that influence on people.\nI would know.
+  /choice Who is L anyway?
+    > Wouldn't you like to know. However, you're not privy to that information.
+    > Let's just say he was my former boss and leave it at that.
+  /choice What were you up to in your past?
+    > Wouldn't you like to know. However, you're not privy to that information.
+    > Let's just say I was working for L and leave it at that.
+  /choice You've got some complicated history.
+    > Sure do. But you're not privy to that history.
+    > Let's just say I was pretty infamous around here and leave it at that.
+?/>
+> Anyway, this was a dead end. We've ought to head back the way we came and look for an alternate path.
+> Let's clear away the rubble so we can leave.
+
+[CH4_PASSAGE,16] # B gang discussing a bit after the second encounter
+/speaker B3
+> Plan B failed. This has never happened before.
+/speaker B2
+> Does that mean...
+/speaker B1
+> Yes, we actually have to use the never-before-seen plan C.
+/speaker B3
+> I can't believe it has come to this...
+
+[CH4_PASSAGE,17] # Third encounter with the B gang
+/speaker B3
+> NOW!
+# Packs of dynamite reveal themselves on the ground
+
+[CH4_PASSAGE,18]
+/speaker Kira
+!> WATCH OUT!\wtnp[10]
+# The player is already ahead, and Kira rams into Amethyst to push her out of the way
+# Kira disappears under a mountain of boulders, his hat lying on the ground just outside the hill.
+
+[CH4_PASSAGE,19]
+/speaker B1
+> Did we... do it?
+/speaker B3
+> ...I think we did.
+/speaker B2
+> We did it! K is no more!
+/speaker B1
+> Now let's get out of here!
+# They skedaddle
+
+[CH4_PASSAGE,20]
+/speaker Amethyst worried
+> Kira, are you okay!?
+/speaker Kira
+/portrait 0
+> I managed to get Sandslash out just time to divert the worst of the rubble.
+# Transfer player to a separate dark map only showing Kira inside the rubble.
+# Sandslash is continuously ramming the boulders.
+
+[CH4_PASSAGE,21]
+/speaker Kira nohat_furious
+> <shake>I'm fine.</shake>
+
+[CH4_PASSAGE,22]
+/speaker Amethyst
+/portrait 0
+> What are we going to do?\nWe have to get him out of there!
+> Azelf, can you fly in to check on him?
+/speaker Azelf
+/portrait 0
+> Of course, leave it to me.
+/cry AZELF 50 90
+
+[CH4_PASSAGE,23]
+/speaker Kira nohat_furious
+> What are you doing here?
+/speaker Azelf
+> You and Sandslash are strong.\nI believe you have the power to escape if you work together.
+/speaker Kira nohat_furious
+> I... <shake>I can't...</shake>
+/speaker Azelf
+> (He is shaking. It's highly unusual for his aura to be this weak[.])
+/speaker Kira nohat_furious
+> <shake>Don't you dare peer into my thoughts!</shake>
+/speaker Azelf
+> (Sorry Kira, but I have to in order to find what is deterring your willpower[.])
+> (To help you[.])
+# Start flashback
+
+[CH4_PASSAGE_GAME_FAIL]
+?> You got hit by an explosion.\nDo you want to try again?
+  /choice Try again
+    /return true
+  /choice Come back later
+    /return false
+?/>
+
+[CH4_MEMORY,0]
+/event set Kira 1
+/event set Sandshrew 5
+/speaker Kira
+/portrait 0
+> Finally, I'm ready to explore the ruins!
+/event Kira turn right
+/event Sandshrew turn left
+> Let's go Sandshrew!\nMaybe we'll even find that rare Pokémon people were talking about!
+# Kira and Sandshrew go into the ruins, and Azelf float into screen at half opacity
+
+[CH4_MEMORY,1]
+/speaker Azelf
+> I sense that something gave him the surge of courage he needed to do this, but I cannot determine what just yet.
+# You now control Kira to find the room with Larvesta.
+
+[CH4_MEMORY,2] # Trying to leave
+/speaker Kira
+/portrait 0
+> I'm not done exploring yet!
+
+[CH4_MEMORY,3]
+/speaker Kira
+/portrait 0
+> That's it!\nThat has to be the rare Pokémon!
+> Come on Sandshrew, let's catch it!
+# Battle where you have to catch the Larvesta
+
+[CH4_MEMORY_NO_CATCH]
+> You need [R]to capture[/] the Larvesta to progress.
+
+[CH4_MEMORY,4]
+/speaker Kira
+/portrait 0
+> Yes! We caught it!
+/event Player turn down
+> Don't you think mom will be impressed when we show her this?
+
+[CH4_MEMORY,5]
+# The room shakes a little
+/speaker Kira
+/portrait 0
+> Did you also feel that rumble Sandshrew?
+
+[CH4_MEMORY,6]
+# The room shakes a lot
+/speaker Kira
+/portrait 0
+> Oh no, I don't think the ruins like that we caught that Pokémon.
+> Let's get out of here, quickly!
+# You control Kira trying to get out
+
+[CH4_MEMORY,7]
+/speaker ???
+> Kira, are you in here!?
+/speaker Kira
+/portrait 0
+> That's mom! I can show her the Pokémon I caught!
+> Mom, I'm here!
+/speaker Kira's_Mom
+> Thank goodness!\nFollow my voice and we'll get out of here!
+
+[CH4_MEMORY,8]
+/speaker Kira's_Mom
+> There you are, Kira!
+> We need to leave this place quickly, come with me.
+
+[CH4_MEMORY,9]
+/speaker Kira's_Mom
+!>WATCH OUT!\wtnp[8]
+
+[CH4_MEMORY,10]
+/speaker Kira
+/portrait 0
+> Mom... We're stuck... *sob*
+/speaker Kira's Mom
+> Don't worry Kira, I will find a way out.
+
+[CH4_MEMORY,11]
+/event set Mom 1
+/speaker Kira's_Mom
+> I see an opening above us!
+/event Mom turn up
+> I will lift you up so you can climb out.
+/speaker Kira
+/portrait 0
+> But what about you, mom?
+/speaker Kira's_Mom
+> I will find another way after you're out safely. Don't worry about me.
+/speaker Kira
+/portrait 0
+> Mom, I'm scared...\nI don't know if I can get out on my own...
+/speaker Kira's_Mom
+> Remember Kira, you have your trusty [R]Adventure Cap[/] to give you all the courage you need.
+> With that and Sandshrew by your side, nothing can stop you!
+
+[CH4_MEMORY,12]
+/speaker Kira
+/portrait 0
+> Mom, I want to explore the ruins!
+/speaker Kira's_Mom
+> You know that's too dangerous Kira. Exploring old ruins like that is a job for brave adventurers.
+> Maybe you can be one when you grow up!
+/speaker Kira
+/portrait 0
+> Aww... But it's so long until I'm grown up enough to be that brave...
+
+[CH4_MEMORY,13]
+/speaker Kira's_Mom
+> Happy birthday, Kira!
+> I got you something I know you will love!
+/speaker Kira
+/portrait 0
+> Yay! Let me see!
+
+[CH4_MEMORY,14]
+/speaker Kira's_Mom
+> Here you go!
+
+[CH4_MEMORY,15]
+/speaker Kira's_Mom
+> It's your very own [R]Adventure Cap[/]!
+> Now you will always be ready for adventure!
+> I know it's a bit big for you right now, but that gives you room to grow into it.
+
+[CH4_MEMORY,16]
+/speaker Kira
+/portrait 0
+> Wow, it's great! Now I can find lots of treasures!
+
+[CH4_MEMORY,17]
+/speaker Kira
+/portrait 0
+> Yes, with this cap, I have the courage I need to escape.
+> Lift me up, mom! I'll wait for you outside!
+
+[CH4_MEMORY,18]
+/speaker Azelf
+> I see...\nKira lost his mother that day...
+> I know what I must do.
+
+[CH4_MEMORY,19]
+/speaker Azelf
+> I will be gone for just a moment, Kira.
+
+[CH4_MEMORY,20]
+/speaker Kira furious
+> ...
+
+[CH4_MEMORY,21]
+/speaker Kira furious
+/expression Kira
+> Let's do this.
+
+[CH4_MEMORY,22]
+/speaker Azelf
+> (Looks like I am not needed here anymore)
+
+[CH4_MEMORY,23]
+/speaker Kira
+> Come on, Sandslash. Let's give this boulder all we've got!
+/cry SANDSLASH 80 100
+/speaker Sandslash
+> Sraash!
+
+[CH4_MEMORY,24]
+/speaker Kira
+> Once more, with even more power!
+
+[CH4_MEMORY,25]
+/speaker Kira
+> Still not enough...
+> I know we can do this Sandslash. Draw out every ounce of power you have, and strike the boulder with all your strength!
+
+[CH4_MEMORY,26]
+/speaker Sandslash
+> Sraaaaaaaaaash!\wtnp[20]
+
+[CH4_MEMORY,27]
+/speaker Kira
+> Now that's what I'm talking about!\wtnp[40]
+> Strike it with your new-found power, Sandolin!\wtnp[40]
+/cry SANDSLASH 80 100
+/speaker Sandolin
+> Sando!\wtnp[20]
+
+[CH4_MEMORY,28]
+/speaker Kira
+> Yes, you did it!\wtnp[30]
+
+[CH4_MEMORY,29]
+/speaker Kira
+> We've got to get out of here, now!\wtnp[40]
+
+[CH4_PASSAGE_END,0]
+/speaker Amethyst smile
+> You're okay!\wtnp[10]
+
+[CH4_PASSAGE_END,1]
+/speaker Amethyst worried
+> Thank goodness you're okay...
+/speaker Kira embarassed
+> ...
+
+[CH4_PASSAGE_END,2]
+/speaker Amethyst awkward
+> Right, personal space... Sorry.
+/speaker Kira lookaway
+> Don't worry about it.
+/expression neutral
+> But it's high time we made our way to Scoria Desert.
+/speaker Amethyst
+> You're right. Those ruffians kept us here long enough.
+
+[CH4_STRENGTH_UNLOCK]
+> With Sandolin's power, you can now [R]move large boulders[/]!
+
+[CH4_KILLER_COMBO]
+?> Sandslash and Kira can now use their [R]exclusive technique, Killer Combo[/]! Do you want to teach Sandolin Killer Combo now?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>

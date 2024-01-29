@@ -529,6 +529,7 @@ def pbShowQuests(show_quest=nil)
   end
   barbitmap.dispose
   infobitmap.dispose
+  pbPlayCloseMenuSE
   pbFadeOutAndHide(sprites)
   pbDisposeSpriteHash(sprites)
   viewport.dispose

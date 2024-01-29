@@ -112,16 +112,11 @@
 /event Duke sprite trainer_FORETELLER_1 down 0
 /expression neutral
 > That is what I have come to present to you.
+> This is your first choice!\nNow choose wisely.
 /event Duke sprite trainer_FORETELLER_1 down 1
 /expression power
 > Partner Pokémon, assemble!
 /event Duke sprite trainer_FORETELLER_1 down 0
-
-[PROLOGUE_CW_DUKE,2]
-/speaker Duke
-> This is your first choice! Now choose wisely.
-/expression point
-> These Pokémon are particularly spry, as they all evolve at level 24.
 
 [PROLOGUE_STARTER_NUMEL]
 /speaker Duke
@@ -217,3 +212,9 @@
 > However, leveling your Pokémon this way comes at the cost of money.\n$1 per Exp. Point to be exact.
 > You can do this at any time from the party screen if you need to boost a weaker party member.
 > Your trainer card details what level each gym is, and thus what [R]Quick Level[/] thresholds they unlock.
+
+[DATA_CHIP_TUTORIAL]
+/speaker Duke
+> We got our hands on some Data Chips, how lucky!
+> When you go to a Pokémon's summary and change its moves, you can use Data Chips to unlock new moves.
+> Using Data Chips unlocks the move for every Pokémon that is able to learn it. They're very useful.

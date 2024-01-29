@@ -1,0 +1,79 @@
+[STADIUM_INTRO,0]
+> Welcome to the Scoria Stadium.
+> Here you can compete in different sets of challenging battles.
+> If you have any questions, please refer to the receptionist to your left. If you wish to compete, talk to me.
+> The most important thing to know is that you will face these battles alone with six of your own Pokémon.
+> These six Pokémon are your active and inactive parties combined.
+> Once you win the Tutorial Cup, more cups will be available to you.
+
+[STADIUM_INTRO,1]
+> Welcome to the Scoria Stadium.
+> Here you can compete in different sets of challenging battles.
+> If you have any questions, you can ask me. To compete, talk to the receptionist to your right.
+> The most important thing to know is that you will face these battles alone with six of your own Pokémon.
+> These six Pokémon are your active and inactive parties combined.
+> Once you win the Tutorial Cup, more cups will be available to you.
+
+[STADIUM_WIN,0]
+> \SPCongratulations, you won the\n{pbStadiumCup[0]} Cup!
+
+[STADIUM_WIN,1]
+> \SPHere are your {pbStadiumPoints(pbStadiumCup)} Stadium Points for winning.
+
+[STADIUM_WIN,2]
+> \SPYou have won this Cup before, so you won't receive any points.
+
+[STADIUM_WIN,3]
+> We hope to see you again soon.
+
+[STADIUM_WAITING]
+> This is the waiting area.\nHere you can save your progress if you want to continue another time.
+
+[STADIUM_QUIT,0]
+?> Are you sure you want to quit?\nAll your progress will be lost.
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[STADIUM_QUIT,1]
+> We hope to see you again soon.
+
+[STADIUM_ENTRY,0]
+> Welcome back.\nWhat would you like to do today?
+
+[STADIUM_ENTRY,1]
+> Please step through the entrance.
+
+[STADIUM_ENTRY,2]
+> Have a nice day.
+
+[STADIUM_HELP]
+/loop
+    ?> What would you like to know?
+        /choice What are cups?
+            > Each cup will have you fight a series of up to 8 trainers, generally following a theme.
+            > The number of trainers in a cup are listed in the menu.
+            > Defeating cups will award you with Stadium Points, but only the first time you beat them.
+        /choice What are the rules?
+            > When participating in battles here, there are certain rules you must abide by.
+            > First of all, only one trainer is allowed to participate, and can bring up to 6 Pokémon.
+            > As such, you will bring both your active and inactive parties to battles as a complete team.
+            > Secondly, all cups have a maximum level listed. Pokémon levels above this will be temporarily lowered for battles.
+            > Lastly, you may not use items during battles.
+        /choice What are the rewards?
+            > When you win a cup you are rewarded with Stadium Points.
+            > These points can be exchanged for a variety of useful TMs at the counter to your right.
+            > If you gain enough points to buy all the TMs available, the clerk will begin selling various consumable items instead.
+            > The points earned from a cup depends on its difficulty and number of trainers.
+        /cancelchoice That's all
+            > Good luck.
+            /break
+    ?/>
+/end
+
+[STADIUM_SHOP_UPGRADE]
+> Congratulations! You've bought every single TM we have to offer!
+> To allow you to keep spending more Stadium Points from now on, the stock available here will change.
+> Please have a look!

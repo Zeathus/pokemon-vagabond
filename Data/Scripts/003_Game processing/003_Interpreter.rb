@@ -411,6 +411,20 @@ class Interpreter
     end
     $PokemonMap&.addMovedEvent(@event_id)
     if old_x != event.x || old_y != event.y
+      pbSEPlay("Blow6")
+      if $game_player.direction != 2
+        anim_x = old_x
+        anim_x += (event.width - 1) if $game_player.direction == 4
+        if $game_player.direction == 8
+          for i in 0...event.width
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x+i,old_y,true,$game_player)
+          end
+        else
+          for i in 0...event.height
+            $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x,old_y-i,true,$game_player)
+          end
+        end
+      end
       $game_player.lock
       loop do
         Graphics.update
@@ -419,12 +433,25 @@ class Interpreter
         break if !event.moving?
       end
       $game_player.unlock
+      return true
     end
+    return false
   end
 
   def pbPushThisBoulder
-    pbPushThisEvent if $PokemonMap.strengthUsed
-    return true
+    ret = false
+    for e in $game_map.events.values
+      if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+        e.through = true
+      end
+    end
+    ret = pbPushThisEvent if $PokemonMap.strengthUsed
+    for e in $game_map.events.values
+      if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+        e.through = false
+      end
+    end
+    return ret
   end
 
   def pbSmashThisEvent

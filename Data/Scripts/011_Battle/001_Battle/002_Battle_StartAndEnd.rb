@@ -152,8 +152,8 @@ class Battle
           idxBattler = (2 * battlerNumber) + side
           pbCreateBattler(idxBattler, pkmn, idxPkmn)
           ret[side][idxTrainer].push(idxBattler)
-          if idxPkmn != starts[idxTrainer] + battlerNumber
-            idxOther = starts[idxTrainer] + battlerNumber
+          if idxPkmn != starts[idxTrainer] + [battlerNumber - idxTrainer, 0].max
+            idxOther = starts[idxTrainer] + [battlerNumber - idxTrainer, 0].max
             partyOrder[idxPkmn], partyOrder[idxOther] = partyOrder[idxOther], partyOrder[idxPkmn]
           end
           battlerNumber += 1
@@ -311,7 +311,8 @@ class Battle
     pbStartBattleSendOut(sendOuts)
     # Weather announcement
     weather_data = GameData::BattleWeather.try_get(@field.weather)
-    pbCommonAnimation(weather_data.animation) if weather_data
+    @scene.pbStartWeather(@field.weather)
+    #pbCommonAnimation(weather_data.animation) if weather_data
     case @field.weather
     when :Sun         then pbDisplay(_INTL("The sunlight is strong."))
     when :Rain        then pbDisplay(_INTL("It is raining."))
@@ -322,6 +323,7 @@ class Battle
     when :HeavyRain   then pbDisplay(_INTL("It is raining heavily."))
     when :StrongWinds then pbDisplay(_INTL("The wind is strong."))
     when :ShadowSky   then pbDisplay(_INTL("The sky is shadowy."))
+    when :NoxiousStorm then pbDisplay(_INTL("A noxious sandstorm is raging."))
     end
     # Terrain announcement
     terrain_data = GameData::BattleTerrain.try_get(@field.terrain)
@@ -339,7 +341,7 @@ class Battle
 
     if $stats.affinity_boosts <= 0
       if trainerBattle? && @player.length >= 2
-        if [:KRABBY, :SKIDDO, :NUMEL].include?(pbGetChoiceValue(:Starter))
+        if [:PALMINO, :BOOMINE, :LAZU].include?(pbGetChoiceValue(:Starter))
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 0)
           pbAddGuide("Affinity Extras", true)
           pbGuide("Affinity Boosts")

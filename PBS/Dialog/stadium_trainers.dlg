@@ -1,0 +1,113 @@
+[STADIUM_TUTORIAL_ICHI,0]
+/speaker Ichi
+> First time here? Good luck beating me!
+
+[STADIUM_TUTORIAL_ICHI,1]
+/speaker Ichi
+> Good luck, pal. You're strong!
+
+[STADIUM_TUTORIAL_NI,0]
+/speaker Ni
+> I'm the second one up! Are you pumped?
+
+[STADIUM_TUTORIAL_NI,1]
+/speaker Ni
+> I'm sure you'll win the next battle too!
+
+[STADIUM_TUTORIAL_SAN,0]
+/speaker San
+> I've come to WHOMP you!
+
+[STADIUM_TUTORIAL_SAN,1]
+/speaker San
+> Make sure you whomp the next guy too!
+
+[STADIUM_TUTORIAL_YON,0]
+/speaker Yon
+> Getting used to the stadium?\nI'm your final match this cup!
+
+[STADIUM_TUTORIAL_YON,1]
+/speaker Yon
+> This was just the Tutorial Cup. Just wait until you get to the really tough matches!
+
+[STADIUM_START_UP_MARGARET,0]
+/speaker Margaret
+> I can handle an entire kindergarten.\nThis battle should be easy!
+
+[STADIUM_START_UP_MIA_&_PIA,0]
+/speaker Mia & Pia
+> Twogether we are stronger than anyone!
+
+[STADIUM_START_UP_HAROLD,0]
+/speaker Harold
+> I work two jobs, and this isn't one of them!
+
+[STADIUM_START_UP_RANDAL,0]
+/speaker Randal
+> Go my Pokémon! Work together and create the perfect symphony!
+
+[STADIUM_MAY-HAVE-BEEN_JANUS,0]
+/speaker Janus
+> Have we met? You remind me of the friend I made when I started my journey.
+
+[STADIUM_MAY-HAVE-BEEN_JANUS,1]
+/speaker Janus
+> You sure pack a punch. You would definitely be strong where I came from.
+
+[STADIUM_MAY-HAVE-BEEN_INDIGO,0]
+/speaker Indigo
+> I see you've made friends with both Amethyst and Kira. They are both alike and different from the ones I knew.
+
+[STADIUM_MAY-HAVE-BEEN_INDIGO,1]
+/speaker Indigo
+> I'm glad to see you're taking good care of my friends in my stead.
+
+[STADIUM_NO_MORE_TUTORIAL_ICHI,0]
+/speaker Ichi
+> This has been a long time coming, hasn't it?
+
+[STADIUM_NO_MORE_TUTORIAL_ICHI,1]
+/speaker Ichi
+> You've really been keeping up all this time!
+
+[STADIUM_NO_MORE_TUTORIAL_NI,0]
+/speaker Ni
+> Wow, we've both come really far, haven't we?
+
+[STADIUM_NO_MORE_TUTORIAL_NI,1]
+/speaker Ni
+> You'll probably ace the other trainers here!
+
+[STADIUM_NO_MORE_TUTORIAL_SAN,0]
+/speaker San
+> Last time I got whomped, but this time shall be different!
+
+[STADIUM_NO_MORE_TUTORIAL_YON,0]
+/speaker Yon
+> I will go all out this time, for a rematch!
+
+[STADIUM_NO_MORE_TUTORIAL_YON,1]
+/speaker Yon
+> You've come so far since the Tutorial Cup. This was a fun battle.
+
+[STADIUM_ECHO_AMY,0]
+/speaker Amy
+> I will channel the strength of my big brother!
+
+[STADIUM_ECHO_KANAI,0]
+/speaker Kanai
+> ...
+
+[STADIUM_ECHO_ALCAR,0]
+/speaker Alcar
+> ...This paper slip is blank.
+> MANAGEMENT! WHERE'S MY SCRIPT!?
+/speaker Management
+> Sorry! The writer didn't know enough about you yet to know what you should say here!
+> Can you improvise, please?
+/speaker Alcar
+> Hmph. Something something evil plans.\n...Let's fight.
+
+[STADIUM_ECHO_ARGLOS,0]
+/speaker Arglos
+> A flamboyant psychic invited me here to battle. Curious...

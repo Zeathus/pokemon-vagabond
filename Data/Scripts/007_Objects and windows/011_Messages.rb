@@ -315,6 +315,9 @@ end
 # Money and coins windows
 #===============================================================================
 def pbGetGoldString
+  if $game_switches[STADIUM_POINT_SHOP]
+    return _INTL("{1}", $player.money.to_s_formatted)
+  end
   return _INTL("${1}", $player.money.to_s_formatted)
 end
 
@@ -493,7 +496,7 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
   ### Controls
   textchunks = []
   controls = []
-  while text[/(?:\\(f|ff|ts|cl|me|se|wt|wtnp|ch)\[([^\]]*)\]|\\(g|cn|pt|wd|wm|op|cl|wu|\.|\||\!|\^))/i]
+  while text[/(?:\\(f|ff|ts|cl|me|se|wt|wtnp|ch)\[([^\]]*)\]|\\(g|sp|cn|pt|wd|wm|op|cl|wu|\.|\||\!|\^))/i]
     textchunks.push($~.pre_match)
     if $~[1]
       controls.push([$~[1].downcase, $~[2], -1])

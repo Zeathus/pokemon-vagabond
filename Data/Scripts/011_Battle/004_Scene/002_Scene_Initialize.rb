@@ -82,6 +82,8 @@ class Battle::Scene
         pkmnSprite.visible = true
       end
     end
+
+    @sprites["weather"] = RPG::Weather.new(@viewport, true)
   end
 
   def pbCreateBackdropSprites

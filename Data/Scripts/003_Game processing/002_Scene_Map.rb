@@ -81,6 +81,7 @@ class Scene_Map
     $game_player.straighten
     $game_player.on_ladder = false
     $game_temp.followers.map_transfer_followers
+    $game_player.sprite.snapPartner
     $game_map.update
     disposeSpritesets
     RPG::Cache.clear

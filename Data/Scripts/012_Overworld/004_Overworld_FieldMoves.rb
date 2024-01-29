@@ -91,12 +91,12 @@ def pbHiddenMoveAnimation(pokemon)
   interp = RectInterpolator.new(
     Rect.new(0, Graphics.height / 2, Graphics.width, 0),
     Rect.new(0, (Graphics.height - bg.bitmap.height) / 2, Graphics.width, bg.bitmap.height),
-    Graphics.frame_rate / 4
+    Graphics.frame_rate / 6
   )
   ptinterp = nil
   phase = 1
   frames = 0
-  strobeSpeed = 64 * 20 / Graphics.frame_rate
+  strobeSpeed = 64 * 30 / Graphics.frame_rate
   loop do
     Graphics.update
     Input.update
@@ -111,7 +111,7 @@ def pbHiddenMoveAnimation(pokemon)
         ptinterp = PointInterpolator.new(
           Graphics.width + (sprite.bitmap.width / 2), bg.bitmap.height / 2,
           Graphics.width / 2, bg.bitmap.height / 2,
-          Graphics.frame_rate * 4 / 10
+          Graphics.frame_rate * 2 / 10
         )
       end
     when 2   # Slide Pokémon sprite in from right to centre
@@ -131,7 +131,7 @@ def pbHiddenMoveAnimation(pokemon)
         ptinterp = PointInterpolator.new(
           Graphics.width / 2, bg.bitmap.height / 2,
           -(sprite.bitmap.width / 2), bg.bitmap.height / 2,
-          Graphics.frame_rate * 4 / 10
+          Graphics.frame_rate * 2 / 10
         )
         frames = 0
       end
@@ -145,7 +145,7 @@ def pbHiddenMoveAnimation(pokemon)
         interp = RectInterpolator.new(
           Rect.new(0, (Graphics.height - bg.bitmap.height) / 2, Graphics.width, bg.bitmap.height),
           Rect.new(0, Graphics.height / 2, Graphics.width, 0),
-          Graphics.frame_rate / 4
+          Graphics.frame_rate / 6
         )
       end
     when 5   # Shrink viewport height from full to zero
@@ -704,23 +704,23 @@ HiddenMoveHandlers::UseMove.add(:ROCKSMASH, proc { |move, pokemon|
 # Strength
 #===============================================================================
 def pbStrength
-  return false
+  if !(hasPartyMember(:Kira) && $game_switches[HAS_STRENGTH])
+    return false
+  end
   if $PokemonMap.strengthUsed
     pbMessage(_INTL("Strength made it possible to move boulders around."))
     return false
   end
   move = :STRENGTH
-  movefinder = $player.get_pokemon_with_move(move)
+  movefinder = Pokemon.new(:SANDOLIN, 5)
   if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_STRENGTH, false) || (!$DEBUG && !movefinder)
     pbMessage(_INTL("It's a big boulder, but a Pokémon may be able to push it aside."))
     return false
   end
-  pbMessage(_INTL("It's a big boulder, but you may be able to push it aside with a hidden move.\1"))
-  if pbConfirmMessage(_INTL("Would you like to use Strength?"))
-    speciesname = (movefinder) ? movefinder.name : $player.name
-    pbMessage(_INTL("{1} used {2}!", speciesname, GameData::Move.get(move).name))
+  speciesname = (movefinder) ? movefinder.name : $player.name
+  if pbConfirmMessage(_INTL("The big boulder looks pushable.\nWould you like to call {1}?", speciesname))
     pbHiddenMoveAnimation(movefinder)
-    pbMessage(_INTL("Strength made it possible to move boulders around!"))
+    pbMessage(_INTL("{1} made it possible to move boulders around!", speciesname))
     $PokemonMap.strengthUsed = true
     return true
   end

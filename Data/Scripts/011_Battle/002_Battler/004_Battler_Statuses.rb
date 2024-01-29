@@ -274,7 +274,7 @@ class Battle::Battler
       when :SLEEP
         @battle.pbDisplay(_INTL("{1} fell asleep!", pbThis))
       when :POISON
-        if newStatusCount > 0
+        if newStatusCount < 0
           @battle.pbDisplay(_INTL("{1} was badly poisoned!", pbThis))
         else
           @battle.pbDisplay(_INTL("{1} was poisoned!", pbThis))

@@ -12,9 +12,10 @@ module PBParty
   Uxie      = 10
   Mesprit   = 11
   Player2   = 12
+  YoungKira = 13
 
   def PBParty.len
-    return 13
+    return 14
   end
 
   def PBParty.getName(id)
@@ -28,7 +29,7 @@ module PBParty
       return "Duke"     # Duke sounds large
     when PBParty::Amethyst
       return "Amethyst" # The gem, colored after her name
-    when PBParty::Kira
+    when PBParty::Kira, PBParty::YoungKira
       return "Kira"     # Reference to Akira, the Sandslash user from the anime
     when PBParty::Eliana
       return "Eliana"   # Hebrew, meaning "My God has answered" (Ziran)
@@ -81,6 +82,8 @@ module PBParty
       return :MESPRIT
     when PBParty::Player2
       return :ANTAGONIST
+    when PBParty::YoungKira
+      return :RIVALYOUNG
     end
     return -1
   end
@@ -94,7 +97,7 @@ module PBParty
       return 25111 # Celebi, with last digit repeated
     when PBParty::Amethyst
       return 1482  # SiO2: Chemical Symbol for Amethyst
-    when PBParty::Kira
+    when PBParty::Kira, PBParty::YoungKira
       return 11011 # Binary for Sandslash DEX#
     when PBParty::Eliana
       return 81204 # 8 + Zekrom dex number in octal (base 8)
@@ -127,7 +130,7 @@ module PBParty
       return 0
     when PBParty::Amethyst
       return 1
-    when PBParty::Kira
+    when PBParty::Kira, PBParty::YoungKira
       return 0
     when PBParty::Eliana
       return 1

@@ -90,6 +90,9 @@ class Battle
   attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
   attr_accessor :levelSync        # If the player's level should be scaled down
   attr_accessor :playerUseAI      # Whether the player should be AI controlled
+  attr_accessor :noItems          # Whether the Player can access the Bag
+  attr_accessor :showParty        # Whether to show the entire opponent's party from the start
+  attr_accessor :keepBGM          # If the BGM kept playing from before battle, and should do so after
   attr_accessor :predictingDamage
 
   def pbRandom(x); return rand(x); end
@@ -180,6 +183,9 @@ class Battle
     @smartWildBattle   = false
     @levelSync         = 0
     @playerUseAI       = false
+    @noItems           = false
+    @showParty         = false
+    @keepBGM           = false
     @predictingDamage  = false
   end
 
@@ -726,7 +732,8 @@ class Battle
     end
     @field.weatherDuration = duration
     weather_data = GameData::BattleWeather.try_get(@field.weather)
-    pbCommonAnimation(weather_data.animation) if showAnim && weather_data
+    @scene.pbStartWeather(@field.weather) if weather_data
+    #pbCommonAnimation(weather_data.animation) if showAnim && weather_data
     pbHideAbilitySplash(user) if user
     case @field.weather
     when :Sun         then pbDisplay(_INTL("The sunlight turned harsh!"))
@@ -738,6 +745,7 @@ class Battle
     when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
     when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
     when :ShadowSky   then pbDisplay(_INTL("A shadow sky appeared!"))
+    when :NoxiousStorm then pbDisplay(_INTL("A sandstorm of noxious fumes brewed!"))
     end
     # Check for end of primordial weather, and weather-triggered form changes
     allBattlers.each { |b| b.pbCheckFormOnWeatherChange }
@@ -774,7 +782,7 @@ class Battle
   end
 
   def pbStartWeatherAbility(new_weather, battler, ignore_primal = false)
-    return if !ignore_primal && [:HarshSun, :HeavyRain, :StrongWinds].include?(@field.weather)
+    return if !ignore_primal && [:HarshSun, :HeavyRain, :StrongWinds, :NoxiousStorm].include?(@field.weather)
     return if @field.weather == new_weather
     pbShowAbilitySplash(battler)
     if !Scene::USE_ABILITY_SPLASH

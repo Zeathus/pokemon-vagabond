@@ -102,7 +102,7 @@ class PokemonLoad_Scene
     @commands = commands
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99998
+    @viewport.z = 99997
     addBackgroundOrColoredPlane(@sprites, "background", "loadbg", Color.new(248, 248, 248), @viewport)
     y = 32
     commands.length.times do |i|
@@ -127,7 +127,7 @@ class PokemonLoad_Scene
   def pbStartDeleteScene
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99998
+    @viewport.z = 99997
     addBackgroundOrColoredPlane(@sprites, "background", "loadbg", Color.new(248, 248, 248), @viewport)
   end
 
@@ -315,9 +315,9 @@ class PokemonLoadScreen
         Game.start_new
         return
       when cmd_mystery_gift
-        pbFadeOutIn { pbDownloadMysteryGift(@save_data[:player]) }
+        pbFadeOutIn(99998) { pbDownloadMysteryGift(@save_data[:player]) }
       when cmd_options
-        pbFadeOutIn do
+        pbFadeOutIn(99998) do
           scene = PokemonOption_Scene.new
           screen = PokemonOptionScreen.new(scene)
           screen.pbStartScreen(true)

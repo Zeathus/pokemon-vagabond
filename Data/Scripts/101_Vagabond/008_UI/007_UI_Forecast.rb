@@ -168,14 +168,16 @@ class PokemonForecastMap_Scene
       :Winds     => "winds",
       :Sandstorm => "sandstorm",
       :BloodMoon => "blood_moon",
-      :Cloudy    => "cloudy"
+      :Cloudy    => "cloudy",
+      :NoxiousStorm => "noxious_storm"
     }
     imagepos = []
     forecast.each do |area|
-      if iconNames[area[1]]
-        area[0].each do |coords|
+      area[0].each do |coords|
+        weather = pbChangeWeatherOnCoords(coords, area[1])
+        if iconNames[weather]
           #imagepos.push([_INTL("Graphics/Pictures/Forecast/icon_bg"), coords[0] * 16 - 8, coords[1] * 16 - 8])
-          imagepos.push([_INTL("Graphics/Pictures/Forecast/{1}", iconNames[area[1]]), coords[0] * 16 - 8, coords[1] * 16 - 8])
+          imagepos.push([_INTL("Graphics/Pictures/Forecast/{1}", iconNames[weather]), coords[0] * 16 - 8, coords[1] * 16 - 8])
         end
       end
     end

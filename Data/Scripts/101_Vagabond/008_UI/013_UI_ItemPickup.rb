@@ -1,4 +1,4 @@
-def pbItemPickupAnimation(item, quantity=1)
+def pbItemPickupAnimation(item, quantity = 1, show_description = false)
 
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
   viewport.z = 99999
@@ -64,7 +64,7 @@ def pbItemPickupAnimation(item, quantity=1)
     pbSEPlay("Item get",100)
   end
 
-  to_do = (item.is_key_item? ? 160 : 80)
+  to_do = (show_description ? 40 : (item.is_key_item? ? 160 : 80))
   i = 0
   while i < to_do
       timer += 1.0
@@ -76,6 +76,66 @@ def pbItemPickupAnimation(item, quantity=1)
       pbUpdateSpriteHash(sprites)
       i += 1
       i += 1 if Input.press?(Input::B)
+  end
+
+  if show_description
+    desc_viewport = Viewport.new(0, 348, Graphics.width, 2)
+    desc_viewport.z = 99999
+    sprites["description"] = Window_AdvancedTextPokemon.new("", 1)
+    sprites["description"].viewport = desc_viewport
+    sprites["description"].opacity = 0
+    sprites["description"].resizeToFit(item.description, Graphics.width * 2 / 3)
+    sprites["description"].text = item.description
+    sprites["description"].x = Graphics.width / 2 - sprites["description"].width / 2
+    sprites["description"].y = -sprites["description"].height / 2 + 6
+    sprites["desc_box"] = Sprite.new(desc_viewport)
+    sprites["desc_box"].bitmap = Bitmap.new(Graphics.width, sprites["description"].height)
+    sprites["desc_box"].bitmap.fill_rect(0, 0, Graphics.width, sprites["description"].height, Color.new(0, 0, 0))
+    sprites["desc_box"].opacity = 192
+    desc_viewport.rect.y += sprites["description"].height / 2
+    frames = (1..16).to_a.reverse
+    frames_sum = frames.sum
+    frames.each do |i|
+      progress = sprites["description"].height * i / frames_sum
+      sprites["description"].y += progress / 2
+      desc_viewport.rect.y -= progress / 2
+      desc_viewport.rect.height += progress
+      timer += 1.0
+      sprites["item"].angle = -Math.sin(timer * 0.05) * 12
+      Graphics.update
+      Input.update
+      viewport.update
+      desc_viewport.update
+      pbUpdateSpriteHash(sprites)
+    end
+    loop do
+      timer += 1.0
+      sprites["item"].angle = -Math.sin(timer * 0.05) * 12
+      Graphics.update
+      Input.update
+      viewport.update
+      desc_viewport.update
+      pbUpdateSpriteHash(sprites)
+      break if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK)
+    end
+    frames = (1..16).to_a
+    frames_sum = frames.sum
+    frames.each do |i|
+      progress = sprites["description"].height * i / frames_sum
+      sprites["description"].y -= progress / 2
+      desc_viewport.rect.y += progress / 2
+      desc_viewport.rect.height -= progress
+      timer += 1.0
+      sprites["item"].angle = -Math.sin(timer * 0.05) * 12
+      Graphics.update
+      Input.update
+      viewport.update
+      desc_viewport.update
+      pbUpdateSpriteHash(sprites)
+    end
+    sprites["description"].dispose
+    sprites["desc_box"].dispose
+    desc_viewport.dispose
   end
 
   sprites["bag"] = IconSprite.new(
@@ -134,8 +194,8 @@ def pbItemPickupAnimation(item, quantity=1)
       timer += 2.0
       sprites["item"].angle -= 0.05 * 24 * 2
       for j in i...(i+2)
-        sprites["item"].x += x_mod[j / 3]
-        sprites["item"].y += y_mod[j / 3]
+        sprites["item"].x += x_mod[j / 3] || 0
+        sprites["item"].y += y_mod[j / 3] || 0
       end
       zoom -= 0.04
       sprites["item"].zoom_x = zoom
@@ -147,8 +207,8 @@ def pbItemPickupAnimation(item, quantity=1)
     else
       timer += 1.0
       sprites["item"].angle -= 0.05 * 24
-      sprites["item"].x += x_mod[i / 3]
-      sprites["item"].y += y_mod[i / 3]
+      sprites["item"].x += x_mod[i / 3] || 0
+      sprites["item"].y += y_mod[i / 3] || 0
       zoom -= 0.02
       sprites["item"].zoom_x = zoom
       sprites["item"].zoom_y = zoom

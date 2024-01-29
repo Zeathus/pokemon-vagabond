@@ -1564,8 +1564,10 @@ class QuickSummarySprite < SpriteWrapper
           if moveobject.id!=0
             imagepos.push(["Graphics/Pictures/Party/move_slot",xPos,yPos,0,
                 GameData::Type.get(moveobject.type).icon_position*46,192,46])
-            textpos.push([movedata.name,xPos+98,yPos+16,2,
+            textpos.push([movedata.name,xPos+110,yPos+16,2,
                 Color.new(64,64,64),Color.new(176,176,176)])
+            #textpos.push([movedata.name,xPos+44,yPos+16,0,
+            #    Color.new(64,64,64),Color.new(176,176,176)])
           end
         end
         yPos+=44
@@ -1794,6 +1796,7 @@ class PokemonScreen_Scene
   end
 
   def pbEndScene
+    pbPlayCloseMenuSE
     pbFadeOutAndHide(@sprites) { update }
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose

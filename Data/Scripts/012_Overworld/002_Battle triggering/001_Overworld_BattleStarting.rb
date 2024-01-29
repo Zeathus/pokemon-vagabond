@@ -65,6 +65,11 @@ class Game_Temp
     when "fixedlevel"             then rules["scaleLevel"]          = false
     when "levelmod"               then rules["levelMod"]            = var
     when "levelsync"              then rules["levelSync"]           = var
+    when "fullplayer"             then rules["fullPlayer"]          = true
+    when "noitems"                then rules["noItems"]             = true
+    when "showparty"              then rules["showParty"]           = true
+    when "noplayerlevelupdate"    then rules["noPlayerLevelUpdate"] = true
+    when "keepbgm"                then rules["keepBGM"]             = true
     else
       raise _INTL("Battle rule \"{1}\" does not exist.", rule)
     end
@@ -189,14 +194,16 @@ module BattleCreationHelperMethods
 
   # Generate information for the player and partner trainer(s)
   def set_up_player_trainers(foe_party)
+    full_player = $game_temp.battle_rules["fullPlayer"] || false
     primary_id = getPartyActive(0)
     primary_trainer = Trainer.new(PBParty.getName(primary_id), PBParty.getTrainerType(primary_id))
     primary_trainer.party = getActivePokemon(0)
+    primary_trainer.party += getInactivePartyPokemon(primary_id) if full_player
     trainer_array = [primary_trainer]
     ally_items    = []
     pokemon_array = primary_trainer.party
     party_starts  = [0]
-    if partner_can_participate?(foe_party)
+    if partner_can_participate?(foe_party) && !full_player
       ally_id = getPartyActive(1)
       ally_trainer = Trainer.new(PBParty.getName(ally_id), PBParty.getTrainerType(ally_id))
       ally_trainer.party = getActivePokemon(1)
@@ -244,6 +251,9 @@ module BattleCreationHelperMethods
     battle.smartWildBattle = battleRules["smartWildBattle"] if !battleRules["smartWildBattle"].nil?
     battle.levelSync = battleRules["levelSync"] if !battleRules["levelSync"].nil?
     battle.playerUseAI = battleRules["playerUseAI"] if !battleRules["playerUseAI"].nil?
+    battle.noItems = battleRules["noItems"] if !battleRules["noItems"].nil?
+    battle.showParty = battleRules["showParty"] if !battleRules["showParty"].nil?
+    battle.keepBGM = battleRules["keepBGM"] if !battleRules["keepBGM"].nil?
     # Terrain
     if battleRules["defaultTerrain"].nil? && Settings::OVERWORLD_WEATHER_SETS_BATTLE_TERRAIN
       case $game_screen.weather_type
@@ -268,6 +278,8 @@ module BattleCreationHelperMethods
         battle.defaultWeather = :Sun
       when :Winds
         battle.defaultWeather = :Winds
+      when :NoxiousStorm
+        battle.defaultWeather = :NoxiousStorm
       end
     else
       battle.defaultWeather = battleRules["defaultWeather"]
@@ -408,6 +420,7 @@ class WildBattle
     scale_level      = $game_temp.battle_rules["scaleLevel"] || false
     level_mod        = $game_temp.battle_rules["levelMod"] || false
     level_sync       = $game_temp.battle_rules["levelSync"] || false
+    keep_bgm         = $game_temp.battle_rules["keepBGM"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable)
@@ -429,6 +442,11 @@ class WildBattle
       }
     end
     foe_party.each { |pokemon|
+      if $game_screen.weather_type == :NoxiousStorm
+        pokemon.status = :POISON
+        pokemon.statusCount = -6
+        pokemon.hp -= (pokemon.hp / 4.0).floor
+      end
       pbWildModify(pokemon) if $game_variables[Supplementals::WILD_MODIFIER] != 0
     }
     # Generate information for the player and partner trainer(s)
@@ -459,7 +477,7 @@ class WildBattle
     $game_temp.clear_battle_rules
     # Perform the battle itself
     outcome = 0
-    pbBattleAnimation(pbGetWildBattleBGM(foe_party), (foe_party.length == 1) ? 0 : 2, foe_party) {
+    pbBattleAnimation(keep_bgm ? -1 : pbGetWildBattleBGM(foe_party), (foe_party.length == 1) ? 0 : 2, foe_party) {
       $scene.spriteset.despawnPokemon if Supplementals::OVERWORLD_POKEMON
       pbSceneStandby {
         outcome = battle.pbStartBattle
@@ -561,6 +579,8 @@ class TrainerBattle
     scale_level      = $game_temp.battle_rules["scaleLevel"] || false
     level_mod        = $game_temp.battle_rules["levelMod"] || false
     level_sync       = $game_temp.battle_rules["levelSync"] || false
+    no_player_level_update = $game_temp.battle_rules["noPlayerLevelUpdate"] || false
+    keep_bgm         = $game_temp.battle_rules["keepBGM"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable, true)
@@ -619,7 +639,7 @@ class TrainerBattle
       $game_temp.clear_battle_rules
       # Perform the battle itself
       outcome = 0
-      pbBattleAnimation(pbGetTrainerBattleBGM(foe_trainers), (battle.singleBattle?) ? 1 : 3, foe_trainers) {
+      pbBattleAnimation(keep_bgm ? -1 : pbGetTrainerBattleBGM(foe_trainers), (battle.singleBattle?) ? 1 : 3, foe_trainers) {
         pbSceneStandby {
           outcome = battle.pbStartBattle
         }
@@ -635,7 +655,7 @@ class TrainerBattle
         Scaling.reset_difficulty(pokemon)
       }
       foe_trainers.each { |trainer|
-        Scaling.update(trainer)
+        Scaling.update(trainer) if !no_player_level_update
       }
     end
     return outcome

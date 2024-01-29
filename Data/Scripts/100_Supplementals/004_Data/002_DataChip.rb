@@ -140,6 +140,14 @@ def pbGetLevelUpMoves(pokemon)
       end
     end
   end
-  level_moves.sort! {|a,b| a[1]<=>b[1]}
+  level_moves.sort! {|a,b|
+    if a[1] == 0 or b[1] == 0
+      a[1]<=>b[1]
+    elsif a[1] > pokemon.level || b[1] > pokemon.level
+      a[1]<=>b[1]
+    else
+      b[1]<=>a[1]
+    end
+  }
   return level_moves
 end 

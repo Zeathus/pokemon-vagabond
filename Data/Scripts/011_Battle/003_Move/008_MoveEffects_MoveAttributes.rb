@@ -1577,6 +1577,8 @@ class Battle::Move::TypeAndPowerDependOnWeather < Battle::Move
       ret = :ICE if GameData::Type.exists?(:ICE)
     when :Winds
       ret = :FLYING if GameData::Type.exists?(:FLYING)
+    when :NoxiousStorm
+      ret = :POISON if GameData::Type.exists?(:POISON)
     end
     return ret
   end

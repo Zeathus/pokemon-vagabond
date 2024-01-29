@@ -1,7 +1,21 @@
 class Battle
 
-  def pbChooseMovesNew(idxBattlers)
+  def pbStartPredictingDamage
     @predictingDamage = true
+    eachBattler do |b|
+      b.turnCount += 1
+    end
+  end
+
+  def pbEndPredictingDamage
+    @predictingDamage = false
+    eachBattler do |b|
+      b.turnCount -= 1
+    end
+  end
+
+  def pbChooseMovesNew(idxBattlers)
+    pbStartPredictingDamage
 
     single = idxBattlers.length == 1
     double = idxBattlers.length == 2
@@ -119,32 +133,27 @@ class Battle
 
         # Update queue with positive priority backwards to ensure speed is accounted for
         for p in 1..7
-          for i in 1..queue.length
-            j = queue.length - i
-            q = queue[j]
+          i = queue.length - 1
+          min_i = 0
+          while i >= min_i
+            q = queue[i]
             if (p == pri0 && idxBattlers[0] == q) ||
                 (p == pri1 && idxBattlers[1] == q) ||
                 (p == pri2 && idxBattlers[2] == q)
               queue.delete(q)
               queue.unshift(q)
+              i += 1
+              min_i += 1
             end
-          end
-        end
-
-        # You went up the queue, this is good
-        for i in 0...queue.length
-          if queue[i] != base_queue[i]
-            scores[i0] += 20 if single
-            scores[i0][i1] += 20 if double
-            scores[i0][i1][i2] += 20 if triple
-            break
+            i -= 1
           end
         end
 
         # Update queue with negative priority backwards to ensure speed is accounted for
         for p1 in 1..7
-          p = -p1
-          for i in 1..queue.length
+          i = queue.length - 1
+          min_i = 0
+          while i >= min_i
             j = queue.length - i
             q = queue[j]
             if (p == pri0 && idxBattlers[0] == q) ||
@@ -152,7 +161,10 @@ class Battle
                 (p == pri2 && idxBattlers[2] == q)
               queue.delete(q)
               queue.push(q)
+              i += 1
+              min_i += 1
             end
+            i -= 1
           end
         end
 
@@ -189,24 +201,18 @@ class Battle
             end
 
             # TODO
-            # - Account for multi-target moves
-            # - Affinity Boosts?
-            # - use pbPossibleTargets to account for multi-target moves
             # - Add fixed_target variable for stuff like Follow Me
             #   * (needs to assume the best move on any target is used on a specific target)
 
             # Stop predicting if no moves are known
             if moves.length > 0
-
-              # Get possible targets
-              possible_targets = []
-              user.eachOpposing do |b|
-                possible_targets.push(b)
-              end
+              # List of allies that can be affinity boosted by any move (even if that move is not best_move)
+              to_affinityboost = []
 
               best_move = nil
               best_damage = -1
-              best_target = -1
+              best_target_group = []
+              best_kills = []
               fixed_move = nil
 
               if (user.hasActiveItem?(:CHOICEBAND) || user.hasActiveItem?(:CHOICESPECS) ||
@@ -221,30 +227,65 @@ class Battle
                 for m in moves
                   if m.id == fixed_move
                     best_move = m
-                    for t in possible_targets
-                      damage = m.pbPredictDamage(user, t, 1, queue, false) || 0
-                      best_damage = damage
-                      best_target = t
-                      hurt = damage * 100 / t.totalhp
-                      if hurt > hurt_potential[t.index]
-                        hurt_potential[t.index] = hurt
+                    possible_target_groups = pbPossibleTargets(user, m)
+                    for group in possible_target_groups
+                      total_damage = 0
+                      kills = []
+                      for t in group
+                        if t.opposes?(user)
+                          damage = m.pbPredictDamage(user, t, group.length, queue, false) || 0
+                          hurt = [damage, t.hp].min * 100 / t.totalhp
+                          if hurt > hurt_potential[t.index]
+                            hurt_potential[t.index] = hurt
+                          end
+                          total_damage += hurt
+                          kills.push(t) if damage >= t.hp
+                        end
+                      end
+                      if total_damage > best_damage
+                        best_damage = total_damage
+                        best_target_group = group
+                        best_kills = kills
                       end
                     end
                   end
                 end
               else
                 # Find optimal damaging play for player
-                for t in possible_targets
-                  for m in moves
-                    damage = m.pbPredictDamage(user, t, 1, queue, false) || 0
-                    if damage > best_damage
-                      best_move = m
-                      best_damage = damage
-                      best_target = t
+                for m in moves
+                  possible_target_groups = pbPossibleTargets(user, m)
+                  next if possible_target_groups.length <= 0
+
+                  for group in possible_target_groups
+                    total_damage = 0
+                    kills = []
+                    for t in group
+                      next if !t.opposes?(user)
+                      damage = m.pbPredictDamage(user, t, group.length, queue, affinityboost[user.index]) || 0
+                      hurt = [damage, t.hp].min * 100 / t.totalhp
+                      if hurt > hurt_potential[t.index]
+                        hurt_potential[t.index] = hurt
+                      end
+                      kills.push(t) if damage >= t.hp && t.opposes?(user)
+                      total_damage += hurt
+                      # Check for affinity boosts
+                      if damage > 0
+                        user.eachAlly do |ally|
+                          next if to_affinityboost.include?(ally.index)
+                          next if !ally.pokemon.hasAffinity?(m.type)
+                          bTypes = t.pbTypes(true)
+                          typeMod = Effectiveness.calculate(m.type, bTypes[0], bTypes[1], bTypes[2])
+                          if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
+                            to_affinityboost.push(ally.index)
+                          end
+                        end
+                      end
                     end
-                    hurt = damage * 100 / t.totalhp
-                    if hurt > hurt_potential[t.index]
-                      hurt_potential[t.index] = hurt
+                    if total_damage > best_damage
+                      best_move = m
+                      best_damage = total_damage
+                      best_target_group = group
+                      best_kills = kills
                     end
                   end
                 end
@@ -252,16 +293,37 @@ class Battle
 
               score_mod = 0
               if best_move
-                if best_damage > best_target.hp
+                best_kills.each do |b|
                   # The pokemon will faint, subtract a high score
-                  # Does not set inactionable on own pokemon, to not assume that all moves are useless
-                  score_mod -= [best_target.hp * 100 / best_target.totalhp,50].max
-                  actionable[best_target.index] = false
-                else
-                  # Subtract percentage of total hp lost from score
-                  score_mod -= best_damage * 100 / best_target.totalhp
+                  # Inactionable on own pokemon only halves scores
+                  score_mod -= [b.hp * 100 / b.totalhp,50].max
+                  actionable[b.index] = false
+                end
+                best_target_group.each do |b|
+                  if !best_kills.include?(b)
+                    score_mod -= best_damage
+                  end
                 end
               end
+
+              # Move affinity boosted pokemon up in the queue
+              for ally in to_affinityboost
+                next_pos = queue_pos + 1
+                ally_pos = -1
+                # Start at next_pos + 1, as there is no need to move if it is already next
+                for pos in (next_pos+1)...queue.length
+                  if queue[pos] == ally
+                    ally_pos = pos
+                    break
+                  end
+                end
+                next if ally_pos < 0
+                affinityboost[ally] = true
+                # Remove ally and reinsert at new position
+                queue.delete(ally)
+                queue.insert(next_pos, ally)
+              end
+
               scores[i0] += score_mod if single
               scores[i0][i1] += score_mod if double
               scores[i0][i1][i2] += score_mod if triple
@@ -315,7 +377,7 @@ class Battle
                   end
                   eff_score = pbGetEffectScore(move, damage, user, target, actionable, fainted)
                   this_score += [damage * 100 / target.totalhp, target.hp * 100 / target.totalhp - hurt_potential[target.index]].min
-                  if damage > (target.hp - hurt_potential[target.index]) && target != user
+                  if damage > (target.hp - hurt_potential[target.index] * target.totalhp / 100) && target != user
                     if target.opposes?(user)
                       kills += 1
                     else
@@ -360,13 +422,16 @@ class Battle
             end
 
             for t in target_group
-              if (high_damage[t.index] > (t.hp - hurt_potential[t.index]))
+              next if fainted[t.index]
+              if (high_damage[t.index] > (t.hp - hurt_potential[t.index] * target.totalhp / 100))
                 high_score += t.opposes?(user) ? 80 : -80
                 actionable[t.index] = false
                 fainted[t.index] = true
               end
               hurt_potential[t.index] = damage[t.index] * 100 / t.totalhp
             end
+            
+            #echoln _INTL("> {1} use {2} on {3}, score: {4}, actionable: {5}", user.name, move.name, target_group[0].name, high_score, actionable[user.index])
 
             high_score /= 2 if !actionable[user.index]
 
@@ -383,7 +448,6 @@ class Battle
                   if Effectiveness.normal?(type_mod) || Effectiveness.super_effective?(type_mod)
                     user.eachAlly do |ally|
                       if ally.pokemon.hasAffinity?(move.type)
-                        affinityboost[ally.index] = true
                         to_affinityboost.push(ally.index)
                       end
                     end
@@ -404,6 +468,7 @@ class Battle
                 end
               end
               next if ally_pos < 0
+              affinityboost[ally] = true
               # Remove ally and reinsert at new position
               queue.delete(ally)
               queue.insert(next_pos, ally)
@@ -803,7 +868,7 @@ class Battle
       end
     end
 
-    @predictingDamage = false
+    pbEndPredictingDamage
 
   end
 

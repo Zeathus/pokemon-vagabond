@@ -9023,7 +9023,7 @@ Description = The user cools the target down in an instant, inflicting it with F
 Name = Killer Combo
 Type = POISON
 Category = Physical
-Power = 50
+Power = 60
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
@@ -9117,13 +9117,14 @@ Description = The target is hit with a beam reminiscent of the northern lights. 
 [RAGINGFURY]
 Name = Raging Fury
 Type = FIRE
-Category = Status
+Category = Physical
+Power = 120
 Accuracy = 100
-TotalPP = 15
+TotalPP = 10
 Target = NearOther
-FunctionCode = CopyUserStatusToTargetTemperature
-Flags = CanProtect,CanMirrorMove
-Description = Not implemented
+FunctionCode = MultiTurnAttackConfuseUserAtEnd
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user rampages around spewing flames for two to three turns. The user then becomes confused.
 #-------------------------------
 [CRASHTEST]
 Name = Crash Test
@@ -9145,5 +9146,41 @@ Accuracy = 100
 TotalPP = 5
 Target = NearOther
 FunctionCode = AttackAndSkipNextTurn
-Flags = CanProtect,CanMirrorMove
+Flags = Contact,CanProtect,CanMirrorMove
 Description = The user swings its whole body around to attack with its huge hammer. This move can't be used twice in a row.
+#-------------------------------
+[TWINBEAM]
+Name = Twin Beam
+Type = PSYCHIC
+Category = Special
+Power = 40
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = HitTwoTimes
+Flags = CanProtect,CanMirrorMove
+Description = The user shoots mystical beams from its eyes to inflict damage. The target is hit twice in a row.
+#-------------------------------
+[HYPERDRILL]
+Name = Hyper Drill
+Type = NORMAL
+Category = Physical
+Power = 100
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = None
+Flags = Contact,CanMirrorMove
+Description = The user spins the pointed part of its body at high speed to pierce the target. This attack can hit a target using a move such as Protect or Detect.
+#-------------------------------
+[RAGEFIST]
+Name = Rage Fist
+Type = GHOST
+Category = Physical
+Power = 50
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = StartRaiseUserAtk1WhenDamaged
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user converts its rage into energy to attack. As long as this move is in use, the user's Attack rises each time the user is hit in battle.

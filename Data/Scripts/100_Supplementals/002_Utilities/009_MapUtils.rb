@@ -24,6 +24,17 @@ def pbPlayerInArea(x1, y1, x2, y2)
   return false
 end
 
+def pbPlayerNearEvent(eventid, x_min, y_min, x_max, y_max)
+  event = $game_map.events[eventid]
+  return false if !event
+  if $game_player.x >= event.x + x_min && $game_player.y >= event.y + y_min
+    if $game_player.x <= event.x + x_max && $game_player.y <= event.y + y_max
+      return true
+    end
+  end
+  return false
+end
+
 # Returns the hypotenus distance from event to player
 def pbDistanceFromPlayer(eventid)
   event = nil

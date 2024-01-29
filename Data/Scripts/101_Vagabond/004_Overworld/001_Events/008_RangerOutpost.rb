@@ -51,3 +51,23 @@ def pbRangerClerk(area)
     pbDialog("RANGER_CLERK_CANCEL")
   end
 end
+
+def pbRangerNoticeBoard(area)
+  notices = []
+  case area
+  when "breccia"
+    notices.push("NOTICE_TROPIUS") if $game_switches[GYM_FAUNUS] && !pbBossDefeated?("Tropius")
+    notices.push(["NOTICE_VESPIQUEN",$game_self_switches[[62,34,"C"]] ? 1 : 0]) if !pbBossDefeated?("Vespiquen")
+  end
+  if notices.length == 0
+    pbDialog("NOTICE_BOARD_EMPTY")
+  else
+    notices.each do |i|
+      if i.is_a?(Array)
+        pbDialog(i[0], i[1])
+      else
+        pbDialog(i)
+      end
+    end
+  end
+end

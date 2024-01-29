@@ -3,6 +3,7 @@ module Battle::CatchAndStoreMixin
   # Store caught Pokémon
   #=============================================================================
   def pbStorePokemon(pkmn)
+    return if getPartyActive(0) == PBParty::YoungKira
     # Nickname the Pokémon (unless it's a Shadow Pokémon)
     if !pkmn.shadowPokemon?
       if $PokemonSystem.givenicknames == 0 &&

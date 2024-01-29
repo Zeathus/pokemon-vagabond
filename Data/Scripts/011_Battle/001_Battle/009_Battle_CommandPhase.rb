@@ -185,9 +185,10 @@ class Battle
       end
     end
     # Choose actions for the round (player first, then AI)
-    pbCommandPhaseLoop(true)    # Player chooses their actions
-    return if @decision != 0   # Battle ended, stop choosing actions
     pbCommandPhaseLoop(false)   # AI chooses their actions
+    pbCommandPhaseLoop(true)    # Player chooses their actions
+    @battleAI.pbThreadJoin
+    return if @decision != 0   # Battle ended, stop choosing actions
   end
 
   def pbCommandPhaseLoop(isPlayer)
@@ -227,6 +228,9 @@ class Battle
           if $game_switches[ATTACKS_ONLY_BATTLE]
             pbDisplayPaused("You don't need to do that now. Hurry!")
             next
+          elsif @noItems
+            pbDisplayPaused("Using items are against the rules in this battle.")
+            next
           end
           if pbItemMenu(idxBattler, actioned.length == 1)
             commandsEnd = true if pbItemUsesAllActions?(@choices[idxBattler][1])
@@ -265,14 +269,14 @@ class Battle
       break if commandsEnd
     end
     if Supplementals::USE_NEW_BATTLE_AI
-      @battleAI.pbDefaultChooseEnemyCommand(idxOpposingToUseAI) if idxOpposingToUseAI.length > 0
-      @battleAI.pbDefaultChooseEnemyCommand(idxAlliedToUseAI) if idxAlliedToUseAI.length > 0
+      @battleAI.pbThreadChooseEnemyCommand(idxOpposingToUseAI) if idxOpposingToUseAI.length > 0
+      @battleAI.pbThreadChooseEnemyCommand(idxAlliedToUseAI) if idxAlliedToUseAI.length > 0
     else
       idxOpposingToUseAI.each do |i|
-        @battleAI.pbDefaultChooseEnemyCommand(i)
+        @battleAI.pbThreadChooseEnemyCommand(i)
       end
       idxAlliedToUseAI.each do |i|
-        @battleAI.pbDefaultChooseEnemyCommand(i)
+        @battleAI.pbThreadChooseEnemyCommand(i)
       end
     end
   end

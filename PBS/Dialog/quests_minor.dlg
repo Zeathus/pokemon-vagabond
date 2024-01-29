@@ -53,7 +53,7 @@
 /wait 30
 /fade normal
 /wait 20
-> That should do the trick.\nThanks for informing me!
+> That should do the trick.
 
 [SICKZAGOON,5]
 /dialog SICKZAGOON 0
@@ -67,3 +67,6 @@
 [SICKZAGOON,7]
 /speaker Duke
 > We need to find a doctor for the Zigzagoon before we continue.
+
+[SICKZAGOON,8]
+> Please take these as thanks for informing me too!

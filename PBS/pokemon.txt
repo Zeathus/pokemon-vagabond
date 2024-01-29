@@ -110,7 +110,7 @@ Category = Lizard
 Pokedex = The flame that burns at the tip of its tail is an indication of its emotions. The flame wavers when Charmander is happy, and blazes when it is enraged.
 Generation = 1
 Evolutions = CHARMELEON,Level,16
-RegionalNumbers = 0,0
+RegionalNumbers = 258,0
 #-------------------------------
 [CHARMELEON]
 Name = Charmeleon
@@ -138,7 +138,7 @@ Category = Flame
 Pokedex = Without pity, its sharp claws destroy foes. If it encounters a strong enemy, it becomes agitated, and the flame on its tail flares with a bluish white color.
 Generation = 1
 Evolutions = CHARIZARD,Level,36
-RegionalNumbers = 0,0
+RegionalNumbers = 259,0
 #-------------------------------
 [CHARIZARD]
 Name = Charizard
@@ -165,7 +165,7 @@ Habitat = Mountain
 Category = Flame
 Pokedex = A Charizard flies about in search of strong opponents. It breathes intense flames that can melt any material. However, it will never torch a weaker foe.
 Generation = 1
-RegionalNumbers = 0,0
+RegionalNumbers = 260,0
 #-------------------------------
 [SQUIRTLE]
 Name = Squirtle
@@ -587,7 +587,7 @@ Pokedex = Its loud cry can be heard over half a mile away. If its high, keening 
 Generation = 1
 WildItemUncommon = SHARPBEAK
 Evolutions = FEAROW,Level,20
-RegionalNumbers = 0,0
+RegionalNumbers = 262,0
 #-------------------------------
 [FEAROW]
 Name = Fearow
@@ -615,7 +615,7 @@ Category = Beak
 Pokedex = Its long neck and elongated beak are ideal for catching prey in soil or water. It deftly moves this extended and skinny beak to pluck prey.
 Generation = 1
 WildItemUncommon = SHARPBEAK
-RegionalNumbers = 0,0
+RegionalNumbers = 263,0
 #-------------------------------
 [EKANS]
 Name = Ekans
@@ -743,7 +743,7 @@ Happiness = 50
 Abilities = SANDVEIL,POISONPOINT
 HiddenAbilities = SANDRUSH
 Moves = 1,DEFENSECURL,1,SCRATCH,3,POISONSTING,4,SANDATTACK,8,ROLLOUT,11,FURYCUTTER,15,RAPIDSPIN,22,BULLDOZE,25,SLASH,31,CROSSPOISON,36,CRUSHCLAW,43,DIG,47,SWORDSDANCE,54,NIGHTSLASH,60,EARTHQUAKE
-TutorMoves = FALSESWIPE,FACADE,POWERUPPUNCH,BRICKBREAK,POISONJAB,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,LEECHLIFE,SHADOWCLAW,GYROBALL,KNOCKOFF,THROATCHOP,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,HONECLAWS,SWORDSDANCE,AGILITY,PROTECT,SAFEGUARD,SUNNYDAY,SANDSTORM,WORKUP,AERIALACE,THIEF,STRENGTH,STEALTHROCK,SEISMICTOSS,DYNAMICPUNCH
+TutorMoves = FALSESWIPE,FACADE,POWERUPPUNCH,BRICKBREAK,POISONJAB,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,LEECHLIFE,SHADOWCLAW,GYROBALL,IRONHEAD,KNOCKOFF,THROATCHOP,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,HONECLAWS,SWORDSDANCE,AGILITY,PROTECT,SUNNYDAY,SANDSTORM,WORKUP,AERIALACE,FORESIGHT,THIEF,CURSE,STRENGTH,STEALTHROCK,SEISMICTOSS,SMARTSTRIKE,DYNAMICPUNCH
 EggMoves = COUNTER,CRUSHCLAW,FLAIL,HONECLAWS,METALCLAW,MUDSHOT,MUDSLAP,NIGHTSLASH,RAPIDSPIN
 EggGroups = Field
 HatchSteps = 5120
@@ -773,7 +773,7 @@ Happiness = 50
 Abilities = SANDVEIL,POISONPOINT
 HiddenAbilities = SANDRUSH
 Moves = 1,GYROBALL,1,SANDSTORM,1,FURYSWIPES,1,SANDTOMB,1,DEFENSECURL,1,SCRATCH,3,POISONSTING,4,SANDATTACK,8,ROLLOUT,11,FURYCUTTER,15,RAPIDSPIN,22,BULLDOZE,25,SLASH,31,CROSSPOISON,36,CRUSHCLAW,43,DIG,47,SWORDSDANCE,54,NIGHTSLASH,60,EARTHQUAKE
-TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,FOCUSBLAST,POISONJAB,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,LEECHLIFE,SHADOWCLAW,GYROBALL,KNOCKOFF,THROATCHOP,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,HONECLAWS,SWORDSDANCE,AGILITY,PROTECT,SAFEGUARD,SUNNYDAY,SANDSTORM,WORKUP,AERIALACE,THIEF,STRENGTH,STEALTHROCK,SEISMICTOSS,DRILLRUN,DYNAMICPUNCH,HYPERBEAM,GIGAIMPACT
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,POISONJAB,BULLDOZE,EARTHPOWER,EARTHQUAKE,SMACKDOWN,ROCKSLIDE,STONEEDGE,LEECHLIFE,SHADOWCLAW,GYROBALL,IRONHEAD,KNOCKOFF,THROATCHOP,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,BULKUP,HONECLAWS,SWORDSDANCE,AGILITY,PROTECT,SUNNYDAY,SANDSTORM,WORKUP,AERIALACE,FORESIGHT,THIEF,CURSE,STRENGTH,STEALTHROCK,SEISMICTOSS,SMARTSTRIKE,DRILLRUN,DYNAMICPUNCH,BODYPRESS,HYPERBEAM,GIGAIMPACT
 EggGroups = Field
 HatchSteps = 5120
 Height = 1.0
@@ -1027,7 +1027,7 @@ CatchRate = 190
 Happiness = 50
 Abilities = FLASHFIRE
 HiddenAbilities = DROUGHT
-Moves = 1,EMBER,1,TAILWHIP,4,DISABLE,8,QUICKATTACK,12,SPITE,16,INCINERATE,20,CONFUSERAY,24,WILLOWISP,28,EXTRASENSORY,32,FLAMETHROWER,36,IMPRISON,40,FIRESPIN,44,SAFEGUARD,48,INFERNO,52,GRUDGE,56,FIREBLAST
+Moves = 1,EMBER,1,TAILWHIP,1,DISABLE,4,QUICKATTACK,10,SPITE,12,INCINERATE,18,CONFUSERAY,23,WILLOWISP,27,EXTRASENSORY,33,FLAMETHROWER,37,SAFEGUARD,39,HEX,50,FIREBLAST,52,IMPRISON
 TutorMoves = FALSESWIPE,FACADE,HEX,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ENERGYBALL,ZENHEADBUTT,DARKPULSE,GENERICBOOST,SPIRITBOOST,FLAMEBOOST,WILLOWISP,NASTYPLOT,AGILITY,PROTECT,SAFEGUARD,REFLECT,SUNNYDAY,OMINOUSWIND,PSYCHUP,WEATHERBALL,INFERNO,OVERHEAT
 EggMoves = BABYDOLLEYES,DISABLE,EXTRASENSORY,FLAIL,FLAMECHARGE,FLAREBLITZ,HEATWAVE,HEX,HOWL,HYPNOSIS,MEMENTO,POWERSWAP,SPITE
 EggGroups = Field
@@ -1057,7 +1057,7 @@ CatchRate = 75
 Happiness = 50
 Abilities = FLASHFIRE
 HiddenAbilities = DROUGHT
-Moves = 1,NASTYPLOT,1,INCINERATE,1,SPITE,1,INCINERATE,1,CONFUSERAY,1,WILLOWISP,1,EXTRASENSORY,1,FLAMETHROWER,1,IMPRISON,1,FIRESPIN,1,SAFEGUARD,1,INFERNO,1,GRUDGE,1,FIREBLAST,1,EMBER,1,TAILWHIP,1,DISABLE,1,QUICKATTACK
+Moves = 0,BURNINGJEALOUSY,1,FLAMEBURST,1,NASTYPLOT,1,EMBER,1,TAILWHIP,1,DISABLE,4,QUICKATTACK,10,SPITE,12,INCINERATE,18,CONFUSERAY,23,WILLOWISP,27,EXTRASENSORY,33,FLAMETHROWER,37,SAFEGUARD,39,HEX,50,FIREBLAST,52,IMPRISON,62,INFERNO
 TutorMoves = FALSESWIPE,FACADE,HEX,SHADOWBALL,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ENERGYBALL,SOLARBEAM,PSYSHOCK,ZENHEADBUTT,DARKPULSE,GENERICBOOST,SPIRITBOOST,FLAMEBOOST,WILLOWISP,CALMMIND,NASTYPLOT,AGILITY,PROTECT,SAFEGUARD,REFLECT,SUNNYDAY,OMINOUSWIND,PSYCHUP,WEATHERBALL,INFERNO,HYPERBEAM,GIGAIMPACT,OVERHEAT
 EggGroups = Field
 HatchSteps = 5120
@@ -1156,7 +1156,7 @@ Category = Bat
 Pokedex = While living in pitch-black caverns, their eyes gradually grew shut and deprived them of vision. They use ultrasonic waves to detect obstacles.
 Generation = 1
 Evolutions = GOLBAT,Level,22
-RegionalNumbers = 0,0
+RegionalNumbers = 229,0
 #-------------------------------
 [GOLBAT]
 Name = Golbat
@@ -1184,7 +1184,7 @@ Category = Bat
 Pokedex = Its fangs easily puncture even thick animal hide. It loves to feast on the blood of people and Pokémon. It flits about in darkness and strikes from behind.
 Generation = 1
 Evolutions = CROBAT,Happiness,
-RegionalNumbers = 0,0
+RegionalNumbers = 230,0
 #-------------------------------
 [ODDISH]
 Name = Oddish
@@ -1418,7 +1418,7 @@ Pokedex = Diglett are raised in most farms. The reason is simple--wherever they 
 Generation = 1
 WildItemUncommon = SOFTSAND
 Evolutions = DUGTRIO,Level,26
-RegionalNumbers = 0,0
+RegionalNumbers = 318,0
 #-------------------------------
 [DUGTRIO]
 Name = Dugtrio
@@ -1446,7 +1446,7 @@ Category = Mole
 Pokedex = Because the triplets originally split from one body, they think exactly alike. They work cooperatively to burrow endlessly through the ground.
 Generation = 1
 WildItemUncommon = SOFTSAND
-RegionalNumbers = 0,0
+RegionalNumbers = 319,0
 #-------------------------------
 [MEOWTH]
 Name = Meowth
@@ -1616,6 +1616,7 @@ Habitat = Mountain
 Category = Pig Monkey
 Pokedex = When it becomes furious, its blood circulation becomes more robust, and its muscles are made stronger. But it also becomes much less intelligent.
 Generation = 1
+Evolutions = ANNIHILAPE,HasMove,RAGEFIST
 RegionalNumbers = 0,0
 #-------------------------------
 [GROWLITHE]
@@ -1645,7 +1646,7 @@ Category = Puppy
 Pokedex = Its superb sense of smell ensures that this Pokémon won't forget any scent, no matter what. It uses its sense of smell to detect the emotions of others.
 Generation = 1
 Evolutions = ARCANINE,Item,FIRESTONE
-RegionalNumbers = 0,0
+RegionalNumbers = 268,0
 #-------------------------------
 [ARCANINE]
 Name = Arcanine
@@ -1672,7 +1673,7 @@ Habitat = Grassland
 Category = Legendary
 Pokedex = This fleet-footed Pokémon is said to run over 6,200 miles in a single day and night. The fire that blazes wildly within its body is its source of power.
 Generation = 1
-RegionalNumbers = 0,0
+RegionalNumbers = 269,0
 #-------------------------------
 [POLIWAG]
 Name = Poliwag
@@ -2104,7 +2105,7 @@ Pokedex = It climbs mountain paths using only the power of its arms. Because the
 Generation = 1
 WildItemUncommon = EVERSTONE
 Evolutions = GRAVELER,Level,25
-RegionalNumbers = 0,0
+RegionalNumbers = 226,0
 #-------------------------------
 [GRAVELER]
 Name = Graveler
@@ -2133,7 +2134,7 @@ Pokedex = They descend from mountains by tumbling down steep slopes. They are so
 Generation = 1
 WildItemUncommon = EVERSTONE
 Evolutions = GOLEM,Trade,
-RegionalNumbers = 0,0
+RegionalNumbers = 227,0
 #-------------------------------
 [GOLEM]
 Name = Golem
@@ -2161,7 +2162,7 @@ Category = Megaton
 Pokedex = It is said to live in volcanic craters on mountain peaks. Once a year, it sheds its hide and grows larger. The shed hide crumbles and returns to the soil.
 Generation = 1
 WildItemUncommon = EVERSTONE
-RegionalNumbers = 0,0
+RegionalNumbers = 228,0
 #-------------------------------
 [PONYTA]
 Name = Ponyta
@@ -2190,7 +2191,7 @@ Category = Fire Horse
 Pokedex = A Ponyta is very weak at birth. It can barely stand up. Its legs become stronger as it stumbles and falls while trying to keep up with its parent.
 Generation = 1
 Evolutions = RAPIDASH,Level,40
-RegionalNumbers = 0,0
+RegionalNumbers = 266,0
 #-------------------------------
 [RAPIDASH]
 Name = Rapidash
@@ -2217,7 +2218,7 @@ Habitat = Grassland
 Category = Fire Horse
 Pokedex = It usually canters casually in the fields and plains. But once a Rapidash turns serious, its fiery manes flare and blaze as it gallops its way up to 150 mph.
 Generation = 1
-RegionalNumbers = 0,0
+RegionalNumbers = 267,0
 #-------------------------------
 [SLOWPOKE]
 Name = Slowpoke
@@ -2705,7 +2706,7 @@ Category = Rock Snake
 Pokedex = There is a magnet in its brain that prevents an Onix from losing direction while tunneling. As it grows older, its body becomes steadily rounder and smoother.
 Generation = 1
 Evolutions = STEELIX,TradeItem,METALCOAT
-RegionalNumbers = 0,0
+RegionalNumbers = 255,0
 #-------------------------------
 [DROWZEE]
 Name = Drowzee
@@ -3014,7 +3015,7 @@ Habitat = Urban
 Category = Kicking
 Pokedex = Its legs freely stretch and contract. Using these springlike limbs, it bowls over foes with devastating kicks. After battle, it rubs down its tired legs.
 Generation = 1
-RegionalNumbers = 0,0
+RegionalNumbers = 236,0
 #-------------------------------
 [HITMONCHAN]
 Name = Hitmonchan
@@ -3041,7 +3042,7 @@ Habitat = Urban
 Category = Punching
 Pokedex = A Hitmonchan is said to possess the spirit of a boxer who aimed to become the world champion. Having an indomitable spirit means that it will never give up.
 Generation = 1
-RegionalNumbers = 0,0
+RegionalNumbers = 237,0
 #-------------------------------
 [LICKITUNG]
 Name = Lickitung
@@ -3158,7 +3159,7 @@ Category = Spikes
 Pokedex = Once it starts running, it doesn't stop. Its tiny brain makes it so stupid that it can't remember why it started running in the first place.
 Generation = 1
 Evolutions = RHYDON,Level,42
-RegionalNumbers = 0,0
+RegionalNumbers = 280,0
 #-------------------------------
 [RHYDON]
 Name = Rhydon
@@ -3186,7 +3187,7 @@ Category = Drill
 Pokedex = Its horn, which rotates like a drill, destroys tall buildings with one strike. It stands on its hind legs, and its brain is well developed.
 Generation = 1
 Evolutions = RHYPERIOR,TradeItem,PROTECTOR
-RegionalNumbers = 0,0
+RegionalNumbers = 281,0
 #-------------------------------
 [CHANSEY]
 Name = Chansey
@@ -3512,7 +3513,7 @@ RegionalNumbers = 0,0
 [JYNX]
 Name = Jynx
 Types = ICE,PSYCHIC
-Affinities = FAIRY
+Affinities = DARK
 BaseStats = 65,50,35,95,115,95
 GenderRatio = AlwaysFemale
 GrowthRate = Medium
@@ -3592,7 +3593,7 @@ Pokedex = In battle, it blows out intense flames from all over its body to intim
 Generation = 1
 WildItemUncommon = MAGMARIZER
 Evolutions = MAGMORTAR,TradeItem,MAGMARIZER
-RegionalNumbers = 0,0
+RegionalNumbers = 248,0
 #-------------------------------
 [PINSIR]
 Name = Pinsir
@@ -3708,16 +3709,16 @@ RegionalNumbers = 198,0
 Name = Lapras
 Types = WATER,ICE
 Affinities = FAIRY
-BaseStats = 130,85,80,60,85,95
+BaseStats = 100,55,75,50,90,85
 GenderRatio = Female50Percent
 GrowthRate = Medium
-BaseExp = 187
+BaseExp = 128
 EVs = HP,2
 CatchRate = 45
 Happiness = 50
 Abilities = AQUAVORTEX,SHELLARMOR
 HiddenAbilities = HYDRATION
-Moves = 1,GROWL,1,WATERGUN,5,SING,10,MIST,15,LIFEDEW,20,ICESHARD,25,CONFUSERAY,30,WATERPULSE,35,BRINE,40,BODYSLAM,45,ICEBEAM,50,RAINDANCE,55,HYDROPUMP,60,PERISHSONG,65,SHEERCOLD
+Moves = 0,AURORABEAM,1,MIST,1,WHIRLPOOL,1,GROWL,1,WATERGUN,1,TACKLE,5,POWDERSNOW,9,SING,12,WATERPULSE,15,LIFEDEW,17,BRINE,22,MIST,27,SURF,34,HYPERVOICE,40,FREEZEDRY,47,AURORAVEIL,54,BLIZZARD,61,PERISHSONG,70,HYDROPUMP
 TutorMoves = ECHOEDVOICE,HYPERVOICE,BULLDOZE,IRONHEAD,WATERFALL,SURF,HYDROPUMP,SOLARBEAM,THUNDERBOLT,THUNDER,PSYCHIC,ZENHEADBUTT,FUTURESIGHT,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DRAGONPULSE,OUTRAGE,GENERICBOOST,AQUABOOST,FROSTBOOST,FLASHFREEZE,PROTECT,SAFEGUARD,REFLECT,RAINDANCE,SNOWSCAPE,WINDS,SHOCKWAVE,FORESIGHT,ANCIENTPOWER,HELPINGHAND,CURSE,STRENGTH,SUBSTITUTE,WEATHERBALL,SMARTSTRIKE,DRILLRUN,LIQUIDATION,FREEZEDRY,ZAPCANNON,PERMAFROST,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
 EggMoves = ANCIENTPOWER,CURSE,DRAGONDANCE,FISSURE,FREEZEDRY,FUTURESIGHT,HORNDRILL,TICKLE,WHIRLPOOL
 EggGroups = Monster,Water1
@@ -3727,7 +3728,7 @@ Weight = 220.0
 Color = Blue
 Shape = Finned
 Habitat = Sea
-Category = Transport
+Category = Lake Monster
 Pokedex = People have driven Lapras almost to the point of extinction. In the evenings, it is said to sing plaintively as it seeks what few others of its kind still remain.
 Generation = 1
 WildItemCommon = MYSTICWATER
@@ -4798,12 +4799,12 @@ Habitat = Cave
 Category = Bat
 Pokedex = Over the course of evolution, its hind legs turned into wings. By alternately resting its front and rear wings, it can fly all day without having to stop.
 Generation = 2
-RegionalNumbers = 0,0
+RegionalNumbers = 231,0
 #-------------------------------
 [CHINCHOU]
 Name = Chinchou
 Types = WATER,ELECTRIC
-Affinities = WATER
+Affinities = FAIRY
 BaseStats = 75,38,38,67,56,56
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -5758,7 +5759,8 @@ Habitat = Grassland
 Category = Long Neck
 Pokedex = A Girafarig is an herbivore--it eats grass and tree shoots. While it is eating, its tail makes chewing and swallowing motions as if it were also eating.
 Generation = 2
-RegionalNumbers = 0,0
+Evolutions = FARIGIRAF,HasMove,TWINBEAM
+RegionalNumbers = 274,0
 #-------------------------------
 [PINECO]
 Name = Pineco
@@ -5842,6 +5844,7 @@ Habitat = Cave
 Category = Land Snake
 Pokedex = Its drill-tipped tail is used to burrow into the ground backwards. This Pokémon is known to make its nest in complex shapes deep under the ground.
 Generation = 2
+Evolutions = DUDUNSPARCE,HasMove,HYPERDRILL
 RegionalNumbers = 0,0
 #-------------------------------
 [GLIGAR]
@@ -5871,7 +5874,7 @@ Category = Fly Scorpion
 Pokedex = It glides without making a single sound. It grasps the face of its foe using its hind and large front claws, then stabs with its poison barb.
 Generation = 2
 Evolutions = GLISCOR,NightHoldItem,RAZORFANG
-RegionalNumbers = 0,0
+RegionalNumbers = 272,0
 #-------------------------------
 [STEELIX]
 Name = Steelix
@@ -5899,7 +5902,7 @@ Category = Iron Snake
 Pokedex = Steelix live even further underground than Onix. This Pokémon is known to dig toward the earth's core, reaching a depth of over six-tenths of a mile underground.
 Generation = 2
 WildItemUncommon = METALCOAT
-RegionalNumbers = 0,0
+RegionalNumbers = 256,0
 #-------------------------------
 [SNUBBULL]
 Name = Snubbull
@@ -6185,7 +6188,7 @@ Category = Lava
 Pokedex = It is a species of Pokémon that lives in volcanic areas. If its body cools, its skin hardens and immobilizes it. To avoid that, it sleeps near magma.
 Generation = 2
 Evolutions = MAGCARGO,Level,38
-RegionalNumbers = 0,0
+RegionalNumbers = 251,0
 #-------------------------------
 [MAGCARGO]
 Name = Magcargo
@@ -6212,7 +6215,7 @@ Habitat = Mountain
 Category = Lava
 Pokedex = The shell on its back is made of hardened magma. Tens of thousands of years spent living in volcanic craters have turned Magcargo's bodies into magma.
 Generation = 2
-RegionalNumbers = 0,0
+RegionalNumbers = 252,0
 #-------------------------------
 [SWINUB]
 Name = Swinub
@@ -6440,7 +6443,7 @@ Category = Armor Bird
 Pokedex = A Pokémon that has a body and wings of steel. People in the past used feathers fallen from Skarmory to make swords and knives.
 Generation = 2
 WildItemUncommon = METALCOAT
-RegionalNumbers = 0,0
+RegionalNumbers = 291,0
 #-------------------------------
 [HOUNDOUR]
 Name = Houndour
@@ -6553,7 +6556,7 @@ Category = Long Nose
 Pokedex = Phanpy's big ears serve as broad fans. When it becomes hot, it flaps the ears busily to cool down. Even the young are very strong.
 Generation = 2
 Evolutions = DONPHAN,Level,25
-RegionalNumbers = 0,0
+RegionalNumbers = 286,0
 #-------------------------------
 [DONPHAN]
 Name = Donphan
@@ -6580,7 +6583,7 @@ Habitat = RoughTerrain
 Category = Armor
 Pokedex = A Donphan is so strong it can easily haul a dump truck. Its hide has toughened to a rock-hard state. An ordinary sort of attack won't even leave a scratch.
 Generation = 2
-RegionalNumbers = 0,0
+RegionalNumbers = 287,0
 #-------------------------------
 [PORYGON2]
 Name = Porygon2
@@ -6692,7 +6695,7 @@ Category = Scuffle
 Pokedex = Tyrogue become stressed out if they do not get to train every day. When raising this Pokémon, the trainer must establish a regular training schedule.
 Generation = 2
 Evolutions = HITMONLEE,AttackGreater,20,HITMONCHAN,DefenseGreater,20,HITMONTOP,AtkDefEqual,20
-RegionalNumbers = 0,0
+RegionalNumbers = 235,0
 #-------------------------------
 [HITMONTOP]
 Name = Hitmontop
@@ -6719,12 +6722,12 @@ Habitat = Urban
 Category = Handstand
 Pokedex = Its technique of kicking while spinning is a remarkable mix of both offense and defense. Hitmontop travel faster spinning than they do walking.
 Generation = 2
-RegionalNumbers = 0,0
+RegionalNumbers = 238,0
 #-------------------------------
 [SMOOCHUM]
 Name = Smoochum
 Types = ICE,PSYCHIC
-Affinities = FAIRY
+Affinities = DARK
 BaseStats = 45,30,15,65,85,65
 GenderRatio = AlwaysFemale
 GrowthRate = Medium
@@ -6808,7 +6811,7 @@ Pokedex = If a Magby is spouting yellow flames from its mouth, it is in good hea
 Generation = 2
 WildItemUncommon = MAGMARIZER
 Evolutions = MAGMAR,Level,30
-RegionalNumbers = 0,0
+RegionalNumbers = 247,0
 #-------------------------------
 [MILTANK]
 Name = Miltank
@@ -7119,7 +7122,7 @@ Generation = 2
 WildItemCommon = LUMBERRY
 WildItemUncommon = LUMBERRY
 WildItemRare = LUMBERRY
-RegionalNumbers = 482,0
+RegionalNumbers = 0,0
 #-------------------------------
 [TREECKO]
 Name = Treecko
@@ -7523,7 +7526,7 @@ RegionalNumbers = 0,0
 [SILCOON]
 Name = Silcoon
 Types = BUG
-Affinities = FAIRY
+Affinities = GRASS
 BaseStats = 50,35,55,15,25,25
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -7550,7 +7553,7 @@ RegionalNumbers = 0,0
 [BEAUTIFLY]
 Name = Beautifly
 Types = BUG,FLYING
-Affinities = FAIRY
+Affinities = GRASS
 BaseStats = 60,70,50,65,100,50
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -8261,7 +8264,7 @@ RegionalNumbers = 0,0
 [SHEDINJA]
 Name = Shedinja
 Types = BUG,GHOST
-Affinities = FAIRY
+Affinities = ICE
 BaseStats = 1,90,45,40,30,30
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -8311,7 +8314,7 @@ Category = Whisper
 Pokedex = Its cries equal a jet plane in volume. It inhales through its ear canals. Because of this system, it can cry continually without having to catch its breath.
 Generation = 3
 Evolutions = LOUDRED,Level,20
-RegionalNumbers = 0,0
+RegionalNumbers = 232,0
 #-------------------------------
 [LOUDRED]
 Name = Loudred
@@ -8339,7 +8342,7 @@ Category = Big Voice
 Pokedex = It positions the round speakers on its head to assail foes with ultrasonic waves at massive volume. It builds power by stomping the ground.
 Generation = 3
 Evolutions = EXPLOUD,Level,40
-RegionalNumbers = 0,0
+RegionalNumbers = 233,0
 #-------------------------------
 [EXPLOUD]
 Name = Exploud
@@ -8366,7 +8369,7 @@ Habitat = Cave
 Category = Loud Noise
 Pokedex = It has sound-generating organs all over its body. It communicates with others by adjusting the tone and volume of the cries it emits.
 Generation = 3
-RegionalNumbers = 0,0
+RegionalNumbers = 234,0
 #-------------------------------
 [MAKUHITA]
 Name = Makuhita
@@ -8396,7 +8399,7 @@ Pokedex = It loves to toughen up its body above all else. If you hear quaking ru
 Generation = 3
 WildItemUncommon = BLACKBELT
 Evolutions = HARIYAMA,Level,24
-RegionalNumbers = 0,0
+RegionalNumbers = 239,0
 #-------------------------------
 [HARIYAMA]
 Name = Hariyama
@@ -8424,7 +8427,7 @@ Category = Arm Thrust
 Pokedex = It has the habit of challenging others without hesitation to tests of strength. It's been known to stand on train tracks and stop trains using forearm thrusts.
 Generation = 3
 WildItemUncommon = KINGSROCK
-RegionalNumbers = 0,0
+RegionalNumbers = 240,0
 #-------------------------------
 [AZURILL]
 Name = Azurill
@@ -8569,7 +8572,7 @@ Category = Darkness
 Pokedex = It digs branching holes in caves using its sharp claws in search of food--raw gems. A Sableye lurks in darkness and is seen only rarely.
 Generation = 3
 WildItemUncommon = WIDELENS
-RegionalNumbers = 229,0
+RegionalNumbers = 328,0
 #-------------------------------
 [MAWILE]
 Name = Mawile
@@ -8628,7 +8631,7 @@ Pokedex = A Pokémon that is clad in steel armor. A new suit of armor is made wh
 Generation = 3
 WildItemUncommon = HARDSTONE
 Evolutions = LAIRON,Level,32
-RegionalNumbers = 0,0
+RegionalNumbers = 241,0
 #-------------------------------
 [LAIRON]
 Name = Lairon
@@ -8657,7 +8660,7 @@ Pokedex = When two Lairon meet in the wild, they fight for territory by bashing 
 Generation = 3
 WildItemUncommon = HARDSTONE
 Evolutions = AGGRON,Level,42
-RegionalNumbers = 0,0
+RegionalNumbers = 242,0
 #-------------------------------
 [AGGRON]
 Name = Aggron
@@ -8685,7 +8688,7 @@ Category = Iron Armor
 Pokedex = Its iron horns grow longer a little at a time. They are used to determine the Aggron's age. The gouges in its armor are worn with pride as mementos from battles.
 Generation = 3
 WildItemUncommon = HARDSTONE
-RegionalNumbers = 0,0
+RegionalNumbers = 243,0
 #-------------------------------
 [MEDITITE]
 Name = Meditite
@@ -9148,7 +9151,7 @@ Category = Numb
 Pokedex = A Numel stores boiling magma in the hump on its back. It is a hardy Pokémon that can transport a 220-pound load. It has served humans at work since long ago.
 Generation = 3
 Evolutions = CAMERUPT,Level,24
-RegionalNumbers = 0,0
+RegionalNumbers = 253,0
 #-------------------------------
 [CAMERUPT]
 Name = Camerupt
@@ -9175,7 +9178,7 @@ Habitat = Mountain
 Category = Eruption
 Pokedex = A Pokémon that lives in the crater of a volcano. Every 10 years, the volcanoes on its back erupt violently. Research is under way on the cause of eruption.
 Generation = 3
-RegionalNumbers = 0,0
+RegionalNumbers = 254,0
 #-------------------------------
 [TORKOAL]
 Name = Torkoal
@@ -9204,7 +9207,7 @@ Category = Coal
 Pokedex = It battles using energy it gets from burning coal. When loosing smoke from its nostrils, it lets off a sound that is similar to a locomotive's horn.
 Generation = 3
 WildItemUncommon = CHARCOAL
-RegionalNumbers = 0,0
+RegionalNumbers = 261,0
 #-------------------------------
 [SPOINK]
 Name = Spoink
@@ -9318,7 +9321,7 @@ Pokedex = Its big jaws crunch through boulders. Because its head is so big, it h
 Generation = 3
 WildItemUncommon = SOFTSAND
 Evolutions = VIBRAVA,Level,35
-RegionalNumbers = 0,0
+RegionalNumbers = 312,0
 #-------------------------------
 [VIBRAVA]
 Name = Vibrava
@@ -9345,7 +9348,7 @@ Category = Vibration
 Pokedex = It looses ultrasonic waves by rubbing its wings together. Since a Vibrava's wings are still in the process of growing, it can only fly short distances.
 Generation = 3
 Evolutions = FLYGON,Level,45
-RegionalNumbers = 0,0
+RegionalNumbers = 313,0
 #-------------------------------
 [FLYGON]
 Name = Flygon
@@ -9371,7 +9374,7 @@ Habitat = RoughTerrain
 Category = Mystic
 Pokedex = The flapping of its wings sounds like singing. To prevent detection by enemies, it hides itself by flapping up a cloud of desert sand.
 Generation = 3
-RegionalNumbers = 0,0
+RegionalNumbers = 314,0
 #-------------------------------
 [CACNEA]
 Name = Cacnea
@@ -9401,7 +9404,7 @@ Pokedex = Cacnea live in deserts with virtually no rainfall. It battles by swing
 Generation = 3
 WildItemUncommon = STICKYBARB
 Evolutions = CACTURNE,Level,32
-RegionalNumbers = 0,0
+RegionalNumbers = 303,0
 #-------------------------------
 [CACTURNE]
 Name = Cacturne
@@ -9429,7 +9432,7 @@ Category = Scarecrow
 Pokedex = After spending thousands of years in harsh deserts, its blood transformed into the same substances as sand. It is nocturnal, so it hunts at night.
 Generation = 3
 WildItemUncommon = STICKYBARB
-RegionalNumbers = 0,0
+RegionalNumbers = 304,0
 #-------------------------------
 [SWABLU]
 Name = Swablu
@@ -10118,16 +10121,16 @@ RegionalNumbers = 0,0
 Name = Tropius
 Types = GRASS,FLYING
 Affinities = FIRE
-BaseStats = 99,68,83,51,72,87
+BaseStats = 99,68,73,51,72,77
 GenderRatio = Female50Percent
 GrowthRate = Medium
-BaseExp = 161
+BaseExp = 128
 EVs = HP,2
 CatchRate = 200
 Happiness = 50
 Abilities = FLORAVORTEX,SOLARPOWER
 HiddenAbilities = HARVEST
-Moves = 1,LEAFSTORM,1,LEER,1,GUST,1,GROWTH,1,RAZORLEAF,6,SWEETSCENT,10,STOMP,16,MAGICALLEAF,21,WHIRLWIND,26,LEAFTORNADO,30,DRAGONDANCE,36,AIRSLASH,41,BODYSLAM,46,DRAGONHAMMER,50,SYNTHESIS,56,SOLARBEAM,61,LEAFSTORM
+Moves = 0,AIRSLASH,1,LEECHSEED,1,LEER,1,LEAFAGE,1,TACKLE,5,GUST,9,GROWTH,12,RAZORLEAF,15,STOMP,17,MAGICALLEAF,22,WHIRLWIND,27,LEAFTORNADO,34,BODYSLAM,40,FLY,47,SYNTHESIS,54,SOLARBEAM,61,DRAGONDANCE,70,LEAFSTORM
 TutorMoves = FACADE,DOUBLEEDGE,AIRSLASH,HURRICANE,BULLDOZE,EARTHQUAKE,UTURN,GRASSPLEDGE,LEAFBLADE,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,DRAGONTAIL,DRAGONPULSE,OUTRAGE,GENERICBOOST,BREEZEBOOST,FLORABOOST,SWORDSDANCE,PROTECT,SAFEGUARD,TAILWIND,DEFOG,RAINDANCE,SUNNYDAY,WINDS,GRASSYTERRAIN,AERIALACE,MAGICALLEAF,OMINOUSWIND,SILVERWIND,HELPINGHAND,CURSE,FLY,STRENGTH,ROOST,BODYPRESS,HYPERBEAM,GIGAIMPACT
 EggMoves = CURSE,DRAGONDANCE,DRAGONHAMMER,HEADBUTT,LEAFBLADE,LEAFSTORM,LEECHSEED,NATUREPOWER,SLAM,SYNTHESIS
 EggGroups = Monster,Grass
@@ -10145,7 +10148,7 @@ RegionalNumbers = 2,0
 [CHIMECHO]
 Name = Chimecho
 Types = PSYCHIC
-Affinities = FAIRY
+Affinities = GHOST
 BaseStats = 75,50,80,65,95,90
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -10430,7 +10433,7 @@ RegionalNumbers = 212,0
 [GOREBYSS]
 Name = Gorebyss
 Types = WATER
-Affinities = FAIRY
+Affinities = BUG
 BaseStats = 55,84,105,52,114,75
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -10487,7 +10490,7 @@ RegionalNumbers = 203,0
 [LUVDISC]
 Name = Luvdisc
 Types = WATER
-Affinities = FAIRY
+Affinities = NORMAL
 BaseStats = 43,30,55,97,40,65
 GenderRatio = Female75Percent
 GrowthRate = Medium
@@ -11412,7 +11415,7 @@ Category = Flash
 Pokedex = All of its fur dazzles if danger is sensed. It flees while the foe is momentarily blinded.
 Generation = 4
 Evolutions = LUXIO,Level,15
-RegionalNumbers = 226,0
+RegionalNumbers = 325,0
 #-------------------------------
 [LUXIO]
 Name = Luxio
@@ -11439,7 +11442,7 @@ Category = Spark
 Pokedex = Its claws loose electricity with enough amperage to cause fainting. They live in small groups.
 Generation = 4
 Evolutions = LUXRAY,Level,30
-RegionalNumbers = 227,0
+RegionalNumbers = 326,0
 #-------------------------------
 [LUXRAY]
 Name = Luxray
@@ -11465,7 +11468,7 @@ Shape = Quadruped
 Category = Gleam Eyes
 Pokedex = It has eyes that can see through anything. It spots and captures prey hiding behind objects.
 Generation = 4
-RegionalNumbers = 228,0
+RegionalNumbers = 327,0
 #-------------------------------
 [BUDEW]
 Name = Budew
@@ -12210,7 +12213,7 @@ RegionalNumbers = 128,0
 [CHINGLING]
 Name = Chingling
 Types = PSYCHIC
-Affinities = FAIRY
+Affinities = GHOST
 BaseStats = 45,30,50,45,65,50
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -12514,7 +12517,7 @@ Category = Land Shark
 Pokedex = It nests in small, horizontal holes in cave walls. It pounces to catch prey that stray too close.
 Generation = 4
 Evolutions = GABITE,Level,24
-RegionalNumbers = 0,0
+RegionalNumbers = 322,0
 #-------------------------------
 [GABITE]
 Name = Gabite
@@ -12541,7 +12544,7 @@ Category = Cave
 Pokedex = There is a long-held belief that medicine made from its scales will heal even incurable illnesses.
 Generation = 4
 Evolutions = GARCHOMP,Level,48
-RegionalNumbers = 0,0
+RegionalNumbers = 323,0
 #-------------------------------
 [GARCHOMP]
 Name = Garchomp
@@ -12567,7 +12570,7 @@ Shape = BipedalTail
 Category = Mach
 Pokedex = When it folds up its body and extends its wings, it looks like a jet plane. It flies at sonic speed.
 Generation = 4
-RegionalNumbers = 0,0
+RegionalNumbers = 324,0
 #-------------------------------
 [MUNCHLAX]
 Name = Munchlax
@@ -12681,7 +12684,7 @@ Category = Hippo
 Pokedex = It lives in arid places. Instead of perspiration, it expels grainy sand from its body.
 Generation = 4
 Evolutions = HIPPOWDON,Level,34
-RegionalNumbers = 0,0
+RegionalNumbers = 307,0
 #-------------------------------
 [HIPPOWDON]
 Name = Hippowdon
@@ -12707,7 +12710,7 @@ Shape = Quadruped
 Category = Heavyweight
 Pokedex = It blasts internally stored sand from ports on its body to create a towering twister for attack.
 Generation = 4
-RegionalNumbers = 0,0
+RegionalNumbers = 308,0
 #-------------------------------
 [SKORUPI]
 Name = Skorupi
@@ -12736,7 +12739,7 @@ Pokedex = It grips prey with its tail claws and injects poison. It tenaciously h
 Generation = 4
 WildItemUncommon = POISONBARB
 Evolutions = DRAPION,Level,40
-RegionalNumbers = 0,0
+RegionalNumbers = 292,0
 #-------------------------------
 [DRAPION]
 Name = Drapion
@@ -12763,7 +12766,7 @@ Category = Ogre Scorpion
 Pokedex = It has the power in its clawed arms to make scrap of a car. The tips of its claws release poison.
 Generation = 4
 WildItemUncommon = POISONBARB
-RegionalNumbers = 0,0
+RegionalNumbers = 293,0
 #-------------------------------
 [CROAGUNK]
 Name = Croagunk
@@ -13091,7 +13094,7 @@ Shape = BipedalTail
 Category = Drill
 Pokedex = It puts rocks in holes in its palms and uses its muscles to shoot them. Geodude are shot at rare times.
 Generation = 4
-RegionalNumbers = 0,0
+RegionalNumbers = 282,0
 #-------------------------------
 [TANGROWTH]
 Name = Tangrowth
@@ -13171,7 +13174,7 @@ Category = Blast
 Pokedex = It blasts fireballs of over 3,600 degrees F from the ends of its arms. It lives in volcanic craters.
 Generation = 4
 WildItemUncommon = MAGMARIZER
-RegionalNumbers = 0,0
+RegionalNumbers = 249,0
 #-------------------------------
 [TOGEKISS]
 Name = Togekiss
@@ -13302,7 +13305,7 @@ Shape = Winged
 Category = Fang Scorpion
 Pokedex = It observes prey while hanging inverted from branches. When the chance presents itself, it swoops!
 Generation = 4
-RegionalNumbers = 0,0
+RegionalNumbers = 273,0
 #-------------------------------
 [MAMOSWINE]
 Name = Mamoswine
@@ -13511,7 +13514,7 @@ Shape = BipedalTail
 Category = Knowledge
 Pokedex = Known as "The Being of Knowledge." It is said that it can wipe out the memory of those who see its eyes.
 Generation = 4
-RegionalNumbers = 475,0
+RegionalNumbers = 331,0
 #-------------------------------
 [MESPRIT]
 Name = Mesprit
@@ -13536,7 +13539,7 @@ Shape = BipedalTail
 Category = Emotion
 Pokedex = Known as "The Being of Emotion." It taught humans the nobility of sorrow, pain, and joy.
 Generation = 4
-RegionalNumbers = 477,0
+RegionalNumbers = 333,0
 #-------------------------------
 [AZELF]
 Name = Azelf
@@ -13561,7 +13564,7 @@ Shape = BipedalTail
 Category = Willpower
 Pokedex = Known as "The Being of Willpower." It sleeps at the bottom of a lake to keep the world in balance.
 Generation = 4
-RegionalNumbers = 476,0
+RegionalNumbers = 332,0
 #-------------------------------
 [DIALGA]
 Name = Dialga
@@ -13691,7 +13694,7 @@ Shape = Multiped
 Category = Renegade
 Pokedex = A Pokémon that is said to live in a world on the reverse side of ours. It appears in an ancient cemetery.
 Generation = 4
-RegionalNumbers = 481,0
+RegionalNumbers = 0,0
 #-------------------------------
 [CRESSELIA]
 Name = Cresselia
@@ -13721,7 +13724,7 @@ RegionalNumbers = 0,0
 [PHIONE]
 Name = Phione
 Types = WATER
-Affinities = FAIRY
+Affinities = BUG
 BaseStats = 80,80,80,80,80,80
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -13746,7 +13749,7 @@ RegionalNumbers = 0,0
 [MANAPHY]
 Name = Manaphy
 Types = WATER
-Affinities = FAIRY
+Affinities = BUG
 BaseStats = 100,100,100,100,100,100
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -13852,7 +13855,7 @@ RegionalNumbers = 0,0
 [VICTINI]
 Name = Victini
 Types = PSYCHIC,FIRE
-Affinities = FAIRY
+Affinities = DRAGON
 BaseStats = 100,100,100,100,100,100
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -14197,7 +14200,7 @@ Category = Puppy
 Pokedex = The long hair around its face provides an amazing radar that lets it sense subtle changes in its surroundings.
 Generation = 5
 Evolutions = HERDIER,Level,16
-RegionalNumbers = 0,0
+RegionalNumbers = 275,0
 #-------------------------------
 [HERDIER]
 Name = Herdier
@@ -14224,7 +14227,7 @@ Category = Loyal Dog
 Pokedex = It loyally follows its Trainer's orders. For ages, they have helped Trainers raise Pokémon.
 Generation = 5
 Evolutions = STOUTLAND,Level,32
-RegionalNumbers = 0,0
+RegionalNumbers = 276,0
 #-------------------------------
 [STOUTLAND]
 Name = Stoutland
@@ -14250,7 +14253,7 @@ Shape = Quadruped
 Category = Big-Hearted
 Pokedex = This extremely wise Pokémon excels at rescuing people stranded at sea or in the mountains.
 Generation = 5
-RegionalNumbers = 0,0
+RegionalNumbers = 277,0
 #-------------------------------
 [PURRLOIN]
 Name = Purrloin
@@ -14685,7 +14688,7 @@ Generation = 5
 WildItemCommon = EVERSTONE
 WildItemUncommon = HARDSTONE
 Evolutions = BOLDORE,Level,25
-RegionalNumbers = 0,0
+RegionalNumbers = 315,0
 #-------------------------------
 [BOLDORE]
 Name = Boldore
@@ -14714,7 +14717,7 @@ Generation = 5
 WildItemCommon = EVERSTONE
 WildItemUncommon = HARDSTONE
 Evolutions = GIGALITH,Trade,
-RegionalNumbers = 0,0
+RegionalNumbers = 316,0
 #-------------------------------
 [GIGALITH]
 Name = Gigalith
@@ -14742,7 +14745,7 @@ Pokedex = The solar energy absorbed by its body's orange crystals is magnified i
 Generation = 5
 WildItemCommon = EVERSTONE
 WildItemUncommon = HARDSTONE
-RegionalNumbers = 0,0
+RegionalNumbers = 317,0
 #-------------------------------
 [WOOBAT]
 Name = Woobat
@@ -14824,7 +14827,7 @@ Category = Mole
 Pokedex = It makes its way swiftly through the soil by putting both claws together and rotating at high speed.
 Generation = 5
 Evolutions = EXCADRILL,Level,31
-RegionalNumbers = 0,0
+RegionalNumbers = 320,0
 #-------------------------------
 [EXCADRILL]
 Name = Excadrill
@@ -14850,7 +14853,7 @@ Shape = Bipedal
 Category = Subterrene
 Pokedex = More than 300 feet below the surface, they build mazelike nests. Their activity can be destructive to subway tunnels.
 Generation = 5
-RegionalNumbers = 0,0
+RegionalNumbers = 321,0
 #-------------------------------
 [AUDINO]
 Name = Audino
@@ -15434,7 +15437,7 @@ Pokedex = It moves along below the sand's surface, except for its nose and eyes.
 Generation = 5
 WildItemUncommon = BLACKGLASSES
 Evolutions = KROKOROK,Level,29
-RegionalNumbers = 0,0
+RegionalNumbers = 294,0
 #-------------------------------
 [KROKOROK]
 Name = Krokorok
@@ -15462,7 +15465,7 @@ Pokedex = The special membrane covering its eyes can sense the heat of objects, 
 Generation = 5
 WildItemUncommon = BLACKGLASSES
 Evolutions = KROOKODILE,Level,40
-RegionalNumbers = 0,0
+RegionalNumbers = 295,0
 #-------------------------------
 [KROOKODILE]
 Name = Krookodile
@@ -15489,7 +15492,7 @@ Category = Intimidation
 Pokedex = It can expand the focus of its eyes, enabling it to see objects in the far distance as if it were using binoculars.
 Generation = 5
 WildItemCommon = BLACKGLASSES
-RegionalNumbers = 0,0
+RegionalNumbers = 296,0
 #-------------------------------
 [DARUMAKA]
 Name = Darumaka
@@ -15572,7 +15575,7 @@ Category = Cactus
 Pokedex = Arid regions are their habitat. They move rhythmically, making a sound similar to maracas.
 Generation = 5
 WildItemUncommon = MIRACLESEED
-RegionalNumbers = 0,0
+RegionalNumbers = 311,0
 #-------------------------------
 [DWEBBLE]
 Name = Dwebble
@@ -16255,7 +16258,7 @@ RegionalNumbers = 91,0
 [VANILLITE]
 Name = Vanillite
 Types = ICE
-Affinities = FAIRY
+Affinities = ROCK
 BaseStats = 36,50,50,44,65,60
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -16284,7 +16287,7 @@ RegionalNumbers = 0,0
 [VANILLISH]
 Name = Vanillish
 Types = ICE
-Affinities = FAIRY
+Affinities = ROCK
 BaseStats = 51,65,65,59,80,75
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -16312,7 +16315,7 @@ RegionalNumbers = 0,0
 [VANILLUXE]
 Name = Vanilluxe
 Types = ICE
-Affinities = FAIRY
+Affinities = ROCK
 BaseStats = 71,95,85,79,110,95
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -17418,7 +17421,7 @@ Shape = Bipedal
 Category = Sharp Blade
 Pokedex = They fight at Bisharp's command. They cling to their prey and inflict damage by sinking their blades into it.
 Generation = 5
-Evolutions = BISHARP,Level,52
+Evolutions = BISHARP,Level,34
 RegionalNumbers = 0,0
 #-------------------------------
 [BISHARP]
@@ -17445,6 +17448,7 @@ Shape = Bipedal
 Category = Sword Blade
 Pokedex = Bisharp pursues prey in the company of a large group of Pawniard. Then Bisharp finishes off the prey.
 Generation = 5
+Evolutions = KINGAMBIT,Level,52
 RegionalNumbers = 0,0
 #-------------------------------
 [BOUFFALANT]
@@ -17606,7 +17610,7 @@ Shape = BipedalTail
 Category = Anteater
 Pokedex = Using their very hot, flame-covered tongues, they burn through Durant's steel bodies and consume their insides.
 Generation = 5
-RegionalNumbers = 0,0
+RegionalNumbers = 257,0
 #-------------------------------
 [DURANT]
 Name = Durant
@@ -17633,7 +17637,7 @@ Shape = Insectoid
 Category = Iron Ant
 Pokedex = Durant dig nests in mountains. They build their complicated, interconnected tunnels in mazes.
 Generation = 5
-RegionalNumbers = 0,0
+RegionalNumbers = 250,0
 #-------------------------------
 [DEINO]
 Name = Deino
@@ -17793,7 +17797,7 @@ Shape = Quadruped
 Category = Iron Will
 Pokedex = It has a body and heart of steel. Its glare is sufficient to make even an unruly Pokémon obey it.
 Generation = 5
-RegionalNumbers = 483,0
+RegionalNumbers = 334,0
 #-------------------------------
 [TERRAKION]
 Name = Terrakion
@@ -17818,7 +17822,7 @@ Shape = Quadruped
 Category = Cavern
 Pokedex = Its charge is strong enough to break through a giant castle wall in one blow. This Pokémon is spoken of in legends.
 Generation = 5
-RegionalNumbers = 485,0
+RegionalNumbers = 336,0
 #-------------------------------
 [VIRIZION]
 Name = Virizion
@@ -17843,7 +17847,7 @@ Shape = Quadruped
 Category = Grassland
 Pokedex = Its head sprouts horns as sharp as blades. Using whirlwind-like movements, it confounds and swiftly cuts opponents.
 Generation = 5
-RegionalNumbers = 484,0
+RegionalNumbers = 335,0
 #-------------------------------
 [TORNADUS]
 Name = Tornadus
@@ -17922,7 +17926,7 @@ Shape = Winged
 Category = Vast White
 Pokedex = When Reshiram's tail flares, the heat energy moves the atmosphere and changes the world's weather.
 Generation = 5
-RegionalNumbers = 478,0
+RegionalNumbers = 0,0
 #-------------------------------
 [ZEKROM]
 Name = Zekrom
@@ -17947,7 +17951,7 @@ Shape = BipedalTail
 Category = Deep Black
 Pokedex = This Pokémon appears in legends. In its tail, it has a giant generator that creates electricity.
 Generation = 5
-RegionalNumbers = 479,0
+RegionalNumbers = 0,0
 #-------------------------------
 [LANDORUS]
 Name = Landorus
@@ -17999,7 +18003,7 @@ Shape = BipedalTail
 Category = Boundary
 Pokedex = It generates a powerful, freezing energy inside itself, but its body became frozen when the energy leaked out.
 Generation = 5
-RegionalNumbers = 480,0
+RegionalNumbers = 0,0
 #-------------------------------
 [KELDEO]
 Name = Keldeo
@@ -18025,7 +18029,7 @@ Shape = Quadruped
 Category = Colt
 Pokedex = It crosses the world, running over the surfaces of oceans and rivers. It appears at scenic waterfronts.
 Generation = 5
-RegionalNumbers = 486,0
+RegionalNumbers = 337,0
 #-------------------------------
 [MELOETTA]
 Name = Meloetta
@@ -18108,7 +18112,7 @@ Category = Spiny Nut
 Pokedex = The quills on its head are usually soft. When it flexes them, the points become so hard and sharp that they can pierce rock.
 Generation = 6
 Evolutions = QUILLADIN,Level,16
-RegionalNumbers = 0,0
+RegionalNumbers = 283,0
 #-------------------------------
 [QUILLADIN]
 Name = Quilladin
@@ -18135,7 +18139,7 @@ Category = Spiny Armor
 Pokedex = They strengthen their lower bodies by running into one another. They are very kind and won't start fights.
 Generation = 6
 Evolutions = CHESNAUGHT,Level,36
-RegionalNumbers = 0,0
+RegionalNumbers = 284,0
 #-------------------------------
 [CHESNAUGHT]
 Name = Chesnaught
@@ -18161,7 +18165,7 @@ Shape = BipedalTail
 Category = Spiny Armor
 Pokedex = Its Tackle is forceful enough to flip a 50-ton tank. It shields its allies from danger with its own body.
 Generation = 6
-RegionalNumbers = 0,0
+RegionalNumbers = 285,0
 #-------------------------------
 [FENNEKIN]
 Name = Fennekin
@@ -18189,7 +18193,7 @@ Category = Fox
 Pokedex = As it walks, it munches on a twig in place of a snack. It intimidates opponents by puffing hot air out of its ears.
 Generation = 6
 Evolutions = BRAIXEN,Level,16
-RegionalNumbers = 0,0
+RegionalNumbers = 297,0
 #-------------------------------
 [BRAIXEN]
 Name = Braixen
@@ -18216,7 +18220,7 @@ Category = Fox
 Pokedex = When the twig is plucked from its tail, friction sets the twig alight. The flame is used to send signals to its allies.
 Generation = 6
 Evolutions = DELPHOX,Level,36
-RegionalNumbers = 0,0
+RegionalNumbers = 298,0
 #-------------------------------
 [DELPHOX]
 Name = Delphox
@@ -18242,7 +18246,7 @@ Shape = BipedalTail
 Category = Fox
 Pokedex = It gazes into the flame at the tip of its branch to achieve a focused state, which allows it to see into the future.
 Generation = 6
-RegionalNumbers = 0,0
+RegionalNumbers = 299,0
 #-------------------------------
 [FROAKIE]
 Name = Froakie
@@ -18709,7 +18713,7 @@ Category = Mount
 Pokedex = If it has sunshine and water, it doesn't need to eat, because it can generate energy from the leaves on its back.
 Generation = 6
 Evolutions = GOGOAT,Level,24
-RegionalNumbers = 0,0
+RegionalNumbers = 264,0
 #-------------------------------
 [GOGOAT]
 Name = Gogoat
@@ -18735,7 +18739,7 @@ Shape = Quadruped
 Category = Mount
 Pokedex = It can tell how its trainer is feeling by subtle shifts in the grip on its horns. This empathetic sense lets them run as if one being.
 Generation = 6
-RegionalNumbers = 0,0
+RegionalNumbers = 265,0
 #-------------------------------
 [PANCHAM]
 Name = Pancham
@@ -18764,7 +18768,7 @@ Pokedex = It does its best to be taken seriously by its enemies, but its glare i
 Generation = 6
 WildItemUncommon = MENTALHERB
 Evolutions = PANGORO,LevelDarkInParty,32
-RegionalNumbers = 0,0
+RegionalNumbers = 270,0
 #-------------------------------
 [PANGORO]
 Name = Pangoro
@@ -18791,7 +18795,7 @@ Category = Daunting
 Pokedex = It charges ahead and bashes its opponents like a berserker, uncaring about any hits it might take. Its arms are mighty enough to snap a telephone pole.
 Generation = 6
 WildItemUncommon = MENTALHERB
-RegionalNumbers = 0,0
+RegionalNumbers = 271,0
 #-------------------------------
 [FURFROU]
 Name = Furfrou
@@ -19302,7 +19306,7 @@ Category = Generator
 Pokedex = They make their home in deserts. They can generate their energy from basking in the sun, so eating food is not a requirement.
 Generation = 6
 Evolutions = HELIOLISK,Item,SUNSTONE
-RegionalNumbers = 0,0
+RegionalNumbers = 278,0
 #-------------------------------
 [HELIOLISK]
 Name = Heliolisk
@@ -19328,7 +19332,7 @@ Shape = BipedalTail
 Category = Generator
 Pokedex = They flare their frills and generate energy. A single Heliolisk can generate sufficient electricity to power a skyscraper.
 Generation = 6
-RegionalNumbers = 0,0
+RegionalNumbers = 279,0
 #-------------------------------
 [TYRUNT]
 Name = Tyrunt
@@ -19981,7 +19985,7 @@ RegionalNumbers = 0,0
 Name = Hoopa
 FormName = Hoopa Confined
 Types = PSYCHIC,GHOST
-Affinities = FAIRY
+Affinities = DARK
 BaseStats = 80,110,60,70,150,130
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -20717,7 +20721,7 @@ RegionalNumbers = 0,0
 [MAREANIE]
 Name = Mareanie
 Types = POISON,WATER
-Affinities = FAIRY
+Affinities = GRASS
 BaseStats = 50,53,62,45,43,52
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -20746,7 +20750,7 @@ RegionalNumbers = 0,0
 [TOXAPEX]
 Name = Toxapex
 Types = POISON,WATER
-Affinities = FAIRY
+Affinities = GRASS
 BaseStats = 50,63,152,35,53,142
 GenderRatio = Female50Percent
 GrowthRate = Medium
@@ -21431,7 +21435,7 @@ Category = Synthetic
 Pokedex = The heavy control mask it wears suppresses its intrinsic capabilities. This Pokémon has some hidden special power.
 Generation = 7
 Evolutions = SILVALLY,Happiness,
-RegionalNumbers = 473,0
+RegionalNumbers = 329,0
 #-------------------------------
 [SILVALLY]
 Name = Silvally
@@ -21457,13 +21461,13 @@ Shape = Quadruped
 Category = Synthetic
 Pokedex = Its trust in its partner is what awakens it. This Pokémon is capable of changing its type, a flexibility that is well displayed in battle.
 Generation = 7
-RegionalNumbers = 474,0
+RegionalNumbers = 330,0
 #-------------------------------
 [MINIOR]
 Name = Minior
 FormName = Meteor Form
 Types = ROCK,FLYING
-Affinities = FAIRY
+Affinities = ICE
 BaseStats = 60,60,100,60,60,100
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -21516,16 +21520,16 @@ RegionalNumbers = 0,0
 Name = Turtonator
 Types = FIRE,DRAGON
 Affinities = WATER
-BaseStats = 60,78,135,36,91,85
+BaseStats = 65,75,110,35,90,75
 GenderRatio = Female50Percent
 GrowthRate = Medium
-BaseExp = 170
+BaseExp = 128
 EVs = DEFENSE,2
 CatchRate = 70
 Happiness = 50
 Abilities = FLAMEVORTEX,SHELLARMOR
 HiddenAbilities = AFTERMATH
-Moves = 1,SMOG,1,TACKLE,4,EMBER,8,PROTECT,12,ENDURE,16,FLAIL,20,INCINERATE,24,IRONDEFENSE,28,DRAGONPULSE,32,BODYSLAM,36,FLAMETHROWER,40,SHELLTRAP,44,SHELLSMASH,48,OVERHEAT,52,EXPLOSION
+Moves = 0,DRAGONBREATH,1,FIRESPIN,1,SELFDESTRUCT,1,ENDURE,1,EMBER,1,TACKLE,5,SMOG,9,PROTECT,12,INCINERATE,15,IRONDEFENSE,17,FLAMEBURST,22,BLOCK,27,LAVAPLUME,34,BODYSLAM,40,DRAGONPULSE,47,SHELLTRAP,54,OUTRAGE,61,SHELLSMASH,70,OVERHEAT
 TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,FOCUSBLAST,VENOSHOCK,BULLDOZE,EARTHQUAKE,SMACKDOWN,STONEEDGE,FLASHCANNON,IRONHEAD,FLAMECHARGE,FLAMETHROWER,FIREBLAST,SOLARBEAM,CHARGEBEAM,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,GENERICBOOST,FLAMEBOOST,AQUABOOST,MYSTICBOOST,WILLOWISP,BULKUP,TAUNT,PROTECT,SUNNYDAY,WORKUP,SHOCKWAVE,CURSE,BODYPRESS,EXPLOSION,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
 EggMoves = CURSE,HEADSMASH,RAPIDSPIN,WIDEGUARD
 EggGroups = Monster,Dragon
@@ -21996,7 +22000,7 @@ RegionalNumbers = 0,0
 [BUZZWOLE]
 Name = Buzzwole
 Types = BUG,FIGHTING
-Affinities = FAIRY
+Affinities = BUG
 BaseStats = 107,139,139,79,53,53
 GenderRatio = Genderless
 GrowthRate = Medium
@@ -23514,7 +23518,7 @@ Category = Radiator
 Pokedex = It stores flammable gas in its body and uses it to generate heat. The yellow sections on its belly get particularly hot.
 Generation = 8
 Evolutions = CENTISKORCH,Level,28
-RegionalNumbers = 0,0
+RegionalNumbers = 309,0
 #-------------------------------
 [CENTISKORCH]
 Name = Centiskorch
@@ -24099,7 +24103,7 @@ BaseExp = 37
 EVs = SPECIAL_ATTACK,1
 CatchRate = 190
 Happiness = 50
-Abilities = SHIELDDUST,RADIANTBOND
+Abilities = SHIELDDUST
 HiddenAbilities = ICESCALES
 Moves = 1,POWDERSNOW,1,STRUGGLEBUG
 TutorMoves = STRUGGLEBUG,ICYWIND,GENERICBOOST,MORPHOBOOST,FROSTBOOST,PROTECT
@@ -24128,7 +24132,7 @@ BaseExp = 168
 EVs = SPECIAL_ATTACK,2
 CatchRate = 75
 Happiness = 50
-Abilities = SHIELDDUST,RADIANTBOND
+Abilities = SHIELDDUST
 HiddenAbilities = ICESCALES
 Moves = 0,ICYWIND,1,ICYWIND,1,POWDERSNOW,1,STRUGGLEBUG,1,HELPINGHAND,1,ATTRACT,4,STUNSPORE,8,INFESTATION,12,MIST,16,DEFOG,21,FEATHERDANCE,24,AURORABEAM,28,HAIL,32,BUGBUZZ,36,AURORAVEIL,40,BLIZZARD,44,TAILWIND,48,WIDEGUARD,52,QUIVERDANCE
 TutorMoves = ECHOEDVOICE,ACROBATICS,AIRSLASH,HURRICANE,STRUGGLEBUG,UTURN,LEECHLIFE,GIGADRAIN,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DAZZLINGGLEAM,PLAYROUGH,GENERICBOOST,BREEZEBOOST,MORPHOBOOST,FROSTBOOST,FLASHFREEZE,CALMMIND,PROTECT,SAFEGUARD,REFLECT,LIGHTSCREEN,TAILWIND,DEFOG,SNOWSCAPE,WINDS,HELPINGHAND,WEATHERBALL,PERMAFROST,HYPERBEAM,GIGAIMPACT
@@ -24805,23 +24809,1170 @@ Pokedex = Calyrex is a merciful Pokémon, capable of providing healing and bless
 Generation = 8
 RegionalNumbers = 0,0
 #-------------------------------
+[SPRIGATITO]
+Name = Sprigatito
+Types = GRASS
+Affinities = GRASS
+BaseStats = 40,61,54,65,45,45
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 65
+CatchRate = 45
+Happiness = 70
+Abilities = OVERGROW
+HiddenAbilities = PROTEAN
+TutorMoves = FALSESWIPE,FACADE,ACROBATICS,UTURN,SHADOWCLAW,GRASSPLEDGE,GIGADRAIN,ENERGYBALL,SOLARBEAM,PLAYROUGH,HONECLAWS,NASTYPLOT,AGILITY,TAUNT,PROTECT,GRASSYTERRAIN,MAGICALLEAF,HELPINGHAND
+EggGroups = Field,Grass
+HatchSteps = 5012
+Height = 0.4
+Weight = 4.1
+Color = Green
+Shape = Quadruped
+Generation = 9
+Evolutions = FLORAGATO,Level,16
+RegionalNumbers = 0,0
+#-------------------------------
+[FLORAGATO]
+Name = Floragato
+Types = GRASS
+Affinities = GRASS
+BaseStats = 61,80,63,83,60,63
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 150
+CatchRate = 30
+Happiness = 70
+Abilities = OVERGROW
+HiddenAbilities = PROTEAN
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,ACROBATICS,UTURN,SHADOWCLAW,GRASSPLEDGE,GIGADRAIN,ENERGYBALL,SOLARBEAM,PLAYROUGH,HONECLAWS,NASTYPLOT,AGILITY,TAUNT,PROTECT,GRASSYTERRAIN,AERIALACE,MAGICALLEAF,HELPINGHAND
+EggGroups = Field,Grass
+HatchSteps = 5012
+Height = 0.9
+Weight = 12.2
+Color = Green
+Shape = BipedalTail
+Generation = 9
+Evolutions = MEOWSCARADA,Level,36
+RegionalNumbers = 0,0
+#-------------------------------
+[MEOWSCARADA]
+Name = Meowscarada
+Types = GRASS,DARK
+Affinities = GRASS
+BaseStats = 76,110,70,123,81,70
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 255
+CatchRate = 15
+Happiness = 70
+Abilities = OVERGROW
+HiddenAbilities = PROTEAN
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,ACROBATICS,POWERGEM,UTURN,POLLENPUFF,SHADOWCLAW,SHADOWBALL,CHILLINGWATER,GRASSPLEDGE,GIGADRAIN,ENERGYBALL,SOLARBEAM,KNOCKOFF,DARKPULSE,PLAYROUGH,HONECLAWS,NASTYPLOT,AGILITY,TAUNT,PROTECT,GRASSYTERRAIN,TRICKROOM,AERIALACE,MAGICALLEAF,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Field,Grass
+HatchSteps = 5012
+Height = 1.5
+Weight = 31.2
+Color = Green
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FUECOCO]
+Name = Fuecoco
+Types = FIRE
+Affinities = DRAGON
+BaseStats = 67,45,59,36,63,40
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 65
+CatchRate = 45
+Happiness = 70
+Abilities = BLAZE
+HiddenAbilities = UNAWARE
+TutorMoves = ECHOEDVOICE,FALSESWIPE,HYPERVOICE,FIREPLEDGE,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ZENHEADBUTT,OUTRAGE,SNARL,WILLOWISP,PROTECT,SUNNYDAY,ROUND,HELPINGHAND,CURSE,OVERHEAT
+EggGroups = Field
+HatchSteps = 5012
+Height = 0.4
+Weight = 9.8
+Color = Red
+Shape = Quadruped
+Generation = 9
+Evolutions = CROCALOR,Level,16
+RegionalNumbers = 0,0
+#-------------------------------
+[CROCALOR]
+Name = Crocalor
+Types = FIRE
+Affinities = DRAGON
+BaseStats = 81,55,78,49,90,58
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 150
+CatchRate = 30
+Happiness = 70
+Abilities = BLAZE
+HiddenAbilities = UNAWARE
+TutorMoves = ECHOEDVOICE,FALSESWIPE,HYPERVOICE,FIREPLEDGE,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ZENHEADBUTT,OUTRAGE,SNARL,WILLOWISP,PROTECT,SUNNYDAY,ROUND,HELPINGHAND,OVERHEAT
+EggGroups = Field
+HatchSteps = 5012
+Height = 1
+Weight = 30.7
+Color = Red
+Shape = Quadruped
+Generation = 9
+Evolutions = SKELEDIRGE,Level,36
+RegionalNumbers = 0,0
+#-------------------------------
+[SKELEDIRGE]
+Name = Skeledirge
+Types = FIRE,GHOST
+Affinities = DRAGON
+BaseStats = 104,75,100,66,110,75
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 255
+CatchRate = 15
+Happiness = 70
+Abilities = BLAZE
+HiddenAbilities = UNAWARE
+TutorMoves = ECHOEDVOICE,FALSESWIPE,HYPERVOICE,EARTHPOWER,EARTHQUAKE,HEX,SHADOWCLAW,SHADOWBALL,FIREPLEDGE,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,SOLARBEAM,ZENHEADBUTT,OUTRAGE,SNARL,WILLOWISP,PROTECT,SUNNYDAY,ROUND,HELPINGHAND,HYPERBEAM,GIGAIMPACT,OVERHEAT
+EggGroups = Field
+HatchSteps = 5012
+Height = 1.6
+Weight = 326.5
+Color = Red
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[QUAXLY]
+Name = Quaxly
+Types = WATER
+Affinities = FLYING
+BaseStats = 55,65,45,50,50,45
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 65
+CatchRate = 45
+Happiness = 70
+Abilities = TORRENT
+HiddenAbilities = MOXIE
+TutorMoves = ECHOEDVOICE,ACROBATICS,AIRSLASH,BRAVEBIRD,WATERPLEDGE,CHILLINGWATER,SURF,HYDROPUMP,PROTECT,RAINDANCE,WINDS,MISTYTERRAIN,WORKUP,AERIALACE,HELPINGHAND,SUBSTITUTE,ROOST,LIQUIDATION
+EggGroups = Flying,Water1
+HatchSteps = 5012
+Height = 0.5
+Weight = 6.1
+Color = Blue
+Shape = Winged
+Generation = 9
+Evolutions = QUAXWELL,Level,16
+RegionalNumbers = 0,0
+#-------------------------------
+[QUAXWELL]
+Name = Quaxwell
+Types = WATER
+Affinities = FLYING
+BaseStats = 70,85,65,65,65,60
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 150
+CatchRate = 30
+Happiness = 70
+Abilities = TORRENT
+HiddenAbilities = MOXIE
+TutorMoves = ECHOEDVOICE,POWERUPPUNCH,ACROBATICS,AIRSLASH,BRAVEBIRD,WATERPLEDGE,CHILLINGWATER,SURF,HYDROPUMP,PROTECT,RAINDANCE,WINDS,MISTYTERRAIN,WORKUP,AERIALACE,HELPINGHAND,SUBSTITUTE,LIQUIDATION
+EggGroups = Flying,Water1
+HatchSteps = 5012
+Height = 1.2
+Weight = 21.5
+Color = Blue
+Shape = Winged
+Generation = 9
+Evolutions = QUAQUAVAL,Level,36
+RegionalNumbers = 0,0
+#-------------------------------
+[QUAQUAVAL]
+Name = Quaquaval
+Types = WATER,FIGHTING
+Affinities = FLYING
+BaseStats = 85,120,80,85,85,75
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 255
+CatchRate = 15
+Happiness = 70
+Abilities = TORRENT
+HiddenAbilities = MOXIE
+TutorMoves = ECHOEDVOICE,POWERUPPUNCH,BRICKBREAK,CLOSECOMBAT,ACROBATICS,AIRSLASH,BRAVEBIRD,HURRICANE,UTURN,WATERPLEDGE,CHILLINGWATER,SURF,HYDROPUMP,ICYWIND,BULKUP,SWORDSDANCE,AGILITY,TAUNT,PROTECT,RAINDANCE,WINDS,MISTYTERRAIN,WORKUP,AERIALACE,HELPINGHAND,LIQUIDATION,HYPERBEAM,GIGAIMPACT
+EggGroups = Flying,Water1
+HatchSteps = 5012
+Height = 1.8
+Weight = 61.9
+Color = Blue
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[LECHONK]
+Name = Lechonk
+Types = NORMAL
+Affinities = GROUND
+BaseStats = 54,45,40,35,35,45
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 51
+CatchRate = 255
+Happiness = 70
+Abilities = AROMAVEIL,GLUTTONY
+HiddenAbilities = THICKFAT
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,BULLDOZE,IRONHEAD,CHILLINGWATER,ZENHEADBUTT,PLAYROUGH,RAINDANCE,SUNNYDAY,WINDS,WORKUP,THIEF,HELPINGHAND
+EggGroups = Field
+HatchSteps = 3766
+Height = 0.5
+Weight = 22.5
+Color = Gray
+Shape = Quadruped
+Generation = 9
+Evolutions = OINKOLOGNE,Level,18
+RegionalNumbers = 0,0
+#-------------------------------
+[OINKOLOGNE]
+Name = Oinkologne
+Types = NORMAL
+Affinities = GROUND
+BaseStats = 110,100,75,65,59,80
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 171
+CatchRate = 100
+Happiness = 70
+Abilities = LINGERINGAROMA,GLUTTONY
+HiddenAbilities = THICKFAT
+TutorMoves = ECHOEDVOICE,FACADE,DOUBLEEDGE
+EggGroups = Field
+HatchSteps = 3766
+Height = 1
+Weight = 120.0
+Color = Gray
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[TAROUNTULA]
+Name = Tarountula
+Types = BUG
+Affinities = NORMAL
+BaseStats = 35,41,45,20,29,40
+GenderRatio = Female50Percent
+GrowthRate = Erratic
+BaseExp = 42
+CatchRate = 255
+Happiness = 70
+Abilities = INSOMNIA
+HiddenAbilities = STAKEOUT
+TutorMoves = FALSESWIPE,CIRCLETHROW,POISONJAB,STRUGGLEBUG,LEECHLIFE,SHADOWCLAW,GIGADRAIN,THROATCHOP,RAINDANCE,SUNNYDAY,WINDS,THIEF
+EggGroups = Bug
+HatchSteps = 3766
+Height = 0.3
+Weight = 4.0
+Color = White
+Shape = Insectoid
+Generation = 9
+Evolutions = SPIDOPS,Level,15
+RegionalNumbers = 0,0
+#-------------------------------
+[SPIDOPS]
+Name = Spidops
+Types = BUG
+Affinities = NORMAL
+BaseStats = 60,79,92,35,52,86
+GenderRatio = Female50Percent
+GrowthRate = Erratic
+BaseExp = 141
+CatchRate = 120
+Happiness = 70
+Abilities = INSOMNIA
+HiddenAbilities = STAKEOUT
+TutorMoves = FALSESWIPE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CIRCLETHROW,POISONJAB,STRUGGLEBUG,UTURN,LEECHLIFE,SHADOWCLAW,GIGADRAIN,THROATCHOP,TAUNT,RAINDANCE,SUNNYDAY,WINDS,AERIALACE,THIEF,GIGAIMPACT
+EggGroups = Bug
+HatchSteps = 3766
+Height = 1
+Weight = 16.5
+Color = Green
+Shape = Insectoid
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[NYMBLE]
+Name = Nymble
+Types = BUG
+Affinities = STEEL
+BaseStats = 33,46,40,45,21,25
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 42
+CatchRate = 190
+Happiness = 35
+Abilities = SWARM
+HiddenAbilities = TINTEDLENS
+TutorMoves = STRUGGLEBUG,UTURN,LEECHLIFE,AGILITY,RAINDANCE,SUNNYDAY,WINDS,THIEF
+EggGroups = Bug
+HatchSteps = 5012
+Height = 0.2
+Weight = 1.0
+Color = Gray
+Shape = Insectoid
+Generation = 9
+Evolutions = LOKIX,Level,24
+RegionalNumbers = 0,0
+#-------------------------------
+[LOKIX]
+Name = Lokix
+Types = BUG,DARK
+Affinities = STEEL
+BaseStats = 71,102,78,92,52,55
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 158
+CatchRate = 30
+Happiness = 0
+Abilities = SWARM
+HiddenAbilities = TINTEDLENS
+TutorMoves = DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,STRUGGLEBUG,UTURN,LEECHLIFE,DARKPULSE,THROATCHOP,SWORDSDANCE,AGILITY,TAUNT,RAINDANCE,SUNNYDAY,WINDS,AERIALACE,THIEF,BOUNCE,GIGAIMPACT
+EggGroups = Bug
+HatchSteps = 5012
+Height = 1
+Weight = 17.5
+Color = Gray
+Shape = Insectoid
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[PAWMI]
+Name = Pawmi
+Types = ELECTRIC
+Affinities = NORMAL
+BaseStats = 45,50,20,60,40,25
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 48
+CatchRate = 190
+Happiness = 70
+Abilities = STATIC,NATURALCURE
+HiddenAbilities = IRONFIST
+TutorMoves = FALSESWIPE,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,PLAYROUGH,THUNDERWAVE,AGILITY,RAINDANCE,SUNNYDAY,WINDS,ELECTRICTERRAIN,THIEF,HELPINGHAND
+EggGroups = Field
+HatchSteps = 3766
+Height = 0.3
+Weight = 2.5
+Color = Yellow
+Shape = BipedalTail
+Generation = 9
+Evolutions = PAWMO,Level,18
+RegionalNumbers = 0,0
+#-------------------------------
+[PAWMO]
+Name = Pawmo
+Types = ELECTRIC,FIGHTING
+Affinities = NORMAL
+BaseStats = 60,75,40,85,50,40
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 123
+CatchRate = 80
+Happiness = 70
+Abilities = VOLTABSORB,NATURALCURE
+HiddenAbilities = IRONFIST
+TutorMoves = FALSESWIPE,DOUBLEEDGE,POWERUPPUNCH,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,PLAYROUGH,THUNDERWAVE,AGILITY,RAINDANCE,SUNNYDAY,WINDS,ELECTRICTERRAIN,THIEF,HELPINGHAND
+EggGroups = Field
+HatchSteps = 3766
+Height = 0.4
+Weight = 6.5
+Color = Yellow
+Shape = BipedalTail
+Generation = 9
+Evolutions = PAWMOT,Happiness,
+RegionalNumbers = 0,0
+#-------------------------------
+[PAWMOT]
+Name = Pawmot
+Types = ELECTRIC,FIGHTING
+Affinities = NORMAL
+BaseStats = 70,115,70,105,70,60
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 245
+CatchRate = 45
+Happiness = 70
+Abilities = VOLTABSORB,NATURALCURE
+HiddenAbilities = IRONFIST
+TutorMoves = FALSESWIPE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,PLAYROUGH,THUNDERWAVE,BULKUP,AGILITY,RAINDANCE,SUNNYDAY,WINDS,ELECTRICTERRAIN,THIEF,HELPINGHAND,BODYPRESS,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Field
+HatchSteps = 3766
+Height = 0.9
+Weight = 41.0
+Color = Yellow
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[TANDEMAUS]
+Name = Tandemaus
+Types = NORMAL
+Affinities = NORMAL
+BaseStats = 50,50,45,75,40,45
+GenderRatio = Genderless
+GrowthRate = Fast
+BaseExp = 51
+CatchRate = 150
+Happiness = 70
+Abilities = RUNAWAY,PICKUP
+HiddenAbilities = OWNTEMPO
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,UTURN,SHADOWCLAW,PLAYROUGH,THUNDERWAVE,AGILITY,TAUNT,RAINDANCE,SUNNYDAY,WINDS,AERIALACE,THIEF,HELPINGHAND
+EggGroups = Field,Fairy
+HatchSteps = 2506
+Height = 0.3
+Weight = 1.8
+Color = White
+Shape = MultiBody
+Generation = 9
+Evolutions = MAUSHOLD,Level,25
+RegionalNumbers = 0,0
+#-------------------------------
+[MAUSHOLD]
+Name = Maushold
+Types = NORMAL
+Affinities = NORMAL
+BaseStats = 74,75,70,111,65,75
+GenderRatio = Genderless
+GrowthRate = Fast
+BaseExp = 165
+CatchRate = 75
+Happiness = 70
+Abilities = FRIENDGUARD,CHEEKPOUCH
+HiddenAbilities = TECHNICIAN
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,UTURN,SHADOWCLAW,CHILLINGWATER,PLAYROUGH,THUNDERWAVE,AGILITY,TAUNT,RAINDANCE,SUNNYDAY,WINDS,AERIALACE,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Field,Fairy
+HatchSteps = 2506
+Height = 5.1
+Weight = 2.3
+Color = White
+Shape = MultiBody
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FIDOUGH]
+Name = Fidough
+Types = FAIRY
+Affinities = FIRE
+BaseStats = 37,55,70,65,30,55
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 62
+CatchRate = 190
+Happiness = 70
+Abilities = OWNTEMPO
+HiddenAbilities = KLUTZ
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,SNARL,DAZZLINGGLEAM,PLAYROUGH,AGILITY,RAINDANCE,SUNNYDAY,WINDS,MISTYTERRAIN,WORKUP,HELPINGHAND
+EggGroups = Field,Mineral
+HatchSteps = 5012
+Height = 0.3
+Weight = 10.9
+Color = Yellow
+Shape = Quadruped
+Generation = 9
+Evolutions = DACHSBUN,Level,26
+RegionalNumbers = 0,0
+#-------------------------------
+[DACHSBUN]
+Name = Dachsbun
+Types = FAIRY
+Affinities = FIRE
+BaseStats = 57,80,115,95,50,80
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 167
+CatchRate = 90
+Happiness = 70
+Abilities = WELLBAKEDBODY
+HiddenAbilities = AROMAVEIL
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,SNARL,DAZZLINGGLEAM,PLAYROUGH,AGILITY,RAINDANCE,SUNNYDAY,WINDS,MISTYTERRAIN,WORKUP,HELPINGHAND,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Field,Mineral
+HatchSteps = 5012
+Height = 0.5
+Weight = 14.9
+Color = Brown
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SMOLIV]
+Name = Smoliv
+Types = GRASS,NORMAL
+Affinities = WATER
+BaseStats = 41,35,45,30,58,51
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 52
+CatchRate = 255
+Happiness = 70
+Abilities = EARLYBIRD
+HiddenAbilities = HARVEST
+TutorMoves = ECHOEDVOICE,EARTHPOWER,GIGADRAIN,ENERGYBALL,SOLARBEAM,SUNNYDAY,GRASSYTERRAIN,MAGICALLEAF,HELPINGHAND,TERRAINPULSE,WEATHERBALL
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.3
+Weight = 6.5
+Color = Green
+Shape = HeadBase
+Generation = 9
+Evolutions = DOLLIV,Level,25
+RegionalNumbers = 0,0
+#-------------------------------
+[DOLLIV]
+Name = Dolliv
+Types = GRASS,NORMAL
+Affinities = WATER
+BaseStats = 52,53,60,33,78,78
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 124
+CatchRate = 140
+Happiness = 70
+Abilities = EARLYBIRD
+HiddenAbilities = HARVEST
+TutorMoves = ECHOEDVOICE,EARTHPOWER,GIGADRAIN,ENERGYBALL,SOLARBEAM,SUNNYDAY,GRASSYTERRAIN,MAGICALLEAF,HELPINGHAND,TERRAINPULSE
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.6
+Weight = 11.9
+Color = Green
+Shape = HeadBase
+Generation = 9
+Evolutions = ARBOLIVA,Level,35
+RegionalNumbers = 0,0
+#-------------------------------
+[ARBOLIVA]
+Name = Arboliva
+Types = GRASS,NORMAL
+Affinities = WATER
+BaseStats = 78,69,90,39,125,109
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 255
+CatchRate = 45
+Happiness = 70
+Abilities = SEEDSOWER
+HiddenAbilities = HARVEST
+TutorMoves = ECHOEDVOICE,HYPERVOICE,EARTHPOWER,POLLENPUFF,GIGADRAIN,ENERGYBALL,SOLARBEAM,DAZZLINGGLEAM,PROTECT,SAFEGUARD,REFLECT,LIGHTSCREEN,SUNNYDAY,GRASSYTERRAIN,MAGICALLEAF,HELPINGHAND,TERRAINPULSE,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Grass
+HatchSteps = 5012
+Height = 1.4
+Weight = 48.2
+Color = Green
+Shape = HeadBase
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SQUAWKABILLY]
+Name = Squawkabilly
+Types = NORMAL,FLYING
+Affinities = ELECTRIC
+BaseStats = 82,96,51,92,45,51
+GenderRatio = Female50Percent
+GrowthRate = Erratic
+BaseExp = 146
+CatchRate = 190
+Happiness = 70
+Abilities = INTIMIDATE,HUSTLE
+HiddenAbilities = GUTS
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,AIRSLASH,BRAVEBIRD,HURRICANE,UTURN,TORMENT,TAUNT,TAILWIND,SUNNYDAY,WINDS,AERIALACE,THIEF,HELPINGHAND,FLY,ROOST,HYPERBEAM,GIGAIMPACT
+EggGroups = Flying
+HatchSteps = 3766
+Height = 0.6
+Weight = 2.4
+Color = Green
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[NACLI]
+Name = Nacli
+Types = ROCK
+Affinities = WATER
+BaseStats = 55,55,75,25,35,35
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 56
+CatchRate = 255
+Happiness = 70
+Abilities = PURIFYINGSALT,STURDY
+HiddenAbilities = CLEARBODY
+TutorMoves = BULLDOZE,EARTHPOWER,EARTHQUAKE,SMACKDOWN,ROCKSLIDE,POWERGEM,STONEEDGE,FLASHCANNON,IRONHEAD,ZENHEADBUTT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,ANCIENTPOWER,HELPINGHAND,CURSE,THERMODYNAMICS,STEALTHROCK
+EggGroups = Mineral
+HatchSteps = 5012
+Height = 0.4
+Weight = 16.0
+Color = Brown
+Shape = Head
+Generation = 9
+Evolutions = NACLSTACK,Level,24
+RegionalNumbers = 288,0
+#-------------------------------
+[NACLSTACK]
+Name = Naclstack
+Types = ROCK
+Affinities = WATER
+BaseStats = 60,60,100,35,35,65
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 124
+CatchRate = 120
+Happiness = 70
+Abilities = PURIFYINGSALT,STURDY
+HiddenAbilities = CLEARBODY
+TutorMoves = BULLDOZE,EARTHPOWER,EARTHQUAKE,SMACKDOWN,ROCKSLIDE,POWERGEM,STONEEDGE,FLASHCANNON,IRONHEAD,ZENHEADBUTT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,HELPINGHAND,THERMODYNAMICS,STEALTHROCK,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Mineral
+HatchSteps = 5012
+Height = 0.6
+Weight = 105.0
+Color = Brown
+Shape = Quadruped
+Generation = 9
+Evolutions = GARGANACL,Level,38
+RegionalNumbers = 289,0
+#-------------------------------
+[GARGANACL]
+Name = Garganacl
+Types = ROCK
+Affinities = WATER
+BaseStats = 100,100,130,35,45,90
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 250
+CatchRate = 45
+Happiness = 70
+Abilities = PURIFYINGSALT,STURDY
+HiddenAbilities = CLEARBODY
+TutorMoves = DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,POWERGEM,STONEEDGE,FLASHCANNON,IRONHEAD,ZENHEADBUTT,AVALANCHE,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,HELPINGHAND,THERMODYNAMICS,STEALTHROCK,BODYPRESS,EXPLOSION,HYPERBEAM,GIGAIMPACT
+EggGroups = Mineral
+HatchSteps = 5012
+Height = 2.3
+Weight = 240.0
+Color = Brown
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 290,0
+#-------------------------------
+[CHARCADET]
+Name = Charcadet
+Types = FIRE
+Affinities = FIGHTING
+BaseStats = 40,50,40,35,50,40
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 51
+CatchRate = 90
+Happiness = 70
+Abilities = FLASHFIRE
+HiddenAbilities = FLAMEBODY
+TutorMoves = CLEARSMOG,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,WILLOWISP,SUNNYDAY,HELPINGHAND,OVERHEAT
+EggGroups = Humanlike
+HatchSteps = 8788
+Height = 0.6
+Weight = 10.5
+Color = Red
+Shape = Bipedal
+Generation = 9
+Evolutions = ARMAROUGE,Item,DAWNSTONE,CERULEDGE,Item,DUSKSTONE
+RegionalNumbers = 300,0
+#-------------------------------
+[ARMAROUGE]
+Name = Armarouge
+Types = FIRE,PSYCHIC
+Affinities = FIGHTING
+BaseStats = 85,60,100,75,125,80
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 263
+CatchRate = 25
+Happiness = 35
+Abilities = FLASHFIRE
+HiddenAbilities = WEAKARMOR
+TutorMoves = DOUBLEEDGE,FOCUSBLAST,CLEARSMOG,SHADOWBALL,FLASHCANNON,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ENERGYBALL,SOLARBEAM,PSYSHOCK,PSYCHIC,DRAGONPULSE,DARKPULSE,WILLOWISP,CALMMIND,TAUNT,REFLECT,LIGHTSCREEN,SUNNYDAY,PSYCHICTERRAIN,TRICKROOM,HELPINGHAND,EXPANDINGFORCE,OVERHEAT
+EggGroups = Humanlike
+HatchSteps = 8788
+Height = 1.5
+Weight = 85.0
+Color = Red
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 301,0
+#-------------------------------
+[CERULEDGE]
+Name = Ceruledge
+Types = FIRE,GHOST
+Affinities = FIGHTING
+BaseStats = 75,125,80,85,60,100
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 263
+CatchRate = 25
+Happiness = 35
+Abilities = FLASHFIRE
+HiddenAbilities = WEAKARMOR
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,CLOSECOMBAT,CLEARSMOG,POISONJAB,HEX,SHADOWCLAW,SHADOWBALL,PHANTOMFORCE,IRONHEAD,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,DRAGONCLAW,WILLOWISP,BULKUP,SWORDSDANCE,TAUNT,REFLECT,LIGHTSCREEN,SUNNYDAY,HELPINGHAND,OVERHEAT
+EggGroups = Humanlike
+HatchSteps = 8788
+Height = 1.6
+Weight = 62.0
+Color = Blue
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 302,0
+#-------------------------------
+[TADBULB]
+Name = Tadbulb
+Types = ELECTRIC
+Affinities = WATER
+BaseStats = 61,31,41,45,59,35
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 54
+CatchRate = 190
+Happiness = 70
+Abilities = OWNTEMPO,STATIC
+HiddenAbilities = DAMP
+TutorMoves = ECHOEDVOICE,HYPERVOICE,CHILLINGWATER,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,THUNDERWAVE,REFLECT,LIGHTSCREEN,RAINDANCE,WINDS,ELECTRICTERRAIN,WEATHERBALL,ZAPCANNON
+EggGroups = Water1
+HatchSteps = 5012
+Height = 0.3
+Weight = 0.4
+Color = Yellow
+Shape = Finned
+Generation = 9
+Evolutions = BELLIBOLT,Item,THUNDERSTONE
+RegionalNumbers = 0,0
+#-------------------------------
+[BELLIBOLT]
+Name = Bellibolt
+Types = ELECTRIC
+Affinities = WATER
+BaseStats = 109,64,91,45,103,83
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 173
+CatchRate = 50
+Happiness = 70
+Abilities = ELECTROMORPHOSIS,STATIC
+HiddenAbilities = DAMP
+TutorMoves = ECHOEDVOICE,HYPERVOICE,CHILLINGWATER,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,THUNDERWAVE,REFLECT,LIGHTSCREEN,RAINDANCE,WINDS,ELECTRICTERRAIN,WEATHERBALL,ZAPCANNON,HYPERBEAM,GIGAIMPACT
+EggGroups = Water1
+HatchSteps = 5012
+Height = 1.2
+Weight = 113.0
+Color = Green
+Shape = HeadArms
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[WATTREL]
+Name = Wattrel
+Types = ELECTRIC,FLYING
+Affinities = FLYING
+BaseStats = 40,40,35,70,55,40
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 56
+CatchRate = 180
+Happiness = 70
+Abilities = WINDPOWER,VOLTABSORB
+HiddenAbilities = COMPETITIVE
+TutorMoves = ECHOEDVOICE,ACROBATICS,AIRSLASH,BRAVEBIRD,HURRICANE,UTURN,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,THUNDERWAVE,AGILITY,TAILWIND,WINDS,ELECTRICTERRAIN,AERIALACE,FLY,ROOST,WEATHERBALL
+EggGroups = Water1,Flying
+HatchSteps = 5012
+Height = 0.4
+Weight = 3.6
+Color = Black
+Shape = Winged
+Generation = 9
+Evolutions = KILOWATTREL,Level,25
+RegionalNumbers = 0,0
+#-------------------------------
+[KILOWATTREL]
+Name = Kilowattrel
+Types = ELECTRIC,FLYING
+Affinities = FLYING
+BaseStats = 70,70,60,125,105,60
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 172
+CatchRate = 90
+Happiness = 70
+Abilities = WINDPOWER,VOLTABSORB
+HiddenAbilities = COMPETITIVE
+TutorMoves = ECHOEDVOICE,ACROBATICS,AIRSLASH,BRAVEBIRD,HURRICANE,UTURN,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,THUNDERWAVE,AGILITY,TAILWIND,WINDS,ELECTRICTERRAIN,AERIALACE,FLY,ROOST,HYPERBEAM,GIGAIMPACT
+EggGroups = Water1,Flying
+HatchSteps = 5012
+Height = 1.4
+Weight = 38.6
+Color = Yellow
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[MASCHIFF]
+Name = Maschiff
+Types = DARK
+Affinities = NORMAL
+BaseStats = 60,78,60,51,40,51
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 68
+CatchRate = 150
+Happiness = 35
+Abilities = INTIMIDATE,RUNAWAY
+HiddenAbilities = STAKEOUT
+TutorMoves = ECHOEDVOICE,FALSESWIPE,FACADE,DOUBLEEDGE,SNARL,DARKPULSE,PLAYROUGH,HONECLAWS,TAUNT,RAINDANCE,SUNNYDAY,WINDS,THIEF,HELPINGHAND
+EggGroups = Field
+HatchSteps = 5012
+Height = 0.5
+Weight = 16.0
+Color = Brown
+Shape = Quadruped
+Generation = 9
+Evolutions = MABOSSTIFF,Level,30
+RegionalNumbers = 0,0
+#-------------------------------
+[MABOSSTIFF]
+Name = Mabostiff
+Types = DARK
+Affinities = NORMAL
+BaseStats = 80,120,90,85,60,70
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 177
+CatchRate = 75
+Happiness = 0
+Abilities = INTIMIDATE,GUARDDOG
+HiddenAbilities = STAKEOUT
+TutorMoves = ECHOEDVOICE,FALSESWIPE,FACADE,HYPERVOICE,DOUBLEEDGE,WILDCHARGE,OUTRAGE,SNARL,DARKPULSE,PLAYROUGH,HONECLAWS,TAUNT,RAINDANCE,SUNNYDAY,WINDS,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 5012
+Height = 1,1
+Weight = 61.0
+Color = Gray
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SHROODLE]
+Name = Shroodle
+Types = POISON,NORMAL
+Affinities = DARK
+BaseStats = 40,65,35,75,40,35
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 58
+CatchRate = 190
+Happiness = 70
+Abilities = UNBURDEN,PICKPOCKET
+HiddenAbilities = PRANKSTER
+TutorMoves = ACROBATICS,VENOSHOCK,POISONJAB,SLUDGEBOMB,UTURN,KNOCKOFF,TOXIC,NASTYPLOT,SWORDSDANCE,TAUNT,RAINDANCE,SUNNYDAY,WINDS,THIEF,HELPINGHAND,SUBSTITUTE,METRONOME
+EggGroups = Field
+HatchSteps = 5012
+Height = 0.2
+Weight = 0.7
+Color = Gray
+Shape = Quadruped
+Generation = 9
+Evolutions = GRAFAIAI,Level,28
+RegionalNumbers = 0,0
+#-------------------------------
+[GRAFAIAI]
+Name = Grafaiai
+Types = POISON,NORMAL
+Affinities = DARK
+BaseStats = 63,95,65,110,80,72
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 170
+CatchRate = 90
+Happiness = 70
+Abilities = UNBURDEN,POISONTOUCH
+HiddenAbilities = PRANKSTER
+TutorMoves = FALSESWIPE,FACADE,ACROBATICS,VENOSHOCK,POISONJAB,SLUDGEBOMB,UTURN,SHADOWCLAW,KNOCKOFF,NASTYPLOT,SWORDSDANCE,TAUNT,RAINDANCE,SUNNYDAY,WINDS,THIEF,HELPINGHAND,SUBSTITUTE,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Field
+HatchSteps = 5012
+Height = 0.7
+Weight = 27.2
+Color = Gray
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[BRAMBLIN]
+Name = Bramblin
+Types = GRASS,GHOST
+Affinities = GROUND
+BaseStats = 40,65,30,60,45,35
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 55
+CatchRate = 190
+Happiness = 70
+Abilities = WINDRIDER
+HiddenAbilities = INFILTRATOR
+TutorMoves = HEX,SHADOWBALL,PHANTOMFORCE,GIGADRAIN,ENERGYBALL,SOLARBEAM,GRASSYTERRAIN,THIEF,CURSE
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.6
+Weight = 0.6
+Color = Brown
+Shape = Head
+Generation = 9
+Evolutions = BRAMBLEGHAST,Happiness,
+RegionalNumbers = 0,0
+#-------------------------------
+[BRAMBLEGHAST]
+Name = Brambleghast
+Types = GRASS,GHOST
+Affinities = GROUND
+BaseStats = 55,115,70,90,80,70
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 168
+CatchRate = 45
+Happiness = 70
+Abilities = WINDRIDER
+HiddenAbilities = INFILTRATOR
+TutorMoves = HEX,SHADOWBALL,PHANTOMFORCE,GIGADRAIN,ENERGYBALL,SOLARBEAM,GRASSYTERRAIN,THIEF,CURSE,HYPERBEAM,GIGAIMPACT
+EggGroups = Grass
+HatchSteps = 5012
+Height = 1.2
+Weight = 6.0
+Color = Brown
+Shape = Head
+Generation = 9
+RegionalNumbers = 306,0
+#-------------------------------
+[TOEDSCOOL]
+Name = Toedscool
+Types = GROUND,GRASS
+Affinities = POISON
+BaseStats = 40,40,35,70,50,100
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 67
+CatchRate = 190
+Happiness = 70
+Abilities = MYCELIUMMIGHT
+TutorMoves = VENOSHOCK,SLUDGEBOMB,EARTHPOWER,HEX,FLASHCANNON,GIGADRAIN,ENERGYBALL,SOLARBEAM,KNOCKOFF,DAZZLINGGLEAM,TOXIC,TAUNT,REFLECT,LIGHTSCREEN,RAINDANCE,WINDS,GRASSYTERRAIN,TRICKROOM,MAGICALLEAF
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.9
+Weight = 3.3
+Color = Yellow
+Shape = Multiped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[TOEDSCRUEL]
+Name = Toedscruel
+Types = GROUND,GRASS
+Affinities = POISON
+BaseStats = 80,70,65,100,80,120
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 180
+CatchRate = 90
+Happiness = 70
+Abilities = MYCELIUMMIGHT
+TutorMoves = VENOSHOCK,SLUDGEBOMB,EARTHPOWER,HEX,FLASHCANNON,GIGADRAIN,ENERGYBALL,SOLARBEAM,DAZZLINGGLEAM,TAUNT,REFLECT,LIGHTSCREEN,RAINDANCE,WINDS,GRASSYTERRAIN,TRICKROOM,MAGICALLEAF,HYPERBEAM,GIGAIMPACT
+EggGroups = Grass
+HatchSteps = 5012
+Height = 1.9
+Weight = 58.0
+Color = Black
+Shape = Multiped
+Generation = 9
+Evolutions = TOEDSCRUEL,Level,30
+RegionalNumbers = 0,0
+#-------------------------------
+[KLAWF]
+Name = Klawf
+Types = ROCK
+Affinities = WATER
+BaseStats = 70,100,115,75,35,55
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 158
+CatchRate = 120
+Happiness = 70
+Abilities = ANGERSHELL,SHELLARMOR
+HiddenAbilities = REGENERATOR
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,BULLDOZE,EARTHPOWER,HIGHHORSEPOWER,ROCKSLIDE,POWERGEM,STONEEDGE,SHADOWCLAW,KNOCKOFF,SWORDSDANCE,PROTECT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,ANCIENTPOWER,HELPINGHAND,STEALTHROCK,HYPERBEAM,GIGAIMPACT
+EggGroups = Water3
+HatchSteps = 8788
+Height = 1.3
+Weight = 79.0
+Color = Red
+Shape = Insectoid
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CAPSAKID]
+Name = Capsakid
+Types = GRASS
+Affinities = FIRE
+BaseStats = 50,62,40,50,62,40
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 61
+CatchRate = 190
+Happiness = 70
+Abilities = CHLOROPHYLL,INSOMNIA
+HiddenAbilities = KLUTZ
+TutorMoves = GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,SUNNYDAY,SANDSTORM,GRASSYTERRAIN,MAGICALLEAF,THIEF,HELPINGHAND
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.3
+Weight = 3.0
+Color = Green
+Shape = BipedalTail
+Generation = 9
+Evolutions = SCOVILLAIN,Item,FIRESTONE
+RegionalNumbers = 0,0
+#-------------------------------
+[SCOVILLAIN]
+Name = Scovillain
+Types = GRASS,FIRE
+Affinities = FIRE
+BaseStats = 65,108,65,75,108,65
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 170
+CatchRate = 75
+Happiness = 70
+Abilities = CHLOROPHYLL,INSOMNIA
+HiddenAbilities = MOODY
+TutorMoves = FLAMETHROWER,FIREBLAST,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,WILLOWISP,SUNNYDAY,SANDSTORM,GRASSYTERRAIN,MAGICALLEAF,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT,OVERHEAT
+EggGroups = Grass
+HatchSteps = 5012
+Height = 0.9
+Weight = 15.0
+Color = Green
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[RELLOR]
+Name = Rellor
+Types = BUG
+Affinities = GROUND
+BaseStats = 41,50,60,30,31,58
+GenderRatio = Female50Percent
+GrowthRate = Fast
+BaseExp = 54
+CatchRate = 190
+Happiness = 70
+Abilities = COMPOUNDEYES
+HiddenAbilities = SHEDSKIN
+TutorMoves = SLUDGEBOMB,STRUGGLEBUG,LEECHLIFE,THIEF,WEATHERBALL
+EggGroups = Bug
+HatchSteps = 5012
+Height = 0.2
+Weight = 1.0
+Color = Brown
+Shape = Insectoid
+Generation = 9
+Evolutions = RABSCA,Happiness,
+RegionalNumbers = 0,0
+#-------------------------------
+[RABSCA]
+Name = Rabsca
+Types = BUG,PSYCHIC
+Affinities = GROUND
+BaseStats = 75,50,85,45,115,100
+GenderRatio = Female50Percent
+GrowthRate = Fast
+BaseExp = 165
+CatchRate = 45
+Happiness = 70
+Abilities = SYNCHRONIZE
+HiddenAbilities = TELEPATHY
+TutorMoves = SLUDGEBOMB,EARTHPOWER,POWERGEM,STRUGGLEBUG,LEECHLIFE,SHADOWBALL,ENERGYBALL,PSYSHOCK,PSYCHIC,ZENHEADBUTT,DAZZLINGGLEAM,CALMMIND,PROTECT,SAFEGUARD,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,PSYCHICTERRAIN,TRICKROOM,THIEF,PSYCHUP,HYPERBEAM,GIGAIMPACT
+EggGroups = Bug
+HatchSteps = 5012
+Height = 0.3
+Weight = 3.5
+Color = Green
+Shape = Insectoid
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FLITTLE]
+Name = Flittle
+Types = PSYCHIC
+Affinities = FLYING
+BaseStats = 30,35,30,75,55,30
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 51
+CatchRate = 120
+Happiness = 70
+Abilities = ANTICIPATION,FRISK
+HiddenAbilities = SPEEDBOOST
+TutorMoves = ECHOEDVOICE,UTURN,PSYSHOCK,PSYCHIC,ZENHEADBUTT,CALMMIND,AGILITY,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,PSYCHICTERRAIN,TRICKROOM,THIEF,HELPINGHAND,ROOST
+EggGroups = Flying
+HatchSteps = 5012
+Height = 0.2
+Weight = 1.5
+Color = Yellow
+Shape = HeadLegs
+Generation = 9
+Evolutions = ESPATHRA,Level,35
+RegionalNumbers = 0,0
+#-------------------------------
+[ESPATHRA]
+Name = Espathra
+Types = PSYCHIC
+Affinities = FLYING
+BaseStats = 95,60,60,105,101,60
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 168
+CatchRate = 60
+Happiness = 70
+Abilities = OPPORTUNIST,FRISK
+HiddenAbilities = SPEEDBOOST
+TutorMoves = ECHOEDVOICE,HYPERVOICE,BRAVEBIRD,UTURN,HEX,SHADOWBALL,FLASHCANNON,ENERGYBALL,PSYSHOCK,PSYCHIC,ZENHEADBUTT,DAZZLINGGLEAM,CALMMIND,AGILITY,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,PSYCHICTERRAIN,TRICKROOM,AERIALACE,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Flying
+HatchSteps = 5012
+Height = 1.9
+Weight = 90.0
+Color = Yellow
+Shape = HeadLegs
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
 [TINKATINK]
 Name = Tinkatink
 Types = FAIRY,STEEL
-Affinities = FLYING
+Affinities = FIRE
 BaseStats = 50,45,45,58,35,64
 GenderRatio = AlwaysFemale
-GrowthRate = Medium
+GrowthRate = Parabolic
 BaseExp = 59
 EVs = SPECIAL_DEFENSE,1
 CatchRate = 190
-Happiness = 50
+Happiness = 70
 Abilities = MOLDBREAKER,OWNTEMPO
 HiddenAbilities = RELENTLESS
 Moves = 1,ASTONISH,1,FAIRYWIND,1,BABYDOLLEYES,6,METALCLAW,9,TOUGHHUG,14,ROCKSMASH,17,DRAININGKISS,20,SWEETKISS,24,BRUTALSWING,32,FLASHCANNON,37,PLAYROUGH,39,FAKEOUT,49,SLAM,55,SKITTERSMACK,61,KNOCKOFF
 TutorMoves = FACADE,ROCKSLIDE,STONEEDGE,FLASHCANNON,STEELBEAM,KNOCKOFF,PLAYROUGH,THUNDERWAVE,SWORDSDANCE,REFLECT,LIGHTSCREEN,THIEF,HELPINGHAND,THERMODYNAMICS,STEALTHROCK,METRONOME
 EggGroups = Fairy
-HatchSteps = 5120
+HatchSteps = 5012
 Height = 0.4
 Weight = 8.9
 Color = Pink
@@ -24831,25 +25982,25 @@ Category = Metalsmith
 Pokedex = This Pokémon pounds iron scraps together to make a hammer. It will remake the hammer again and again until it’s satisfied with the result.
 Generation = 9
 Evolutions = TINKATUFF,Level,24
-RegionalNumbers = 230,0
+RegionalNumbers = 244,0
 #-------------------------------
 [TINKATUFF]
 Name = Tinkatuff
 Types = FAIRY,STEEL
-Affinities = FLYING
+Affinities = FIRE
 BaseStats = 65,55,55,78,45,82
 GenderRatio = AlwaysFemale
-GrowthRate = Medium
+GrowthRate = Parabolic
 BaseExp = 133
 EVs = SPECIAL_DEFENSE,2
 CatchRate = 90
-Happiness = 50
+Happiness = 70
 Abilities = MOLDBREAKER,OWNTEMPO
 HiddenAbilities = RELENTLESS
 Moves = 1,ASTONISH,1,FAIRYWIND,1,BABYDOLLEYES,6,METALCLAW,9,TOUGHHUG,14,ROCKSMASH,17,DRAININGKISS,20,SWEETKISS,24,BRUTALSWING,32,FLASHCANNON,37,PLAYROUGH,39,FAKEOUT,49,SLAM,55,SKITTERSMACK,61,KNOCKOFF,69,HEAVYSLAM
 TutorMoves = FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,ROCKSLIDE,STONEEDGE,FLASHCANNON,STEELBEAM,KNOCKOFF,PLAYROUGH,THUNDERWAVE,SWORDSDANCE,REFLECT,LIGHTSCREEN,THIEF,HELPINGHAND,THERMODYNAMICS,STEALTHROCK,METRONOME
 EggGroups = Fairy
-HatchSteps = 5120
+HatchSteps = 5012
 Height = 0.7
 Weight = 59.1
 Color = Pink
@@ -24859,25 +26010,25 @@ Category = Hammer
 Pokedex = These Pokémon make their homes in piles of scrap metal. They test the strength of each other’s hammers by smashing them together.
 Generation = 9
 Evolutions = TINKATON,Level,38
-RegionalNumbers = 231,0
+RegionalNumbers = 245,0
 #-------------------------------
 [TINKATON]
 Name = Tinkaton
 Types = FAIRY,STEEL
-Affinities = FLYING
+Affinities = FIRE
 BaseStats = 85,75,77,94,70,105
 GenderRatio = AlwaysFemale
-GrowthRate = Medium
+GrowthRate = Parabolic
 BaseExp = 253
 EVs = SPECIAL_DEFENSE,3
 CatchRate = 45
-Happiness = 50
+Happiness = 70
 Abilities = MOLDBREAKER,OWNTEMPO
 HiddenAbilities = RELENTLESS
 Moves = 0,GIGATONHAMMER,1,ICEHAMMER,1,QUASH,1,FEINT,1,ASTONISH,1,FAIRYWIND,1,BABYDOLLEYES,6,METALCLAW,9,TOUGHHUG,14,ROCKSMASH,17,DRAININGKISS,20,SWEETKISS,24,BRUTALSWING,32,FLASHCANNON,37,PLAYROUGH,39,FAKEOUT,49,SLAM,55,SKITTERSMACK,61,KNOCKOFF,69,HEAVYSLAM
 TutorMoves = FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,BULLDOZE,ROCKSLIDE,STONEEDGE,FLASHCANNON,STEELBEAM,KNOCKOFF,PLAYROUGH,THUNDERWAVE,SWORDSDANCE,REFLECT,LIGHTSCREEN,THIEF,HELPINGHAND,THERMODYNAMICS,STEALTHROCK,METRONOME
 EggGroups = Fairy
-HatchSteps = 5120
+HatchSteps = 5012
 Height = 0.7
 Weight = 112.8
 Color = Pink
@@ -24886,26 +26037,1402 @@ Habitat = Forest
 Category = Hammer
 Pokedex = This intelligent Pokémon has a very daring disposition. It knocks rocks into the sky with its hammer, aiming for flying Corviknight.
 Generation = 9
-RegionalNumbers = 232,0
+RegionalNumbers = 246,0
+#-------------------------------
+[WIGLETT]
+Name = Wiglett
+Types = WATER
+Affinities = ROCK
+BaseStats = 10,55,25,95,35,25
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 49
+CatchRate = 255
+Happiness = 70
+Abilities = GOOEY,RATTLED
+HiddenAbilities = SANDVEIL
+TutorMoves = FACADE,BULLDOZE,EARTHPOWER,CHILLINGWATER,SURF,HYDROPUMP,ICEBEAM,BLIZZARD,THROATCHOP,AGILITY,RAINDANCE,SANDSTORM,WINDS,HELPINGHAND,LIQUIDATION
+EggGroups = Water3
+HatchSteps = 5012
+Height = 1.2
+Weight = 1.8
+Color = White
+Shape = HeadBase
+Generation = 9
+Evolutions = WUGTRIO,Level,26
+RegionalNumbers = 0,0
+#-------------------------------
+[WUGTRIO]
+Name = Wugtrio
+Types = WATER
+Affinities = ROCK
+BaseStats = 35,100,50,120,50,70
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 149
+CatchRate = 50
+Happiness = 70
+Abilities = GOOEY,RATTLED
+HiddenAbilities = SANDVEIL
+TutorMoves = FACADE,BULLDOZE,EARTHPOWER,CHILLINGWATER,SURF,HYDROPUMP,ICEBEAM,BLIZZARD,THROATCHOP,AGILITY,RAINDANCE,SANDSTORM,WINDS,HELPINGHAND,LIQUIDATION,HYPERBEAM,GIGAIMPACT
+EggGroups = Water3
+HatchSteps = 5012
+Height = 1.2
+Weight = 5.4
+Color = White
+Shape = HeadBase
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[BOMBIRDIER]
+Name = Bombirdier
+Types = FLYING,DARK
+Affinities = ROCK
+BaseStats = 70,103,85,82,60,85
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 243
+CatchRate = 25
+Happiness = 70
+Abilities = BIGPECKS,KEENEYE
+HiddenAbilities = ROCKYPAYLOAD
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,ACROBATICS,AIRSLASH,BRAVEBIRD,HURRICANE,ROCKSLIDE,POWERGEM,STONEEDGE,UTURN,ICYWIND,SNARL,KNOCKOFF,DARKPULSE,HONECLAWS,NASTYPLOT,TORMENT,TAUNT,TAILWIND,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,AERIALACE,THIEF,FLY,STEALTHROCK,ROOST,DRILLRUN,HYPERBEAM,GIGAIMPACT,SKYATTACK
+EggGroups = Flying
+HatchSteps = 8788
+Height = 1.5
+Weight = 42.9
+Color = White
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FINIZEN]
+Name = Finizen
+Types = WATER
+Affinities = FIGHTING
+BaseStats = 70,45,40,75,45,40
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 63
+CatchRate = 200
+Happiness = 70
+Abilities = WATERVEIL
+TutorMoves = ACROBATICS,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,ZENHEADBUTT,ICYWIND,ICEBEAM,BLIZZARD,AGILITY,RAINDANCE,WINDS,HELPINGHAND,BOUNCE,LIQUIDATION
+EggGroups = Field,Water2
+HatchSteps = 10024
+Height = 1.3
+Weight = 60.2
+Color = Blue
+Shape = Finned
+Generation = 9
+Evolutions = PALAFIN,Level,38
+RegionalNumbers = 0,0
+#-------------------------------
+[PALAFIN]
+Name = Palafin
+Types = WATER
+Affinities = FIGHTING
+BaseStats = 100,70,72,100,53,62
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 160
+CatchRate = 45
+Happiness = 70
+Abilities = ZEROTOHERO
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,POWERUPPUNCH,CLOSECOMBAT,FOCUSBLAST,ACROBATICS,IRONHEAD,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,ZENHEADBUTT,ICYWIND,ICEBEAM,BLIZZARD,OUTRAGE,BULKUP,AGILITY,TAUNT,RAINDANCE,WINDS,HELPINGHAND,LIQUIDATION,HYPERBEAM,GIGAIMPACT
+EggGroups = Field,Water2
+HatchSteps = 10024
+Height = 1.3
+Weight = 60.2
+Color = Blue
+Shape = Finned
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[VAROOM]
+Name = Varoom
+Types = POISON,STEEL
+Affinities = FIRE
+BaseStats = 45,70,63,47,30,45
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 60
+CatchRate = 190
+Happiness = 70
+Abilities = SLOWSTART
+HiddenAbilities = OVERCOAT
+TutorMoves = VENOSHOCK,POISONJAB,SLUDGEBOMB,BULLDOZE,GYROBALL,FLASHCANNON,IRONHEAD,STEELBEAM,ZENHEADBUTT,TOXIC,TORMENT,TAUNT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,THERMODYNAMICS
+EggGroups = Mineral
+HatchSteps = 5012
+Height = 1
+Weight = 35.0
+Color = Gray
+Shape = Head
+Generation = 9
+Evolutions = REVAVROOM,Level,40
+RegionalNumbers = 0,0
+#-------------------------------
+[REVAVROOM]
+Name = Revavroom
+Types = POISON,STEEL
+Affinities = FIRE
+BaseStats = 80,119,90,90,54,67
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 175
+CatchRate = 75
+Happiness = 70
+Abilities = OVERCOAT
+HiddenAbilities = FILTER
+TutorMoves = VENOSHOCK,POISONJAB,SLUDGEBOMB,BULLDOZE,GYROBALL,FLASHCANNON,IRONHEAD,STEELBEAM,ZENHEADBUTT,TAUNT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,THERMODYNAMICS,HYPERBEAM,GIGAIMPACT,OVERHEAT
+EggGroups = Mineral
+HatchSteps = 5012
+Height = 1.8
+Weight = 120.0
+Color = Gray
+Shape = Head
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CYCLIZAR]
+Name = Cyclizar
+Types = NORMAL,DRAGON
+Affinities = DRAGON
+BaseStats = 70,95,65,121,85,65
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 175
+CatchRate = 190
+Happiness = 105
+Abilities = SHEDSKIN
+HiddenAbilities = REGENERATOR
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,ACROBATICS,UTURN,IRONHEAD,WILDCHARGE,THUNDERBOLT,BREAKINGSWIPE,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,KNOCKOFF,AGILITY,TAUNT,RAINDANCE,SUNNYDAY,WINDS,AERIALACE,THIEF,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
+EggGroups = Field
+HatchSteps = 7518
+Height = 1.6
+Weight = 63.0
+Color = Green
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[ORTHWORM]
+Name = Orthworm
+Types = STEEL,POISON
+Affinities = GROUND
+BaseStats = 70,85,145,65,60,55
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 240
+CatchRate = 25
+Happiness = 70
+Abilities = EARTHEATER
+HiddenAbilities = SANDVEIL
+TutorMoves = DOUBLEEDGE,BULLDOZE,EARTHPOWER,EARTHQUAKE,SMACKDOWN,ROCKSLIDE,FLASHCANNON,IRONHEAD,STEELBEAM,SANDSTORM,HELPINGHAND,CURSE,THERMODYNAMICS,STEALTHROCK,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 7518
+Height = 2.5
+Weight = 310.0
+Color = Pink
+Shape = Serpentine
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[GLIMMET]
+Name = Glimmet
+Types = ROCK,POISON
+Affinities = FAIRY
+BaseStats = 48,35,42,60,105,60
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 70
+CatchRate = 70
+Happiness = 70
+Abilities = TOXICDEBRIS
+HiddenAbilities = CORROSION
+TutorMoves = VENOSHOCK,SLUDGEBOMB,SMACKDOWN,ROCKSLIDE,POWERGEM,STONEEDGE,DAZZLINGGLEAM,TOXIC,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,ANCIENTPOWER,STEALTHROCK,SLUDGEWAVE,EXPLOSION
+EggGroups = Mineral
+HatchSteps = 7518
+Height = 0.7
+Weight = 8.0
+Color = Blue
+Shape = Head
+Generation = 9
+Evolutions = GLIMMORA,Level,35
+RegionalNumbers = 0,0
+#-------------------------------
+[GLIMMORA]
+Name = Glimmora
+Types = ROCK,POISON
+Affinities = FAIRY
+BaseStats = 83,55,90,86,130,81
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 184
+CatchRate = 25
+Happiness = 70
+Abilities = TOXICDEBRIS
+HiddenAbilities = CORROSION
+TutorMoves = VENOSHOCK,SLUDGEBOMB,EARTHPOWER,SMACKDOWN,ROCKSLIDE,POWERGEM,STONEEDGE,FLASHCANNON,ENERGYBALL,SOLARBEAM,DAZZLINGGLEAM,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,ANCIENTPOWER,STEALTHROCK,SLUDGEWAVE,HYPERBEAM,GIGAIMPACT
+EggGroups = Mineral
+HatchSteps = 7518
+Height = 1.5
+Weight = 99.2
+Color = Blue
+Shape = Head
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[GREAVARD]
+Name = Greavard
+Types = GHOST
+Affinities = ROCK
+BaseStats = 50,61,60,34,30,55
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 58
+CatchRate = 120
+Happiness = 70
+Abilities = PICKUP
+HiddenAbilities = FLUFFY
+TutorMoves = ECHOEDVOICE,FALSESWIPE,DOUBLEEDGE,BULLDOZE,HEX,SHADOWBALL,PHANTOMFORCE,SNARL,PLAYROUGH,REST,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,HELPINGHAND
+EggGroups = Field
+HatchSteps = 5012
+Height = 0.6
+Weight = 35.0
+Color = White
+Shape = Quadruped
+Generation = 9
+Evolutions = HOUNDSTONE,LevelNight,30
+RegionalNumbers = 0,0
+#-------------------------------
+[HOUNDSTONE]
+Name = Houndstone
+Types = GHOST
+Affinities = ROCK
+BaseStats = 72,101,100,68,50,97
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 171
+CatchRate = 60
+Happiness = 70
+Abilities = SANDRUSH
+HiddenAbilities = FLUFFY
+TutorMoves = ECHOEDVOICE,FALSESWIPE,DOUBLEEDGE,BULLDOZE,HEX,SHADOWBALL,PHANTOMFORCE,SNARL,PLAYROUGH,WILLOWISP,REST,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,HELPINGHAND,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 5012
+Height = 2
+Weight = 15.0
+Color = White
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FLAMIGO]
+Name = Flamigo
+Types = FLYING,FIGHTING
+Affinities = NORMAL
+BaseStats = 82,115,74,90,75,64
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 175
+CatchRate = 100
+Happiness = 70
+Abilities = SCRAPPY,TANGLEDFEET
+HiddenAbilities = COSTAR
+TutorMoves = DOUBLEEDGE,CLOSECOMBAT,ACROBATICS,AIRSLASH,BRAVEBIRD,HURRICANE,UTURN,CHILLINGWATER,THROATCHOP,BULKUP,SWORDSDANCE,AGILITY,TAUNT,TAILWIND,WINDS,AERIALACE,THIEF,FLY,ROOST,LIQUIDATION,HYPERBEAM,GIGAIMPACT,SKYATTACK
+EggGroups = Flying
+HatchSteps = 5012
+Height = 1.6
+Weight = 37.0
+Color = Pink
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CETODDLE]
+Name = Cetoddle
+Types = ICE
+Affinities = NORMAL
+BaseStats = 108,68,45,43,30,40
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 67
+CatchRate = 150
+Happiness = 70
+Abilities = THICKFAT,SNOWCLOAK
+HiddenAbilities = SHEERFORCE
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,BULLDOZE,EARTHQUAKE,CHILLINGWATER,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,PLAYROUGH,FLASHFREEZE,REST,RAINDANCE,SNOWSCAPE,WINDS,HELPINGHAND,BOUNCE,LIQUIDATION,PERMAFROST,BODYPRESS,HYPERBEAM
+EggGroups = Field
+HatchSteps = 6215
+Height = 1.2
+Weight = 45.0
+Color = White
+Shape = BipedalTail
+Generation = 9
+Evolutions = CETITAN,Item,ICESTONE
+RegionalNumbers = 0,0
+#-------------------------------
+[CETITAN]
+Name = Cetitan
+Types = ICE
+Affinities = NORMAL
+BaseStats = 170,113,65,73,45,55
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 182
+CatchRate = 50
+Happiness = 70
+Abilities = THICKFAT,SLUSHRUSH
+HiddenAbilities = SHEERFORCE
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,BULLDOZE,EARTHQUAKE,CHILLINGWATER,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,PLAYROUGH,FLASHFREEZE,REST,RAINDANCE,SNOWSCAPE,WINDS,HELPINGHAND,BOUNCE,LIQUIDATION,PERMAFROST,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 6215
+Height = 4.5
+Weight = 700.0
+Color = White
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[VELUZA]
+Name = Veluza
+Types = WATER,PSYCHIC
+Affinities = STEEL
+BaseStats = 90,102,73,70,78,65
+GenderRatio = Female50Percent
+GrowthRate = Fast
+BaseExp = 167
+CatchRate = 100
+Happiness = 70
+Abilities = MOLDBREAKER
+HiddenAbilities = SHARPNESS
+TutorMoves = DOUBLEEDGE,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,PSYCHIC,ZENHEADBUTT,ICYWIND,ICEBEAM,BLIZZARD,AGILITY,RAINDANCE,SNOWSCAPE,WINDS,PSYCHICTERRAIN,DRILLRUN,LIQUIDATION,HYPERBEAM,GIGAIMPACT
+EggGroups = Water2
+HatchSteps = 5012
+Height = 2.5
+Weight = 90.0
+Color = Gray
+Shape = Finned
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[DONDOZO]
+Name = Dondozo
+Types = WATER
+Affinities = DRAGON
+BaseStats = 150,100,115,35,65,65
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 265
+CatchRate = 25
+Happiness = 70
+Abilities = UNAWARE,OBLIVIOUS
+HiddenAbilities = WATERVEIL
+TutorMoves = DOUBLEEDGE,BULLDOZE,EARTHQUAKE,ROCKSLIDE,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,ZENHEADBUTT,AVALANCHE,OUTRAGE,REST,RAINDANCE,WINDS,CURSE,LIQUIDATION,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Water2
+HatchSteps = 10024
+Height = 12
+Weight = 220.0
+Color = Blue
+Shape = Finned
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[TATSUGIRI]
+Name = Tatsugiri
+Types = DRAGON,WATER
+Affinities = NORMAL
+BaseStats = 68,50,60,82,120,95
+GenderRatio = Female50Percent
+GrowthRate = Parabolic
+BaseExp = 166
+CatchRate = 100
+Happiness = 70
+Abilities = COMMANDER
+HiddenAbilities = STORMDRAIN
+TutorMoves = CHILLINGWATER,SURF,HYDROPUMP,ICYWIND,DRAGONPULSE,OUTRAGE,NASTYPLOT,TAUNT,RAINDANCE,WINDS,HELPINGHAND,HYPERBEAM,GIGAIMPACT,DRACOMETEOR
+EggGroups = Water2
+HatchSteps = 8788
+Height = 0.3
+Weight = 8.0
+Color = Pink
+Shape = Serpentine
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[ANNIHILAPE]
+Name = Annihilape
+Types = FIGHTING,GHOST
+Affinities = NORMAL
+BaseStats = 110,115,80,90,50,90
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 268
+CatchRate = 45
+Happiness = 0
+Abilities = VITALSPIRIT,ANGERPOINT
+HiddenAbilities = DEFIANT
+TutorMoves = FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,ACROBATICS,POISONJAB,BULLDOZE,EARTHQUAKE,ROCKSLIDE,STONEEDGE,UTURN,SHADOWCLAW,SHADOWBALL,PHANTOMFORCE,THUNDERBOLT,THUNDER,OUTRAGE,BULKUP,TAUNT,PROTECT,RAINDANCE,SUNNYDAY,WINDS,THIEF,HELPINGHAND,STEALTHROCK,SEISMICTOSS,HYPERBEAM,GIGAIMPACT,OVERHEAT,METRONOME
+EggGroups = Field
+HatchSteps = 5012
+Height = 1.2
+Weight = 56.0
+Color = Gray
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CLODSIRE]
+Name = Clodsire
+Types = POISON,GROUND
+Affinities = WATER
+BaseStats = 130,75,60,20,45,100
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 151
+CatchRate = 90
+Happiness = 70
+Abilities = POISONPOINT,WATERABSORB
+HiddenAbilities = UNAWARE
+TutorMoves = FACADE,VENOSHOCK,POISONJAB,SLUDGEBOMB,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,IRONHEAD,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,ZENHEADBUTT,TOXIC,RAINDANCE,SANDSTORM,WINDS,HELPINGHAND,STEALTHROCK,LIQUIDATION,SLUDGEWAVE,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Water1,Field
+HatchSteps = 5012
+Height = 1.8
+Weight = 223.0
+Color = Brown
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FARIGIRAF]
+Name = Farigiraf
+Types = NORMAL,PSYCHIC
+Affinities = DARK
+BaseStats = 120,90,70,60,110,70
+GenderRatio = Female75Percent
+GrowthRate = Medium
+BaseExp = 260
+CatchRate = 45
+Happiness = 70
+Abilities = CUDCHEW,ARMORTAIL
+HiddenAbilities = SAPSIPPER
+TutorMoves = FACADE,HYPERVOICE,DOUBLEEDGE,BULLDOZE,EARTHQUAKE,SHADOWBALL,IRONHEAD,ENERGYBALL,CHARGEBEAM,THUNDERBOLT,THUNDER,PSYSHOCK,PSYCHIC,ZENHEADBUTT,DAZZLINGGLEAM,THUNDERWAVE,CALMMIND,NASTYPLOT,AGILITY,PROTECT,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,WINDS,PSYCHICTERRAIN,TRICKROOM,THIEF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 5012
+Height = 3.2
+Weight = 160.0
+Color = Brown
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[DUDUNSPARCE]
+Name = Dudunsparce
+Types = NORMAL
+Affinities = DRAGON
+BaseStats = 125,100,80,55,85,75
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 182
+CatchRate = 45
+Happiness = 70
+Abilities = SERENEGRACE,RUNAWAY
+HiddenAbilities = RATTLED
+TutorMoves = ECHOEDVOICE,FACADE,HYPERVOICE,DOUBLEEDGE,AIRSLASH,HURRICANE,POISONJAB,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,HEX,SHADOWBALL,FLAMETHROWER,FIREBLAST,CHILLINGWATER,SOLARBEAM,WILDCHARGE,THUNDERBOLT,THUNDER,ZENHEADBUTT,ICEBEAM,BLIZZARD,DRAGONTAIL,OUTRAGE,CALMMIND,AGILITY,PROTECT,TAILWIND,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,THIEF,ANCIENTPOWER,HELPINGHAND,STEALTHROCK,ROOST,SMARTSTRIKE,DRILLRUN,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Field
+HatchSteps = 5012
+Height = 3.6
+Weight = 39.2
+Color = Yellow
+Shape = Serpentine
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[KINGAMBIT]
+Name = Kingambit
+Types = DARK,STEEL
+Affinities = FIGHTING
+BaseStats = 100,135,120,50,60,85
+GenderRatio = Female25Percent
+GrowthRate = Medium
+BaseExp = 275
+CatchRate = 25
+Happiness = 70
+Abilities = DEFIANT,SUPREMEOVERLORD
+HiddenAbilities = PRESSURE
+TutorMoves = FALSESWIPE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,FOCUSBLAST,AIRSLASH,POISONJAB,STONEEDGE,SHADOWCLAW,FLASHCANNON,IRONHEAD,STEELBEAM,ZENHEADBUTT,SNARL,DARKPULSE,THUNDERWAVE,SWORDSDANCE,TORMENT,TAUNT,PROTECT,RAINDANCE,SANDSTORM,WINDS,AERIALACE,THIEF,STEALTHROCK,HYPERBEAM,GIGAIMPACT
+EggGroups = Humanlike
+HatchSteps = 5012
+Height = 2
+Weight = 120.0
+Color = Black
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[GREATTUSK]
+Name = Great Tusk
+Types = GROUND,FIGHTING
+Affinities = GROUND
+BaseStats = 115,131,131,87,53,53
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = DOUBLEEDGE,BRICKBREAK,CLOSECOMBAT,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,FLASHCANNON,IRONHEAD,PSYSHOCK,ZENHEADBUTT,KNOCKOFF,PLAYROUGH,BULKUP,TAUNT,SUNNYDAY,SANDSTORM,STEALTHROCK,SMARTSTRIKE,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 2.2
+Weight = 320.0
+Color = Purple
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SCREAMTAIL]
+Name = Scream Tail
+Types = FAIRY,PSYCHIC
+Affinities = NORMAL
+BaseStats = 115,65,99,111,65,115
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = ECHOEDVOICE,HYPERVOICE,FOCUSBLAST,GYROBALL,FLAMETHROWER,FIREBLAST,THUNDERBOLT,THUNDER,PSYSHOCK,PSYCHIC,ZENHEADBUTT,ICEBEAM,BLIZZARD,DAZZLINGGLEAM,PLAYROUGH,THUNDERWAVE,BULKUP,CALMMIND,REST,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,SANDSTORM,SNOWSCAPE,WINDS,MISTYTERRAIN,PSYCHICTERRAIN,TRICKROOM,HELPINGHAND,STEALTHROCK,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.2
+Weight = 8.0
+Color = Pink
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[BRUTEBONNET]
+Name = Brute Bonnet
+Types = GRASS,DARK
+Affinities = POISON
+BaseStats = 111,127,99,55,79,99
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = DOUBLEEDGE,POWERUPPUNCH,CLOSECOMBAT,CLEARSMOG,VENOSHOCK,EARTHPOWER,POLLENPUFF,HEX,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,OUTRAGE,DARKPULSE,TAUNT,SUNNYDAY,GRASSYTERRAIN,MAGICALLEAF,THIEF,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.2
+Weight = 21.0
+Color = Gray
+Shape = HeadArms
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FLUTTERMANE]
+Name = Flutter Mane
+Types = GHOST,FAIRY
+Affinities = GHOST
+BaseStats = 55,55,55,135,135,135
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = ECHOEDVOICE,HYPERVOICE,POWERGEM,HEX,SHADOWBALL,PHANTOMFORCE,ENERGYBALL,CHARGEBEAM,THUNDERBOLT,THUNDER,PSYSHOCK,ICYWIND,DARKPULSE,DAZZLINGGLEAM,MOONBLAST,THUNDERWAVE,CALMMIND,TAUNT,SUNNYDAY,MISTYTERRAIN,TRICKROOM,MAGICALLEAF,HELPINGHAND,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.4
+Weight = 4.0
+Color = Purple
+Shape = Head
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SLITHERWING]
+Name = Slither Wing
+Types = BUG,FIGHTING
+Affinities = FIRE
+BaseStats = 85,135,79,81,85,105
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = DOUBLEEDGE,BRICKBREAK,CLOSECOMBAT,ACROBATICS,HURRICANE,EARTHQUAKE,UTURN,LEECHLIFE,FLAMECHARGE,FLAREBLITZ,GIGADRAIN,WILDCHARGE,ZENHEADBUTT,WILLOWISP,BULKUP,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,AERIALACE,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 3.2
+Weight = 92.0
+Color = Red
+Shape = Insectoid
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[SANDYSHOCKS]
+Name = Sandy Shocks
+Types = ELECTRIC,GROUND
+Affinities = STEEL
+BaseStats = 85,81,97,101,121,85
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = BULLDOZE,EARTHPOWER,EARTHQUAKE,POWERGEM,FLASHCANNON,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,THUNDERWAVE,REFLECT,LIGHTSCREEN,SUNNYDAY,SANDSTORM,ELECTRICTERRAIN,STEALTHROCK,ZAPCANNON,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 7.7
+Weight = 60.0
+Color = Gray
+Shape = MultiBody
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONTREADS]
+Name = Iron Treads
+Types = GROUND,STEEL
+Affinities = GROUND
+BaseStats = 90,112,120,106,72,70
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = DOUBLEEDGE,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,FLASHCANNON,IRONHEAD,STEELBEAM,VOLTSWITCH,WILDCHARGE,THUNDER,ZENHEADBUTT,KNOCKOFF,SANDSTORM,ELECTRICTERRAIN,THERMODYNAMICS,STEALTHROCK,SMARTSTRIKE,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 0.9
+Weight = 240.0
+Color = Gray
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONBUNDLE]
+Name = Iron Bundle
+Types = ICE,WATER
+Affinities = FLYING
+BaseStats = 56,80,114,136,124,60
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = ACROBATICS,UTURN,CHILLINGWATER,HYDROPUMP,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,PLAYROUGH,FLASHFREEZE,AGILITY,TAUNT,RAINDANCE,SNOWSCAPE,WINDS,ELECTRICTERRAIN,THIEF,HELPINGHAND,THERMODYNAMICS,FREEZEDRY,PERMAFROST,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 0.6
+Weight = 11.0
+Color = Red
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONHANDS]
+Name = Iron Hands
+Types = FIGHTING,ELECTRIC
+Affinities = FIGHTING
+BaseStats = 154,140,108,50,50,68
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,BULLDOZE,EARTHQUAKE,ROCKSLIDE,IRONHEAD,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,PLAYROUGH,SWORDSDANCE,ELECTRICTERRAIN,THERMODYNAMICS,SEISMICTOSS,BODYPRESS,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.8
+Weight = 380.7
+Color = Gray
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONJUGULIS]
+Name = Iron Jugulus
+Types = DARK,FLYING
+Affinities = DRAGON
+BaseStats = 94,80,86,108,122,80
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = ECHOEDVOICE,HYPERVOICE,FOCUSBLAST,ACROBATICS,AIRSLASH,HURRICANE,EARTHPOWER,UTURN,FLASHCANNON,IRONHEAD,FLAMETHROWER,FIREBLAST,HYDROPUMP,CHARGEBEAM,ZENHEADBUTT,DRAGONTAIL,DRAGONPULSE,OUTRAGE,SNARL,KNOCKOFF,DARKPULSE,TAUNT,TAILWIND,RAINDANCE,SUNNYDAY,WINDS,ELECTRICTERRAIN,WORKUP,THERMODYNAMICS,FLY,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.3
+Weight = 111.0
+Color = Black
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONMOTH]
+Name = Iron Moth
+Types = FIRE,POISON
+Affinities = BUG
+BaseStats = 80,70,60,110,140,110
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = ACROBATICS,AIRSLASH,HURRICANE,VENOSHOCK,STRUGGLEBUG,UTURN,FLASHCANNON,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,ENERGYBALL,SOLARBEAM,CHARGEBEAM,PSYCHIC,DAZZLINGGLEAM,AGILITY,LIGHTSCREEN,SUNNYDAY,ELECTRICTERRAIN,HELPINGHAND,THERMODYNAMICS,SLUDGEWAVE,HYPERBEAM,GIGAIMPACT,OVERHEAT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.2
+Weight = 36.0
+Color = Red
+Shape = Winged
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONTHORNS]
+Name = Iron Thorns
+Types = ROCK,ELECTRIC
+Affinities = DARK
+BaseStats = 100,134,110,72,70,84
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = DOUBLEEDGE,BRICKBREAK,FOCUSBLAST,BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,POWERGEM,STONEEDGE,IRONHEAD,FLAMETHROWER,FIREBLAST,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,ICEBEAM,BLIZZARD,DRAGONTAIL,DRAGONCLAW,SNARL,THUNDERWAVE,SWORDSDANCE,TAUNT,RAINDANCE,SUNNYDAY,SANDSTORM,WINDS,ELECTRICTERRAIN,THERMODYNAMICS,STEALTHROCK,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.6
+Weight = 303.0
+Color = Green
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[FRIGIBAX]
+Name = Frigibax
+Types = ICE,DRAGON
+Affinities = STEEL
+BaseStats = 65,75,45,55,35,45
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 65
+CatchRate = 45
+Happiness = 70
+Abilities = THERMALEXCHANGE
+HiddenAbilities = ICEBODY
+TutorMoves = FALSESWIPE,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,FLASHFREEZE,SWORDSDANCE,RAINDANCE,SNOWSCAPE,WINDS,HELPINGHAND,THERMODYNAMICS,FREEZEDRY,PERMAFROST,DRACOMETEOR
+EggGroups = Dragon,Mineral
+HatchSteps = 10024
+Height = 0.5
+Weight = 17.0
+Color = Gray
+Shape = BipedalTail
+Generation = 9
+Evolutions = ARCTIBAX,Level,35
+RegionalNumbers = 0,0
+#-------------------------------
+[ARCTIBAX]
+Name = Arctibax
+Types = ICE,DRAGON
+Affinities = STEEL
+BaseStats = 90,95,66,62,45,65
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 150
+CatchRate = 25
+Happiness = 70
+Abilities = THERMALEXCHANGE
+HiddenAbilities = ICEBODY
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,IRONHEAD,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,FLASHFREEZE,SWORDSDANCE,RAINDANCE,SNOWSCAPE,WINDS,AERIALACE,HELPINGHAND,THERMODYNAMICS,PERMAFROST,DRACOMETEOR
+EggGroups = Dragon,Mineral
+HatchSteps = 10024
+Height = 0.8
+Weight = 30.0
+Color = Gray
+Shape = BipedalTail
+Generation = 9
+Evolutions = BAXCALIBUR,Level,54
+RegionalNumbers = 0,0
+#-------------------------------
+[BAXCALIBUR]
+Name = Baxcalibur
+Types = ICE,DRAGON
+Affinities = STEEL
+BaseStats = 115,145,92,87,75,86
+GenderRatio = Female50Percent
+GrowthRate = Slow
+BaseExp = 300
+CatchRate = 10
+Happiness = 70
+Abilities = THERMALEXCHANGE
+HiddenAbilities = ICEBODY
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,BULLDOZE,EARTHQUAKE,IRONHEAD,ZENHEADBUTT,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,BREAKINGSWIPE,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,FLASHFREEZE,SWORDSDANCE,RAINDANCE,SNOWSCAPE,WINDS,AERIALACE,HELPINGHAND,THERMODYNAMICS,PERMAFROST,BODYPRESS,HYPERBEAM,GIGAIMPACT,DRACOMETEOR
+EggGroups = Dragon,Mineral
+HatchSteps = 10024
+Height = 2.1
+Weight = 210.0
+Color = Gray
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[GIMMIGHOUL]
+Name = Gimmighoul
+Types = GHOST
+Affinities = STEEL
+BaseStats = 45,30,70,10,75,70
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 60
+CatchRate = 45
+Happiness = 70
+Abilities = RATTLED
+TutorMoves = POWERGEM,HEX,SHADOWBALL,NASTYPLOT,REFLECT,LIGHTSCREEN,THIEF
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 0.3
+Weight = 5.0
+Color = Brown
+Shape = Head
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[GHOLDENGO]
+Name = Gholdengo
+Types = STEEL,GHOST
+Affinities = STEEL
+BaseStats = 87,60,95,84,133,91
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 275
+CatchRate = 45
+Happiness = 70
+Abilities = GOODASGOLD
+TutorMoves = POWERUPPUNCH,FOCUSBLAST,POWERGEM,HEX,SHADOWBALL,FLASHCANNON,IRONHEAD,STEELBEAM,CHARGEBEAM,THUNDERBOLT,THUNDER,PSYSHOCK,PSYCHIC,DAZZLINGGLEAM,THUNDERWAVE,NASTYPLOT,REFLECT,LIGHTSCREEN,SANDSTORM,THIEF,SUBSTITUTE,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.2
+Weight = 30.0
+Color = Yellow
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[WOCHIEN]
+Name = Wo-Chien
+Types = DARK,GRASS
+Affinities = DARK
+BaseStats = 85,85,100,70,95,135
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 6
+Happiness = 0
+Abilities = TABLETSOFRUIN
+TutorMoves = POLLENPUFF,HEX,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,SNARL,KNOCKOFF,DARKPULSE,TAUNT,REFLECT,LIGHTSCREEN,RAINDANCE,SUNNYDAY,WINDS,GRASSYTERRAIN,MAGICALLEAF,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.5
+Weight = 74.2
+Color = Brown
+Shape = Serpentine
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CHIENPAO]
+Name = Chien-Pao
+Types = DARK,ICE
+Affinities = DARK
+BaseStats = 80,120,80,135,90,65
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 6
+Happiness = 0
+Abilities = SWORDOFRUIN
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,ACROBATICS,HEX,ICYWIND,AVALANCHE,BLIZZARD,SNARL,DARKPULSE,THROATCHOP,SWORDSDANCE,TAUNT,RAINDANCE,SNOWSCAPE,WINDS,AERIALACE,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.9
+Weight = 152.2
+Color = White
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[TINGLU]
+Name = Ting-Lu
+Types = DARK,GROUND
+Affinities = DARK
+BaseStats = 155,110,125,45,55,80
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 6
+Happiness = 0
+Abilities = VESSELOFRUIN
+TutorMoves = BULLDOZE,EARTHPOWER,EARTHQUAKE,ROCKSLIDE,STONEEDGE,HEX,ZENHEADBUTT,SNARL,DARKPULSE,THROATCHOP,TAUNT,SUNNYDAY,SANDSTORM,STEALTHROCK,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 2.7
+Weight = 699.7
+Color = Brown
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[CHIYU]
+Name = Chi-Yu
+Types = DARK,FIRE
+Affinities = DARK
+BaseStats = 55,80,80,100,135,120
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 6
+Happiness = 0
+Abilities = BEADSOFRUIN
+TutorMoves = HEX,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,PSYCHIC,ZENHEADBUTT,SNARL,DARKPULSE,WILLOWISP,NASTYPLOT,TAUNT,REFLECT,LIGHTSCREEN,SUNNYDAY,BOUNCE,INFERNO,HYPERBEAM,GIGAIMPACT,OVERHEAT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 0.4
+Weight = 4.9
+Color = Red
+Shape = Finned
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[ROARINGMOON]
+Name = Roaring Moon
+Types = DARK,DRAGON
+Affinities = FLYING
+BaseStats = 105,139,71,119,55,101
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,BRICKBREAK,ACROBATICS,AIRSLASH,HURRICANE,EARTHQUAKE,ROCKSLIDE,STONEEDGE,UTURN,SHADOWCLAW,IRONHEAD,FLAMETHROWER,FIREBLAST,HYDROPUMP,ZENHEADBUTT,BREAKINGSWIPE,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,SNARL,DARKPULSE,THROATCHOP,TAUNT,TAILWIND,SUNNYDAY,WINDS,AERIALACE,FLY,ROOST,BODYPRESS,HYPERBEAM,GIGAIMPACT,DRACOMETEOR
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 2
+Weight = 380.0
+Color = Blue
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONVALIANT]
+Name = Iron Valiant
+Types = FIGHTING,FAIRY
+Affinities = PSYCHIC
+BaseStats = 74,130,90,116,120,60
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 285
+CatchRate = 20
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = FALSESWIPE,HYPERVOICE,DOUBLEEDGE,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,POISONJAB,HEX,SHADOWCLAW,SHADOWBALL,LEAFBLADE,ENERGYBALL,CHARGEBEAM,THUNDERBOLT,PSYSHOCK,PSYCHIC,ZENHEADBUTT,FUTURESIGHT,ICYWIND,KNOCKOFF,SPIRITBREAK,DAZZLINGGLEAM,MOONBLAST,THUNDERWAVE,CALMMIND,SWORDSDANCE,AGILITY,TAUNT,REFLECT,LIGHTSCREEN,ELECTRICTERRAIN,MISTYTERRAIN,PSYCHICTERRAIN,TRICKROOM,AERIALACE,MAGICALLEAF,HELPINGHAND,THERMODYNAMICS,LIQUIDATION,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.4
+Weight = 35.0
+Color = White
+Shape = Bipedal
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[KORAIDON]
+Name = Koraidon
+Types = FIGHTING,DRAGON
+Affinities = DRAGON
+BaseStats = 100,135,115,135,85,100
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 335
+CatchRate = 3
+Happiness = 0
+Abilities = ORICHALCUMPULSE
+TutorMoves = FALSESWIPE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,ACROBATICS,BULLDOZE,UTURN,SHADOWCLAW,IRONHEAD,FLAMECHARGE,FLAMETHROWER,FIREBLAST,FLAREBLITZ,SOLARBEAM,WILDCHARGE,ZENHEADBUTT,BREAKINGSWIPE,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,SNARL,BULKUP,SWORDSDANCE,AGILITY,TAUNT,SUNNYDAY,ANCIENTPOWER,HELPINGHAND,BODYPRESS,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 2.5
+Weight = 303.0
+Color = Red
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[MIRAIDON]
+Name = Miraidon
+Types = ELECTRIC,DRAGON
+Affinities = DRAGON
+BaseStats = 100,85,100,135,135,115
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 335
+CatchRate = 3
+Happiness = 0
+Abilities = HADRONENGINE
+TutorMoves = ECHOEDVOICE,ACROBATICS,POWERGEM,UTURN,FLASHCANNON,SOLARBEAM,CHARGEBEAM,VOLTSWITCH,WILDCHARGE,THUNDERBOLT,THUNDER,ZENHEADBUTT,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,SNARL,DAZZLINGGLEAM,THUNDERWAVE,CALMMIND,SWORDSDANCE,AGILITY,TAUNT,REFLECT,LIGHTSCREEN,ELECTRICTERRAIN,SHOCKWAVE,HELPINGHAND,THERMODYNAMICS,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 3.5
+Weight = 240.0
+Color = Blue
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[WALKINGWAKE]
+Name = Walking Wake
+Types = WATER,DRAGON
+Affinities = WATER
+BaseStats = 99,83,91,109,125,83
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 5
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+TutorMoves = FALSESWIPE,DOUBLEEDGE,HURRICANE,FLAMETHROWER,CHILLINGWATER,WATERFALL,SURF,HYDROPUMP,BREAKINGSWIPE,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,SNARL,HONECLAWS,AGILITY,RAINDANCE,SUNNYDAY,WINDS,LIQUIDATION,HYPERBEAM,GIGAIMPACT,DRACOMETEOR
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 3.5
+Weight = 280.0
+Color = Blue
+Shape = BipedalTail
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[IRONLEAVES]
+Name = Iron Leaves
+Types = GRASS,PSYCHIC
+Affinities = FIGHTING
+BaseStats = 90,130,88,104,70,108
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 5
+Happiness = 0
+Abilities = QUARKDRIVE
+TutorMoves = FALSESWIPE,DOUBLEEDGE,BRICKBREAK,CLOSECOMBAT,FOCUSBLAST,AIRSLASH,LEAFBLADE,GIGADRAIN,ENERGYBALL,SOLARBEAM,WILDCHARGE,CALMMIND,SWORDSDANCE,AGILITY,TAUNT,GRASSYTERRAIN,ELECTRICTERRAIN,PSYCHICTERRAIN,WORKUP,AERIALACE,MAGICALLEAF,HELPINGHAND,THERMODYNAMICS,SMARTSTRIKE,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.5
+Weight = 125.0
+Color = Green
+Shape = Quadruped
+Generation = 9
+RegionalNumbers = 0,0
+#-------------------------------
+[DIPPLIN]
+Name = Dipplin
+Types = GRASS,DRAGON
+Affinities = BUG
+BaseStats = 80,80,110,40,95,80
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 170
+CatchRate = 45
+Happiness = 70
+Abilities = SUPERSWEETSYRUP,GLUTTONY
+HiddenAbilities = STICKYHOLD
+EggGroups = Grass,Dragon
+HatchSteps = 5020
+Height = 0.4
+Weight = 4.4
+Color = Green
+Shape = MultiBody
+Generation = 9
+#-------------------------------
+[POLCHAGEIST]
+Name = Polchageist
+Types = GRASS,GHOST
+Affinities = WATER
+BaseStats = 40,45,45,50,74,54
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 62
+CatchRate = 120
+Happiness = 70
+Abilities = HOSPITALITY
+HiddenAbilities = HEATPROOF
+EggGroups = Mineral,Amorphous
+HatchSteps = 5020
+Height = 0.1
+Weight = 1.1
+Color = Green
+Shape = Head
+Generation = 9
+#-------------------------------
+[SINISTCHA]
+Name = Sinistcha
+Types = GRASS,GHOST
+Affinities = WATER
+BaseStats = 71,60,106,70,121,80
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 178
+CatchRate = 80
+Happiness = 70
+Abilities = HOSPITALITY
+HiddenAbilities = HEATPROOF
+EggGroups = Mineral,Amorphous
+HatchSteps = 5020
+Height = 0.2
+Weight = 2.2
+Color = Green
+Shape = Head
+Generation = 9
+#-------------------------------
+[OKIDOGI]
+Name = Okidogi
+Types = POISON,FIGHTING
+Affinities = POISON
+BaseStats = 88,128,115,80,58,86
+GenderRatio = AlwaysMale
+GrowthRate = Slow
+BaseExp = 278
+CatchRate = 5
+Happiness = 0
+Abilities = TOXICCHAIN
+HiddenAbilities = GUARDDOG
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.8
+Weight = 92.0
+Color = Black
+Shape = Bipedal
+Generation = 9
+#-------------------------------
+[MUNKIDORI]
+Name = Munkidori
+Types = POISON,PSYCHIC
+Affinities = POISON
+BaseStats = 88,75,66,106,130,90
+GenderRatio = AlwaysMale
+GrowthRate = Slow
+BaseExp = 278
+CatchRate = 5
+Happiness = 0
+Abilities = TOXICCHAIN
+HiddenAbilities = FRISK
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1
+Weight = 12.2
+Color = Black
+Shape = Bipedal
+Generation = 9
+#-------------------------------
+[FEZANDIPITI]
+Name = Fezandipiti
+Types = POISON,FAIRY
+Affinities = POISON
+BaseStats = 88,91,82,99,70,125
+GenderRatio = AlwaysMale
+GrowthRate = Slow
+BaseExp = 278
+CatchRate = 5
+Happiness = 0
+Abilities = TOXICCHAIN
+HiddenAbilities = TECHNICIAN
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.4
+Weight = 30.1
+Color = Black
+Shape = Winged
+Generation = 9
+#-------------------------------
+[OGERPON]
+Name = Ogerpon
+Types = GRASS
+Affinities = GRASS
+BaseStats = 80,120,84,110,60,96
+GenderRatio = AlwaysFemale
+GrowthRate = Slow
+BaseExp = 300
+CatchRate = 5
+Happiness = 0
+Abilities = DEFIANT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.2
+Weight = 39.8
+Color = Green
+Shape = Bipedal
+Generation = 9
+#-------------------------------
+[ARCHALUDON]
+Name = Archaludon
+Types = STEEL,DRAGON
+Affinities = STEEL
+BaseStats = 90,105,130,85,125,65
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 200
+CatchRate = 10
+Happiness = 70
+Abilities = STAMINA,STURDY
+EggGroups = Mineral,Dragon
+HatchSteps = 7600
+Height = 2
+Weight = 60.0
+Color = White
+Shape = BipedalTail
+Generation = 9
+#-------------------------------
+[HYDRAPPLE]
+Name = Hydrapple
+Types = GRASS,DRAGON
+Affinities = BUG
+BaseStats = 106,80,110,44,120,80
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 200
+CatchRate = 10
+Happiness = 70
+Abilities = SUPERSWEETSYRUP,REGENERATOR
+HiddenAbilities = STICKYHOLD
+EggGroups = Grass,Dragon
+HatchSteps = 5020
+Height = 1.8
+Weight = 93.0
+Color = Green
+Shape = MultiBody
+Generation = 9
+#-------------------------------
+[GOUGINGFIRE]
+Name = Gouging Fire
+Types = FIRE,DRAGON
+Affinities = FIRE
+BaseStats = 105,115,121,91,65,93
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 10
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 3.5
+Weight = 590.0
+Color = Brown
+Shape = Quadruped
+Generation = 9
+#-------------------------------
+[RAGINGBOLT]
+Name = Raging Bolt
+Types = ELECTRIC,DRAGON
+Affinities = ELECTRIC
+BaseStats = 125,73,91,75,137,89
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 10
+Happiness = 0
+Abilities = PROTOSYNTHESIS
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 5.2
+Weight = 480.0
+Color = Yellow
+Shape = Quadruped
+Generation = 9
+#-------------------------------
+[IRONBOULDER]
+Name = Iron Boulder
+Types = ROCK,PSYCHIC
+Affinities = FIGHTING
+BaseStats = 90,120,80,124,68,108
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 10
+Happiness = 0
+Abilities = QUARKDRIVE
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.5
+Weight = 162.5
+Color = Gray
+Shape = Quadruped
+Generation = 9
+#-------------------------------
+[IRONCROWN]
+Name = Iron Crown
+Types = STEEL,PSYCHIC
+Affinities = FIGHTING
+BaseStats = 90,72,100,98,122,108
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 295
+CatchRate = 10
+Happiness = 0
+Abilities = QUARKDRIVE
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 1.6
+Weight = 156.0
+Color = Blue
+Shape = Quadruped
+Generation = 9
+#-------------------------------
+[TERAPAGOS]
+Name = Terapagos
+Types = NORMAL
+Affinities = NORMAL
+BaseStats = 90,65,85,60,65,85
+GenderRatio = Genderless
+GrowthRate = Slow
+BaseExp = 300
+CatchRate = 255
+Happiness = 0
+Abilities = STELLARSHIFT
+EggGroups = Undiscovered
+HatchSteps = 15036
+Height = 0.2
+Weight = 6.5
+Color = Blue
+Shape = Quadruped
+Generation = 9
 #-------------------------------
 [PALMINO]
 Name = Palmino
-Types = GRASS,FLYING
+Types = GRASS
 Affinities = NORMAL
-BaseStats = 72,47,53,41,47,50
+BaseStats = 70,60,50,40,65,55
 GenderRatio = Female50Percent
 GrowthRate = Medium
 BaseExp = 64
-EVs = HP,2
+EVs = HP,1
 CatchRate = 180
 Happiness = 70
 Abilities = FLORAVORTEX,SOLARPOWER
 HiddenAbilities = HARVEST
-Moves = 1,LEER,1,GUST,1,GROWTH,1,RAZORLEAF,6,SWEETSCENT,10,STOMP,16,MAGICALLEAF,21,WHIRLWIND,26,LEAFTORNADO,30,NATURALGIFT,36,AIRSLASH,41,BODYSLAM,46,BESTOW,50,SYNTHESIS,56,SOLARBEAM
-TutorMoves = ECHOEDVOICE,GENERICBOOST,BREEZEBOOST,FLORABOOST,PROTECT
-EggMoves = BULLETSEED,CURSE,DRAGONDANCE,DRAGONHAMMER,HEADBUTT,LEAFBLADE,LEAFSTORM,LEECHSEED,NATURALGIFT,NATUREPOWER,RAZORWIND,SLAM,SYNTHESIS
+Moves = 1,LEER,1,LEAFAGE,1,TACKLE,5,GUST,9,GROWTH,12,RAZORLEAF,15,STOMP,17,MAGICALLEAF,22,WHIRLWIND,27,LEAFTORNADO,34,BODYSLAM,47,SYNTHESIS
+TutorMoves = FACADE,DOUBLEEDGE,AIRSLASH,HURRICANE,BULLDOZE,EARTHQUAKE,UTURN,GRASSPLEDGE,LEAFBLADE,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,DRAGONTAIL,DRAGONPULSE,OUTRAGE,GENERICBOOST,BREEZEBOOST,FLORABOOST,SWORDSDANCE,PROTECT,SAFEGUARD,TAILWIND,DEFOG,RAINDANCE,SUNNYDAY,WINDS,GRASSYTERRAIN,AERIALACE,MAGICALLEAF,OMINOUSWIND,SILVERWIND,HELPINGHAND,CURSE,FLY,STRENGTH,ROOST,BODYPRESS,HYPERBEAM,GIGAIMPACT
 EggGroups = Undiscovered
-HatchSteps = 6400
+HatchSteps = 5120
 Height = 0.8
 Weight = 44.7
 Color = Green
@@ -24913,23 +27440,142 @@ Shape = Quadruped
 Habitat = Forest
 Category = Sprout
 Pokedex = Palmino are a rare sight in the wild. Tropius will keep their Palmino hidden until they have evolved and can survive on their own as larger Pokémon may come after the fruits growing on its neck, even when not ripe.
-Generation = 3
-Evolutions = TROPIUS,HappinessDay,
+Generation = 50
+Evolutions = TROPIUS,Level,16
 RegionalNumbers = 1,0
-GenderRate = Female50Percent
-BaseEXP = 80
-EffortPoints = 1,0,0,0,0,0
-Rareness = 200
-HiddenAbility = HARVEST
-Compatibility = Monster,Grass
-StepsToHatch = 6400
-Kind = Growth
-BattlerPlayerX = 0
-BattlerPlayerY = 0
-BattlerEnemyX = 0
-BattlerEnemyY = 2
-BattlerShadowX = 0
-BattlerShadowSize = 3
+#-------------------------------
+[DENDROQUIUS]
+Name = Dendroquius
+Types = GRASS,FLYING
+Affinities = FIRE
+BaseStats = 120,95,75,65,110,80
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 255
+EVs = HP,2,SPECIAL_ATTACK,1
+CatchRate = 45
+Happiness = 70
+Abilities = FLORAVORTEX,SOLARPOWER
+HiddenAbilities = HARVEST
+Moves = 0,FRUITFLOURISH,1,AIRSLASH,1,WOODHAMMER,1,WIDEGUARD,1,OUTRAGE,1,LEECHSEED,1,LEAFBLADE,1,LEER,1,LEAFAGE,1,TACKLE,5,GUST,9,GROWTH,12,RAZORLEAF,15,STOMP,17,MAGICALLEAF,22,WHIRLWIND,27,LEAFTORNADO,34,BODYSLAM,40,FLY,47,SYNTHESIS,54,SOLARBEAM,61,DRAGONDANCE,70,LEAFSTORM
+TutorMoves = FACADE,DOUBLEEDGE,AIRSLASH,HURRICANE,BULLDOZE,EARTHQUAKE,UTURN,GRASSPLEDGE,LEAFBLADE,GIGADRAIN,ENERGYBALL,SOLARBEAM,ZENHEADBUTT,DRAGONTAIL,DRAGONPULSE,OUTRAGE,GENERICBOOST,BREEZEBOOST,FLORABOOST,SWORDSDANCE,PROTECT,SAFEGUARD,TAILWIND,DEFOG,RAINDANCE,SUNNYDAY,WINDS,GRASSYTERRAIN,AERIALACE,MAGICALLEAF,OMINOUSWIND,SILVERWIND,HELPINGHAND,CURSE,FLY,STRENGTH,ROOST,BODYPRESS,HYPERBEAM,GIGAIMPACT
+EggGroups = Monster,Grass
+HatchSteps = 6400
+Height = 3.4
+Weight = 430.3
+Color = Green
+Shape = Quadruped
+Habitat = Forest
+Category = Elder Tree
+Generation = 50
+RegionalNumbers = 3,0
+#-------------------------------
+[BOOMINE]
+Name = Boomine
+Types = FIRE
+Affinities = NORMAL
+BaseStats = 60,55,70,40,65,50
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 64
+EVs = DEFENSE,1
+CatchRate = 180
+Happiness = 70
+Abilities = FLAMEVORTEX,SHELLARMOR
+HiddenAbilities = AFTERMATH
+Moves = 1,ENDURE,1,EMBER,1,TACKLE,5,SMOG,9,PROTECT,12,INCINERATE,15,IRONDEFENSE,17,FLAMEBURST,22,BLOCK,27,LAVAPLUME,34,BODYSLAM,47,SHELLTRAP
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,FOCUSBLAST,VENOSHOCK,BULLDOZE,EARTHQUAKE,SMACKDOWN,STONEEDGE,FLASHCANNON,IRONHEAD,FLAMECHARGE,FLAMETHROWER,FIREBLAST,SOLARBEAM,CHARGEBEAM,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,GENERICBOOST,FLAMEBOOST,AQUABOOST,MYSTICBOOST,WILLOWISP,BULKUP,TAUNT,PROTECT,SUNNYDAY,WORKUP,SHOCKWAVE,CURSE,BODYPRESS,EXPLOSION,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
+EggGroups = Undiscovered
+HatchSteps = 5120
+Height = 0.4
+Weight = 50.4
+Color = Red
+Shape = Quadruped
+Category = Landmine
+Pokedex = While Boomine have a lower concentration of explosive material in its shell than Turtonator, it is still very sensitive to impacts. This is especially true for the button-like protrusion on its shell.
+Generation = 50
+Evolutions = TURTONATOR,Level,16
+RegionalNumbers = 4,0
+#-------------------------------
+[ARCHABLAST]
+Name = Archablast
+Types = FIRE,DRAGON
+Affinities = WATER
+BaseStats = 90,85,135,30,120,85
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 255
+EVs = DEFENSE,2,SPECIAL_ATTACK,1
+CatchRate = 45
+Happiness = 70
+Abilities = FLAMEVORTEX,SHELLARMOR
+HiddenAbilities = AFTERMATH
+Moves = 0,BLOWOUTBLAST,1,DRAGONBREATH,1,HEADSMASH,1,WIDEGUARD,1,FIRESPIN,1,SELFDESTRUCT,1,EXPLOSION,1,FLAMETHROWER,1,ENDURE,1,EMBER,1,TACKLE,5,SMOG,9,PROTECT,12,INCINERATE,15,IRONDEFENSE,17,FLAMEBURST,22,BLOCK,27,LAVAPLUME,34,BODYSLAM,40,DRAGONPULSE,47,SHELLTRAP,54,OUTRAGE,61,SHELLSMASH,70,OVERHEAT
+TutorMoves = ECHOEDVOICE,HYPERVOICE,DOUBLEEDGE,FOCUSBLAST,VENOSHOCK,BULLDOZE,EARTHQUAKE,SMACKDOWN,STONEEDGE,FLASHCANNON,IRONHEAD,FLAMECHARGE,FLAMETHROWER,FIREBLAST,SOLARBEAM,CHARGEBEAM,DRAGONTAIL,DRAGONCLAW,DRAGONPULSE,OUTRAGE,GENERICBOOST,FLAMEBOOST,AQUABOOST,MYSTICBOOST,WILLOWISP,BULKUP,TAUNT,PROTECT,SUNNYDAY,WORKUP,SHOCKWAVE,CURSE,BODYPRESS,EXPLOSION,HYPERBEAM,GIGAIMPACT,OVERHEAT,DRACOMETEOR
+EggGroups = Monster,Dragon
+HatchSteps = 6400
+Height = 2.4
+Weight = 270.7
+Color = Red
+Shape = BipedalTail
+Category = Blast Turtle
+Generation = 50
+RegionalNumbers = 6,0
+#-------------------------------
+[LAZU]
+Name = Lazu
+Types = WATER
+Affinities = NORMAL
+BaseStats = 70,50,55,40,65,60
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 64
+EVs = HP,1
+CatchRate = 180
+Happiness = 70
+Abilities = AQUAVORTEX,SHELLARMOR
+HiddenAbilities = HYDRATION
+Moves = 1,GROWL,1,WATERGUN,1,TACKLE,5,POWDERSNOW,9,SING,12,WATERPULSE,15,LIFEDEW,17,BRINE,22,MIST,27,SURF,34,HYPERVOICE,47,AURORAVEIL
+TutorMoves = ECHOEDVOICE,HYPERVOICE,BULLDOZE,IRONHEAD,WATERFALL,SURF,HYDROPUMP,SOLARBEAM,THUNDERBOLT,THUNDER,PSYCHIC,ZENHEADBUTT,FUTURESIGHT,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DRAGONPULSE,OUTRAGE,GENERICBOOST,AQUABOOST,FROSTBOOST,FLASHFREEZE,PROTECT,SAFEGUARD,REFLECT,RAINDANCE,SNOWSCAPE,WINDS,SHOCKWAVE,FORESIGHT,ANCIENTPOWER,HELPINGHAND,CURSE,STRENGTH,SUBSTITUTE,WEATHERBALL,SMARTSTRIKE,DRILLRUN,LIQUIDATION,FREEZEDRY,ZAPCANNON,PERMAFROST,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Undiscovered
+HatchSteps = 5120
+Height = 0.7
+Weight = 52.4
+Color = Blue
+Shape = Finned
+Habitat = Sea
+Category = Lake Child
+Pokedex = Lazu are inexperienced swimmers and struggle to move in water, even though they are naturally buoyant. Instead they are often carried on the backs of Lapras.
+Generation = 50
+Evolutions = LAPRAS,Level,16
+RegionalNumbers = 7,0
+#-------------------------------
+[LAPRANESSE]
+Name = Lapranesse
+Types = WATER,ICE
+Affinities = FAIRY
+BaseStats = 130,60,85,60,115,95
+GenderRatio = Female50Percent
+GrowthRate = Medium
+BaseExp = 255
+EVs = HP,2,SPECIAL_ATTACK,1
+CatchRate = 45
+Happiness = 70
+Abilities = AQUAVORTEX,SHELLARMOR
+HiddenAbilities = HYDRATION
+Moves = 0,BOREALBEAM,1,AURORABEAM,1,MIST,1,DRAGONDANCE,1,WHIRLPOOL,1,ANCIENTPOWER,1,TICKLE,1,SPARKLINGARIA,1,GROWL,1,WATERGUN,1,TACKLE,5,POWDERSNOW,9,SING,12,WATERPULSE,15,LIFEDEW,17,BRINE,22,MIST,27,SURF,34,HYPERVOICE,40,FREEZEDRY,47,AURORAVEIL,54,BLIZZARD,61,PERISHSONG,70,HYDROPUMP
+TutorMoves = ECHOEDVOICE,HYPERVOICE,BULLDOZE,IRONHEAD,WATERFALL,SURF,HYDROPUMP,SOLARBEAM,THUNDERBOLT,THUNDER,PSYCHIC,ZENHEADBUTT,FUTURESIGHT,ICYWIND,AVALANCHE,ICEBEAM,BLIZZARD,DRAGONPULSE,OUTRAGE,GENERICBOOST,AQUABOOST,FROSTBOOST,FLASHFREEZE,PROTECT,SAFEGUARD,REFLECT,RAINDANCE,SNOWSCAPE,WINDS,SHOCKWAVE,FORESIGHT,ANCIENTPOWER,HELPINGHAND,CURSE,STRENGTH,SUBSTITUTE,WEATHERBALL,SMARTSTRIKE,DRILLRUN,LIQUIDATION,FREEZEDRY,ZAPCANNON,PERMAFROST,BODYPRESS,HYPERBEAM,GIGAIMPACT,MEGAHORN
+EggGroups = Monster,Water1
+HatchSteps = 6400
+Height = 2.8
+Weight = 302.5
+Color = Blue
+Shape = Finned
+Habitat = Sea
+Category = Lake Monster
+Pokedex = Lapranesse are so rarely seen that some think they are only a myth. Hobbyist photographers gather around lakes after rumours of a Lapranesse sighting hoping to snap a news-worthy picture.
+Generation = 50
+RegionalNumbers = 9,0
 #-------------------------------
 [SANDOLIN]
 Name = Sandolin
@@ -24944,8 +27590,8 @@ CatchRate = 45
 Happiness = 70
 Abilities = SANDVEIL,POISONTOUCH
 HiddenAbilities = SANDRUSH
-Moves = 0,KILLERCOMBO,1,GYROBALL,1,SANDSTORM,1,FURYSWIPES,1,SANDTOMB,1,DEFENSECURL,1,SCRATCH,3,POISONSTING,6,SANDATTACK,8,ROLLOUT,12,FURYCUTTER,15,RAPIDSPIN,19,BULLDOZE,25,SLASH,33,CROSSPOISON,36,CRUSHCLAW,44,DIG,47,SWORDSDANCE,53,NIGHTSLASH,60,EARTHQUAKE
-TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,PROTECT
+Moves = 1,GYROBALL,1,SANDSTORM,1,FURYSWIPES,1,SANDTOMB,1,DEFENSECURL,1,SCRATCH,3,POISONSTING,6,SANDATTACK,8,ROLLOUT,12,FURYCUTTER,15,RAPIDSPIN,19,BULLDOZE,25,SLASH,33,CROSSPOISON,36,CRUSHCLAW,44,DIG,47,SWORDSDANCE,53,NIGHTSLASH,60,EARTHQUAKE
+TutorMoves = FALSESWIPE,FACADE,DOUBLEEDGE,POWERUPPUNCH,BRICKBREAK,CIRCLETHROW,CLOSECOMBAT,CLEARSMOG,VENOSHOCK,POISONJAB,SLUDGEBOMB,BULLDOZE,EARTHPOWER,HIGHHORSEPOWER,EARTHQUAKE,SMACKDOWN,ROCKSLIDE,STONEEDGE,UTURN,LEECHLIFE,SHADOWCLAW,GYROBALL,IRONHEAD,BREAKINGSWIPE,KNOCKOFF,THROATCHOP,GENERICBOOST,MUSCLEBOOST,VENOMBOOST,EARTHBOOST,METALBOOST,BULKUP,HONECLAWS,SWORDSDANCE,AGILITY,PROTECT,SUNNYDAY,SANDSTORM,WORKUP,AERIALACE,FORESIGHT,THIEF,CURSE,STRENGTH,STEALTHROCK,SEISMICTOSS,SMARTSTRIKE,DRILLRUN,DYNAMICPUNCH,BODYPRESS,HYPERBEAM,GIGAIMPACT
 EggGroups = Field
 HatchSteps = 5120
 Height = 1.4
@@ -24954,8 +27600,8 @@ Color = Yellow
 Shape = BipedalTail
 Habitat = RoughTerrain
 Category = Pangolin
-Pokedex = Sandolin’s scales secrete a moderately strong toxin. By cloaking its claws in this toxin, it can poison its prey. Some cultures believe its scales have medicinal properties and use them in nontraditional medicine.
-Generation = 1
+Pokedex = Sandolin's scales secrete a moderately strong toxin. By cloaking its claws in this toxin, it can poison its prey. Some cultures believe its scales have medicinal properties and use them in nontraditional medicine.
+Generation = 50
 WildItemUncommon = GRIPCLAW
 RegionalNumbers = 219,0
 GenderRate = Female50Percent
@@ -24990,7 +27636,7 @@ Color = White
 Shape = HeadBase
 Habitat = Forest
 Pokedex = A mysterious husk floating in the air. It is said that it can live forever, even without any nutrition.
-RegionalNumbers = 0,0
+RegionalNumbers = 0,1
 GenderRate = Genderless
 BaseEXP = 100
 EffortPoints = 2,0,0,0,0,0
@@ -25019,7 +27665,7 @@ Shape = Finned
 Habitat = Sea
 Pokedex = It prefers to live in bright places to absorb them of their light. If other Lanturn try to absorb light from its area, they get very aggressive.
 WildItemUncommon = SMOKEBALL
-RegionalNumbers = 0,0
+RegionalNumbers = 0,2
 GenderRate = Female50Percent
 BaseEXP = 161
 EffortPoints = 2,0,0,0,0,0
@@ -25046,7 +27692,7 @@ Color = Blue
 Shape = HeadBase
 Habitat = Cave
 Pokedex = Usually docile, a Wobbuffet strikes back ferociously if its black tail is attacked. It makes its lair in caves where it waits for nightfall.
-RegionalNumbers = 0,0
+RegionalNumbers = 0,6
 GenderRate = Female50Percent
 BaseEXP = 142
 EffortPoints = 2,0,0,0,0,0
@@ -25076,7 +27722,7 @@ Habitat = Cave
 Pokedex = Solluna is the reverse form of Solrock and Lunatone. It can freely change between forms that harness the power of the sun or moon.
 WildItemUncommon = STARDUST
 WildItemRare = COMETSHARD
-RegionalNumbers = 0,0
+RegionalNumbers = 0,4
 GenderRate = Genderless
 BaseEXP = 161
 EffortPoints = 1,1,0,0,1,0
@@ -25104,7 +27750,7 @@ Color = Purple
 Shape = Bipedal
 Habitat = Grassland
 Pokedex = No dex entry.
-RegionalNumbers = 0,0
+RegionalNumbers = 0,3
 GenderRate = Female50Percent
 BaseEXP = 149
 EffortPoints = 0,0,0,0,2,0

@@ -1529,7 +1529,7 @@ module Compiler
             raise _INTL("Pokémon hasn't been defined yet!\r\n{1}", FileLineData.linereport)
           end
           case property_name
-          when "IV", "EV"
+          when "IV", "EV", "EL"
             value_hash = {}
             GameData::Stat.each_main do |s|
               next if s.pbs_order < 0

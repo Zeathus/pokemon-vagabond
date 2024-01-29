@@ -426,6 +426,7 @@ class Battle::Scene
     mode = (target_data.num_targets == 1) ? 0 : 1
     cw.setDetails(texts, mode)
     cw.setAffinityBoost(@battle.battlers[idxBattler], move)
+    cw.sefEffectiveness(@battle.battlers[idxBattler], move)
     cw.index = pbFirstTarget(idxBattler, target_data)
     pbSelectBattler((mode == 0) ? cw.index : texts, 2)   # Select initial battler/data box
     pbFadeInAndShow(@sprites, visibleSprites) if visibleSprites

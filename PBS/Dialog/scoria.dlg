@@ -1,0 +1,97 @@
+[SECRET_MARKET_ENTER]
+?> Jump down?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SECRET_MARKET_DOOR,0]
+> The door is tightly locked.
+
+[SECRET_MARKET_DOOR,1]
+> It looks like the door locks behind you when you leave.
+
+[SCORIA_DESERT_GUARD,0] # No weather in the desert
+/speaker Guard
+> Scoria Desert is surprisingly tame today. It is more safe than ever to venture in.
+
+[SCORIA_DESERT_GUARD,1] # Sunny in the desert
+/speaker Guard
+> It's a very hot day in Scoria Desert today. Remember to stay hydrated if you go exploring.
+
+[SCORIA_DESERT_GUARD,2] # Sandstorm in the desert
+/speaker Guard
+> There's an ongoing sandstorm in Scoria Desert. It's safe to go in as long as you're careful.
+
+[SCORIA_DESERT_GUARD,3] # Noxious fumes in the desert
+/speaker Guard
+> Wait!\nYou can't go into Scoria Desert right now!
+> The active sandstorm has picked up large amounts of noxious fumes.
+> It's very dangerous to go in there.\nThe storm can even harm Poison and Steel-type Pokémon.
+
+[SCORIA_DESERT_GUARD,4] # Noxious fumes in the desert soon
+/speaker Guard
+> Wait!\nYou can't go into Scoria Desert right now!
+> Our forecast says a sandstorm carrying large amounts of noxious fumes is starting soon.
+> It's very dangerous to go in there.\nThe storm can even harm Poison and Steel-type Pokémon.
+
+[SCORIA_DESERT_GUARD,5] # During Mesprit quest when storm never stops
+/speaker Guard
+?> The storm has shown no signs of stopping anytime soon.
+  /choice We're in a hurry
+    > Sorry, but a hurry doesn't avoid my strict orders to not let anyone pass when the storm is this dangerous.
+  /choice It's a matter of life or death
+    > I don't know what you're up to, but the storm is also a matter of life and death.
+  /choice Is there any way we can pass?
+    > Sorry, but I'm under strict orders to not let anyone pass when the storm is this dangerous.
+?/>
+> If I let anyone pass, I would not only risk my job, but also their life.
+
+[SCORIA_CITY_OLD_MAN]
+/speaker Old_Man
+> Have you come to Scoria City to peruse our market?
+> They sell some odd knicks and knacks there, maybe you'll find something useful.
+
+[SCORIA_CITY_BREEDER]
+/speaker Breeder
+> I love sitting by the oasis while looking at the wild Pokémon living here.
+
+[SCORIA_CITY_HIKER]
+/speaker Hiker
+> I was hoping to travel through Scoria Desert, but I heard there are dangerous fumes in the sandstorms sometimes.
+> Since then I've been paralyzed and unable to venture in.
+
+[SCORIA_CITY_YOUNGSTER]
+/speaker Youngster
+> I've been trying to get into Scoria Desert while the dangerous storm is going.
+> With the wild Pokémon weakened, they must be easy to catch!
+
+[SCORIA_SECRET_MARKET_SHOP,0]
+/speaker G
+> You interested in my stock? Good choice.
+> I've got lots of tools and gadgets that are great at making people talk.
+/reset
+> It's probably best to avoid this business.
+
+[SCORIA_SECRET_MARKET_SHOP,1]
+/speaker T
+> I've engineered various concoctions for both humans and Pokémon to enhance their abilities.
+> Recently I even managed to soften the potential side effects from possibly lethal to just a few lifetime injuries!
+/reset
+> It's probably best to avoid this business.
+
+[SCORIA_SECRET_MARKET_SHOP,2]
+/speaker R
+> If you've got any valuable items of questionable legality, stolen or otherwise, I'll give good cash for them.
+/reset
+> It's probably best to avoid this business.
+
+[SCORIA_SECRET_MARKET_SHOP_J,0]
+/speaker J
+> If it isn't my favorite squad!
+
+[SCORIA_SECRET_MARKET_SHOP_J,1]
+/speaker J
+> K isn't with you, {pbPlayerPseudonym}?\nI bet he's off on a cool mission.
+> Well, a friend of K is a friend of J!

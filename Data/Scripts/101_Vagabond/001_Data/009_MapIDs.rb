@@ -11,6 +11,7 @@ module PBMaps
   QuartzGrove       = 74
   CanjonValley      = 106
   LakeCanjon        = 107
+  ScoriaDesert      = 132
   ScoriaCanyon      = 216
   SouthGabbroRiver  = 220
   

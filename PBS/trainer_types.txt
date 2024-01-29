@@ -104,6 +104,8 @@
 113,AZELF,Lake Guardian,200,,,,Mixed
 114,UXIE,Lake Guardian,200,,,,Mixed
 115,MESPRIT,Lake Guardian,200,,,,Mixed
+116,BGANG,The,200,,,,Male
+117,RIVALYOUNG,Trainer,200,Battle! VS Kira (Sick),,,Male,255,
 130,HOOPARING,Mysterious,200,cameo_2,,,Mixed,0,
 131,AURA,,0,Battle Aura,,,Mixed,200,
 200,JANUS,Friend,0,,,,Male

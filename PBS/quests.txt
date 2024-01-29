@@ -2,6 +2,7 @@
 Name = Sickzagoon
 Type = Basic
 Exp = 40
+Items = DATACHIP,3
 Description = A sick Zigzagoon is blocking the path ahead. Find a doctor to help cure it.
 Location = Crosswoods
 FullLocation = near the Crosswoods
@@ -289,8 +290,8 @@ Exp = 60
 Description = The transportation of ore from the Mica District to the Feldspar District in Pegma City has reached a halt. Gym Leader Raphael is looking into it.
 Step1 = Meet with Raphael at the Blacksmith's house.
 Step2 = Follow Raphael through the tunnel to the east to the Mica District to meet the supervisor of Pegma Quarry.
-Step3 = Raphael got heated.
-Step4 = Research the supply issue with Allon.
+Step3 = Raphael got heated. Looks like you can't do much here.
+Step4 = Search for Steve in the Pegma Quarry with Allon.
 Step5 = Find Steve in the first layer quarry zone.
 Step6 = Report back to Raphael and the supervisor.
 Done = You rescued Steve and successfully fixed the ore shortage.
@@ -346,10 +347,12 @@ Name = Guardian of Emotion
 Type = Main
 Exp = 100
 Description = Nekane needs to see Mesprit to understand emotions. The D.A.O. are also after Mesprit. Save Mesprit and help Nekane at the same time!
-Step1 = Further main story quests have not been implemented yet.
-Step2 = Nekane went out to the east of the Lazuli District. Go look for her.
-Step3 = Azelf suggested you ask people in the city about their desires. Head back to the city.
-Step4 = Use Azelf's willpower readings to provide examples for Nekane.
+Step1 = Head to Scoria City and enter Scoria Desert to find Mesprit's lake.
+Step2 = The guard won't let you into the desert due to a dangerous storm. Ask around the Scoria City center for information.
+Step3 = Kira told you to jump off an edge in Scoria City between two sandstone rocks. Best follow his lead on this.
+Step4 = Kira showed you the way to a secret marketplace. Find someone called J who has the goggles you need.
+Step5 = "With Go-Goggles acquired, head to Scoria Desert through the cave in the Secret Market."
+Step6 = "After dealing with the B Gang, Sandslash evolved! Make your way through Scoria Desert with its new power."
 Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
 
 [TEST]

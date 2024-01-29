@@ -521,7 +521,7 @@ class TalkMessageWindowWrapper
     text = colortag + text
     ### Controls
     textchunks = []
-    while text[/(?:\\(f|ff|ts|cl|me|se|wt|wtnp|ch)\[([^\]]*)\]|\\(g|cn|pt|wd|wm|op|cl|wu|\.|\||\!|\^))/i]
+    while text[/(?:\\(f|ff|ts|cl|me|se|wt|wtnp|ch)\[([^\]]*)\]|\\(g|sp|cn|pt|wd|wm|op|cl|wu|\.|\||\!|\^))/i]
       textchunks.push($~.pre_match)
       if $~[1]
         @controls.push([$~[1].downcase, $~[2], -1])
@@ -633,6 +633,9 @@ class TalkMessageWindowWrapper
       when "g"      # Display gold window
         @goldwindow&.dispose
         @goldwindow = pbDisplayGoldWindow(@msgwindow)
+      when "sp"     # Display coins window
+        @coinwindow&.dispose
+        @coinwindow = pbDisplayStadiumPointsWindow(@msgwindow, @goldwindow)
       when "cn"     # Display coins window
         @coinwindow&.dispose
         @coinwindow = pbDisplayCoinsWindow(@msgwindow, @goldwindow)
@@ -962,6 +965,10 @@ class TalkMessageWindowWrapper
     return @msgwindow.pausing?
   end
 
+  def canSkipAhead
+    return !@hasAutoClose
+  end
+
   def skipAhead
     if !@msgwindow.pausing?
       if !@hasAutoClose && @msgwindow.position > 1
@@ -1037,9 +1044,12 @@ class TalkMessageWindows
       Input::USE, "Next", Graphics.width - 120, Graphics.height - 40, @viewport)
     @control_log = KeybindSprite.new(
       Input::SPECIAL, "Log", Graphics.width - 120, Graphics.height - 80, @viewport)
+    @control_auto = KeybindSprite.new(
+      "autorun", "Auto", Graphics.width - 120, Graphics.height - 40, @viewport)
     @control_skip.visible = false
     @control_next.visible = false
     @control_log.visible = false
+    @control_auto.visible = false
     @holding = false # Collect messages to display simultaneously
     @queue = [] # Queue in holding
     @queue_shout = false
@@ -1126,6 +1136,7 @@ class TalkMessageWindows
       loop do
         if (window.pausing? || !window.busy?)
           @control_skip.visible = false
+          @control_auto.visible = false
           @control_next.visible = true
           if show_log
             if Input.trigger?(Input::SPECIAL)
@@ -1136,7 +1147,8 @@ class TalkMessageWindows
             @control_log.visible = false
           end
         else
-          @control_skip.visible = true
+          @control_skip.visible = window.canSkipAhead
+          @control_auto.visible = !window.canSkipAhead
           @control_next.visible = false
         end
         if window.busy? && Input.trigger?(Input::USE)
@@ -1237,6 +1249,7 @@ class TalkMessageWindows
   end
 
   def update
+    @control_auto.update if @control_auto.visible
     #@msgwindows.each { |w| w.update }
   end
 

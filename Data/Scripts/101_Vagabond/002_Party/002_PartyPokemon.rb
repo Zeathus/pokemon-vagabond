@@ -93,6 +93,9 @@ def initPartyPokemon(id)
   when PBParty::Player2
     party.push(createPartyPokemon(
       id,:VICTINI,70,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
+  when PBParty::YoungKira
+    party.push(createPartyPokemon(
+      id,:SANDSHREW,9,[:FALSESWIPE,:DEFENSECURL,:SANDATTACK,:POISONSTING],1,:ADAMANT,0,[2,3,3,2,0,1]))
   end
   parties[id]=party
 end
@@ -187,4 +190,14 @@ def alignMemberLevels(source, target)
       end
     end
   end
+end
+
+def pbFindPokemon(owner, species)
+  owner = getID(PBParty,owner) if owner.is_a?(Symbol)
+  for pkmn in getPartyPokemon(owner)
+    if pkmn.species == species
+      return pkmn
+    end
+  end
+  return nil
 end

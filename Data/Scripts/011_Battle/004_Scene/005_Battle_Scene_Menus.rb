@@ -473,9 +473,11 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     #       0=select 1 button (@index), 1=select all buttons with text
     # Create bitmaps
     @buttonBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/cursor_target")
+    @effectiveness_icons = []
     @boost_icons = []
-    @boost_icon_timer = 0
+    @icons_timer = 0
     @can_affinity_boost = []
+    @effectivenesses = []
     # Create target buttons
     @buttons = Array.new(maxIndex + 1) do |i|
       numButtons = @sideSizes[i % 2]
@@ -497,6 +499,12 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       button.y = self.y + 2
       button.y += (BUTTON_HEIGHT) * ((i + 1) % 2)
       addSprite("button_#{i}", button)
+      @effectiveness_icons[i] = IconSprite.new(0, 0, viewport)
+      @effectiveness_icons[i].setBitmap("Graphics/Pictures/Battle/effectiveness_icons")
+      @effectiveness_icons[i].x = button.x + 12
+      @effectiveness_icons[i].y = button.y - 6
+      @effectiveness_icons[i].opacity = 0
+      @effectiveness_icons[i].src_rect = Rect.new(0, 0, 26, 26)
       @boost_icons[i] = IconSprite.new(0, 0, viewport)
       @boost_icons[i].setBitmap("Graphics/Pictures/Battle/affinityboost_text_small")
       @boost_icons[i].x = button.x + button.src_rect.width - 96
@@ -516,30 +524,55 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
 
   def update
     super
+    for i in 0...@effectiveness_icons.length
+      icon = @effectiveness_icons[i]
+      next if !icon
+      if self.visible && @effectivenesses[i] && @effectivenesses[i] != 0
+        case @effectivenesses[i]
+        when 1
+          icon.src_rect.x = 0
+        when -1
+          icon.src_rect.x = 26
+        when -2
+          icon.src_rect.x = 26 * 2
+        end
+        if @icons_timer < 32
+          icon.opacity += 8
+        elsif @icons_timer >= 48 && @icons_timer < 80
+          icon.opacity -= 8
+        end
+        @icons_timer = 0 if @icons_timer >= 88
+      else
+        icon.opacity = 0
+      end
+    end
     for i in 0...@boost_icons.length
       icon = @boost_icons[i]
       next if !icon
       if self.visible && @can_affinity_boost[i]
-        if @boost_icon_timer < 32
+        if @icons_timer < 32
           icon.opacity += 8
-        elsif @boost_icon_timer >= 48 && @boost_icon_timer < 80
+        elsif @icons_timer >= 48 && @icons_timer < 80
           icon.opacity -= 8
         end
-        @boost_icon_timer = 0 if @boost_icon_timer >= 88
+        @icons_timer = 0 if @icons_timer >= 88
       else
         icon.opacity = 0
       end
     end
     if self.visible
-      @boost_icon_timer += 1
+      @icons_timer += 1
     else
-      @boost_icon_timer = 0
+      @icons_timer = 0
     end
   end
 
   def dispose
     super
     @buttonBitmap&.dispose
+    @effectiveness_icons.each do |icon|
+      icon&.dispose
+    end
     @boost_icons.each do |icon|
       icon&.dispose
     end
@@ -547,17 +580,26 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
 
   def visible=(value)
     super
+    @effectiveness_icons.each do |icon|
+      next if !icon
+      icon.visible = value
+      icon.opacity = 0
+    end
     @boost_icons.each do |icon|
       next if !icon
       icon.visible = value
       icon.opacity = 0
     end
-    @boost_icon_timer = 0
+    @icons_timer = 0
   end
 
   def z=(value)
     super
     @overlay.z += 5 if @overlay
+    @effectiveness_icons.each do |icon|
+      next if !icon
+      icon.z = self.z + 10
+    end
     @boost_icons.each do |icon|
       next if !icon
       icon.z = self.z + 10
@@ -571,8 +613,9 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
   end
 
   def setAffinityBoost(battler, move)
-    return if !battler || !move
     @can_affinity_boost = []
+    return if !battler || !move
+    return if move.category == 2
     @boost_icons.each_with_index do |icon, i|
       next if !icon
       ret = false
@@ -597,6 +640,32 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     end
   end
 
+  def sefEffectiveness(battler, move)
+    @effectivenesses = []
+    return if !battler || !move
+    return if move.category == 2
+    @effectiveness_icons.each_with_index do |icon, i|
+      next if !icon
+      effectiveness = 0
+      target = nil
+      battler.eachOpposing do |b|
+        target = b if b.index == i
+      end
+      if target
+        bTypes = target.pbTypes(true)
+        typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+        if Effectiveness.super_effective?(typeMod)
+          effectiveness = 1
+        elsif Effectiveness.ineffective?(typeMod)
+          effectiveness = -2
+        elsif Effectiveness.resistant?(typeMod)
+          effectiveness = -1
+        end
+      end
+      @effectivenesses[i] = effectiveness
+    end
+  end
+
   def refreshButtons
     # Choose appropriate button graphics and z positions
     @buttons.each_with_index do |button, i|
@@ -612,6 +681,8 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       button.src_rect.x = (sel) ? @buttonBitmap.width / 2 : 0
       button.src_rect.y = buttonType * BUTTON_HEIGHT
       button.z          = self.z + ((sel) ? 3 : 2)
+      @effectiveness_icons[i].x = button.x + 12
+      @effectiveness_icons[i].y = button.y - 6
       @boost_icons[i].x = button.x + button.src_rect.width - 96
       @boost_icons[i].y = button.y - 6
     end

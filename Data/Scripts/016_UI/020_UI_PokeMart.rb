@@ -79,6 +79,9 @@ class PokemonMartAdapter
 
   def getDisplayPrice(item, selling = false)
     price = getPrice(item, selling).to_s_formatted
+    if $game_switches[STADIUM_POINT_SHOP]
+      return _INTL("{1} SP", price)
+    end
     return _INTL("$ {1}", price)
   end
 
@@ -212,7 +215,11 @@ class PokemonMart_Scene
       @sprites["qtywindow"].y       = Graphics.height - 102 - @sprites["qtywindow"].height
       itemwindow.refresh
     end
-    @sprites["moneywindow"].text = _INTL("Money:\r\n<r>{1}", @adapter.getMoneyString)
+    if $game_switches[STADIUM_POINT_SHOP]
+      @sprites["moneywindow"].text = _INTL("Points:\r\n<r>{1}", @adapter.getMoneyString)
+    else
+      @sprites["moneywindow"].text = _INTL("Money:\r\n<r>{1}", @adapter.getMoneyString)
+    end
   end
 
   def pbStartBuyOrSellScene(buying, stock, adapter)

@@ -126,6 +126,7 @@ def pbShowUnownText(text)
   has_dictionary = $bag && $bag.quantity(:UNOWNDICTIONARY) > 0
 
   text.gsub!("\n","")
+  text.gsub!("\\n", " \n")
   showtext = ""
   alpha = "abcdefghijklmnopqrstuvwxyz!?"
   size1 = "aijlprtvyz!?"
@@ -146,7 +147,7 @@ def pbShowUnownText(text)
         showtext += _INTL("<icon=unown_{1}>",char)
       end
     else
-      if char == " " && length >= 340
+      if char == "\n" || (char == " " && length >= 340)
         showtext += " \n"
         length = 0
       else

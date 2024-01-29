@@ -403,7 +403,8 @@ class Battle::Move
   def pbPredictDamage(user, target, numTargets, queue, boost, options = 0)
     calcType = pbCalcType(user)
     target.damageState.typeMod = pbCalcTypeMod(calcType, user, target)
-    if (pbImmunityByAbility(user, target, false)) ||
+    if pbMoveFailed?(user, [target]) ||
+        (pbImmunityByAbility(user, target, false)) ||
         (Effectiveness.ineffective?(target.damageState.typeMod)) ||
         (calcType == :GROUND && target.airborne? && !hitsFlyingTargets?)
       target.damageState.reset

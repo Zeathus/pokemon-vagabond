@@ -52,18 +52,18 @@ class StadiumTransition
     # Drawing cup name and battle number
     pbSetSystemFont(@sprites["title"].bitmap)
     pbDrawTextPositions(@sprites["title"].bitmap,
-      [[@name.upcase,212,2,2,Color.new(0,0,0),Color.new(120,120,120),1]])
+      [[_INTL("{1} CUP", @name.upcase),212,8,2,Color.new(0,0,0),Color.new(120,120,120),1]])
     pbSetSystemFont(@sprites["subtitle"].bitmap)
     if @opponent
       battletitle = _INTL("BATTLE {1}",@index+1)
       battletitle = "SEMIFINAL" if (@index+2)==@trainers.length
       battletitle = "FINAL" if (@index+1)==@trainers.length
       pbDrawTextPositions(@sprites["subtitle"].bitmap,
-        [[battletitle,212,2,2,Color.new(0,0,0),Color.new(120,120,120),1]])
+        [[battletitle,212,8,2,Color.new(0,0,0),Color.new(120,120,120),1]])
     else
       battletitle = "RESULTS"
       pbDrawTextPositions(@sprites["subtitle"].bitmap,
-        [[battletitle,212,2,2,Color.new(0,0,0),Color.new(120,120,120),1]])
+        [[battletitle,212,8,2,Color.new(0,0,0),Color.new(120,120,120),1]])
     end
 
     @sprites["row1"] = IconSprite.new(0,0,@viewport)
@@ -135,7 +135,7 @@ class StadiumTransition
         if i <= @index
           @sprites[_INTL("trainer{1}",i)].y = @sprites[_INTL("lock{1}",i)].y
         end
-        if i == @index
+        if i == @index && @sprites["select"] && @sprites[_INTL("lock{1}",i)]
           @sprites["select"].y = @sprites[_INTL("lock{1}",i)].y
         end
       end
@@ -203,12 +203,12 @@ class StadiumTransition
       # Drawing cup name and battle number
       pbSetSmallFont(@sprites["player"].bitmap)
       pbDrawTextPositions(@sprites["player"].bitmap,
-        [["Trainer",14,98,0,Color.new(250,250,250),Color.new(40,40,40),1],
-         [PBParty.getName(getPartyActive(0)).upcase,14,122,0,Color.new(250,250,250),Color.new(40,40,40),1]])
+        [["Trainer",16,104,0,Color.new(250,250,250),Color.new(40,40,40),1],
+         [PBParty.getName(getPartyActive(0)).upcase,14,126,0,Color.new(250,250,250),Color.new(40,40,40),1]])
       pbSetSmallFont(@sprites["opponent"].bitmap)
       pbDrawTextPositions(@sprites["opponent"].bitmap,
-        [[typename,312,0,0,Color.new(250,250,250),Color.new(40,40,40),1],
-         [name.upcase,312,20,0,Color.new(250,250,250),Color.new(40,40,40),1]])
+        [[typename,312,4,0,Color.new(250,250,250),Color.new(40,40,40),1],
+         [name.upcase,312,24,0,Color.new(250,250,250),Color.new(40,40,40),1]])
 
       x_coords = [308,408,508,308,408,508]
       y_coords = [148,148,148,220,220,220]
@@ -217,26 +217,13 @@ class StadiumTransition
       bottom_sprites = ["opponent", "opponent_img"]
       blue_sprites = ["player", "opponent"]
 
+      
       playerparty = []
-      for i in 0...3
-        if getActivePokemon(0)[i]
-          playerparty.push(getActivePokemon(0)[i])
-        else
-          playerparty.push(false)
-        end
+      getAllPartyPokemon(getPartyActive(0)).each do |pkmn|
+        playerparty.push(pkmn)
       end
-      if pbStadiumCup[4] # doubles
-        for i in 0...3
-          if getActivePokemon(1)[i]
-            playerparty.push(getActivePokemon(1)[i])
-          else
-            playerparty.push(false)
-          end
-        end
-      else
-        for i in 0...3
-          playerparty.push(false)
-        end
+      while playerparty.length < 6
+        playerparty.push(false)
       end
 
       for i in 0...6
@@ -319,6 +306,7 @@ class StadiumTransition
   end
 
   def start
+    pbBGMPlay("Stadium Loop")
     while @sprites["bg"].opacity < 255
       self.update
       @sprites["bg"].opacity += 4
@@ -488,17 +476,6 @@ class StadiumTransition
               @sprites[_INTL("olock{1}",j)].src_rect.y += 12
               @sprites[_INTL("olock{1}",j)].src_rect.height -= 12
             end
-          end
-        end
-      end
-
-      if i % 2 == 0
-        for j in 0...6
-          if @playerparty[j]
-            @sprites[_INTL("ppokemon{1}",j)].update
-          end
-          if @opponentparty.length > j
-            @sprites[_INTL("opokemon{1}",j)].update
           end
         end
       end
@@ -693,34 +670,38 @@ def pbStadiumMenu
   ret = 0
 
   cups = pbStadiumCups
+  cup_names = []
+  cups[0].each do |c|
+    cup_names.push(_INTL("{1} Cup", c))
+  end
 
-  sprites["searchtitle"]=Window_AdvancedTextPokemon.newWithSize("",2,-16,Graphics.width,64,viewport)
+  sprites["searchtitle"]=Window_AdvancedTextPokemon.newWithSize("",2,80,Graphics.width,64,viewport)
   sprites["searchtitle"].windowskin=nil
   sprites["searchtitle"].baseColor=Color.new(248,248,248)
   sprites["searchtitle"].shadowColor=Color.new(0,0,0)
-  sprites["searchtitle"].text=_ISPRINTF("<b><outln2><ac>Pokémon Stadium</ac><outln><b>")
-  sprites["searchlist"]=Window_ComplexCommandPokemon.newEmpty(-6,32,258,352,viewport)
-  sprites["searchlist"].baseColor=Color.new(88,88,80)
-  sprites["searchlist"].shadowColor=Color.new(168,184,184)
+  sprites["searchtitle"].text=_ISPRINTF("<outln><ac>Pokémon Stadium</ac></outln>")
+  sprites["searchlist"]=Window_ComplexCommandPokemon.newEmpty(58,128,322,352,viewport)
+  sprites["searchlist"].baseColor=Color.new(248,248,248)
+  sprites["searchlist"].shadowColor=Color.new(40,44,48)
   sprites["searchlist"].commands=[
     "Select a Cup",
-    cups[0] + ["Cancel"]
+    cup_names + ["Cancel"]
   ]
-  sprites["auxlist"]=Window_UnformattedTextPokemon.newWithSize("",254,32,264,194,viewport)
-  sprites["auxlist"].baseColor=Color.new(88,88,80)
-  sprites["auxlist"].shadowColor=Color.new(168,184,184)
-  sprites["messagebox"]=Window_UnformattedTextPokemon.newWithSize("",254,226,264,158,viewport)
-  sprites["messagebox"].baseColor=Color.new(88,88,80)
-  sprites["messagebox"].shadowColor=Color.new(168,184,184)
+  sprites["auxlist"]=Window_UnformattedTextPokemon.newWithSize("",382,128,328,194,viewport)
+  sprites["auxlist"].baseColor=Color.new(248,248,248)
+  sprites["auxlist"].shadowColor=Color.new(40,44,48)
+  sprites["messagebox"]=Window_UnformattedTextPokemon.newWithSize("",382,322,328,158,viewport)
+  sprites["messagebox"].baseColor=Color.new(248,248,248)
+  sprites["messagebox"].shadowColor=Color.new(40,44,48)
   sprites["messagebox"].letterbyletter=false
 
-  sprites["difficulty"]=IconSprite.new(384,342,viewport)
+  sprites["difficulty"]=IconSprite.new(512,438,viewport)
   sprites["difficulty"].setBitmap("Graphics/Pictures/Stadium/difficulty")
   sprites["difficulty"].src_rect = Rect.new(0,0,120,22)
   sprites["difficulty"].z=999
 
   for i in 0...10
-    sprites[_INTL("complete{1}",i)]=IconSprite.new(204,50+32*i,viewport)
+    sprites[_INTL("complete{1}",i)]=IconSprite.new(204+128,50+96+32*i,viewport)
     sprites[_INTL("complete{1}",i)].setBitmap("Graphics/Pictures/Quests/icon_complete")
     sprites[_INTL("complete{1}",i)].z=999
     sprites[_INTL("complete{1}",i)].visible=false
@@ -769,7 +750,6 @@ def pbStadiumMenu
                cups[1][index],
                cups[2][index],
                cups[3][index],
-               cups[4][index],
                0
              ]
              break
@@ -799,11 +779,12 @@ def pbRefreshStadiumMenu(sprites,cups)
   index = searchlist.index-1
   stats=cups[2][index]
   if helptexts[index]
-    auxlist.text = names[index].upcase + "\n" + helptexts[index]
+    num_battles = cups[3][index].length
+    auxlist.text = names[index].upcase + " CUP\n" + helptexts[index]
     messagebox.text = sprintf(
-      "Max Level: %d\nBattles: %d\nPokemon per Battle: %d\nDifficulty: ",
-      stats[0],cups[3][index].length,stats[1])
-    difficulty.src_rect.width = 20 * stats[2]
+      "Max Level: %d\nBattles: %d\nReward: %s SP\nDifficulty: ",
+      stats[0], num_battles, pbStadiumPointsCore(stats[1], num_battles).to_s_formatted)
+    difficulty.src_rect.width = 20 * stats[1]
   else
     auxlist.text=""
     messagebox.text=""
@@ -829,12 +810,19 @@ def pbRefreshStadiumMenu(sprites,cups)
 end
 
 def pbStadiumHasWonCup(name)
-  if $game_variables[STADIUM_WON_CUPS].is_a?(Array)
-    for cup in $game_variables[STADIUM_WON_CUPS]
-      return true if cup == name
+  if name.is_a?(Array)
+    name.each do |n|
+      return false if !pbStadiumHasWonCup(n)
     end
+    return true
+  else
+    if $game_variables[STADIUM_WON_CUPS].is_a?(Array)
+      for cup in $game_variables[STADIUM_WON_CUPS]
+        return true if cup == name
+      end
+    end
+    return false
   end
-  return false
 end
 
 def pbStadiumCup
@@ -860,15 +848,31 @@ def pbStadiumCupTrainer
   cup = pbStadiumCup
   index = pbStadiumCupIndex
   setBattleRule("fixedlevel")
-  setBattleRule("noPartner") if !cup[4]
-  return pbTrainerBattle(
-    cup[3][index][0],
-    cup[3][index][1],
-    _I(cup[3][index][3]),
-    cup[4], # double battle
-    cup[3][index][2] ? cup[3][index][2] : 0,
-    true,
-    nil)
+  setBattleRule("noexp")
+  setBattleRule("nomoney")
+  setBattleRule("levelsync", cup[2][0])
+  setBattleRule("noItems")
+  setBattleRule("canLose")
+  setBattleRule("fullPlayer")
+  setBattleRule("showParty")
+  setBattleRule("noPlayerLevelUpdate")
+  trainer_data = cup[3][index]
+  return TrainerBattle.start(
+    trainer_data[0],
+    trainer_data[1],
+    trainer_data[2] || 0
+  )
+end
+
+def pbStadiumPointsCore(difficulty, battles)
+  points = (8 * (2**(difficulty-1))) * 10
+  points = points * 3 / 4 if battles <= 2
+  points = points * 3 / 2 if battles >= 6
+  return points
+end
+
+def pbStadiumPoints(cup)
+  return pbStadiumPointsCore(cup[2][1], cup[3].length)
 end
 
 def pbStadiumWin(cup)
@@ -879,7 +883,7 @@ def pbStadiumWin(cup)
 
   if !$game_variables[STADIUM_WON_CUPS].include?(cup[0])
     $game_variables[STADIUM_WON_CUPS].push(cup[0])
-    points = (100 * (2**(cup[2][2]-1)))
+    points = pbStadiumPoints(cup)
     $game_variables[STADIUM_POINTS] += points
     return points
   end
@@ -894,7 +898,7 @@ def pbStadiumSetup
   cup = pbStadiumCup
   index = pbStadiumCupIndex
   trainer = cup[3][index][0]
-  difficulty = cup[2][2]
+  difficulty = cup[2][1]
   chance = 9 - difficulty
   chance -= 1 if cup[3].length - 2 == index
   chance -= 2 if cup[3].length - 1 == index
@@ -970,7 +974,7 @@ class Window_ComplexCommandPokemon < Window_DrawableCommand
     dims=[]
     getAutoDims(commands,dims,width)
     super(0,0,dims[0],dims[1])
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/selarrow")
+    @selarrow=AnimatedBitmap.new("Graphics/Pictures/selarrow_white")
     @starting=false
   end
 

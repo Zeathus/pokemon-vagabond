@@ -311,6 +311,26 @@ FishingRod
     30,TYMPOLE,5,10
     15,RELICANTH,10,15
 #-------------------------------
+[132] # Scoria Desert
+Land,21
+    30,CACNEA,23,27
+    20,BRAMBLIN,23,27
+    20,SKORUPI,23,27
+    10,SANDILE,23,27
+    10,HIPPOPOTAS,23,27
+    5,SIZZLIPEDE,23,27
+    5,MARACTUS,23,27
+#-------------------------------
+[135] # Underground Desert
+Cave,5
+    30,DIGLETT,23,27
+    20,ROGGENROLA,23,27
+    20,SANDSHREW,23,27
+    10,SIZZLIPEDE,23,27
+    10,TRAPINCH,23,27
+    5,GIBLE,23,27
+    5,DRILBUR,23,27
+#-------------------------------
 [143] # cave
 Cave,5
     20,BUIZEL,5,8
@@ -327,7 +347,7 @@ Land,21
     20,BIDOOF,5,8
     20,PIDOVE,5,8
     10,BOUNSWEET,4,7
-    10,SOBBLE,5,8,3
+    10,SOBBLE,5,8
 Water,2
     30,SURSKIT,10,13
     20,DUCKLETT,10,13
@@ -337,3 +357,17 @@ FishingRod
     40,MAGIKARP,5,10
     30,POLIWAG,5,10
     30,FINNEON,5,10
+#-------------------------------
+[198] # Scoria City
+Land,21
+    30,WOOPER,15,18
+    20,HELIOPTILE,15,18
+    20,SKORUPI,15,18
+    10,SANDILE,15,18
+    10,LILLIPUP,14,17
+    5,FENNEKIN,15,18
+    5,CHARCADET,15,18
+#-------------------------------
+[245] # Scoria Desert Passage
+Cave,5
+    100,GEODUDE,5,8

@@ -53,6 +53,12 @@ U> Its true nature within these rooms lie concealed
 [RUINS_LAZULI_RIVER,3]
 > The Corsola is waiting for you to accept your reward.
 
+[RUINS_LAZULI_RIVER,4]
+U> Shapes
+
+[RUINS_LAZULI_RIVER,5]
+U> Glyphs
+
 [RUINS_BRECCIA,0]
 ?> The Shiinotic looks like it wants to test your strength. Are you ready?
     /choice Yes
@@ -75,6 +81,12 @@ U> Its true nature within these rooms lie concealed
 [RUINS_BRECCIA,3]
 > The Shiinotic is waiting for you to accept your reward.
 
+[RUINS_BRECCIA,4]
+U> Top floor of four
+
+[RUINS_BRECCIA,5]
+U> Bottom floor of four
+
 [RUINS_PEGMA_HILLSIDE,0]
 ?> The Darmanitan looks like it wants to test your strength. Are you ready?
     /choice Yes
@@ -96,6 +108,12 @@ U> Its true nature within these rooms lie concealed
 
 [RUINS_PEGMA_HILLSIDE,3]
 > The Darmanitan is waiting for you to accept your reward.
+
+[RUINS_PEGMA_HILLSIDE,4]
+U> Four rooms\nFour corners
+
+[RUINS_PEGMA_HILLSIDE,5]
+U> Five glyphs\nFour corners
 
 [RUINS_SMOKEY_FOREST,0]
 ?> The Spiritomb looks like it wants to test your strength. Are you ready?

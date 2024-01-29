@@ -432,6 +432,7 @@ def pbRandomRewardItem(difficulty)
      :LEFTOVERS,
      :KINGSROCK,
      :FLAMEORB,
+     :FROSTORB,
      :TOXICORB,
      [:LAXINCENSE,
       :FULLINCENSE,

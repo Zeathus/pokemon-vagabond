@@ -75,10 +75,12 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   end
   # Play battle music
   bgm = pbGetWildBattleBGM([]) if !bgm
-  if $PokemonGlobal.quickBattleAnimation
-    pbQuickBattleAnimation(viewport, bgm, foe, $PokemonGlobal.quickBattleDialog)
-  else
-    pbBGMPlay(bgm)
+  if bgm != -1
+    if $PokemonGlobal.quickBattleAnimation
+      pbQuickBattleAnimation(viewport, bgm, foe, $PokemonGlobal.quickBattleDialog)
+    else
+      pbBGMPlay(bgm)
+    end
   end
   # Determine location of battle
   location = 0   # 0=outside, 1=inside, 2=cave, 3=water

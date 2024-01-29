@@ -24,11 +24,16 @@ def pbGenerateSingleForecast
     [[[14, 7],[14, 9.5]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
     [[[21, 6]],[:MicaDistrict,:FeldsparDistrict,:MtPegmaHillside,:MtPegmaPeak]],
     [[[17.5, 5]],[:QuartzPassing]],
-    [[[24.5, 15]],[:CanjonValley]]
+    [[[23, 15]],[:CanjonValley]],
+    [[[27, 13]],[:ScoriaDesert]]
+  ]
+
+  dry_areas = [
+    PBMaps::CanjonValley
   ]
 
   desert_areas = [
-    PBMaps::CanjonValley
+    PBMaps::ScoriaDesert
   ]
 
   weathers = [
@@ -39,7 +44,7 @@ def pbGenerateSingleForecast
     :Winds
   ]
 
-  desert_weathers = [
+  dry_weathers = [
     :None,
     :None,
     :Cloudy,
@@ -47,9 +52,19 @@ def pbGenerateSingleForecast
     :Sun,
     :Sandstorm,
     :Sandstorm,
-    :Sandstorm,
     :Winds
   ]
+
+  desert_weathers = [
+    :None,
+    :Sun,
+    :Sun,
+    :Sandstorm,
+    :Sandstorm,
+    :Sandstorm
+  ]
+  # This will have a quest completion check to stop adding
+  desert_weathers += [:NoxiousStorm] * 4
 
   weathers.push(:Sun) if pbGetTimeNow.wday == "Sunday"
   weathers.push(:Rain) if pbGetTimeNow.wday == "Wednesday"
@@ -61,7 +76,9 @@ def pbGenerateSingleForecast
 
   for area in areas
     weather = weathers[rand(weathers.length)]
-    if desert_areas.include?(getID(PBMaps,area[1][0]))
+    if dry_areas.include?(getID(PBMaps,area[1][0]))
+      weather = dry_weathers[rand(dry_weathers.length)]
+    elsif desert_areas.include?(getID(PBMaps,area[1][0]))
       weather = desert_weathers[rand(desert_weathers.length)]
     end
     for map in area[1]
@@ -122,10 +139,9 @@ def pbUpdateWeather
     end
   end
   if !force_weather
-    forecast = pbGetForecast(false, 0)
     new_weather = :None
-    if forecast[$game_map.map_id] && outdoor_map
-      new_weather = forecast[$game_map.map_id]
+    if outdoor_map
+      new_weather = pbGetForecastWeatherOnMap($game_map.map_id)
       if new_weather == :BloodMoon
         if pbGetTimeNow.hour < 18
           new_weather = :None
@@ -149,11 +165,30 @@ EventHandlers.add(:on_enter_map, :update_weather,
   }
 )
 
-def pbGetForecast(map_data = false, index = 0)
-  pbGenerateForecast if !$game_variables[DAILY_FORECAST].is_a?(Array) || !$game_variables[DAILY_FORECAST][index]
-  return $game_variables[DAILY_FORECAST][index][map_data ? 1 : 0]
+def pbGetForecast(map_data = false, day = 0)
+  pbGenerateForecast if !$game_variables[DAILY_FORECAST].is_a?(Array) || !$game_variables[DAILY_FORECAST][day]
+  return $game_variables[DAILY_FORECAST][day][map_data ? 1 : 0]
 end
 
+def pbGetForecastWeatherOnMap(map_id, day = 0)
+  forecast = pbGetForecast(false, day)
+  if map_id == PBMaps::ScoriaDesert
+    if $quests && $quests[:GUARDIANOFEMOTION].active?
+      return :NoxiousStorm
+    end
+  end
+  return :None if forecast[map_id].nil?
+  return forecast[map_id]
+end
+
+def pbChangeWeatherOnCoords(coords, weather)
+  if coords[0] == 27 && coords[1] == 13 # Scoria Desert
+    if $quests && $quests[:GUARDIANOFEMOTION].active?
+      weather = :NoxiousStorm
+    end
+  end
+  return weather
+end
 
 
 

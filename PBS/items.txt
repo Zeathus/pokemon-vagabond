@@ -3086,7 +3086,7 @@ Description = It maximally raises the top PP of a selected move that has been le
 Name = HP Up
 NamePlural = HP Ups
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the HP Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -3095,7 +3095,7 @@ Description = A nutritious drink for Pokémon. It increases the HP Effort Level 
 Name = Protein
 NamePlural = Proteins
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the Attack Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -3104,7 +3104,7 @@ Description = A nutritious drink for Pokémon. It increases the Attack Effort Le
 Name = Iron
 NamePlural = Irons
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the Defense Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -3113,7 +3113,7 @@ Description = A nutritious drink for Pokémon. It increases the Defense Effort L
 Name = Calcium
 NamePlural = Calciums
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the Sp. Atk Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -3122,7 +3122,7 @@ Description = A nutritious drink for Pokémon. It increases the Sp. Atk Effort L
 Name = Zinc
 NamePlural = Zincs
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the Sp. Def Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -3131,7 +3131,7 @@ Description = A nutritious drink for Pokémon. It increases the Sp. Def Effort L
 Name = Carbos
 NamePlural = Carbos
 Pocket = 2
-Price = 10000
+Price = 5000
 FieldUse = OnPokemon
 Flags = Fling_30
 Description = A nutritious drink for Pokémon. It increases the Speed Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
@@ -6776,9 +6776,22 @@ Pocket = 9
 Price = 0
 Flags = KeyItem
 Description = A dictionary that allows you to easily translate ancient Unown texts.
-
-
-
+#-------------------------------
+[GOGOGGLES]
+Name = Go-Goggles
+NamePlural = Go-Goggles
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = Goggles developed by Silph Co. in Hoenn. They protect your eyes during even the harshest sandstorms.
+#-------------------------------
+[FROSTORB]
+Name = Frost Orb
+NamePlural = Frost Orbs
+Pocket = 4
+Price = 4000
+Flags = Fling_30
+Description = An item to be held by a Pokémon. It is a bizarre orb that inflicts a frostbite on the holder in battle.
 
 
 

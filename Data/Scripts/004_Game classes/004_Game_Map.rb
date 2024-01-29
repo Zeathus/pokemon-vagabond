@@ -307,7 +307,8 @@ class Game_Map
         tile_id = data[x, y, i]
         next if tile_id == 0
         terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
-        next if terrain.ignore_passability || @priorities[tile_id] > 0
+        return terrain if terrain.id == :Overhang
+        next if terrain.ignore_passability || @priorities[tile_id] != 0
         next if !countBridge && terrain.bridge && $PokemonGlobal.bridge == 0
         return terrain
       end

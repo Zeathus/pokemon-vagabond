@@ -385,7 +385,7 @@ def pbBossRotomGroupEasy
     :THUNDERWAVE,
     :HEX
   ]
-  pbModifier.next.next.item = :WHITEHERB
+  pbModifier.item = :WHITEHERB
 
   pbModifier.form = 5
   pbModifier.next.next.form = 2

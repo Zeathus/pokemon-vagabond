@@ -184,3 +184,35 @@ GameData::Weather.register({
   :tile_delta_y     => -16
 })
 
+GameData::Weather.register({
+  :id               => :NoxiousStorm,
+  :id_number        => 11,
+  :category         => :NoxiousStorm,
+  :graphics         => [["noxious_1", "noxious_2", "noxious_3", "noxious_4"], ["noxious_tile"]],
+  :particle_delta_x => -1200,
+  :particle_delta_y => 640,
+  :tile_delta_x     => -720,
+  :tile_delta_y     => 360,
+  :tone_proc        => proc { |strength|
+    next Tone.new(strength / 2, 0, -strength / 2, 0)
+  }
+})
+
+GameData::Weather.register({
+  :id               => :SunBattle,
+  :id_number        => 20,
+  :category         => :Sun,
+  :graphics         => [["sunray", "moonray"]],
+  :tone_proc        => proc { |strength|
+    next Tone.new(16, 16, 8, 0)
+  }
+})
+
+GameData::Weather.register({
+  :id               => :WindsBattle,
+  :id_number        => 21,
+  :category         => :WindsBattle,
+  :graphics         => [["winds_1", "winds_2", "winds_1", "winds_2", "winds_1", "winds_2"]],
+  :particle_delta_x => 450,
+  :particle_delta_y => -90
+})

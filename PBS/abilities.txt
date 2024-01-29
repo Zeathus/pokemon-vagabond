@@ -1109,7 +1109,7 @@ Description = This Pokémon is immune to Dark and Fairy-type moves. This ability
 #-------------------------------
 [MENDINGBOND]
 Name = Mending Bond
-Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, the Affinity Boosted Pokémon recovers 1/8 their max HP.
+Description = If this Pokémon Affinity Boosts an ally or an ally Affinity Boosts this Pokémon, the Affinity Boosted Pokémon recovers 1/4 their max HP.
 #-------------------------------
 [FIERCEBOND]
 Name = Fierce Bond
@@ -1170,3 +1170,152 @@ Description = If the Pokémon is Affinity Boosted, the boosted move will not cau
 [SHARPNESS]
 Name = Sharpness
 Description = Not implemented. Does nothing.
+#-------------------------------
+[LINGERINGAROMA]
+Name = Lingering Aroma
+Description = Not implemented. Does nothing.
+#-------------------------------
+[WELLBAKEDBODY]
+Name = Well-Baked Body
+Description = Not implemented. Does nothing.
+#-------------------------------
+[SEEDSOWER]
+Name = Seed Sower
+Description = Not implemented. Does nothing.
+#-------------------------------
+[PURIFYINGSALT]
+Name = Purifying Salt
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ELECTROMORPHOSIS]
+Name = Electromorphosis
+Description = Not implemented. Does nothing.
+#-------------------------------
+[WINDPOWER]
+Name = Wind Power
+Description = Not implemented. Does nothing.
+#-------------------------------
+[GUARDDOG]
+Name = Guard Dog
+Description = Not implemented. Does nothing.
+#-------------------------------
+[WINDRIDER]
+Name = Wind Rider
+Description = Not implemented. Does nothing.
+#-------------------------------
+[MYCELIUMMIGHT]
+Name = Mycelium Might
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ANGERSHELL]
+Name = Anger Shell
+Description = Not implemented. Does nothing.
+#-------------------------------
+[OPPORTUNIST]
+Name = Opportunist
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ROCKYPAYLOAD]
+Name = Rocky Payload
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ZEROTOHERO]
+Name = Zero to Hero
+Description = Not implemented. Does nothing.
+#-------------------------------
+[EARTHEATER]
+Name = Earth Eater
+Description = Not implemented. Does nothing.
+#-------------------------------
+[TOXICDEBRIS]
+Name = Toxic Debris
+Description = Not implemented. Does nothing.
+#-------------------------------
+[COSTAR]
+Name = Costar
+Description = Not implemented. Does nothing.
+#-------------------------------
+[COMMANDER]
+Name = Commander
+Description = Not implemented. Does nothing.
+#-------------------------------
+[CUDCHEW]
+Name = Cud Chew
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ARMORTAIL]
+Name = Armor Tail
+Description = Not implemented. Does nothing.
+#-------------------------------
+[SUPREMEOVERLORD]
+Name = Supreme Overlord
+Description = Not implemented. Does nothing.
+#-------------------------------
+[PROTOSYNTHESIS]
+Name = Protosynthesis
+Description = Not implemented. Does nothing.
+#-------------------------------
+[QUARKDRIVE]
+Name = Quark Drive
+Description = Not implemented. Does nothing.
+#-------------------------------
+[THERMALEXCHANGE]
+Name = Thermal Exchange
+Description = Not implemented. Does nothing.
+#-------------------------------
+[GOODASGOLD]
+Name = Good as Gold
+Description = Not implemented. Does nothing.
+#-------------------------------
+[TABLETSOFRUIN]
+Name = Tablets of Ruin
+Description = Not implemented. Does nothing.
+#-------------------------------
+[SWORDOFRUIN]
+Name = Sword of Ruin
+Description = Not implemented. Does nothing.
+#-------------------------------
+[VESSELOFRUIN]
+Name = Vessel of Ruin
+Description = Not implemented. Does nothing.
+#-------------------------------
+[BEADSOFRUIN]
+Name = Beads of Ruin
+Description = Not implemented. Does nothing.
+#-------------------------------
+[ORICHALCUMPULSE]
+Name = Orichalcum Pulse
+Description = Not implemented. Does nothing.
+#-------------------------------
+[HADRONENGINE]
+Name = Hadron Engine
+Description = Not implemented. Does nothing.
+#-------------------------------
+[SUPERSWEETSYRUP]
+Name = Supersweet Syrup
+Description = Not implemented. Does nothing.
+#-------------------------------
+[HOSPITALITY]
+Name = Hospitality
+Description = Not implemented. Does nothing.
+#-------------------------------
+[TOXICCHAIN]
+Name = Toxic Chain
+Description = Not implemented. Does nothing.
+#-------------------------------
+[STELLARSHIFT]
+Name = Stellar Shift
+Description = Not implemented. Does nothing.
+#-------------------------------
+[TERRASHELL]
+Name = Terra Shell
+Description = Not implemented. Does nothing.
+#-------------------------------
+[TERAFORMZERO]
+Name = Teraform Zero
+Description = Not implemented. Does nothing.
+#-------------------------------
+[POISONPUPPETEER]
+Name = Poison Puppeteer
+Description = Not implemented. Does nothing.
+

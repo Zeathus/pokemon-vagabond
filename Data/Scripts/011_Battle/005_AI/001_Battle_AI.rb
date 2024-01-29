@@ -20,6 +20,7 @@ end
 class Battle::AI
   def initialize(battle)
     @battle = battle
+    @threads = []
   end
 
   def pbAIRandom(x); return rand(x); end
@@ -61,12 +62,31 @@ class Battle::AI
   #=============================================================================
   def pbDefaultChooseEnemyCommand(idxBattler)
     if Supplementals::USE_NEW_BATTLE_AI && idxBattler.is_a?(Array)
-      return @battle.pbChooseMovesNew(idxBattler)
+      ret = @battle.pbChooseMovesNew(idxBattler)
+      idxBattler.each do |b|
+        if @battle.choices[b][0] == :UseMove && pbEnemyShouldMegaEvolve?(b)
+          @battle.pbRegisterMegaEvolution(b)
+        end
+      end
+      return
     end
     return if pbEnemyShouldUseItem?(idxBattler)
     return if pbEnemyShouldWithdraw?(idxBattler)
     return if @battle.pbAutoFightMenu(idxBattler)
     @battle.pbRegisterMegaEvolution(idxBattler) if pbEnemyShouldMegaEvolve?(idxBattler)
     pbChooseMoves(idxBattler)
+  end
+
+  def pbThreadChooseEnemyCommand(idxBattler)
+    @threads.push(Thread.new {
+      pbDefaultChooseEnemyCommand(idxBattler)
+    })
+  end
+
+  def pbThreadJoin
+    @threads.each do |t|
+      t.join
+    end
+    @threads = []
   end
 end

@@ -61,7 +61,10 @@ class TextBubble
 
   def update
       character = self.get_character
-      return if character.nil?
+      if character.nil?
+          self.dispose
+          return
+      end
       if @time < 180 && @sprite.busy?
           @time += 1
           @sprite.opacity = @time * 16

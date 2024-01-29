@@ -496,6 +496,8 @@ class BossEff_Weather < BossEffect
       return false
     when :StrongWinds
       return false
+    when :NoxiousStorm
+      return false
     when @weather
       return false
     end

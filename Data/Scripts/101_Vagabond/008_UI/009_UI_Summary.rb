@@ -115,8 +115,8 @@ class MoveSelectionSprite < SpriteWrapper
       end
     else
       self.x=530
-      self.y=134
-      self.y+=(self.index - self.scroll) * 86
+      self.y=126
+      self.y+=(self.index - self.scroll) * 72
     end
     self.bitmap=@movesel.bitmap
     if self.preselected
@@ -275,12 +275,26 @@ class PokemonSummaryScene
       @page=1
       @sprites["movesel"].page = 1
       @sprites["movesel"].side = 1
+      found = false
       tm_list = @listMoves[1]
       for i in 0...tm_list.length
         if tm_list[i][0] == @machinemove
           @sprites["movesel"].index = i
           @sprites["movesel"].scroll = [[tm_list.length - 5, i - 1].min, 0].max
+          found = true
           break
+        end
+      end
+      if !found
+        @sprites["movesel"].page = 0
+        learn_list = @listMoves[0]
+        for i in 0...learn_list.length
+          if learn_list[i][0] == @machinemove
+            @sprites["movesel"].index = i
+            @sprites["movesel"].scroll = [[learn_list.length - 5, i - 1].min, 0].max
+            found = true
+            break
+          end
         end
       end
       drawPageMoves(@pokemon)
@@ -845,22 +859,17 @@ class PokemonSummaryScene
           if moveobject.id!=0
             imagepos.push(["Graphics/Pictures/Summary/move_slot",xPos,yPos,0,
                 GameData::Type.get(moveobject.type).icon_position*80,216,80])
-            textpos.push([movedata.name,xPos+106,yPos+10,2,
+            smalltextpos.push([movedata.name,xPos+122,yPos+20,2,
                 Color.new(64,64,64),Color.new(176,176,176)])
             if moveobject.totalpp>0
-              textpos.push([_ISPRINTF("PP"),xPos+30,yPos+38,0,
-                  Color.new(64,64,64),Color.new(176,176,176)])
-              textpos.push([sprintf("%d/%d",moveobject.pp,moveobject.totalpp),
-                  xPos+186,yPos+38,1,Color.new(64,64,64),Color.new(176,176,176)])
+              smallesttextpos.push([sprintf("%d/%d PP",moveobject.pp,moveobject.totalpp),
+                  xPos+176,yPos+48,2,Color.new(252,252,252),Color.new(0,0,0,0)])
+              power = movedata.base_damage
               accuracy = movedata.accuracy
-              if movedata.base_damage > 0
-                smallesttextpos.push([sprintf("%d PWR   %s ACC",
-                    movedata.base_damage,accuracy==0 ? "-" : sprintf("%d",accuracy)),
-                    xPos+106,yPos+62,2,Color.new(252,252,252),Color.new(33,33,33)])
-              else
-                smallesttextpos.push([sprintf("%s ACCURACY",accuracy==0 ? "---" : sprintf("%d",accuracy)),
-                    xPos+106,yPos+62,2,Color.new(252,252,252),Color.new(33,33,33)])
-              end
+              smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
+                  xPos+38,yPos+48,2,Color.new(252,252,252),Color.new(0,0,0,0)])
+              smallesttextpos.push([sprintf("%s ACC",accuracy==0 ? "-" : sprintf("%d",accuracy)),
+                  xPos+104,yPos+48,2,Color.new(252,252,252),Color.new(0,0,0,0)])
             end
           else
             textpos.push(["-",316,yPos+6,0,Color.new(64,64,64),Color.new(176,176,176)])
@@ -872,10 +881,10 @@ class PokemonSummaryScene
     end
     if refresh_zones[1]
       xPos=536
-      yPos=140
+      yPos=132
       page = @sprites["movesel"].page
       scroll = @sprites["movesel"].scroll
-      for i in scroll...(scroll+5)
+      for i in scroll...(scroll+6)
         movearr=@listMoves[page][i]
         if movearr
           moveid=movearr[0]
@@ -888,32 +897,34 @@ class PokemonSummaryScene
             imagepos.push(["Graphics/Pictures/Summary/move_slot",xPos,yPos,
                 available ? 0 : 216,
                 GameData::Type.get(movedata.type).icon_position*80,216,80])
-            textcolor = available ? base2 : base
-            textshadow = available ? shadow2 : shadow
+            textcolor = available ? base2 : Color.new(24,24,24)
+            textshadow = available ? shadow2 : Color.new(72,72,72)
             reqcolor = available ? base2 : Color.new(252,100,100)
             reqshadow = available ? shadow2 : Color.new(120,40,40)
-            textpos.push([movedata.name,xPos+106,yPos+10,2,
-                textcolor, textshadow])
+            desccolor = available ? Color.new(252,252,252) : Color.new(160,160,160)
+            move_name = movedata.name
             if movedata.total_pp>0
-              textpos.push([sprintf("%d PP", movedata.total_pp),xPos+30,yPos+38,0,
-                  textcolor, textshadow])
+              smallesttextpos.push([sprintf("%d PP", movedata.total_pp),xPos+176,yPos+48,2,
+                    desccolor, Color.new(0,0,0,0)])
               case page
               when 0
-                textpos.push([sprintf("Lv. %d",@listMoves[page][i][1]),
-                    xPos+186,yPos+38,1,reqcolor,reqshadow])
+                if !available
+                  learn_level = @listMoves[page][i][1]
+                  smallesttextpos.push([learn_level == 0 ? "Lv.-" : sprintf("Lv.%d", learn_level),
+                      xPos+206,yPos+10,1,reqcolor,reqshadow])
+                end
               when 1
-                textpos.push([sprintf("%s",@listMoves[page][i][1]),
-                    xPos+186,yPos+38,1,textcolor,textshadow])
+                move_name = sprintf("%s %s",@listMoves[page][i][1], move_name)
               when 2
                 if pbHasDataChipMove(moveid)
 
                 else
-                  imagepos.push(["Graphics/Pictures/Summary/datachip",xPos+190,yPos+42,0,0,-1,-1])
+                  imagepos.push(["Graphics/Pictures/Summary/datachip",xPos+196,yPos+12,0,0,-1,-1])
                   if $bag.quantity(:DATACHIP)>=movearr[1]
-                    textpos.push([_INTL("{1}x",movearr[1]),xPos+186,yPos+38,1,
+                    smallesttextpos.push([_INTL("{1}x",movearr[1]),xPos+194,yPos+10,1,
                           Color.new(0,252,0),Color.new(0,100,0)])
                   else
-                    textpos.push([_INTL("{1}x",movearr[1]),xPos+186,yPos+38,1,
+                    textpos.push([_INTL("{1}x",movearr[1]),xPos+194,yPos+10,1,
                           reqcolor,reqshadow])
                   end
                 end
@@ -922,38 +933,41 @@ class PokemonSummaryScene
                 smallesttextpos.push(["INCOMPATIBLE",
                   xPos+106,yPos+62,2,reqcolor,reqshadow])
               else
+                power = movedata.base_damage
                 accuracy = movedata.accuracy
-                if movedata.base_damage > 0
-                  smallesttextpos.push([sprintf("%s PWR   %s ACC",
-                      (movedata.base_damage == 1) ? "???" : sprintf("%d", movedata.base_damage),
-                      accuracy==0 ? "-" : sprintf("%d",accuracy)),
-                      xPos+106,yPos+62,2,Color.new(252,252,252),Color.new(33,33,33)])
-                else
-                  smallesttextpos.push([sprintf("%s ACCURACY",accuracy==0 ? "---" : sprintf("%d",accuracy)),
-                      xPos+106,yPos+62,2,Color.new(252,252,252),Color.new(33,33,33)])
-                end
+                smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
+                      xPos+38,yPos+48,2,desccolor,Color.new(0,0,0,0)])
+                smallesttextpos.push([sprintf("%s ACC",accuracy==0 ? "-" : sprintf("%d",accuracy)),
+                      xPos+104,yPos+48,2,desccolor,Color.new(0,0,0,0)])
               end
+            end
+            if move_name.length >= 18
+              smallesttextpos.push([move_name,xPos+122,yPos+20,2,
+                  textcolor, textshadow])
+            else
+              smalltextpos.push([move_name,xPos+122,yPos+20,2,
+                  textcolor, textshadow])
             end
           else
             textpos.push(["-",316,yPos+6,0,Color.new(64,64,64),Color.new(176,176,176)])
             textpos.push(["--",442,yPos+38,1,Color.new(64,64,64),Color.new(176,176,176)])
           end
         end
-        yPos+=86
+        yPos+=72
       end
       imagepos.push(["Graphics/Pictures/Summary/learnset_title",520,104,0,page*32,248,32])
       scroll_height = 64
       scroll_y = 138
-      if @listMoves[page].length > 5
-        scroll_y += [((428 - scroll_height) * scroll / (@listMoves[page].length - 5)), 0].max
+      if @listMoves[page].length > 6
+        scroll_y += [((428 - scroll_height) * scroll / (@listMoves[page].length - 6)), 0].max
       end
       imagepos.push(["Graphics/Pictures/Summary/scrollbar",760,scroll_y,0,0,8,scroll_height])
     end
     pbDrawImagePositions(overlay,imagepos)
-    pbSetSmallestFont(overlay)
-    pbDrawTextPositions(overlay,smallesttextpos)
     pbSetSmallFont(overlay)
     pbDrawTextPositions(overlay,smalltextpos)
+    pbSetSmallestFont(overlay)
+    pbDrawTextPositions(overlay,smallesttextpos)
     pbSetSystemFont(overlay)
     pbDrawTextPositions(overlay,textpos)
     if $game_switches && !$game_switches[MOVES_TUTORIAL]
@@ -1550,7 +1564,7 @@ class PokemonSummaryScene
           scroll = @sprites["movesel"].scroll
           if selmove == 0
             scroll = 0
-          elsif selmove - scroll == 4 && selmove < numMoves - 1
+          elsif selmove - scroll == 5 && selmove < numMoves - 1
             scroll += 1
           end
           refresh_zones[1] = true if @sprites["movesel"].scroll != scroll
@@ -1570,7 +1584,7 @@ class PokemonSummaryScene
           if selmove == 0
             scroll = 0
           elsif selmove == numMoves - 1
-            scroll = [numMoves - 5, 0].max
+            scroll = [numMoves - 6, 0].max
           elsif selmove - scroll <= 0 && selmove > 0
             scroll -= 1
           end

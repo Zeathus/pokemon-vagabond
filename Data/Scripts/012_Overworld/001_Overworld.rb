@@ -749,6 +749,7 @@ def pbItemBall(item, quantity = 1, switch = "A")
   itemname = (quantity > 1) ? item.name_plural : item.name
   pocket = item.pocket
   move = item.move
+  show_description = !$bag.seen_item?(item)
   if $bag.add(item, quantity)   # If item can be picked up
     event_id = nil
     event_id = @event_id if $game_map.events[@event_id].character_name == "Object ball"
@@ -758,7 +759,7 @@ def pbItemBall(item, quantity = 1, switch = "A")
       $game_map.need_refresh = true
       pbUpdateSceneMap
     end
-    pbItemPickupAnimation(item, quantity)
+    pbItemPickupAnimation(item, quantity, show_description)
     return true
   end
   # Can't add the item
@@ -785,8 +786,9 @@ end
 def pbReceiveItem(item, quantity = 1)
   item = GameData::Item.get(item)
   return false if !item || quantity < 1
+  show_description = !$bag.seen_item?(item)
   if $bag.add(item, quantity)   # If item can be added
-    pbItemPickupAnimation(item, quantity)
+    pbItemPickupAnimation(item, quantity, show_description)
     return true
   end
   return false   # Can't add the item

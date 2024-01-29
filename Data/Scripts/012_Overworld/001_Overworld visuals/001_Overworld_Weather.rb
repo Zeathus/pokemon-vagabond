@@ -22,7 +22,7 @@ module RPG
     FADE_NEW_TILES_START     = 4   # Shouldn't be sooner than FADE_OLD_TILES_END
     FADE_NEW_TILES_END       = 5
 
-    def initialize(viewport = nil)
+    def initialize(viewport = nil, in_battle = false)
       @viewport         = Viewport.new(0, 0, Graphics.width, Graphics.height)
       @viewport.z       = viewport.z + 1
       @origViewport     = viewport
@@ -48,6 +48,7 @@ module RPG
       @new_sprites          = []
       @new_sprite_lifetimes = []
       @fading               = false
+      @in_battle            = in_battle
     end
 
     def dispose
@@ -256,7 +257,8 @@ module RPG
         sprite.y = @oy - sprite.bitmap.height + rand(Graphics.height + (sprite.bitmap.height * 2))
         lifetimes[index] = (rand(30...50)) * 0.01   # 0.3-0.5 seconds
       elsif @weatherTypes[weather_type][0].category == :Sun
-
+        sprite.opacity = 0
+        return
       else
         x_speed = @weatherTypes[weather_type][0].particle_delta_x
         y_speed = @weatherTypes[weather_type][0].particle_delta_y
@@ -295,23 +297,34 @@ module RPG
       if @weatherTypes[weather_type][0].category == :Rain && index.odd?   # Splash
         sprite.opacity = (lifetimes[index] < 0.2) ? 255 : 0   # 0.2 seconds
       elsif @weatherTypes[weather_type][0].category == :Sun
-        visible = (index < 10)
+        still_sunny = @weatherTypes[@target_type ? @target_type : @type][0].category == :Sun
+        visible = (index < 10) && still_sunny
         if visible
           nighttime = (pbGetTimeNow.hour > 17 || pbGetTimeNow.hour < 5)
           visible = nighttime == (index % 2 == 1)
         end
         if !visible
-          sprite.opacity = 0
+          if sprite.opacity > 0
+            sprite.opacity = [sprite.opacity - 2, 0].max
+          elsif !still_sunny
+            lifetimes[index] = 0
+          end
         else
           cycle = (@beam_timer / (360.0 * 4))
           position = (index / 2).floor + cycle
-          sprite.opacity = 128 + Math.sin(Math::PI * 2 * @beam_timer / 360) * 64
+          target_opacity = 128 + Math.sin(Math::PI * 2 * @beam_timer / 360) * 64
+          if sprite.opacity > target_opacity
+            sprite.opacity = [sprite.opacity - 2, target_opacity].max
+          else
+            sprite.opacity = [sprite.opacity + 2, target_opacity].min
+          end
           sprite.ox = -100
           sprite.oy = -80
           sprite.x = -140
           sprite.y = -110
           sprite.angle = -42 + 20 * position
           zoom = 1.0 - 0.2 * (position - 2).abs
+          zoom -= 0.2 if @in_battle
           sprite.zoom_x = zoom
           sprite.zoom_y = zoom
         end
@@ -553,6 +566,36 @@ module RPG
         @tiles.each { |sprite| sprite&.dispose }
         @tiles.clear
       end
+    end
+
+    def disposed?
+      return @viewport.disposed?
+    end
+
+    def visible=(value)
+      @sprites.each { |sprite| sprite.visible = value if sprite }
+      @new_sprites.each { |sprite| sprite.visible = value if sprite }
+      @tiles.each { |sprite| sprite.visible = value if sprite }
+    end
+
+    def visible
+      @sprites.each { |sprite| return true if sprite && sprite.visible }
+      @new_sprites.each { |sprite| return true if sprite && sprite.visible }
+      @tiles.each { |sprite| return true if sprite && sprite.visible }
+      return false
+    end
+
+    def color=(value)
+      @sprites.each { |sprite| sprite.color = value if sprite }
+      @new_sprites.each { |sprite| sprite.color = value if sprite }
+      @tiles.each { |sprite| sprite.color = value if sprite }
+    end
+
+    def color
+      @sprites.each { |sprite| return sprite.color if sprite }
+      @new_sprites.each { |sprite| return sprite.color if sprite }
+      @tiles.each { |sprite| return sprite.color if sprite }
+      return Color.new(0, 0, 0)
     end
   end
 end

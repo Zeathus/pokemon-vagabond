@@ -1,5 +1,23 @@
+def pbFallInHole
+  boulder = get_self
+  hole = nil
+  for e in $game_map.events.values
+    if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+      if e.x == boulder.x and e.y == boulder.y
+        hole = e
+        break
+      end
+    end
+  end
+  if hole
+    pbSEPlay("Earth3")
+    $game_self_switches[[$game_map.map_id, boulder.id, "A"]] = true
+    $game_self_switches[[$game_map.map_id, e.id, "A"]] = true
+    $game_map.need_refresh = true
+  end
+end
+
 def pbLargeBoulder(event_id)
-  return
   event = false
   holes = []
   boulders = []

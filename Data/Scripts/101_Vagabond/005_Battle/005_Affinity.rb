@@ -12,7 +12,7 @@ class Battle::Battler
     for ally in allies
       if ally.hasActiveAbility?(:MENDINGBOND)
         if @hp != @totalhp && @effects[PBEffects::HealBlock] <= 0
-          pbRecoverHP(((attacker.totalhp+1)/2).floor,true)
+          pbRecoverHP((@totalhp/4.0).ceil,true)
           if ally == self
             @battle.pbDisplay(_INTL("{1}'s Mending Bond restored its HP!", pbThis))
           else
@@ -94,8 +94,7 @@ class Battle::Scene
       sprites["text"].opacity += 16
       sprites["beam"].update
       sprites["text"].update
-      @viewport.update
-      Graphics.update
+      pbGraphicsUpdate
       Input.update
     end
 
@@ -130,8 +129,7 @@ class Battle::Scene
         sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -142,8 +140,7 @@ class Battle::Scene
         sprites["pkmn2"].y += ((i - 19.0) / 4.0).floor
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -157,14 +154,12 @@ class Battle::Scene
         sprites["pkmn2"].y += ((i - 6.0) / 2.0).floor
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
       10.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -175,8 +170,7 @@ class Battle::Scene
         sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -193,8 +187,7 @@ class Battle::Scene
         sprites["pkmn2"].y += ((i - 19.0) / 4.0).floor
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -206,14 +199,12 @@ class Battle::Scene
         sprites["pkmn2"].x -= 8 + (i < 4 ? i : 4)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
       10.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -226,14 +217,12 @@ class Battle::Scene
         sprites["pkmn2"].x -= 12 - (i > 8 ? (i - 8) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
       10.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -246,14 +235,12 @@ class Battle::Scene
         end
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
       10.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -264,8 +251,7 @@ class Battle::Scene
         sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -276,8 +262,7 @@ class Battle::Scene
         sprites["pkmn2"].y += ((i - 19.0) / 4.0).floor
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -286,22 +271,19 @@ class Battle::Scene
         sprites["pkmn2"].x -= 8 + (i < 4 ? i : 4)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
       10.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
     else
       # 40% chance of no special animation
       32.times do |i|
-        @viewport.update
-        Graphics.update
+        pbGraphicsUpdate
         Input.update
       end
 
@@ -323,8 +305,7 @@ class Battle::Scene
       sprites["text"].update
       sprites["pkmn1"].update if sprites["pkmn1"]
       sprites["pkmn2"].update if sprites["pkmn2"]
-      @viewport.update
-      Graphics.update
+      pbGraphicsUpdate
       Input.update
     end
 

@@ -55,7 +55,7 @@ class OverworldPokemon
       @sprite.setBitmap(sprintf("Graphics/Pokemon/Icons/%s",species))
     end
     pbDayNightTint(@sprite)
-    if @terrain == 0 # Grass
+    if @terrain == 0 && terrain.id != :Rocky # Grass
       @sprite.bitmap.fill_rect(0,50,128,14,Color.new(0,0,0,0))
       for y in 44...50
         for x in 0...128
@@ -68,23 +68,38 @@ class OverworldPokemon
           end
         end
       end
-    elsif @terrain == 1 # Cave
+    elsif @terrain == 1 || terrain.id == :Rocky # Cave
       shadow = Color.new(12,12,12,100)
+      shadow_offset = -1
+      for y in 0...32
+        for x in 0...32
+          pixel = @sprite.bitmap.get_pixel(64-x*2,64-y*2)
+          if pixel.alpha == 100
+            shadow_offset = y * 2
+            break
+          end
+          if pixel.alpha >= 10
+            shadow_offset = [0, (y - 3) * 2].max
+            break
+          end
+        end
+        break if shadow_offset != -1
+      end
       for y in 50...64
         min = y < 52 ? 24 :
-             (y < 54 ? 20 :
-             (y < 60 ? 18 :
-             (y < 62 ? 20 : 22)))
+            (y < 54 ? 20 :
+            (y < 60 ? 18 :
+            (y < 62 ? 20 : 22)))
         max = y < 52 ? 40 :
-             (y < 54 ? 44 :
-             (y < 60 ? 46 :
-             (y < 62 ? 44 : 42)))
+            (y < 54 ? 44 :
+            (y < 60 ? 46 :
+            (y < 62 ? 44 : 42)))
         for x in min...max
-          if @sprite.bitmap.get_pixel(x,y).alpha < 10
-            @sprite.bitmap.set_pixel(x,y,shadow)
+          if @sprite.bitmap.get_pixel(x,y - shadow_offset).alpha < 10
+            @sprite.bitmap.set_pixel(x,y - shadow_offset,shadow)
           end
-          if @sprite.bitmap.get_pixel(x+64,y).alpha < 10
-            @sprite.bitmap.set_pixel(x+64,y,shadow)
+          if @sprite.bitmap.get_pixel(x+64,y - shadow_offset).alpha < 10
+            @sprite.bitmap.set_pixel(x+64,y - shadow_offset,shadow)
           end
         end
       end
@@ -187,10 +202,10 @@ class OverworldPokemon
     elsif willmove && (rand(60)==0) # will move
       dirs = []
       if @terrain==0 # Grass
-        dirs.push(0) if @map.terrain_tag(@map_x,@map_y+1).shows_grass_rustle && !tileOccupied(@map_x,@map_y+1)
-        dirs.push(1) if @map.terrain_tag(@map_x-1,@map_y).shows_grass_rustle && !tileOccupied(@map_x-1,@map_y)
-        dirs.push(2) if @map.terrain_tag(@map_x+1,@map_y).shows_grass_rustle && !tileOccupied(@map_x+1,@map_y)
-        dirs.push(3) if @map.terrain_tag(@map_x,@map_y-1).shows_grass_rustle && !tileOccupied(@map_x,@map_y-1)
+        dirs.push(0) if @map.terrain_tag(@map_x,@map_y+1).has_land_encounters? && !tileOccupied(@map_x,@map_y+1)
+        dirs.push(1) if @map.terrain_tag(@map_x-1,@map_y).has_land_encounters? && !tileOccupied(@map_x-1,@map_y)
+        dirs.push(2) if @map.terrain_tag(@map_x+1,@map_y).has_land_encounters? && !tileOccupied(@map_x+1,@map_y)
+        dirs.push(3) if @map.terrain_tag(@map_x,@map_y-1).has_land_encounters? && !tileOccupied(@map_x,@map_y-1)
       elsif @terrain==1 # Cave
         dirs.push(0) if @map.passable?(@map_x,map_y+1,8) && !tileOccupied(@map_x,@map_y+1)
         dirs.push(1) if @map.passable?(@map_x-1,map_y,6) && !tileOccupied(@map_x-1,@map_y)
@@ -285,7 +300,7 @@ class SpawnArea
     @height = maxY - @y
     divisor = 16.0
     if terrain == -1 || terrain.can_surf
-      divisor = 24.0
+      divisor = 32.0
     end
     @max_pkmn = (@tiles.length / divisor).ceil
     @repel_active = false
@@ -374,6 +389,7 @@ class SpawnArea
 
   def updateSpawns(initial = false)
     return if !$player || $player.party.length <= 0
+    return if $game_switches && $game_switches[NO_WILD_POKEMON]
     if ($PokemonGlobal.repel > 0) != @repel_active
       @repel_active = ($PokemonGlobal.repel > 0)
       if @repel_active
@@ -578,6 +594,7 @@ class Spriteset_Map
   end
 
   def initialSpawns
+    return if $game_switches && $game_switches[NO_WILD_POKEMON]
     20.times do
       @spawn_areas.each do |area|
         if area.inRange(13,11)
