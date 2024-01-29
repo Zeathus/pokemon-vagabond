@@ -15,18 +15,17 @@ GUIDES = [
     ""]
 ]
 
-class KeybindSprite < SpriteWrapper
+class KeybindSprite < BitmapSprite
 
   attr_accessor :baseColor
   attr_accessor :shadowColor
 
   def initialize(input, name, x, y, viewport)
-    super(viewport)
+    super(224, 28, viewport)
     @input = input
     @name  = name
     @baseColor = Color.new(252,252,252)
     @shadowColor = Color.new(0,0,0)
-    self.bitmap = Bitmap.new(224, 28)
     self.x = x
     self.y = y
     @keybind_icons = AnimatedBitmap.new("Graphics/Pictures/keybinds")

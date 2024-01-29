@@ -1,17 +1,16 @@
-class CriticalSprite < SpriteWrapper
+class CriticalSprite < BitmapSprite
 
   attr_accessor :type
   attr_accessor :frame
   attr_accessor :opponent
 
   def initialize(user, viewport)
-    super(viewport)
+    super(1024, 128, viewport)
     @simple = user.is_a?(Numeric)
     @type = @simple ? 1 : user.types[0]
     @opponent = @simple ? true : ((user.index % 2) == 1)
     @src_bitmap = RPG::Cache.load_bitmap("",
       _INTL("Graphics/Pictures/Battle/critical_{1}",type.to_s))
-    self.bitmap = Bitmap.new(1024,128)
     self.x = 0
     self.y = 192
     self.oy = 64
@@ -51,7 +50,7 @@ class CriticalSprite < SpriteWrapper
 
 end
 
-class CriticalSpritePokemon < SpriteWrapper
+class CriticalSpritePokemon < BitmapSprite
 
   attr_accessor :species
   attr_accessor :frame
@@ -59,12 +58,11 @@ class CriticalSpritePokemon < SpriteWrapper
   attr_accessor :xframes
 
   def initialize(user, viewport)
-    super(viewport)
+    super(192, 128, viewport)
     @simple = user.is_a?(Numeric)
     @species = @simple ? user : user.species
     @opponent = @simple ? true : ((user.index % 2) == 1)
     @src_bitmap = @simple ? GameData::Species.front_sprite_bitmap(@species) : GameData::Species.front_sprite_bitmap(@species,user.form,user.gender,user.shiny?)
-    self.bitmap = Bitmap.new(192,128)
     if @src_bitmap.height < 128
       self.bitmap.blt(0, 64-(@src_bitmap.bitmap.height/2), @src_bitmap.bitmap,
         Rect.new(0, 0,

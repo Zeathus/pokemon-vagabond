@@ -39,15 +39,14 @@
 002_Game_System
 003_Game_Picture
 004_Game_Map
-005_Game_Map_Autoscroll
-006_Game_MapFactory
-007_Game_Character
-008_Game_Event
-009_Game_Player
-010_Game_CommonEvent
-011_Game_Follower
-012_Game_FollowerFactory
-013_Game_Stats
+005_Game_MapFactory
+006_Game_Character
+007_Game_Event
+008_Game_Player
+009_Game_CommonEvent
+010_Game_Follower
+011_Game_FollowerFactory
+012_Game_Stats
 @@001_Switches and Variables
 001_Game_Temp
 002_Game_Switches
@@ -64,10 +63,8 @@
 007_Spriteset_Map
 008_Sprite_AnimationSprite
 009_Sprite_DynamicShadows
-010_ParticleEngine
-011_PictureEx
-012_Interpolators
-013_ScreenPosHelper
+010_PictureEx
+011_ScreenPosHelper
 ---------------------------~blank
 @006_Map renderer
 001_TilemapRenderer
@@ -82,7 +79,7 @@
 004_SpriteWindow
 005_SpriteWindow_text
 006_SpriteWindow_pictures
-007_SpriteWrapper
+007_BitmapSprite
 008_AnimatedBitmap
 009_Planes
 010_DrawText
@@ -119,7 +116,7 @@
 017_Target
 @@002_PBS data
 001_MiscPBSData
-002_PhoneDatabase
+002_TownMap
 003_Type
 004_Ability
 005_Move
@@ -136,6 +133,9 @@
 016_Metadata
 017_PlayerMetadata
 018_MapMetadata
+019_DungeonTileset
+020_DungeonParameters
+021_PhoneMessage
 ---------------------------~blank
 @011_Battle
 @@001_Battle
@@ -187,14 +187,27 @@
 009_Battle_DebugScene
 @@005_AI
 001_Battle_AI
-002_AI_Item
-003_AI_Switch
-004_AI_Move
-005_AI_Move_EffectScores_1
-006_AI_Move_EffectScores_2
-007_AI_Move_EffectScores_3
-008_AI_Move_Utilities
-@@006_Other battle code
+002_AI_Switch
+003_AI_UseItem
+004_AI_MegaEvolve
+005_AI_ChooseMove
+006_AI_ChooseMove_GenericEffects
+007_AI_ChooseMove_OtherScores
+008_AI_Utilities
+009_AITrainer
+010_AIBattler
+011_AIMove
+@@006_AI MoveEffects
+001_AI_MoveEffects_Misc
+002_AI_MoveEffects_BattlerStats
+003_AI_MoveEffects_BattlerOther
+004_AI_MoveEffects_MoveAttributes
+005_AI_MoveEffects_MultiHit
+006_AI_MoveEffects_Healing
+007_AI_MoveEffects_Items
+008_AI_MoveEffects_ChangeMoveEffect
+009_AI_MoveEffects_SwitchingActing
+@@007_Other battle code
 001_PBEffects
 002_Battle_ActiveField
 003_Battle_DamageState
@@ -205,7 +218,7 @@
 008_Battle_AbilityEffects
 009_Battle_ItemEffects
 010_Battle_PokeBallEffects
-@@007_Other battle types
+@@008_Other battle types
 001_SafariBattle
 002_BugContestBattle
 003_BattlePalaceBattle
@@ -282,10 +295,11 @@
 018_UI_ItemStorage
 019_UI_PC
 020_UI_PokeMart
-021_UI_MoveRelearner
-022_UI_PurifyChamber
-023_UI_MysteryGift
-024_UI_TextEntry
+021_UI_BattlePointShop
+022_UI_MoveRelearner
+023_UI_PurifyChamber
+024_UI_MysteryGift
+025_UI_TextEntry
 @@001_Non-interactive UI
 001_UI_SplashesAndTitleScreen
 002_UI_Controls

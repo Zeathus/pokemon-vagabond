@@ -37,12 +37,20 @@ class Battle::Battler
   attr_accessor :currentMove   # ID of multi-turn move currently being used
   attr_accessor :droppedBelowHalfHP   # Used for Emergency Exit/Wimp Out
   attr_accessor :statsDropped   # Used for Eject Pack
+  attr_accessor :tookMoveDamageThisRound   # Boolean for Focus Punch
   attr_accessor :tookDamageThisRound   # Boolean for whether self took damage this round
   attr_accessor :tookPhysicalHit
   attr_accessor :statsRaisedThisRound   # Boolean for whether self's stat(s) raised this round
   attr_accessor :statsLoweredThisRound   # Boolean for whether self's stat(s) lowered this round
   attr_accessor :canRestoreIceFace   # Whether Hail started in the round
   attr_accessor :damageState
+
+  # These arrays should all have the same number of values in them
+  STAT_STAGE_MULTIPLIERS    = [2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8]
+  STAT_STAGE_DIVISORS       = [8, 7, 6, 5, 4, 3, 2, 2, 2, 2, 2, 2, 2]
+  ACC_EVA_STAGE_MULTIPLIERS = [3, 3, 3, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9]
+  ACC_EVA_STAGE_DIVISORS    = [9, 8, 7, 6, 5, 4, 3, 3, 3, 3, 3, 3, 3]
+  STAT_STAGE_MAXIMUM        = 6   # Is also the minimum (-6)
 
   #=============================================================================
   # Complex accessors
@@ -241,10 +249,8 @@ class Battle::Battler
   #=============================================================================
   def pbSpeed
     return 1 if fainted?
-    stageMul = [2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8]
-    stageDiv = [8, 7, 6, 5, 4, 3, 2, 2, 2, 2, 2, 2, 2]
-    stage = @stages[:SPEED] + 6
-    speed = @speed * stageMul[stage] / stageDiv[stage]
+    stage = @stages[:SPEED] + STAT_STAGE_MAXIMUM
+    speed = @speed * STAT_STAGE_MULTIPLIERS[stage] / STAT_STAGE_DIVISORS[stage]
     speedMult = 1.0
     # Ability effects that alter calculated Speed
     if abilityActive?
@@ -302,7 +308,7 @@ class Battle::Battler
 
   # Returns the active types of this Pokémon. The array should not include the
   # same type more than once, and should not include any invalid types.
-  def pbTypes(withType3 = false)
+  def pbTypes(withExtraType = false)
     ret = @types.uniq
     # Burn Up erases the Fire-type.
     ret.delete(:FIRE) if @effects[PBEffects::BurnUp]
@@ -313,8 +319,8 @@ class Battle::Battler
       ret.push(:NORMAL) if ret.length == 0
     end
     # Add the third type specially.
-    if withType3 && @effects[PBEffects::Type3] && !ret.include?(@effects[PBEffects::Type3])
-      ret.push(@effects[PBEffects::Type3])
+    if withExtraType && @effects[PBEffects::ExtraType] && !ret.include?(@effects[PBEffects::ExtraType])
+      ret.push(@effects[PBEffects::ExtraType])
     end
     return ret
   end
@@ -473,7 +479,7 @@ class Battle::Battler
   def pbHasMoveFunction?(*arg)
     return false if !arg
     eachMove do |m|
-      arg.each { |code| return true if m.function == code }
+      arg.each { |code| return true if m.function_code == code }
     end
     return false
   end
@@ -551,7 +557,7 @@ class Battle::Battler
   end
 
   def takesShadowSkyDamage?
-    return false if fainted?
+    return false if !takesIndirectDamage?
     return false if shadowPokemon?
     return true
   end

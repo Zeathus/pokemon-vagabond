@@ -48,7 +48,7 @@ class TextBubble
           @sprite.x = character.x - @sprite.width / 2
           @sprite.y = character.y - @sprite.height - character.bitmap.height / 4
           @sprite.letterbyletter = true
-          @sprite.textspeed = 4
+          @sprite.textspeed = 4 / 80.0
           @sprite.text = text
           @sprite.contents.font.name = "Small"
           @sprite.resume
