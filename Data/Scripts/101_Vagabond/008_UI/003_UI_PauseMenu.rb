@@ -1,4 +1,4 @@
-class PauseOptionSprite < SpriteWrapper
+class PauseOptionSprite < Sprite
 
   def initialize(viewport, index)
     super(viewport)

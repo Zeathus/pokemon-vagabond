@@ -7,26 +7,20 @@ class PokemonBoxIcon < IconSprite
   def initialize(pokemon, viewport = nil)
     super(0, 0, viewport)
     @pokemon = pokemon
-    @release = Interpolator.new
-    @startRelease = false
+    @release_timer_start = nil
     refresh
   end
 
   def releasing?
-    return @release.tweening?
+    return !@release_timer_start.nil?
   end
 
   def release
-    self.ox = self.src_rect.width / 2   # 32
+    self.ox = self.src_rect.width / 2    # 32
     self.oy = self.src_rect.height / 2   # 32
-    self.x += self.src_rect.width / 2   # 32
+    self.x += self.src_rect.width / 2    # 32
     self.y += self.src_rect.height / 2   # 32
-    @release.tween(self,
-                   [[Interpolator::ZOOM_X, 0],
-                    [Interpolator::ZOOM_Y, 0],
-                    [Interpolator::OPACITY, 0]],
-                   100)
-    @startRelease = true
+    @release_timer_start = System.uptime
   end
 
   def refresh
@@ -37,9 +31,17 @@ class PokemonBoxIcon < IconSprite
 
   def update
     super
-    @release.update
     self.color = Color.new(0, 0, 0, 0)
-    dispose if @startRelease && !releasing?
+    if releasing?
+      time_now = System.uptime
+      self.zoom_x = lerp(1.0, 0.0, 1.5, @release_timer_start, System.uptime)
+      self.zoom_y = self.zoom_x
+      self.opacity = lerp(255, 0, 1.5, @release_timer_start, System.uptime)
+      if self.opacity == 0
+        @release_timer_start = nil
+        dispose
+      end
+    end
   end
 end
 
@@ -110,9 +112,32 @@ end
 #
 #===============================================================================
 class AutoMosaicPokemonSprite < MosaicPokemonSprite
+  INITIAL_MOSAIC = 10   # Pixellation factor
+
+  def mosaic=(value)
+    @mosaic = value
+    @mosaic = 0 if @mosaic < 0
+    @start_mosaic = @mosaic if !@start_mosaic
+  end
+
+  def mosaic_duration=(val)
+    @mosaic_duration = val
+    @mosaic_duration = 0 if @mosaic_duration < 0
+    @mosaic_timer_start = System.uptime if @mosaic_duration > 0
+  end
+
   def update
     super
-    self.mosaic -= 1
+    if @mosaic_timer_start
+      @start_mosaic = INITIAL_MOSAIC if !@start_mosaic || @start_mosaic == 0
+      new_mosaic = lerp(@start_mosaic, 0, @mosaic_duration, @mosaic_timer_start, System.uptime).to_i
+      self.mosaic = new_mosaic
+      mosaicRefresh(@oldbitmap)
+      if new_mosaic == 0
+        @mosaic_timer_start = nil
+        @start_mosaic = nil
+      end
+    end
   end
 end
 
@@ -122,24 +147,25 @@ end
 class PokemonBoxArrow < Sprite
   attr_accessor :quickswap
 
+  # Time in seconds for the cursor to move down and back up to grab/drop a
+  # Pokémon.
+  GRAB_TIME = 0.4
+
   def initialize(viewport = nil)
     super(viewport)
-    @frame         = 0
-    @holding       = false
-    @updating      = false
-    @quickswap     = false
-    @grabbingState = 0
-    @placingState  = 0
-    @heldpkmn      = nil
-    @handsprite    = ChangelingSprite.new(0, 0, viewport)
-    @handsprite.addBitmap("point1", "Graphics/Pictures/Storage/cursor_point_1")
-    @handsprite.addBitmap("point2", "Graphics/Pictures/Storage/cursor_point_2")
-    @handsprite.addBitmap("grab", "Graphics/Pictures/Storage/cursor_grab")
-    @handsprite.addBitmap("fist", "Graphics/Pictures/Storage/cursor_fist")
-    @handsprite.addBitmap("point1q", "Graphics/Pictures/Storage/cursor_point_1_q")
-    @handsprite.addBitmap("point2q", "Graphics/Pictures/Storage/cursor_point_2_q")
-    @handsprite.addBitmap("grabq", "Graphics/Pictures/Storage/cursor_grab_q")
-    @handsprite.addBitmap("fistq", "Graphics/Pictures/Storage/cursor_fist_q")
+    @holding    = false
+    @updating   = false
+    @quickswap  = false
+    @heldpkmn   = nil
+    @handsprite = ChangelingSprite.new(0, 0, viewport)
+    @handsprite.addBitmap("point1", "Graphics/UI/Storage/cursor_point_1")
+    @handsprite.addBitmap("point2", "Graphics/UI/Storage/cursor_point_2")
+    @handsprite.addBitmap("grab", "Graphics/UI/Storage/cursor_grab")
+    @handsprite.addBitmap("fist", "Graphics/UI/Storage/cursor_fist")
+    @handsprite.addBitmap("point1q", "Graphics/UI/Storage/cursor_point_1_q")
+    @handsprite.addBitmap("point2q", "Graphics/UI/Storage/cursor_point_2_q")
+    @handsprite.addBitmap("grabq", "Graphics/UI/Storage/cursor_grab_q")
+    @handsprite.addBitmap("fistq", "Graphics/UI/Storage/cursor_fist_q")
     @handsprite.changeBitmap("fist")
     @spriteX = self.x
     @spriteY = self.y
@@ -149,38 +175,6 @@ class PokemonBoxArrow < Sprite
     @handsprite.dispose
     @heldpkmn&.dispose
     super
-  end
-
-  def heldPokemon
-    @heldpkmn = nil if @heldpkmn&.disposed?
-    @holding = false if !@heldpkmn
-    return @heldpkmn
-  end
-
-  def visible=(value)
-    super
-    @handsprite.visible = value
-    sprite = heldPokemon
-    sprite.visible = value if sprite
-  end
-
-  def color=(value)
-    super
-    @handsprite.color = value
-    sprite = heldPokemon
-    sprite.color = value if sprite
-  end
-
-  def holding?
-    return self.heldPokemon && @holding
-  end
-
-  def grabbing?
-    return @grabbingState > 0
-  end
-
-  def placing?
-    return @placingState > 0
   end
 
   def x=(value)
@@ -202,6 +196,38 @@ class PokemonBoxArrow < Sprite
     @handsprite.z = value
   end
 
+  def visible=(value)
+    super
+    @handsprite.visible = value
+    sprite = heldPokemon
+    sprite.visible = value if sprite
+  end
+
+  def color=(value)
+    super
+    @handsprite.color = value
+    sprite = heldPokemon
+    sprite.color = value if sprite
+  end
+
+  def heldPokemon
+    @heldpkmn = nil if @heldpkmn&.disposed?
+    @holding = false if !@heldpkmn
+    return @heldpkmn
+  end
+
+  def holding?
+    return self.heldPokemon && @holding
+  end
+
+  def grabbing?
+    return !@grabbing_timer_start.nil?
+  end
+
+  def placing?
+    return !@placing_timer_start.nil?
+  end
+
   def setSprite(sprite)
     if holding?
       @heldpkmn = sprite
@@ -221,7 +247,7 @@ class PokemonBoxArrow < Sprite
   end
 
   def grab(sprite)
-    @grabbingState = 1
+    @grabbing_timer_start = System.uptime
     @heldpkmn = sprite
     @heldpkmn.viewport = self.viewport
     @heldpkmn.z = 1
@@ -229,7 +255,7 @@ class PokemonBoxArrow < Sprite
   end
 
   def place
-    @placingState = 1
+    @placing_timer_start = System.uptime
   end
 
   def release
@@ -243,46 +269,40 @@ class PokemonBoxArrow < Sprite
     heldpkmn&.update
     @handsprite.update
     @holding = false if !heldpkmn
-    if @grabbingState > 0
-      if @grabbingState <= 4 * Graphics.frame_rate / 20
+    if @grabbing_timer_start
+      if System.uptime - @grabbing_timer_start <= GRAB_TIME / 2
         @handsprite.changeBitmap((@quickswap) ? "grabq" : "grab")
-        self.y = @spriteY + (4.0 * @grabbingState * 20 / Graphics.frame_rate)
-        @grabbingState += 1
-      elsif @grabbingState <= 8 * Graphics.frame_rate / 20
+        self.y = @spriteY + lerp(0, 16, GRAB_TIME / 2, @grabbing_timer_start, System.uptime)
+      else
         @holding = true
         @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-        self.y = @spriteY + (4 * ((8 * Graphics.frame_rate / 20) - @grabbingState) * 20 / Graphics.frame_rate)
-        @grabbingState += 1
-      else
-        @grabbingState = 0
+        delta_y = lerp(16, 0, GRAB_TIME / 2, @grabbing_timer_start + (GRAB_TIME / 2), System.uptime)
+        self.y = @spriteY + delta_y
+        @grabbing_timer_start = nil if delta_y == 0
       end
-    elsif @placingState > 0
-      if @placingState <= 4 * Graphics.frame_rate / 20
+    elsif @placing_timer_start
+      if System.uptime - @placing_timer_start <= GRAB_TIME / 2
         @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-        self.y = @spriteY + (4.0 * @placingState * 20 / Graphics.frame_rate)
-        @placingState += 1
-      elsif @placingState <= 8 * Graphics.frame_rate / 20
+        self.y = @spriteY + lerp(0, 16, GRAB_TIME / 2, @placing_timer_start, System.uptime)
+      else
         @holding = false
         @heldpkmn = nil
         @handsprite.changeBitmap((@quickswap) ? "grabq" : "grab")
-        self.y = @spriteY + (4 * ((8 * Graphics.frame_rate / 20) - @placingState) * 20 / Graphics.frame_rate)
-        @placingState += 1
-      else
-        @placingState = 0
+        delta_y = lerp(16, 0, GRAB_TIME / 2, @placing_timer_start + (GRAB_TIME / 2), System.uptime)
+        self.y = @spriteY + delta_y
+        @placing_timer_start = nil if delta_y == 0
       end
     elsif holding?
       @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-    else
+    else   # Idling
       self.x = @spriteX
       self.y = @spriteY
-      if @frame < Graphics.frame_rate / 2
+      if (System.uptime / 0.5).to_i.even?   # Changes every 0.5 seconds
         @handsprite.changeBitmap((@quickswap) ? "point1q" : "point1")
       else
         @handsprite.changeBitmap((@quickswap) ? "point2q" : "point2")
       end
     end
-    @frame += 1
-    @frame = 0 if @frame >= Graphics.frame_rate
     @updating = false
   end
 end
@@ -306,7 +326,7 @@ class PokemonBoxSprite < Sprite
       pokemon = @storage[boxnumber, i]
       @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport)
     end
-    @contents = BitmapWrapper.new(324, 296)
+    @contents = Bitmap.new(324, 296)
     self.bitmap = @contents
     self.x = 184
     self.y = 18
@@ -374,7 +394,7 @@ class PokemonBoxSprite < Sprite
         @storage[@boxnumber].background = @bg
       end
       @boxbitmap&.dispose
-      @boxbitmap = AnimatedBitmap.new("Graphics/Pictures/Storage/box_#{@bg}")
+      @boxbitmap = AnimatedBitmap.new("Graphics/UI/Storage/box_#{@bg}")
     end
   end
 
@@ -424,7 +444,7 @@ class PokemonBoxSprite < Sprite
           sprite.viewport = self.viewport
           sprite.x = xval
           sprite.y = yval
-          sprite.z = 0
+          sprite.z = 1
         end
         xval += 48
       end
@@ -449,7 +469,7 @@ class PokemonBoxPartySprite < Sprite
   def initialize(party, viewport = nil)
     super(viewport)
     @party = party
-    @boxbitmap = AnimatedBitmap.new("Graphics/Pictures/Storage/overlay_party")
+    @boxbitmap = AnimatedBitmap.new("Graphics/UI/Storage/overlay_party")
     @pokemonsprites = []
     MAX_PARTY_BOX_SIZE.times do |i|
       @pokemonsprites[i] = nil
@@ -465,7 +485,7 @@ class PokemonBoxPartySprite < Sprite
         end
       end
     end
-    @contents = BitmapWrapper.new(172, 352)
+    @contents = Bitmap.new(172, 352)
     self.bitmap = @contents
     self.x = 182
     self.y = 384 - 352
@@ -553,7 +573,7 @@ class PokemonBoxPartySprite < Sprite
     @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 172, 352))
     pbDrawTextPositions(
       self.bitmap,
-      [[_INTL("Back"), 86, 248, 2, Color.new(248, 248, 248), Color.new(80, 80, 80), 1]]
+      [[_INTL("Back"), 86, 248, :center, Color.new(248, 248, 248), Color.new(80, 80, 80), :outline]]
     )
     xvalues = []   # [18, 90, 18, 90, 18, 90]
     yvalues = []   # [2, 18, 66, 82, 130, 146]
@@ -638,7 +658,7 @@ class PokemonStorageScene
     @sprites["helptext"].text = "Welcome to the Pokemon Storage system, this screen will provide you with extra information when assumed necessary."
     @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport)
     @sprites["boxsides"] = IconSprite.new(0, 0, @boxsidesviewport)
-    @sprites["boxsides"].setBitmap("Graphics/Pictures/Storage/overlay_main")
+    @sprites["boxsides"].setBitmap("Graphics/UI/Storage/overlay_main")
     @sprites["overlay"] = BitmapSprite.new(512, 384, @boxsidesviewport)
     pbSetSystemFont(@sprites["overlay"].bitmap)
     @sprites["pokemon"] = AutoMosaicPokemonSprite.new(@boxsidesviewport)
@@ -650,11 +670,13 @@ class PokemonStorageScene
       @sprites["boxparty"].x = 182
       @sprites["boxparty"].y = 384
     end
-    @markingbitmap = AnimatedBitmap.new("Graphics/Pictures/Storage/markings")
+    @markingbitmap = AnimatedBitmap.new("Graphics/UI/Storage/markings")
     @sprites["markingbg"] = IconSprite.new(292, 68, @boxsidesviewport)
-    @sprites["markingbg"].setBitmap("Graphics/Pictures/Storage/overlay_marking")
+    @sprites["markingbg"].setBitmap("Graphics/UI/Storage/overlay_marking")
+    @sprites["markingbg"].z = 10
     @sprites["markingbg"].visible = false
     @sprites["markingoverlay"] = BitmapSprite.new(512, 384, @boxsidesviewport)
+    @sprites["markingoverlay"].z = 11
     @sprites["markingoverlay"].visible = false
     pbSetSystemFont(@sprites["markingoverlay"].bitmap)
     @sprites["arrow"] = PokemonBoxArrow.new(@arrowviewport)
@@ -747,15 +769,15 @@ class PokemonStorageScene
 
   def pbSetArrow(arrow, selection)
     case selection
-    when -1, -4, -5 # Box name, move left, move right
-      arrow.x = 157 * 2
-      arrow.y = -12 * 2
-    when -2 # Party Pokémon
-      arrow.x = 119 * 2
-      arrow.y = 139 * 2
-    when -3 # Close Box
-      arrow.x = 207 * 2
-      arrow.y = 139 * 2
+    when -1, -4, -5   # Box name, move left, move right
+      arrow.x = 314
+      arrow.y = -24
+    when -2   # Party Pokémon
+      arrow.x = 238
+      arrow.y = 278
+    when -3   # Close Box
+      arrow.x = 414
+      arrow.y = 278
     else
       arrow.x = (97 + (24 * (selection % PokemonBox::BOX_WIDTH))) * 2
       arrow.y = (8 + (24 * (selection / PokemonBox::BOX_WIDTH))) * 2
@@ -954,9 +976,7 @@ class PokemonStorageScene
     return pbSelectBoxInternal(party) if @command == 1   # Withdraw
     ret = nil
     loop do
-      if !@choseFromParty
-        ret = pbSelectBoxInternal(party)
-      end
+      ret = pbSelectBoxInternal(party) if !@choseFromParty
       if @choseFromParty || (ret && ret[0] == -2)   # Party Pokémon
         if !@choseFromParty
           pbShowPartyTab
@@ -965,7 +985,7 @@ class PokemonStorageScene
         ret = pbSelectPartyInternal(party, false)
         if ret < 0
           pbHidePartyTab
-          @selection = 0
+          @selection = -2
           @choseFromParty = false
         else
           @choseFromParty = true
@@ -1036,74 +1056,66 @@ class PokemonStorageScene
   end
 
   def pbChangeBackground(wp)
+    duration = 0.2   # Time in seconds to fade out or fade in
     @sprites["box"].refreshSprites = false
-    alpha = 0
     Graphics.update
     self.update
-    timeTaken = Graphics.frame_rate * 4 / 10
-    alphaDiff = (255.0 / timeTaken).ceil
-    timeTaken.times do
-      alpha += alphaDiff
-      Graphics.update
-      Input.update
+    # Fade old background to white
+    timer_start = System.uptime
+    loop do
+      alpha = lerp(0, 255, duration, timer_start, System.uptime)
       @sprites["box"].color = Color.new(248, 248, 248, alpha)
+      Graphics.update
       self.update
+      break if alpha >= 255
     end
+    # Fade in new background from white
     @sprites["box"].refreshBox = true
     @storage[@storage.currentBox].background = wp
-    (Graphics.frame_rate / 10).times do
-      Graphics.update
-      Input.update
-      self.update
-    end
-    timeTaken.times do
-      alpha -= alphaDiff
-      Graphics.update
-      Input.update
+    timer_start = System.uptime
+    loop do
+      alpha = lerp(255, 0, duration, timer_start, System.uptime)
       @sprites["box"].color = Color.new(248, 248, 248, alpha)
+      Graphics.update
       self.update
+      break if alpha <= 0
     end
     @sprites["box"].refreshSprites = true
+    Input.update
   end
 
-  def pbSwitchBoxToRight(newbox)
-    newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport)
-    newbox.x = 520
-    Graphics.frame_reset
-    distancePerFrame = 64 * 20 / Graphics.frame_rate
+  def pbSwitchBoxToRight(new_box_number)
+    start_x = @sprites["box"].x
+    newbox = PokemonBoxSprite.new(@storage, new_box_number, @boxviewport)
+    newbox.x = start_x + 336
+    timer_start = System.uptime
     loop do
-      Graphics.update
-      Input.update
-      @sprites["box"].x -= distancePerFrame
-      newbox.x -= distancePerFrame
+      @sprites["box"].x = lerp(start_x, start_x - 336, 0.25, timer_start, System.uptime)
+      newbox.x = @sprites["box"].x + 336
       self.update
-      break if newbox.x <= 184
+      Graphics.update
+      break if newbox.x == start_x
     end
-    diff = newbox.x - 184
-    newbox.x = 184
-    @sprites["box"].x -= diff
     @sprites["box"].dispose
     @sprites["box"] = newbox
+    Input.update
   end
 
-  def pbSwitchBoxToLeft(newbox)
-    newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport)
-    newbox.x = -152
-    Graphics.frame_reset
-    distancePerFrame = 64 * 20 / Graphics.frame_rate
+  def pbSwitchBoxToLeft(new_box_number)
+    start_x = @sprites["box"].x
+    newbox = PokemonBoxSprite.new(@storage, new_box_number, @boxviewport)
+    newbox.x = start_x - 336
+    timer_start = System.uptime
     loop do
-      Graphics.update
-      Input.update
-      @sprites["box"].x += distancePerFrame
-      newbox.x += distancePerFrame
+      @sprites["box"].x = lerp(start_x, start_x + 336, 0.25, timer_start, System.uptime)
+      newbox.x = @sprites["box"].x - 336
       self.update
-      break if newbox.x >= 184
+      Graphics.update
+      break if newbox.x == start_x
     end
-    diff = newbox.x - 184
-    newbox.x = 184
-    @sprites["box"].x -= diff
     @sprites["box"].dispose
     @sprites["box"] = newbox
+    Input.update
   end
 
   def pbJumpToBox(newbox)
@@ -1119,7 +1131,7 @@ class PokemonStorageScene
   def pbSetMosaic(selection)
     return if @screen.pbHeldPokemon
     return if @boxForMosaic == @storage.currentBox && @selectionForMosaic == selection
-    @sprites["pokemon"].mosaic = Graphics.frame_rate / 4
+    @sprites["pokemon"].mosaic_duration = 0.25   # In seconds
     @boxForMosaic = @storage.currentBox
     @selectionForMosaic = selection
   end
@@ -1186,7 +1198,7 @@ class PokemonStorageScene
       @sprites["box"].setPokemon(selected[1], heldpokesprite)
     end
     @sprites["arrow"].setSprite(boxpokesprite)
-    @sprites["pokemon"].mosaic = 10
+    @sprites["pokemon"].mosaic_duration = 0.25   # In seconds
     @boxForMosaic = @storage.currentBox
     @selectionForMosaic = selected[1]
   end
@@ -1271,9 +1283,7 @@ class PokemonStorageScene
   def pbBoxName(helptext, minchars, maxchars)
     oldsprites = pbFadeOutAndHide(@sprites)
     ret = pbEnterBoxName(helptext, minchars, maxchars)
-    if ret.length > 0
-      @storage[@storage.currentBox].name = ret
-    end
+    @storage[@storage.currentBox].name = ret if ret.length > 0
     @sprites["box"].refreshBox = true
     pbRefresh
     pbFadeInAndShow(@sprites, oldsprites)
@@ -1281,11 +1291,11 @@ class PokemonStorageScene
 
   def pbChooseItem(bag)
     ret = nil
-    pbFadeOutIn {
+    pbFadeOutIn do
       scene = PokemonBag_Scene.new
       screen = PokemonBagScreen.new(scene, bag)
       ret = screen.pbChooseItemScreen(proc { |item| GameData::Item.get(item).can_hold? })
-    }
+    end
     return ret
   end
 
@@ -1400,8 +1410,8 @@ class PokemonStorageScene
                                                 @markingbitmap.bitmap, markrect)
         end
         textpos = [
-          [_INTL("OK"), 402, 216, 2, base, shadow, 1],
-          [_INTL("Cancel"), 402, 280, 2, base, shadow, 1]
+          [_INTL("OK"), 402, 216, :center, base, shadow, :outline],
+          [_INTL("Cancel"), 402, 280, :center, base, shadow, :outline]
         ]
         pbDrawTextPositions(@sprites["markingoverlay"].bitmap, textpos)
         pbMarkingSetArrow(@sprites["arrow"], index)
@@ -1474,7 +1484,7 @@ class PokemonStorageScene
     buttonshadow = Color.new(80, 80, 80)
     pbDrawTextPositions(
       overlay,
-      [[_INTL("Party: {1}/{2}", (@storage.party.length rescue 0), ($player.inactive_party.length rescue 0)), 270, 334, 2, buttonbase, buttonshadow, 1],
+      [[_INTL("Party: {1}/{2}", (@storage.party.length rescue 0), ($player.inactive_party.length rescue 0)), 270, 334, :center, buttonbase, buttonshadow, 1],
        [_INTL("Exit"), 446, 334, 2, buttonbase, buttonshadow, 1]]
     )
     pokemon = nil
@@ -1494,31 +1504,29 @@ class PokemonStorageScene
     nonshadow = Color.new(224, 224, 224)
     pokename = pokemon.name
     textstrings = [
-      [pokename, 10, 14, false, base, shadow]
+      [pokename, 10, 14, :left, base, shadow]
     ]
     if !pokemon.egg?
       imagepos = []
       if pokemon.male?
-        textstrings.push([_INTL("♂"), 148, 14, false, Color.new(24, 112, 216), Color.new(136, 168, 208)])
+        textstrings.push([_INTL("♂"), 148, 14, :left, Color.new(24, 112, 216), Color.new(136, 168, 208)])
       elsif pokemon.female?
-        textstrings.push([_INTL("♀"), 148, 14, false, Color.new(248, 56, 32), Color.new(224, 152, 144)])
+        textstrings.push([_INTL("♀"), 148, 14, :left, Color.new(248, 56, 32), Color.new(224, 152, 144)])
       end
-      imagepos.push(["Graphics/Pictures/Storage/overlay_lv", 6, 246])
-      textstrings.push([pokemon.level.to_s, 28, 240, false, base, shadow])
+      imagepos.push([_INTL("Graphics/UI/Storage/overlay_lv"), 6, 246])
+      textstrings.push([pokemon.level.to_s, 28, 240, :left, base, shadow])
       if pokemon.ability
-        textstrings.push([pokemon.ability.name, 86, 312, 2, base, shadow])
+        textstrings.push([pokemon.ability.name, 86, 312, :center, base, shadow])
       else
-        textstrings.push([_INTL("No ability"), 86, 312, 2, nonbase, nonshadow])
+        textstrings.push([_INTL("No ability"), 86, 312, :center, nonbase, nonshadow])
       end
       if pokemon.item
-        textstrings.push([pokemon.item.name, 86, 348, 2, base, shadow])
+        textstrings.push([pokemon.item.name, 86, 348, :center, base, shadow])
       else
-        textstrings.push([_INTL("No item"), 86, 348, 2, nonbase, nonshadow])
+        textstrings.push([_INTL("No item"), 86, 348, :center, nonbase, nonshadow])
       end
-      if pokemon.shiny?
-        imagepos.push(["Graphics/Pictures/shiny", 156, 198])
-      end
-      typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+      imagepos.push(["Graphics/UI/shiny", 156, 198]) if pokemon.shiny?
+      typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
       pokemon.types.each_with_index do |type, i|
         type_number = GameData::Type.get(type).icon_position
         type_rect = Rect.new(0, type_number * 28, 64, 28)
@@ -1715,15 +1723,18 @@ class PokemonStorageScreen
     $game_temp.in_storage = false
   end
 
-  def pbUpdate   # For debug
+  # For debug purposes.
+  def pbUpdate
     @scene.update
   end
 
-  def pbHardRefresh   # For debug
+  # For debug purposes.
+  def pbHardRefresh
     @scene.pbHardRefresh
   end
 
-  def pbRefreshSingle(i)   # For debug
+  # For debug purposes.
+  def pbRefreshSingle(i)
     @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil)
     @scene.pbHardRefresh
   end
@@ -1759,9 +1770,7 @@ class PokemonStorageScreen
   def pbWithdraw(selected, heldpoke)
     box = selected[0]
     index = selected[1]
-    if box == -1
-      raise _INTL("Can't withdraw from party...")
-    end
+    raise _INTL("Can't withdraw from party...") if box == -1
     if @storage.party_full?
       pbDisplay(_INTL("Your party's full!"))
       return false
@@ -1980,8 +1989,8 @@ class PokemonStorageScreen
       return
     end
     if pokemon.item
-      itemname = pokemon.item.name
-      if pbConfirm(_INTL("Take this {1}?", itemname))
+      itemname = pokemon.item.portion_name
+      if pbConfirm(_INTL("Take the {1}?", itemname))
         if $bag.add(pokemon.item)
           pbDisplay(_INTL("Took the {1}.", itemname))
           pokemon.item = nil
@@ -2013,9 +2022,7 @@ class PokemonStorageScreen
     case command
     when 0
       destbox = @scene.pbChooseBox(_INTL("Jump to which Box?"))
-      if destbox >= 0
-        @scene.pbJumpToBox(destbox)
-      end
+      @scene.pbJumpToBox(destbox) if destbox >= 0
     when 1
       papers = @storage.availableWallpapers
       index = 0
@@ -2026,9 +2033,7 @@ class PokemonStorageScreen
         end
       end
       wpaper = pbShowCommands(_INTL("Pick the wallpaper."), papers[0], index)
-      if wpaper >= 0
-        @scene.pbChangeBackground(papers[1][wpaper])
-      end
+      @scene.pbChangeBackground(papers[1][wpaper]) if wpaper >= 0
     when 2
       @scene.pbBoxName(_INTL("Box name?"), 0, 12)
     end

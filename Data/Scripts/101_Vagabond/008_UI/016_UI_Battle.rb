@@ -284,7 +284,7 @@ class OuterMoveBox < IconSprite
     @cursor.y = self.y - 2
     @cursor.z = self.z + 1
     @cursor.visible = false
-    @overlay = SpriteWrapper.new(viewport)
+    @overlay = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(self.src_rect.width,self.src_rect.height)
     @overlay.x = self.x
     @overlay.y = self.y
@@ -587,7 +587,7 @@ class OuterMoveInfo < IconSprite
     setBitmap("Graphics/Pictures/Battle/outer_move_info")
     @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
     @categoryBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/category"))
-    @overlay = SpriteWrapper.new(viewport)
+    @overlay = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(self.bitmap.width,self.bitmap.height)
     @overlay.x = self.x
     @overlay.y = self.y

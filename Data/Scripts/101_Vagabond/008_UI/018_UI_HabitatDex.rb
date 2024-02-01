@@ -252,7 +252,7 @@ def pbGetHabitatList
       for i in @scroll...@scroll+16
         offset=(i-@scroll)*32
         if @habitatlist[i]
-          textpos.push([@habitatlist[i][0],36,40+offset,false,
+          textpos.push([@habitatlist[i][0],36,40+offset,:left,
             Color.new(24,24,24),Color.new(184,184,184)])
           if i == @player_habitat_area
             @sprites["player_list"].x = 238
@@ -271,7 +271,7 @@ def pbGetHabitatList
     def pbDrawSubMapList
       @sprites["player_list"].visible = false
       textpos = []
-      textpos.push([@habitatlist[@index][0],142,40,2,
+      textpos.push([@habitatlist[@index][0],142,40,:center,
             Color.new(24,24,24),Color.new(184,184,184)])
       arealist = @habitatlist[@index]
       namebug = false
@@ -286,7 +286,7 @@ def pbGetHabitatList
             mapname = "NULL"
             namebug = true
           end
-          textpos.push([mapname,36,40+offset,false,
+          textpos.push([mapname,36,40+offset,:left,
             Color.new(24,24,24),Color.new(184,184,184)])
           if @index == @player_habitat_area && i == @player_habitat_subarea
             @sprites["player_list"].x = 238
@@ -299,7 +299,7 @@ def pbGetHabitatList
       if namebug
         pbSetSmallFont(@sprites["maplist"].bitmap)
         pbDrawTextPositions(@sprites["maplist"].bitmap,
-          [["Failed to load String 'mapname'",Graphics.width - 8,6,1,
+          [["Failed to load String 'mapname'",Graphics.width - 8,6,:right,
           Color.new(0,255,0),Color.new(0,155,0,0)]])
       end
       pbSetSystemFont(@sprites["maplist"].bitmap)
@@ -317,9 +317,9 @@ def pbGetHabitatList
       if !$PokemonGlobal.visitedMaps[mapid]
         pbSetSystemFont(@sprites["pokemonlist2"].bitmap)
         pbDrawTextPositions(@sprites["pokemonlist2"].bitmap,[
-          ["You have not been",512,120,2,
+          ["You have not been",512,120,:center,
           Color.new(24,24,24),Color.new(184,184,184)],
-          ["to this area yet",512,150,2,
+          ["to this area yet",512,150,:center,
           Color.new(24,24,24),Color.new(184,184,184)]])
         return
       end
@@ -354,7 +354,7 @@ def pbGetHabitatList
           encounter_type_name = ENCOUNTER_TYPE_ALTERNATE_NAMES[[mapsym, @encounter_type]]
         end
         x = 280
-        textpos.push([encounter_type_name,350,y,2,
+        textpos.push([encounter_type_name,350,y,:center,
           Color.new(24,24,24),Color.new(184,184,184)])
         y += 24
         encounter_index = 0
@@ -384,7 +384,7 @@ def pbGetHabitatList
             imagepos.push([sprintf("Graphics/Pictures/Pokedex/icon_hooked"),
               x+16,y+102,0,0,-1,-1])
           end
-          smalltextpos.push([_INTL("{1}%",chance),x+32,y+80,2,
+          smalltextpos.push([_INTL("{1}%",chance),x+32,y+80,:center,
             Color.new(24,24,24),Color.new(184,184,184)])
           x += 66
           encounter_index += 1

@@ -102,8 +102,6 @@ class Battle::Scene
     # Update other graphics
     @sprites["battle_bg"].update if @sprites["battle_bg"].respond_to?("update")
     Graphics.update
-    @frameCounter += 1
-    @frameCounter = @frameCounter % (Graphics.frame_rate * 12 / 20)
     @sprites["weather"].update
   end
 
@@ -119,9 +117,9 @@ class Battle::Scene
     cw&.update
     @battle.battlers.each_with_index do |b, i|
       next if !b
-      @sprites["dataBox_#{i}"]&.update(@frameCounter)
-      @sprites["pokemon_#{i}"]&.update(@frameCounter)
-      @sprites["shadow_#{i}"]&.update(@frameCounter)
+      @sprites["dataBox_#{i}"]&.update
+      @sprites["pokemon_#{i}"]&.update
+      @sprites["shadow_#{i}"]&.update
     end
     @outer.update
   end
@@ -179,10 +177,9 @@ class Battle::Scene
     return if !@briefMessage
     pbShowWindow(MESSAGE_BOX)
     cw = @sprites["messageWindow"]
-    timer = 0.0
-    while timer < MESSAGE_PAUSE_TIME
+    timer_start = System.uptime
+    while System.uptime - timer_start < MESSAGE_PAUSE_TIME
       pbUpdate(cw)
-      timer += Graphics.delta_s
     end
     cw.text    = ""
     cw.visible = false
@@ -196,9 +193,9 @@ class Battle::Scene
     pbShowWindow(MESSAGE_BOX)
     cw = @sprites["messageWindow"]
     cw.setText(msg)
-    PBDebug.log(msg)
+    PBDebug.log_message(msg)
     yielded = false
-    timer = 0.0
+    timer_start = nil
     loop do
       pbUpdate(cw)
       if !cw.busy?
@@ -212,12 +209,12 @@ class Battle::Scene
           @briefMessage = true
           break
         end
-        if timer >= MESSAGE_PAUSE_TIME   # Autoclose after 1 second
+        timer_start = System.uptime if !timer_start
+        if System.uptime - timer_start >= MESSAGE_PAUSE_TIME   # Autoclose after 1 second
           cw.text = ""
           cw.visible = false
           break
         end
-        timer += Graphics.delta_s
       end
       if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
         if cw.busy?
@@ -241,10 +238,10 @@ class Battle::Scene
     pbWaitMessage
     pbShowWindow(MESSAGE_BOX)
     cw = @sprites["messageWindow"]
-    cw.text = _INTL("{1}\1", msg)
-    PBDebug.log(msg)
+    cw.text = msg + "\1"
+    PBDebug.log_message(msg)
     yielded = false
-    timer = 0.0
+    timer_start = nil
     loop do
       pbUpdate(cw)
       if !cw.busy?
@@ -253,12 +250,12 @@ class Battle::Scene
           yielded = true
         end
         if !@battleEnd
-          if timer >= MESSAGE_PAUSE_TIME * 3   # Autoclose after 3 seconds
+          timer_start = System.uptime if !timer_start
+          if System.uptime - timer_start >= MESSAGE_PAUSE_TIME * 3   # Autoclose after 3 seconds
             cw.text = ""
             cw.visible = false
             break
           end
-          timer += Graphics.delta_s
         end
       end
       if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE) || @abortable
@@ -290,7 +287,7 @@ class Battle::Scene
     cw.z        = dw.z + 1
     cw.index    = 0
     cw.viewport = @viewport
-    PBDebug.log(msg)
+    PBDebug.log_message(msg)
     loop do
       cw.visible = (!dw.busy?)
       pbUpdate(cw)
@@ -371,8 +368,7 @@ class Battle::Scene
     pbShowWindow(MESSAGE_BOX)
   end
 
-  def pbBeginEndOfRoundPhase
-  end
+  def pbBeginEndOfRoundPhase; end
 
   def pbEndBattle(_result)
     @abortable = false
@@ -408,7 +404,8 @@ class Battle::Scene
     shadowSprite.visible = true if Supplementals::ALWAYS_SHOW_BATTLER_SHADOW
   end
 
-  def pbResetMoveIndex(idxBattler)
+  def pbResetCommandsIndex(idxBattler)
+    @lastCmd[idxBattler] = 0
     @lastMove[idxBattler] = 0
   end
 

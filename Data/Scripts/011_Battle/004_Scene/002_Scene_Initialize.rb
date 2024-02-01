@@ -3,12 +3,11 @@ class Battle::Scene
   # Create the battle scene and its elements
   #=============================================================================
   def initialize
-    @battle       = nil
-    @abortable    = false
-    @aborted      = false
-    @battleEnd    = false
-    @animations   = []
-    @frameCounter = 0
+    @battle     = nil
+    @abortable  = false
+    @aborted    = false
+    @battleEnd  = false
+    @animations = []
   end
 
   # Called whenever the battle begins.
@@ -28,7 +27,6 @@ class Battle::Scene
     @sprites = {}
     # The background image and each side's base graphic
     pbCreateBackdropSprites
-
     # Create command window
     @sprites["commandWindow"] = CommandMenu.new(@viewport, 200)
     # Create fight window
@@ -42,7 +40,7 @@ class Battle::Scene
     # The party lineup graphics (bar and balls) for both sides
     2.times do |side|
       partyBar = pbAddSprite("partyBar_#{side}", 0, 0,
-                             "Graphics/Pictures/Battle/overlay_lineup", @viewport)
+                             "Graphics/UI/Battle/overlay_lineup", @viewport)
       partyBar.z       = 120
       partyBar.mirror  = true if side == 0   # Player's lineup bar only
       partyBar.visible = false
@@ -98,24 +96,24 @@ class Battle::Scene
     messageFilename = @battle.backdrop
     if time
       trialName = sprintf("%s_%s", backdropFilename, time)
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/" + trialName + "_bg"))
+      if pbResolveBitmap(sprintf("Graphics/Battlebacks/%s_bg", trialName))
         backdropFilename = trialName
       end
       trialName = sprintf("%s_%s", baseFilename, time)
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/" + trialName + "_base0"))
+      if pbResolveBitmap(sprintf("Graphics/Battlebacks/%s_base0", trialName))
         baseFilename = trialName
       end
       trialName = sprintf("%s_%s", messageFilename, time)
-      if pbResolveBitmap(sprintf("Graphics/Battlebacks/" + trialName + "_message"))
+      if pbResolveBitmap(sprintf("Graphics/Battlebacks/%s_message", trialName))
         messageFilename = trialName
       end
     end
-    if !pbResolveBitmap(sprintf("Graphics/Battlebacks/" + baseFilename + "_base0")) &&
+    if !pbResolveBitmap(sprintf("Graphics/Battlebacks/%s_base0", baseFilename)) &&
        @battle.backdropBase
       baseFilename = @battle.backdropBase
       if time
         trialName = sprintf("%s_%s", baseFilename, time)
-        if pbResolveBitmap(sprintf("Graphics/Battlebacks/" + trialName + "_base0"))
+        if pbResolveBitmap(sprintf("Graphics/Battlebacks/%s_base0", trialName))
           baseFilename = trialName
         end
       end

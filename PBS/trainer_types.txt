@@ -1,112 +1,623 @@
 # See the documentation on the wiki to learn how to edit this file.
-0,PROTAGONIST,Pokémon Trainer,60,,,,Male,255,
-1,POKEMONTRAINER_Female,Pokémon Trainer,60,,,,Female,255,
-2,PROTAGONIST_NoCoat,Pokémon Trainer,60,,,,Male,255,
-3,POKEMONTRAINER_Female_NoCoat,Pokémon Trainer,60,,,,Female,255,
-4,WILDPOKEMON,The Wild,0,,,,Mixed,0,
-5,YOUNGSTER,Youngster,16,,,,Male,,
-6,LASS,Lass,16,,,,Female,,
-7,SCHOOLBOY,School Boy,24,,,,Male,,
-8,SCHOOLGIRL,School Girl,24,,,,Female,,
-9,WAITER,Waiter,16,,,,Male,,
-10,WAITRESS,Waitress,16,,,,Female,,
-11,NURSERYAID,Nursery Aid,24,,,,Female,,
-12,PRESCHOOLER_M,Preschooler,8,,,,Male,,
-13,PRESCHOOLER_F,Preschooler,8,,,,Female,,
-14,TWINS,Twins,8,,,,Female,,
-15,PKMNBREEDER_M,Pokémon Breeder,32,,,,Male,,
-16,PKMNBREEDER_F,Pokémon Breeder,32,,,,Female,,
-17,PKMNRANGER_M,Pokémon Ranger,64,,,,Male,,
-18,PKMNRANGER_F,Pokémon Ranger,64,,,,Female,,
-19,BACKPACKER_M,Backpacker,32,,,,Male,,
-20,BACKPACKER_F,Backpacker,32,,,,Female,,
-21,MINER,Miner,32,,,,Male,,
-22,FISHERMAN,Fisherman,24,,,,Male,,
-23,GUITARIST,Guitarist,16,,,,Male,,
-24,SAILOR,Sailor,32,,,,Male,,
-25,CLOWN,Clown,16,,,,Male,,
-26,PAINTER,Painter,24,,,,Male,,
-27,BAKER,Baker,16,,,,Male,,
-28,PSYCHIC_M,Psychic,48,,,,Male,,
-29,PSYCHIC_F,Psychic,48,,,,Female,,
-30,LIBRARIAN,Librarian,48,,,,Female,,
-31,RICHBOY,Rich Boy,48,,,,Male,128,
-32,LADY,Lady,48,,,,Female,128,
-33,PILOT,Pilot,48,,,,Male,,
-34,SCIENTIST_M,Scientist,64,,,,Male,,
-35,SCIENTIST_F,Scientist,64,,,,Female,,
-36,ACETRAINER_M,Ace Trainer,96,,,,Male,,
-37,ACETRAINER_F,Ace Trainer,96,,,,Female,,
-38,BLACKBELT,Black Belt,32,,,,Male,,
-39,CRUSHGIRL,Crush Girl,32,,,,Female,,
-40,JANITOR,Janitor,16,,,,Male,,
-41,PKMNFAN_M,Pokémon Fan,24,,,,Male,,
-42,PKMNFAN_F,Pokémon Fan,24,,,,Female,,
-43,DOCTOR,Doctor,32,,,,Male,,
-44,NURSE,Nurse,32,,,,Female,,
-45,ROUGHNECK,Roughneck,24,,,,Male,,
-46,BIKER,Biker,24,,,,Male,,
-47,PARASOLLADY,Parasol Lady,32,,,,Female,,
-48,HIKER,Hiker,24,,,,Male,,
-49,OFFICEWORKER,Office Worker,32,,,,Male,,
-50,VETERAN_M,Veteran,128,,,,Male,,
-51,VETERAN_F,Veteran,128,,,,Female,,
-52,GENTLEMAN,Gentleman,64,,,,Male,128,
-53,SOCIALITE,Socialite,64,,,,Female,128,
-54,SWIMMER_M,Swimmer,32,,,,Male,,
-55,SWIMMER_F,Swimmer,32,,,,Female,,
-56,CYCLIST_M,Cyclist,32,,,,Male,,
-57,CYCLIST_F,Cyclist,32,,,,Female,,
-58,MAID,Maid,48,,,,Female,,
-59,BIRDKEEPER,Birdkeeper,32,,,,Male,,
-60,CHANNELER,Channeler,32,,,,Mixed,,
-61,BEAUTY,Beauty,32,,,,Female,,
-62,GAMBLER,Gambler,64,,,,Male,,
-63,BUGCATCHER,Bug Catcher,16,,,,Male,,
-64,ENGINEER,Engineer,32,,,,Male,,
-65,RUINMANIAC,Ruin Maniac,32,,,,Male,,
-66,TAMER,Tamer,32,,,,Male,,
-67,BURGLAR,Burglar,32,,,,Male,,
-74,ZEATHUS,Professor,200,boss04,,,Male,150,
-75,RIVAL,Trainer,200,Battle! VS Kira (Sick),,,Male,255,
-76,BUGCATCHERDAN,Bug Catcher,16,,,,Male,64,
-77,BUGCATCHERJL,Bug Catcher,32,LJarryIntro,,,Male,,
-78,AMETHYST,Trainer,200,,,,Female,255,
-79,FORETELLER,Foreteller,200,,,,Male,255,
-80,KIRA_Kid,Trainer,50,Battle! VS Kira (Sick),,,Male,50,
-83,NEKANE,Mystery Girl,50,Battle! VS Nekane (My Turn),,,Female,100,
-84,TEAM_DAO_YIN,D.A.O.,48,Battle! VS Team Dao (Here I Come!),,,Male,100,
-85,TEAM_DAO_YANG,D.A.O.,48,Battle! VS Team Dao (Here I Come!),,,Female,100,
-86,DAO_Eliana,D.A.O. Admin,200,Battle! VS Eliana (Fever Dream),,,Female,,
-87,DAO_Fintan,D.A.O. Admin,200,Battle! VS Fintan (Only the Strongest),,,Male,,
-88,DAO_Ziran,D.A.O. Boss,255,Battle! VS Ziran (Lost in Time),,,Male,,
-89,SHADOW,Shadow,0,Battle Shadow,silence,,Mixed,255,
-90,GUARDIAN,Guardian,0,Battle Guardian,,,Mixed,255,
-91,CULPRIT,Trainer,80,,,,Male,255,
-92,CHAMPION_Steven,Champion,80,,,,Male,255,
-93,TRAINER_Colress,Trainer,80,,,,Male,255,
-94,EARTHELDER,Elder of Earth,64,,,,Female,64,
-95,FIREELDER,Elder of Fire,64,,,,Male,64,
-96,AIRELDER,Elder of Air,64,,,,Male,64,
-97,WATERELDER,Elder of Water,64,,,,Female,64,
-98,SIMTRAINER_M,Sim Trainer,0,,,,Male,255,
-99,SIMTRAINER_F,Sim Trainer,0,,,,Female,255,
-100,LEADER_Raphael,Gym Leader,200,Battle! VS Gym Leader (Fighting Spirit),,,Male,,raphael
-101,LEADER_Faunus,Gym Leader,200,Battle! VS Gym Leader (Fighting Spirit),,,Male,,
-102,LEADER_Leroy,Gym Leader,200,Battle! VS Gym Leader (Fighting Spirit),,,Male
-103,LEADER_4,Gym Leader,200,Battle! VS Gym Leader (Fighting Spirit),,,Male
-104,LEADER_5,Gym Leader,200,Battle! VS Gym Leader (Fighting Spirit),,,Male
-108,AETHER_M,Aether Employee,100,,,,Male
-109,AETHER_F,Aether Employee,100,,,,Female
-110,AETHERELDER,Elder of Aether,100,,,,Female
-111,CYRUS,Otherworld Inhabitant,200,,,,Male
-112,CERISE,Swordswoman,200,Battle! VS Cerise (Sour Cherry),,,Female
-113,AZELF,Lake Guardian,200,,,,Mixed
-114,UXIE,Lake Guardian,200,,,,Mixed
-115,MESPRIT,Lake Guardian,200,,,,Mixed
-116,BGANG,The,200,,,,Male
-117,RIVALYOUNG,Trainer,200,Battle! VS Kira (Sick),,,Male,255,
-130,HOOPARING,Mysterious,200,cameo_2,,,Mixed,0,
-131,AURA,,0,Battle Aura,,,Mixed,200,
-200,JANUS,Friend,0,,,,Male
-201,OLDPROTAGONIST,Protagonist,0,,,,Male
+#------------------
+[PROTAGONIST]
+Name = Pokémon Trainer
+Gender = Male
+BaseMoney = 60
+SkillLevel = 255
+#------------------
+[POKEMONTRAINER_Female]
+Name = Pokémon Trainer
+Gender = Female
+BaseMoney = 60
+SkillLevel = 255
+#------------------
+[PROTAGONIST_NoCoat]
+Name = Pokémon Trainer
+Gender = Male
+BaseMoney = 60
+SkillLevel = 255
+#------------------
+[POKEMONTRAINER_Female_NoCoat]
+Name = Pokémon Trainer
+Gender = Female
+BaseMoney = 60
+SkillLevel = 255
+#------------------
+[WILDPOKEMON]
+Name = The Wild
+Gender = Mixed
+BaseMoney = 0
+SkillLevel = 0
+#------------------
+[YOUNGSTER]
+Name = Youngster
+Gender = Male
+BaseMoney = 16
+#------------------
+[LASS]
+Name = Lass
+Gender = Female
+BaseMoney = 16
+#------------------
+[SCHOOLBOY]
+Name = School Boy
+Gender = Male
+BaseMoney = 24
+#------------------
+[SCHOOLGIRL]
+Name = School Girl
+Gender = Female
+BaseMoney = 24
+#------------------
+[WAITER]
+Name = Waiter
+Gender = Male
+BaseMoney = 16
+#------------------
+[WAITRESS]
+Name = Waitress
+Gender = Female
+BaseMoney = 16
+#------------------
+[NURSERYAID]
+Name = Nursery Aid
+Gender = Female
+BaseMoney = 24
+#------------------
+[PRESCHOOLER_M]
+Name = Preschooler
+Gender = Male
+BaseMoney = 8
+#------------------
+[PRESCHOOLER_F]
+Name = Preschooler
+Gender = Female
+BaseMoney = 8
+#------------------
+[TWINS]
+Name = Twins
+Gender = Female
+BaseMoney = 8
+#------------------
+[PKMNBREEDER_M]
+Name = Pokémon Breeder
+Gender = Male
+BaseMoney = 32
+#------------------
+[PKMNBREEDER_F]
+Name = Pokémon Breeder
+Gender = Female
+BaseMoney = 32
+#------------------
+[PKMNRANGER_M]
+Name = Pokémon Ranger
+Gender = Male
+BaseMoney = 64
+#------------------
+[PKMNRANGER_F]
+Name = Pokémon Ranger
+Gender = Female
+BaseMoney = 64
+#------------------
+[BACKPACKER_M]
+Name = Backpacker
+Gender = Male
+BaseMoney = 32
+#------------------
+[BACKPACKER_F]
+Name = Backpacker
+Gender = Female
+BaseMoney = 32
+#------------------
+[MINER]
+Name = Miner
+Gender = Male
+BaseMoney = 32
+#------------------
+[FISHERMAN]
+Name = Fisherman
+Gender = Male
+BaseMoney = 24
+#------------------
+[GUITARIST]
+Name = Guitarist
+Gender = Male
+BaseMoney = 16
+#------------------
+[SAILOR]
+Name = Sailor
+Gender = Male
+BaseMoney = 32
+#------------------
+[CLOWN]
+Name = Clown
+Gender = Male
+BaseMoney = 16
+#------------------
+[PAINTER]
+Name = Painter
+Gender = Male
+BaseMoney = 24
+#------------------
+[BAKER]
+Name = Baker
+Gender = Male
+BaseMoney = 16
+#------------------
+[PSYCHIC_M]
+Name = Psychic
+Gender = Male
+BaseMoney = 48
+#------------------
+[PSYCHIC_F]
+Name = Psychic
+Gender = Female
+BaseMoney = 48
+#------------------
+[LIBRARIAN]
+Name = Librarian
+Gender = Female
+BaseMoney = 48
+#------------------
+[RICHBOY]
+Name = Rich Boy
+Gender = Male
+BaseMoney = 48
+SkillLevel = 128
+#------------------
+[LADY]
+Name = Lady
+Gender = Female
+BaseMoney = 48
+SkillLevel = 128
+#------------------
+[PILOT]
+Name = Pilot
+Gender = Male
+BaseMoney = 48
+#------------------
+[SCIENTIST_M]
+Name = Scientist
+Gender = Male
+BaseMoney = 64
+#------------------
+[SCIENTIST_F]
+Name = Scientist
+Gender = Female
+BaseMoney = 64
+#------------------
+[ACETRAINER_M]
+Name = Ace Trainer
+Gender = Male
+BaseMoney = 96
+#------------------
+[ACETRAINER_F]
+Name = Ace Trainer
+Gender = Female
+BaseMoney = 96
+#------------------
+[BLACKBELT]
+Name = Black Belt
+Gender = Male
+BaseMoney = 32
+#------------------
+[CRUSHGIRL]
+Name = Crush Girl
+Gender = Female
+BaseMoney = 32
+#------------------
+[JANITOR]
+Name = Janitor
+Gender = Male
+BaseMoney = 16
+#------------------
+[PKMNFAN_M]
+Name = Pokémon Fan
+Gender = Male
+BaseMoney = 24
+#------------------
+[PKMNFAN_F]
+Name = Pokémon Fan
+Gender = Female
+BaseMoney = 24
+#------------------
+[DOCTOR]
+Name = Doctor
+Gender = Male
+BaseMoney = 32
+#------------------
+[NURSE]
+Name = Nurse
+Gender = Female
+BaseMoney = 32
+#------------------
+[ROUGHNECK]
+Name = Roughneck
+Gender = Male
+BaseMoney = 24
+#------------------
+[BIKER]
+Name = Biker
+Gender = Male
+BaseMoney = 24
+#------------------
+[PARASOLLADY]
+Name = Parasol Lady
+Gender = Female
+BaseMoney = 32
+#------------------
+[HIKER]
+Name = Hiker
+Gender = Male
+BaseMoney = 24
+#------------------
+[OFFICEWORKER]
+Name = Office Worker
+Gender = Male
+BaseMoney = 32
+#------------------
+[VETERAN_M]
+Name = Veteran
+Gender = Male
+BaseMoney = 128
+#------------------
+[VETERAN_F]
+Name = Veteran
+Gender = Female
+BaseMoney = 128
+#------------------
+[GENTLEMAN]
+Name = Gentleman
+Gender = Male
+BaseMoney = 64
+SkillLevel = 128
+#------------------
+[SOCIALITE]
+Name = Socialite
+Gender = Female
+BaseMoney = 64
+SkillLevel = 128
+#------------------
+[SWIMMER_M]
+Name = Swimmer
+Gender = Male
+BaseMoney = 32
+#------------------
+[SWIMMER_F]
+Name = Swimmer
+Gender = Female
+BaseMoney = 32
+#------------------
+[CYCLIST_M]
+Name = Cyclist
+Gender = Male
+BaseMoney = 32
+#------------------
+[CYCLIST_F]
+Name = Cyclist
+Gender = Female
+BaseMoney = 32
+#------------------
+[MAID]
+Name = Maid
+Gender = Female
+BaseMoney = 48
+#------------------
+[BIRDKEEPER]
+Name = Birdkeeper
+Gender = Male
+BaseMoney = 32
+#------------------
+[CHANNELER]
+Name = Channeler
+Gender = Mixed
+BaseMoney = 32
+#------------------
+[BEAUTY]
+Name = Beauty
+Gender = Female
+BaseMoney = 32
+#------------------
+[GAMBLER]
+Name = Gambler
+Gender = Male
+BaseMoney = 64
+#------------------
+[BUGCATCHER]
+Name = Bug Catcher
+Gender = Male
+BaseMoney = 16
+#------------------
+[ENGINEER]
+Name = Engineer
+Gender = Male
+BaseMoney = 32
+#------------------
+[RUINMANIAC]
+Name = Ruin Maniac
+Gender = Male
+BaseMoney = 32
+#------------------
+[TAMER]
+Name = Tamer
+Gender = Male
+BaseMoney = 32
+#------------------
+[BURGLAR]
+Name = Burglar
+Gender = Male
+BaseMoney = 32
+#------------------
+[ZEATHUS]
+Name = Professor
+Gender = Male
+BaseMoney = 200
+SkillLevel = 150
+BattleBGM = boss04
+#------------------
+[RIVAL]
+Name = Trainer
+Gender = Male
+BaseMoney = 200
+SkillLevel = 255
+BattleBGM = Battle! VS Kira (Sick)
+#------------------
+[BUGCATCHERDAN]
+Name = Bug Catcher
+Gender = Male
+BaseMoney = 16
+SkillLevel = 64
+#------------------
+[BUGCATCHERJL]
+Name = Bug Catcher
+Gender = Male
+BaseMoney = 32
+BattleBGM = LJarryIntro
+#------------------
+[AMETHYST]
+Name = Trainer
+Gender = Female
+BaseMoney = 200
+SkillLevel = 255
+#------------------
+[FORETELLER]
+Name = Foreteller
+Gender = Male
+BaseMoney = 200
+SkillLevel = 255
+#------------------
+[KIRA_Kid]
+Name = Trainer
+Gender = Male
+BaseMoney = 50
+SkillLevel = 50
+BattleBGM = Battle! VS Kira (Sick)
+#------------------
+[NEKANE]
+Name = Mystery Girl
+Gender = Female
+BaseMoney = 50
+SkillLevel = 100
+BattleBGM = Battle! VS Nekane (My Turn)
+#------------------
+[TEAM_DAO_YIN]
+Name = D.A.O.
+Gender = Male
+BaseMoney = 48
+SkillLevel = 100
+BattleBGM = Battle! VS Team Dao (Here I Come!)
+#------------------
+[TEAM_DAO_YANG]
+Name = D.A.O.
+Gender = Female
+BaseMoney = 48
+SkillLevel = 100
+BattleBGM = Battle! VS Team Dao (Here I Come!)
+#------------------
+[DAO_Eliana]
+Name = D.A.O. Admin
+Gender = Female
+BaseMoney = 200
+BattleBGM = Battle! VS Eliana (Fever Dream)
+#------------------
+[DAO_Fintan]
+Name = D.A.O. Admin
+Gender = Male
+BaseMoney = 200
+BattleBGM = Battle! VS Fintan (Only the Strongest)
+#------------------
+[DAO_Ziran]
+Name = D.A.O. Boss
+Gender = Male
+BaseMoney = 255
+BattleBGM = Battle! VS Ziran (Lost in Time)
+#------------------
+[SHADOW]
+Name = Shadow
+Gender = Mixed
+BaseMoney = 0
+SkillLevel = 255
+BattleBGM = Battle Shadow
+#------------------
+[GUARDIAN]
+Name = Guardian
+Gender = Mixed
+BaseMoney = 0
+SkillLevel = 255
+BattleBGM = Battle Guardian
+#------------------
+[CULPRIT]
+Name = Trainer
+Gender = Male
+BaseMoney = 80
+SkillLevel = 255
+#------------------
+[CHAMPION_Steven]
+Name = Champion
+Gender = Male
+BaseMoney = 80
+SkillLevel = 255
+#------------------
+[TRAINER_Colress]
+Name = Trainer
+Gender = Male
+BaseMoney = 80
+SkillLevel = 255
+#------------------
+[EARTHELDER]
+Name = Elder of Earth
+Gender = Female
+BaseMoney = 64
+SkillLevel = 64
+#------------------
+[FIREELDER]
+Name = Elder of Fire
+Gender = Male
+BaseMoney = 64
+SkillLevel = 64
+#------------------
+[AIRELDER]
+Name = Elder of Air
+Gender = Male
+BaseMoney = 64
+SkillLevel = 64
+#------------------
+[WATERELDER]
+Name = Elder of Water
+Gender = Female
+BaseMoney = 64
+SkillLevel = 64
+#------------------
+[SIMTRAINER_M]
+Name = Sim Trainer
+Gender = Male
+BaseMoney = 0
+SkillLevel = 255
+#------------------
+[SIMTRAINER_F]
+Name = Sim Trainer
+Gender = Female
+BaseMoney = 0
+SkillLevel = 255
+#------------------
+[LEADER_Raphael]
+Name = Gym Leader
+Gender = Male
+BaseMoney = 200
+BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
+#------------------
+[LEADER_Faunus]
+Name = Gym Leader
+Gender = Male
+BaseMoney = 200
+BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
+#------------------
+[LEADER_Leroy]
+Name = Gym Leader
+Gender = Male
+BaseMoney = 200
+SkillLevel = 200
+BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
+#------------------
+[LEADER_4]
+Name = Gym Leader
+Gender = Male
+BaseMoney = 200
+SkillLevel = 200
+BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
+#------------------
+[LEADER_5]
+Name = Gym Leader
+Gender = Male
+BaseMoney = 200
+SkillLevel = 200
+BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
+#------------------
+[AETHER_M]
+Name = Aether Employee
+Gender = Male
+BaseMoney = 100
+SkillLevel = 100
+#------------------
+[AETHER_F]
+Name = Aether Employee
+Gender = Female
+BaseMoney = 100
+SkillLevel = 100
+#------------------
+[AETHERELDER]
+Name = Elder of Aether
+Gender = Female
+BaseMoney = 100
+SkillLevel = 100
+#------------------
+[CYRUS]
+Name = Otherworld Inhabitant
+Gender = Male
+BaseMoney = 200
+SkillLevel = 200
+#------------------
+[CERISE]
+Name = Swordswoman
+Gender = Female
+BaseMoney = 200
+SkillLevel = 200
+BattleBGM = Battle! VS Cerise (Sour Cherry)
+#------------------
+[AZELF]
+Name = Lake Guardian
+Gender = Mixed
+BaseMoney = 200
+SkillLevel = 200
+#------------------
+[UXIE]
+Name = Lake Guardian
+Gender = Mixed
+BaseMoney = 200
+SkillLevel = 200
+#------------------
+[MESPRIT]
+Name = Lake Guardian
+Gender = Mixed
+BaseMoney = 200
+SkillLevel = 200
+#------------------
+[BGANG]
+Name = The
+Gender = Male
+BaseMoney = 200
+SkillLevel = 200
+#------------------
+[RIVALYOUNG]
+Name = Trainer
+Gender = Male
+BaseMoney = 200
+SkillLevel = 255
+BattleBGM = Battle! VS Kira (Sick)
+#------------------
+[HOOPARING]
+Name = Mysterious
+Gender = Mixed
+BaseMoney = 200
+SkillLevel = 0
+BattleBGM = cameo_2
+#------------------
+[AURA]
+Name =
+Gender = Mixed
+BaseMoney = 0
+SkillLevel = 200
+BattleBGM = Battle Aura
+#------------------
+[JANUS]
+Name = Friend
+Gender = Male
+BaseMoney = 0
+SkillLevel = 0
+#------------------
+[OLDPROTAGONIST]
+Name = Protagonist
+Gender = Male
+BaseMoney = 0
+SkillLevel = 0

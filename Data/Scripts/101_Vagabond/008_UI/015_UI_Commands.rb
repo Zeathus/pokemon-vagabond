@@ -1,13 +1,12 @@
-class CenterCommandSprite < SpriteWrapper
+class CenterCommandSprite < BitmapSprite
 
   def initialize(viewport, command, width)
-      super(viewport)
+      super(width + 48, 48, viewport)
       @command = command
       @width = width
       @selected = false
       @choice_bitmap = AnimatedBitmap.new("Graphics/Windowskins/choice vb")
       @selected_bitmap = AnimatedBitmap.new("Graphics/Windowskins/choice vb selected")
-      self.bitmap = Bitmap.new(width + 48, 48)
       self.refresh
   end
 
@@ -39,16 +38,15 @@ class CenterCommandSprite < SpriteWrapper
 
 end
 
-class CenterCommandListSprite < SpriteWrapper
+class CenterCommandListSprite < BitmapSprite
 
   attr_reader :index
 
   def initialize(viewport, commands, msgwindow=nil)
-      super(viewport)
+      super(2, 2, viewport)
       @index = 0
       @commands = commands
       @msgwindow = msgwindow
-      self.bitmap = Bitmap.new(2, 2)
       pbSetSystemFont(self.bitmap)
       @max_width = 48
       for command in @commands

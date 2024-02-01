@@ -146,13 +146,18 @@ class Sprite_Character
     self.visible = false if !@visibility || $PokemonGlobal.surfing
     self.z = owner.z
 
+    time_now = System.uptime
+    @p_last_update_time = time_now if !@p_last_update_time || @p_last_update_time > time_now
+    @p_delta_t = time_now - @p_last_update_time
+    @p_last_update_time = time_now
+
     owner_direction = [0, 2, 4, 6][sy / @ch]
 
     dif_x = @real_x - owner.character.real_x
     dif_y = @real_y - owner.character.real_y
 
     distance = Game_Map::TILE_WIDTH * 4
-    speed = owner.character.move_speed_real
+    speed = owner.character.move_speed * distance * 2 * @p_delta_t
 
     if (dif_x.abs > 256 || dif_y.abs > 256)
       @real_x = owner.character.real_x

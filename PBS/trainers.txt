@@ -1,4 +1,4 @@
-# See the documentation on the wiki to learn how to edit this file.
+﻿# See the documentation on the wiki to learn how to edit this file.
 #-------------------------------
 [ACETRAINER_F,Ni] #Stadium No More Tutorial Cup #2
 LoseText = Impressive!

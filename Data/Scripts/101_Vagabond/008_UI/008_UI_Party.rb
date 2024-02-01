@@ -1,7 +1,7 @@
-class PokeSelectionSelectedSprite < SpriteWrapper
+class PokeSelectionSelectedSprite < Sprite
   attr_accessor :text
 
-  def initialize(index,viewport=nil)
+  def initialize(index, viewport=nil)
     super(viewport)
     @xvalues=([70]*6) + ([378]*6) + [0, 710]
     @yvalues=[]
@@ -89,7 +89,7 @@ class PokeSelectionSelectedSprite < SpriteWrapper
 end
 
 
-class PokeSelectionMenuItemSprite < SpriteWrapper
+class PokeSelectionMenuItemSprite < Sprite
   attr_reader :selected
 
   def initialize(text,x,y,dir=0,otherid=0,viewport=nil,z=10)
@@ -172,7 +172,7 @@ class PokeSelectionMenuItemSprite < SpriteWrapper
 end
 
 
-class PokeSelectionConfirmCancelSprite < SpriteWrapper
+class PokeSelectionConfirmCancelSprite < Sprite
   attr_reader :selected
 
   def initialize(text,x,y,narrowbox=false,viewport=nil)
@@ -239,7 +239,7 @@ end
 
 
 
-class PokeSelectionSwitchSprite < SpriteWrapper
+class PokeSelectionSwitchSprite < Sprite
   attr_reader :selected
 
   def initialize(text,x,y,narrowbox=false,viewport=nil)
@@ -373,7 +373,7 @@ end
 
 
 
-class ChangelingSprite < SpriteWrapper
+class ChangelingSprite < Sprite
   def initialize(x=0,y=0,viewport=nil)
     super(viewport)
     self.x=x
@@ -410,7 +410,7 @@ end
 
 
 
-class PartyMemberSprite < SpriteWrapper
+class PartyMemberSprite < Sprite
 
   def initialize(type,otherid,other,viewport)
     super(viewport)
@@ -517,7 +517,7 @@ class PartyMemberSprite < SpriteWrapper
 
 end
 
-class PartyMemberChangeSprite < SpriteWrapper
+class PartyMemberChangeSprite < Sprite
 
   def initialize(otherid,other,viewport)
     super(viewport)
@@ -660,7 +660,7 @@ end
 
 
 
-class PokeSelectionSprite < SpriteWrapper
+class PokeSelectionSprite < Sprite
   attr_reader :selected
   attr_reader :preselected
   attr_reader :switching
@@ -944,7 +944,7 @@ class PokeSelectionSprite < SpriteWrapper
   end
 end
 
-class PokeSelectionPlaceholderSprite < SpriteWrapper
+class PokeSelectionPlaceholderSprite < Sprite
   attr_accessor :text
 
   def initialize(pokemon,index,viewport=nil,other=false,otherid=0)
@@ -1033,7 +1033,7 @@ class PokeSelectionPlaceholderSprite < SpriteWrapper
   end
 end
 
-class InactivePokeSelectionSprite < SpriteWrapper
+class InactivePokeSelectionSprite < Sprite
   attr_reader :selected
   attr_reader :preselected
   attr_reader :switching
@@ -1283,7 +1283,7 @@ class InactivePokeSelectionSprite < SpriteWrapper
   end
 end
 
-class InactivePokeSelectionPlaceholderSprite < SpriteWrapper
+class InactivePokeSelectionPlaceholderSprite < Sprite
   attr_accessor :text
 
   def initialize(pokemon,index,viewport=nil,other=false,otherid=0)
@@ -1378,7 +1378,7 @@ class InactivePokeSelectionPlaceholderSprite < SpriteWrapper
   end
 end
 
-class LevelUpSprite < SpriteWrapper
+class LevelUpSprite < Sprite
   attr_accessor :spriteY
   attr_accessor :new_level
   attr_reader :max_level
@@ -1466,7 +1466,7 @@ class LevelUpSprite < SpriteWrapper
   end
 end
 
-class QuickSummarySprite < SpriteWrapper
+class QuickSummarySprite < Sprite
   def initialize(pokemon,viewport=nil)
     super(viewport)
     @enabled=true

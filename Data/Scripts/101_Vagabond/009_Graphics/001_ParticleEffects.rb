@@ -1,5 +1,7 @@
 # Remember to add new effects to @effects in ParticleEngine
 
+__END__
+
 class Particle_Engine::DarkPortal < ParticleEffect_Event
   def initialize(event,viewport)
     super

@@ -8,9 +8,9 @@ class Window_DexesList < Window_CommandPokemon
   def initialize(commands, commands2, width)
     @commands2 = commands2
     super(commands, width)
-    @selarrow = AnimatedBitmap.new("Graphics/Pictures/selarrow_white")
+    @selarrow = AnimatedBitmap.new("Graphics/UI/sel_arrow_white")
     self.baseColor   = Color.new(248, 248, 248)
-    self.shadowColor = Color.new(0, 0, 0)
+    self.shadowColor = Color.black
     self.windowskin  = nil
   end
 
@@ -25,8 +25,8 @@ class Window_DexesList < Window_CommandPokemon
       allown  = (@commands2[index][1] >= @commands2[index][2])
       pbDrawImagePositions(
         self.contents,
-        [["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 348, rect.y + 6, (allseen) ? 24 : 0, 0, 24, 24],
-         ["Graphics/Pictures/Pokedex/icon_menuseenown", rect.x + 460, rect.y + 6, (allown) ? 24 : 0, 24, 24, 24]]
+        [["Graphics/UI/Pokedex/icon_menuseenown", rect.x + 348, rect.y + 6, (allseen) ? 24 : 0, 0, 24, 24],
+         ["Graphics/UI/Pokedex/icon_menuseenown", rect.x + 460, rect.y + 6, (allown) ? 24 : 0, 24, 24, 24]]
       )
     end
   end
@@ -36,6 +36,9 @@ end
 #
 #===============================================================================
 class PokemonPokedexMenu_Scene
+  SEEN_OBTAINED_TEXT_BASE   = Color.new(248, 248, 248)
+  SEEN_OBTAINED_TEXT_SHADOW = Color.new(192, 32, 40)
+
   def pbUpdate
     pbUpdateSpriteHash(@sprites)
   end
@@ -46,9 +49,10 @@ class PokemonPokedexMenu_Scene
     @viewport.z = 99999
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
-    @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/bg_menu"))
+    @sprites["background"].setBitmap(_INTL("Graphics/UI/Pokedex/bg_menu"))
+    text_tag = shadowc3tag(SEEN_OBTAINED_TEXT_BASE, SEEN_OBTAINED_TEXT_SHADOW)
     @sprites["headings"] = Window_AdvancedTextPokemon.newWithSize(
-      _INTL("<c3=F8F8F8,C02028>SEEN<r>OBTAINED</c3>"), 446, 136, 208, 64, @viewport
+      text_tag + _INTL("SEEN") + "<r>" + _INTL("OBTAINED") + "</c3>", 446, 136, 208, 64, @viewport
     )
     @sprites["headings"].windowskin = nil
     @sprites["commands"] = Window_DexesList.new(commands, commands2, Graphics.width - 84)
@@ -70,7 +74,7 @@ class PokemonPokedexMenu_Scene
         break
       elsif Input.trigger?(Input::USE)
         ret = @sprites["commands"].index
-        (ret == @commands.length - 1) ? pbPlayCloseMenuSE : pbPlayDecisionSE
+        (ret == @commands.length - 1) ? pbPlayCloseMenuSE : pbSEPlay("GUI pokedex open")
         break
       end
     end

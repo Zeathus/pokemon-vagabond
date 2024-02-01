@@ -54,19 +54,18 @@ GUIDES = [
     "Fish Behaviors\n\nHooked Pokémon can have one of four behaviors depending on species:\n- Passive: Sometimes stands still\n- Normal: Always moving\n- Sudden: Moves sometimes, but fast\n- Aggressive: Occassionally stuns you\n\nThey also have three species-dependant stats:\n- Stamina: Time it takes to fill the progress bar\n- Speed: How fast the Pokémon moves\n- Strength: Reduces the size of the green bar"]
 ]
 
-class KeybindSprite < SpriteWrapper 
+class KeybindSprite < BitmapSprite
 
   attr_accessor :baseColor
   attr_accessor :shadowColor
 
   def initialize(input, name, x, y, viewport)
-    super(viewport)
+    super(224, 28, viewport)
     @input = input
     @name  = name
     @time = 0
     @baseColor = Color.new(252,252,252)
     @shadowColor = Color.new(0,0,0)
-    self.bitmap = Bitmap.new(224, 28)
     self.x = x
     self.y = y
     if @input.is_a?(String)

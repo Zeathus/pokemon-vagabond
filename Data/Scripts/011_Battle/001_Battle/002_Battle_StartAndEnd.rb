@@ -202,7 +202,7 @@ class Battle
       # Opposing trainers and partner trainers's messages about sending out Pokémon
       trainers.each_with_index do |t, i|
         next if side == 0 && i == 0   # The player's message is shown last
-        msg += "\r\n" if msg.length > 0
+        msg += "\n" if msg.length > 0
         sent = sendOuts[side][i]
         case sent.length
         when 1
@@ -218,7 +218,7 @@ class Battle
       end
       # The player's message about sending out Pokémon
       if side == 0
-        msg += "\r\n" if msg.length > 0
+        msg += "\n" if msg.length > 0
         sent = sendOuts[side][0]
         case sent.length
         when 1
@@ -246,7 +246,8 @@ class Battle
   #=============================================================================
   def pbStartBattle
     PBDebug.log("")
-    PBDebug.log("******************************************")
+    PBDebug.log("================================================================")
+    PBDebug.log("")
     logMsg = "[Started battle] "
     if @sideSizes[0] == 1 && @sideSizes[1] == 1
       logMsg += "Single "
@@ -278,7 +279,7 @@ class Battle
   def pbStartBattleCore
     # Start writing log
     if Supplementals::WRITE_BATTLE_LOGS
-      Dir.mkdir("Logs") if !safeExists?("Logs/")
+      Dir.mkdir("Logs") if !FileTest.exist?("Logs/")
       if wildBattle? && @smartWildBattle && pbParty(1).length < 3
         party_str = pbParty(1)[0].species.to_s
         party_str += pbParty(1)[0].form.to_s if pbParty(1)[0].form != 0
@@ -305,6 +306,7 @@ class Battle
     end
     # Set up the battlers on each side
     sendOuts = pbSetUpSides
+    @battleAI.create_ai_objects
     # Create all the sprites and play the battle intro animation
     @scene.pbStartBattle(self)
     # Show trainers on both sides sending out Pokémon
@@ -364,7 +366,7 @@ class Battle
     @turnCount = 0
     loop do   # Now begin the battle loop
       PBDebug.log("")
-      PBDebug.log("***Round #{@turnCount + 1}***")
+      PBDebug.log_header("===== Round #{@turnCount + 1} =====")
       if @debug && @turnCount >= 100
         @decision = pbDecisionOnTime
         PBDebug.log("")
@@ -483,7 +485,8 @@ class Battle
     ##### WIN #####
     when 1
       PBDebug.log("")
-      PBDebug.log("***Player won***")
+      PBDebug.log_header("===== Player won =====")
+      PBDebug.log("")
       if trainerBattle?
         @scene.pbTrainerBattleSuccess
         case @opponent.length
@@ -502,6 +505,7 @@ class Battle
           msg = "..." if !msg || msg.empty?
           pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/, pbPlayer.name))
         end
+        PBDebug.log("")
       end
       # Update chain data
       if !trainerBattle?
@@ -524,8 +528,9 @@ class Battle
     ##### LOSE, DRAW #####
     when 2, 5
       PBDebug.log("")
-      PBDebug.log("***Player lost***") if @decision == 2
-      PBDebug.log("***Player drew with opponent***") if @decision == 5
+      PBDebug.log_header("===== Player lost =====") if @decision == 2
+      PBDebug.log_header("===== Player drew with opponent =====") if @decision == 5
+      PBDebug.log("")
       if @internalBattle
         pbDisplayPaused(_INTL("You have no more Pokémon that can fight!"))
         if trainerBattle?
@@ -551,10 +556,14 @@ class Battle
             msg = "..." if !msg || msg.empty?
             pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/, pbPlayer.name))
           end
+          PBDebug.log("")
         end
       end
     ##### CAUGHT WILD POKÉMON #####
     when 4
+      PBDebug.log("")
+      PBDebug.log_header("===== Pokémon caught =====")
+      PBDebug.log("")
       @scene.pbWildBattleSuccess if !Settings::GAIN_EXP_FOR_CAPTURE
     end
     # Register captured Pokémon in the Pokédex, and store them
@@ -621,7 +630,7 @@ class Battle
     return 2 if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
     return 1 if hpTotals[0] > hpTotals[1]   # Win (player has more HP in total)
     return 2 if hpTotals[0] < hpTotals[1]   # Loss (foe has more HP in total)
-    return 5                              # Draw
+    return 5                                # Draw
   end
 
   # Unused
@@ -640,10 +649,10 @@ class Battle
     return 2 if counts[0] < counts[1]       # Loss (foe has more able Pokémon)
     return 1 if hpTotals[0] > hpTotals[1]   # Win (player has a bigger average HP %)
     return 2 if hpTotals[0] < hpTotals[1]   # Loss (foe has a bigger average HP %)
-    return 5                              # Draw
+    return 5                                # Draw
   end
 
-  def pbDecisionOnDraw; return 5; end     # Draw
+  def pbDecisionOnDraw; return 5; end   # Draw
 
   def pbJudge
     fainted1 = pbAllFainted?(0)

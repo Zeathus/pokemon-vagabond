@@ -94,6 +94,7 @@ module GameData
 
     DATA = {}
     DATA_FILENAME = "quests.dat"
+    PBS_BASE_FILENAME = "quests"
     MAX_STEPS = 50
 
     extend ClassMethods

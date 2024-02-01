@@ -13,11 +13,11 @@ class ReadyMenuButton < Sprite
     @selected = selected
     @side = side
     if @command[2]
-      @button = AnimatedBitmap.new("Graphics/Pictures/Ready Menu/icon_movebutton")
+      @button = AnimatedBitmap.new("Graphics/UI/Ready Menu/icon_movebutton")
     else
-      @button = AnimatedBitmap.new("Graphics/Pictures/Ready Menu/icon_itembutton")
+      @button = AnimatedBitmap.new("Graphics/UI/Ready Menu/icon_itembutton")
     end
-    @contents = BitmapWrapper.new(@button.width, @button.height / 2)
+    @contents = Bitmap.new(@button.width, @button.height / 2)
     self.bitmap = @contents
     pbSetSystemFont(self.bitmap)
     if @command[2]
@@ -70,18 +70,21 @@ class ReadyMenuButton < Sprite
     self.bitmap.clear
     rect = Rect.new(0, (sel) ? @button.height / 2 : 0, @button.width, @button.height / 2)
     self.bitmap.blt(0, 0, @button.bitmap, rect)
-    textx = (@command[2]) ? 164 : (GameData::Item.get(@command[0]).is_important?) ? 146 : 124
+    textx = 164
+    if !@command[2]
+      textx = (GameData::Item.get(@command[0]).is_important?) ? 146 : 124
+    end
     textpos = [
-      [@command[1], textx, 24, 2, Color.new(248, 248, 248), Color.new(40, 40, 40), 1]
+      [@command[1], textx, 24, :center, Color.new(248, 248, 248), Color.new(40, 40, 40), :outline]
     ]
     if !@command[2] && !GameData::Item.get(@command[0]).is_important?
       qty = $bag.quantity(@command[0])
       if qty > 99
-        textpos.push([_INTL(">99"), 230, 24, 1,
-                      Color.new(248, 248, 248), Color.new(40, 40, 40), 1])
+        textpos.push([_INTL(">99"), 230, 24, :right,
+                      Color.new(248, 248, 248), Color.new(40, 40, 40), :outline])
       else
-        textpos.push([_INTL("x{1}", qty), 230, 24, 1,
-                      Color.new(248, 248, 248), Color.new(40, 40, 40), 1])
+        textpos.push([_INTL("x{1}", qty), 230, 24, :right,
+                      Color.new(248, 248, 248), Color.new(40, 40, 40), :outline])
       end
     end
     pbDrawTextPositions(self.bitmap, textpos)
@@ -125,7 +128,7 @@ class PokemonReadyMenu_Scene
     @viewport.z = 99999
     @sprites = {}
     @sprites["cmdwindow"] = Window_CommandPokemon.new((@index[2] == 0) ? @movecommands : @itemcommands)
-    @sprites["cmdwindow"].height = 6 * 32
+    @sprites["cmdwindow"].height = 192
     @sprites["cmdwindow"].visible = false
     @sprites["cmdwindow"].viewport = @viewport
     @commands[0].length.times do |i|

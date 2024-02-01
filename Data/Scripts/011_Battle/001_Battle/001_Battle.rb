@@ -61,6 +61,7 @@ class Battle
   attr_accessor :debug            # Debug flag
   attr_accessor :canRun           # True if player can run from battle
   attr_accessor :canLose          # True if player won't black out if they lose
+  attr_accessor :canSwitch        # True if player is allowed to switch Pokémon
   attr_accessor :switchStyle      # Switch/Set "battle style" option
   attr_accessor :showAnims        # "Battle Effects" option
   attr_accessor :controlPlayer    # Whether player's Pokémon are AI controlled
@@ -84,6 +85,7 @@ class Battle
   attr_accessor :poke_ball_failed # Set after first_poke_ball to prevent it being set again
   attr_reader   :switching        # True if during the switching phase of the round
   attr_reader   :futureSight      # True if Future Sight is hitting
+  attr_reader   :command_phase
   attr_reader   :endOfRound       # True during the end of round
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
@@ -108,7 +110,6 @@ class Battle
     end
     @scene             = scene
     @peer              = Peer.new
-    @battleAI          = AI.new(self)
     @field             = ActiveField.new    # Whole field (gravity/rooms)
     @sides             = [ActiveSide.new,   # Player's side
                           ActiveSide.new]   # Foe's side
@@ -138,6 +139,7 @@ class Battle
     @debug             = false
     @canRun            = true
     @canLose           = false
+    @canSwitch         = true
     @switchStyle       = true
     @showAnims         = true
     @controlPlayer     = false
@@ -167,18 +169,15 @@ class Battle
     @lastMoveUser      = -1
     @switching         = false
     @futureSight       = false
+    @command_phase     = false
     @endOfRound        = false
     @moldBreaker       = false
     @runCommand        = 0
     @nextPickupUse     = 0
     @expGained         = 0
     @sharedExpGained   = 0
-    if GameData::Move.exists?(:STRUGGLE)
-      @struggle = Move.from_pokemon_move(self, Pokemon::Move.new(:STRUGGLE))
-    else
-      @struggle = Move::Struggle.new(self, nil)
-    end
-    @mega_rings = []
+    @struggle          = Move::Struggle.new(self, nil)
+    @mega_rings        = []
     GameData::Item.each { |item| @mega_rings.push(item.id) if item.has_flag?("MegaRing") }
     @smartWildBattle   = false
     @levelSync         = 0
@@ -187,6 +186,7 @@ class Battle
     @showParty         = false
     @keepBGM           = false
     @predictingDamage  = false
+    @battleAI          = AI.new(self)
   end
 
   #=============================================================================
@@ -754,6 +754,7 @@ class Battle
   end
 
   def pbEndPrimordialWeather
+    return if @field.weather == @field.defaultWeather
     oldWeather = @field.weather
     # End Primordial Sea, Desolate Land, Delta Stream
     case @field.weather
@@ -878,7 +879,10 @@ class Battle
     return if !Scene::USE_ABILITY_SPLASH
     @scene.pbShowAbilitySplash(battler)
     if delay
-      Graphics.frame_rate.times { @scene.pbUpdate }   # 1 second
+      timer_start = System.uptime
+      until System.uptime - timer_start >= 1   # 1 second
+        @scene.pbUpdate
+      end
     end
   end
 

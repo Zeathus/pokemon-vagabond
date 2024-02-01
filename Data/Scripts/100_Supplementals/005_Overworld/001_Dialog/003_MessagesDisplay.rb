@@ -657,17 +657,17 @@ class TalkMessageWindowWrapper
         pbPositionNearMsgWindow(@facewindow, @msgwindow, :left)
         @msgwindow.y = Graphics.height - (@msgwindow.height * (@signWaitTime - @signWaitCount) / @signWaitTime)
       when "ts"     # Change text speed
-        @msgwindow.textspeed = (param == "") ? -999 : param.to_i
+        @msgwindow.textspeed = (param == "") ? 0 : param.to_i / 80.0
       when "."      # Wait 0.25 seconds
-        @msgwindow.waitcount += Graphics.frame_rate / 4
+        @msgwindow.waitcount += 0.25
       when "|"      # Wait 1 second
-        @msgwindow.waitcount += Graphics.frame_rate
+        @msgwindow.waitcount += 1.0
       when "wt"     # Wait X/20 seconds
         param = param.sub(/\A\s+/, "").sub(/\s+\z/, "")
-        @msgwindow.waitcount += param.to_i * Graphics.frame_rate / 20
+        @msgwindow.waitcount += param.to_i / 20.0
       when "wtnp"   # Wait X/20 seconds, no pause
         param = param.sub(/\A\s+/, "").sub(/\s+\z/, "")
-        @msgwindow.waitcount = param.to_i * Graphics.frame_rate / 20
+        @msgwindow.waitcount = param.to_i / 20.0
         @autoresume = true
       when "^"      # Wait, no pause
         @autoresume = true
@@ -787,8 +787,8 @@ class TalkMessageWindowWrapper
       if base && shadow
         temp = _INTL("{1}<c2={2}{3}>{4}",
           temp[0...index1],
-          colorToRgb16(base).to_s,
-          colorToRgb16(shadow).to_s,
+          base.to_rgb15.to_s,
+          shadow.to_rgb15.to_s,
           temp[(index2+1)...temp.length]
         )
       else
@@ -812,8 +812,8 @@ class TalkMessageWindowWrapper
 
       for i in 0...old_str.length
         new_str += "<c2="
-        new_str += colorToRgb16(pbHueShift(color1,-i*hue_step)).to_s
-        new_str += colorToRgb16(pbHueShift(color2,-i*hue_step)).to_s
+        new_str += pbHueShift(color1,-i*hue_step).to_rgb15.to_s
+        new_str += pbHueShift(color2,-i*hue_step).to_rgb15.to_s
         new_str += ">"
         new_str += old_str[i..i]
         new_str += "</c2>"
@@ -837,8 +837,8 @@ class TalkMessageWindowWrapper
 
       for i in 0...old_str.length
         new_str += "<c2="
-        new_str += colorToRgb16(pbHueShift(color1,-i*hue_step)).to_s
-        new_str += colorToRgb16(pbHueShift(color2,-i*hue_step)).to_s
+        new_str += pbHueShift(color1,-i*hue_step).to_rgb15.to_s
+        new_str += pbHueShift(color2,-i*hue_step).to_rgb15.to_s
         new_str += ">"
         new_str += old_str[i..i]
         new_str += "</c2>"
@@ -855,7 +855,7 @@ class TalkMessageWindowWrapper
       shadow = Dialog.defaultTextColor(1, @message_frame == 0) if !shadow
       if base && shadow
         value = _INTL("<c2={1}{2}>{3}</c2>",
-          colorToRgb16(base).to_s, colorToRgb16(shadow).to_s, value)
+          base.to_rgb15.to_s, shadow.to_rgb15.to_s, value)
       end
     end
 
@@ -1084,7 +1084,7 @@ class TalkMessageWindows
     }
     if @queue_shout
       windows.each { |w|
-        w.textspeed = -999
+        w.textspeed = 0
       }
     end
     loop do
@@ -1186,7 +1186,7 @@ class TalkMessageWindows
       @queue_shout = true
     else
       oldtextspeed = window.textspeed
-      window.textspeed = -999
+      window.textspeed = 0
       $game_temp.textSize = 4
       $game_screen.start_shake(2, 25, 10)
       pbSEPlay("Damage1", 100, 100)
