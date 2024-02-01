@@ -224,7 +224,7 @@ class Window_Craft < Window_DrawableCommand
     @stock=stock
     @adapter=adapter
     super(x,y,width,height,viewport)
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/Craft/cursor")
+    @selarrow=AnimatedBitmap.new("Graphics/UI/Craft/cursor")
     @baseColor=Color.new(88,88,80)
     @shadowColor=Color.new(168,184,184)
     self.windowskin=nil
@@ -363,7 +363,7 @@ class CraftScene
     @adapter=adapter
     @sprites={}
     @sprites["background"]=IconSprite.new(0,0,@viewport)
-    @sprites["background"].setBitmap("Graphics/Pictures/Craft/bg")
+    @sprites["background"].setBitmap("Graphics/UI/Craft/bg")
     @item_x = 312
     @item_text_x = @item_x + 24
     @item_1_y = 52

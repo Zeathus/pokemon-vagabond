@@ -90,7 +90,7 @@ class Sprite_Character
             bm = Bitmap.new(text_width + 8, 48)
             pbSetSmallFont(bm)
           end
-          src_bm = RPG::Cache.load_bitmap("","Graphics/Pictures/Quests/markers")
+          src_bm = RPG::Cache.load_bitmap("","Graphics/UI/Quests/markers")
           bm.blt(bm.width / 2 - 16, 0, src_bm, Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48))
           src_bm.dispose
           pbDrawTextPositions(bm, [[_INTL(@marker_text), bm.width / 2, 6, 2, Color.new(252,252,252), Color.new(0,0,0), true]])
@@ -98,7 +98,7 @@ class Sprite_Character
         else
           if !@marker
             @marker = IconSprite.new(0, 0, self.viewport)
-            @marker.setBitmap("Graphics/Pictures/Quests/markers")
+            @marker.setBitmap("Graphics/UI/Quests/markers")
           end
         end
         @marker.src_rect = Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48) if !@marker_text
