@@ -10,7 +10,7 @@ class CriticalSprite < BitmapSprite
     @type = @simple ? 1 : user.types[0]
     @opponent = @simple ? true : ((user.index % 2) == 1)
     @src_bitmap = RPG::Cache.load_bitmap("",
-      _INTL("Graphics/Pictures/Battle/critical_{1}",type.to_s))
+      _INTL("Graphics/UI/Battle/critical_{1}",type.to_s))
     self.x = 0
     self.y = 192
     self.oy = 64

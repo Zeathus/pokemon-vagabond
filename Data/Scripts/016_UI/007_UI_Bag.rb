@@ -219,7 +219,7 @@ class PokemonBag_Scene
     @sprites["msgwindow"].visible  = false
     @sprites["msgwindow"].viewport = @viewport
     @sprites["pocketarrow"] = IconSprite.new(14, 50, @viewport)
-    @sprites["pocketarrow"].setBitmap("Graphics/Pictures/Bag/cursor_pocket")
+    @sprites["pocketarrow"].setBitmap("Graphics/UI/Bag/cursor_pocket")
     pbBottomLeftLines(@sprites["helpwindow"], 1)
     pbDeactivateWindows(@sprites)
     pbRefresh
@@ -265,7 +265,7 @@ class PokemonBag_Scene
 
   def pbRefresh
     # Set the background image
-    @sprites["background"].setBitmap(sprintf("Graphics/Pictures/Bag/bg_#{@bag.last_viewed_pocket}"))
+    @sprites["background"].setBitmap(sprintf("Graphics/UI/Bag/bg_#{@bag.last_viewed_pocket}"))
     # Refresh the item window
     @sprites["itemlist"].refresh
     # Refresh more things

@@ -470,13 +470,13 @@ class Battle::Scene::PokemonDataBox < Sprite
 
       case gauge.type
       when PBGauge::Full
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
         textpos.push([gauge.name,x_offset + 90,y_offset - 12,2,base,shadow])
       when PBGauge::Half
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,24,92,24])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,24,92,24])
         textpos.push([gauge.name,x_offset + 45,y_offset - 12,2,base,shadow])
       when PBGauge::Long
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,48,180,16])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,48,180,16])
         textpos.push([gauge.name,x_offset + 8,y_offset - 12,0,base,shadow])
       end
       pbDrawImagePositions(self.bitmap,imagepos)
@@ -678,13 +678,13 @@ class Battle::Scene::BattlerSprite < RPG::Sprite
     @spriteXExtra     = 0   # Offset due to "bobbing" animation
     @spriteYExtra     = 0   # Offset due to "bobbing" animation
     @critSplashSprite = IconSprite.new(0, 0, viewport)
-    @critSplashSprite.setBitmap("Graphics/Pictures/Battle/splash_critical")
+    @critSplashSprite.setBitmap("Graphics/UI/Battle/splash_critical")
     @critSplashSprite.src_rect = Rect.new(0, 0, @critSplashSprite.bitmap.width, @critSplashSprite.bitmap.height / 2)
     @critSplashSprite.ox = @critSplashSprite.src_rect.width / 2
     @critSplashSprite.oy = @critSplashSprite.src_rect.height / 2
     @critSplashSprite.visible = false
     @weakSplashSprite = IconSprite.new(0, 0, viewport)
-    @weakSplashSprite.setBitmap("Graphics/Pictures/Battle/splash_weakness")
+    @weakSplashSprite.setBitmap("Graphics/UI/Battle/splash_weakness")
     @weakSplashSprite.src_rect = Rect.new(0, 0, @weakSplashSprite.bitmap.width, @weakSplashSprite.bitmap.height / 19)
     @weakSplashSprite.ox = @weakSplashSprite.src_rect.width / 2
     @weakSplashSprite.oy = @weakSplashSprite.src_rect.height / 2

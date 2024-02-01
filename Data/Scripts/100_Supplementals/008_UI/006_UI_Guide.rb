@@ -28,7 +28,7 @@ class KeybindSprite < BitmapSprite
     @shadowColor = Color.new(0,0,0)
     self.x = x
     self.y = y
-    @keybind_icons = AnimatedBitmap.new("Graphics/Pictures/keybinds")
+    @keybind_icons = AnimatedBitmap.new("Graphics/UI/keybinds")
     self.refresh
   end
 
@@ -69,7 +69,7 @@ class Window_Guide < Window_DrawableCommand
   def initialize(items,x,y,width,height,viewport=nil)
     @items = items
     super(x, y, width, height, viewport)
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/Guide/cursor")
+    @selarrow=AnimatedBitmap.new("Graphics/UI/Guide/cursor")
     @baseColor=Color.new(88,88,80)
     @shadowColor=Color.new(168,184,184)
     self.windowskin=nil
@@ -136,7 +136,7 @@ class GuideScreen
     @image_max_width = @text_width * 1.0
     @image_max_height = Graphics.height * 3.0 / 4.0
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
-    @sprites["background"].setBitmap("Graphics/Pictures/Guide/bg")
+    @sprites["background"].setBitmap("Graphics/UI/Guide/bg")
     @sprites["itemlist"]=Window_Guide.new(@guides, -12, 12, 264, Graphics.height - 56)
     @sprites["itemlist"].viewport = @viewport
     @sprites["itemlist"].index = @index
@@ -187,7 +187,7 @@ class GuideScreen
         @sprites["image"].visible = true
         image = item[1...item.index("]")]
         item = item[item.index("]")+1...item.length]
-        @sprites["image"].setBitmap(_INTL("Graphics/Pictures/Guide/{1}", image))
+        @sprites["image"].setBitmap(_INTL("Graphics/UI/Guide/{1}", image))
         @sprites["image"].ox = @sprites["image"].bitmap.width / 2
         zoom = [1.0, @image_max_width/@sprites["image"].bitmap.width, @image_max_height/@sprites["image"].bitmap.height].min
         @sprites["image"].zoom_x = zoom
