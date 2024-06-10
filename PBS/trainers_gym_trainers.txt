@@ -1,0 +1,381 @@
+# See the documentation on the wiki to learn how to edit this file.
+#-------------------------------
+[PKMNBREEDER_M,Arnold] # Breccia Gym
+LoseText = You're strong!
+Pokemon = PALMINO,17
+    AbilityIndex = 0
+Pokemon = ODDISH,16
+    AbilityIndex = 0
+#--------------
+[PKMNBREEDER_M,Arnold,1] # Breccia Gym
+LoseText = You're strong!
+Pokemon = TROPIUS,27
+    AbilityIndex = 0
+Pokemon = GLOOM,26
+    AbilityIndex = 0
+#--------------
+[PKMNBREEDER_M,Arnold,2] # Breccia Gym
+LoseText = You're strong!
+Pokemon = TROPIUS,37
+    AbilityIndex = 0
+Pokemon = GLOOM,36
+    AbilityIndex = 0
+Pokemon = BELLOSSOM,36
+    AbilityIndex = 0
+#--------------
+[PKMNBREEDER_M,Arnold,3] # Breccia Gym
+LoseText = You're strong!
+Pokemon = TROPIUS,47
+    AbilityIndex = 0
+Pokemon = VILEPLUME,46
+    AbilityIndex = 0
+Pokemon = BELLOSSOM,46
+    AbilityIndex = 0
+#--------------
+[PKMNBREEDER_M,Arnold,4] # Breccia Gym
+LoseText = You're strong!
+Pokemon = TROPIUS,57
+    AbilityIndex = 0
+Pokemon = VILEPLUME,56
+    AbilityIndex = 0
+Pokemon = BELLOSSOM,56
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia] # Breccia Gym
+LoseText = My adorable Pokemon, defeated...
+Pokemon = SEWADDLE,17
+    AbilityIndex = 0
+Pokemon = SKIPLOOM,18
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia,1] # Breccia Gym
+LoseText = My adorable Pokemon, defeated...
+Pokemon = SWADLOON,27
+    AbilityIndex = 0
+Pokemon = JUMPLUFF,28
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia,2] # Breccia Gym
+LoseText = My adorable Pokemon, defeated...
+Pokemon = LEAVANNY,37
+    AbilityIndex = 0
+Pokemon = JUMPLUFF,38
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia,3] # Breccia Gym
+LoseText = My adorable Pokemon, defeated...
+Pokemon = LEAVANNY,47
+    AbilityIndex = 0
+Pokemon = JUMPLUFF,48
+    AbilityIndex = 0
+Pokemon = CHERRIM,47
+    AbilityIndex = 0
+#--------------
+[PKMNFAN_F,Patricia,4] # Breccia Gym
+LoseText = My adorable Pokemon, defeated...
+Pokemon = LEAVANNY,57
+    AbilityIndex = 0
+Pokemon = JUMPLUFF,58
+    AbilityIndex = 0
+Pokemon = CHERRIM,57
+    AbilityIndex = 0
+#--------------
+[LASS,Sally] # Breccia Gym
+LoseText = They have many weaknesses though...
+Pokemon = SEEDOT,18
+    AbilityIndex = 0
+Pokemon = SNIVY,18
+    AbilityIndex = 0
+Pokemon = NUZLEAF,19
+    AbilityIndex = 0
+#--------------
+[LASS,Sally,1] # Breccia Gym
+LoseText = They have many weaknesses though...
+Pokemon = NUZLEAF,28
+    AbilityIndex = 0
+Pokemon = SERVINE,28
+    AbilityIndex = 0
+Pokemon = NUZLEAF,29
+    AbilityIndex = 0
+#--------------
+[LASS,Sally,2] # Breccia Gym
+LoseText = They have many weaknesses though...
+Pokemon = SHIFTRY,38
+    AbilityIndex = 0
+Pokemon = SERPERIOR,38
+    AbilityIndex = 0
+Pokemon = SHIFTRY,39
+    AbilityIndex = 0
+#--------------
+[LASS,Sally,3] # Breccia Gym
+LoseText = They have many weaknesses though...
+Pokemon = SHIFTRY,48
+    AbilityIndex = 0
+Pokemon = SERPERIOR,48
+    AbilityIndex = 0
+Pokemon = SHIFTRY,49
+    AbilityIndex = 0
+#--------------
+[LASS,Sally,4] # Breccia Gym
+LoseText = They have many weaknesses though...
+Pokemon = SHIFTRY,58
+    AbilityIndex = 0
+Pokemon = SERPERIOR,58
+    AbilityIndex = 0
+Pokemon = SHIFTRY,59
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald] # Lapis Lazuli Gym
+LoseText = I must be washed up...
+Pokemon = DUCKLETT,17
+    AbilityIndex = 0
+Pokemon = SLOWPOKE,16
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,1] # Lapis Lazuli Gym
+LoseText = I must be washed up...
+Pokemon = DUCKLETT,27
+    AbilityIndex = 0
+Pokemon = SLOWPOKE,26
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,2] # Lapis Lazuli Gym
+LoseText = I must be washed up...
+Pokemon = SLOWBRO,37
+    AbilityIndex = 0
+Pokemon = SWANNA,36
+    AbilityIndex = 0
+Pokemon = PELIPPER,36
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,3] # Lapis Lazuli Gym
+LoseText = I must be washed up...
+Pokemon = SLOWBRO,47
+    AbilityIndex = 0
+Pokemon = SWANNA,46
+    AbilityIndex = 0
+Pokemon = PELIPPER,46
+    AbilityIndex = 0
+#--------------
+[JANITOR,Gerald,4] # Lapis Lazuli Gym
+LoseText = I must be washed up...
+Pokemon = SLOWBRO,57
+    AbilityIndex = 0
+Pokemon = SWANNA,56
+    AbilityIndex = 0
+Pokemon = PELIPPER,56
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby] # Lapis Lazuli Gym
+LoseText = The button is yours!
+Pokemon = TENTACOOL,18
+    AbilityIndex = 0
+Pokemon = CHINCHOU,17
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,1] # Lapis Lazuli Gym
+LoseText = The button is yours!
+Pokemon = TENTACOOL,28
+    AbilityIndex = 0
+Pokemon = LANTURN,27
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,2] # Lapis Lazuli Gym
+LoseText = The button is yours!
+Pokemon = TENTACRUEL,38
+    AbilityIndex = 0
+Pokemon = LANTURN,38
+    AbilityIndex = 0
+Pokemon = CLAWITZER,37
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,3] # Lapis Lazuli Gym
+LoseText = The button is yours!
+Pokemon = TENTACRUEL,48
+    AbilityIndex = 0
+Pokemon = LANTURN,48
+    AbilityIndex = 0
+Pokemon = CLAWITZER,47
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Bobby,4] # Lapis Lazuli Gym
+LoseText = The button is yours!
+Pokemon = TENTACRUEL,58
+    AbilityIndex = 0
+Pokemon = LANTURN,58
+    AbilityIndex = 0
+Pokemon = CLAWITZER,57
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice] # Lapis Lazuli Gym
+LoseText = I must've been distracted...
+Pokemon = HORSEA,18
+    AbilityIndex = 0
+Pokemon = PSYDUCK,18
+    AbilityIndex = 0
+Pokemon = MARILL,19
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,1] # Lapis Lazuli Gym
+LoseText = I must've been distracted...
+Pokemon = SEADRA,28
+    AbilityIndex = 0
+Pokemon = GOLDUCK,28
+    AbilityIndex = 0
+Pokemon = MARILL,29
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,2] # Lapis Lazuli Gym
+LoseText = I must've been distracted...
+Pokemon = SEADRA,38
+    AbilityIndex = 0
+Pokemon = GOLDUCK,39
+    AbilityIndex = 0
+Pokemon = AZUMARILL,39
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,3] # Lapis Lazuli Gym
+LoseText = I must've been distracted...
+Pokemon = KINGDRA,48
+    AbilityIndex = 0
+Pokemon = GOLDUCK,49
+    AbilityIndex = 0
+Pokemon = AZUMARILL,49
+    AbilityIndex = 0
+#--------------
+[PARASOLLADY,Beatrice,4] # Lapis Lazuli Gym
+LoseText = I must've been distracted...
+Pokemon = KINGDRA,58
+    AbilityIndex = 0
+Pokemon = GOLDUCK,59
+    AbilityIndex = 0
+Pokemon = AZUMARILL,59
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed] # Pegma Gym
+LoseText = Remember, copper plus tin equals bronze!
+Pokemon = SLUGMA,16
+    AbilityIndex = 0
+Pokemon = MAGBY,17
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,1] # Pegma Gym
+LoseText = Remember, copper plus tin equals bronze!
+Pokemon = MAGCARGO,26
+    AbilityIndex = 0
+Pokemon = MAGMAR,27
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,2] # Pegma Gym
+LoseText = Remember, copper plus tin equals bronze!
+Pokemon = MAGCARGO,36
+    AbilityIndex = 0
+Pokemon = MAGMAR,37
+    AbilityIndex = 0
+Pokemon = HEATMOR,37
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,3] # Pegma Gym
+LoseText = Remember, copper plus tin equals bronze!
+Pokemon = MAGCARGO,46
+    AbilityIndex = 0
+Pokemon = MAGMAR,47
+    AbilityIndex = 0
+Pokemon = HEATMOR,47
+    AbilityIndex = 0
+#--------------
+[ENGINEER,Ed,4] # Pegma Gym
+LoseText = Remember, copper plus tin equals bronze!
+Pokemon = MAGCARGO,56
+    AbilityIndex = 0
+Pokemon = MAGMAR,57
+    AbilityIndex = 0
+Pokemon = HEATMOR,57
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch] # Pegma Gym
+LoseText = You'll have four switches this time. Good luck!
+Pokemon = NUMEL,18
+    AbilityIndex = 0
+Pokemon = SALANDIT,18
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,1] # Pegma Gym
+LoseText = You'll have four switches this time. Good luck!
+Pokemon = NUMEL,28
+    AbilityIndex = 0
+Pokemon = SALAZZLE,28
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,2] # Pegma Gym
+LoseText = You'll have four switches this time. Good luck!
+Pokemon = CAMERUPT,38
+    AbilityIndex = 0
+Pokemon = SALAZZLE,38
+    AbilityIndex = 0
+Pokemon = LAMPENT,38
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,3] # Pegma Gym
+LoseText = You'll have four switches this time. Good luck!
+Pokemon = CAMERUPT,48
+    AbilityIndex = 0
+Pokemon = SALAZZLE,48
+    AbilityIndex = 0
+Pokemon = CHANDELURE,48
+    AbilityIndex = 0
+#--------------
+[MINER,Mitch,4] # Pegma Gym
+LoseText = You'll have four switches this time. Good luck!
+Pokemon = CAMERUPT,58
+    AbilityIndex = 0
+Pokemon = SALAZZLE,58
+    AbilityIndex = 0
+Pokemon = CHANDELURE,58
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter] # Pegma Gym
+LoseText = Raphael talked about you when he returned. He's looking forward to this.
+Pokemon = GROWLITHE,18
+    AbilityIndex = 0
+Pokemon = VULPIX,18
+    AbilityIndex = 0
+Pokemon = FLETCHINDER,19
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,1] # Pegma Gym
+LoseText = Raphael talked about you when he returned. He's looking forward to this.
+Pokemon = GROWLITHE,28
+    AbilityIndex = 0
+Pokemon = NINETALES,28
+    AbilityIndex = 0
+Pokemon = FLETCHINDER,29
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,2] # Pegma Gym
+LoseText = Raphael talked about you when he returned. He's looking forward to this.
+Pokemon = ARCANINE,38
+    AbilityIndex = 0
+Pokemon = NINETALES,38
+    AbilityIndex = 0
+Pokemon = TALONFLAME,39
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,3] # Pegma Gym
+LoseText = Raphael talked about you when he returned. He's looking forward to this.
+Pokemon = ARCANINE,48
+    AbilityIndex = 0
+Pokemon = NINETALES,48
+    AbilityIndex = 0
+Pokemon = TALONFLAME,49
+    AbilityIndex = 0
+#--------------
+[GENTLEMAN,Peter,4] # Pegma Gym
+LoseText = Raphael talked about you when he returned. He's looking forward to this.
+Pokemon = ARCANINE,58
+    AbilityIndex = 0
+Pokemon = NINETALES,59
+    AbilityIndex = 0
+Pokemon = TALONFLAME,59
+    AbilityIndex = 0
+#--------------

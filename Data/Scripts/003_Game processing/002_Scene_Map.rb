@@ -88,7 +88,7 @@ class Scene_Map
     $game_player.straighten
     $game_player.on_ladder = false
     $game_temp.followers.map_transfer_followers
-    $game_player.sprite.snapPartner
+    $game_player.sprite.snapPartner(false)
     $game_map.update
     disposeSpritesets
     RPG::Cache.clear
@@ -160,7 +160,7 @@ class Scene_Map
     pbDayNightTint(@map_renderer)
     @map_renderer.refresh if refresh
     @map_renderer.update
-    updateToasts
+    pbUpdateToasts
     EventHandlers.trigger(:on_frame_update)
   end
 

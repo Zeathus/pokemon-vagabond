@@ -207,7 +207,7 @@ class Battle::Scene::FightMenu < Battle::Scene::MenuBase
   #     Graphics/UI/Battle/overlay_message.png. You will need to edit def
   #     pbShowWindow to make the graphic appear while the command menu is being
   #     displayed.
-  USE_GRAPHICS     = true
+  USE_GRAPHICS     = false
   TYPE_ICON_HEIGHT = 28
   # Text colours of PP of selected move
   PP_COLORS = [
@@ -495,13 +495,13 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       button.y += (BUTTON_HEIGHT) * ((i + 1) % 2)
       addSprite("button_#{i}", button)
       @effectiveness_icons[i] = IconSprite.new(0, 0, viewport)
-      @effectiveness_icons[i].setBitmap("Graphics/Pictures/Battle/effectiveness_icons")
+      @effectiveness_icons[i].setBitmap("Graphics/UI/Battle/effectiveness_icons")
       @effectiveness_icons[i].x = button.x + 12
       @effectiveness_icons[i].y = button.y - 6
       @effectiveness_icons[i].opacity = 0
       @effectiveness_icons[i].src_rect = Rect.new(0, 0, 26, 26)
       @boost_icons[i] = IconSprite.new(0, 0, viewport)
-      @boost_icons[i].setBitmap("Graphics/Pictures/Battle/affinityboost_text_small")
+      @boost_icons[i].setBitmap("Graphics/UI/Battle/affinityboost_text_small")
       @boost_icons[i].x = button.x + button.src_rect.width - 96
       @boost_icons[i].y = button.y - 6
       @boost_icons[i].opacity = 0
@@ -625,7 +625,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
         end
         if target
           bTypes = target.pbTypes(true)
-          typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+          typeMod = Effectiveness.calculate(move.type, *bTypes)
           if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
             ret = true
           end
@@ -635,7 +635,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     end
   end
 
-  def sefEffectiveness(battler, move)
+  def setEffectiveness(battler, move)
     @effectivenesses = []
     return if !battler || !move
     return if move.category == 2
@@ -648,7 +648,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       end
       if target
         bTypes = target.pbTypes(true)
-        typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+        typeMod = Effectiveness.calculate(move.type, *bTypes)
         if Effectiveness.super_effective?(typeMod)
           effectiveness = 1
         elsif Effectiveness.ineffective?(typeMod)

@@ -48,10 +48,10 @@ def pbQuickBattleAnimation(viewport, bgm, trainers, dialog)
     background.x = Settings::SCREEN_WIDTH / 2
     background.y = Settings::SCREEN_HEIGHT / 2
     top = IconSprite.new(-512, -256, viewport)
-    top.setBitmap(_INTL("Graphics/Pictures/Battle/intro_top_{1}", ball_type))
+    top.setBitmap(_INTL("Graphics/UI/Battle/intro_top_{1}", ball_type))
     top.z = 2
     bottom = IconSprite.new(512 - 128, 256, viewport)
-    bottom.setBitmap("Graphics/Pictures/Battle/intro_bottom_pokeball")
+    bottom.setBitmap("Graphics/UI/Battle/intro_bottom_pokeball")
     bottom.z = 1
     trainer_sprite = IconSprite.new(Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT / 4, viewport)
     trainer_sprite.setBitmap(GameData::TrainerType.front_sprite_filename(trainer_type))

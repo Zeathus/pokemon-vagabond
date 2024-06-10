@@ -49,10 +49,11 @@
 /speaker Marty
 > They must've eaten some bad berries or something.
 > Give me a minute and I'll have them sorted out.
+/reset
 /fade black
 /wait 30
 /fade normal
-/wait 20
+/wait 10
 > That should do the trick.
 
 [SICKZAGOON,5]

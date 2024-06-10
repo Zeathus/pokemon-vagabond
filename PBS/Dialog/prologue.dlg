@@ -59,8 +59,8 @@
 /hidewindow 1
 /hidename 2
 > <PLAYER>...
-> You need to... go there...
-> Find...
+> Someone is awaiting you...
+> You must... find them...
 > ... ... ...
 /speaker 0
 /windowpos bottom
@@ -184,17 +184,39 @@
 
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,0]
 /speaker Duke
-> <PLAYER>, do you know about affinities?
-> Allow me to explain...
-
-[PROLOGUE_AFFINITY_BOOST_TUTORIAL,1]
-/speaker Duke
-/if pbGetChoiceValue(:Starter) == :KRABBY
-    > Riolu is faster than your Krabby.\nHave Riolu use a Fighting-type move to trigger an Affinity Boost.
-/elsif pbGetChoiceValue(:Starter) == :SKIDDO
-    > Riolu is faster than your Skiddo.\nHave Riolu use a Normal-type move to trigger an Affinity Boost.
-/elsif pbGetChoiceValue(:Starter) == :NUMEL
-    > Riolu is faster than your Numel.\nHave Riolu use a Steel-type move to trigger an Affinity Boost.
+> <PLAYER>, do you know about affinities and [R]Affinity Boosts[/]?
+/newwindow 118 202 264 1
+/hold
+/focus 1
+> \leftarrow YOUR AFFINITY
+/focus 0
+> All Pokémon have an [R]affinity[/] for a certain type, determined by that Pokémon's species and form.
+/start
+/if pbGetChoiceValue(:Starter) == :BOOMINE
+    > Boomine has a [R]Dragon-type affinity[/], which pairs well with my Dragonair.
+    > If Dragonair damages an opponent with a [R]Dragon-type move[/] before Boomine has had its turn, Boomine is [R]Affinity Boosted[/].
+    > The Affinity Boost makes Boomine [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
+    > The power is usually boosted by 30%, but Boomine's [R]Flame Vortex ability[/] increases it to a 60% boost for Fire-type moves.
+/elsif pbGetChoiceValue(:Starter) == :LAZU
+    > Lazu has a [R]Dragon-type affinity[/], which pairs well with my Dragonair.
+    > If Dragonair damages an opponent with a [R]Dragon-type move[/] before Lazu has had its turn, Lazu is [R]Affinity Boosted[/].
+    > The Affinity Boost makes Boomine [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
+    > The power is usually boosted by 30%, but Lazu's [R]Aqua Vortex ability[/] increases it to a 60% boost for Water-type moves.
+/elsif pbGetChoiceValue(:Starter) == :PALMINO
+    > Palmino has a [R]Dragon-type affinity[/], which pairs well with my Dragonair.
+    > If Dragonair damages an opponent with a [R]Dragon-type move[/] before Palmino has had its turn, Palmino is [R]Affinity Boosted[/].
+    > The Affinity Boost makes Boomine [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
+    > The power is usually boosted by 30%, but Palmino's [R]Flora Vortex ability[/] increases it to a 60% boost for Grass-type moves.
+/end
+> Keep in mind that if all opponents damaged by Dragonair's move resists the attack, [R]the Affinity Boost is blocked[/].
+> You can find more details on Affinity Boosts in [R]the Guide[/] after the battle.
+/expression huzzah
+/if pbGetChoiceValue(:Starter) == :BOOMINE
+    > [R]Dragonair is faster[/] than your Boomine.\nHave Dragonair [R]use a Dragon-type move[/] to trigger an Affinity Boost!
+/elsif pbGetChoiceValue(:Starter) == :LAZU
+    > [R]Dragonair is faster[/] than your Lazu.\nHave Dragonair [R]use a Dragon-type move[/] to trigger an Affinity Boost!
+/elsif pbGetChoiceValue(:Starter) == :PALMINO
+    > [R]Dragonair is faster[/] than your Palmino.\nHave Dragonair [R]use a Dragon-type move[/] to trigger an Affinity Boost!
 /end
 
 [PROLOGUE_GYM_DUKE]

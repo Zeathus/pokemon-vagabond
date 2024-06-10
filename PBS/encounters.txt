@@ -2,148 +2,159 @@
 #-------------------------------
 [009] # Lazuli River
 Land,21
-    30,BUIZEL,5,8
-    20,PANPOUR,5,8
-    20,BUDEW,5,8
-    10,BIDOOF,5,8
-    10,FLABEBE,5,8,3
-    10,AZURILL,4,7
+    25,BUDEW,7,11
+    25,PAWMI,7,11
+    15,AZURILL,7,11
+    30,PSYDUCK,7,11
+    5,SNUBBULL,7,11
 Land2,21
-    30,BIDOOF,6,9
-    20,PANPOUR,6,9
-    20,AZURILL,5,8
-    20,BUIZEL,5,9
-    5,DUCKLETT,5,9
-    5,PSYDUCK,5,9
+    25,SPOINK,7,11
+    25,SHINX,7,11
+    15,MARILL,7,11
+    15,AZURILL,7,11
+    20,BUDEW,7,11
 Land3,21
-    30,MAREEP,14,17
-    20,FARFETCHD,14,17
-    20,MARILL,14,17
-    15,PACHIRISU,14,17
-    15,OSHAWOTT,14,17
+    25,MARILL,7,11
+    25,SNUBBULL,7,11
+    15,LUXIO,7,11
+    30,ROSELIA,7,11
+    5,INDEEDEE,7,11
 Water,2
-    30,SURSKIT,10,13
-    20,DUCKLETT,10,13
-    20,PSYDUCK,10,13
-    30,BUIZEL,11,14
+    40,DUCKLETT,10,13
+    30,PSYDUCK,10,13
+    15,AZURILL,10,13
+    15,MARILL,10,13
 FishingRod
-    40,MAGIKARP,5,10
-    30,POLIWAG,5,10
-    30,FINNEON,5,10
+    95,MAGIKARP,5,10
+    5,DRATINI,18,24
 #-------------------------------
 [113] # Lazuli District
 FishingRod
-    50,MAGIKARP,5,10
-    50,FINNEON,5,10
+    100,MAGIKARP,5,10
 #-------------------------------
 [27] # Lapis District
 Land,21
-    30,WINGULL,5,10
-    20,YUNGOOS,5,10
-    20,BUNEARY,5,10
-    20,AZURILL,5,10
-    10,RATTATA,5,10
+    40,DUCKLETT,9,12
+    30,TRUBBISH,9,12
+    15,MEOWTH,9,12
+    15,SKITTY,9,12
+Water,2
+    70,WINGULL,13,17
+    15,DUCKLETT,13,17
+    15,MANTYKE,13,17
 FishingRod
-    30,LUVDISC,10,15
-    20,SHELLDER,10,15
-    20,STARYU,10,15
-    15,CLAMPERL,10,15
-    15,FINNEON,10,15
+    40,MANTYKE,14,20
+    30,STARYU,14,20
+    30,SHELLDER,14,20
 #-------------------------------
 [007] # Crosswoods
 Land,21
-    30,HOPPIP,5,8
-    20,SENTRET,5,8
-    20,PIDGEY,5,8
-    20,PIKIPEK,5,8
-    10,POOCHYENA,5,8
+    25,ZIGZAGOON,5,8
+    25,PIDGEY,5,8
+    15,CATERPIE,5,8
+    15,WEEDLE,5,8
+    20,HOPPIP,5,8
 Land2,21
-    30,HOPPIP,5,8
-    20,SENTRET,5,8
-    20,PIDGEY,5,8
-    10,PANSAGE,5,8
-    10,ODDISH,5,8
-    10,POOCHYENA,5,8
+    25,ZIGZAGOON,5,8
+    25,PIDGEY,5,8
+    15,SWABLU,5,8
+    15,ODDISH,5,8
+    20,HOPPIP,5,8
 Land3,21
-    30,HOPPIP,5,8
-    20,SENTRET,5,8
-    20,PIDGEY,5,8
-    10,PANSEAR,5,8
-    10,BONSLY,5,8
-    10,POOCHYENA,5,8
+    25,ZIGZAGOON,5,8
+    25,PIDGEY,5,8
+    15,VULPIX,5,8
+    15,BONSLY,5,8
+    20,HOPPIP,5,8
 Land4,21
-    30,HOPPIP,5,8
-    20,SENTRET,5,8
-    20,PIDGEY,5,8
-    10,PANPOUR,5,8
-    10,BUIZEL,5,8
-    10,POOCHYENA,5,8
+    25,ZIGZAGOON,5,8
+    25,PIDGEY,5,8
+    15,PAWMI,5,8
+    15,AZURILL,5,8
+    20,HOPPIP,5,8
 Water,2
-    50,SURSKIT,10,13
-    40,WOOPER,10,13
-    10,MASQUERAIN,11,14
+    40,WOOPER,10,13,1
+    30,MARILL,10,13
+    30,PSYDUCK,10,13
 FishingRod
-    100,MAGIKARP,5,15
+    40,MAGIKARP,10,15
+    45,POLIWAG,10,15
+    10,POLIWHIRL,15,20
+    5,TOTODILE,10,15
 #-------------------------------
 [061] # Halcyon Forest
 Land,21
-    30,PIKIPEK,5,8
-    20,CATERPIE,5,8
-    20,WEEDLE,5,8
-    10,PATRAT,5,8
-    10,NATU,4,8
-    5,TEDDIURSA,5,9
-    5,RALTS,5,7
+    25,CATERPIE,5,8
+    25,WEEDLE,5,8
+    15,SEEDOT,5,8
+    15,NATU,5,8
+    15,NICKIT,5,8
+    5,EEVEE,5,8
 Land2,21
     100,SNIVY,10,12
 Water,2
-    50,POLIWAG,10,13
-    30,TYMPOLE,10,13
-    20,LOTAD,11,13
+    40,WOOPER,10,13,1
+    30,MARILL,10,13
+    30,PSYDUCK,10,13
 FishingRod
-    55,POLIWAG,5,15
-    45,TYMPOLE,5,15
+    40,MAGIKARP,10,15
+    45,POLIWAG,10,15
+    15,POLIWHIRL,15,20
 #-------------------------------
 [058] # Halcyon Clearing
+Water,2
+    40,WOOPER,10,13,1
+    30,MARILL,10,13
+    30,PSYDUCK,10,13
 FishingRod
-    55,POLIWAG,5,15
-    45,TYMPOLE,5,15
+    40,MAGIKARP,10,15
+    45,POLIWAG,10,15
+    10,POLIWHIRL,15,20
+    5,POLITOED,20,25
 #-------------------------------
 [011] # Breccia Undergrowth
 Land,21
-    30,HOOTHOOT,5,8
-    20,SHROOMISH,5,8
-    20,BURMY,5,8,0
-    10,PINECO,5,8
-    10,SEEDOT,5,8
-    5,PARAS,4,7
-    5,ROWLET,6,9
+    25,TAILLOW,9,12
+    25,SEWADDLE,9,12
+    15,NINCADA,9,12
+    15,TIMBURR,9,12
+    15,PACHIRISU,9,12
+    5,ROWLET,9,12
 #-------------------------------
 [062] # Breccia Trail
 Land,21
-    30,BELLSPROUT,5,8
-    20,PANSAGE,5,8
-    20,PIDOVE,5,8
-    10,BOUNSWEET,5,8
-    10,SEWADDLE,5,8
-    5,LEDYBA,4,7
-    5,ODDISH,4,7
+    25,ODDISH,7,11
+    25,SWABLU,7,11
+    15,GOSSIFLEUR,7,11
+    15,SEWADDLE,7,11
+    15,CUTIEFLY,7,11
+    5,MINCCINO,7,11
 Flowers,21
-    30,COMBEE,5,8
-    30,FLABEBE,5,8,0
-    20,CHERUBI,5,8
-    10,LEDYBA,5,8
-    10,CUTIEFLY,5,8
+    25,COMBEE,7,11
+    25,CUTIEFLY,7,11
+    15,CHERUBI,7,11
+    15,GOSSIFLEUR,7,11
+    20,FLABEBE,7,11
+Water,2
+    40,PSYDUCK,10,13
+    30,SWABLU,10,13
+    15,AZURILL,10,13
+    15,MARILL,10,13
+FishingRod
+    70,POLIWAG,10,15
+    30,POLIWHIRL,15,20
 #-------------------------------
 [072] # Quartz Passing
 Land,21
-    30,BONSLY,5,8
-    20,PANSEAR,5,8
-    20,FLETCHLING,5,8
-    10,TIMBURR,5,8
-    10,VULPIX,5,8
-    5,NIDORANmA,5,7
-    5,NIDORANfE,5,7
+    25,BONSLY,7,11
+    25,VULPIX,7,11
+    15,FLETCHLING,7,11
+    15,NIDORANmA,7,11
+    15,NIDORANfE,7,11
+    5,NUMEL,7,11
+FishingRod
+    40,POLIWAG,5,15
+    60,MAGIKARP,5,20
 #-------------------------------
 [116] # Crosswoods Ruins
 Cave,5
@@ -167,169 +178,232 @@ Cave,5
 #-------------------------------
 [21] # Feldspar District
 Land,21
-    100,ROCKRUFF,7,9
+    25,GROWLITHE,8,12
+    25,ROCKRUFF,8,12
+    15,FLETCHLING,8,12
+    15,NIDORANmA,8,12
+    15,NIDORANfE,8,12
+    5,NUMEL,8,12
+Water,2
+    40,DUCKLETT,10,13
+    30,PSYDUCK,10,13
+    15,AZURILL,10,13
+    10,MARILL,10,13
+    5,MUDKIP,10,13
 FishingRod
-    55,POLIWAG,5,15
-    45,TYMPOLE,5,15
+    90,MAGIKARP,5,10
+    10,GYARADOS,18,24
 #-------------------------------
 [14] # Mt. Pegma Hillside
-Land,5
-    100,FLETCHLING,7,9
+Land,21
+    25,SPEAROW,9,12
+    25,NUMEL,9,12
+    15,SALANDIT,9,12
+    15,MAKUHITA,9,12
+    15,MANKEY,9,12
+    5,SKIDDO,9,12
+Water,2
+    55,SHELLOS,13,16,1
+    45,PSYDUCK,13,16
+FishingRod
+    55,MAGIKARP,10,20
+    45,KRABBY,16,20
+#-------------------------------
+[73] # Mt. Pegma Falls
+Land,21
+    25,MACHOP,17,20
+    25,DODUO,17,20
+    15,SKIDDO,17,20
+    15,MAKUHITA,17,20
+    15,RHYHORN,17,20
+    5,SCRAGGY,17,20
+Water,2
+    40,SHELLOS,16,20,1
+    30,PSYDUCK,16,20
+    20,GOLDUCK,17,21
+    10,GASTRODON,17,21,1
+FishingRod
+    50,MAGIKARP,10,20
+    30,KRABBY,16,20
+    20,GYARADOS,18,23
 #-------------------------------
 [20] # Mt. Pegma 1F
 Cave,5
-    100,GEODUDE,5,10
+    25,GEODUDE,9,12,1
+    25,DIGLETT,9,12
+    15,ARON,9,12
+    15,TINKATINK,9,12
+    15,MAGBY,9,12
+    5,TYROGUE,9,12
 #-------------------------------
 [44] # Mt. Pegma 1F
 Cave,5
-    100,GEODUDE,5,10
+    25,GEODUDE,12,17,1
+    25,DIGLETT,12,17
+    15,ARON,12,17
+    15,TINKATINK,12,17
+    15,MAGBY,12,17
+    5,TYROGUE,12,17
 #-------------------------------
 [45] # Mt. Pegma 2F
 Cave,5
-    100,GEODUDE,5,10
+    25,GEODUDE,15,19,1
+    25,DIGLETT,15,19
+    15,ARON,15,19
+    15,ONIX,15,19
+    15,TYROGUE,15,19
+    5,DURANT,15,19
 #-------------------------------
 [47] # Mt. Pegma 3F
 Cave,5
-    100,GEODUDE,5,10
+    25,GEODUDE,15,19,1
+    25,DIGLETT,15,19
+    15,ARON,15,19
+    15,ONIX,15,19
+    15,TYROGUE,15,19
+    5,DURANT,15,19
 #-------------------------------
 [92] # Pegma Quarry B1F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [93] # Pegma Quarry B2F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [94] # Pegma Quarry B3F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [95] # Pegma Quarry B4F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [96] # Pegma Quarry B5F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [97] # Pegma Quarry B6F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [98] # Pegma Quarry B7F
 Cave,5
-    100,GEODUDE,5,10
+    100,GEODUDE,5,10,1
 #-------------------------------
 [99] # Pegma Quarry B8F
 Cave,5
-    100,GEODUDE,5,10
-#-------------------------------
-[46] # Lake Kirrock
-Cave,5
-    100,GEODUDE,5,10
-Water,2
-    50,POLIWAG,10,13
-    30,TYMPOLE,10,13
-    20,LOTAD,11,13
-FishingRod
-    55,POLIWAG,5,15
-    45,TYMPOLE,5,15
+    100,GEODUDE,5,10,1
 #-------------------------------
 [022] # Lapis Lazuli Park
 Land,21
-    30,SPOINK,5,8
-    20,CHINGLING,5,8
-    20,SPINARAK,5,8
-    10,SCATTERBUG,5,8
-    10,SUNKERN,5,8
-    5,DRIFLOON,5,7
-    5,MUNCHLAX,5,7
+    25,MEOWTH,9,12
+    25,SKITTY,9,12
+    15,CHINGLING,9,12
+    15,DRIFLOON,9,12
+    15,MIMEJR,9,12
+    5,MUNCHLAX,9,12
 #-------------------------------
 [126] # Smokey Forest Trail
 Land,21
-    30,SPOINK,5,8
-    20,CHINGLING,5,8
-    20,SPINARAK,5,8
-    10,SCATTERBUG,5,8
-    10,SUNKERN,5,8
-    5,DRIFLOON,5,7
-    5,MUNCHLAX,5,7
+    25,MEOWTH,9,12
+    25,SKITTY,9,12
+    15,CHINGLING,9,12
+    15,DRIFLOON,9,12
+    15,MIMEJR,9,12
+    5,MUNCHLAX,9,12
 #-------------------------------
 [208] # Evergone Mangrove
 Land,21
-    30,ESPURR,18,22
-    20,PUMPKABOO,18,22
-    20,MORELULL,18,22
-    10,PHANTUMP,18,22
-    10,RALTS,18,22
-    5,ABSOL,18,22
-    5,CARNIVINE,18,22
+    25,PUMPKABOO,17,22
+    25,MORELULL,17,22
+    15,MURKROW,17,22
+    15,RALTS,17,22
+    15,CARNIVINE,17,22
+    5,ABSOL,17,22
 Water,2
-    50,LOTAD,18,22
-    40,DEWPIDER,18,22
-    10,LOMBRE,18,22
+    55,DEWPIDER,18,22
+    30,SHELLOS,18,22
+    15,POLIWAG,18,22
 FishingRod
-    55,TYMPOLE,18,22
-    30,SKRELP,18,22
-    15,QWILFISH,18,22
+    40,POLIWAG,18,22
+    35,MAGIKARP,18,22
+    25,WIMPOD,18,22
 #-------------------------------
 [209] # Evergone Hill
 Land,21
-    30,ESPURR,18,22
-    20,PUMPKABOO,18,22
-    20,MORELULL,18,22
-    10,PHANTUMP,18,22
-    10,RALTS,18,22
-    5,ABSOL,18,22
-    5,CARNIVINE,18,22
+    25,PUMPKABOO,17,22
+    25,MORELULL,17,22
+    15,MURKROW,17,22
+    15,RALTS,17,22
+    15,CARNIVINE,17,22
+    5,ABSOL,17,22
 Water,2
-    50,LOTAD,18,22
-    40,DEWPIDER,18,22
-    10,LOMBRE,18,22
+    55,DEWPIDER,18,22
+    30,SHELLOS,18,22
+    15,POLIWAG,18,22
 FishingRod
-    55,TYMPOLE,18,22
-    30,SKRELP,18,22
-    15,QWILFISH,18,22
+    40,POLIWAG,18,22
+    35,MAGIKARP,12,22
+    25,WIMPOD,18,22
 #-------------------------------
 [210] # Evergone Stairway
 Land,21
-    30,ESPURR,18,22
-    20,PUMPKABOO,18,22
-    20,MORELULL,18,22
-    10,PHANTUMP,18,22
-    10,RALTS,18,22
-    5,ABSOL,18,22
-    5,CARNIVINE,18,22
+    25,PUMPKABOO,17,22
+    25,MORELULL,17,22
+    15,MURKROW,17,22
+    15,RALTS,17,22
+    20,CLEFFA,17,22
 #-------------------------------
 [070] # Evergone Crater
 Water,2
-    50,LOTAD,10,13
-    40,SHELLOS,10,13
-    10,MUDKIP,11,14
+    40,SHELLOS,15,19
+    30,PSYDUCK,15,19
+    15,POLIWAG,15,19
+    15,DEWPIDER,15,19
 FishingRod
-    55,BARBOACH,5,10
-    30,TYMPOLE,5,10
-    15,RELICANTH,10,15
+    40,MAGIKARP,10,20
+    30,POLIWAG,15,19
+    15,POLIWHIRL,15,19
+    10,WIMPOD,15,19
+    5,FEEBAS,10,20
+#-------------------------------
+[216] # Scoria Canyon
+Land,21
+    25,SCRAGGY,22,27
+    25,DODUO,22,27
+    15,RHYHORN,22,27
+    15,MACHOKE,22,27
+    15,HELIOPTILE,22,27
+    5,SCORBUNNY,22,27
+Land2,21
+    25,HELIOPTILE,22,27
+    25,RHYHORN,22,27
+    15,FERROSEED,22,27
+    15,CHARCADET,22,27
+    15,SCRAGGY,22,27
+    5,SKARMORY,22,27
 #-------------------------------
 [132] # Scoria Desert
-Land,21
-    30,CACNEA,23,27
-    20,BRAMBLIN,23,27
-    20,SKORUPI,23,27
-    10,SANDILE,23,27
-    10,HIPPOPOTAS,23,27
-    5,SIZZLIPEDE,23,27
-    5,MARACTUS,23,27
+Land2,21
+    25,CACNEA,25,30
+    25,BRAMBLIN,25,30
+    15,SANDILE,25,30
+    15,ARCHEN,25,30
+    15,DARUMAKA,25,30
+    5,MARACTUS,25,30
+FishingRod
+    90,TIRTOUGA,25,30
+    10,CARRACOSTA,30,35
 #-------------------------------
 [135] # Underground Desert
 Cave,5
-    30,DIGLETT,23,27
-    20,ROGGENROLA,23,27
-    20,SANDSHREW,23,27
-    10,SIZZLIPEDE,23,27
-    10,TRAPINCH,23,27
-    5,GIBLE,23,27
-    5,DRILBUR,23,27
+    25,TRAPINCH,25,30
+    25,ROGGENROLA,25,30
+    15,NACLI,25,30
+    15,HIPPOPOTAS,25,30
+    15,SANDSHREW,25,30
+    5,GIBLE,25,30
 #-------------------------------
 [143] # cave
 Cave,5
@@ -360,14 +434,19 @@ FishingRod
 #-------------------------------
 [198] # Scoria City
 Land,21
-    30,WOOPER,15,18
-    20,HELIOPTILE,15,18
-    20,SKORUPI,15,18
-    10,SANDILE,15,18
-    10,LILLIPUP,14,17
-    5,FENNEKIN,15,18
-    5,CHARCADET,15,18
+    25,SCRAGGY,20,25
+    25,DARUMAKA,20,25
+    30,HELIOPTILE,20,25
+    15,CHARCADET,20,25
+    5,FENNEKIN,20,25
+FishingRod
+    50,MAGIKARP,15,25
+    40,KRABBY,20,25
+    10,KINGLER,25,30
 #-------------------------------
 [245] # Scoria Desert Passage
 Cave,5
-    100,GEODUDE,5,8
+    30,ROGGENROLA,20,25
+    30,NACLI,20,25
+    20,SCRAGGY,20,25
+    20,ONIX,20,25

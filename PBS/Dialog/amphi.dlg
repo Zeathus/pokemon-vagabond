@@ -1,0 +1,13 @@
+[PENTAGRAM_START]
+?> Do you want to light an incense to start an invocation?
+    /choice Earth Incense
+      /return 0
+    /choice Water Incense
+      /return 1
+    /choice Air Incense
+      /return 2
+    /choice Fire Incense
+      /return 3
+    /cancelchoice Never mind
+      /return -1
+?/>

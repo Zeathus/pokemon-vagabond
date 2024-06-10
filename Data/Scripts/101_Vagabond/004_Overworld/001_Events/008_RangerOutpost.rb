@@ -11,14 +11,14 @@ def pbRangerClerk(area)
     ret = pbDialog("RANGER_CLERK_REST")
     if ret != -1
       $game_screen.start_tone_change(Tone.new(-255, -255, -255), 20 * Graphics.frame_rate / 20)
-      pbWait(60)
+      pbWait(3.0)
       pbMEPlay("Pkmn healing", 100, 100)
-      pbWait(60)
+      pbWait(3.0)
       $player.heal_party
       pbGetTimeNow.forwardToTime([6, 12, 18, 0][ret])
       PBDayNight.updateTone
       $game_screen.start_tone_change(Tone.new(0, 0, 0), 20 * Graphics.frame_rate / 20)
-      pbWait(60)
+      pbWait(3.0)
       pbDialog("RANGER_CLERK_REST", is_ranger ? 2 : 1)
     else
       pbDialog("RANGER_CLERK_REST", is_ranger ? 4 : 3)

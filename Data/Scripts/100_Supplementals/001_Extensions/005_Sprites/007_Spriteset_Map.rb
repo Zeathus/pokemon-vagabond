@@ -18,6 +18,7 @@ class Spriteset_Map
     initSpawnAreas if Supplementals::OVERWORLD_POKEMON
 
     pbUpdateMarkers
+    pbUpdateSigns
   end
 
   def dispose

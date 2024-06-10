@@ -30,6 +30,11 @@ class Game_Character
   attr_writer   :bob_height
   attr_accessor :always_on_top
   attr_accessor :always_on_bottom
+  attr_reader   :move_time
+  attr_reader   :move_timer
+  attr_reader   :jump_time
+  attr_reader   :jump_timer
+  attr_reader   :jump_peak
 
   def initialize(map = nil)
     @map                       = map

@@ -137,8 +137,8 @@
             > Timburr... Perfect!
             > Timburr already carries a log all the time.\nIt's used to that kind of work.
             /break
-        /choice Ursaring
-            > Ursaring is sure to be strong enough...
+        /choice Granbull
+            > Granbull is sure to be strong enough...
             > But taming that thing? That'd be a pain!
     ?/>
 /end
@@ -155,7 +155,7 @@
 
 [BRECCIA_PENT,2]
 /speaker Pent
-> There should be Timburr near Mt. Pegma.\nThat's east of the Crosswoods if you know it.
+> There should be Timburr living close by the city.
 > I'd be overjoyed if you could catch one for me!
 
 [BRECCIA_PENT,3]
@@ -333,40 +333,20 @@
 /speaker Faunus
 > I look forward to when we can battle again!
 
-[QUEST_AYFAO,0]
-/speaker Girl
-> I heard of cute grass owl Pokémon Gym Leader has.
-> They rare below the city, so I never seen one.
-> Even just a picture would be cute...
-
-[QUEST_AYFAO,1]
-/speaker Girl
-> You have picture of owl?
-> Let me seeeeeee!
-
-[QUEST_AYFAO,2]
-/speaker Girl
-> Owl is so cute! Thank you for showing me!
-> I made these with mom. You can have them as thanks!
-
-[QUEST_AYFAO,3]
-/speaker Girl
-> § <wave>Cute tiny Rowlet, sitting in a treeee~</wave>
-
 [QUEST_FIERY_ROBIN,0]
 /speaker Bird_Keeper
 > I have always been befriending all kinds of bird Pokémon, but there was one I never got my hands on.
-> They say it lives by the mountains east of the Crosswoods. The name is Fletchling.
-> Oh, how I wish for that fiery bird to be in my grasp.
+> They say it lives by the forest north of the Crosswoods. The name is Natu.
+> Oh, how I desire for a Natu to be in my company.
 
 [QUEST_FIERY_ROBIN,1]
 /speaker Bird_Keeper
-> Is that a Fletchling you have!?
-> I would very much like to have a Fletchling.<br>Did you catch it for me?
-/eval $game_variables[1] = pbDeliverPokemon(:FLETCHLING)
+> Is that a Natu you have!?
+> I would very much like to have a Natu.<br>Did you catch it for me?
+/eval $game_variables[1] = pbDeliverPokemon(:NATU)
 /if $game_variables[1]
-    > Thank you so much!<br>I know that Fletchling will be happy with my other birds.
-    > Please accept this as a gift for finding Fletchling for me.
+    > Thank you so much!<br>I know that Natu will be happy with my other birds.
+    > Please accept this as a gift for finding Natu for me.
 /else
     > Oh, I see...
     /return false
@@ -375,8 +355,8 @@
 
 [QUEST_FIERY_ROBIN,2]
 /speaker Bird_Keeper
-> Fletchling is getting along perfectly with my other birds.
-> No other Fletchling could have been better!
+> Natu is getting along perfectly with my other birds.
+> No other Natu could have been better!
 
 [SORROWFUL_ZORUA_MAN,0]
 /speaker Man

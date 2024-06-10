@@ -19,6 +19,7 @@ CATCH_BLOCK         = 60
 MUDAMUDA            = 61
 LETHAL_LOSSES       = 62
 MESPRIT_AID         = 63
+NO_FISHING          = 64
 CANNOT_OPEN_MENUS   = 65
 SPIN_PLAYER         = 66
 MAP_UPDATE          = 67
@@ -76,6 +77,7 @@ HAS_MESPRIT         = 158
 HAS_SECRET_MARKET   = 159
 HAS_STRENGTH        = 160
 FRIENDOFELEMENTS    = 209
+DRAWING_PENTAGRAM   = 210
 
 # ----------------------------------------------------------------------
 # Game Variables
@@ -170,6 +172,11 @@ CHAIN_SPECIES       = 201
 CHAIN_LENGTH        = 202
 CUSTOM_POKEMON      = 203
 CHANGE_BATTLE_INTRO = 204
+PENTAGRAM_PARTS     = 205
+PENTAGRAM_PROGRESS  = 206
+PENTAGRAM_ELEMENT   = 207
+PENTAGRAM_DIRECTION = 208
+PENTAGRAM_INCENSE   = 209
 
 # ----------------------------------------------------------------------
 # Misc.
@@ -182,7 +189,8 @@ MAIN_QUEST_DISPLAY_PRIORITY = [
   :UNKNOWNDESTINATION,
   :OPERATIONPEGMA,
   :NEKANEGONEMISSING,
-  :GUARDIANOFEMOTION
+  :GUARDIANOFEMOTION,
+  :ELIANASFAVOR
 ]
 
 def pbPlayerPseudonym

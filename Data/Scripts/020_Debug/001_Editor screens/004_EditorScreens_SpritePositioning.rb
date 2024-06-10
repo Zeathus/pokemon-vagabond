@@ -55,6 +55,7 @@ class SpritePositioner
     @sprites["battle_bg"].setBitmap(battlebg)
     @sprites["battle_bg"].z = 0
     baseX, baseY = Battle::Scene.pbBattlerPosition(0)
+    baseY += 90
     @sprites["base_0"] = IconSprite.new(baseX, baseY, @viewport)
     @sprites["base_0"].setBitmap(playerbase)
     @sprites["base_0"].x -= @sprites["base_0"].bitmap.width / 2 if @sprites["base_0"].bitmap
@@ -69,6 +70,8 @@ class SpritePositioner
     @sprites["messageBox"] = IconSprite.new(0, Graphics.height - 96, @viewport)
     @sprites["messageBox"].setBitmap("Graphics/UI/Debug/battle_message")
     @sprites["messageBox"].z = 2
+    @sprites["shadow_0"] = IconSprite.new(0, 0, @viewport)
+    @sprites["shadow_0"].z = 3
     @sprites["shadow_1"] = IconSprite.new(0, 0, @viewport)
     @sprites["shadow_1"].z = 3
     @sprites["pokemon_0"] = PokemonSprite.new(@viewport)
@@ -113,6 +116,7 @@ class SpritePositioner
     if !@species
       @sprites["pokemon_0"].visible = false
       @sprites["pokemon_1"].visible = false
+      @sprites["shadow_0"].visible = false
       @sprites["shadow_1"].visible = false
       return
     end
@@ -123,15 +127,14 @@ class SpritePositioner
       @sprites["pokemon_#{i}"].y = pos[1]
       metrics_data.apply_metrics_to_sprite(@sprites["pokemon_#{i}"], i)
       @sprites["pokemon_#{i}"].visible = true
-      next if i != 1
-      @sprites["shadow_1"].x = pos[0]
-      @sprites["shadow_1"].y = pos[1]
-      if @sprites["shadow_1"].bitmap
-        @sprites["shadow_1"].x -= @sprites["shadow_1"].bitmap.width / 2
-        @sprites["shadow_1"].y -= @sprites["shadow_1"].bitmap.height / 2
+      @sprites["shadow_#{i}"].x = pos[0]
+      @sprites["shadow_#{i}"].y = pos[1]
+      if @sprites["shadow_#{i}"].bitmap
+        @sprites["shadow_#{i}"].x -= @sprites["shadow_#{i}"].bitmap.width / 2
+        @sprites["shadow_#{i}"].y -= @sprites["shadow_#{i}"].bitmap.height / 2
       end
-      metrics_data.apply_metrics_to_sprite(@sprites["shadow_1"], i, true)
-      @sprites["shadow_1"].visible = true
+      metrics_data.apply_metrics_to_sprite(@sprites["shadow_#{i}"], i, true)
+      @sprites["shadow_#{i}"].visible = true
     end
   end
 
@@ -161,6 +164,7 @@ class SpritePositioner
     return if !species_data
     @sprites["pokemon_0"].setSpeciesBitmap(@species, 0, @form, false, false, true)
     @sprites["pokemon_1"].setSpeciesBitmap(@species, 0, @form)
+    @sprites["shadow_0"].setBitmap(GameData::Species.shadow_filename(@species, @form, true))
     @sprites["shadow_1"].setBitmap(GameData::Species.shadow_filename(@species, @form))
   end
 

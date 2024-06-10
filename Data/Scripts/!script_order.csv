@@ -443,6 +443,7 @@
 004_InGameTime
 005_OverworldPokemon
 006_Items
+007_Signs
 @@@001_Dialog
 001_Dialog
 002_Talk
@@ -469,6 +470,7 @@
 001_CriticalAnimation
 @@007_Sprites
 001_Sprite_DropShadow
+002_Sprite_Cache
 @@008_UI
 001_HardcodedFont
 002_UI_Help
@@ -506,6 +508,7 @@
 002_PokemonLists
 003_PokemonUtils
 004_FormHandlers
+005_Itembryo
 @@004_Overworld
 001_Traveler
 002_Forecast
@@ -523,6 +526,7 @@
 008_RangerOutpost
 009_Ladder
 010_Quicksand
+011_Pentagram
 @@@002_Puzzles
 001_AmphiWoods
 002_LightMirrors
@@ -564,6 +568,7 @@
 @@009_Graphics
 001_ParticleEffects
 002_Utils
+003_OverworldEffects
 @@098_Debug
 001_DebugMenu
 ---------------------------~blank

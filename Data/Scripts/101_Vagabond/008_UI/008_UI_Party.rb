@@ -17,9 +17,9 @@ class PokeSelectionSelectedSprite < Sprite
     @yvalues.push(122, 122)
     @member=false
     @inactive=false
-    @pbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_select")
-    @ibitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_inactive_select")
-    @mbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/member_select")
+    @pbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_select")
+    @ibitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_inactive_select")
+    @mbitmap=AnimatedBitmap.new("Graphics/UI/Party/member_select")
     self.bitmap=@pbitmap.bitmap
     self.x=@xvalues[index]
     self.y=@yvalues[index]
@@ -98,8 +98,8 @@ class PokeSelectionMenuItemSprite < Sprite
     @otherid=otherid
     @refreshBitmap=true
     @bgsprite=ChangelingSprite.new(0,0,viewport)
-    @bgsprite.addBitmap("deselbitmap","Graphics/Pictures/Party/menu_item")
-    @bgsprite.addBitmap("selbitmap","Graphics/Pictures/Party/menu_item_selected")
+    @bgsprite.addBitmap("deselbitmap","Graphics/UI/Party/menu_item")
+    @bgsprite.addBitmap("selbitmap","Graphics/UI/Party/menu_item_selected")
     if dir > 0
       @bgsprite.mirror=true
     end
@@ -171,6 +171,59 @@ class PokeSelectionMenuItemSprite < Sprite
   end
 end
 
+class PartyPokemonOptionSprite < Sprite
+  attr_reader :selected
+
+  def initialize(text,container,x_offset,y_offset,viewport=nil)
+    super(viewport)
+    @text = text
+    @container = container
+    @container.add_child(@text, self)
+    @refreshBitmap=true
+    @bgsprite=IconSprite.new(0,0,viewport)
+    @bgsprite.setBitmap("Graphics/UI/Party/pokemon_option")
+    @bgsprite.z=self.z
+    @bgsprite.src_rect=Rect.new(0, 0, 192, 48)
+    @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
+    pbSetSystemFont(@overlaysprite.bitmap)
+    textpos=[[text,96,14,2,Color.new(248,248,248),Color.new(40,40,40)]]
+    pbDrawTextPositions(@overlaysprite.bitmap,textpos)
+    @overlaysprite.z=self.z+1 # For compatibility with RGSS2
+    @x_offset=x_offset
+    @y_offset=y_offset
+    self.update
+  end
+
+  def dispose
+    @container.remove_child(@text)
+    @overlaysprite.dispose
+    @bgsprite.dispose
+    super
+  end
+
+  def selected=(value)
+    @selected=value
+    refresh
+  end
+
+  def update
+    super
+    @bgsprite.x=@container.x + @x_offset
+    @bgsprite.y=@container.y + @y_offset
+    @bgsprite.z=@container.z + 1
+    @overlaysprite.x=@container.x + @x_offset
+    @overlaysprite.y=@container.y + @y_offset
+    @overlaysprite.z=@container.z + 2
+    @bgsprite.color=@container.color
+    @overlaysprite.color=@container.color
+  end
+
+  def refresh
+    if @bgsprite && !@bgsprite.disposed?
+      @bgsprite.src_rect=Rect.new(0, @selected ? 48 : 0, 192, 48)
+    end
+  end
+end
 
 class PokeSelectionConfirmCancelSprite < Sprite
   attr_reader :selected
@@ -179,8 +232,8 @@ class PokeSelectionConfirmCancelSprite < Sprite
     super(viewport)
     @refreshBitmap=true
     @bgsprite=ChangelingSprite.new(0,0,viewport)
-    @bgsprite.addBitmap("deselbitmap","Graphics/Pictures/Party/button")
-    @bgsprite.addBitmap("selbitmap","Graphics/Pictures/Party/button_active")
+    @bgsprite.addBitmap("deselbitmap","Graphics/UI/Party/button")
+    @bgsprite.addBitmap("selbitmap","Graphics/UI/Party/button_active")
     @bgsprite.changeBitmap("deselbitmap")
     @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
     @yoffset=8
@@ -246,10 +299,10 @@ class PokeSelectionSwitchSprite < Sprite
     super(viewport)
     @refreshBitmap=true
     @bgsprite=ChangelingSprite.new(0,0,viewport)
-    @bgsprite.addBitmap("deselbitmap","Graphics/Pictures/Party/button")
-    @bgsprite.addBitmap("selbitmap","Graphics/Pictures/Party/button_active")
-    @bgsprite.addBitmap("switchbitmap","Graphics/Pictures/Party/button_switch")
-    @bgsprite.addBitmap("switchselbitmap","Graphics/Pictures/Party/button_switch_active")
+    @bgsprite.addBitmap("deselbitmap","Graphics/UI/Party/button")
+    @bgsprite.addBitmap("selbitmap","Graphics/UI/Party/button_active")
+    @bgsprite.addBitmap("switchbitmap","Graphics/UI/Party/button_switch")
+    @bgsprite.addBitmap("switchselbitmap","Graphics/UI/Party/button_switch_active")
     @bgsprite.changeBitmap("deselbitmap")
     @overlaysprite=BitmapSprite.new(@bgsprite.bitmap.width,@bgsprite.bitmap.height,viewport)
     @yoffset=8
@@ -418,7 +471,7 @@ class PartyMemberSprite < Sprite
     @type=type
     @otherid=otherid
     @other=other
-    @barbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/member")
+    @barbitmap=AnimatedBitmap.new("Graphics/UI/Party/member")
     @charsprite=IconSprite.new(0,0,viewport)
     @stepx=0
     @spritex=(@other ? 712 : 0)
@@ -524,10 +577,10 @@ class PartyMemberChangeSprite < Sprite
     self.z = 30
     @otherid=otherid
     @other=other
-    @bgbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/member_change")
-    @namebitmap=AnimatedBitmap.new("Graphics/Pictures/Party/member_change_name")
+    @bgbitmap=AnimatedBitmap.new("Graphics/UI/Party/member_change")
+    @namebitmap=AnimatedBitmap.new("Graphics/UI/Party/member_change_name")
     @arrow=IconSprite.new(0,0,viewport)
-    @arrow.setBitmap("Graphics/Pictures/downarrow")
+    @arrow.setBitmap("Graphics/UI/down_arrow")
     @arrow.src_rect=Rect.new(0,0,28,40)
     @arrow.z = 32
     @members=[]
@@ -680,9 +733,9 @@ class PokeSelectionSprite < Sprite
     @hasother = hasother
     @other = other
     @otherid = otherid
-    @barbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar")
-    @switchbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_switch")
-    @numberbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_numbers")
+    @barbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar")
+    @switchbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_switch")
+    @numberbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_numbers")
     @spriteXOffset=@other ? 14 : 28
     @spriteYOffset=-18
     @pokenameX=@spriteXOffset + 60
@@ -712,14 +765,14 @@ class PokeSelectionSprite < Sprite
     end
     @yvalues *= 2
     @text=nil
-    @statuses=AnimatedBitmap.new(_INTL("Graphics/Pictures/Party/statuses"))
-    @hpbar=AnimatedBitmap.new("Graphics/Pictures/Party/overlay_hp")
+    @statuses=AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
+    @hpbar=AnimatedBitmap.new("Graphics/UI/Party/overlay_hp")
     @pkmnsprite=PokemonIconSprite.new(pokemon,viewport)
     @pkmnsprite.active=active
     @pkmnsprite.color=self.color
     @itemsprite=ChangelingSprite.new(0,0,viewport)
-    @itemsprite.addBitmap("itembitmap","Graphics/Pictures/Party/icon_item")
-    @itemsprite.addBitmap("mailbitmap","Graphics/Pictures/Party/icon_mail")
+    @itemsprite.addBitmap("itembitmap","Graphics/UI/Party/icon_item")
+    @itemsprite.addBitmap("mailbitmap","Graphics/UI/Party/icon_mail")
     @spriteX=@xvalues[@index]
     @spriteY=@yvalues[@index]
     @refreshBitmap=true
@@ -732,6 +785,10 @@ class PokeSelectionSprite < Sprite
     self.x=@spriteX
     self.y=@spriteY
     refresh
+  end
+
+  def placeholder?
+    return false
   end
 
   def enabled=(value)
@@ -769,7 +826,7 @@ class PokeSelectionSprite < Sprite
 
   def setTeamPos(value)
     @teampos=value
-    #@switchbitmap=AnimatedBitmap.new("Graphics/Pictures/partyBar" + value.to_s + "_switch")
+    #@switchbitmap=AnimatedBitmap.new("Graphics/UI/partyBar" + value.to_s + "_switch")
   end
 
   def selected=(value)
@@ -960,13 +1017,21 @@ class PokeSelectionPlaceholderSprite < Sprite
     @otherid = otherid
     @index = index
     @selected = false
-    @pbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar")
+    @pbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar")
     self.bitmap=@pbitmap.bitmap
     self.x=@xvalues[index]
     self.y=@yvalues[index]
     self.src_rect = Rect.new(@other ? 320 : 0,[64*@otherid, self.bitmap.height - 64].min,320,64)
     self.tone = Tone.new(-100,-100,-100)
     @text=nil
+  end
+
+  def pokemon
+    return nil
+  end
+
+  def placeholder?
+    return true
   end
 
   def enabled=(value)
@@ -1053,8 +1118,8 @@ class InactivePokeSelectionSprite < Sprite
     @hasother = hasother
     @other = other
     @otherid = otherid
-    @barbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_inactive")
-    @switchbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_inactive_switch")
+    @barbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_inactive")
+    @switchbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_inactive_switch")
     @spriteXOffset=0
     @spriteYOffset=-18
     #@levelX=@other ? 274 : 292
@@ -1077,14 +1142,14 @@ class InactivePokeSelectionSprite < Sprite
       @xvalues[i + 6] += (i - 3) * 100 if i >= 3
     end
     @yvalues *= 2
-    @statuses=AnimatedBitmap.new(_INTL("Graphics/Pictures/Party/statuses"))
-    @hpbar=AnimatedBitmap.new("Graphics/Pictures/Party/overlay_hp_inactive")
+    @statuses=AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
+    @hpbar=AnimatedBitmap.new("Graphics/UI/Party/overlay_hp_inactive")
     @pkmnsprite=PokemonIconSprite.new(pokemon,viewport)
     @pkmnsprite.active=active
     @pkmnsprite.color=self.color
     @itemsprite=ChangelingSprite.new(0,0,viewport)
-    @itemsprite.addBitmap("itembitmap","Graphics/Pictures/Party/icon_item")
-    @itemsprite.addBitmap("mailbitmap","Graphics/Pictures/Party/icon_mail")
+    @itemsprite.addBitmap("itembitmap","Graphics/UI/Party/icon_item")
+    @itemsprite.addBitmap("mailbitmap","Graphics/UI/Party/icon_mail")
     @spriteX=@xvalues[@index]
     @spriteY=@yvalues[@index]
     @refreshBitmap=true
@@ -1097,6 +1162,10 @@ class InactivePokeSelectionSprite < Sprite
     self.x=@spriteX
     self.y=@spriteY
     refresh
+  end
+
+  def placeholder?
+    return false
   end
 
   def enabled=(value)
@@ -1133,7 +1202,7 @@ class InactivePokeSelectionSprite < Sprite
 
   def setTeamPos(value)
     @teampos=value
-    #@switchbitmap=AnimatedBitmap.new("Graphics/Pictures/partyBar" + value.to_s + "_switch")
+    #@switchbitmap=AnimatedBitmap.new("Graphics/UI/partyBar" + value.to_s + "_switch")
   end
 
   def selected=(value)
@@ -1301,7 +1370,7 @@ class InactivePokeSelectionPlaceholderSprite < Sprite
     @otherid = otherid
     @index = index
     @selected = false
-    @pbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/bar_inactive")
+    @pbitmap=AnimatedBitmap.new("Graphics/UI/Party/bar_inactive")
     self.bitmap=@pbitmap.bitmap
     self.x=@xvalues[index]
     self.y=@yvalues[index]
@@ -1309,6 +1378,14 @@ class InactivePokeSelectionPlaceholderSprite < Sprite
     self.tone = Tone.new(-100,-100,-100)
     @text=nil
     self.update
+  end
+
+  def placeholder?
+    return true
+  end
+
+  def pokemon
+    return nil
   end
 
   def enabled=(value)
@@ -1393,7 +1470,7 @@ class LevelUpSprite < Sprite
       @max_level = 0
     end
     @summary = summary
-    @pbitmap = AnimatedBitmap.new("Graphics/Pictures/Party/summary_minihud")
+    @pbitmap = AnimatedBitmap.new("Graphics/UI/Party/summary_minihud")
     self.bitmap = @pbitmap.bitmap
     @overlay=Sprite.new(viewport)
     @overlay.bitmap=Bitmap.new(@pbitmap.bitmap.width, @pbitmap.bitmap.height)
@@ -1449,10 +1526,10 @@ class LevelUpSprite < Sprite
     if arrow
       imagepos = []
       if @new_level > @pokemon.level
-        imagepos.push(["Graphics/Pictures/Party/arrow",268,36,0,16,24,16])
+        imagepos.push(["Graphics/UI/Party/arrow",268,36,0,16,24,16])
       end
       if @new_level < @max_level
-        imagepos.push(["Graphics/Pictures/Party/arrow",268,0,0,0,24,16])
+        imagepos.push(["Graphics/UI/Party/arrow",268,0,0,0,24,16])
       end
       pbDrawImagePositions(@arrowoverlay.bitmap, imagepos)
     end
@@ -1469,18 +1546,21 @@ end
 class QuickSummarySprite < Sprite
   def initialize(pokemon,viewport=nil)
     super(viewport)
+    @children={}
     @enabled=true
     @pokemon=pokemon
-    @pbitmap=AnimatedBitmap.new("Graphics/Pictures/Party/summary")
+    @species=pokemon.nil? ? nil : pokemon.species
+    @pbitmap=AnimatedBitmap.new("Graphics/UI/Party/summary")
     self.bitmap=@pbitmap.bitmap
     @overlay=Sprite.new(viewport)
     @overlay.bitmap=Bitmap.new(@pbitmap.bitmap.width, @pbitmap.bitmap.height)
     @overlay.z = self.z + 1
     @icon = AutoMosaicPokemonSprite.new(viewport)
     @icon.z = self.z + 1
-    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/UI/types"))
+    @statuses=AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
     self.x=Graphics.width / 2 - @pbitmap.bitmap.width / 2
-    self.y=Graphics.height - @pbitmap.bitmap.height
+    self.y=Graphics.height - 264
     self.update
     if @pokemon
       @icon.setPokemonBitmap(@pokemon)
@@ -1489,12 +1569,14 @@ class QuickSummarySprite < Sprite
   end
 
   def pokemon=(value)
-    if @pokemon != value
+    if @pokemon != value || (value && value.species != @species)
       if !value
         @pokemon = nil
+        @species = nil
         self.refresh
       else
         @pokemon = value
+        @species = value.species
         @icon.setPokemonBitmap(@pokemon)
         #@icon.mosaic = Graphics.frame_rate/4
         self.refresh
@@ -1511,7 +1593,7 @@ class QuickSummarySprite < Sprite
     @overlay.y = self.y
     @overlay.update
     @icon.x = Graphics.width / 2 + 8
-    @icon.y = self.y + 134
+    @icon.y = self.y + 140
     @icon.update
     super
   end
@@ -1523,12 +1605,17 @@ class QuickSummarySprite < Sprite
   end
 
   def refresh
+    if @pokemon && @pokemon.species != @species
+      self.pokemon = @pokemon
+    end
     @overlay.bitmap.clear
     if @pokemon
       base=Color.new(64,64,64)
       shadow=Color.new(176,176,176)
       base2=Color.new(248,248,248)
       shadow2=Color.new(104,104,104)
+
+      # Draw types
       typerect=Rect.new(0,GameData::Type.get(@pokemon.types[0]).icon_position*28,64,28)
       affinityrect=Rect.new(0,GameData::Type.get(@pokemon.affinities[0]).icon_position*28,64,28)
       if @pokemon.types.length == 1
@@ -1545,6 +1632,22 @@ class QuickSummarySprite < Sprite
         @overlay.bitmap.blt(478-34,40+58,@typebitmap.bitmap,affinityrect)
         @overlay.bitmap.blt(478+34,40+58,@typebitmap.bitmap,affinity2rect)
       end
+
+      # Draw name
+      textpos = [
+        [@pokemon.name, 318, 22, 2, base2, shadow2]
+      ]
+      pbSetSystemFont(@overlay.bitmap)
+      pbDrawTextPositions(@overlay.bitmap, textpos)
+
+      # Draw level
+      textpos = [
+        [_INTL("Lv.{1}", @pokemon.level), 406, 54, 1, base2, shadow2]
+      ]
+      pbSetSmallestFont(@overlay.bitmap)
+      pbDrawTextPositions(@overlay.bitmap, textpos)
+
+      # Draw Item and Ability
       textpos = []
       imagepos = []
       if @pokemon.hasItem?
@@ -1555,6 +1658,29 @@ class QuickSummarySprite < Sprite
       abilityname = GameData::Ability.get(@pokemon.ability).name
       textpos.push([abilityname,478+32,46+58*3,2,base2,shadow2])
 
+      # Draw HP
+      hpzone=0
+      hpzone=1 if @pokemon.hp<=(@pokemon.totalhp/2).floor
+      hpzone=2 if @pokemon.hp<=(@pokemon.totalhp/4).floor
+      hpcolors=[
+         Color.new(14,152,22),Color.new(24,192,32),   # Green
+         Color.new(202,138,0),Color.new(232,168,0),   # Orange
+         Color.new(218,42,36),Color.new(248,72,56)    # Red
+      ]
+      bar_len = 142
+      for i in 0...4
+        color_index = [0,1,1,0][i]
+        @overlay.bitmap.fill_rect(258, 238+i*2, (@pokemon.hp*1.0*bar_len/@pokemon.totalhp/2).ceil*2, 2, hpcolors[hpzone*2 + color_index])
+      end
+
+      # Draw Status
+      if @pokemon.hp==0 || @pokemon.status != :NONE
+        status=(@pokemon.hp==0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position)
+        statusrect=Rect.new(0, 32*status, 32, 32)
+        @overlay.bitmap.blt(224, 226, @statuses.bitmap, statusrect)
+      end
+
+      # Draw Moves
       xPos=16
       yPos=52
       for i in 0...4
@@ -1562,12 +1688,9 @@ class QuickSummarySprite < Sprite
         if moveobject
           movedata=GameData::Move.get(moveobject.id)
           if moveobject.id!=0
-            imagepos.push(["Graphics/Pictures/Party/move_slot",xPos,yPos,0,
+            imagepos.push(["Graphics/UI/Party/move_slot",xPos,yPos,0,
                 GameData::Type.get(moveobject.type).icon_position*46,192,46])
-            textpos.push([movedata.name,xPos+110,yPos+16,2,
-                Color.new(64,64,64),Color.new(176,176,176)])
-            #textpos.push([movedata.name,xPos+44,yPos+16,0,
-            #    Color.new(64,64,64),Color.new(176,176,176)])
+            textpos.push([movedata.name,xPos+110,yPos+16,2,base,shadow])
           end
         end
         yPos+=44
@@ -1578,10 +1701,21 @@ class QuickSummarySprite < Sprite
     end
   end
 
+  def add_child(key, value)
+    @children[key] = value
+  end
+
+  def remove_child(key)
+    @children.delete(key)
+  end
+
   def color=(value)
     @overlay.color = value
     @icon.color = value
     super(value)
+    @children.each do |key, value|
+      value.update
+    end
   end
 
   def dispose
@@ -1589,6 +1723,7 @@ class QuickSummarySprite < Sprite
     @overlay.dispose
     @pbitmap.dispose
     @typebitmap.dispose
+    @statuses.dispose
     super
   end
 end
@@ -1919,6 +2054,23 @@ class PokemonScreen_Scene
   end
 
   def pbPokemonMenuStart(index, cmds)
+    @menuindex=0
+    x = 36
+    y = 262
+    for i in 0...cmds.length
+      @sprites[_INTL("button{1}",i)] = PartyPokemonOptionSprite.new(
+        cmds[i], @sprites["summary"], x, y, @viewport
+      )
+      if i % 2 == 0
+        y += 48
+      else
+        x += 176
+        y -= 48
+      end
+    end
+    @sprites["selected"].visible = false
+    pbToggleAll(false, false, true)
+    return
     otherid = index < 6 ? @tid : @ptid
     other = @ptid >= 0
     if index < 3 || (index >= 6 && index < 9)
@@ -1954,6 +2106,14 @@ class PokemonScreen_Scene
   end
 
   def pbPokemonMenuEnd(index, cmds)
+    pbToggleAll(true, false, true)
+    @sprites["selected"].visible = true
+    for i in 0...cmds.length
+      @sprites[_INTL("button{1}",i)]&.dispose
+      @sprites.delete(_INTL("button{1}",i))
+    end
+    @menuindex=0
+    return
     return if !@sprites.key?("button0")
     index-=9 if index >= 9
     index-=3 if index >= 6
@@ -1977,8 +2137,7 @@ class PokemonScreen_Scene
 
   def pbPokemonMenu(index, cmds)
     menuitems = cmds.length
-    @sprites[_INTL("button{1}",@menuindex)].selected = true
-    @sprites[_INTL("button{1}",@menuindex)].refresh
+    @sprites[_INTL("button{1}", @menuindex)].selected = true
     Graphics.update
     Input.update
 
@@ -1987,6 +2146,8 @@ class PokemonScreen_Scene
       key=-1
       key=Input::DOWN if Input.repeat?(Input::DOWN)
       key=Input::UP if Input.repeat?(Input::UP)
+      key=Input::LEFT if Input.repeat?(Input::LEFT)
+      key=Input::RIGHT if Input.repeat?(Input::RIGHT)
 
       if key == Input::DOWN
         @menuindex += 1
@@ -1996,16 +2157,27 @@ class PokemonScreen_Scene
         @menuindex -= 1
         @menuindex = menuitems - 1 if @menuindex < 0
         update = true
+      elsif key == Input::RIGHT
+        @menuindex += 2
+        @menuindex = @menuindex % 2 == 0 ? 0 : 1 if @menuindex >= menuitems
+        update = true
+      elsif key == Input::LEFT
+        @menuindex -= 2
+        @menuindex = menuitems - (@menuindex % 2 == 0 ? 2 : 1) if @menuindex < 0
+        update = true
       end
 
       if Input.trigger?(Input::USE)
+        pbPlayDecisionSE()
         return @menuindex
       end
       if Input.trigger?(Input::BACK)
+        pbSEPlay("GUI storage hide party panel")
         return -1
       end
 
       if update
+        pbPlayCursorSE()
         for i in 0...menuitems
           @sprites[_INTL("button{1}",i)].selected=(@menuindex==i ? true : false)
           @sprites[_INTL("button{1}",i)].refresh
@@ -2163,6 +2335,39 @@ class PokemonScreen_Scene
     end
   end
 
+  def pbSoftRefresh(pkmnid = nil)
+    for i in 0...3
+      if !@sprites["pokemon#{i}"].placeholder?
+        @sprites["pokemon#{i}"].pokemon = @party[i]
+      end
+    end
+    for i in 3...6
+      if !@sprites["pokemon#{i}"].placeholder?
+        @sprites["pokemon#{i}"].pokemon = @inactive_party[i - 3]
+      end
+    end
+    for i in 6...9
+      if !@sprites["pokemon#{i}"].placeholder?
+        @sprites["pokemon#{i}"].pokemon = @pparty[i - 6]
+      end
+    end
+    for i in 9...12
+      if !@sprites["pokemon#{i}"].placeholder?
+        @sprites["pokemon#{i}"].pokemon = @inactive_pparty[i - 9]
+      end
+    end
+    if pkmnid
+      @activecmd = pkmnid
+      @prevcmd = pkmnid
+      numsprites=12
+      for i in 0...numsprites
+        @sprites["pokemon#{i}"].selected=(i==@activecmd)
+      end
+      @sprites["selected"].setIndex(@activecmd)
+      @sprites["summary"].pokemon = @sprites["pokemon#{pkmnid}"].pokemon
+    end
+  end
+
   def pbHardRefresh(hide=-1)
     oldtext=[]
     lastselected=-1
@@ -2316,7 +2521,11 @@ class PokemonScreen_Scene
       end
       if Input.trigger?(Input::USE)
         if @activecmd < 12
-          pbPlayDecisionSE()
+          if switching
+            pbPlayDecisionSE()
+          else
+            pbSEPlay("GUI storage show party panel")
+          end
           return @activecmd
         else
           if inbattle
@@ -2336,9 +2545,16 @@ class PokemonScreen_Scene
             if cmd == 1 && @ptid >= 0
               @changecmd = @activecmd == 12 ? 0 : 6
             elsif cmd == 0
+              pbSEPlay("GUI storage show party panel")
               pbPartyMemberChange(@activecmd)
             end
           end
+        end
+      end
+      if Input.trigger?(Input::ACTION) && !inbattle
+        if @activecmd < 12
+          pbPlayDecisionSE()
+          return @activecmd
         end
       end
     end
@@ -2352,7 +2568,7 @@ class PokemonScreen_Scene
     while @sprites["pokemon0"].animating
       if memchange
         @sprites["memchange"].y += 16
-        if @sprites["summary"].y > Graphics.height - @sprites["summary"].bitmap.height
+        if @sprites["summary"].y > Graphics.height - 264
           @sprites["summary"].y -= 24
         end
       end
@@ -2370,7 +2586,7 @@ class PokemonScreen_Scene
     while @sprites["pokemon6"].animating
       if memchange
         @sprites["memchange"].y += 16
-        if @sprites["summary"].y > Graphics.height - @sprites["summary"].bitmap.height
+        if @sprites["summary"].y > Graphics.height - 264
           @sprites["summary"].y -= 24
         end
       end
@@ -2380,7 +2596,7 @@ class PokemonScreen_Scene
     end
   end
 
-  def pbToggleAll(enabled, memchange=false)
+  def pbToggleAll(enabled, memchange=false, summary=false)
     @sprites["member1"].enabled = enabled
     @sprites["member2"].enabled = enabled
     for i in 0...6
@@ -2392,8 +2608,24 @@ class PokemonScreen_Scene
     while @sprites["pokemon0"].animating || @sprites["pokemon6"].animating
       if memchange
         @sprites["memchange"].y += 16
-        if @sprites["summary"].y > Graphics.height - @sprites["summary"].bitmap.height
+        if @sprites["summary"].y > Graphics.height - 264
           @sprites["summary"].y -= 24
+        end
+      elsif summary
+        if enabled
+          if @sprites["summary"].y < Graphics.height - 264
+            @sprites["summary"].y += 24
+            if @sprites["summary"].y > Graphics.height - 264
+              @sprites["summary"].y = Graphics.height - 264
+            end
+          end
+        else
+          if @sprites["summary"].y > Graphics.height - @sprites["summary"].bitmap.height
+            @sprites["summary"].y -= 24
+            if @sprites["summary"].y < Graphics.height - @sprites["summary"].bitmap.height
+              @sprites["summary"].y = Graphics.height - @sprites["summary"].bitmap.height
+            end
+          end
         end
       end
       pbUpdateSpriteHash(@sprites)
@@ -2413,7 +2645,7 @@ class PokemonScreen_Scene
 
     @sprites["memchange"].cursor_visible=false
     @sprites["memchange"].y = Graphics.height
-    @sprites["summary"].y = Graphics.height - @sprites["summary"].bitmap.height
+    @sprites["summary"].y = Graphics.height - 264
     14.times do
       @sprites["memchange"].y -= 16
       @sprites["summary"].y += 24
@@ -2426,12 +2658,15 @@ class PokemonScreen_Scene
     choice = -1
     loop do
       if Input.repeat?(Input::RIGHT)
+        pbPlayCursorSE()
         @sprites["memchange"].right
       end
       if Input.repeat?(Input::LEFT)
+        pbPlayCursorSE()
         @sprites["memchange"].left
       end
       if Input.trigger?(Input::USE)
+        pbSEPlay("GUI naming tab swap start")
         choice = @sprites["memchange"].selected
         member = @sprites["memchange"].member
         if left && PBParty.secondOnly(member)
@@ -2446,6 +2681,7 @@ class PokemonScreen_Scene
           break
         end
       elsif Input.trigger?(Input::BACK)
+        pbSEPlay("GUI storage hide party panel")
         break
       end
       Graphics.update
@@ -2745,7 +2981,7 @@ class PokemonScreen_Scene
     end
   end
 
-  def pbSummary(pkmnid,both=true,inbattle=false)
+  def pbSummary(pkmnid,both=true,inbattle=false,moves=false)
     oldsprites=pbFadeOutAndHide(@sprites)
     scene=PokemonSummaryScene.new(inbattle)
     screen=PokemonSummary.new(scene)
@@ -2793,7 +3029,21 @@ class PokemonScreen_Scene
       end
       pkmnid = pkmnid % 3
     end
-    screen.pbStartScreen(party,pkmnid)
+    pkmn = party[screen.pbStartScreen(party,pkmnid,moves ? :NONE : nil)]
+    new_index = pkmnid
+    for i in 0...12
+      if @sprites["pokemon#{i}"] && @sprites["pokemon#{i}"].pokemon == pkmn
+        new_index = i
+        break
+      end
+    end
+    @activecmd = new_index
+    @prevcmd = new_index
+    numsprites=12
+    for i in 0...numsprites
+      @sprites["pokemon#{i}"].selected=(i==@activecmd)
+    end
+    @sprites["selected"].setIndex(@activecmd)
     @sprites["summary"].pokemon = nil
     pbUpdateQuickSummary
     pbFadeInAndShow(@sprites,oldsprites)
@@ -2934,6 +3184,10 @@ class PokemonScreen
     @scene.pbHardRefresh
   end
 
+  def pbSoftRefresh
+    @scene.pbSoftRefresh
+  end
+
   def pbRefresh
     @scene.pbRefresh
   end
@@ -2954,8 +3208,9 @@ class PokemonScreen
     return @scene.pbDisplayConfirm(text)
   end
 
-  def pbSwitch(oldid,newid)
+  def pbSwitch(oldid,newid,instant=false)
     if oldid != newid
+      pbSEPlay("GUI party switch")
       if [3,4,5,9,10,11].include?(oldid) || [3,4,5,9,10,11].include?(newid)
         if oldid > 5 && newid > 5
           tmpA = oldid < 9 ? @pparty[oldid % 3] : @inactive_pparty[oldid % 3]
@@ -2964,7 +3219,7 @@ class PokemonScreen
           (newid < 9 ? @pparty : @inactive_pparty)[newid % 3] = tmpA
           @pparty.compact!
           @inactive_pparty.compact!
-          @scene.pbHardRefresh
+          @scene.pbHardRefresh if !instant
           @scene.pbUpdateQuickSummary
         elsif oldid <= 5 && newid <= 5
           tmpA = oldid < 3 ? @party[oldid % 3] : @inactive_party[oldid % 3]
@@ -2973,28 +3228,31 @@ class PokemonScreen
           (newid < 3 ? @party : @inactive_party)[newid % 3] = tmpA
           @party.compact!
           @inactive_party.compact!
-          @scene.pbHardRefresh
+          @scene.pbHardRefresh if !instant
           @scene.pbUpdateQuickSummary
         else
           pbDisplay("You can't swap Pokemon between characters.")
         end
       elsif oldid > 5 && newid > 5
-        @scene.pbSwitchBegin(oldid,newid)
+        @scene.pbSwitchBegin(oldid,newid) if !instant
         tmp=@pparty[oldid % 6]
         @pparty[oldid % 6]=@pparty[newid % 6]
         @pparty[newid % 6]=tmp
-        @scene.pbSwitchEnd(oldid,newid)
+        @scene.pbSwitchEnd(oldid,newid) if !instant
         @scene.pbUpdateQuickSummary
       elsif oldid <= 5 && newid <= 5
-        @scene.pbSwitchBegin(oldid,newid)
+        @scene.pbSwitchBegin(oldid,newid) if !instant
         tmp=@party[oldid]
         @party[oldid]=@party[newid]
         @party[newid]=tmp
-        @scene.pbSwitchEnd(oldid,newid)
+        @scene.pbSwitchEnd(oldid,newid) if !instant
         @scene.pbUpdateQuickSummary
       else
         pbDisplay("You can't swap Pokemon between characters.")
         return
+      end
+      if instant
+        @scene.pbSoftRefresh(newid)
       end
     end
   end
@@ -3416,6 +3674,14 @@ class PokemonScreen
     loop do
       @scene.pbSetHelpText(@party.length>1 ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
       pkmnid=@scene.pbChoosePokemon
+      if Input.trigger?(Input::ACTION) && pkmnid < 12
+        oldpkmnid=pkmnid
+        pkmnid=@scene.pbChoosePokemon(true)
+        if pkmnid>=0 && pkmnid<=11 && pkmnid!=oldpkmnid
+          pbSwitch(oldpkmnid,pkmnid)
+        end
+        next
+      end
       @party = @scene.party
       @inactive_party = @scene.inactive_party
       @pparty = @scene.pparty
@@ -3465,21 +3731,69 @@ class PokemonScreen
             movecmds.push(move.id)
           end
         end
-        cmds = ["Summary", "Item", "Switch"]
-        cmds.push("Level Up") if $game_variables[BADGE_COUNT] > 0
+        cmds = ["Stats", "Moves", "Use Item", "Held Item", "To Lead"]
+        cmds.push($game_variables[BADGE_COUNT] > 0 ? "Level Up" : "???")
         switch=false
         @scene.pbPokemonMenuStart(pkmnid, cmds)
         loop do
           cmd = @scene.pbPokemonMenu(pkmnid, cmds)
           if cmd < 0
             break
-          elsif cmds[cmd]=="Summary"
+          elsif cmds[cmd]=="Stats"
             @scene.pbSummary(pkmnid)
-          elsif cmds[cmd]=="Restore"
-
+          elsif cmds[cmd]=="Moves"
+            @scene.pbSummary(pkmnid, true, false, true)
+          elsif cmds[cmd]=="To Lead"
+            newpkmnid = pkmnid < 6 ? 0 : 6
+            pbSwitch(pkmnid, newpkmnid, true)
+            @scene.refresh_summary
+            break
           elsif cmds[cmd]=="Switch"
             switch=true
             break
+          elsif cmds[cmd]=="Use Item"
+            item = @scene.pbUseItem($bag,pkmn) {
+              @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
+            }
+            if item
+              pbUseItemOnPokemon(item,pkmn,self)
+              pbRefreshSingle(pkmnid)
+            end
+            @scene.refresh_summary
+          elsif cmds[cmd]=="Held Item"
+            if pkmn.hasItem?
+              itemcommands = []
+              cmdGiveItem     = -1
+              cmdTakeItem     = -1
+              # Build the commands
+              itemcommands[cmdGiveItem=itemcommands.length]     = _INTL("Give")
+              itemcommands[cmdTakeItem=itemcommands.length]     = _INTL("Take") if pkmn.hasItem?
+              itemcommands[itemcommands.length]                 = _INTL("Cancel")
+              command=@scene.pbShowCommands(_INTL("Do what with an item?"),itemcommands)
+              if cmdGiveItem>=0 && command==cmdGiveItem   # Give
+                item = @scene.pbChooseItem($bag) {
+                  @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
+                }
+                if item
+                  if pbGiveItemToPokemon(item,pkmn,self,pkmnid)
+                    pbRefreshSingle(pkmnid)
+                  end
+                end
+              elsif cmdTakeItem>=0 && command==cmdTakeItem   # Take
+                pbTakeMail(pkmn)
+                pbRefreshSingle(pkmnid)
+              end
+            else
+              item = @scene.pbChooseItem($bag) {
+                @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
+              }
+              if item
+                if pbGiveItemToPokemon(item,pkmn,self,pkmnid)
+                  pbRefreshSingle(pkmnid)
+                end
+              end
+            end
+            @scene.refresh_summary
           elsif cmds[cmd]=="Item"
             if pkmn.hp >= pkmn.totalhp &&
               pkmn.status == 0

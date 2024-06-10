@@ -1101,6 +1101,7 @@ class Interpreter
       if Settings::HEAL_STORED_POKEMON   # No need to heal stored Pokémon
         $player.heal_party
       else
+        $player.heal_party
         pbEachPokemon { |pkmn, box| pkmn.heal }   # Includes party Pokémon
       end
     end

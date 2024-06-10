@@ -102,7 +102,7 @@ def pbHiddenMoveAnimation(pokemon)
     case phase
     when 1   # Expand viewport height from zero to full
       viewport.rect.y = lerp(Graphics.height / 2, (Graphics.height - bg.bitmap.height) / 2,
-                             0.25, timer_start, System.uptime)
+                             0.2, timer_start, System.uptime)
       viewport.rect.height = Graphics.height - (viewport.rect.y * 2)
       bg.oy = (bg.bitmap.height - viewport.rect.height) / 2
       if viewport.rect.y == (Graphics.height - bg.bitmap.height) / 2
@@ -112,20 +112,20 @@ def pbHiddenMoveAnimation(pokemon)
       end
     when 2   # Slide Pokémon sprite in from right to centre
       sprite.x = lerp(Graphics.width + (sprite.bitmap.width / 2), Graphics.width / 2,
-                      0.4, timer_start, System.uptime)
+                      0.2, timer_start, System.uptime)
       if sprite.x == Graphics.width / 2
         phase = 3
         pokemon.play_cry
         timer_start = System.uptime
       end
     when 3   # Wait
-      if System.uptime - timer_start >= 0.75
+      if System.uptime - timer_start >= 1.0
         phase = 4
         timer_start = System.uptime
       end
     when 4   # Slide Pokémon sprite off from centre to left
       sprite.x = lerp(Graphics.width / 2, -(sprite.bitmap.width / 2),
-                      0.4, timer_start, System.uptime)
+                      0.2, timer_start, System.uptime)
       if sprite.x == -(sprite.bitmap.width / 2)
         phase = 5
         sprite.visible = false
@@ -133,7 +133,7 @@ def pbHiddenMoveAnimation(pokemon)
       end
     when 5   # Shrink viewport height from full to zero
       viewport.rect.y = lerp((Graphics.height - bg.bitmap.height) / 2, Graphics.height / 2,
-                             0.25, timer_start, System.uptime)
+                             0.2, timer_start, System.uptime)
       viewport.rect.height = Graphics.height - (viewport.rect.y * 2)
       bg.oy = (bg.bitmap.height - viewport.rect.height) / 2
       phase = 6 if viewport.rect.y == Graphics.height / 2
@@ -496,13 +496,12 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
     speed -= 1
   end
   pbSEPlay("Flash")
-  $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 10 * Graphics.frame_rate / 20)
-  10.times do
+  $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 10.0 * Graphics.frame_rate / 20.0)
+  13.times do
     $game_player.direction = directions[dir]
     dir = (dir - 1) % 4
     pbWait(speed / 60.0)
   end
-  pbWait(20)
   $game_temp.player_new_map_id    = $game_temp.fly_destination[0]
   $game_temp.player_new_x         = $game_temp.fly_destination[1]
   $game_temp.player_new_y         = $game_temp.fly_destination[2]
@@ -514,7 +513,7 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
   $game_player.always_on_top = false
   yield if block_given?
   pbWait(0.25)
-  $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10 * Graphics.frame_rate / 20)
+  $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10.0 * Graphics.frame_rate / 30.0)
   pbWait(0.5)
   pbEraseEscapePoint
   $game_temp.fly_destination = nil
@@ -772,7 +771,7 @@ def pbEndSurf(_xOffset, _yOffset)
     end
     # Make sure terrain is walkable
     target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
-    if !target_terrain.can_surf && !target_terrain.water_edge && $game_player.passable?(target_tile[0], target_tile[1], $game_player.direction)
+    if !target_terrain.can_surf && !target_terrain.water_edge && $game_map.passable?(target_tile[0], target_tile[1], $game_player.direction)
       $game_player.direction_fix = true
       $game_temp.surf_base_coords = [$game_player.x, $game_player.y]
       success = false
@@ -790,6 +789,7 @@ def pbEndSurf(_xOffset, _yOffset)
         $game_player.increase_steps
         result = $game_player.check_event_trigger_here([1, 2])
         pbOnStepTaken(result)
+        $game_player.sprite.snapPartner(false)
       end
       $game_temp.surf_base_coords = nil
       $game_player.direction_fix = false

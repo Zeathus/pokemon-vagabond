@@ -41,12 +41,13 @@ class BossEff_Message < BossEffect
 end
 
 class BossEff_Dialog < BossEffect
-  def initialize(trigger, dialog)
+  def initialize(trigger, dialog, index=0)
     super(trigger)
     @dialog = dialog
+    @index = index
   end
   def activate(battle, triggerer, target)
-    pbDialog(@dialog)
+    pbDialog(@dialog, @index)
   end
 end
 

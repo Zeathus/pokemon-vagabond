@@ -27,7 +27,7 @@ class StadiumTransition
     @sprites = {}
 
     @sprites["bg"] = AnimatedPlane.new(@viewport)
-    @sprites["bg"].setBitmap("Graphics/Pictures/Stadium/bg")
+    @sprites["bg"].setBitmap("Graphics/UI/Stadium/bg")
     @sprites["bg"].z = 1
     @sprites["bg"].opacity = 0
     @sprites["bg"].update
@@ -38,13 +38,13 @@ class StadiumTransition
     ycoords = @rows.length == 1 ? [305,347,195] : [250,292,140,334]
 
     @sprites["title"] = IconSprite.new(0,0,@viewport)
-    @sprites["title"].setBitmap("Graphics/Pictures/Stadium/title")
+    @sprites["title"].setBitmap("Graphics/UI/Stadium/title")
     @sprites["title"].z = 2
     @sprites["title"].x = xcoords[4]
     @sprites["title"].y = ycoords[0]
 
     @sprites["subtitle"] = IconSprite.new(0,0,@viewport)
-    @sprites["subtitle"].setBitmap("Graphics/Pictures/Stadium/subtitle")
+    @sprites["subtitle"].setBitmap("Graphics/UI/Stadium/subtitle")
     @sprites["subtitle"].z = 2
     @sprites["subtitle"].x = xcoords[4]
     @sprites["subtitle"].y = ycoords[1]
@@ -67,14 +67,14 @@ class StadiumTransition
     end
 
     @sprites["row1"] = IconSprite.new(0,0,@viewport)
-    @sprites["row1"].setBitmap(_INTL("Graphics/Pictures/Stadium/bar{1}",@rows[0]))
+    @sprites["row1"].setBitmap(_INTL("Graphics/UI/Stadium/bar{1}",@rows[0]))
     @sprites["row1"].z = 2
     @sprites["row1"].x = xcoords[@rows[0]]
     @sprites["row1"].y = ycoords[2]
 
     if @rows.length == 2
       @sprites["row2"] = IconSprite.new(0,0,@viewport)
-      @sprites["row2"].setBitmap(_INTL("Graphics/Pictures/Stadium/bar{1}",@rows[1]))
+      @sprites["row2"].setBitmap(_INTL("Graphics/UI/Stadium/bar{1}",@rows[1]))
       @sprites["row2"].z = 2
       @sprites["row2"].x = xcoords[@rows[1]]
       @sprites["row2"].y = ycoords[3]
@@ -83,9 +83,9 @@ class StadiumTransition
     for i in 0...@trainertypes.length
       @sprites[_INTL("lock{1}",i)] = IconSprite.new(0,0,@viewport)
       if @opponent
-        @sprites[_INTL("lock{1}",i)].setBitmap("Graphics/Pictures/Stadium/locked")
+        @sprites[_INTL("lock{1}",i)].setBitmap("Graphics/UI/Stadium/locked")
       else
-        @sprites[_INTL("lock{1}",i)].setBitmap("Graphics/Pictures/Stadium/defeat")
+        @sprites[_INTL("lock{1}",i)].setBitmap("Graphics/UI/Stadium/defeat")
       end
       @sprites[_INTL("lock{1}",i)].z = 5
       @sprites[_INTL("lock{1}",i)].x = (i >= @rows[0]) ? ((i-@rows[0]) * 104) : (i * 104)
@@ -109,7 +109,7 @@ class StadiumTransition
           @sprites[_INTL("lock{1}",i)].src_rect = Rect.new(0,0,94,94)
           if i == @index
             @sprites["select"] = IconSprite.new(sprite.x,sprite.y,@viewport)
-            @sprites["select"].setBitmap("Graphics/Pictures/Stadium/marker")
+            @sprites["select"].setBitmap("Graphics/UI/Stadium/marker")
             @sprites["select"].z = 4
           else
             sprite.tone = Tone.new(-60,-60,-60,140)
@@ -162,7 +162,7 @@ class StadiumTransition
       party = trainer.party
 
       @sprites["player"] = IconSprite.new(44+128,44+96,@viewport)
-      @sprites["player"].setBitmap("Graphics/Pictures/Stadium/team_player")
+      @sprites["player"].setBitmap("Graphics/UI/Stadium/team_player")
       @sprites["player"].z = 2
 
       player_type = PBParty.getTrainerType(getPartyActive(0))
@@ -177,7 +177,7 @@ class StadiumTransition
       @sprites["player_img"].src_rect.y -= offset[1]
 
       @sprites["opponent"] = IconSprite.new(44+128,196+96,@viewport)
-      @sprites["opponent"].setBitmap("Graphics/Pictures/Stadium/team_opponent")
+      @sprites["opponent"].setBitmap("Graphics/UI/Stadium/team_opponent")
       @sprites["opponent"].z = 2
 
       @sprites["opponent_img"] = IconSprite.new(358+128,246+96,@viewport)
@@ -191,7 +191,7 @@ class StadiumTransition
       @sprites["opponent_img"].src_rect.y -= offset[1]
 
       @sprites["vs"] = IconSprite.new(206+128,160+96,@viewport)
-      @sprites["vs"].setBitmap("Graphics/Pictures/Stadium/stadium_vs")
+      @sprites["vs"].setBitmap("Graphics/UI/Stadium/stadium_vs")
       @sprites["vs"].z = 6
       @sprites["vs"].opacity = 0
 
@@ -229,7 +229,7 @@ class StadiumTransition
       for i in 0...6
         # Player party
         @sprites[_INTL("plock{1}",i)] = IconSprite.new(358,246,@viewport)
-        @sprites[_INTL("plock{1}",i)].setBitmap("Graphics/Pictures/Stadium/team_lock")
+        @sprites[_INTL("plock{1}",i)].setBitmap("Graphics/UI/Stadium/team_lock")
         @sprites[_INTL("plock{1}",i)].z = 5
         @sprites[_INTL("plock{1}",i)].src_rect = Rect.new(0, 0, 90, 64)
         @sprites[_INTL("plock{1}",i)].x = x_coords[i] - 12
@@ -245,7 +245,7 @@ class StadiumTransition
 
         # Opponent party
         @sprites[_INTL("olock{1}",i)] = IconSprite.new(358,246,@viewport)
-        @sprites[_INTL("olock{1}",i)].setBitmap("Graphics/Pictures/Stadium/team_lock")
+        @sprites[_INTL("olock{1}",i)].setBitmap("Graphics/UI/Stadium/team_lock")
         @sprites[_INTL("olock{1}",i)].z = 5
         @sprites[_INTL("olock{1}",i)].src_rect = Rect.new(0, 0, 90, 64)
         @sprites[_INTL("olock{1}",i)].x = x_coords[i] - 126
@@ -280,7 +280,7 @@ class StadiumTransition
     else
       @sprites["victory"] = IconSprite.new(
         0,Graphics.height/2-40,@viewport)
-      @sprites["victory"].setBitmap("Graphics/Pictures/Stadium/victory")
+      @sprites["victory"].setBitmap("Graphics/UI/Stadium/victory")
       @sprites["victory"].opacity = 0
       @sprites["victory"].z = 9
     end
@@ -696,13 +696,13 @@ def pbStadiumMenu
   sprites["messagebox"].letterbyletter=false
 
   sprites["difficulty"]=IconSprite.new(512,438,viewport)
-  sprites["difficulty"].setBitmap("Graphics/Pictures/Stadium/difficulty")
+  sprites["difficulty"].setBitmap("Graphics/UI/Stadium/difficulty")
   sprites["difficulty"].src_rect = Rect.new(0,0,120,22)
   sprites["difficulty"].z=999
 
   for i in 0...10
     sprites[_INTL("complete{1}",i)]=IconSprite.new(204+128,50+96+32*i,viewport)
-    sprites[_INTL("complete{1}",i)].setBitmap("Graphics/Pictures/Quests/icon_complete")
+    sprites[_INTL("complete{1}",i)].setBitmap("Graphics/UI/Quests/icon_complete")
     sprites[_INTL("complete{1}",i)].z=999
     sprites[_INTL("complete{1}",i)].visible=false
   end
@@ -933,6 +933,7 @@ def pbStadiumSetup
         else
           event.character_name = spectators[rand(spectators.length)]
         end
+        event.always_on_top = true
       else
         event.character_name = ""
       end
@@ -974,7 +975,7 @@ class Window_ComplexCommandPokemon < Window_DrawableCommand
     dims=[]
     getAutoDims(commands,dims,width)
     super(0,0,dims[0],dims[1])
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/selarrow_white")
+    @selarrow=AnimatedBitmap.new("Graphics/UI/sel_arrow_white")
     @starting=false
   end
 

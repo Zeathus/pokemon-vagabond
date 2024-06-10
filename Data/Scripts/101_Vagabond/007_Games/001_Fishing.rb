@@ -16,7 +16,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
 
     sprites = {}
     sprites["bg"] = IconSprite.new(118, 64, viewport)
-    sprites["bg"].setBitmap(_INTL("Graphics/Pictures/Fishing/bar"))
+    sprites["bg"].setBitmap(_INTL("Graphics/UI/Fishing/bar"))
     sprites["bg"].z = 0
 
     if item
@@ -27,7 +27,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
       sprites["pokeicon"].z = 1001
     else
       sprites["pokeicon"] = AnimatedSprite.new(
-        _INTL("Graphics/Pokemon/Icons/{1}",encounter[0].to_s),2,64,64,1)
+        GameData::Species.icon_filename(encounter[0], encounter[2]),2,64,64,1)
       sprites["pokeicon"].viewport = viewport
       sprites["pokeicon"].x = fish_x - 32
       sprites["pokeicon"].z = 1001
@@ -35,7 +35,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     end
 
     sprites["arrow"] = AnimatedSprite.new(
-      "Graphics/Pictures/arrow",4,32,32,1)
+      "Graphics/UI/arrow",4,32,32,1)
     sprites["arrow"].viewport = viewport
     sprites["arrow"].y = 54
     sprites["arrow"].x = fish_x - 16
@@ -55,7 +55,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
 
     if has_stun
       sprites["stun_bar"] = IconSprite.new(140, 104, viewport)
-      sprites["stun_bar"].setBitmap("Graphics/Pictures/Fishing/stun_cooldown")
+      sprites["stun_bar"].setBitmap("Graphics/UI/Fishing/stun_cooldown")
       overlay_bitmap = Bitmap.new(sprites["stun_bar"].bitmap.width, sprites["stun_bar"].bitmap.height)
       overlay_bitmap.fill_rect(90, 10, 54, 6, Color.new(14, 152, 22))
       overlay_bitmap.fill_rect(148, 10, 54, 6, Color.new(14, 152, 22))
@@ -104,7 +104,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     end
 
     sprites["zone"] = IconSprite.new(118,64,viewport)
-    sprites["zone"].setBitmap("Graphics/Pictures/Fishing/zone_"+difficulty.to_s)
+    sprites["zone"].setBitmap("Graphics/UI/Fishing/zone_"+difficulty.to_s)
     sprites["zone"].y = 72
     sprites["zone"].x = zone_x
     sprites["zone"].z = 999
@@ -115,7 +115,9 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     off_time = 0
     perfect = true
     switch = false
+    last_goal = fish_x
     goal = -1
+    turn_around = 0
     move_time = 0
     knockback = 0
     knockback_timer = 0
@@ -141,7 +143,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     for i in 1..3
       sprites[_INTL("num{1}",i)] = IconSprite.new(234,62,viewport)
       sprites[_INTL("num{1}",i)].setBitmap(
-        _INTL("Graphics/Pictures/Fishing/countdown_{1}",i))
+        _INTL("Graphics/UI/Fishing/countdown_{1}",i))
       sprites[_INTL("num{1}",i)].z = 1005
       sprites[_INTL("num{1}",i)].visible=false
     end
@@ -150,6 +152,14 @@ def pbFishingGame(encounter, tutorial=false, item=false)
       sprites[_INTL("num{1}",(3-i+1))].visible=false if i > 0
       sprites[_INTL("num{1}",(3-i))].visible=true
       60.times do
+        if Input.trigger?(Input::BACK)
+          pbDisposeSpriteHash(sprites)
+          viewport.dispose
+          pbFishingEnd
+          pbMessage("It got away...")
+          $game_temp.in_menu = false
+          return false
+        end
         Graphics.update
         viewport.update
         Input.update
@@ -309,18 +319,31 @@ def pbFishingGame(encounter, tutorial=false, item=false)
         case behaviour
         when "normal"
           if switch
+            move = speed / 1.0
+            if turn_around > 0
+              turn_around -= 1
+              move *= [0.85, 0.7, 0.55, 0.4, 0.25, 0.1, -0.1, -0.25, -0.4, -0.55, -0.7, -0.85][turn_around / 2]
+            end
             if goal < fish_x
-              fish_x -= speed / (move_time >= 2.0 ? 1.0 : 1.5)
+              fish_x -= move
               switch = false if goal >= fish_x
             elsif goal > fish_x
-              fish_x += speed / (move_time >= 2.0 ? 1.0 : 1.5)
+              fish_x += move
               switch = false if goal <= fish_x
             end
             move_time += 1
           else
             move_time = 0
             switch = true
-            goal = 142 + rand(231)
+            new_goal = 142 + rand(231)
+            while (new_goal - fish_x).abs < 48
+              new_goal = 142 + rand(231)
+            end
+            if (goal > last_goal) != (new_goal > goal)
+              turn_around = 24
+            end
+            last_goal = goal
+            goal = new_goal
           end
         when "passive"
           if switch
@@ -344,23 +367,40 @@ def pbFishingGame(encounter, tutorial=false, item=false)
             move_time = 0
             if rand(30/(difficulty+1))==1
               switch = true
-              goal = 142 + rand(230)
+              last_goal = goal
+              goal = 142 + rand(231)
+              while (goal - fish_x).abs < 48
+                goal = 142 + rand(231)
+              end
             end
           end
         when "aggressive"
           if switch
+            move = speed / 1.0
+            if turn_around > 0
+              turn_around -= 1
+              move *= [0.85, 0.7, 0.55, 0.4, 0.25, 0.1, -0.1, -0.25, -0.4, -0.55, -0.7, -0.85][turn_around / 2]
+            end
             if goal < fish_x
-              fish_x -= speed / (move_time >= 2.0 ? 1.0 : 1.5)
+              fish_x -= move
               switch = false if goal >= fish_x
             elsif goal > fish_x
-              fish_x += speed / (move_time >= 2.0 ? 1.0 : 1.5)
+              fish_x += move
               switch = false if goal <= fish_x
             end
             move_time += 1
           else
             move_time = 0
             switch = true
-            goal = 142 + rand(231)
+            new_goal = 142 + rand(231)
+            while (new_goal - fish_x).abs < 48
+              new_goal = 142 + rand(231)
+            end
+            if (goal > last_goal) != (new_goal > goal)
+              turn_around = 24
+            end
+            last_goal = goal
+            goal = new_goal
           end
           if knockback <= 0 && rand(100/difficulty)==1
             knockback = 5 + (5*difficulty)
@@ -417,7 +457,11 @@ def pbFishingGame(encounter, tutorial=false, item=false)
                 switch = true
                 move_time = 20 + rand(10)
                 while (goal - fish_x).abs < 80 || goal <= 0
-                  goal = 142 + rand(230)
+                  last_goal = goal
+                  goal = 142 + rand(231)
+                  while (goal - fish_x).abs < 48
+                    goal = 142 + rand(231)
+                  end
                 end
               end
             end
@@ -448,13 +492,12 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     pbDisposeSpriteHash(sprites)
     viewport.dispose
 
+    pbFishingEnd
     if caught
       if item
-        pbExclaim($game_player)
         pbItemBall(encounter)
       else
         pbJob("Fisher").register(encounter[0])
-        pbExclaim($game_player)
         WildBattle.start(encounter[0], encounter[1])
       end
       $game_temp.in_menu = false
@@ -471,68 +514,90 @@ end
 
 def pbFishStats
   return {
+    :POLIWAG => [0, 250, 2, "normal"],
+    :POLIWHIRL => [1, 350, 3, "normal"],
+    :POLIWRATH => [2, 1000, 3, "aggressive"],
+    :POLITOED => [2, 1000, 5, "normal"],
+    :TENTACOOL => [1, 250, 3, "normal"],
+    :TENTACRUEL => [2, 800, 4, "normal"],
+    :SHELLDER => [1, 350, 2, "passive"],
+    :CLOYSTER => [2, 1250, 3, "passive"],
+    :KRABBY => [1, 250, 3, "aggressive"],
+    :KINGLER => [2, 800, 3, "aggressive"],
+    :HORSEA => [1, 250, 4, "sudden"],
+    :SEADRA => [2, 350, 6, "sudden"],
+    :KINGDRA => [2, 500, 10, "sudden"],
+    :STARYU => [1, 250, 3, "sudden"],
+    :STARMIE => [2, 500, 7, "sudden"],
+    :MAGIKARP => [0, 250, 2, "passive"],
+    :GYARADOS => [1, 500, 3, "aggressive"],
+    :DRATINI => [2, 500, 4, "sudden"],
+    :DRAGONAIR => [2, 650, 5, "sudden"],
+    :DRAGONITE => [2, 2000, 10, "dragonite"],
+    :TOTODILE => [1, 500, 3, "aggressive"],
+    :CROCONAW => [1, 650, 4, "aggressive"],
+    :FERALIGATR => [2, 1000, 7, "aggressive"],
+    :CHINCHOU => [1, 350, 2, "normal"],
+    :LANTURN => [2, 1000, 3, "normal"],
+    :QWILFISH => [1, 350, 4, "aggressive"],
+    :OVERQWIL => [2, 1500, 5, "aggressive"],
+    :CORSOLA => [1, 650, 2, "passive"],
+    :CARVANHA => [1, 250, 4, "aggressive"],
+    :SHARPEDO => [2, 500, 8, "aggressive"],
+    :WAILMER => [1, 800, 3, "normal"],
+    :WAILORD => [2, 1500, 3, "normal"],
+    :FEEBAS => [1, 350, 5, "sudden"],
+    :MILOTIC => [2, 1000, 8, "sudden"],
+    :SPHEAL => [1, 500, 3, "normal"],
+    :SEALEO => [1, 650, 4, "normal"],
+    :WALREIN => [2, 800, 4, "aggressive"],
+    :PHIONE => [1, 1000, 10, "normal"],
+    :MANAPHY => [2, 2000, 10, "manaphy"],
+    :MANTYKE => [1, 350, 3, "sudden"],
+    :MANTINE => [2, 800, 4, "sudden"],
+    :STUNFISK => [1, 650, 2, "aggressive"],
+    :TIRTOUGA => [1, 350, 4, "normal"],
+    :CARRACOSTA => [2, 1250, 4, "normal"],
+    :SKRELP => [1, 350, 4, "sudden"],
+    :DRAGALGE => [2, 800, 6, "sudden"],
+    :CLAUNCHER => [1, 350, 3, "aggressive"],
+    :CLAWITZER => [2, 800, 5, "aggressive"],
+    :POPPLIO => [1, 650, 3, "normal"],
+    :BRIONNE => [1, 800, 6, "normal"],
+    :PRIMARINA => [2, 1500, 8, "normal"],
+    :WIMPOD => [1, 350, 2, "sudden"],
+    :CLOBBOPUS => [1, 500, 2, "aggressive"],
+    :GRAPPLOCT => [2, 1000, 4, "aggressive"],
+    :FINIZEN => [1, 500, 5, "normal"],
+    :PALAFIN => [2, 650, 6, "aggressive"]
+  }
+  return {
     #Surf/Land :SQUIRTLE => [],
     #Surf/Land :WARTORTLE => [],
     #Surf/Land :BLASTOISE => [],
     #Surf/Land :PSYDUCK => [],
     #Surf/Land :GOLDUCK => [],
-    :POLIWAG => [0, 300, 2, "normal"],
-    :POLIWHIRL => [1, 200, 3, "normal"],
-    :POLIWRATH => [1, 500, 2, "aggressive"],
-    :TENTACOOL => [1, 250, 3, "normal"],
-    :TENTACRUEL => [1, 450, 4, "normal"],
     #Surf/Land :SLOWPOKE => [],
     #Surf/Land :SLOWBRO => [],
     :SEEL => [1, 300, 3, "normal"],
     :DEWGONG => [1, 700, 4, "normal"],
-    :SHELLDER => [1, 300, 2, "passive"],
-    :CLOYSTER => [2, 700, 3, "passive"],
-    :KRABBY => [1, 250, 3, "aggressive"],
-    :KINGLER => [2, 500, 3, "aggressive"],
-    :HORSEA => [1, 150, 4, "sudden"],
-    :SEADRA => [1, 300, 4, "sudden"],
     :GOLDEEN => [0, 200, 3, "normal"],
     :SEAKING => [1, 300, 2, "normal"],
-    :STARYU => [1, 250, 3, "sudden"],
-    :STARMIE => [1, 500, 7, "sudden"],
-    :MAGIKARP => [0, 300, 2, "passive"],
-    :GYARADOS => [1, 500, 3, "aggressive"],
-    :DRATINI => [1, 250, 3, "sudden"],
-    :DRAGONAIR => [1, 400, 4, "sudden"],
-    #Surf/Land :TOTODILE => [],
-    #Surf/Land :CROCONAW => [],
-    #Surf/Land :FERALIGATR => [],
-    :CHINCHOU => [1, 250, 3, "normal"],
-    :LANTURN => [1, 700, 4, "normal"],
     #Surf/Land :MARILL => [],
     #Surf/Land :AZUMARILL => [],
-    :POLITOED => [2, 800, 5, "normal"],
     #Swamp :WOOPER => [],
     #Swamp :QUAGSIRE => [],
     #Surf/Land :SLOWKING => [],
-    :QWILFISH => [1, 400, 3, "aggressive"],
-    :CORSOLA => [1, 500, 2, "passive"],
     :REMORAID => [1, 200, 4, "sudden"],
     :OCTILLERY => [2, 500, 3, "aggressive"],
-    :MANTINE => [2, 700, 4, "sudden"],
-    :KINGDRA => [2, 500, 10, "sudden"],
     #Swamp :MUDKIP => [],
     #Swamp :MARSHTOMP => [],
     #Swamp :SWAMPERT => [],
     #Surf/Land :AZURILL => [],
-    :CARVANHA => [1, 250, 4, "aggressive"],
-    :SHARPEDO => [2, 500, 8, "aggressive"],
-    :WAILMER => [1, 700, 3, "normal"],
-    :WAILORD => [2, 1000, 3, "normal"],
     :BARBOACH => [1, 200, 3, "normal"],
     :WHISCASH => [1, 600, 3, "normal"],
     :CORPHISH => [1, 250, 3, "aggressive"],
     :CRAWDAUNT => [2, 500, 4, "aggressive"],
-    :FEEBAS => [1, 300, 5, "sudden"],
-    :MILOTIC => [2, 500, 5, "sudden"],
-    #Surf/Land :SPHEAL => [],
-    #Surf/Land :SEALEO => [],
-    :WALREIN => [2, 750, 4, "aggressive"],
     :CLAMPERL => [1, 300, 2, "passive"],
     :HUNTAIL => [2, 600, 5, "aggressive"],
     :GOREBYSS => [2, 600, 5, "sudden"],
@@ -545,9 +610,6 @@ def pbFishStats
     #Surf/Land :BIBAREL => [],
     :FINNEON => [1, 300, 4, "sudden"],
     :LUMINEON => [1, 700, 3, "normal"],
-    :MANTYKE => [1, 300, 3, "sudden"],
-    :PHIONE => [1, 1000, 10, "normal"],
-    :MANAPHY => [2, 2000, 10, "normal"],
     #Surf/Land :OSHAWOTT => [],
     #Surf/Land :DEWOTT => [],
     #Surf/Land :SAMUROTT => [],
@@ -558,19 +620,11 @@ def pbFishStats
     :FRILLISH => [1, 500, 3, "normal"],
     :JELLICENT => [2, 750, 3, "normal"],
     :ALOMOMOLA => [1, 600, 4, "normal"],
-    :STUNFISK => [1, 700, 2, "aggressive"],
     #Surf/Land :FROAKIE => [],
     #Surf/Land :FROGADIER => [],
     #Surf/Land :GRENINJA => [],
     #Beach :BINACLE => [],
     #Beach :BARBARACLE => [],
-    :SKRELP => [1, 300, 4, "sudden"],
-    :DRAGALGE => [2, 700, 6, "sudden"],
-    :CLAUNCHER => [1, 300, 3, "aggressive"],
-    :CLAWITZER => [2, 700, 5, "aggressive"],
-    #Surf/Land :POPPLIO => [],
-    #Surf/Land :BRIONNE => [],
-    #Surf/Land :PRIMARINA => [],
     :WISHIWASHI => [1, 300, 3, "normal"],
     :MAREANIE => [1, 300, 3, "aggressive"],
     :TOXAPEX => [2, 1000, 5, "aggressive"],
@@ -582,13 +636,8 @@ def pbFishStats
     #Surf/Land :INTELEON => [],
     :ARROKUDA => [1, 300, 5, "sudden"],
     :BARRASKEWDA => [2, 500, 10, "sudden"],
-    #Surf/Land :CLOBBOPUS => [],
-    #Surf/Land :GRAPPLOCT => [],
     #Beach :PINCURCHIN => [],
     :BASCULEGION => [2, 1000, 7, "aggressive"],
-    :OVERQWIL => [2, 1300, 5, "aggressive"],
-    :FINIZEN => [1, 500, 5, "normal"],
-    :PALAFIN => [2, 1000, 5, "aggressive"],
     :DONDOZO => [2, 1200, 3, "aggressive"],
     #Beach :TATSUGIRI => [],
     #Swamp :CLODSIRE => []

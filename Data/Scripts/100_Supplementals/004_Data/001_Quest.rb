@@ -21,10 +21,12 @@ class QuestList
         unlocked += 1
       end
     }
-    if unlocked == 1
-      pbToast(TopWindowToast.new(_INTL("A new quest is available!")))
-    elsif unlocked > 1
-      pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
+    if self.enabled?
+      if unlocked == 1
+        pbToast(TopWindowToast.new(_INTL("A new quest is available!")))
+      elsif unlocked > 1
+        pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
+      end
     end
   end
 
@@ -46,8 +48,8 @@ class QuestList
   end
 
   def update
-    return if !self.enabled?
     self.do_unlocks
+    return if !self.enabled?
     self.do_auto_finishes
   end
 

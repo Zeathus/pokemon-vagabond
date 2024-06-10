@@ -7,7 +7,7 @@ class Battle::Battler
     booster = @affinityBooster
     @battle.scene.pbAffinityBoostAnimation(self,booster)
     allies = [self]
-    allies.push(booster) if booster && !booster.fainted?
+    allies.push(booster) if booster && !booster.fainted? && booster != self
 
     for ally in allies
       if ally.hasActiveAbility?(:MENDINGBOND)
@@ -65,14 +65,14 @@ class Battle::Scene
     ### Beam
     sprites = {}
     sprites["beam"] = IconSprite.new(0,112,@viewport)
-    sprites["beam"].setBitmap("Graphics/Pictures/Battle/affinityboost_bg")
+    sprites["beam"].setBitmap("Graphics/UI/Battle/affinityboost_bg")
     sprites["beam"].src_rect = Rect.new(0,0,512,108)
     sprites["beam"].z = 101
     sprites["beam"].mirror = opponent
 
     ### Text
     sprites["text"] = IconSprite.new(176,134,@viewport)
-    sprites["text"].setBitmap("Graphics/Pictures/Battle/affinityboost_text")
+    sprites["text"].setBitmap("Graphics/UI/Battle/affinityboost_text")
     sprites["text"].src_rect = Rect.new(0,0,512,108)
     sprites["text"].z = 102
     sprites["text"].opacity = 0

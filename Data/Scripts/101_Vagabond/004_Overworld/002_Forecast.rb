@@ -175,6 +175,8 @@ def pbGetForecastWeatherOnMap(map_id, day = 0)
   if map_id == PBMaps::ScoriaDesert
     if $quests && $quests[:GUARDIANOFEMOTION].active?
       return :NoxiousStorm
+    elsif $quests && $quests[:GUARDIANOFEMOTION].complete? && !$quests[:ELIANASFAVOR].complete?
+      return :Sun
     end
   end
   return :None if forecast[map_id].nil?

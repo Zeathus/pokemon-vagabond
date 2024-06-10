@@ -4,7 +4,7 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
 
   if expgain > 0 || sharedexp > 0
 
-    viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
+    viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     viewport.z = 99999
 
     active = []
@@ -214,22 +214,14 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       #### Title
       sprites = {}
       sprites["levelup"] = IconSprite.new(0,-26,viewport)
-      sprites["levelup"].setBitmap("Graphics/Pictures/Exp Screen/levelup")
+      sprites["levelup"].setBitmap("Graphics/UI/Exp Screen/levelup")
       sprites["levelup"].src_rect=Rect.new(0,0,768,148)
       sprites["levelup"].z=10
 
       # Speed up hint
-      sprites["hint"] = Sprite.new(viewport)
-      sprites["hint"].bitmap = Bitmap.new(120,60)
-      sprites["hint"].x = 600
-      sprites["hint"].y = 450
-      sprites["hint"].z = 10
+      sprites["hint"] = KeybindSprite.new(Input::BACK, "Fast Forward", Graphics.width - 180, Graphics.height - 48, viewport)
       sprites["hint"].opacity = 0
-      textpos=[["X:",10,20,0,base,shadow,1],
-               ["Fast",30,12,0,base,shadow,1],
-               ["Forward",30,28,0,base,shadow,1]]
-      pbSetSmallFont(sprites["hint"].bitmap)
-      pbDrawTextPositions(sprites["hint"].bitmap,textpos)
+      sprites["hint"].z = 10
 
       pbSEPlay("Up")
       28.times do |i|
@@ -264,7 +256,7 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
         partyindex = party[0]
 
         linesprite = IconSprite.new(startx + spacing * i - 52, 0, viewport)
-        linesprite.setBitmap("Graphics/Pictures/Exp Screen/party")
+        linesprite.setBitmap("Graphics/UI/Exp Screen/party")
         linesprite.src_rect = Rect.new(0,576*active_all[partyindex],104,576)
         linesprite.z = 8
         sprites[_INTL("line{1}",partyindex)]=linesprite

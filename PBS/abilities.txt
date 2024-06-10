@@ -1318,4 +1318,19 @@ Description = Not implemented. Does nothing.
 [POISONPUPPETEER]
 Name = Poison Puppeteer
 Description = Not implemented. Does nothing.
-
+#-------------------------------
+[AMALGAMATE]
+Name = Amalgamate
+Description = When given most items to hold that has an effect when held, the item is absorbed causing the Pokémon to evolve based on the item.
+#-------------------------------
+[STAGNANT]
+Name = Stagnant
+Description = The Pokémon absorbed an Everstone that rendered it unable to ever evolve.
+#-------------------------------
+[DEIFIED]
+Name = Deified
+Description = Raises Special Attack when hit by a Fairy-type move.
+#-------------------------------
+[LAYOFTHELAND]
+Name = Lay of the Land
+Description = Increases the power of Nature Power by 50%. The Pokémon can permanently learn any moves its Nature Power has turned into.

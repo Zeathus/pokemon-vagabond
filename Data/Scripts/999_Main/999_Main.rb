@@ -37,6 +37,7 @@ def mainFunctionDebug
     Compiler.pbLoadMindReadComments(true)
     Game.initialize
     Game.set_up_system
+    Supplementals::Cache.prepare
     Graphics.update
     Graphics.freeze
     $scene = pbCallTitle

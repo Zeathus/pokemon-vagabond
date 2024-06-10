@@ -7,6 +7,7 @@ def pbAllDataChipMoves
     [:FORESIGHT,1],
     [:ROUND,1],
     [:THIEF,1],
+    [:HEALPULSE,1],
     [:ANCIENTPOWER,2],
     [:OMINOUSWIND,2],
     [:SILVERWIND,2],
@@ -50,7 +51,7 @@ def pbAllDataChipMoves
       [:MEGAHORN,5],
       [:DRACOMETEOR,5],
       [:SKYATTACK,5],
-      [:METRONOME,6],
+      [:METRONOME,5],
     ]
   end
 

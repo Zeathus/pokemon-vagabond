@@ -65,8 +65,27 @@
 
 [JOB_FISHER_2,1]
 /speaker Ivan
-> The first Pokémon is Seaking, which as you might guess, can be found at sea.
+> The first Pokémon is Staryu, which you can hook at or close to sea.
 > The second Pokémon is Poliwhirl. You're more likely to find that one in a lake somewhere.
 > You will have to figure out where to find them yourself, though the Habitat Dex I've heard is in development would help.
 > I believe someone at the G[.]P[.]O[.] could hook you up with it, even though it's still in development.
 > I've heard the fishing encounter list in the Habitat Dex even shows what Pokémon you have previously hooked.
+
+[JOB_FISHER_2,2]
+/speaker Ivan
+> You managed to hook both Staryu and Poliwhirl? Good job my aspiring fisher!
+
+[JOB_FISHER_2,3]
+/speaker Ivan
+> To celebrate your achievement I will [R]teach you a new technique[/].
+> This technique is called [R]Powerful Hookset[/] and it allows you to temporarily stun hooked fish, stopping their movement.
+> You can only stun so often however, so pay attention to the [R]Stun Gauge[/] next time you fish.
+
+[JOB_FISHER_3,0]
+/speaker Ivan
+> With this new technique, I hope you will be able to hook a new set of more challenging Pokémon.
+
+[JOB_FISHER_3,1]
+/speaker Ivan
+> The Pokémon are Gyarados, Mantine and Cloyster.
+> Gyarados can be found where there are [R]waterfalls[/]. While both Mantine and Cloyster are found at the [R]western sea[/].

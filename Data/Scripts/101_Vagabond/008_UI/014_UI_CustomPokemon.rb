@@ -2,8 +2,8 @@ class Window_CustomFrame < Window_DrawableCommand
   def initialize(x,y,width,height,viewport)
     @commands = []
     super(x,y,width,height,viewport)
-    @selarrow     = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/cursor_list")
-    @icon_on  = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/icon_on")
+    @selarrow     = AnimatedBitmap.new("Graphics/UI/CustomPokemon/cursor_list")
+    @icon_on  = AnimatedBitmap.new("Graphics/UI/CustomPokemon/icon_on")
     self.baseColor   = Color.new(88,88,80)
     self.shadowColor = Color.new(168,184,184)
     self.windowskin  = nil
@@ -62,9 +62,9 @@ class Window_CustomMemory < Window_DrawableCommand
   def initialize(x,y,width,height,viewport)
     @commands = []
     super(x,y,width,height,viewport)
-    @selarrow        = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/cursor_list")
-    @icon_on         = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/icon_on")
-    @typebitmap      = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @selarrow        = AnimatedBitmap.new("Graphics/UI/CustomPokemon/cursor_list")
+    @icon_on         = AnimatedBitmap.new("Graphics/UI/CustomPokemon/icon_on")
+    @typebitmap      = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
     self.baseColor   = Color.new(88,88,80)
     self.shadowColor = Color.new(168,184,184)
     self.windowskin  = nil
@@ -129,8 +129,8 @@ class Window_CustomChips < Window_DrawableCommand
   def initialize(x,y,width,height,viewport)
     @commands = []
     super(x,y,width,height,viewport)
-    @selarrow     = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/cursor_list")
-    @icon_on  = AnimatedBitmap.new("Graphics/Pictures/CustomPokemon/icon_on")
+    @selarrow     = AnimatedBitmap.new("Graphics/UI/CustomPokemon/cursor_list")
+    @icon_on  = AnimatedBitmap.new("Graphics/UI/CustomPokemon/icon_on")
     self.baseColor   = Color.new(88,88,80)
     self.shadowColor = Color.new(168,184,184)
     self.windowskin  = nil
@@ -194,7 +194,7 @@ class CustomPokemon_Scene
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = 99999
     @page = 1
-    @typebitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
     @species = :SILVALLY
     @custom = pbCustomPokemon
     @sprites = {}
@@ -339,7 +339,7 @@ class CustomPokemon_Scene
   end
 
   def drawPageFrame
-    @sprites["background"].setBitmap(_INTL("Graphics/Pictures/CustomPokemon/bg_frame"))
+    @sprites["background"].setBitmap(_INTL("Graphics/UI/CustomPokemon/bg_frame"))
     commands = []
     for i in 0...PBFrame.len
       commands.push(i) if @custom.available_frames.include?(i)
@@ -383,7 +383,7 @@ class CustomPokemon_Scene
   end
 
   def drawPageMemory
-    @sprites["background"].setBitmap(_INTL("Graphics/Pictures/CustomPokemon/bg_memory"))
+    @sprites["background"].setBitmap(_INTL("Graphics/UI/CustomPokemon/bg_memory"))
     commands = []
     for key in GameData::Type.keys
       if key.is_a?(Symbol) && key != :QMARKS
@@ -391,83 +391,10 @@ class CustomPokemon_Scene
       end
     end
     @sprites["choose_memory"].commands = commands
-    return
-    overlay = @sprites["overlay"].bitmap
-    base   = Color.new(88,88,80)
-    shadow = Color.new(168,184,184)
-    @sprites["areahighlight"].bitmap.clear
-    # Fill the array "points" with all squares of the region map in which the
-    # species can be found
-    points = []
-    mapwidth = 1+PokemonRegionMap_Scene::RIGHT-PokemonRegionMap_Scene::LEFT
-    GameData::Encounter.each_of_version($PokemonGlobal.encounter_version) do |enc_data|
-      next if !pbFindEncounter(enc_data.types, @species)
-      map_metadata = GameData::MapMetadata.try_get(enc_data.map)
-      mappos = (map_metadata) ? map_metadata.town_map_position : nil
-      next if !mappos || mappos[0] != @region
-      showpoint = true
-      for loc in @mapdata[@region][2]
-        showpoint = false if loc[0]==mappos[1] && loc[1]==mappos[2] &&
-                              loc[7] && !$game_switches[loc[7]]
-      end
-      next if !showpoint
-      mapsize = map_metadata.town_map_size
-      if mapsize && mapsize[0] && mapsize[0]>0
-        sqwidth  = mapsize[0]
-        sqheight = (mapsize[1].length*1.0/mapsize[0]).ceil
-        for i in 0...sqwidth
-          for j in 0...sqheight
-            if mapsize[1][i+j*sqwidth,1].to_i>0
-              points[mappos[1]+i+(mappos[2]+j)*mapwidth] = true
-            end
-          end
-        end
-      else
-        points[mappos[1]+mappos[2]*mapwidth] = true
-      end
-    end
-    # Draw coloured squares on each square of the region map with a nest
-    pointcolor   = Color.new(0,248,248)
-    pointcolorhl = Color.new(192,248,248)
-    sqwidth = PokemonRegionMap_Scene::SQUAREWIDTH
-    sqheight = PokemonRegionMap_Scene::SQUAREHEIGHT
-    for j in 0...points.length
-      if points[j]
-        x = (j%mapwidth)*sqwidth
-        x += (512+256-@sprites["areamap"].bitmap.width)/2
-        y = (j/mapwidth)*sqheight
-        y += (384+96-@sprites["areamap"].bitmap.height)/2
-        @sprites["areahighlight"].bitmap.fill_rect(x,y,sqwidth,sqheight,pointcolor)
-        if j-mapwidth<0 || !points[j-mapwidth]
-          @sprites["areahighlight"].bitmap.fill_rect(x,y-2,sqwidth,2,pointcolorhl)
-        end
-        if j+mapwidth>=points.length || !points[j+mapwidth]
-          @sprites["areahighlight"].bitmap.fill_rect(x,y+sqheight,sqwidth,2,pointcolorhl)
-        end
-        if j%mapwidth==0 || !points[j-1]
-          @sprites["areahighlight"].bitmap.fill_rect(x-2,y,2,sqheight,pointcolorhl)
-        end
-        if (j+1)%mapwidth==0 || !points[j+1]
-          @sprites["areahighlight"].bitmap.fill_rect(x+sqwidth,y,2,sqheight,pointcolorhl)
-        end
-      end
-    end
-    # Set the text
-    textpos = []
-    if points.length==0
-      pbDrawImagePositions(overlay,[
-          [sprintf("Graphics/Pictures/Pokedex/overlay_areanone"),108+128,188+32]
-      ])
-      textpos.push([_INTL("Area unknown"),Graphics.width/2,384/2 + 32 - 6,2,base,shadow])
-    end
-    textpos.push([pbGetMessage(MessageTypes::RegionNames,@region),414+128,38+32,2,base,shadow])
-    textpos.push([_INTL("{1}'s area",GameData::Species.get(@species).name),
-        Graphics.width/2,346+32,2,base,shadow])
-    pbDrawTextPositions(overlay,textpos)
   end
 
   def drawPageChips
-    @sprites["background"].setBitmap(_INTL("Graphics/Pictures/CustomPokemon/bg_chips"))
+    @sprites["background"].setBitmap(_INTL("Graphics/UI/CustomPokemon/bg_chips"))
     commands = []
     for i in 1...PBChip.len
       if @custom.available_chip_types.include?(PBChip.getType(i))

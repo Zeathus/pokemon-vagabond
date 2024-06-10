@@ -24,13 +24,13 @@ class OreEvent
   def move
       self.move_route.push(self.direction)
       case direction
-      when PBMoveRoute::Down
+      when PBMoveRoute::DOWN
           self.y += 1
-      when PBMoveRoute::Left
+      when PBMoveRoute::LEFT
           self.x -= 1
-      when PBMoveRoute::Right
+      when PBMoveRoute::RIGHT
           self.x += 1
-      when PBMoveRoute::Up
+      when PBMoveRoute::UP
           self.y -= 1
       end
   end
@@ -75,10 +75,10 @@ def pbOrePuzzle(max_iterations=500)
       if event.name.include?("copper,") || event.name.include?("tin,")
           values = event.name.split(",")
           direction = {
-              "down"  => PBMoveRoute::Down,
-              "left"  => PBMoveRoute::Left,
-              "right" => PBMoveRoute::Right,
-              "up"    => PBMoveRoute::Up
+              "down"  => PBMoveRoute::DOWN,
+              "left"  => PBMoveRoute::LEFT,
+              "right" => PBMoveRoute::RIGHT,
+              "up"    => PBMoveRoute::UP
           }[values[1]]
           ores.push(OreEvent.new(
               values[0],
@@ -89,10 +89,10 @@ def pbOrePuzzle(max_iterations=500)
           values = event.name.split(",")
           if values[1] == "var"
               direction = {
-                  2 => PBMoveRoute::Down,
-                  4 => PBMoveRoute::Left,
-                  6 => PBMoveRoute::Right,
-                  8 => PBMoveRoute::Up
+                  2 => PBMoveRoute::DOWN,
+                  4 => PBMoveRoute::LEFT,
+                  6 => PBMoveRoute::RIGHT,
+                  8 => PBMoveRoute::UP
               }[event.direction]
               junctions.push(OreJunction.new(
                   event,
@@ -100,10 +100,10 @@ def pbOrePuzzle(max_iterations=500)
               ))
           else
               direction = {
-                  "down"  => PBMoveRoute::Down,
-                  "left"  => PBMoveRoute::Left,
-                  "right" => PBMoveRoute::Right,
-                  "up"    => PBMoveRoute::Up
+                  "down"  => PBMoveRoute::DOWN,
+                  "left"  => PBMoveRoute::LEFT,
+                  "right" => PBMoveRoute::RIGHT,
+                  "up"    => PBMoveRoute::UP
               }[values[1]]
               junctions.push(OreJunction.new(
                   event,
@@ -128,7 +128,7 @@ def pbOrePuzzle(max_iterations=500)
           next if ore.in_shute || ore.in_furnace
           ore.move
           if i == 0
-              ore.move_route.push(PBMoveRoute::AlwaysOnTopOn)
+              ore.move_route.push(PBMoveRoute::ALWAYS_ON_TOP_ON)
           end
       end
 
@@ -160,7 +160,7 @@ def pbOrePuzzle(max_iterations=500)
       for ore in ores
           for entry in furnace_entries
               if ore.x == entry.x && ore.y == entry.y
-                  ore.move_route.push(PBMoveRoute::AlwaysOnTopOff)
+                  ore.move_route.push(PBMoveRoute::ALWAYS_ON_TOP_OFF)
               end
           end
       end
@@ -198,13 +198,13 @@ def pbOrePuzzle(max_iterations=500)
                       ore = furnace.contents[1]
                       furnace.contents = []
                       ore.in_furnace = false
-                      ore.move_route.push(PBMoveRoute::Script,
+                      ore.move_route.push(PBMoveRoute::SCRIPT,
                           _INTL("self.character_name = 'ingots'"))
-                      ore.move_route.push(PBMoveRoute::Wait, 1)
-                      ore.move_route.push(PBMoveRoute::Script,
+                      ore.move_route.push(PBMoveRoute::WAIT, 1)
+                      ore.move_route.push(PBMoveRoute::SCRIPT,
                           _INTL("self.direction = 4"))
-                      ore.move_route.push(PBMoveRoute::Wait, 1)
-                      ore.move_route.push(PBMoveRoute::Script,
+                      ore.move_route.push(PBMoveRoute::WAIT, 1)
+                      ore.move_route.push(PBMoveRoute::SCRIPT,
                           _INTL("self.pattern = 0"))
                   end
               end
@@ -238,39 +238,39 @@ def pbOrePuzzle(max_iterations=500)
       end
   end
   if failure
-      longest_route.move_route.push(PBMoveRoute::Script,
+      longest_route.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("pbSEPlay('GUI sel buzzer', 100, 100)"))
       for ore in ores
           if failure_events.include?(ore)
               for i in 0...4
-                  ore.move_route.push(PBMoveRoute::Opacity, 0)
-                  ore.move_route.push(PBMoveRoute::Wait, 2)
-                  ore.move_route.push(PBMoveRoute::Opacity, 255)
-                  ore.move_route.push(PBMoveRoute::Wait, 2)
+                  ore.move_route.push(PBMoveRoute::OPACITY, 0)
+                  ore.move_route.push(PBMoveRoute::WAIT, 2)
+                  ore.move_route.push(PBMoveRoute::OPACITY, 255)
+                  ore.move_route.push(PBMoveRoute::WAIT, 2)
               end
           else
-              ore.move_route.push(PBMoveRoute::Wait, 4 * 4)
+              ore.move_route.push(PBMoveRoute::WAIT, 4 * 4)
           end
       end
   else
-      longest_route.move_route.push(PBMoveRoute::Script,
+      longest_route.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("pbSEPlay('Mining reveal full', 100, 100)"))
   end
 
   for ore in ores
-      ore.move_route.push(PBMoveRoute::AlwaysOnTopOff)
-      ore.move_route.push(PBMoveRoute::Script,
+      ore.move_route.push(PBMoveRoute::ALWAYS_ON_TOP_OFF)
+      ore.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("self.character_name = '{1}'", ore.event.character_name))
-      ore.move_route.push(PBMoveRoute::Wait, 1)
-      ore.move_route.push(PBMoveRoute::Script,
+      ore.move_route.push(PBMoveRoute::WAIT, 1)
+      ore.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("self.direction = {1}", ore.event.direction))
-      ore.move_route.push(PBMoveRoute::Wait, 1)
-      ore.move_route.push(PBMoveRoute::Script,
+      ore.move_route.push(PBMoveRoute::WAIT, 1)
+      ore.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("self.pattern = {1}", ore.event.pattern))
-      ore.move_route.push(PBMoveRoute::Wait, 1)
-      ore.move_route.push(PBMoveRoute::Script,
+      ore.move_route.push(PBMoveRoute::WAIT, 1)
+      ore.move_route.push(PBMoveRoute::SCRIPT,
           _INTL("self.moveto({1}, {2})", ore.event.x, ore.event.y))
-      ore.move_route.push(PBMoveRoute::Opacity, 255)
+      ore.move_route.push(PBMoveRoute::OPACITY, 255)
   end
 
   for ore in ores

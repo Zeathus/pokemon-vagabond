@@ -281,6 +281,7 @@ class Battle::Battler
     @effects[PBEffects::CorrosiveAcid]       = false
     @effects[PBEffects::EverlastingFainted]  = 0
     @effects[PBEffects::AffinityBoostNext]   = nil
+    @effects[PBEffects::LayOfTheLand]        = false
   end
 
   #=============================================================================

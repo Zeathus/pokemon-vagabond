@@ -104,7 +104,7 @@ module MessageConfig
   def self.pbSettingToTextSpeed(speed)
     case speed
     when 0 then return 4 / 80.0   # Slow
-    when 1 then return 2 / 80.0   # Medium
+    when 1 then return 1 / 80.0   # Medium
     when 2 then return 1 / 80.0   # Fast
     when 3 then return 0          # Instant
     end

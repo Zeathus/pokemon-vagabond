@@ -926,7 +926,14 @@ class Battle::Move::UseMoveDependingOnEnvironment < Battle::Move
 
   def pbEffectAgainstTarget(user, target)
     @battle.pbDisplay(_INTL("{1} turned into {2}!", @name, GameData::Move.get(@npMove).name))
+    user.effects[PBEffects::LayOfTheLand] = true if user.hasActiveAbility?(:LAYOFTHELAND)
     user.pbUseMoveSimple(@npMove, target.index)
+    user.effects[PBEffects::LayOfTheLand] = false
+    if user.hasActiveAbility?(:LAYOFTHELAND) && !user.pokemon.first_moves.include?(@npMove)
+      user.pokemon.first_moves.push(@npMove)
+      @battle.pbDisplay(_INTL("{1} can now learn {2}!",
+        user.pbThis, GameData::Move.get(@npMove).name)) { pbSEPlay("Pkmn move learnt") }
+    end
   end
 end
 

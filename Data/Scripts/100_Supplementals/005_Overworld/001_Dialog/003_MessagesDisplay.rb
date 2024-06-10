@@ -864,6 +864,11 @@ class TalkMessageWindowWrapper
       value.gsub!("<PLAYER>", self.format_name($player.name))
     end
 
+    value.gsub!("\\rightarrow", "→")
+    value.gsub!("\\leftarrow", "←")
+    value.gsub!("\\downarrow", "↓")
+    value.gsub!("\\uparrow", "↑")
+
     if @add_pauses
       i = 1
       brackets = 0
@@ -1282,13 +1287,13 @@ def pbShowDialogLog
     0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0))
   sprites["background"].opacity = 0
 
-  sprites["uparrow"] = AnimatedSprite.new("Graphics/Pictures/uparrow", 8, 28, 40, 2, viewport)
+  sprites["uparrow"] = AnimatedSprite.new("Graphics/UI/up_arrow", 8, 28, 40, 2, viewport)
   sprites["uparrow"].x = Graphics.width - 48
   sprites["uparrow"].y = 32
   sprites["uparrow"].play
   sprites["uparrow"].visible = false
   sprites["uparrow"].opacity = 0
-  sprites["downarrow"] = AnimatedSprite.new("Graphics/Pictures/downarrow", 8, 28, 40, 2, viewport)
+  sprites["downarrow"] = AnimatedSprite.new("Graphics/UI/down_arrow", 8, 28, 40, 2, viewport)
   sprites["downarrow"].x = Graphics.width - 48
   sprites["downarrow"].y = Graphics.height - 192
   sprites["downarrow"].play
@@ -1334,7 +1339,7 @@ def pbShowDialogLog
       window.opacity = 0
       window.contents_opacity = 0
       sprites[_INTL("window_{1}", index)] = window
-      rightarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow", 8, 40, 28, 2, viewport)
+      rightarrow = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
       rightarrow.x = (Graphics.width - Supplementals::MESSAGE_WINDOW_WIDTH) / 2 - 48
       rightarrow.y = y - (window.height / 2) - 14
       rightarrow.opacity = 0

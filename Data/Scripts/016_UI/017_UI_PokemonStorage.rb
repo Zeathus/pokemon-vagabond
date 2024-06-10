@@ -25,7 +25,8 @@ class PokemonBoxIcon < IconSprite
 
   def refresh
     return if !@pokemon
-    self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
+    #self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
+    self.setCachedBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
     self.src_rect = Rect.new(0, 0, self.bitmap.height, self.bitmap.height)
   end
 
@@ -649,7 +650,7 @@ class PokemonStorageScene
     @command = command
     addBackgroundPlane(@sprites, "background", "Storage/bg", @bgviewport)
     @border = IconSprite.new(0,0,@borderviewport)
-    @border.setBitmap("Graphics/Pictures/Storage/border")
+    @border.setBitmap("Graphics/UI/Storage/border")
     @sprites["helptext"] = Window_UnformattedTextPokemon.newWithSize("", 128, 442, 500, 128, @borderviewport)
     @sprites["helptext"].baseColor   = Color.new(252,252,252)
     @sprites["helptext"].shadowColor = Color.new(60,60,80)
@@ -1878,7 +1879,7 @@ class PokemonStorageScreen
     @storage[box, index] = @heldpkmn
     if box == -1
       @storage.party.compact!
-      $Trainer.inactive_party.compact!
+      $player.inactive_party.compact!
     end
     @scene.pbRefresh
     @heldpkmn = nil

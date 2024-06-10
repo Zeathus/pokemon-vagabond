@@ -8,8 +8,8 @@ def pbFadeEvent(id, start, finish, duration)
     event = (id.is_a?(Game_Character)) ? id : $game_map.events[id]
     while time < duration
       event.setOpacity(start - ((start - finish) * (time / duration)))
-      time+=1.0
-      pbWait(1)
+      time+=0.05
+      pbWait(0.05)
     end
     event.setOpacity(finish)
   else
@@ -17,8 +17,8 @@ def pbFadeEvent(id, start, finish, duration)
       for i in id
         $game_map.events[i].setOpacity(start - ((start - finish) * (time / duration)))
       end
-      time+=1.0
-      pbWait(1)
+      time+=0.05
+      pbWait(0.05)
     end
     for i in id
       $game_map.events[i].setOpacity(finish)

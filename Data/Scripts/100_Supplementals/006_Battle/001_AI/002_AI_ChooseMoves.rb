@@ -274,7 +274,7 @@ class Battle
                           next if to_affinityboost.include?(ally.index)
                           next if !ally.pokemon.hasAffinity?(m.type)
                           bTypes = t.pbTypes(true)
-                          typeMod = Effectiveness.calculate(m.type, bTypes[0], bTypes[1], bTypes[2])
+                          typeMod = Effectiveness.calculate(m.type, *bTypes)
                           if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
                             to_affinityboost.push(ally.index)
                           end
@@ -544,7 +544,8 @@ class Battle
               !pbCanChooseMove?(i,1,false) &&
               !pbCanChooseMove?(i,2,false) &&
               !pbCanChooseMove?(i,3,false)
-            switchscore += [30 * battler.turnCount, 100].min
+            #switchscore += [30 * battler.turnCount, 100].min
+            useless_switch = true
           end
           # Consider switching if the Pokemon has low damage potential
           if dmg_potential[i] <= 12.5
@@ -624,7 +625,7 @@ class Battle
             healing_switch = 30
             healing_switch += 10 if battler.hp < battler.totalhp * 0.6
           end
-          if battler.hasActiveAbility?(:NATURALCURE) && battler.status > 0
+          if battler.hasActiveAbility?(:NATURALCURE) && battler.status != :NONE
             healing_switch = 20 if battler.status == :POISON
             healing_switch += 10 * battler.effects[PBEffects::Toxic] if battler.status == :POISON if battler.effects[PBEffects::Toxic] > 0
             healing_switch = 15 if battler.status == :BURN
@@ -672,7 +673,9 @@ class Battle
                   end
                 end
                 if rocks
-                  eff = Effectiveness.calculate(:ROCK, pkmn.type1, pkmn.type2, nil)
+                  types = [pkmn.type1, pkmn.type2]
+                  types.compact!
+                  eff = Effectiveness.calculate(:ROCK, *types)
                   if eff > 0
                     hazard_scores[p] += (100.0 * eff) / (64.0)
                   end
@@ -808,10 +811,10 @@ class Battle
             for k in 0...4
               m = battler.moves[k]
               if pbCanChooseMove?(i, k, false)
-                if m.function == "0ED" # Baton Pass
+                if m.function_code == "0ED" # Baton Pass
                   passmove = k
                   break
-                elsif m.function == "0EE" # U-turn / Volt Switch
+                elsif m.function_code == "0EE" # U-turn / Volt Switch
                   # Avoid being redirected and not switching
                   stopped = false
                   eachBattler do |b|
@@ -832,7 +835,7 @@ class Battle
                       passdamage = damage
                     end
                   end
-                elsif m.function == "151" # Parting Shot
+                elsif m.function_code == "151" # Parting Shot
                   passmove = k
                   break
                 end

@@ -76,7 +76,7 @@ class PokemonEntryScene
 
   def pbStartScene(helptext, minlength, maxlength, initialText, subject = 0, pokemon = nil)
     @sprites = {}
-    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport = Viewport.new(128, 80, Graphics.width - 256, Graphics.height - 192)
     @viewport.z = 99999
     if USEKEYBOARD
       @sprites["entry"] = Window_TextEntry_Keyboard.new(
@@ -369,7 +369,7 @@ class PokemonEntryScene2
   end
 
   def pbStartScene(helptext, minlength, maxlength, initialText, subject = 0, pokemon = nil)
-    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport = Viewport.new(128, 80, Graphics.width - 256, Graphics.height - 192)
     @viewport.z = 99999
     @helptext = helptext
     @helper = CharacterEntryHelper.new(initialText)

@@ -65,7 +65,7 @@ class Battle
     def pbGetEffectScore(move,damage,user,target,actionable,fainted,chosen=false)
       score = 0
 
-      if @battleAI.pbCheckMoveImmunity(1, move, user, target, PBTrainerAI.bestSkill)
+      if @battleAI.pokemon_can_absorb_move?(target, move, move.type)
         return score
       end
 
@@ -87,9 +87,9 @@ class Battle
         has_status = false
         for m in b.moves
           if m.physicalMove?
-            has_physical = true if m.baseDamage > 40
+            has_physical = true if m.power > 40
           elsif m.specialMove?
-            has_special = true if m.baseDamage > 40
+            has_special = true if m.power > 40
           else
             has_status = true
           end
@@ -115,9 +115,9 @@ class Battle
         target_speed = target.pbSpeed
         for m in target.moves
           if m.physicalMove?
-            target_has_physical = true if m.baseDamage > 40
+            target_has_physical = true if m.power > 40
           elsif m.specialMove?
-            target_has_special = true if m.baseDamage > 40
+            target_has_special = true if m.power > 40
           else
             target_has_status = true
           end
@@ -132,9 +132,9 @@ class Battle
       has_status = false
       for m in user.moves
         if m.physicalMove?
-          has_physical = true if m.baseDamage > 40
+          has_physical = true if m.power > 40
         elsif m.specialMove?
-          has_special = true if m.baseDamage > 40
+          has_special = true if m.power > 40
         else
           has_status = true
         end
@@ -208,7 +208,7 @@ class Battle
       end
 
       # Return here if no extra effect is needed
-      func = move.function
+      func = move.function_code
       return score if func == "None" || func == "DoesNothingUnusableInGravity" || func == "Struggle" || (target && target.damageState.substitute && !move.soundMove?)
 
       effscore = 0
@@ -431,7 +431,7 @@ class Battle
           if func == "RaiseUserDefense1CurlUpUser" && !user.effects[PBEffects::DefenseCurl]
             # Defense Curl
             for m in user.moves
-              if m.function == "MultiTurnAttackPowersUpEachTurn"
+              if m.function_code == "MultiTurnAttackPowersUpEachTurn"
                 # Has Rollout or Ice Ball
                 statscore += 30 * statscore_mods[:DEFENSE]
                 break
@@ -565,7 +565,7 @@ class Battle
 
       # Boost score if the user has Stored Power
       for m in user.moves
-        if m.function == "PowerHigherWithUserPositiveStatStages"
+        if m.function_code == "PowerHigherWithUserPositiveStatStages"
           statscore *= 1.5
         end
       end
@@ -1224,7 +1224,7 @@ class Battle
         # Round
         user.eachAlly do |b|
           b.eachMove do |m|
-            if m.function == "UsedAfterAllyRoundWithDoublePower"
+            if m.function_code == "UsedAfterAllyRoundWithDoublePower"
               score += 30
               break
             end
@@ -1254,7 +1254,7 @@ class Battle
         # Mud Sport
         user.eachOpposing do |b|
           b.eachMove do |m|
-            score += 10 if m.type == :ELECTRIC && m.baseDamage > 40
+            score += 10 if m.type == :ELECTRIC && m.power > 40
           end
         end
         score += 10
@@ -1262,7 +1262,7 @@ class Battle
         # Water Sport
         user.eachOpposing do |b|
           b.eachMove do |m|
-            score += 10 if m.type == :FIRE && m.baseDamage > 40
+            score += 10 if m.type == :FIRE && m.power > 40
           end
         end
         score += 10
@@ -1304,7 +1304,7 @@ class Battle
             score += 10 * (target.stages[:EVASION] - 1)
           end
           for m in user.moves
-            if m.function == "OHKO" || m.function == "OHKOIce" || m.function == "OHKOHitsUndergroundTarget"
+            if m.function_code == "OHKO" || m.function_code == "OHKOIce" || m.function_code == "OHKOHitsUndergroundTarget"
               # Add score if the user has OHKO moves
               score += 40
               break
@@ -1354,7 +1354,7 @@ class Battle
         # Feint
         # Prioritize Feint if target has Protect
         for m in target.moves
-          if m.function == "ProtectUser"
+          if m.function_code == "ProtectUser"
             score += 30
             break
           end
@@ -1403,7 +1403,7 @@ class Battle
         # Use if opponents have buffing moves
         user.eachOpposing do |b|
           b.eachMove do |m|
-            if m.function <= "RaiseUserSpAtk3" && m.function >= "RaiseUserAttack1"
+            if m.function_code <= "RaiseUserSpAtk3" && m.function_code >= "RaiseUserAttack1"
               score += 20
               is_buffed = false
               # Assume target will not buff if they're already buffed
@@ -1532,7 +1532,7 @@ class Battle
         score += 20
         # If ally has Perish Song, assume Perish Trap strategy
         user.eachAllyMove do |m|
-          if m.function == "StartPerishCountsForAllBattlers"
+          if m.function_code == "StartPerishCountsForAllBattlers"
             score += 50
             break
           end
@@ -2732,7 +2732,7 @@ class Battle
             if b.pbCanPoison?(user,false,nil)
               has_physical = false
               b.eachMove do |m|
-                has_physical = true if m.baseDamage >= 40
+                has_physical = true if m.power >= 40
               end
               score += 15 if has_physical
             end
@@ -2746,7 +2746,7 @@ class Battle
             if b.pbCanPoison?(user,false,nil)
               has_physical = false
               b.eachMove do |m|
-                has_physical = true if m.baseDamage >= 40
+                has_physical = true if m.power >= 40
               end
               score += 15 if has_physical
             end

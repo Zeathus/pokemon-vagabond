@@ -1,7 +1,7 @@
 module GameData
   class Species
     def self.check_graphic_file(path, species, form = 0, gender = 0, shiny = false, shadow = false, subfolder = "")
-      try_subfolder = sprintf("%s/", subfolder)
+      try_subfolder = sprintf("%s/%s/", subfolder, species[0..0])
       try_species = species
       try_form    = (form > 0) ? sprintf("_%d", form) : ""
       try_gender  = (gender == 1) ? "_female" : ""
@@ -69,16 +69,19 @@ module GameData
     end
 
     def self.front_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false)
+      return nil if species.nil?
       filename = self.front_sprite_filename(species, form, gender, shiny, shadow)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
     def self.back_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false)
+      return nil if species.nil?
       filename = self.back_sprite_filename(species, form, gender, shiny, shadow)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
     def self.egg_sprite_bitmap(species, form = 0)
+      return nil if species.nil?
       filename = self.egg_sprite_filename(species, form)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
@@ -111,11 +114,13 @@ module GameData
     #===========================================================================
 
     def self.egg_icon_filename(species, form)
+      return nil if species.nil?
       ret = self.check_egg_graphic_file("Graphics/Pokemon/Eggs/", species, form, "_icon")
       return (ret) ? ret : pbResolveBitmap("Graphics/Pokemon/Eggs/000_icon")
     end
 
     def self.icon_filename(species, form = 0, gender = 0, shiny = false, shadow = false, egg = false)
+      return nil if species.nil?
       return self.egg_icon_filename(species, form) if egg
       return self.check_graphic_file("Graphics/Pokemon/", species, form, gender, shiny, shadow, "Icons")
     end
@@ -153,7 +158,7 @@ module GameData
 
     #===========================================================================
 
-    def self.shadow_filename(species, form = 0)
+    def self.shadow_filename(species, form = 0, ally = false)
       species_data = self.get_species_form(species, form)
       return nil if species_data.nil?
       # Look for species-specific shadow graphic
@@ -165,16 +170,18 @@ module GameData
       return ret if ret
       # Use general shadow graphic
       metrics_data = GameData::SpeciesMetrics.get_species_form(species_data.species, form)
-      return pbResolveBitmap(sprintf("Graphics/Pokemon/Shadow/%d", metrics_data.shadow_size))
+      shadow_size = metrics_data.shadow_size
+      shadow_size += 1 if ally
+      return pbResolveBitmap(sprintf("Graphics/Pokemon/Shadow/%d", shadow_size))
     end
 
-    def self.shadow_bitmap(species, form = 0)
-      filename = self.shadow_filename(species, form)
+    def self.shadow_bitmap(species, form = 0, ally = false)
+      filename = self.shadow_filename(species, form, ally)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
-    def self.shadow_bitmap_from_pokemon(pkmn)
-      filename = self.shadow_filename(pkmn.species, pkmn.form)
+    def self.shadow_bitmap_from_pokemon(pkmn, ally = false)
+      filename = self.shadow_filename(pkmn.species, pkmn.form, ally)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 

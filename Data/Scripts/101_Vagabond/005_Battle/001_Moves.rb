@@ -369,7 +369,7 @@ class Battle::Move::CrashTest < Battle::Move
 
         targets = @battle.pbPossibleTargets(c, move)
 
-        damage = move.baseDamage
+        damage = move.power
 
         statuses = [:NONE, :BURN, :PARALYSIS, :FROZEN, :SLEEP, :POISON]
         hp = [1.0, 0.6, 0.3] #[1.0, 0.75, 0.50, 0.25, 0.0]

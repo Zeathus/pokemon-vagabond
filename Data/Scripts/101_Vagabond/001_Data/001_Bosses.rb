@@ -449,7 +449,7 @@ def pbBossTropius
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Message.new(t, "The clear skies shine on the outlook."))
   t.effect(BossEff_Weather.new(t, :Sun, 999))
-  t.effect(BossEff_Weather.new(t, "Tropius is speeding up due to its Chlorophyll."))
+  t.effect(BossEff_Message.new(t, "Tropius is speeding up due to its Chlorophyll."))
   pbBoss.add(t)
 
   t = BossTrigger.new(:EndOfTurn)
@@ -502,15 +502,17 @@ def pbMiniBossRotom(form=0)
   pbModifier.hpmult = $PokemonSystem.difficulty == 0 ? 1.0 : 2.0
   moveset = [
     :THUNDERSHOCK,
-    :UPROAR,
-    :DOUBLETEAM
+    :ASTONISH
   ]
+  if $game_variables[BADGE_COUNT] > 0 || $PokemonSystem.difficulty > 1
+    moveset[2] = :UPROAR
+  end
   if $game_variables[BADGE_COUNT] > 0
-    moveset[2] = :THUNDERWAVE
     moveset[3] = :ELECTROBALL
   end
   if $game_variables[BADGE_COUNT] > 1
     moveset[1] = :HEX
+    moveset[2] = :THUNDERWAVE
   end
   if form > 0
     rotom_moves = [:THUNDERSHOCK, :OVERHEAT, :HYDROPUMP, :BLIZZARD, :AIRSLASH, :LEAFSTORM]
@@ -567,6 +569,29 @@ def pbMiniBossAbsol
   ]
 end
 
+# --- Chapter 4 Archeops ---
+def pbBossArcheops
+  pbBossGeneral
+  setBattleRule("1v1")
+  kira_pokemon = getPartyPokemon(:Kira)
+  if kira_pokemon[0].species != :SANDOLIN
+    if kira_pokemon[1].species == :SANDOLIN
+      kira_pokemon[0], kira_pokemon[1] = kira_pokemon[1], kira_pokemon[0]
+    elsif kira_pokemon[2].species == :SANDOLIN
+      kira_pokemon[0], kira_pokemon[2] = kira_pokemon[2], kira_pokemon[0]
+    end
+  end
+  kira_pokemon[0].heal
+
+  pbModifier.optimize
+  pbModifier.hpmult = 5.0
+  pbModifier.moves = [:ROCKTOMB,:ROCKTHROW,:WINGATTACK,:QUICKATTACK]
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Dialog.new(t, "CH4_DESERT", 11))
+  pbBoss.add(t)
+end
+
 def pbTestBoss
   pbBossGeneral
   pbModifier.hpmult = 10.0
@@ -601,7 +626,9 @@ def pbStoryBossElianaAzelf
   t = BossTrigger.new(:Start, 1)
   t.max_activations = 1
   t.effect(BossEff_Message.new(t, "Azelf is holding back against you!"))
-  levels = ($PokemonSystem.difficulty == 0) ? -2 : -1
+  levels = -3
+  levels = -2 if $PokemonSystem.difficulty == 1
+  levels = -1 if $PokemonSystem.difficulty == 2
   t.effect(BossEff_ChangeStat.new(t, [:ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED], levels))
   pbBoss.add(t)
 end

@@ -7,6 +7,7 @@ class TextBubble
 
   def initialize(event_id, text, partner=false)
       text = text.gsub("\n", "")
+      text = "<c2=ffff0000><outln>" + text + "</outln></c2>"
       @event_id = event_id
       @text = text
       @partner = partner
@@ -45,6 +46,7 @@ class TextBubble
           @sprite.setArrow("Graphics/Windowskins/mini_msg_arrow")
           @sprite.text = ""
           @sprite.resizeToFit(text, Graphics.width * 2 / 5)
+          @sprite.height += 2
           @sprite.x = character.x - @sprite.width / 2
           @sprite.y = character.y - @sprite.height - character.bitmap.height / 4
           @sprite.letterbyletter = true
@@ -52,7 +54,7 @@ class TextBubble
           @sprite.text = text
           @sprite.contents.font.name = "Small"
           @sprite.resume
-          @sprite.waitcount = 40
+          @sprite.waitcount = 0.5
           @sprite.opacity = 0
       end
       character.set_text_bubble(self)
@@ -65,13 +67,15 @@ class TextBubble
           self.dispose
           return
       end
+      max_opacity = 160
       if @time < 180 && @sprite.busy?
           @time += 1
           @sprite.opacity = @time * 16
-          @time = 180 if @sprite.opacity >= 255
+          @time = 180 if @sprite.opacity >= max_opacity
       elsif !@sprite.busy?
           @time -= 1
-          @sprite.opacity = @time * 16
+          @sprite.opacity = [@time * 16, max_opacity].min
+          @sprite.contents_opacity = [@time * 16, 255].min
       end
       @sprite.x = character.x - @sprite.width / 2
       @sprite.y = character.y - @sprite.height - character.bitmap.height / 4

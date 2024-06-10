@@ -974,7 +974,7 @@ def drawSingleFormattedChar(bitmap, ch)
     bitmap.font.italic = ch[7] if bitmap.font.italic != ch[7]
     bitmap.font.name = ch[12] if bitmap.font.name != ch[12]
     offset = 0
-    if ch[9]   # shadow
+    if ch[9] || ch[16]   # shadow
       bitmap.font.color = ch[9]
       if (ch[16] & 1) != 0   # outline
         offset = 1

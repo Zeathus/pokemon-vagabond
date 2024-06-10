@@ -6,14 +6,14 @@ def pbGetHabitatList
       ["Breccia Area", :BrecciaUndergrowth, :BrecciaTrail],
       ["Crosswoods Area", :Crosswoods, :HalcyonForest, :HalcyonClearing],
       ["Evergone Mangrove", :EvergoneMangrove, :EvergoneCrater, :EvergoneHill, :EvergoneStairway],
-      ["Lapis Lazuli Area", :LazuliRiver, :LazuliDistrict, :LapisDistrict, :LapisLazuliPark],
-      ["Mt. Pegma Area", :FeldsparDistrict, :QuartzPassing, :MtPegmaHillside],
-      ["Mt. Pegma Interior", :MtPegma1F, :MtPegma2F, :MtPegma3F, :LakeKirrock],
+      ["Lapis Lazuli Area", :LazuliRiver, :LapisDistrict, :LapisLazuliPark],
+      ["Mt. Pegma Area", :FeldsparDistrict, :QuartzPassing, :MtPegmaHillside, :PegmaFalls],
+      ["Mt. Pegma Interior", :MtPegma1F, :MtPegma2F, :MtPegma3F],
       ["Pegma Quarry", :MicaQuarryB1F, :MicaQuarryB2F, :MicaQuarryB3F, :MicaQuarryB4F, :MicaQuarryB5F],
       #["Pegma Quarry Depths", :MicaQuarryB6F, :MicaQuarryB7F],
       #["Smokey Forest", :SmokeyForest1],
       #["Canjon Area", :CanjonValley, :LakeCanjon],
-      #["Scoria Area", :ScoriaCity, :ScoriaCanyon]
+      ["Scoria Area", :ScoriaCity, :ScoriaCanyon, :ScoriaDesert, :ScoriaDesertUnder, :ScoriaDesertPass]
     ]
   end
   
@@ -109,22 +109,21 @@ def pbGetHabitatList
       @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
       @viewport.z=99999
       @sprites={}
-      @mapdata = pbLoadTownMapData
       map_metadata = $game_map.metadata
       playerpos = (map_metadata) ? map_metadata.town_map_position : nil
       if !playerpos
         mapindex = 0
-        @map     = @mapdata[0]
+        @map     = GameData::TownMap.get(0)
         @map_x   = LEFT
         @map_y   = TOP
         @region = 0 if @region < 0
-      elsif @region >= 0 && @region != playerpos[0] && @map_data[@region]
+      elsif @region >= 0 && @region != playerpos[0] && GameData::TownMap.exists?(@region)
         mapindex = @region
         @region  = playerpos[0]
-        @map     = @mapdata[@region]
+        @map     = GameData::TownMap.get(@region)
       else
         mapindex = playerpos[0]
-        @map     = @mapdata[playerpos[0]]
+        @map     = GameData::TownMap.get(playerpos[0])
         @map_x    = playerpos[1]
         @map_y    = playerpos[2]
         mapsize = map_metadata.town_map_size
@@ -136,15 +135,15 @@ def pbGetHabitatList
         end
       end
       @sprites["background"]=IconSprite.new(0,0,@viewport)
-      @sprites["background"].setBitmap(_INTL("Graphics/Pictures/Pokedex/habitat"))
+      @sprites["background"].setBitmap(_INTL("Graphics/UI/Pokedex/habitat"))
       @sprites["overlay"]=IconSprite.new(0,0,@viewport)
-      @sprites["overlay"].setBitmap(_INTL("Graphics/Pictures/Pokedex/habitat_overlay"))
+      @sprites["overlay"].setBitmap(_INTL("Graphics/UI/Pokedex/habitat_overlay"))
       @sprites["overlay"].z=99
       @sprites["frame"]=IconSprite.new(0,0,@viewport)
-      @sprites["frame"].setBitmap(_INTL("Graphics/Pictures/Pokedex/habitat_frame"))
+      @sprites["frame"].setBitmap(_INTL("Graphics/UI/Pokedex/habitat_frame"))
       @sprites["frame"].z=103
       @sprites["pokemonlist"]=IconSprite.new(0,0,@viewport)
-      @sprites["pokemonlist"].setBitmap(_INTL("Graphics/Pictures/Pokedex/habitat_list"))
+      @sprites["pokemonlist"].setBitmap(_INTL("Graphics/UI/Pokedex/habitat_list"))
       @sprites["pokemonlist"].z=99
       @sprites["pokemonlist"].visible=false
       @sprites["pokemonlist2"]=Sprite.new(@viewport)
@@ -152,7 +151,7 @@ def pbGetHabitatList
       @sprites["pokemonlist2"].z=101
       @sprites["pokemonlist2"].visible=false
       @sprites["map"]=IconSprite.new(0,0,@viewport)
-      @sprites["map"].setBitmap("Graphics/Pictures/#{@mapdata[@region][1]}")
+      @sprites["map"].setBitmap("Graphics/UI/Town Map/#{@map.filename}")
       @sprites["map"].x = 276
       @sprites["map"].y = (Graphics.height - @sprites["map"].bitmap.height) / 2
       @sprites["map_highlight"] = Sprite.new(@viewport)
@@ -172,7 +171,7 @@ def pbGetHabitatList
         end
         pbDrawImagePositions(
           @sprites["map2"].bitmap,
-          [["Graphics/Pictures/#{graphic[4]}", graphic[2] * SQUARE_WIDTH, graphic[3] * SQUARE_HEIGHT]]
+          [["Graphics/UI/#{graphic[4]}", graphic[2] * SQUARE_WIDTH, graphic[3] * SQUARE_HEIGHT]]
         )
       end
       @index = 0
@@ -202,14 +201,14 @@ def pbGetHabitatList
       @sprites["maplist"]=Sprite.new(@viewport)
       @sprites["maplist"].bitmap=Bitmap.new(Graphics.width,Graphics.height)
       @sprites["maplist"].z=100
-      @sprites["rightarrow"]=AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+      @sprites["rightarrow"]=AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
       @sprites["rightarrow"].z=200
       @sprites["rightarrow"].play
-      @sprites["rightarrowenc"]=AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+      @sprites["rightarrowenc"]=AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
       @sprites["rightarrowenc"].z=201
       @sprites["rightarrowenc"].visible=false
       @sprites["rightarrowenc"].play
-      @sprites["leftarrowenc"]=AnimatedSprite.new("Graphics/Pictures/leftarrow",8,40,28,2,@viewport)
+      @sprites["leftarrowenc"]=AnimatedSprite.new("Graphics/UI/left_arrow",8,40,28,2,@viewport)
       @sprites["leftarrowenc"].z=201
       @sprites["leftarrowenc"].visible=false
       @sprites["leftarrowenc"].play
@@ -222,7 +221,7 @@ def pbGetHabitatList
       pbDrawMapList
       pbDrawAreaLocations
       @sprites["mapbottom"]=MapBottomSprite.new(@viewport)
-      @sprites["mapbottom"].maplocation=pbGetMessage(MessageTypes::RegionNames,@region)
+      @sprites["mapbottom"].maplocation=@map.name
       @sprites["mapbottom"].mapdetails=_INTL("")
       return true
     end
@@ -233,6 +232,11 @@ def pbGetHabitatList
   
     def point_y_to_screen_y(y)
       return (-SQUARE_HEIGHT / 2) + (y * SQUARE_HEIGHT) + ((Graphics.height - @sprites["map"].bitmap.height) / 4)
+    end
+
+    def location_shown?(point)
+      return point[5] if @wallmap
+      return point[1] > 0 && $game_switches[point[1]]
     end
   
     def pbUpdate
@@ -342,7 +346,7 @@ def pbGetHabitatList
       
       for i in 0...[@encounter_types.length, 9].min
         type = @encounter_types[(@encounter_type_index + i) % @encounter_types.length]
-        imagepos.push([_INTL("Graphics/Pictures/Pokedex/habitat_type_{1}",type.downcase),
+        imagepos.push([_INTL("Graphics/UI/Pokedex/habitat_type_{1}",type.downcase),
           414 + i * 38, 36, 0, 0, -1, -1])
       end
 
@@ -373,15 +377,15 @@ def pbGetHabitatList
           end
 
           if @encounter_type == :FishingRod && pbJob("Fisher").hooked?(species) && $player.owned?(species)
-            imagepos.push([sprintf("Graphics/Pictures/Pokedex/icon_own"),
+            imagepos.push([sprintf("Graphics/UI/Pokedex/icon_own"),
               x+30,y+102,0,0,-1,-1])
-            imagepos.push([sprintf("Graphics/Pictures/Pokedex/icon_hooked"),
+            imagepos.push([sprintf("Graphics/UI/Pokedex/icon_hooked"),
               x+2,y+102,0,0,-1,-1])
           elsif $player.owned?(species)
-            imagepos.push([sprintf("Graphics/Pictures/Pokedex/icon_own"),
+            imagepos.push([sprintf("Graphics/UI/Pokedex/icon_own"),
               x+16,y+102,0,0,-1,-1])
           elsif @encounter_type == :FishingRod && pbJob("Fisher").hooked?(species)
-            imagepos.push([sprintf("Graphics/Pictures/Pokedex/icon_hooked"),
+            imagepos.push([sprintf("Graphics/UI/Pokedex/icon_hooked"),
               x+16,y+102,0,0,-1,-1])
           end
           smalltextpos.push([_INTL("{1}%",chance),x+32,y+80,:center,

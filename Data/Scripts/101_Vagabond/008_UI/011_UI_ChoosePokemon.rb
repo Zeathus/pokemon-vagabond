@@ -7,7 +7,7 @@ class ChoosePokemonSprite < IconSprite
       @hp = @pokemon ? @pokemon.hp : 0
       @totalhp = @pokemon ? @pokemon.totalhp : 1
       @selected = false
-      self.setBitmap("Graphics/Pictures/Party/choose_pokemon")
+      self.setBitmap("Graphics/UI/Party/choose_pokemon")
       if @size == 1
           self.src_rect = Rect.new(0, 0, 232, 64)
       elsif @size == 0
@@ -111,7 +111,7 @@ class ChooseMemberSprite < IconSprite
       super(viewport)
       @member = 0
       @size = size
-      self.setBitmap("Graphics/Pictures/Party/choose_member")
+      self.setBitmap("Graphics/UI/Party/choose_member")
       if @size == 1
           self.src_rect = Rect.new(0, 0, 232, 64)
       elsif @size == 0
@@ -270,7 +270,7 @@ class ChoosePokemonScreen
       end
 
       @sprites["cursor"] = IconSprite.new(x_pos[1] - 2, y_pos + 66, @viewport)
-      @sprites["cursor"].setBitmap("Graphics/Pictures/Party/choose_cursor")
+      @sprites["cursor"].setBitmap("Graphics/UI/Party/choose_cursor")
       @sprites["cursor"].z = 1
 
       self.refresh

@@ -188,6 +188,22 @@ class IconSprite < Sprite
     end
   end
 
+  # Sets the icon's filename.
+  def setCachedBitmap(file)
+    oldrc = self.src_rect
+    clearBitmaps
+    @name = file
+    return if file.nil?
+    if file == ""
+      @_iconbitmap = nil
+    else
+      @_iconbitmap = Supplementals::Cache.get(file)
+      # for compatibility
+      self.bitmap = @_iconbitmap ? @_iconbitmap.bitmap : nil
+      self.src_rect = oldrc
+    end
+  end
+
   def clearBitmaps
     @_iconbitmap&.dispose
     @_iconbitmap = nil

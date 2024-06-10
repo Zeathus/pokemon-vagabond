@@ -1,4 +1,4 @@
-class Sprite_Character
+class Sprite_Character < RPG::Sprite
 
   alias sup_initialize initialize
   alias sup_dispose dispose
@@ -11,6 +11,7 @@ class Sprite_Character
     @marker      = nil
     @marker_text = nil
     @text_bubble = nil
+    @proximity_textboxes = {}
     if Supplementals::CHARACTER_DROP_SHADOWS && !@isPartner
       @dropshadow = DropShadowSprite.new(self, character, viewport)
     end
@@ -21,6 +22,22 @@ class Sprite_Character
       @real_y = 0
       @direction = 0
       @visibility = true
+    end
+  end
+
+  def color=(value)
+    super(value)
+    @marker&.color = value
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.color = value
+    end
+  end
+
+  def tone=(value)
+    super(value)
+    @marker&.tone = value
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.tone = value
     end
   end
 
@@ -55,6 +72,9 @@ class Sprite_Character
     @marker&.dispose
     @text_bubble&.on_event_dispose
     @partner&.dispose
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.dispose
+    end
     sup_dispose
   end
 
@@ -116,6 +136,61 @@ class Sprite_Character
       end
       @marker&.update
     end
+    if $game_player && ($game_player.x - @character.x).abs < 4 && ($game_player.y - (@character.y + 1)).abs < 5
+      #echoln @character.proximity_texts.length.to_s if @character.id == 38
+      @character.proximity_texts.each do |direction, text|
+        textbox = @proximity_textboxes[direction]
+        if textbox
+          if textbox.opacity < 255
+            textbox.opacity += 8
+            textbox.contents_opacity += 8
+          end
+        else
+          textbox = Window_AdvancedTextPokemon.new("", 1)
+          textbox.viewport = self.viewport
+          textbox.setSkin("Graphics/Windowskins/floating_text", false)
+          textbox.text = ""
+          textbox.resizeToFit(text, Graphics.width * 2 / 5)
+          textbox.letterbyletter = false
+          textbox.text = text
+          textbox.contents.font.name = "Small"
+          textbox.opacity = 0
+          textbox.contents_opacity = 0
+          textbox.z = 99999
+          @proximity_textboxes[direction] = textbox
+        end
+      end
+    else
+      cleared = false
+      @proximity_textboxes.each do |direction, textbox|
+        textbox.opacity -= 8
+        textbox.contents_opacity -= 8
+        if textbox.opacity <= 0
+          textbox.dispose
+          cleared = true
+        end
+      end
+      @proximity_textboxes = {} if cleared
+    end
+    @proximity_textboxes.each do |direction, textbox|
+      case direction
+      when :left
+        textbox.x = self.x - textbox.width - self.src_rect.width / 4 - 8
+        textbox.y = self.y - textbox.height / 2 - self.src_rect.height / 2
+      when :right
+        textbox.x = self.x + self.src_rect.width / 4 + 8
+        textbox.y = self.y - textbox.height / 2 - self.src_rect.height / 2
+      when :top
+        textbox.x = self.x - textbox.width / 2
+        textbox.y = self.y - textbox.height - self.src_rect.height + 4
+      when :bottom
+        textbox.x = self.x - textbox.width / 2
+        textbox.y = self.y - 4
+      end
+    end
+    if $game_switches[DRAWING_PENTAGRAM] && @character_name[/pentagram/]
+      self.bitmap = pbDrawPentagram(self.bitmap, @charbitmap.bitmap)
+    end
   end
 
   def updatePartner(owner, sx, sy, run)
@@ -153,50 +228,100 @@ class Sprite_Character
 
     owner_direction = [0, 2, 4, 6][sy / @ch]
 
-    dif_x = @real_x - owner.character.real_x
-    dif_y = @real_y - owner.character.real_y
+    if !@next_target_x
+      @next_target_x = owner.character.x
+      @next_target_y = owner.character.y
+    end
+    if !@target_x
+      @target_x = owner.character.x
+      @target_y = owner.character.y
+      @last_target_x = @target_x
+      @last_target_y = @target_y
+    end
+    @post_move = 0 if !@post_move
+    if owner.character.x != @next_target_x || owner.character.y != @next_target_y
+      @last_target_x = @target_x
+      @last_target_y = @target_y
+      @target_x = @next_target_x
+      @target_y = @next_target_y
+      @next_target_x = owner.character.x
+      @next_target_y = owner.character.y
+      @post_move = 0
+      @jumping = (@target_x - @last_target_x).abs > 1 || (@target_y - @last_target_y).abs > 1
+    elsif ((@target_x - owner.character.x).abs > 2 || (@target_y - owner.character.y).abs > 2) &&
+      owner.character.jump_timer && owner.character.move_time < owner.character.jump_timer
+      @last_target_x = @target_x
+      @last_target_y = @target_y
+      @target_x = @next_target_x
+      @target_x -= 1 if @last_target_x < owner.character.x
+      @target_x += 1 if @last_target_x > owner.character.x
+      @target_y = @next_target_y
+      @target_y -= 1 if @last_target_y < owner.character.y
+      @target_y += 1 if @last_target_y > owner.character.y
+      @post_move = owner.character.jump_timer
+      @jumping = true
+    end
+    
+    if owner.character.x == @target_x && owner.character.y == @target_y
+      self.visible = false
+    end
+    
+    target_real_x = @target_x * Game_Map::REAL_RES_X
+    target_real_y = @target_y * Game_Map::REAL_RES_Y
+    dif_x = @real_x - target_real_x
+    dif_y = @real_y - target_real_y
 
     distance = Game_Map::TILE_WIDTH * 4
     speed = owner.character.move_speed * distance * 2 * @p_delta_t
+    
+    if (@last_target_x != @target_x || @last_target_y != @target_y)
+      move_time = owner.character.move_time
+      move_timer = owner.character.move_timer || owner.character.jump_timer || move_time
 
-    if (dif_x.abs > 256 || dif_y.abs > 256)
-      @real_x = owner.character.real_x
-      @real_y = owner.character.real_y
-    elsif (dif_x != 0 && dif_y != 0) ||
-        dif_x.abs > distance || dif_y.abs > distance
-      goal_x = owner.character.real_x
-      goal_y = owner.character.real_y
-      if owner_direction == 2
-        goal_x += distance
-      elsif owner_direction == 4
-        goal_x -= distance
-      end
-      if owner_direction == 0
-        goal_y -= distance
-      elsif owner_direction == 6
-        goal_y += distance
-      end
+      dif_x = @real_x - target_real_x
+      dif_y = @real_y - target_real_y
 
-      dif_x = @real_x - goal_x
-      dif_y = @real_y - goal_y
-
-      if dif_x.abs > 0
-        if dif_x > 0
-          @real_x -= speed
-          @real_x = goal_x if @real_x < goal_x
-        else
-          @real_x += speed
-          @real_x = goal_x if @real_x > goal_x
+      dist_x = (@last_target_x - @target_x).abs
+      dist_y = (@last_target_y - @target_y).abs
+      dist = dist_x + dist_y
+      if !@jumping
+        if @last_target_x != @target_x
+          @real_x = lerp(@last_target_x, @target_x, move_time, move_timer) * Game_Map::REAL_RES_X
         end
-      end
-      if dif_y.abs > 0
-        if dif_y > 0
-          @real_y -= speed
-          @real_y = goal_y if @real_y < goal_y
-        else
-          @real_y += speed
-          @real_y = goal_y if @real_y > goal_y
+        if @last_target_y != @target_y
+          @real_y = lerp(@last_target_y, @target_y, move_time, move_timer) * Game_Map::REAL_RES_Y
         end
+        @jump_fraction = nil
+        @jump_peak = 0
+      else
+        if @post_move == 0
+          dist = 1
+        else
+          dist = [(@last_target_x - owner.character.x).abs - 1, (@last_target_y - owner.character.y).abs - 1].max
+          dist = 1 if dist <= 0
+          move_time = owner.character.jump_time
+          move_timer = owner.character.jump_timer ? (owner.character.jump_timer - @post_move) : (move_time * dist)
+        end
+        if @last_target_x != @target_x
+          @real_x = lerp(@last_target_x, @target_x, move_time * dist, move_timer) * Game_Map::REAL_RES_X
+        end
+        if @last_target_y != @target_y
+          @real_y = lerp(@last_target_y, @target_y, move_time * dist, move_timer) * Game_Map::REAL_RES_Y
+        end
+        # Player moved multiple blocks, should be jumping
+        @jump_fraction = (move_timer) / (move_time * dist)
+        @jump_peak = @post_move == 0 ? (dist * Game_Map::TILE_HEIGHT * 3 / 8) : owner.character.jump_peak
+      end
+      @real_x = @target_x * Game_Map::REAL_RES_X if (@real_x - (@target_x * Game_Map::REAL_RES_X)).abs < Game_Map::X_SUBPIXELS / 2
+      @real_y = @target_y * Game_Map::REAL_RES_Y if (@real_y - (@target_y * Game_Map::REAL_RES_Y)).abs < Game_Map::Y_SUBPIXELS / 2
+
+      if move_timer >= move_time * dist
+        @last_target_x = @target_x
+        @last_target_y = @target_y
+        @real_x =  @target_x * Game_Map::REAL_RES_X
+        @real_y =  @target_y * Game_Map::REAL_RES_Y
+        @jump_fraction = nil
+        @jump_peak = 0
       end
 
       if dif_y.abs > dif_x.abs
@@ -213,8 +338,8 @@ class Sprite_Character
       end
     end
 
-    self.x = screen_x(@real_x)
-    self.y = screen_y(@real_y)
+    self.x = screen_x(owner, @real_x)
+    self.y = screen_y(owner, @real_y)
     self.src_rect.set(sx, @direction * @ch / 2, @cw, @ch)
 
     if (@real_y - owner.character.real_y) < 4
@@ -230,35 +355,67 @@ class Sprite_Character
     self.angle = owner.angle
   end
 
-  def screen_x(real_x)
-    return (real_x - $game_map.display_x + 3) / 4 + (Game_Map::TILE_WIDTH/2)
+  def screen_x(owner, real_x)
+    ret = ((@real_x.to_f - owner.character.map.display_x) / Game_Map::X_SUBPIXELS).round
+    ret += Game_Map::TILE_WIDTH / 2
+    return ret
   end
 
-  def screen_y(real_y)
-    y = (real_y - $game_map.display_y + 3) / 4 + (Game_Map::TILE_HEIGHT)
-    return y
+  def screen_y(owner, real_y)
+    ret = ret = ((@real_y.to_f - owner.character.map.display_y) / Game_Map::Y_SUBPIXELS).round
+    ret += Game_Map::TILE_HEIGHT
+    if @jump_fraction
+      jump_progress = (@jump_fraction - 0.5).abs   # 0.5 to 0 to 0.5
+      ret += @jump_peak * ((4 * (jump_progress**2)) - 1)
+    end
+    return ret
   end
 
-  def snapPartner
-    @partner&.snapToLeader(self)
+  def snapPartner(behind = true)
+    if behind
+      @partner&.snapToLeader(self)
+    else
+      @partner&.snapOnLeader(self)
+    end
   end
 
   def snapToLeader(owner)
     @real_x = owner.character.real_x
     @real_y = owner.character.real_y
+    @next_target_x = owner.character.x
+    @next_target_y = owner.character.y
     distance = Game_Map::TILE_WIDTH * 4
-    case $game_player.direction
+    case owner.character.direction
     when 2
+      @last_target_x = @target_x = @next_target_x
+      @last_target_y = @target_y = @next_target_y - 1
       @real_y -= distance
     when 4
+      @last_target_x = @target_x = @next_target_x + 1
+      @last_target_y = @target_y = @next_target_y
       @real_x += distance
     when 6
+      @last_target_x = @target_x = @next_target_x - 1
+      @last_target_y = @target_y = @next_target_y
       @real_x -= distance
     when 8
+      @last_target_x = @target_x = @next_target_x
+      @last_target_y = @target_y = @next_target_y + 1
       @real_y += distance
     end
-    self.x = screen_x(@real_x)
-    self.y = screen_y(@real_y)
+    @direction = owner.character.direction - 2
+    self.x = screen_x(owner, @real_x)
+    self.y = screen_y(owner, @real_y)
+  end
+
+  def snapOnLeader(owner)
+    @real_x = owner.character.real_x
+    @real_y = owner.character.real_y
+    @last_target_x = @target_x = @next_target_x = owner.character.x
+    @last_target_y = @target_y = @next_target_y = owner.character.y
+    @direction = owner.character.direction - 2
+    self.x = screen_x(owner, @real_x)
+    self.y = screen_y(owner, @real_y)
   end
 
 end

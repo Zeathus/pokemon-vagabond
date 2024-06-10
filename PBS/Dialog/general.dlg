@@ -76,6 +76,9 @@
 [NO_QUEST_LIST]
 > You don't have access to this yet.
 
+[NO_FISHING]
+> This is not the time to fish.
+
 [AURA_AZELF]
 /speaker Azelf
 /portrait 0
@@ -126,6 +129,13 @@
 > The inactive party can hold up to three Pokémon. While these cannot be used in battle, they [R]still gain some experience[/].
 > Pokémon can also be delivered for quests from either the active or inactive party.
 
-[TEST]
-> Test 1
-> AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA. AAAAAAAAAAAAAA.
+[MEDKIT,0]
+?> It's a box full of medical supplies.\nDo you want to heal your Pokémon?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[MEDKIT,1]
+> Your Pokémon were fully healed!

@@ -72,10 +72,10 @@ class CenterCommandListSprite < BitmapSprite
           sprite.y += (i - @commands.length / 2.0) * 48
           @sprites.push(sprite)
       end
-      @rightarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,viewport)
+      @rightarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,viewport)
       @rightarrow.z = 2
       @rightarrow.play
-      @leftarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,viewport)
+      @leftarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,viewport)
       @leftarrow.z = 2
       @leftarrow.zoom_x = -1
       @leftarrow.play
@@ -140,9 +140,11 @@ class CenterCommandListSprite < BitmapSprite
 end
 
 def pbCenterCommands(msgwindow, commands=nil,cmdIfCancel=0,defaultCmd=0)
+  background_viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+  background_viewport.z = (msgwindow ? (msgwindow.z - 1) : 99998)
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = (msgwindow ? (msgwindow.z - 1) : 99998)
-  darken = Sprite.new(viewport)
+  viewport.z = (msgwindow ? (msgwindow.z + 1) : 99999)
+  darken = Sprite.new(background_viewport)
   darken.bitmap = Bitmap.new(Graphics.width, Graphics.height)
   darken.bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.new(0, 0, 0))
   darken.opacity = 0
@@ -200,5 +202,7 @@ def pbCenterCommands(msgwindow, commands=nil,cmdIfCancel=0,defaultCmd=0)
   darken.dispose
   cmdwindow.dispose
   Input.update
+  background_viewport.dispose
+  viewport.dispose
   return ret
 end

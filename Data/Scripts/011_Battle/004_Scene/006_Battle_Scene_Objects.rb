@@ -895,7 +895,7 @@ class Battle::Scene::BattlerShadowSprite < RPG::Sprite
   def setPokemonBitmap(pkmn)
     @pkmn = pkmn
     @_iconBitmap&.dispose
-    @_iconBitmap = GameData::Species.shadow_bitmap_from_pokemon(@pkmn)
+    @_iconBitmap = GameData::Species.shadow_bitmap_from_pokemon(@pkmn, @index % 2 == 0)
     self.bitmap = (@_iconBitmap) ? @_iconBitmap.bitmap : nil
     pbSetPosition
   end

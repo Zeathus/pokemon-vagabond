@@ -603,12 +603,15 @@ def pbLearnMove(pkmn, move, ignore_if_known = false, by_machine = false, &block)
     pbMessage("\\se[]" + _INTL("{1} learned {2}!", pkmn_name, move_name) + "\\se[Pkmn move learnt]", &block)
     return true
   end
-  if by_machine
+  if !by_machine && move == :KILLERCOMBO
+    pbMessage(_INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]", pkmn_name, move_name))
+    return
+  end
+  msg = _INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]\\wt[16]\nForget a move to learn it?", pkmn_name, move_name)
+  if by_machine || pbConfirmMessage(msg)
     scene = PokemonSummaryScene.new()
     screen = PokemonSummary.new(scene)
     screen.pbStartScreen([pkmn], 0, move)
-  else
-    pbMessage(_INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]", pkmn_name, move_name))
   end
   return false
   pbMessage(_INTL("{1} wants to learn {2}, but it already knows {3} moves.\1",
@@ -786,7 +789,11 @@ def pbUseItemOnPokemon(item, pkmn, scene)
   return false if qty <= 0
   ret = ItemHandlers.triggerUseOnPokemon(item, qty, pkmn, scene)
   scene.pbClearAnnotations
-  scene.pbHardRefresh
+  if scene.is_a?(PokemonScreen)
+    scene.pbSoftRefresh
+  else
+    scene.pbHardRefresh
+  end
   if ret && itm.consumed_after_use?
     $bag.remove(item, qty)
     if !$bag.has?(item)
@@ -854,6 +861,7 @@ def pbGiveItemToPokemon(item, pkmn, scene, pkmnid = 0)
         if pbWriteMail(item, pkmn, pkmnid, scene)
           pkmn.item = item
           scene.pbDisplay(_INTL("Took the {1} from {2} and gave it the {3}.", olditemname, pkmn.name, newitemname))
+          pbEvolveItembryo(pkmn, scene) if pkmn.species == :ITEMBRYO
           return true
         elsif !$bag.add(item)
           raise _INTL("Couldn't re-store deleted item in Bag somehow")
@@ -861,6 +869,7 @@ def pbGiveItemToPokemon(item, pkmn, scene, pkmnid = 0)
       else
         pkmn.item = item
         scene.pbDisplay(_INTL("Took the {1} from {2} and gave it the {3}.", olditemname, pkmn.name, newitemname))
+        pbEvolveItembryo(pkmn, scene) if pkmn.species == :ITEMBRYO
         return true
       end
     end
@@ -868,6 +877,7 @@ def pbGiveItemToPokemon(item, pkmn, scene, pkmnid = 0)
     $bag.remove(item)
     pkmn.item = item
     scene.pbDisplay(_INTL("{1} is now holding the {2}.", pkmn.name, newitemname))
+    pbEvolveItembryo(pkmn, scene) if pkmn.species == :ITEMBRYO
     return true
   end
   return false

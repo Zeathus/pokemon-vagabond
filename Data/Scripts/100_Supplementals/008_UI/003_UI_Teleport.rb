@@ -74,7 +74,7 @@ class PokemonTeleportMapScene
       end
     end
     @sprites["mapbottom"]=MapBottomSprite.new(@viewport)
-    @sprites["mapbottom"].mapname=pbGetMessage(MessageTypes::RegionNames,mapindex)
+    @sprites["mapbottom"].mapname=pbGetMessage(@map.name,mapindex)
     @sprites["mapbottom"].maplocation=pbGetMapLocation(@mapX,@mapY)
     @sprites["mapbottom"].mapdetails=pbGetMapDetails(@mapX,@mapY)
     if @destlist
@@ -398,7 +398,7 @@ end
 
 def pbTeleport(id, list=$game_variables[TELEPORT_LIST])
   destination = list[id]
-  for i in 0..4
+  for i in 0..5
     pbToneChangeAll(Tone.new(255,255,255),20) if i==2
     for j in 0..3
       $game_player.turn_up if j==0

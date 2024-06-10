@@ -19,9 +19,9 @@ class ShellOSScreen
       @sprites = {}
 
       @sprites["bg"] = IconSprite.new(0, 0, @viewport)
-      @sprites["bg"].setBitmap("Graphics/Pictures/Storage/shellos")
+      @sprites["bg"].setBitmap("Graphics/UI/Storage/shellos")
       @sprites["border"] = IconSprite.new(0, 0, @viewport)
-      @sprites["border"].setBitmap("Graphics/Pictures/Storage/border")
+      @sprites["border"].setBitmap("Graphics/UI/Storage/border")
       @sprites["border"].z = 998
 
       @sprites["terminal"] = Window_UnformattedTextPokemon.newWithSize("",
@@ -44,7 +44,7 @@ class ShellOSScreen
       end
 
       @sprites["logo"] = IconSprite.new(Graphics.width / 2, Graphics.height / 6, @viewport)
-      @sprites["logo"].setBitmap("Graphics/Pictures/Storage/shellos_logo")
+      @sprites["logo"].setBitmap("Graphics/UI/Storage/shellos_logo")
       @sprites["logo"].ox = @sprites["logo"].bitmap.width / 2
 
       @sprites["overlay"] = Sprite.new(@viewport)
@@ -67,29 +67,29 @@ class ShellOSScreen
       all_text = "Please scan your Trainer Card to log in."
       terminal.text = all_text
       pbFadeInAndShow(@sprites)
-      pbWait(60)
+      pbWait(1.0)
       pbMessage(_INTL("{1} grabs their Trainer Card and scans it.", $player.name))
       temp_text = all_text + "\nScanning Trainer Card..."
       pbLoading(terminal, temp_text, 4)
       all_text += "\nUser identified as '" + $player.name + "'."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       temp_text = all_text + "\nSearching in user database..."
       pbLoading(terminal, temp_text, 6)
       all_text += "\nCould not find '" + $player.name + "'."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       all_text += "\nCreate new user '" + $player.name + "'? (y/n): "
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       all_text += "y"
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       temp_text = all_text + "\nCreating new user..."
       pbLoading(terminal, temp_text, 4)
       all_text += "\nUser '" + $player.name + "' successfully created."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       all_text += "\nInitializing storage environment...\n"
       progress = -1
       loop do
@@ -112,16 +112,16 @@ class ShellOSScreen
           end
           self.pbUpdate
       end
-      pbWait(20)
+      pbWait(0.5)
       all_text += "\nDone."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       all_text += "\nYou will be signed in automatically next time."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       all_text += "\nPress any key to continue..."
       terminal.text = all_text
-      pbWait(60)
+      pbWait(1.0)
       loop do
           pbUpdate
           if Input.trigger?(Input::USE) ||
@@ -147,13 +147,16 @@ class ShellOSScreen
       cycles.times do
           for i in icons
               terminal.text = text + "  " + i
-              pbWait(12)
+              pbWait(0.2)
           end
       end
   end
 
-  def pbWait(frames)
-      frames.times do
+  def pbWait(duration)
+      timer_start = System.uptime
+      until System.uptime - timer_start >= duration
+          Graphics.update
+          Input.update
           self.pbUpdate()
       end
   end

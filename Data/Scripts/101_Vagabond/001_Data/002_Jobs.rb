@@ -588,11 +588,11 @@ class JobFisher < Job
   def progress_text
     case @level
     when 1
-      return _INTL("Hook Seaking & Poliwhirl ({1} / {2})", self.progress, self.requirement)
+      return _INTL("Hook Staryu & Poliwhirl ({1} / {2})", self.progress, self.requirement)
     when 2
-      return _INTL("Gyarados, Dragonair, Whiscash ({1} / {2})", self.progress, self.requirement)
+      return _INTL("Gyarados, Mantine, Cloyster ({1} / {2})", self.progress, self.requirement)
     when 3
-      return _INTL("Hook Wailord, Milotic, Walrein ({1} / {2})", self.progress, self.requirement)
+      return _INTL("Hook Wailord, Seadra, Walrein ({1} / {2})", self.progress, self.requirement)
     when 4
       return _INTL("Hook the Master of the Sea")
     when 5
@@ -620,15 +620,15 @@ class JobFisher < Job
     total = 0
     case @level
     when 1
-        total += 1 if hooked?(:SEAKING)
+        total += 1 if hooked?(:STARYU)
         total += 1 if hooked?(:POLIWHIRL)
     when 2
         total += 1 if hooked?(:GYARADOS)
-        total += 1 if hooked?(:DRAGONAIR)
-        total += 1 if hooked?(:WHISCASH)
+        total += 1 if hooked?(:MANTINE)
+        total += 1 if hooked?(:CLOYSTER)
     when 3
         total += 1 if hooked?(:WAILORD)
-        total += 1 if hooked?(:MILOTIC)
+        total += 1 if hooked?(:SEADRA)
         total += 1 if hooked?(:WALREIN)
     when 4
         total += 1 if hooked?(:MANAPHY)

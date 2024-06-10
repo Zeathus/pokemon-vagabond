@@ -7,11 +7,12 @@ module PBMaps
   MtPegmaHillside   = 14
   BrecciaTrail      = 62
   QuartzPassing     = 72
-  QuartzFalls       = 73
-  QuartzGrove       = 74
+  PegmaFalls        = 73
   CanjonValley      = 106
   LakeCanjon        = 107
   ScoriaDesert      = 132
+  ScoriaDesertUnder = 135
+  ScoriaDesertPass  = 245
   ScoriaCanyon      = 216
   SouthGabbroRiver  = 220
   

@@ -6,6 +6,25 @@ def pbSpecialFieldSkill(pokemon)
     pbGuardianMindRead(:UXIE)
   when :MESPRIT
     pbGuardianMindRead(:MESPRIT)
+  when :LUXRAY
+    if !$PokemonMap.electrifyUsed
+      movefinder = Pokemon.new(:LUXRAY, 5)
+      pbHiddenMoveAnimation(movefinder)
+    end
+    pbWait(0.2)
+    $game_player.animation_id = 24
+    $PokemonMap.electrifyUsed = true
+    pbWait(1.0)
+    $game_map.events.each_value do |event|
+      next if !event.name[/ElectrifyTarget/]
+      dist_x = ($game_player.x - event.x).abs
+      dist_y = ($game_player.y - event.y).abs
+      if dist_x <= 2 && dist_y <= 2 && dist_x + dist_y <= 3
+        $game_self_switches[[$game_map.map_id, event.id, "A"]] = true
+        $game_map.need_refresh = true
+        event.animation_id = 11
+      end
+    end
   end
 end
 

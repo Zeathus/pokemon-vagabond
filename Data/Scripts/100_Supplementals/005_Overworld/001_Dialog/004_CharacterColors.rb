@@ -26,6 +26,8 @@ module Dialog
       #return Color.new(120, 170, 140) if tint == 0
       #return Color.new(70, 100, 80) if tint == 1
     elsif name == "mesprit"
+      return Color.new(160, 64, 99) if tint == 0
+      return Color.new(219, 174, 188) if tint == 1
       return Color.new(200, 104, 139) if tint == 0
       return Color.new(249, 204, 218) if tint == 1
     elsif name == "azelf"

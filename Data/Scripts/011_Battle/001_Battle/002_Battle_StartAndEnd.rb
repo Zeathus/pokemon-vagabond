@@ -345,9 +345,10 @@ class Battle
       if trainerBattle? && @player.length >= 2
         if [:PALMINO, :BOOMINE, :LAZU].include?(pbGetChoiceValue(:Starter))
           pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 0)
+          pbAddGuide("Affinity Boosts", true)
           pbAddGuide("Affinity Extras", true)
-          pbGuide("Affinity Boosts")
-          pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 1)
+          #pbGuide("Affinity Boosts")
+          #pbDialog("PROLOGUE_AFFINITY_BOOST_TUTORIAL", 1)
         end
       end
     end

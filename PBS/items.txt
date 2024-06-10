@@ -4362,8 +4362,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = FIREPLEDGE
-Description = A column of fire hits opposing Pokémon. When used with its Grass equivalent, it makes a sea of fire.
+Move = FLAMECHARGE
+Description = The user cloaks itself in flame and attacks. Building up more power, it raises the user's Speed stat.
 #-------------------------------
 [TM40]
 Name = TM40
@@ -4372,8 +4372,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = FLAMECHARGE
-Description = The user cloaks itself in flame and attacks. Building up more power, it raises the user's Speed stat.
+Move = MYSTICALFIRE
+Description = The user attacks by breathing a special, hot fire. This also lowers the target's Sp. Atk stat.
 #-------------------------------
 [TM41]
 Name = TM41
@@ -4412,8 +4412,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = WATERPLEDGE
-Description = A column of water strikes the target. When combined with its fire equivalent, it makes a rainbow.
+Move = CHILLINGWATER
+Description = The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat.
 #-------------------------------
 [TM45]
 Name = TM45
@@ -4422,8 +4422,8 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = CHILLINGWATER
-Description = The user attacks the target by showering it with water that's so cold it saps the target's power. This also lowers the target's Attack stat.
+Move = BRINE
+Description = If the target's HP is below half, this attack will hit with double the power.
 #-------------------------------
 [TM46]
 Name = TM46
@@ -4462,7 +4462,7 @@ Pocket = 7
 Price = 3000
 FieldUse = TM
 Flags = Fling_80
-Move = GRASSPLEDGE
+Move = TRAILBLAZE
 Description = A column of grass hits the foes. When used with its water equivalent, it creates a vast swamp.
 #-------------------------------
 [TM50]
@@ -7083,7 +7083,15 @@ Pocket = 4
 Price = 4000
 Flags = Fling_30
 Description = An item to be held by a Pokémon. It is a bizarre orb that inflicts a frostbite on the holder in battle.
-
+#-------------------------------
+[MATTERAMPLIFIER]
+Name = Matter Amplifier
+NamePlural = Matter Amplifiers
+Pocket = 4
+Price = 1000
+SellPrice = 500
+Flags = Fling_30
+Description = An item to be held by a Pokémon. It strengthens the essence of the holder's held item, doubling its effect.
 
 
 

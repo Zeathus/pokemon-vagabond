@@ -192,7 +192,7 @@ module Scaling
     # Update level if player level is at least 10 above
     if level <= player_level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
       level_dif = player_level - level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
-      level = [level + level_dif / 2, old_level + Supplementals::WILD_POKEMON_MAX_SCALING].max
+      level = [level + level_dif / 2, old_level + Supplementals::WILD_POKEMON_MAX_SCALING].min
     end
 
     evolve = (rand < Supplementals::WILD_POKEMON_EVOLVE_CHANCE)

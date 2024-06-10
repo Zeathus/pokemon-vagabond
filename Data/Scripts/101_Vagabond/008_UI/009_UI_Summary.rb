@@ -8,8 +8,8 @@ class MoveSelectionSprite < Sprite
   def initialize(viewport=nil,fifthmove=false)
     super(viewport)
     @movesel=AnimatedBitmap.new(
-      fifthmove ? "Graphics/Pictures/Summary/cursor_move_learn" :
-                  "Graphics/Pictures/Summary/cursor_move")
+      fifthmove ? "Graphics/UI/Summary/cursor_move_learn" :
+                  "Graphics/UI/Summary/cursor_move")
     @frame=0
     @index=0
     @listindex=[0, 0, 0]
@@ -162,15 +162,15 @@ class PokemonSummaryScene
       pbGetDataChipMoves(@pokemon)
     ]
     @sprites={}
-    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-    @effortbitmap=AnimatedBitmap.new(_INTL("Graphics/Pictures/Summary/effort_bar"))
-    @buttonbitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Summary/move_slot_learn"))
+    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/UI/types"))
+    @effortbitmap=AnimatedBitmap.new(_INTL("Graphics/UI/Summary/effort_bar"))
+    @buttonbitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Summary/move_slot_learn"))
     @sprites["bg"]=IconSprite.new(0,0,@viewport)
-    @sprites["bg"].setBitmap("Graphics/Pictures/Summary/summarybg")
+    @sprites["bg"].setBitmap("Graphics/UI/Summary/summarybg")
     @sprites["bg"].z=0
     for i in 0...@party.length
       @sprites[_INTL("pokebar{1}",i)]=IconSprite.new(0,0,@viewport)
-      @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/Pictures/Summary/bar")
+      @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/UI/Summary/bar")
       @sprites[_INTL("pokebar{1}",i)].x=14
       @sprites[_INTL("pokebar{1}",i)].y=36+i*56
       @sprites[_INTL("pokebar{1}",i)].z=1
@@ -179,16 +179,16 @@ class PokemonSummaryScene
       @sprites[_INTL("pokeicon{1}",i)].y=18+i*56
       @sprites[_INTL("pokeicon{1}",i)].z=2
       if @partyindex==i
-        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/Pictures/Summary/bar_selected")
+        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/UI/Summary/bar_selected")
         @sprites[_INTL("pokebar{1}",i)].x=4
         @sprites[_INTL("pokeicon{1}",i)].x=0
       end
     end
     @sprites["bg2"]=IconSprite.new(0,0,@viewport)
     if @pokemon.egg?
-      @sprites["bg2"].setBitmap(_INTL("Graphics/Pictures/Summary/summarybg9"))
+      @sprites["bg2"].setBitmap(_INTL("Graphics/UI/Summary/summarybg9"))
     else
-      @sprites["bg2"].setBitmap(_INTL("Graphics/Pictures/Summary/summarybg{1}",GameData::Type.get(@pokemon.types[0]).icon_position))
+      @sprites["bg2"].setBitmap(_INTL("Graphics/UI/Summary/summarybg{1}",GameData::Type.get(@pokemon.types[0]).icon_position))
     end
     @sprites["bg2"].z=3
     @sprites["background"]=IconSprite.new(0,0,@viewport)
@@ -271,7 +271,12 @@ class PokemonSummaryScene
     sprite.z = 10
     @sprites[_INTL("editmoves_keybinds_{1}", keybinds.length)] = sprite
 
-    if @machinemove
+    if @machinemove == :NONE
+      @page=1
+      @sprites["movesel"].side = 0
+      @sprites["movesel"].index = 0
+      drawPageMoves(@pokemon)
+    elsif @machinemove
       @page=1
       @sprites["movesel"].page = 1
       @sprites["movesel"].side = 1
@@ -313,9 +318,9 @@ class PokemonSummaryScene
     @pokemon=@party[@partyindex]
     @sprites={}
     @page=3
-    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @typebitmap=AnimatedBitmap.new(_INTL("Graphics/UI/types"))
     @sprites["bg"]=IconSprite.new(0,0,@viewport)
-    @sprites["bg"].setBitmap("Graphics/Pictures/Summary/summarybg")
+    @sprites["bg"].setBitmap("Graphics/UI/Summary/summarybg")
     @sprites["bg"].z=0
     @sprites["background"]=IconSprite.new(0,0,@viewport)
     @sprites["background"].z=4
@@ -382,9 +387,9 @@ class PokemonSummaryScene
 
   def updatePokeIcons
     if @pokemon.egg?
-      @sprites["bg2"].setBitmap(_INTL("Graphics/Pictures/Summary/summarybg9"))
+      @sprites["bg2"].setBitmap(_INTL("Graphics/UI/Summary/summarybg9"))
     else
-      @sprites["bg2"].setBitmap(_INTL("Graphics/Pictures/Summary/summarybg{1}",GameData::Type.get(@pokemon.types[0]).icon_position))
+      @sprites["bg2"].setBitmap(_INTL("Graphics/UI/Summary/summarybg{1}",GameData::Type.get(@pokemon.types[0]).icon_position))
     end
     for i in 0...@party.length
       @sprites[_INTL("pokebar{1}",i)].x=14
@@ -392,11 +397,11 @@ class PokemonSummaryScene
       @sprites[_INTL("pokeicon{1}",i)].x=10
       @sprites[_INTL("pokeicon{1}",i)].y=18+i*56
       if @partyindex==i
-        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/Pictures/Summary/bar_selected")
+        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/UI/Summary/bar_selected")
         @sprites[_INTL("pokebar{1}",i)].x=4
         @sprites[_INTL("pokeicon{1}",i)].x=0
       else
-        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/Pictures/Summary/bar")
+        @sprites[_INTL("pokebar{1}",i)].setBitmap("Graphics/UI/Summary/bar")
       end
     end
   end
@@ -421,14 +426,14 @@ class PokemonSummaryScene
     overlay.clear
     updatePokeIcons
     if pokemon.egg?
-      @sprites["background"].setBitmap("Graphics/Pictures/Summary/bg_1_egg")
+      @sprites["background"].setBitmap("Graphics/UI/Summary/bg_1_egg")
     else
-      @sprites["background"].setBitmap("Graphics/Pictures/Summary/bg_1")
+      @sprites["background"].setBitmap("Graphics/UI/Summary/bg_1")
     end
     imagepos=[]
-    circleFile = _INTL("Graphics/Pictures/Summary/summaryCircle{1}",GameData::Type.get(@pokemon.types[0]).icon_position)
+    circleFile = _INTL("Graphics/UI/Summary/summaryCircle{1}",GameData::Type.get(@pokemon.types[0]).icon_position)
     if pokemon.egg?
-      circleFile = _INTL("Graphics/Pictures/Summary/summaryCircle9")
+      circleFile = _INTL("Graphics/UI/Summary/summaryCircle9")
     end
     imagepos.push([circleFile,360,108,0,0,-1,-1])
     pbDrawImagePositions(@sprites["bg2"].bitmap,imagepos)
@@ -437,25 +442,25 @@ class PokemonSummaryScene
       status=6 if pbPokerus(pokemon)==1
       status=(GameData::Status.get(@pokemon.status).icon_position) if @pokemon.status != :NONE
       status=5 if pokemon.hp==0
-      imagepos.push(["Graphics/Pictures/Party/statuses",334,276,0,32*status,32,32])
+      imagepos.push(["Graphics/UI/Party/statuses",334,276,0,32*status,32,32])
     end
     if !pokemon.egg?
       extra_x = 308
       if pokemon.shiny?
-        imagepos.push([sprintf("Graphics/Pictures/shiny"),extra_x,112,0,0,-1,-1])
+        imagepos.push([sprintf("Graphics/UI/shiny"),extra_x,112,0,0,-1,-1])
         extra_x -= 20
       end
       if pbPokerus(pokemon)==2
-        imagepos.push([sprintf("Graphics/Pictures/Summary/icon_pokerus"),extra_x,112,0,0,-1,-1])
+        imagepos.push([sprintf("Graphics/UI/Summary/icon_pokerus"),extra_x,112,0,0,-1,-1])
       end
     end
     ballused=@pokemon.poke_ball ? @pokemon.poke_ball : :POKEBALL
-    ballimage=sprintf("Graphics/Pictures/Summary/icon_ball_%s",ballused.to_s)
+    ballimage=sprintf("Graphics/UI/Summary/icon_ball_%s",ballused.to_s)
     imagepos.push([ballimage,102,100,0,0,-1,-1])
     if (pokemon.shadowPokemon? rescue false)
-      imagepos.push(["Graphics/Pictures/Summary/overlay_shadow",224,240,0,0,-1,-1])
+      imagepos.push(["Graphics/UI/Summary/overlay_shadow",224,240,0,0,-1,-1])
       shadowfract=pokemon.heartgauge*1.0/PokeBattle_Pokemon::HEARTGAUGESIZE
-      imagepos.push(["Graphics/Pictures/Summary/overlay_shadowbar",242,280,0,0,(shadowfract*248).floor,-1])
+      imagepos.push(["Graphics/UI/Summary/overlay_shadowbar",242,280,0,0,(shadowfract*248).floor,-1])
     end
     pbDrawImagePositions(overlay,imagepos)
     base=Color.new(248,248,248)
@@ -649,19 +654,19 @@ class PokemonSummaryScene
     overlay=@sprites["overlay"].bitmap
     overlay.clear
     updatePokeIcons
-    @sprites["background"].setBitmap("Graphics/Pictures/Summary/bg_2")
+    @sprites["background"].setBitmap("Graphics/UI/Summary/bg_2")
     imagepos=[]
     if pbPokerus(pokemon)==1 || pokemon.hp==0 || @pokemon.status!=:NONE
       status=6 if pbPokerus(pokemon)==1
       status=GameData::Status.get(@pokemon.status).icon_position if @pokemon.status!=:NONE
       status=5 if pokemon.hp==0
-      #imagepos.push(["Graphics/Pictures/statuses",124,100,0,16*status,44,16])
+      #imagepos.push(["Graphics/UI/statuses",124,100,0,16*status,44,16])
     end
     if pokemon.shiny?
-      imagepos.push([sprintf("Graphics/Pictures/shiny"),2,106,0,0,-1,-1])
+      imagepos.push([sprintf("Graphics/UI/shiny"),2,106,0,0,-1,-1])
     end
     if pbPokerus(pokemon)==2
-      imagepos.push([sprintf("Graphics/Pictures/Summary/icon_pokerus"),176,100,0,0,-1,-1])
+      imagepos.push([sprintf("Graphics/UI/Summary/icon_pokerus"),176,100,0,0,-1,-1])
     end
     pbDrawImagePositions(overlay,imagepos)
     base=Color.new(64,64,64)
@@ -788,7 +793,7 @@ class PokemonSummaryScene
       overlay.clear_rect(96,490,432,80) if refresh_zones[3]
     end
     updatePokeIcons
-    @sprites["background"].setBitmap("Graphics/Pictures/Summary/bg_3")
+    @sprites["background"].setBitmap("Graphics/UI/Summary/bg_3")
     @sprites["pokemon"].visible=false
     @sprites["pokeicon"].visible=false
     speciesname=GameData::Species.get(pokemon.species).name
@@ -857,14 +862,14 @@ class PokemonSummaryScene
         if moveobject
           movedata=GameData::Move.get(moveobject.id)
           if moveobject.id!=0
-            imagepos.push(["Graphics/Pictures/Summary/move_slot",xPos,yPos,0,
+            imagepos.push(["Graphics/UI/Summary/move_slot",xPos,yPos,0,
                 GameData::Type.get(moveobject.type).icon_position*80,216,80])
             smalltextpos.push([movedata.name,xPos+122,yPos+20,2,
                 Color.new(64,64,64),Color.new(176,176,176)])
             if moveobject.totalpp>0
               smallesttextpos.push([sprintf("%d/%d PP",moveobject.pp,moveobject.totalpp),
                   xPos+176,yPos+48,2,Color.new(252,252,252),Color.new(0,0,0,0)])
-              power = movedata.base_damage
+              power = movedata.power
               accuracy = movedata.accuracy
               smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
                   xPos+38,yPos+48,2,Color.new(252,252,252),Color.new(0,0,0,0)])
@@ -894,7 +899,7 @@ class PokemonSummaryScene
             available = false if page == 0 && pokemon.level < movearr[1]
             available = false if page == 2 && !movearr[2]
             available = false if page == 2 && !pbHasDataChipMove(moveid)
-            imagepos.push(["Graphics/Pictures/Summary/move_slot",xPos,yPos,
+            imagepos.push(["Graphics/UI/Summary/move_slot",xPos,yPos,
                 available ? 0 : 216,
                 GameData::Type.get(movedata.type).icon_position*80,216,80])
             textcolor = available ? base2 : Color.new(24,24,24)
@@ -919,7 +924,7 @@ class PokemonSummaryScene
                 if pbHasDataChipMove(moveid)
 
                 else
-                  imagepos.push(["Graphics/Pictures/Summary/datachip",xPos+196,yPos+12,0,0,-1,-1])
+                  imagepos.push(["Graphics/UI/Summary/datachip",xPos+196,yPos+12,0,0,-1,-1])
                   if $bag.quantity(:DATACHIP)>=movearr[1]
                     smallesttextpos.push([_INTL("{1}x",movearr[1]),xPos+194,yPos+10,1,
                           Color.new(0,252,0),Color.new(0,100,0)])
@@ -933,7 +938,7 @@ class PokemonSummaryScene
                 smallesttextpos.push(["INCOMPATIBLE",
                   xPos+106,yPos+62,2,reqcolor,reqshadow])
               else
-                power = movedata.base_damage
+                power = movedata.power
                 accuracy = movedata.accuracy
                 smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
                       xPos+38,yPos+48,2,desccolor,Color.new(0,0,0,0)])
@@ -955,13 +960,13 @@ class PokemonSummaryScene
         end
         yPos+=72
       end
-      imagepos.push(["Graphics/Pictures/Summary/learnset_title",520,104,0,page*32,248,32])
+      imagepos.push(["Graphics/UI/Summary/learnset_title",520,104,0,page*32,248,32])
       scroll_height = 64
       scroll_y = 138
       if @listMoves[page].length > 6
         scroll_y += [((428 - scroll_height) * scroll / (@listMoves[page].length - 6)), 0].max
       end
-      imagepos.push(["Graphics/Pictures/Summary/scrollbar",760,scroll_y,0,0,8,scroll_height])
+      imagepos.push(["Graphics/UI/Summary/scrollbar",760,scroll_y,0,0,8,scroll_height])
     end
     pbDrawImagePositions(overlay,imagepos)
     pbSetSmallFont(overlay)
@@ -985,7 +990,7 @@ class PokemonSummaryScene
     @sprites["pokeicon"].src_rect=Rect.new(0,0,64,64)
     @sprites["pokeicon"].visible=(moveToLearn!=0)
     movedata=GameData::Move.get(moveid)
-    basedamage=movedata.base_damage
+    basedamage=movedata.power
     type=GameData::Type.get(movedata.type).icon_position
     category=movedata.category
     accuracy=movedata.accuracy
@@ -997,13 +1002,13 @@ class PokemonSummaryScene
     drawMoveSelection(pokemon,moveToLearn,refresh_zones)
     pbSetSystemFont(overlay)
     textcolor=[
-      basedamage==movedata.base_damage ? Color.new(64,64,64) : Color.new(0,150,0),
+      basedamage==movedata.power ? Color.new(64,64,64) : Color.new(0,150,0),
       accuracy==movedata.accuracy ? Color.new(64,64,64) : Color.new(0,150,0),
       effectch==movedata.effect_chance ? Color.new(64,64,64) : Color.new(0,150,0),
       priority==movedata.priority ? Color.new(64,64,64) : Color.new(0,150,0)
     ]
     textshadow=[
-      basedamage==movedata.base_damage ? Color.new(198,176,176) : Color.new(176,198,176),
+      basedamage==movedata.power ? Color.new(198,176,176) : Color.new(176,198,176),
       accuracy==movedata.accuracy ? Color.new(198,176,176) : Color.new(176,198,176),
       effectch==movedata.effect_chance ? Color.new(198,176,176) : Color.new(176,198,176),
       priority==movedata.priority ? Color.new(198,176,176) : Color.new(176,198,176)
@@ -1026,8 +1031,8 @@ class PokemonSummaryScene
     pbSetSystemFont(overlay)
     text_x = moveToLearn!=0 ? 166 : 456
     text_y = moveToLearn!=0 ? 56 : 144
-    imagepos=[["Graphics/Pictures/category",text_x,text_y+32,0,category*28,64,28],
-              ["Graphics/Pictures/types",text_x,text_y,0,type*28,64,28]]
+    imagepos=[["Graphics/UI/category",text_x,text_y+32,0,category*28,64,28],
+              ["Graphics/UI/types",text_x,text_y,0,type*28,64,28]]
     pbDrawImagePositions(overlay,imagepos)
     drawSmallTextEx(overlay,332,312,194,8,
         movedata.description,
@@ -1172,7 +1177,7 @@ class PokemonSummaryScene
     new_stat_index = 0
     stat_order = [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED]
     @sprites["effort_overlay"] = IconSprite.new(92, 336, @viewport)
-    @sprites["effort_overlay"].setBitmap("Graphics/Pictures/Summary/effort_levelling")
+    @sprites["effort_overlay"].setBitmap("Graphics/UI/Summary/effort_levelling")
     @sprites["effort_overlay"].z = 100
     for i in 0...4
       @sprites[_INTL("effort_item_{1}", i)] = IconSprite.new(98 + 94 * i, 340, @viewport)
@@ -1185,26 +1190,26 @@ class PokemonSummaryScene
     @sprites["effort_item_counts"].x = 92
     @sprites["effort_item_counts"].y = 336
     @sprites["effort_item_counts"].z = 102
-    @rightarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @rightarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
     @rightarrow.x = 446
     @rightarrow.y = 366
     @rightarrow.z = 103
     @rightarrow.play
     @rightarrow.visible = false
-    @leftarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @leftarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
     @leftarrow.x = 374
     @leftarrow.y = 366
     @leftarrow.z = 103
     @leftarrow.zoom_x = -1
     @leftarrow.play
     @leftarrow.visible = false
-    @uparrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @uparrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
     @uparrow.x = 246
     @uparrow.y = 356
     @uparrow.z = 103
     @uparrow.angle = 90
     @uparrow.play
-    @downarrow = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,@viewport)
+    @downarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,@viewport)
     @downarrow.x = 274
     @downarrow.y = 374
     @downarrow.z = 103
@@ -1373,6 +1378,7 @@ class PokemonSummaryScene
   end
 
   def pbMoveSelection
+    pbPlayDecisionSE
     @sprites["movesel"].visible=true
     selmove=0
     oldselmove=0
@@ -1391,13 +1397,13 @@ class PokemonSummaryScene
     forceleft=false
     up_frames = 0
     down_frames = 1
-    if @machinemove
+    if @machinemove && @machinemove != :NONE
       move = @listMoves[@sprites["movesel"].page][selmove][0]
       drawSelectedMove(@pokemon,0,move,[false,false,true,false])
-      @machinemove = nil
     else
       drawSelectedMove(@pokemon,0,@pokemon.moves[selmove].id,[false,false,true,false])
     end
+    @machinemove = nil
     offset=0
     loop do
       Graphics.update
@@ -1412,6 +1418,7 @@ class PokemonSummaryScene
         @sprites["movepresel"].z=@sprites["movesel"].z
       end
       if Input.trigger?(Input::BACK)
+        pbPlayCancelSE()
         break if !switching
         @sprites["movepresel"].visible=false
         switching = false
@@ -1795,7 +1802,7 @@ class PokemonSummaryScene
         @page=0 if @page>1
         dorefresh=true
         if @page!=oldpage # Move to next page
-          pbPlayCursorSE()
+          pbSEPlay("GUI summary change page")
           dorefresh=true
         end
       end
@@ -1805,7 +1812,7 @@ class PokemonSummaryScene
         @page=1 if @page<0
         @page=0 if @page>1
         if @page!=oldpage # Move to next page
-          pbPlayCursorSE()
+          pbSEPlay("GUI summary change page")
           dorefresh=true
         end
       end

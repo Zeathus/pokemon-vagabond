@@ -52,3 +52,11 @@ Battle::AbilityEffects::OnSwitchIn.add(:ZEPHYR,
     battle.pbStartWeatherAbility(:Winds, battler)
   }
 )
+
+Battle::AbilityEffects::DamageCalcFromUser.add(:LAYOFTHELAND,
+  proc { |ability, user, target, move, mults, power, type|
+    if user.effects[PBEffects::LayOfTheLand]
+      mults[:attack_multiplier] *= 1.5
+    end
+  }
+)

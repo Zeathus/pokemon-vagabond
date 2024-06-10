@@ -254,6 +254,7 @@ class PokemonReadyMenu
       name = "Willpower" if i[0] == :AZELF
       name = "Knowledge" if i[0] == :UXIE
       name = "Emotion" if i[0] == :MESPRIT
+      name = "Electrify" if i[0] == :LUXRAY
       commands[0].push([i[0], name, true, -1])
     end
     items.each do |i|
@@ -342,6 +343,9 @@ def pbUseKeyItem
   end
   if $game_switches[HAS_MESPRIT] && pbGuardianMindReadNPC(:MESPRIT)
     special.push([:MESPRIT, -1])
+  end
+  if hasPartyMember(:Eliana)
+    special.push([:LUXRAY, -1])
   end
   if real_items.length == 0 && real_moves.length == 0 && special.length == 0
     if $game_switches[HAS_AZELF] || $game_switches[HAS_UXIE] || $game_switches[HAS_MESPRIT]

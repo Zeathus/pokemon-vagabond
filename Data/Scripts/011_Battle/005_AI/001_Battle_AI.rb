@@ -50,7 +50,8 @@ class Battle::AI
     if Supplementals::USE_NEW_BATTLE_AI && idxBattler.is_a?(Array)
       ret = @battle.pbChooseMovesNew(idxBattler)
       idxBattler.each do |b|
-        if @battle.choices[b][0] == :UseMove && pbEnemyShouldMegaEvolve?(b)
+        set_up(b)
+        if @battle.choices[b][0] == :UseMove && pbEnemyShouldMegaEvolve?
           @battle.pbRegisterMegaEvolution(b)
         end
       end
@@ -85,6 +86,19 @@ class Battle::AI
   def pbDefaultChooseNewEnemy(idxBattler)
     set_up(idxBattler)
     return choose_best_replacement_pokemon(idxBattler, true)
+  end
+
+  def pbThreadChooseEnemyCommand(idxBattler)
+    @threads.push(Thread.new {
+      pbDefaultChooseEnemyCommand(idxBattler)
+    })
+  end
+
+  def pbThreadJoin
+    @threads.each do |t|
+      t.join
+    end
+    @threads = []
   end
 end
 
@@ -169,18 +183,5 @@ module Battle::AI::Handlers
   def self.modify_item_ranking(item, score, *args)
     ret = ItemRanking.trigger(item, score, *args)
     return (ret.nil?) ? score : ret
-  end
-
-  def pbThreadChooseEnemyCommand(idxBattler)
-    @threads.push(Thread.new {
-      pbDefaultChooseEnemyCommand(idxBattler)
-    })
-  end
-
-  def pbThreadJoin
-    @threads.each do |t|
-      t.join
-    end
-    @threads = []
   end
 end

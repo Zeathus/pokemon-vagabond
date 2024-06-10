@@ -19,3 +19,4 @@ RunCharset = run
 CycleCharset = bike
 SurfCharset = surf
 FishCharset = fish
+SurfFishCharset = surf_fish

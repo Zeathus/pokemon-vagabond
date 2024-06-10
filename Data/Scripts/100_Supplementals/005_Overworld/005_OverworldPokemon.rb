@@ -48,12 +48,9 @@ class OverworldPokemon
     @species = species
     @form = form ? form : 0
     @lvl = lvl
-    @sprite = IconSprite.new(0,0,@viewport)
-    if @form > 0
-      @sprite.setBitmap(sprintf("Graphics/Pokemon/Icons/%s_%d",species,@form))
-    else
-      @sprite.setBitmap(sprintf("Graphics/Pokemon/Icons/%s",species))
-    end
+    src_bitmap = Supplementals::Cache.get(GameData::Species.icon_filename(species, @form))
+    @sprite = BitmapSprite.new(src_bitmap.bitmap.width, src_bitmap.bitmap.height, @viewport)
+    @sprite.bitmap.blt(0, 0, src_bitmap.bitmap, Rect.new(0, 0, src_bitmap.bitmap.width, src_bitmap.bitmap.height))
     pbDayNightTint(@sprite)
     if @terrain == 0 && terrain.id != :Rocky # Grass
       @sprite.bitmap.fill_rect(0,50,128,14,Color.new(0,0,0,0))
@@ -160,6 +157,16 @@ class OverworldPokemon
     @sprite.update
   end
 
+  def event_at?(x, y)
+    @map.events.each_value do |event|
+      next if !event.at_coordinate?(x, y)
+      if !event.through && event.character_name != ""
+        return true
+      end
+    end
+    return false
+  end
+
   def update(willmove=true)
     @time += 1
     return if !@sprite || @sprite.disposed?
@@ -173,7 +180,9 @@ class OverworldPokemon
       @map_x = @new_x.round
       @map_y = @new_y.round
     end
-    if @lifetime + 40 < @time
+    if self.event_at?(@map_x, @map_y)
+      @dead = true
+    elsif @lifetime + 40 < @time
       @dead = true
     elsif @time <= 30
       @sprite.zoom_x = [@time / 30.0, 1].min
@@ -201,21 +210,25 @@ class OverworldPokemon
       end
     elsif willmove && (rand(60)==0) # will move
       dirs = []
-      if @terrain==0 # Grass
-        dirs.push(0) if @map.terrain_tag(@map_x,@map_y+1).has_land_encounters? && !tileOccupied(@map_x,@map_y+1)
-        dirs.push(1) if @map.terrain_tag(@map_x-1,@map_y).has_land_encounters? && !tileOccupied(@map_x-1,@map_y)
-        dirs.push(2) if @map.terrain_tag(@map_x+1,@map_y).has_land_encounters? && !tileOccupied(@map_x+1,@map_y)
-        dirs.push(3) if @map.terrain_tag(@map_x,@map_y-1).has_land_encounters? && !tileOccupied(@map_x,@map_y-1)
-      elsif @terrain==1 # Cave
-        dirs.push(0) if @map.passable?(@map_x,map_y+1,8) && !tileOccupied(@map_x,@map_y+1)
-        dirs.push(1) if @map.passable?(@map_x-1,map_y,6) && !tileOccupied(@map_x-1,@map_y)
-        dirs.push(2) if @map.passable?(@map_x+1,map_y,4) && !tileOccupied(@map_x+1,@map_y)
-        dirs.push(3) if @map.passable?(@map_x,map_y-1,2) && !tileOccupied(@map_x,@map_y-1)
-      elsif @terrain==2 # Water
-        dirs.push(0) if @map.terrain_tag(@map_x,@map_y+1).can_surf_freely && !tileOccupied(@map_x,@map_y+1)
-        dirs.push(1) if @map.terrain_tag(@map_x-1,@map_y).can_surf_freely && !tileOccupied(@map_x-1,@map_y)
-        dirs.push(2) if @map.terrain_tag(@map_x+1,@map_y).can_surf_freely && !tileOccupied(@map_x+1,@map_y)
-        dirs.push(3) if @map.terrain_tag(@map_x,@map_y-1).can_surf_freely && !tileOccupied(@map_x,@map_y-1)
+      offsets = [
+        [0, 1],
+        [-1, 0],
+        [1, 0],
+        [0, -1]
+      ]
+      for i in 0...4
+        new_x = @map_x + offsets[i][0]
+        new_y = @map_y + offsets[i][1]
+        valid = false
+        if @terrain==0 # Grass
+          valid = true if @map.terrain_tag(new_x,new_y).has_land_encounters?
+        elsif @terrain==1 # Cave
+          valid = true if @map.passable?(new_x,new_y,8)
+        elsif @terrain==2 # Water
+          valid = true if @map.terrain_tag(new_x,new_y).can_surf_freely
+        end
+        valid = !tileOccupied(new_x,new_y) if valid
+        dirs.push(i) if valid
       end
       if dirs.length > 0
         dir = dirs[rand(dirs.length)]
@@ -249,6 +262,7 @@ class OverworldPokemon
         return true
       end
     end
+    return true if self.event_at?(x, y)
     return false
   end
 
@@ -387,6 +401,16 @@ class SpawnArea
     return (xdist.abs <= xmax && ydist.abs <= ymax)
   end
 
+  def event_at?(x, y)
+    @map.events.each_value do |event|
+      next if !event.at_coordinate?(x, y)
+      if !event.through && event.character_name != ""
+        return true
+      end
+    end
+    return false
+  end
+
   def updateSpawns(initial = false)
     return if !$player || $player.party.length <= 0
     return if $game_switches && $game_switches[NO_WILD_POKEMON]
@@ -413,6 +437,7 @@ class SpawnArea
           return
         end
       end
+      return if self.event_at?(x, y)
       encounterType = $PokemonEncounters.pbSpawnType(@terrain)
       return if encounterType == :None
       return if !$PokemonEncounters.has_encounter_type?(encounterType)

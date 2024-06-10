@@ -6,7 +6,7 @@ class Window_Jobs < Window_DrawableCommand
   def initialize(items,x,y,width,height,viewport=nil)
     @items = items
     super(x, y, width, height, viewport)
-    @selarrow=AnimatedBitmap.new("Graphics/Pictures/Trainer Card/cursor")
+    @selarrow=AnimatedBitmap.new("Graphics/UI/Trainer Card/cursor")
     @baseColor=Color.new(88,88,80)
     @shadowColor=Color.new(168,184,184)
     self.windowskin=nil
@@ -42,14 +42,14 @@ class PokemonJobs_Scene
     @viewport.z = 99999
     @sprites = {}
     addBackgroundPlane(@sprites,"bg","Trainer Card/bg",@viewport)
-    cardexists = pbResolveBitmap(sprintf("Graphics/Pictures/Trainer Card/card_f"))
+    cardexists = pbResolveBitmap(sprintf("Graphics/UI/Trainer Card/card_f"))
     @jobs = ["Trainer"]
     pbAllJobs.each do |job|
       @jobs.push(job) if pbHasJob(job)
     end
     @jobs.push("General Stats", "Battle Stats")
     @sprites["listbg"] = IconSprite.new(0,48,@viewport)
-    @sprites["listbg"].setBitmap("Graphics/Pictures/Trainer Card/list")
+    @sprites["listbg"].setBitmap("Graphics/UI/Trainer Card/list")
     @sprites["itemlist"]=Window_Jobs.new(@jobs, -12, 54, 264, Graphics.height - 56)
     @sprites["itemlist"].viewport = @viewport
     @sprites["itemlist"].index = @index
@@ -117,9 +117,9 @@ class PokemonJobs_Scene
 
   def pbDrawTrainerCard(card, overlay)
     if $player.female? && cardexists
-      card.setBitmap("Graphics/Pictures/Trainer Card/card_f")
+      card.setBitmap("Graphics/UI/Trainer Card/card_f")
     else
-      card.setBitmap("Graphics/Pictures/Trainer Card/card")
+      card.setBitmap("Graphics/UI/Trainer Card/card")
     end
     return if !overlay
     #@sprites["trainer"].visible=true
@@ -154,14 +154,14 @@ class PokemonJobs_Scene
     region = pbGetCurrentRegion(0) # Get the current region
     imagePositions = []
     for i in $player.badges
-      imagePositions.push(["Graphics/Pictures/Trainer Card/icon_badges",x,310,i*32,region*32,32,32])
+      imagePositions.push(["Graphics/UI/Trainer Card/icon_badges",x,310,i*32,region*32,32,32])
       x += 44
     end
     pbDrawImagePositions(overlay.bitmap,imagePositions)
   end
 
   def pbDrawStats(card, overlay, section="general")
-    card.setBitmap("Graphics/Pictures/Trainer Card/card_2")
+    card.setBitmap("Graphics/UI/Trainer Card/card_2")
     return if !overlay
     #@sprites["trainer"].visible=false
     overlay.bitmap.clear
@@ -223,7 +223,7 @@ class PokemonJobs_Scene
 
   def pbDrawJob(name, card, overlay)
     job = pbJob(name)
-    card.setBitmap(_INTL("Graphics/Pictures/Trainer Card/{1}", job.card_file))
+    card.setBitmap(_INTL("Graphics/UI/Trainer Card/{1}", job.card_file))
     return if !overlay
     overlay.bitmap.clear
     baseColor    = Color.new(72,72,72)
@@ -259,7 +259,7 @@ class PokemonJobs_Scene
     y = 110
     imagePositions = []
     for i in 0...job.level
-      imagePositions.push(["Graphics/Pictures/Trainer Card/star",30,y,0,0,32,32])
+      imagePositions.push(["Graphics/UI/Trainer Card/star",30,y,0,0,32,32])
       y += 36
     end
     pbDrawImagePositions(overlay.bitmap,imagePositions)

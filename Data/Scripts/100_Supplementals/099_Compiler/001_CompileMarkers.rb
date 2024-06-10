@@ -5,18 +5,21 @@ module Compiler
     mapdata=MapData.new
     t = Time.now.to_i
     Graphics.update
-    $Markers=[]
+    $Markers = []
+    $Signs = []
     for id in mapdata.mapinfos.keys.sort
-      $Markers[id]=[]
+      $Markers[id] = []
+      $Signs[id] = []
       map=mapdata.getMap(id)
       next if !map || !mapdata.mapinfos[id]
-      pbSetWindowText(_INTL("Processing markers on map {1} ({2})",id,mapdata.mapinfos[id].name)) if !silent
+      pbSetWindowText(_INTL("Processing comments on map {1} ({2})",id,mapdata.mapinfos[id].name)) if !silent
       for key in map.events.keys
         if Time.now.to_i - t >= 5
           Graphics.update
           t = Time.now.to_i
         end
         pbLoadMarkersFromEvent(map.events[key],$Markers[id])
+        pbLoadSignsFromEvent(map.events[key],$Signs[id])
       end
     end
     if Time.now.to_i-t>=5
@@ -31,7 +34,6 @@ module Compiler
     for page in 0...event.pages.length
       commands=[]
       list=event.pages[page].list
-      isFirstCommand=false
       i=0; while i<list.length
         if list[i].code==108
           command=list[i].parameters[0]
@@ -42,7 +44,6 @@ module Compiler
           end
           if command[/^(MarkerType\:|MarkerQuest\:|MarkerReq\:|MarkerText\:)/i]
             commands.push(command)
-            isFirstCommand=true if i==0
           end
         end
         i+=1
@@ -99,6 +100,46 @@ module Compiler
         markers.push([event.id,page,markertype,markerreqs,markertext])
       else
         markers.push([event.id,page,markertype,markerreqs,markerquest])
+      end
+    end
+  end
+
+  def pbLoadSignsFromEvent(event, signs)
+    return if !event || event.pages.length==0
+    for page in 0...event.pages.length
+      commands=[]
+      list=event.pages[page].list
+      i=0; while i<list.length
+        if list[i].code==108
+          command=list[i].parameters[0]
+          j=i+1; while j<list.length
+            break if list[j].code!=408
+            command+="\r\n"+list[j].parameters[0]
+            j+=1
+          end
+          if command[/^(Sign\:|SignTop\:|SignUp\:|SignLeft\:|SignRight\:|SignBottom\:)/i]
+            commands.push(command)
+          end
+        end
+        i+=1
+      end
+      next if commands.length==0
+      for command in commands
+        cmd = command[0...(command.index(":"))]
+        text = command[(command.index(":")+1)..command.length]
+        text.strip!
+        direction = :top
+        case cmd
+        when "Sign", "SignTop", "SignUp"
+          direction = :top
+        when "SignBottom"
+          direction = :bottom
+        when "SignLeft"
+          direction = :left
+        when "SignRight"
+          direction = :right
+        end
+        signs.push([event.id,page,direction,text])
       end
     end
   end

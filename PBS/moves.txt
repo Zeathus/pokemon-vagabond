@@ -8519,7 +8519,7 @@ TotalPP = 10
 Target = NearOther
 FunctionCode = DoublePowerIfTargetHPLessThanHalf
 Flags = CanProtect,CanMirrorMove
-Description = If the target's HP is down to about half, this attack will hit with double the power.
+Description = If the target's HP is below half, this attack will hit with double the power.
 #-------------------------------
 [BUBBLEBEAM]
 Name = Bubble Beam
@@ -9172,3 +9172,88 @@ Target = NearOther
 FunctionCode = StartRaiseUserAtk1WhenDamaged
 Flags = Contact,CanProtect,CanMirrorMove
 Description = The user converts its rage into energy to attack. As long as this move is in use, the user's Attack rises each time the user is hit in battle.
+#-------------------------------
+[ALLURINGVOICE]
+Name = Alluring Voice
+Type = FAIRY
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = None
+Flags = CanProtect,CanMirrorMove,Sound
+Description = The user attacks the target using its angelic voice. This also confuses the target if its stats have been boosted during the turn.
+#-------------------------------
+[BITTERMALICE]
+Name = Bitter Malice
+Type = GHOST
+Category = Special
+Power = 75
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = FrostbiteTarget
+Flags = CanProtect,CanMirrorMove
+EffectChance = 30
+Description = The user attacks its target with spine-chilling resentment. This may also leave the target with frostbite.
+#-------------------------------
+[TRAILBLAZE]
+Name = Trailblaze
+Type = GRASS
+Category = Physical
+Power = 50
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = RaiseUserSpeed1
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user attacks suddenly as if leaping out from tall grass. The user’s nimble footwork boosts its Speed stat.
+#-------------------------------
+[CHILLYRECEPTION]
+Name = Chilly Reception
+Type = ICE
+Category = Status
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = LowerTargetAtkSpAtk1SwitchOutUser
+Flags = CanProtect,CanMirrorMove,Sound
+Description = Not Implemented. Has Parting Shot's effect.
+#-------------------------------
+[WAVECRASH]
+Name = Wave Crash
+Type = WATER
+Category = Physical
+Power = 120
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = RecoilThirdOfDamageDealt
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user shrouds itself in water and slams into the target with its whole body to inflict damage. This also damages the user quite a lot.
+#-------------------------------
+[DOUBLESHOCK]
+Name = Double Shock
+Type = ELECTRIC
+Category = Special
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = UserLosesFireType
+Flags = CanProtect,CanMirrorMove
+Description = Not Implemented. Has the effect of Burn Up.
+#-------------------------------
+[SUPERCELLSLAM]
+Name = Supercell Slam
+Type = ELECTRIC
+Category = Physical
+Power = 100
+Accuracy = 95
+TotalPP = 15
+Target = NearOther
+FunctionCode = CrashDamageIfFailsUnusableInGravity
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user electrifies its body and drops onto the target to inflict damage. If this move misses, the user takes damage instead.

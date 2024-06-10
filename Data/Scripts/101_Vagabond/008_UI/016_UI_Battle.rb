@@ -18,13 +18,13 @@ class Battle::Scene::Outer
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = @parent.z
     @sprites["border"] = IconSprite.new(0, 0, @viewport)
-    @sprites["border"].setBitmap("Graphics/Pictures/Battle/border")
+    @sprites["border"].setBitmap("Graphics/UI/Battle/border")
     #@sprites["border"].z = 999
     @sprites["outerOverlay"] = IconSprite.new(0,0,@viewport)
-    @sprites["outerOverlay"].setBitmap("Graphics/Pictures/Battle/outer_overlay")
+    @sprites["outerOverlay"].setBitmap("Graphics/UI/Battle/outer_overlay")
     # Create message box graphic
     messageBox = pbAddSprite("messageBox",0,576-100,
-      "Graphics/Pictures/Battle/overlay_message",@viewport)
+      "Graphics/UI/Battle/overlay_message",@viewport)
     messageBox.z = 195
     # Create message window (displays the message)
     msgWindow = Window_AdvancedTextPokemon.newWithSize("",
@@ -52,7 +52,7 @@ class Battle::Scene::Outer
       @sprites[_INTL("switch_{1}", i)].visible = false
     end
     @sprites["switch_cursor"] = IconSprite.new(0, 0, @viewport)
-    @sprites["switch_cursor"].setBitmap("Graphics/Pictures/Battle/switch_cursor")
+    @sprites["switch_cursor"].setBitmap("Graphics/UI/Battle/switch_cursor")
     @sprites["switch_cursor"].z = 4
     @sprites["switch_cursor"].visible = false
     @sprites["lineupPlayer"] = OuterTeamLineup.new(@viewport, @battle.pbParty(0), true, true)
@@ -62,7 +62,7 @@ class Battle::Scene::Outer
     @sprites["lineupOpponent"].z = 5
     @sprites["lineupOpponent"].x = Graphics.width / 2 + 8
     @sprites["vs"] = IconSprite.new(0, 0, @viewport)
-    @sprites["vs"].setBitmap("Graphics/Pictures/Battle/vs")
+    @sprites["vs"].setBitmap("Graphics/UI/Battle/vs")
     @sprites["vs"].ox = @sprites["vs"].bitmap.width / 2
     @sprites["vs"].x = Graphics.width / 2
     @sprites["vs"].y = 20
@@ -276,10 +276,10 @@ class OuterMoveBox < IconSprite
     x += 186 if @pos&1==1
     y += 46  if @pos>1
     super(x,y,viewport)
-    setBitmap("Graphics/Pictures/Battle/move_buttons")
+    setBitmap("Graphics/UI/Battle/move_buttons")
     self.src_rect = Rect.new(0,0,182,42)
     @cursor = IconSprite.new(0, 0, viewport)
-    @cursor.setBitmap("Graphics/Pictures/Battle/move_cursor")
+    @cursor.setBitmap("Graphics/UI/Battle/move_cursor")
     @cursor.x = self.x - 2
     @cursor.y = self.y - 2
     @cursor.z = self.z + 1
@@ -290,14 +290,14 @@ class OuterMoveBox < IconSprite
     @overlay.y = self.y
     @overlay.z = self.z + 2
     @effectiveness_icon = IconSprite.new(0, 0, viewport)
-    @effectiveness_icon.setBitmap("Graphics/Pictures/Battle/effectiveness_icons")
+    @effectiveness_icon.setBitmap("Graphics/UI/Battle/effectiveness_icons")
     @effectiveness_icon.x = self.x - 6
     @effectiveness_icon.y = self.y - 6
     @effectiveness_icon.z = self.z + 3
     @effectiveness_icon.src_rect = Rect.new(0, 0, 26, 26)
     @effectiveness_icon.opacity = 0
     @boost_icon = IconSprite.new(0, 0, viewport)
-    @boost_icon.setBitmap("Graphics/Pictures/Battle/affinityboost_text_small")
+    @boost_icon.setBitmap("Graphics/UI/Battle/affinityboost_text_small")
     @boost_icon.x = self.x + 96
     @boost_icon.y = self.y - 6
     @boost_icon.z = self.z + 3
@@ -326,7 +326,7 @@ class OuterMoveBox < IconSprite
     if move.category != 2
       @parent.battler.eachOpposing do |target|
         bTypes = target.pbTypes(true)
-        typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+        typeMod = Effectiveness.calculate(move.type, *bTypes)
         eff = 0
         if Effectiveness.super_effective?(typeMod)
           eff = 1
@@ -345,7 +345,7 @@ class OuterMoveBox < IconSprite
       @can_affinity_boost = false
       @parent.battler.eachOpposing do |target|
         bTypes = target.pbTypes(true)
-        typeMod = Effectiveness.calculate(move.type, bTypes[0], bTypes[1], bTypes[2])
+        typeMod = Effectiveness.calculate(move.type, *bTypes)
         if Effectiveness.normal?(typeMod) || Effectiveness.super_effective?(typeMod)
           @can_affinity_boost = true
         end
@@ -445,7 +445,7 @@ class OuterTeamLineup < Sprite
     end
     @shown = [showAll] * 6
     @rightAlign = rightAlign
-    @statusBitmap = AnimatedBitmap.new("Graphics/Pictures/Party/statuses_small")
+    @statusBitmap = AnimatedBitmap.new("Graphics/UI/Party/statuses_small")
     @hpcolors=[
        Color.new(14,152,22),Color.new(24,192,32),   # Green
        Color.new(202,138,0),Color.new(232,168,0),   # Orange
@@ -462,7 +462,7 @@ class OuterTeamLineup < Sprite
     @poke_sprites = []
     for i in 0...@party.length
       ball_sprite = IconSprite.new(0, 0, @viewport)
-      ball_sprite.setBitmap("Graphics/Pictures/Battle/icon_ball")
+      ball_sprite.setBitmap("Graphics/UI/Battle/icon_ball")
       ball_sprite.ox = ball_sprite.bitmap.width / 2
       ball_sprite.oy = ball_sprite.bitmap.height / 2
       @ball_sprites.push(ball_sprite)
@@ -584,9 +584,9 @@ class OuterMoveInfo < IconSprite
 
   def initialize(viewport,parent)
     super(502,478,viewport)
-    setBitmap("Graphics/Pictures/Battle/outer_move_info")
-    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
-    @categoryBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/category"))
+    setBitmap("Graphics/UI/Battle/outer_move_info")
+    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
+    @categoryBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/category"))
     @overlay = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(self.bitmap.width,self.bitmap.height)
     @overlay.x = self.x
@@ -615,7 +615,7 @@ class OuterMoveInfo < IconSprite
     @overlay.bitmap.blt(64,6,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(move.type).icon_position,64,28))
     @overlay.bitmap.blt(64,62,@categoryBitmap.bitmap,Rect.new(0,28*move.category,64,28))
     textPos = []
-    powerString = (move.baseDamage <= 0) ? "-" : move.baseDamage.to_s
+    powerString = (move.power <= 0) ? "-" : move.power.to_s
     textPos.push([powerString,28,18,2,base,shadow])
     accString = (move.accuracy <= 0) ? "-" : (move.accuracy.to_s + "%")
     textPos.push([accString,28,54,2,base,shadow])
@@ -709,7 +709,7 @@ class OuterDataBox < RPG::Sprite
     end
     @fainted = @battler.fainted?
     @boxVisible = @parent.visible
-    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/types"))
+    @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
     @pkmnSprite = PokemonIconSprite.new(@battler.pokemon,viewport)
     @pkmnSprite.visible = false
     @pkmnSprite.mirror = true if pos % 2 == 0
@@ -958,7 +958,7 @@ class OuterCommandSprite < IconSprite
     super(x,y,viewport)
     @parent  = parent
     @pos = pos
-    setBitmap(_INTL("Graphics/Pictures/Battle/options"))
+    setBitmap(_INTL("Graphics/UI/Battle/options"))
     refresh
   end
 
@@ -999,12 +999,12 @@ class OuterSwitchBox < IconSprite
     @pokemon = nil
     @overlay = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(170, 112)
-    setBitmap(_INTL("Graphics/Pictures/Battle/switch"))
+    setBitmap(_INTL("Graphics/UI/Battle/switch"))
     @pkmnsprite = PokemonIconSprite.new(@pokemon, viewport)
     @pkmnsprite.setOffset(PictureOrigin::CENTER)
     @pkmnsprite.active = false
-    @statuses=AnimatedBitmap.new(_INTL("Graphics/Pictures/Party/statuses"))
-    @hpbar = AnimatedBitmap.new("Graphics/Pictures/Battle/switch_overlay_hp")
+    @statuses=AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
+    @hpbar = AnimatedBitmap.new("Graphics/UI/Battle/switch_overlay_hp")
     refresh
   end
 
@@ -1096,9 +1096,9 @@ class OuterSwitchBox < IconSprite
       pbDrawTextPositions(@overlay.bitmap, textpos)
       imagepos = []
       for i in 0...@pokemon.types.length
-        imagepos.push(["Graphics/Pictures/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
+        imagepos.push(["Graphics/UI/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
       end
-      imagepos.push(["Graphics/Pictures/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
+      imagepos.push(["Graphics/UI/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
       pbDrawImagePositions(@overlay.bitmap, imagepos)
 
       hptextpos = [[_ISPRINTF("{1: 3d}/{2: 3d}", @pokemon.hp, @pokemon.totalhp),
@@ -1221,11 +1221,11 @@ class Battle::Scene::PokemonDataBox < Sprite
     onPlayerSide = @battler.index.even?
     # Get the data box graphic and set whether the HP numbers/Exp bar are shown
     if sideSize == 1   # One Pokémon on side, use the regular dara box BG
-      bgFilename = ["Graphics/Pictures/Battle/databox_normal",
-                    "Graphics/Pictures/Battle/databox_normal_foe"][@battler.index % 2]
+      bgFilename = ["Graphics/UI/Battle/databox_normal",
+                    "Graphics/UI/Battle/databox_normal_foe"][@battler.index % 2]
     else   # Multiple Pokémon on side, use the thin dara box BG
-      bgFilename = ["Graphics/Pictures/Battle/databox_thin",
-                    "Graphics/Pictures/Battle/databox_thin_foe"][@battler.index % 2]
+      bgFilename = ["Graphics/UI/Battle/databox_thin",
+                    "Graphics/UI/Battle/databox_thin_foe"][@battler.index % 2]
     end
     if onPlayerSide
       @showHP = true
@@ -1270,11 +1270,11 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def initializeOtherGraphics(viewport)
     # Create other bitmaps
-    @numbersBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers")
-    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp_vb{1}", onPlayerSide ? "" : "_foe"))
-    @hpBarExBitmap = AnimatedBitmap.new(_INTL("Graphics/Pictures/Battle/overlay_hp_extra{1}", onPlayerSide ? "" : "_foe"))
-    @expBarBitmap  = AnimatedBitmap.new("Graphics/Pictures/Battle/overlay_exp")
-    @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/Pictures/Battle/icon_numbers_white")
+    @numbersBitmap = AnimatedBitmap.new("Graphics/UI/Battle/icon_numbers")
+    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_vb{1}", onPlayerSide ? "" : "_foe"))
+    @hpBarExBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_extra{1}", onPlayerSide ? "" : "_foe"))
+    @expBarBitmap  = AnimatedBitmap.new("Graphics/UI/Battle/overlay_exp")
+    @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/UI/Battle/icon_numbers_white")
     # Create sprite to draw HP numbers on
     @hpNumbers = BitmapSprite.new(124, 16, viewport)
   #    pbSetSmallFont(@hpNumbers.bitmap)
@@ -1372,7 +1372,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   end
   
   def hp
-    return (@animatingHP) ? @currentHP : @battler.hp
+    return (animating_hp?) ? @anim_hp_current : @battler.hp
   end
   
   def exp_fraction
@@ -1380,30 +1380,16 @@ class Battle::Scene::PokemonDataBox < Sprite
     return (@animatingExp) ? @currentExp.to_f / @rangeExp : @battler.pokemon.exp_fraction
   end
   
-  def animateHP(oldHP, newHP, rangeHP)
-    @currentHP   = oldHP
-    @endHP       = newHP
-    @rangeHP     = rangeHP
-    # NOTE: A change in HP takes the same amount of time to animate, no matter
-    #       how big a change it is.
-    @hpIncPerFrame = (newHP - oldHP).abs / (HP_BAR_CHANGE_TIME * Graphics.frame_rate)
-    # minInc is the smallest amount that HP is allowed to change per frame.
-    # This avoids a tiny change in HP still taking HP_BAR_CHANGE_TIME seconds.
-    minInc = (rangeHP * 4) / (@hpBarBitmap.width * HP_BAR_CHANGE_TIME * Graphics.frame_rate)
-    @hpIncPerFrame = minInc if @hpIncPerFrame < minInc
-    @animatingHP   = true
+  def animate_hp(old_val, new_val)
+    return if old_val == new_val
+    @anim_hp_start = old_val
+    @anim_hp_end = new_val
+    @anim_hp_current = old_val
+    @anim_hp_timer_start = System.uptime
   end
-  
-  def animateExp(oldExp, newExp, rangeExp)
-    return if rangeExp == 0
-    @currentExp     = oldExp
-    @endExp         = newExp
-    @rangeExp       = rangeExp
-    # NOTE: Filling the Exp bar from empty to full takes EXP_BAR_FILL_TIME
-    #       seconds no matter what. Filling half of it takes half as long, etc.
-    @expIncPerFrame = rangeExp / (EXP_BAR_FILL_TIME * Graphics.frame_rate)
-    @animatingExp   = true
-    pbSEPlay("Pkmn exp gain") if @showExp
+
+  def animating_hp?
+    return @anim_hp_timer_start != nil
   end
   
   def pbDrawNumber(number, btmp, startX, startY, align = 0, white = false)
@@ -1485,30 +1471,30 @@ class Battle::Scene::PokemonDataBox < Sprite
     end
     return if s < 0
     pbDrawImagePositions(self.bitmap, [
-      ["Graphics/Pictures/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), @spriteBaseY + 20,
+      ["Graphics/UI/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), @spriteBaseY + 20,
        0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
     pbSetSmallFont(self.bitmap)
     pbDrawTextPositions(self.bitmap, [
-      [_INTL("{1}", @battler.statusCount),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, @spriteBaseY + 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+      [_INTL("{1}", @battler.statusCount.abs),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, @spriteBaseY + 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
     pbSetSystemFont(self.bitmap)
   end
   
   def draw_shiny_icon
     return if !@battler.shiny?
     shiny_x = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/shiny", @spriteBaseX + shiny_x, @spriteBaseY + 36]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/shiny", @spriteBaseX + shiny_x, @spriteBaseY + 36]])
   end
   
   def draw_special_form_icon
     # Mega Evolution/Primal Reversion icon
     if @battler.mega?
-      pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_mega", @spriteBaseX + 8, @spriteBaseY + 34]])
+      pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_mega", @spriteBaseX + 8, @spriteBaseY + 34]])
     elsif @battler.primal?
       filename = nil
       if @battler.isSpecies?(:GROUDON)
-        filename = "Graphics/Pictures/Battle/icon_primal_Groudon"
+        filename = "Graphics/UI/Battle/icon_primal_Groudon"
       elsif @battler.isSpecies?(:KYOGRE)
-        filename = "Graphics/Pictures/Battle/icon_primal_Kyogre"
+        filename = "Graphics/UI/Battle/icon_primal_Kyogre"
       end
       primalX = (@battler.opposes?) ? 208 : -28   # Foe's/player's
       pbDrawImagePositions(self.bitmap, [[filename, @spriteBaseX + primalX, 4]]) if filename
@@ -1517,7 +1503,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/Pictures/Battle/icon_own", @spriteBaseX + 206, @spriteBaseY + 6]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_own", @spriteBaseX + 206, @spriteBaseY + 6]])
   end
   
   def refresh
@@ -1531,11 +1517,11 @@ class Battle::Scene::PokemonDataBox < Sprite
     draw_shiny_icon
     draw_special_form_icon
     draw_owned_icon
-    refreshHP
+    refresh_hp
     refreshExp
   end
   
-  def refreshHP
+  def refresh_hp
     @hpNumbers.bitmap.clear
     return if !@battler.pokemon
     # Show HP numbers
@@ -1599,18 +1585,19 @@ class Battle::Scene::PokemonDataBox < Sprite
     @expBar.src_rect.width = w
   end
   
-  def updateHPAnimation
-    return if !@animatingHP
-    if @currentHP < @endHP      # Gaining HP
-      @currentHP += @hpIncPerFrame
-      @currentHP = @endHP if @currentHP >= @endHP
-    elsif @currentHP > @endHP   # Losing HP
-      @currentHP -= @hpIncPerFrame
-      @currentHP = @endHP if @currentHP <= @endHP
-    end
+  def update_hp_animation
+    return if !animating_hp?
+    @anim_hp_current = lerp(@anim_hp_start, @anim_hp_end, HP_BAR_CHANGE_TIME,
+                            @anim_hp_timer_start, System.uptime)
     # Refresh the HP bar/numbers
-    refreshHP
-    @animatingHP = false if @currentHP == @endHP
+    refresh_hp
+    # End the HP bar filling animation
+    if @anim_hp_current == @anim_hp_end
+      @anim_hp_start = nil
+      @anim_hp_end = nil
+      @anim_hp_timer_start = nil
+      @anim_hp_current = nil
+    end
   end
   
   def updateExpAnimation
@@ -1668,13 +1655,13 @@ class Battle::Scene::PokemonDataBox < Sprite
   
       case gauge.type
       when PBGauge::Full
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,0,180,24])
         textpos.push([gauge.name,x_offset + 90,y_offset - 12,2,base,shadow])
       when PBGauge::Half
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,24,92,24])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,24,92,24])
         textpos.push([gauge.name,x_offset + 45,y_offset - 12,2,base,shadow])
       when PBGauge::Long
-        imagepos.push(["Graphics/Pictures/Battle/boss_gauge.png",x_offset,y_offset,0,48,180,16])
+        imagepos.push(["Graphics/UI/Battle/boss_gauge.png",x_offset,y_offset,0,48,180,16])
         textpos.push([gauge.name,x_offset + 8,y_offset - 12,0,base,shadow])
       end
       pbDrawImagePositions(self.bitmap,imagepos)
@@ -1741,7 +1728,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   def update(frameCounter = 0)
     super()
     # Animate HP bar
-    updateHPAnimation
+    update_hp_animation
     # Animate Exp bar
     updateExpAnimation
     # Update coordinates of the data box

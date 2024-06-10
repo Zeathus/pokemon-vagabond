@@ -84,7 +84,8 @@
 > As long as you're traveling with me, water will be no problem!
 
 [CH1_CRATER_AMETHYST,6]
-> \ts[4]Amethyst has joined the party!\wtnp[60]
+/me Slots win
+> \ts[5]Amethyst has joined the party!\wtnp[60]
 
 [CH1_NO_SURF,0]
 /speaker Amethyst

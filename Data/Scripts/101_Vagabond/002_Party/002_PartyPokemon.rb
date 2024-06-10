@@ -40,8 +40,8 @@ def initPartyPokemon(id)
   case id
   when PBParty::Duke
     party.push(createPartyPokemon(
-      id,:RIOLU,10,[:QUICKATTACK,:METALCLAW,:VACUUMWAVE,:ENDURE],1,
-      :HASTY,0,[1,3,2,3,2,0]))
+      id,:DRAGONAIR,10,[:DRAGONBREATH,:SWIFT,:THUNDERWAVE,:TWISTER],1,
+      :NAIVE,0,[3,1,2,3,0,1]))
     party.push(createPartyPokemon(
       id,:BRONZOR,9,[:CONFUSION,:TACKLE,:CONFUSERAY,:PAYBACK],0,
       :CALM,2,[2,0,3,1,2,3]))
@@ -50,7 +50,7 @@ def initPartyPokemon(id)
     for i in getPartyPokemon(PBParty::Duke)
       if i.species == :BRONZOR || i.species == :BRONZONG
         levels[0] = i.level if i.level > levels[0]
-      elsif i.species == :RIOLU || i.species == :LUCARIO
+      elsif i.species == :DRAGONAIR || i.species == :DRAGONITE || i.species == :RIOLU || i.species == :LUCARIO
         levels[1] = i.level if i.level > levels[1]
       end
     end
@@ -74,7 +74,13 @@ def initPartyPokemon(id)
     party.push(createPartyPokemon(
       id,:TYRUNT,levels[0],[],0,:ADAMANT,0,[3,3,2,1,0,2]))
   when PBParty::Eliana
-
+    party.push(createPartyPokemon(
+      id,:LUXRAY,31,[:SPARK,:QUICKATTACK,:BITE,:MORALEBOOST],0,:ADAMANT,0,[3,3,2,1,0,2]))
+    party[0].form = 1
+    party.push(createPartyPokemon(
+      id,:TINKATUFF,30,[:TOUGHHUG,:ROCKSMASH,:BRUTALSWING,:METALCLAW],2,:JOLLY,0,[2,3,1,3,0,2]))
+    party.push(createPartyPokemon(
+      id,:SABLEYE,30,[:KNOCKOFF,:FAKEOUT,:DISABLE,:NIGHTSHADE],2,:RELAXED,0,[3,2,3,0,2,1]))
   when PBParty::Fintan
 
   when PBParty::Nekane
@@ -165,13 +171,13 @@ end
 def alignMemberLevels(source, target)
   source = getID(PBParty,source) if source.is_a?(Symbol)
   target = getID(PBParty,target) if target.is_a?(Symbol)
-  levels = [18, 18]
 
   pokemon = {
-    PBParty::Duke => [[:RIOLU, :LUCARIO], [:BRONZOR, :BRONZONG], []],
+    PBParty::Duke => [[:DRAGONAIR, :DRAGONITE], [:BRONZOR, :BRONZONG], [:RIOLU, :LUCARIO]],
     PBParty::Amethyst => [[:WEAVILE], [:MISDREAVUS, :MISMAGIUS], [:STARMIE]],
     PBParty::Kira => [[:SANDSHREW, :SANDSLASH, :SANDOLIN], [:LARVESTA, :VOLCARONA], [:TYRUNT, :TYRANTRUM]],
-    PBParty::Eliana => [[:LUXIO, :LUXRAY], [:MIMIKYU], []]
+    PBParty::Eliana => [[:LUXIO, :LUXRAY], [:SABLEYE], [:TINKATUFF, :TINKATON]],
+    PBParty::Fintan => [[:ALAKAZAM], [:TALONFLAME], [:DECIDUEYE]]
   }
 
   getPartyPokemon(target).each do |target_pkmn|

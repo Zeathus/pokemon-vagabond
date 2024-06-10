@@ -4,6 +4,7 @@ DIALOG_FILES = [
   "chapter2",
   "chapter3",
   "chapter4",
+  "chapter5",
   "crosswoods",
   "breccia",
   "lazuli",
@@ -14,6 +15,7 @@ DIALOG_FILES = [
   "mica",
   "pegma",
   "scoria",
+  "amphi",
   "general",
   "pokemon",
   "ruins",
@@ -226,7 +228,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       when "addpauses"
         msgwindows.focused.add_pauses = args[0]
       when "wait"
-        args[0].times do
+        start_time = System.uptime
+        while System.uptime < start_time + args[0]
           Graphics.update
           Input.update
           msgwindows.update
@@ -253,8 +256,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         when "gray"
           tone = Tone.new(0, 0, 0, 255)
         end
-        $game_screen.start_tone_change(tone, args[0] * Graphics.frame_rate / 20)
-        pbWait(args[0] * Graphics.frame_rate / 20)
+        $game_screen.start_tone_change(tone, args[0])
+        pbWait(args[0].to_f / 20.0)
       when "eval"
         eval(args[0])
       when "se"

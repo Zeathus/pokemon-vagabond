@@ -123,6 +123,7 @@ module PBEffects
   CorrosiveAcid       = 118
   EverlastingFainted  = 119
   AffinityBoostNext   = 120
+  LayOfTheLand        = 121
 
   #=============================================================================
   # These effects apply to a battler position

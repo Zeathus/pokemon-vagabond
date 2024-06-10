@@ -132,6 +132,7 @@ class PokemonMapMetadata
   attr_reader   :erasedEvents
   attr_reader   :movedEvents
   attr_accessor :strengthUsed
+  attr_accessor :electrifyUsed
   attr_accessor :lower_encounter_rate    # Black Flute's old effect
   attr_accessor :higher_encounter_rate   # White Flute's old effect
   attr_accessor :lower_level_wild_pokemon    # White Flute's new effect
@@ -145,6 +146,7 @@ class PokemonMapMetadata
     @erasedEvents              = {}
     @movedEvents               = {}
     @strengthUsed              = false
+    @electrifyUsed             = false
     @lower_encounter_rate      = false   # Takes priority over @higher_encounter_rate
     @higher_encounter_rate     = false
     @lower_level_wild_pokemon  = false   # Takes priority over @higher_level_wild_pokemon

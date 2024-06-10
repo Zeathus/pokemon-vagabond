@@ -467,7 +467,7 @@
 /speaker Kira nohat_furious
 > I... <shake>I can't...</shake>
 /speaker Azelf
-> (He is shaking. It's highly unusual for his aura to be this weak[.])
+> (He is shaking. It is highly unusual for his aura to be this weak[.])
 /speaker Kira nohat_furious
 > <shake>Don't you dare peer into my thoughts!</shake>
 /speaker Azelf
@@ -707,3 +707,162 @@
   /cancelchoice No
     /return false
 ?/>
+
+[CH4_LAKE,0]
+/speaker Fintan
+> The storm in the desert has started.\nAll is going as planned.
+
+[CH4_LAKE,1]
+/event set Fintan 4
+/event Fintan emote confused
+/speaker Yin
+> Fintan, sir!\nThe G[.]P[.]O[.] guys have given chase!
+> Our scouts in Scoria City saw them gathering intel in an attempt to enter the desert.
+> There is also someone with them who looks weirdly similar to <PLAYER>.
+/speaker Fintan
+> Was there now? Maybe there was truth to Eliana's recount...
+> Good work, I will forward this to Eliana myself.
+/speaker Yin
+> Thank you, sir!
+
+[CH4_LAKE,2]
+/speaker Eliana
+/portrait none
+> Hey Fintan! What's up?
+/speaker Fintan
+> A yin just reported that the G[.]P[.]O[.] people might enter Scoria Desert despite the ongoing storm.
+/speaker Eliana
+/portrait none
+> They are!? What if they get hurt!?
+/speaker Fintan
+> The plan was to let the sandstorm cover for us. What they choose to subject themselves to is outside our control.
+> At worst, they will collapse on their way here and wake up after the storm with some burns and blisters.
+> Nothing a few days of first aid can't fix.
+/speaker Eliana
+/portrait none
+> That's still bad!
+/speaker Fintan
+> We have to keep our wits about us and prioritize what is important. Don't let the enemy's mistakes get in your way.
+/speaker Eliana
+/portrait none
+> Yeah... Sorry...
+
+[CH4_LAKE,3]
+/event set Fintan 4
+/event Fintan emote sigh
+/speaker Fintan
+> Eliana... Ever the worrywart.
+
+[CH4_DESERT,0]
+/event set Amethyst 95
+/event set Kira 96
+/event set Nekane 97
+/event set Azelf 98
+/event set Player2 99
+/speaker Kira
+> Are you guys holding up?
+/reset
+/event Amethyst emote frown
+/event Player2 turn up
+/speaker Amethyst pinch
+> This sandstorm... is really...\ndoing its toll... on me...
+.> My eyes... feel heavy...
+
+[CH4_DESERT,1]
+/speaker Kira annoyed
+> Amethyst!
+
+[CH4_DESERT,2]
+/event set Kira 96
+/event Kira emote ...
+/speaker Kira annoyed
+> Damn, she's completely out.\nWe need to find somewhere more humid, and fast.
+
+[CH4_DESERT,3]
+/speaker Kira annoyed
+> How are the rest of you doing?
+/speaker Azelf
+> Sorry... I am not doing...\nmuch better...
+> I can feel the others...\nare at their limits too...
+
+[CH4_DESERT,4]
+/speaker Kira annoyed
+> Nekane?
+
+[CH4_DESERT,5]
+/speaker Kira annoyed
+?> <PLAYER>?
+  /choice I can't go on
+  /choice It's up to you
+?/>
+
+[CH4_DESERT,6]
+/speaker Kira annoyed
+> I should have known better. I am the one most used to this climate and even I am feeling the fatigue kicking in.
+/expression angry
+> <shake>How could I let this happen to Amethyst.\nThis isn't how you repay someone.</shake>
+
+[CH4_DESERT,7]
+/speaker Archeops
+/hidename 1
+/cry ARCHEOPS 100 100
+!> Aaaaaaaarcchhhh!
+
+[CH4_DESERT,8]
+/speaker Kira angry
+> <shake>What now!?</shake>
+
+[CH4_DESERT,9]
+/speaker Kira annoyed
+> The Archeops has gone mad from all the fumes...
+
+[CH4_DESERT,10]
+/speaker Kira angry
+> <shake>Leave her alone! If you want any of them, you'll have to get past me first!</shake>
+
+[CH4_DESERT,11]
+/speaker Kira annoyed
+> If things weren't going south already...
+/expression neutral
+> I have to pull through.\nSandolin, let's go!
+
+[CH4_DESERT,12]
+/speaker Kira annoyed
+> That was a close call...
+
+[CH4_DESERT,13]
+/speaker Kira annoyed
+> At least I scared it away...
+
+[CH4_DESERT,14]
+/speaker Kira annoyed
+> But now even I have started...\nto feel the sting...
+
+[CH4_DESERT,15]
+/speaker Kira annoyed
+> <shake>Must... hold... on...</shake>
+
+[CH4_DESERT,16]
+/speaker Kira annoyed
+.> <shake>just... a bit... longer...</shake>
+
+[CH4_INTERMISSION,0]
+/speaker <PLAYER2>
+> Welcome back, Fintan!\nHow did the mission go?
+/speaker Fintan
+> Everything went as calculated. [Mesprit]Mesprit[/] has been acquired and put into their respective chamber downstairs.
+/speaker <PLAYER2>
+> I knew we could count on you. Well done.
+> This is sure to please [R]the Dragon[/].
+/speaker Fintan smile
+> Always glad to be of service to you and the Dragon.
+/expression neutral
+> Now, where is Eliana? She would usually be here with you.
+/speaker <PLAYER2>
+> She left a little while ago and looked to be in a hurry. I have no clue why.
+/speaker Fintan
+> I see...
+> While reading people isn't my forté,\nI believe she might have been upset by our pursuers hurting themselves.
+/speaker <PLAYER2>
+> That does sound like her, alright.
+> She probably just needed some fresh air to cool off, and will be back later.

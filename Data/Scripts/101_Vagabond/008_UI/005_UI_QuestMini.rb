@@ -97,7 +97,7 @@ def pbMiniQuestMenu
   sprites["messagebox"].letterbyletter=false
 
   sprites["difficulty"]=IconSprite.new(384,342,viewport)
-  sprites["difficulty"].setBitmap("Graphics/Pictures/Stadium_difficulty")
+  sprites["difficulty"].setBitmap("Graphics/UI/Stadium/difficulty")
   sprites["difficulty"].src_rect = Rect.new(0,0,120,22)
   sprites["difficulty"].z=999
 

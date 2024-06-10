@@ -680,7 +680,7 @@ module Compiler
             raise _INTL("Expected a species entry line for encounter type {1} for map {2}.",
                         GameData::EncounterType.get(current_type).real_name, encounter_hash[:map]) + "\n" + FileLineData.linereport
           end
-          values = get_csv_record(line, [nil, "vevV", nil, :Species])
+          values = get_csv_record(line, [nil, "vevVV", nil, :Species])
           values[3] = values[2] if !values[3]
           if values[2] > max_level
             raise _INTL("Level number {1} is not valid (max. {2}).", values[2], max_level) + "\n" + FileLineData.linereport
@@ -689,6 +689,7 @@ module Compiler
           elsif values[2] > values[3]
             raise _INTL("Minimum level is greater than maximum level.") + "\n" + FileLineData.linereport
           end
+          values[4] = 0 if values[4].nil?
           encounter_hash[:types][current_type].push(values)
         elsif line[/^\[\s*(.+)\s*\]$/]   # Map ID line
           values = $~[1].split(",").collect! { |v| v.strip.to_i }

@@ -314,9 +314,9 @@ def compile_dialog
         when "wait"
           arg = arguments[0]
           if arg[arg.length - 1] == "s"
-            arg = (arg[0...(arg.length-1)].to_f * Graphics.frame_rate).round.to_i
+            arg = arg[0...(arg.length-1)].to_f
           else
-            arg = arg.to_i
+            arg = arg.to_f / 20.0
           end
           feed.push([Dialog::Command, "wait", arg])
         when "rest"

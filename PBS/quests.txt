@@ -11,27 +11,15 @@ Done = The doctor fixed up the sick Zigzagoon. Hooray!
 ShowAvailable = true
 
 [THEFIERYROBIN]
-Name = The Fiery Robin
+Name = A Natural Desire
 Type = Basic
 Exp = 50
 Items = SHARPBEAK
-Description = The Bird Keeper in Breccia City really wants to add a Fletchling to his collection.
+Description = The Bird Keeper in Breccia City really wants to add a Natu to his collection.
 Location = Breccia City
 FullLocation = in Breccia City
-Step1 = Catch a Fletchling on Breccia Trail and deliver it to the Bird Keeper in Breccia City.
-Done = "You caught a Fletchling for the Bird Keeper, and now they enjoy each other's company."
-# Breccia City
-RequireMaps = 8
-
-[ANEYEFORANOWL]
-Name = An Eye for an Owl
-Type = Basic
-Exp = 40
-Description = A young girl in Breccia City reeeaaalllyyy wants to see a cute owl.
-Location = Breccia City
-FullLocation = in Breccia City
-Step1 = Register a Grass-type Owl Pokémon as seen in the Pokédex and show it to the girl in Breccia City.
-Done = The girl was so happy to see Rowlet! She even gave you some Sweet Hearts.
+Step1 = Catch a Natu in Halcyon Forest north of the Crosswoods and deliver it to the Bird Keeper in Breccia City.
+Done = "You caught a Natu for the Bird Keeper, and now they enjoy each other's company."
 # Breccia City
 RequireMaps = 8
 
@@ -56,8 +44,8 @@ Items = RAREBONE
 Description = "The carpenter in Breccia City, Pent, has trouble gathering woods for his workshop. He needs a Pokémon to help him out."
 Location = Breccia City
 FullLocation = in Breccia City
-Step1 = "Help Pent get his carpenter business up and running again by getting him a Timburr from Quartz Passing, east of the Crosswoods."
-Step2 = Catch a Timburr for Pent. You can find it east of the Crosswoods.
+Step1 = "Help Pent get his carpenter business up and running again by catching him a Timburr. They live near Breccia City."
+Step2 = Catch a Timburr for Pent. They live near Breccia City.
 Done = Pent has got his shop up and running again! He can now craft you various items.
 # Breccia City
 RequireMaps = 8
@@ -70,7 +58,7 @@ Description = "The jeweler in Lapis Lazuli City, Channelle, has a severe lack of
 Location = Lapis Lazuli City
 FullLocation = in Lapis Lazuli City
 Step1 = Show Channelle a Pokémon with a bright pink pearl to inspire her.
-Done = Channelle was happy to see the Pokémon you brought her. She even named her jewelry after it!
+Done = Channelle was happy to see the Pokémon you brought her. She even named her jewelry store after it!
 # Lapis District
 RequireMaps = 27
 
@@ -216,20 +204,20 @@ Require = $game_switches[GPO_MEMBER]
 Name = Small Fry
 Type = Fisher
 Exp = 70
-Description = Ivan sees potential in you. He has challenged you to hook a Seaking and a Poliwhirl, but you have to find them yourself.
+Description = "Ivan sees potential in you. He has challenged you to hook a Seaking and a Poliwhirl, but you have to find them yourself."
 Location = Lazuli River
 FullLocation = at Lazuli River
-Step1 = Successfully hook a Seaking (found at sea) and a Poliwhirl (found in lakes).
-Done = ???
+Step1 = Successfully hook a Staryu (found at sea) and a Poliwhirl (found in lakes).
+Done = "You hooked a Staryu and a Poliwhirl, and Ivan taught you the Powerful Hookset technique as a reward."
 
 [HOOKLINEANDSINKER]
 Name = "Hook, Line and Sinker"
 Type = Fisher
 Exp = 100
-Description = ???
+Description = "Impressed by your efforts, Ivan has tasked you with a new challenge to hook a Gyarados, a Cloyster and a Mantine."
 Location = Lazuli River
 FullLocation = at Lazuli River
-Step1 = Successfully hook a Gyarados, a Dragonair and a Whiscash.
+Step1 = "Successfully hook a Gyarados, a Cloyster and a Mantine."
 Done = ???
 
 [BIGFISH]
@@ -239,7 +227,7 @@ Exp = 150
 Description = ???
 Location = Lazuli River
 FullLocation = at Lazuli River
-Step1 = Successfully hook a Wailord, a Milotic and a Walrein.
+Step1 = "Successfully hook a Wailord, a Milotic and a Walrein."
 Done = ???
 
 [MASTEROFTHESEA]
@@ -353,7 +341,20 @@ Step3 = Kira told you to jump off an edge in Scoria City between two sandstone r
 Step4 = Kira showed you the way to a secret marketplace. Find someone called J who has the goggles you need.
 Step5 = "With Go-Goggles acquired, head to Scoria Desert through the cave in the Secret Market."
 Step6 = "After dealing with the B Gang, Sandslash evolved! Make your way through Scoria Desert with its new power."
-Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
+Done = "You failed to stop the D.A.O. from capturing Mesprit due to the storm in the desert. However, Eliana moved you to safety."
+
+[ELIANASFAVOR]
+Name = Eliana's Favor
+Type = Main
+Exp = 110
+Description = "Mesprit was captured by the D.A.O. before you got their help. However, Eliana showed sympathy for Nekane and has granted you another chance."
+Step1 = Wake Nekane up to take her with you.
+Step2 = Head to the D.A.O. HQ east of Scoria Canyon. Scoria Canyon is north of Scoria City.
+Step3 = Use Luxray's Electrify to open the gate to D.A.O. HQ. Do so by opening the Field Action menu (default: D).
+Step4 = Infiltrate D.A.O. HQ with Eliana and Nekane to find Mesprit.
+Step5 = Make your way through the basement at the D.A.O. HQ to find Mesprit.
+Step6 = Have Mesprit project you into Nekane's mind to unlock her capacity for emotions.
+Done = Temp
 
 [TEST]
 Name = Test

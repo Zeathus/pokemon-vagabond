@@ -30,6 +30,14 @@
 /speaker Toriel
 > Trainers on routes are a great way to train and become stronger!
 
+[CROSSWOODS_LEANNE,0]
+/speaker Leanne
+> Are you going to Lazuli City? You should visit the park there to find some cute Pokémon!
+
+[CROSSWOODS_LEANNE,1]
+/speaker Leanne
+> Make sure to visit the Lazuli Park when you reach Lazuli City! That's where I caught my Spoink.
+
 [LAZULI_RIVER_SUSIE,0]
 /speaker Susie
 > Both me and my Pokémon love to be out in the fresh air. Let's start some winds with a Pokémon battle!
@@ -37,14 +45,6 @@
 [LAZULI_RIVER_SUSIE,1]
 /speaker Susie
 > A good battle is such a pleasant breeze.
-
-[LAZULI_RIVER_REVALI,0]
-/speaker Revali
-> My Pokémon always win competitions!<br>You don't stand a chance!
-
-[LAZULI_RIVER_REVALI,1]
-/speaker Revali
-> Have you tried archery before?<br>It can be hard to hit even a single arrow, but I can hit three at once!
 
 [LAZULI_RIVER_ROBIN,0]
 /speaker Robin
@@ -96,11 +96,27 @@
 
 [BRECCIA_TRAIL_WADE,0]
 /speaker Wade
-> My bees are coming for you! Bzzzzzz!
+> Defeating my Butterfree and Beedrill isn't a freebie!
 
 [BRECCIA_TRAIL_WADE,1]
 /speaker Wade
-> I need more bees.
+> Maybe I was a freebie all along...
+
+[BRECCIA_UNDERGROWTH_REVALI,0]
+/speaker Revali
+> My Pokémon always win competitions!<br>You don't stand a chance!
+
+[BRECCIA_UNDERGROWTH_REVALI,1]
+/speaker Revali
+> Have you tried archery before?<br>It can be hard to hit even a single arrow, but I can hit three at once!
+
+[BRECCIA_UNDERGROWTH_PETER,0]
+/speaker Peter
+> I wonder if you would make a good ranger. Let me test your skills.
+
+[BRECCIA_UNDERGROWTH_PETER,1]
+/speaker Peter
+> You would make a good ranger. You should speak with the clerk at the output just past here.
 
 [QUARTZ_PASSING_MARK,0]
 /speaker Mark
@@ -165,6 +181,22 @@
 [MT._PEGMA_HILLSIDE_EDDIE,1]
 /speaker Eddie
 > I like shorts, they're comfy and easy to wear!
+
+[MT._PEGMA_1F_LUDOVIC,0]
+/speaker Ludovic
+> On your way to the Mica District, are you? Not without a battle first!
+
+[MT._PEGMA_1F_LUDOVIC,1]
+/speaker Ludovic
+> Mt. Pegma is quite the sight from the outside, but I think the inside is even more impressive.
+
+[MT._PEGMA_1F_OLI,0]
+/speaker Oli
+> I think you stepped on a nice rock. Shame on you.
+
+[MT._PEGMA_1F_OLI,1]
+/speaker Oli
+> I'm sure I can find another nice stone around here somewhere.
 
 [PEGMA_YANG_0]
 /speaker Yang

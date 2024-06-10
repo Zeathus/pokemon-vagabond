@@ -526,7 +526,11 @@ class PokemonBagScreen
           @scene.pbDisplay(_INTL("The {1} can't be held.", itm.portion_name))
         else
           pbChoosePokemonScreen(0, 99999) { |member_id, party_idx|
-            pbGiveItemToPokemon(item, getPartyPokemon(member_id)[party_idx], @scene)
+            if member_id && party_idx
+              pbGiveItemToPokemon(item, getPartyPokemon(member_id)[party_idx], @scene)
+            else
+              true
+            end
           }
           @scene.pbRefresh
         end

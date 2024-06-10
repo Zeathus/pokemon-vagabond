@@ -1,0 +1,421 @@
+[CH5_SHUFFLE,0]
+> \se[Sand Landing]Shuffle... \se[Sand Landing:70]shuffle... \se[Sand Landing:40]shuffle...\wtnp[4]
+
+[CH5_SHUFFLE,1]
+> \se[Sand Landing]Shuffle... \se[Sand Landing]shuffle... \se[Sand Landing]shuffle...\wtnp[4]
+
+[CH5_SHUFFLE,2]
+> \se[Sand Landing:40]Shuffle... \se[Sand Landing:70]shuffle... \se[Sand Landing]shuffle...\wtnp[4]
+
+[CH5_START,0]
+/speaker Eliana
+/portrait none
+/hidename 1
+> ...That storm really did a number on them.
+> Now it's your turn.
+
+[CH5_START,1]
+/speaker Eliana
+/portrait none
+/hidename 1
+> You really do look exactly like <PLAYER>.\nIt's so weird.
+
+[CH5_START,2]
+/speaker Eliana
+/portrait none
+/hidename 1
+> Whew... One more to go.
+
+[CH5_START,3]
+/speaker Eliana
+/portrait none
+/hidename 1
+> That's all of them!\nTalk about a workout...
+
+[CH5_OASIS_BLOCK]
+> You should speak to the person who rescued you before leaving.
+
+[CH5_OASIS_BLOCK,1]
+> You should get Nekane before leaving.
+
+[CH5_FAINTED_AMETHYST]
+> Amethyst won't wake up.
+
+[CH5_FAINTED_KIRA]
+> Kira is fully knocked out.
+
+[CH5_FAINTED_NEKANE]
+> Nekane is unconscious.
+
+[CH5_FAINTED_AZELF]
+> Azelf isn't responding.
+
+[CH5_OASIS,0]
+/speaker Eliana
+> ...
+
+[CH5_OASIS,1]
+/speaker Eliana surprised
+> Oh, you're awake already!?
+/expression think
+> That makes this kinda awkward...\nI planned to leave before you woke up.
+/expression happy
+?> I was just so tired from moving you guys to the oasis that I had to rest up a bit.
+  /savechoice ch5 eliana rescue
+  /choice Did you rescue us?
+    /expression think
+    > Yeah, I guess I did, huh.
+  /choice What are you doing here?
+    /expression wonder
+    > Well, I probably shouldn't have come...
+  /choice Stay away from them.
+    /expression sad
+    > No! I'm not planning anything! Promise!
+?/>
+/expression neutral
+> Fintan said you went into the desert despite how dangerous it was.
+/expression sad
+> I know you're our enemies and all, but I don't want anyone to get badly hurt.
+/expression neutral
+> I wasn't responsible for capturing Mesprit though. Fintan did and should be back at HQ by now.
+> Don't worry, I had no intention to capture Azelf while you were out cold.\n...or out hot rather.
+/expression sad
+?> That just... wouldn't feel fair.
+  /savechoice ch5 eliana reason
+  /choice Why capture the Lake Guardians?
+    /expression sad
+    > Sorry, but I would be in trouble if I revealed that.
+  /choice Stay away from the Lake Guardians
+    /expression sad
+    > Sorry, but we have no choice but to capture them.
+?/>
+/expression neutral
+> All I can say is that it's for the sake of the world.
+> You... err... I mean, [R]someone[/] rescued me and gave me something meaningful to strive for.
+/expression think
+?> But if you don't even know why we're after them... Why would you go to such lengths to stop us?
+  /savechoice ch5 eliana lengths
+  /choice It's against their will
+    /expression neutral
+    > Even so, we have to. We need their help for our mission.
+    /expression think
+    > Though, I also have to wonder...\nWhy did you take a defenseless girl along with you?
+  /choice We needed Mesprit's help
+    /expression neutral
+    > You needed Mesprit's help too?\nWhy is that?
+    /expression think
+    > Though, maybe that is related to why you took a defenseless girl along with you?
+?/>
+/reset
+/fade black
+> You explain Nekane's situation to Eliana.
+/reset
+/fade normal
+/speaker Eliana sad
+> I had no idea...
+> I can't imagine how it must be to not have any emotions or willpower... No feelings or ideals to drive you forward...
+/expression think
+> Hmmm... Maybe we can work this out.\nI'd hate to leave Nekane in that state.
+/expression neutral
+> Obviously I can't hand over Mesprit, but we could [R]visit[/] them.
+/expression smile
+?> If we team up, we can bring Nekane to the HQ in secret to have Mesprit help her!
+  /savechoice ch5 teamup
+  /choice Count me in
+    /expression happy
+    > I had a feeling you'd say that!\nYou two really are so alike.
+    /return true
+  /choice That would risk your position
+    /expression think
+    > That's true, but if it can help someone,\nI think it's worth it.
+  /choice What's in it for you?
+    /expression think
+    > For me? I hadn't really thought of it that way.
+    /expression neutral
+    > It just feels like the right thing to do, you know?
+  /choice Sounds like a trap
+    /if pbGetChoiceValue("ch5 eliana rescue") == "Stay away from them."
+      /expression sad
+      > Again, I swear I'm not planning anything malicious!
+    /else
+      /expression think
+      > I guess it kinda does, yeah...
+    /end
+    /expression neutral
+    > I'll just have to ask you to trust me on this.
+?/>
+/return false
+
+[CH5_OASIS,2]
+/speaker Eliana neutral
+?> So, are you in on the plan?
+  /choice Yes
+    > That's the spirit!
+    /return true
+  /cancelchoice No
+?/>
+/expression sad
+> This might be your only chance to meet Mesprit... I promise I just want to help.
+/loop
+  ?> Will you give me a chance?
+    /choice Yes
+      /expression neutral
+      > Thank you. I'm glad you can trust me,\nif only a bit.
+      /break
+    /cancelchoice No
+      > Please... I just want to help...
+  ?/>
+/end
+
+[CH5_OASIS,3]
+/speaker Eliana
+> We need to wake Nekane to tell her the plan. I'll follow your lead.
+
+[CH5_OASIS,4]
+/me Slots win
+> \ts[5]Eliana has joined the party!
+
+[CH5_OASIS,5]
+/speaker Nekane
+> \ts[2]What... happened..?\nWhere... are we..?
+/speaker Eliana
+> \ts[1]The sandstorm knocked you all out, and I moved you to this oasis.
+/expression happy
+> \ts[1]Glad to see you're unharmed!
+/speaker Nekane
+> \ts[2]Who... are you?
+/speaker Eliana
+> \ts[1]My name is Eliana. <PLAYER> and I are going to take you to see Mesprit!
+/speaker Nekane
+> \ts[2]I thought <PLAYER> and Amethyst were doing that already.
+/speaker Eliana
+> \ts[1]Well... Mesprit has been relocated, so there's been a change of plans.
+/speaker Nekane
+> \ts[2]Okay. Then I will follow you.
+/speaker Eliana
+> \ts[1]Great! We won't let you down.
+
+[CH5_OASIS,6]
+/speaker Eliana smile
+?> Now, let's make our way to HQ!
+  /savechoice ch5 others
+  /choice Let's go!
+    /expression happy
+    > You've got the right energy!\nIt's heist time!
+    /expression think
+    > We should get going before the others wake up. If they knew about this, I could risk the trust of my friends at HQ.
+  /choice What about the others?
+    /expression neutral
+    > I've left them provisions for when they wake up. They will be fine on their own.
+    /expression think
+    > It's also better if they didn't know about this... If they did, I could risk the trust of my friends at HQ.
+?/>
+/expression neutral
+> Please keep this between us.\nIt's all I ask for in return.
+> To reach the D[.]A[.]O[.] HQ, we have to head east at Scoria Canyon. That's the canyon north of Scoria City.
+
+[CH5_GROVE,0]
+/speaker Eliana
+> The D[.]A[.]O[.] HQ is just past this gate.
+
+[CH5_GROVE,1]
+/speaker Eliana
+> To open it, we must activate the device right here.
+/expression smile
+> Luckily, my Luxray can do just that!
+
+[CH5_GROVE,2]
+/speaker Eliana smile
+/expression neutral
+> C'mon, give it a try!
+
+[CH5_GROVE,3]
+> You can use Luxray's [R]Electrify skill[/] while Eliana is in your party.
+> To use Electrify, open the Field Action menu (default: D). When used, Electrify will activate all devices around you.
+
+[CH5_HQ,0]
+/speaker Eliana smile
+> Welcome to the D[.]A[.]O[.] HQ!
+/expression think
+> Well, it's not the warmest of welcomes considering we're going to sneak around.
+/expression neutral
+> We should avoid being spotted if we can, but not look too suspicious doing it.
+/expression smile
+> That way, we won't draw suspicion if a yin or yang happens to spot us passing by.
+/expression neutral
+> We have to make our way downstairs first of all, so follow me.
+
+[CH5_HQ,1]
+/event set Yin 5
+/event set Fintan 9
+/event Yin emote ...
+/event Fintan emote ...
+
+[CH5_HQ,2]
+/speaker Eliana think
+> Of course Fintan would strike a conversation with the stairs in sight...
+
+[CH5_HQ,3]
+/speaker Eliana think
+/expression neutral
+> We can't let Fintan see you.\nHe would definitely catch on.
+> I'll distract him while you sneak down, OK?
+/expression think
+> I have a hunch of what he'll ask me about, so you go when I say [R]"Sorry about that"[/].
+
+[CH5_HQ,4]
+/speaker Fintan smile
+> Ah, Eliana, are you back from your excursion?
+
+[CH5_HQ,5]
+/speaker Eliana smile
+> Yeah, I just needed some fresh air.
+/speaker Fintan smile
+> It is as <PLAYER> said then.\nI am relieved you did not do anything hasty or reckless.
+/speaker Eliana happy
+> Me, doing something hasty or reckless? Can you imagine?
+/speaker Fintan
+> I definitely can, yes.
+/speaker Eliana angry
+> You're not supposed to agree with that!
+/expression sad
+> But I didn't mean to worry you.\n[R]Sorry about that[/].
+
+[CH5_HQ,6]
+/speaker Fintan smile
+> \ts[2]The important thing is that you are back.\nWe both know you are indispensable to us.\wtnp[30]
+
+[CH5_HQ,7]
+/speaker Eliana
+> Phew... That went pretty well.
+> We'll need Luxray's help to get through here. Remember that Electrify can activate devices [R]at a distance[/].
+
+[CH5_HQ,8]
+> If you leave the basement during this mission, you will be sent outside the HQ.
+> You also get sent directly back to the basement once you enter the HQ again.
+
+[CH5_HQ,9]
+/speaker Yang
+> Oh, it's rare to see you down here, boss.
+> Did you get a new cloak?\nIt looks good on you!
+> If you're going to check on the recently captured Mesprit, it's just down the hall.
+
+[CH5_PRE_MESPRIT,0]
+/speaker Eliana smile
+> We made it!\nThis is where we're keeping Mesprit.
+/expression neutral
+> I will send out Mesprit, but remember that they will stay here after helping Nekane.
+
+[CH5_PRE_MESPRIT,1]
+/cry Mesprit 100 100
+/event set Mesprit 10
+/event Mesprit emote ?
+
+[CH5_PRE_MESPRIT,2]
+/event set Eliana 8
+/event set Mesprit 10
+/speaker Mesprit
+> Where am I?\nAm I being released?
+/speaker Eliana sad
+> Sorry, but I can't do that.
+/expression neutral
+> ...Wait.
+/expression surprised
+> You can talk to me!?
+/speaker Mesprit
+> Of course I can. You are very much in tune with your emotions after all.
+/speaker Eliana think
+> What do you mean by that?\nI never heard Azelf say anything.
+/speaker Mesprit
+> That is because you are not as attuned to willpower as you are to emotions.
+> Emotions are my domain, and willpower is Azelf's. Who you can hear depends on your affinity to these traits.
+/speaker Eliana think
+> Interesting... I guess that makes sense.
+/event Eliana turn left
+/event Player turn right
+/expression neutral
+?> <PLAYER>, could you hear Azelf?
+  /choice Yes I could
+    /event Eliana turn up
+    /event Player turn up
+    /speaker Mesprit
+    > Intriguing.\nI sense that you can hear me too.
+  /choice Not a word
+    /event Eliana turn up
+    /event Player turn up
+    /speaker Mesprit
+    > There is no need to keep secrets. It is clear you can hear both Azelf and me.
+  /choice I hear them both just fine
+    /event Eliana turn up
+    /event Player turn up
+    /speaker Mesprit
+    > Intriguing.\nI sense that you speak truthfully.
+?/>
+> It is rare for a person to be attuned to more than one trait, but not unheard of.
+> That aside, what is it you have called me for, if not to release me?
+/reset
+/fade black
+/event Mesprit turn left
+> You and Eliana explain the situation to Mesprit.
+/reset
+/fade normal
+/speaker Mesprit
+> So Amethyst and Azelf recommended to bring this girl to me, did they?
+/event Mesprit turn down
+> I understand.\nIf only Amethyst could have come too.\nIt has been far too long.
+> I must also thank you, Eliana.\nWithout your initiative, this girl might never have been helped.
+> As such, I will respect your deal and stay behind at the end of this.
+/speaker Eliana happy
+> Wow, it's not every day you get thanked by a legendary Pokémon!
+/expression neutral
+> Thank you for your cooperation.
+/speaker Mesprit
+> Can you ask the girl if she will let me examine her?
+/reset
+/fade black
+/event Mesprit turn left
+/event Eliana turn left
+/event Player turn left
+> You tell Nekane about Mesprit's offer.
+/reset
+/fade normal
+/speaker Nekane
+> \ts[2]Sure. Mesprit can examine me.
+
+[CH5_PRE_MESPRIT,3]
+/event set Eliana 8
+/event set Mesprit 10
+/event Mesprit emote ...
+/speaker Mesprit
+> It is hard to believe, but I sense no emotion at all from her.
+> I cannot begin to fathom how it must be to live this way.
+/speaker Eliana sad
+> Those were my thoughts exactly!\nI knew I couldn't leave that be...
+/speaker Mesprit
+> Indeed. What Azelf said about the lack of [Azelf]willpower[/] also appears to be true...
+> Unfortunately, I cannot comment on [Uxie]knowledge[/], as its logical nature constrasts too much with emotion.
+> Luckily, the emotional issue I can do something about.
+/speaker Eliana surprised
+> You can!?
+/expression
+> That's a relief...
+/speaker Mesprit
+> Yes, I can grant her the capacity for emotions, but this case is not so simple.
+> It is as if her mind was never made for any of these traits in the first place.
+> For this to be possible, I need to project one of you into her mind to manually open her up to the ability.
+/event Player turn right
+/event Eliana turn left
+/speaker Eliana
+> That role would naturally go to <PLAYER> of course.
+?> In the meantime, I will stand guard in case something happens.
+  /savechoice ch5 guard
+  /choice I trust you
+    /expression smile
+    > You can leave this to me!
+  /choice Remember our deal
+    > Of course, I've come too far to back out.
+?/>
+/event Player turn up
+/event Eliana turn up
+/speaker Mesprit
+> With that settled, let me know when you are ready to enter Nekane's mind.

@@ -51,7 +51,7 @@ class PokemonPokedexInfo_Scene
     @sprites["formicon"].setOffset(PictureOrigin::CENTER)
     @sprites["formicon"].x = 82 + 128
     @sprites["formicon"].y = 328 + 128
-    @sprites["uparrow"] = AnimatedSprite.new("Graphics/UI/uparrow", 8, 28, 40, 2, @viewport)
+    @sprites["uparrow"] = AnimatedSprite.new("Graphics/UI/up_arrow", 8, 28, 40, 2, @viewport)
     @sprites["uparrow"].x = 242
     @sprites["uparrow"].y = 268
     @sprites["uparrow"].play
@@ -246,8 +246,8 @@ class PokemonPokedexInfo_Scene
        116, 52, :left, Color.new(248, 248, 248), Color.black]
     ]
     if @show_battled_count
-      textpos.push([_INTL("Number Battled"), 314, 164, :left, base, shadow])
-      textpos.push([$player.pokedex.battled_count(@species).to_s, 452, 196, :right, base, shadow])
+      textpos.push([_INTL("Number Battled"), 498, 52, :left, base, shadow])
+      textpos.push([$player.pokedex.battled_count(@species).to_s, 498, 84, :left, base, shadow])
     else
       textpos.push([_INTL("Height"), 498, 52, :left, base, shadow])
       textpos.push([_INTL("Weight"), 498, 84, :left, base, shadow])
@@ -425,7 +425,7 @@ class PokemonPokedexInfo_Scene
       x = (j % town_map_width) * sqwidth
       x += (512 + 256 - @sprites["areamap"].bitmap.width) / 2
       y = (j / town_map_width) * sqheight
-      y += (384 + 96 + 32 - @sprites["areamap"].bitmap.height) / 2
+      y += (384 + 96 - @sprites["areamap"].bitmap.height) / 2
       @sprites["areahighlight"].bitmap.fill_rect(x, y, sqwidth, sqheight, pointcolor)
       if j - town_map_width < 0 || !points[j - town_map_width]
         @sprites["areahighlight"].bitmap.fill_rect(x, y - 2, sqwidth, 2, pointcolorhl)
@@ -449,7 +449,7 @@ class PokemonPokedexInfo_Scene
       )
       textpos.push([_INTL("Area unknown"), Graphics.width / 2, (384 / 2) + 38, 2, base, shadow])
     end
-    textpos.push([pbGetMessage(MessageTypes::RegionNames, @region), 414 + 128, 50 + 32, :center, base, shadow])
+    textpos.push([GameData::TownMap.get(@region).name, 414 + 128, 50 + 32, :center, base, shadow])
     textpos.push([_INTL("{1}'s area", GameData::Species.get(@species).name),
                   Graphics.width / 2, 358 + 32, :center, base, shadow])
     pbDrawTextPositions(overlay, textpos)
