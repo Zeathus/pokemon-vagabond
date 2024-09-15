@@ -284,6 +284,28 @@ def pbBossRuinGrass
   pbBoss.add(t)
 end
 
+# --- Krookodile ---
+def pbBossRuinGround
+  pbBossRuinGeneral
+  pbModifier.hpmult = ($PokemonSystem.difficulty > 1) ? 3.0 : 2.0
+  pbModifier.moves = [
+    ($PokemonSystem.difficulty > 0) ? :EARTHQUAKE : :BULLDOZE,
+    :POWERTRIP,
+    ($PokemonSystem.difficulty > 0) ? :ROCKSLIDE : :ROCKTOMB,
+    :BULKUP
+  ]
+  pbModifier.item = :WEAKNESSPOLICY if $PokemonSystem.difficulty > 1
+  pbModifier.ability = :MOXIE
+
+  # Attempts to raise its own stats with Moxie to use Power Trip
+  # Counters: Justified, Clear Smog, Topsy-Turvy, Stat-Lowering Moves
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "TRIGGERER is powered up by feeling invincible!"))
+  t.effect(BossEff_ChangeStatQuick.new(t, [:DEFENSE, :SPECIAL_DEFENSE, :SPEED], 1))
+  pbBoss.add(t)
+end
+
 # --- Chimecho ---
 def pbBossSmokeyForest
   pbBossGeneral
@@ -590,6 +612,63 @@ def pbBossArcheops
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Dialog.new(t, "CH4_DESERT", 11))
   pbBoss.add(t)
+end
+
+# --- Chapter 5 Togekiss and Yamask ---
+def pbBossMind1
+  pbBossGeneral
+  setBattleRule("2v2")
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+  pbModifier.optimize
+  if $PokemonSystem.difficulty > 1
+    pbModifier.moves = [:LIFEDEW,:CHARM,:DAZZLINGGLEAM,:AIRSLASH]
+  else
+    pbModifier.moves = [:LIFEDEW,:CHARM,:FAIRYWIND,:AERIALACE]
+  end
+  pbModifier.next.optimize
+  pbModifier.next.moves = [:NIGHTSHADE,:DARKPULSE,:FAKETEARS,:WILLOWISP]
+end
+
+# --- Chapter 5 Wimpod and Primeape ---
+def pbBossMind2
+  pbBossGeneral
+  setBattleRule("2v2")
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+
+  pbModifier.optimize
+  pbModifier.moves = [:STRUGGLEBUG,:SCREECH]
+  pbModifier.next.optimize
+  if $PokemonSystem.difficulty > 1
+    pbModifier.next.moves = [:RAGEFIST,:OUTRAGE,:CLOSECOMBAT,:STOMPINGTANTRUM]
+  else
+    pbModifier.next.moves = [:RAGEFIST,:OUTRAGE,:FURYSWIPES,:STOMPINGTANTRUM]
+  end
+end
+
+# --- Chapter 5 Hattrem and Zoroark ---
+def pbBossMind3(fight, type)
+  pbBossGeneral
+  setBattleRule("1v1")
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+
+  pbModifier.optimize
+  if type == 0
+    pbModifier.ability = :ANTICIPATION
+    pbModifier.moves = [:CALMMIND,:DAZZLINGGLEAM,:PSYBEAM]
+  else
+    pbModifier.moves = [:SUCKERPUNCH,:FOULPLAY]
+  end
+end
+
+# --- Chapter 5 Revinja ---
+def pbBossMindRevinja
+  pbBossGeneral
+  setBattleRule("1v1")
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+
+  pbModifier.optimize
+  pbModifier.moves = [:SHADOWBALL,:PSYCHIC,:DESTINYBOND]
+  pbModifier.name = "???"
 end
 
 def pbTestBoss

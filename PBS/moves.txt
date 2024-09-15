@@ -9074,7 +9074,7 @@ Power = 80
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
-FunctionCode = FrostbiteTarget
+FunctionCode = RestoreBerryWhenAffinityBoosted
 Flags = CanProtect,CanMirrorMove
 Description = The user gathers energy from the fruits growing off its body to strike the target. If affinity boosted, restores a consumed berry.
 #-------------------------------
@@ -9086,7 +9086,7 @@ Power = 120
 Accuracy = 100
 TotalPP = 10
 Target = AllNearFoes
-FunctionCode = BurnTarget
+FunctionCode = AttackAndSkipNextTurnIfNotAffinityBoosted
 Flags = CanProtect,CanMirrorMove
 Description = The user detonates all the explosive material in its shell to damage opposing Pokémon. The user must rest on the next turn to regain its energy, unless it was affinity boosted.
 #-------------------------------
@@ -9098,7 +9098,7 @@ Power = 90
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
-FunctionCode = FrostbiteTarget
+FunctionCode = HalveTurnDamageWhenAffinityBoosted
 Flags = CanProtect,CanMirrorMove
 Description = The target is hit with a beam reminiscent of the northern lights. If affinity boosted, halves the damage taken by allies for the rest of the turn.
 #-------------------------------
@@ -9133,7 +9133,7 @@ Power = 160
 Accuracy = 100
 TotalPP = 5
 Target = NearOther
-FunctionCode = AttackAndSkipNextTurn
+FunctionCode = CannotUseTwiceInARow
 Flags = Contact,CanProtect,CanMirrorMove
 Description = The user swings its whole body around to attack with its huge hammer. This move can't be used twice in a row.
 #-------------------------------
@@ -9209,7 +9209,7 @@ Target = NearOther
 FunctionCode = RaiseUserSpeed1
 Flags = Contact,CanProtect,CanMirrorMove
 EffectChance = 100
-Description = The user attacks suddenly as if leaping out from tall grass. The user’s nimble footwork boosts its Speed stat.
+Description = The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat.
 #-------------------------------
 [CHILLYRECEPTION]
 Name = Chilly Reception
@@ -9257,3 +9257,37 @@ Target = NearOther
 FunctionCode = CrashDamageIfFailsUnusableInGravity
 Flags = Contact,CanProtect,CanMirrorMove
 Description = The user electrifies its body and drops onto the target to inflict damage. If this move misses, the user takes damage instead.
+#-------------------------------
+[NIHILITY]
+Name = Nihility
+Type = GHOST
+Category = Status
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = PreventTargetStatIncreases
+Flags = CanProtect,CanMirrorMove
+Description = For three turns, the target is prevented from raising any of their stats.
+#-------------------------------
+[PERMANENCE]
+Name = Permanence
+Type = NORMAL
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = ProtectUserAbilityAndItem
+Description = Prevents the user's item and ability from being changed or disabled until the user leaves the field. Effects like healing can still be prevented by relevant effects, such as Heal Block.
+#-------------------------------
+[TRIPLEARROWS]
+Name = Triple Arrows
+Type = FIGHTING
+Category = Physical
+Power = 90
+Accuracy = 100
+TotalPP = 25
+Target = NearOther
+FunctionCode = LowerTargetDefense1
+Flags = CanProtect,CanMirrorMove,HighCriticalHitRate
+EffectChance = 50
+Description = The target is attacked with a sharp chop. Critical hits land more easily. Has a 50% chance to lower the target's Defense.

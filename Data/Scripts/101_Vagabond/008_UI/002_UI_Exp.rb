@@ -383,6 +383,7 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
           while thispoke.level < newlevel
             tmpexp = growth_rate.minimum_exp_for_level(thispoke.level + 1)
             thispoke.exp = tmpexp
+            thispoke.calc_stats
 
             # Level Animation
             lvlbitmap.clear

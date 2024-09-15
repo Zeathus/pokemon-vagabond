@@ -72,7 +72,7 @@ end
 #===============================================================================
 # Format text
 #===============================================================================
-FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2|wave|wavebow|shake)(\s*\=\s*([^>]*))?>/i
+FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2|wave|wavebow|shake|shakeslow)(\s*\=\s*([^>]*))?>/i
 
 def fmtEscape(text)
   if text[/[&<>]/]
@@ -550,7 +550,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
           rightalign = 1
           lastword = [characters.length, x]
         end
-      when "wave", "wavebow", "shake"
+      when "wave", "wavebow", "shake", "shakeslow"
         if endtag
           effectstack.pop
         else

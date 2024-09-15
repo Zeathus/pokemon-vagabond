@@ -291,26 +291,49 @@ class Game_Character
     when 1, 3   # Down diagonals
       # Treated as moving down first and then horizontally, because that
       # describes which tiles the character's feet touch
+      success = true
       (start_x...(start_x + @width)).each do |i|
-        return false if !passable?(i, start_y, 2, strict)
+        success = false if !passable?(i, start_y, 2, strict)
       end
       x_diff = (dir == 3) ? @width - 1 : 0
       ((start_y - @height + 1)..start_y).each do |i|
-        return false if !passable?(start_x + x_diff, i + 1, dir + 3, strict)
+        success = false if !passable?(start_x + x_diff, i + 1, dir + 3, strict)
       end
-      return true
+      if !success
+        success = true
+        x_diff = (dir == 3) ? @width - 1 : 0
+        ((start_y - @height + 1)..start_y).each do |i|
+          success = false if !passable?(start_x + x_diff, i, dir + 3, strict)
+        end
+        x_tile_offset = (dir == 3) ? 1 : -1
+        (start_x...(start_x + @width)).each do |i|
+          success = false if !passable?(i + x_tile_offset, start_y - @height + 1, 2, strict)
+        end
+      end
+      return success
     when 7, 9   # Up diagonals
       # Treated as moving horizontally first and then up, because that describes
       # which tiles the character's feet touch
+      success = true
       x_diff = (dir == 9) ? @width - 1 : 0
       ((start_y - @height + 1)..start_y).each do |i|
-        return false if !passable?(start_x + x_diff, i, dir - 3, strict)
+        success = false if !passable?(start_x + x_diff, i, dir - 3, strict)
       end
       x_tile_offset = (dir == 9) ? 1 : -1
       (start_x...(start_x + @width)).each do |i|
-        return false if !passable?(i + x_tile_offset, start_y - @height + 1, 8, strict)
+        success = false if !passable?(i + x_tile_offset, start_y - @height + 1, 8, strict)
       end
-      return true
+      if !success
+        success = true
+        (start_x...(start_x + @width)).each do |i|
+          success = false if !passable?(i, start_y, 8, strict)
+        end
+        x_diff = (dir == 9) ? @width - 1 : 0
+        ((start_y - @height + 1)..start_y).each do |i|
+          success = false if !passable?(start_x + x_diff, i - 1, dir - 3, strict)
+        end
+      end
+      return success
     end
     return false
   end
@@ -930,6 +953,18 @@ class Game_Character
     (moving? || jumping?) ? update_move : update_stop
     # Update animation
     update_pattern
+    if $game_variables && $game_variables[PLAYER_ROTATION] != false && self == $game_player
+      target_y_offset = 180 - (($game_variables[PLAYER_ROTATION].abs % 360) - 180).abs
+      target_y_offset = -(16 * target_y_offset / 180).floor
+      if @y_offset < target_y_offset
+        @y_offset = [@y_offset + 1, target_y_offset].min
+      elsif self.y_offset > target_y_offset
+        @y_offset = [@y_offset - 1, target_y_offset].max
+      end
+      if $game_variables[PLAYER_ROTATION] == 0 && @y_offset == 0
+        $game_variables[PLAYER_ROTATION] = false
+      end
+    end
   end
 
   def update_command

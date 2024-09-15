@@ -7,6 +7,7 @@ def pbQuicksand(eventid)
   start_time = System.uptime
   last_time = start_time
   started_tone_change = false
+  y_offset = 0.0
   while System.uptime - start_time < 1.0
     time_now = System.uptime
     delta = time_now - last_time
@@ -15,8 +16,9 @@ def pbQuicksand(eventid)
       $game_screen.start_tone_change(Tone.new(-255, -255, -255), 30)
       started_tone_change = true
     end
+    y_offset -= y_step * delta
     $game_player.x_offset -= x_step * delta
-    $game_player.y_offset -= y_step * delta
+    $game_player.y_offset = y_offset
     pbUpdateSceneMap
     Graphics.update
     Input.update

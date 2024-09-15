@@ -12,6 +12,7 @@ class Battle
       next unless b && b.opposes?
       next if b.participants.length==0
       next unless b.fainted? || b.captured
+      pbGainEffortEssence(b)
       # Count the number of participants
       p1 = pbParty(0)
       numPartic = 0
@@ -51,6 +52,25 @@ class Battle
         end
       end
       b.participants = []
+    end
+  end
+
+  def pbGainEffortEssence(defeatedBattler)
+    essenceYield = defeatedBattler.pokemon.evYield
+    attacker = defeatedBattler.causeOfFaint
+    if attacker
+      # Modify EV yield based on pkmn's held item
+      if !Battle::ItemEffects.triggerEVGainModifier(attacker.item, attacker, essenceYield)
+        Battle::ItemEffects.triggerEVGainModifier(@initialItems[0][attacker.pokemonIndex], attacker, essenceYield)
+      end
+      # Double EV gain because of Pokérus
+      if attacker.pokerusStage >= 1   # Infected or cured
+        essenceYield.each_key { |stat| essenceYield[stat] *= 2 }
+      end
+      essenceHeld = pbGetEffortEssence
+      essenceYield.each_key { |stat|
+        essenceHeld[stat] = [essenceHeld[stat] + essenceYield[stat], 1000].min
+      }
     end
   end
 

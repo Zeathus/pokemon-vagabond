@@ -49,3 +49,13 @@ def perfectlySpacedLines(bitmap,normtext,boxheight,lines,maxlines)
     end
   end
 end
+
+def pbSetScreenOrigin(sprites, ox, oy)
+  sprites = [sprites] if !sprites.is_a?(Array)
+  for s in sprites
+    s.ox = ox - s.x
+    s.x = ox
+    s.oy = oy - s.y
+    s.y = oy
+  end
+end

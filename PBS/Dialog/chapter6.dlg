@@ -1,0 +1,50 @@
+[CH6_WAKE_UP]
+> You'd best go meet up with the others right away.
+
+[CH6_MEETING,0]
+/speaker Amethyst smile
+> Good morning everyone!
+/expression neutral
+> I explained the situation to Azelf before the meeting.
+/expression awkward
+> It was a fairly one-sided conversation...
+/expression neutral
+> I'll leave the discussion to you and Kira, as you can hear Azelf.
+/speaker Kira lookaway
+> No way around it, huh?
+/expression neutral
+?> Well then... As we learned yesterday, Nekane has successfully gained emotions from Mesprit.
+  /choice Can she have willpower now?
+    /speaker Azelf
+    > While it is possible to grant her willpower this very moment, she has yet to come to terms with her new emotions.
+  /choice She must get used to emotions.
+    /speaker Azelf
+    > You are correct. While it is possible to grant her willpower this very moment, she is not ready.
+?/>
+> A person should not have the willpower to act on emotions they cannot understand. It can put them in great danger.
+/speaker Kira
+> Someone like that is bound to be unpredictable. If she's not ready, she's not ready.
+/speaker Azelf
+> This would have been much easier if Mesprit was here. They would undoubtedly be the best guide.
+> However, I know of [R]someone[/] who might be able to help.
+> To meet him, we must head into [R]Halcyon Forest[/], north of the Crosswoods.
+/speaker Kira lookaway
+> We have to meet some mystery guy who lives in the woods?
+/expression annoyed
+> At least let us know who we're meeting with.
+/speaker Azelf
+> I believe he himself would prefer it to be a surprise, but I promise he is trustworthy.
+/speaker Kira
+> If you say so. Sounds like we'll just have to go with the flow.
+
+[CH6_MEETING,1]
+/speaker Kira
+> Azelf wants us to go meet someone in Halcyon Forest, who can apparently help Nekane understand her emotions.
+/speaker Amethyst confused
+> I don't recall there being any cottages or the like in Halcyon Forest...
+/expression neutral
+> But if Azelf says so, we'll go have a look!
+/expression awkward
+> A trip through the forest doesn't sound half-bad either. Especially after our desert trip...
+/speaker Kira
+> Then let's get going.

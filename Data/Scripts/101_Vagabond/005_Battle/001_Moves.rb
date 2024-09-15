@@ -337,6 +337,118 @@ class Battle::Move::AffinityBoostSideEffect < Battle::Move
   end
 end
 
+#===============================================================================
+# This attack is always a critical hit if affinity boosted. (X-Scissor, Cut)
+#===============================================================================
+class Battle::Move::AlwaysCriticalHitWhenAffinityBoosted < Battle::Move
+  def pbCritialOverride(user, target); return !(user.affinityBooster.nil?); end
+end
+
+#===============================================================================
+# Halves the damage taken by allies until end of turn if affinity boosted. (Boreal Beam)
+#===============================================================================
+class Battle::Move::HalveTurnDamageWhenAffinityBoosted < Battle::Move
+  def pbEffectGeneral(user)
+    if user.affinityBooster && user.pbOwnSide.effects[PBEffects::AuroraVeil] == 0
+      user.pbOwnSide.effects[PBEffects::AuroraVeil] = 1
+      @battle.pbDisplay(_INTL("{1} made {2} stronger against physical and special moves!",
+                            @name, user.pbTeam(true)))
+    end
+  end
+end
+
+#===============================================================================
+# Attacks first turn, skips second turn if not affinity boosted (Blowout Blast).
+#===============================================================================
+class Battle::Move::AttackAndSkipNextTurnIfNotAffinityBoosted < Battle::Move
+  def pbEffectGeneral(user)
+    if user.affinityBooster
+      @battle.pbDisplay(_INTL("The Affinity Boost made {1} not have to recharge!", user.pbThis))
+      return
+    end
+    user.effects[PBEffects::HyperBeam] = 2
+    user.currentMove = @id
+  end
+end
+
+#===============================================================================
+# Restored the user's consumed berry if affinity boosted. (Fruit Flourish)
+#===============================================================================
+class Battle::Move::RestoreBerryWhenAffinityBoosted < Battle::Move
+  def pbEffectGeneral(user)
+    if user.affinityBooster
+      if !user.item && user.recycleItem && GameData::Item.get(user.recycleItem).is_berry?
+        user.item = user.recycleItem
+        user.setRecycleItem(nil)
+        user.setInitialItem(user.item) if !user.initialItem
+        @battle.pbDisplay(_INTL("{1} harvested one {2}!", user.pbThis, user.itemName))
+        user.pbHeldItemTriggerCheck
+      end
+    end
+  end
+end
+
+#===============================================================================
+# Prevent the removal and changing of the user's item and ability
+# until it switches out. Most logic handled elsewhere (Permanence)
+#===============================================================================
+class Battle::Move::ProtectUserAbilityAndItem < Battle::Move
+  def canSnatch?; return true; end
+
+  def pbMoveFailed?(user, targets)
+    if user.effects[PBEffects::Permanence]
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectGeneral(user)
+    user.effects[PBEffects::Permanence] = true
+    @battle.pbDisplay(_INTL("{1} is protecting its item and ability!", user.pbThis))
+  end
+end
+
+#===============================================================================
+# For 3 rounds, prevents the target from raising their stats. (Nihility)
+#===============================================================================
+class Battle::Move::PreventTargetStatIncreases < Battle::Move
+  def canMagicCoat?; return true; end
+
+  def pbFailsAgainstTarget?(user, target, show_message)
+    if target.effects[PBEffects::Nihility] > 0
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    return false
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    target.effects[PBEffects::Nihility] = 3
+    @battle.pbDisplay(_INTL("{1} was prevented from raising its stats!", target.pbThis))
+    target.pbItemStatusCureCheck
+  end
+end
+
+#===============================================================================
+# The move cannot be used in succession (Gigaton Hammer).
+#===============================================================================
+class Battle::Move::CannotUseTwiceInARow < Battle::Move
+  def pbEffectGeneral(user)
+    if user.hasActiveAbility?(:RELENTLESS) && user.affinityBooster
+      @battle.pbShowAbilitySplash(user)
+      @battle.pbDisplay(_INTL("The Affinity Boost made {1} not have to recharge!", user.pbThis))
+      @battle.pbHideAbilitySplash(user)
+      return
+    end
+    user.effects[PBEffects::GigatonHammer] = @id
+    user.effects[PBEffects::GigatonHammerTime] = 2
+  end
+end
+
+#===============================================================================
+# Test Move to ensure no AI logic crashes the game.
+#===============================================================================
 class Battle::Move::CrashTest < Battle::Move
 
   def pbEffectGeneral(user)

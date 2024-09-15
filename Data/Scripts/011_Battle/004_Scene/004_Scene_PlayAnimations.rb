@@ -330,6 +330,24 @@ class Battle::Scene
   end
 
   #=============================================================================
+  # Animates a Pokémon fainting
+  #=============================================================================
+  def pbUnfaintBattler(battler)
+    @briefMessage = false
+    # Pokémon plays cry and drops down, data box disappears
+    unfaintAnim   = Animation::BattlerUnfaint.new(@sprites, @viewport, battler.index, @battle)
+    dataBoxAnim = Animation::DataBoxAppear.new(@sprites, @viewport, battler.index)
+    loop do
+      unfaintAnim.update
+      dataBoxAnim.update
+      pbUpdate
+      break if unfaintAnim.animDone? && dataBoxAnim.animDone?
+    end
+    unfaintAnim.dispose
+    dataBoxAnim.dispose
+  end
+
+  #=============================================================================
   # Animates throwing a Poké Ball at a Pokémon in an attempt to catch it
   #=============================================================================
   def pbThrow(ball, shakes, critical, targetBattler, showPlayer = false)

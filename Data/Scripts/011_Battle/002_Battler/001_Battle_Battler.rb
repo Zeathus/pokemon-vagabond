@@ -45,6 +45,7 @@ class Battle::Battler
   attr_accessor :canRestoreIceFace   # Whether Hail started in the round
   attr_accessor :damageState
   attr_accessor :affinityBooster
+  attr_accessor :causeOfFaint
 
   # These arrays should all have the same number of values in them
   STAT_STAGE_MULTIPLIERS    = [2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8]
@@ -220,7 +221,9 @@ class Battle::Battler
 
   def pbThis(lowerCase = false)
     if opposes?
-      if @battle.trainerBattle?
+      if name == "???"
+        return _INTL("the mysterious Pokémon")
+      elsif @battle.trainerBattle?
         return lowerCase ? _INTL("the opposing {1}", name) : _INTL("The opposing {1}", name)
       else
         return lowerCase ? _INTL("the wild {1}", name) : _INTL("The wild {1}", name)
@@ -424,10 +427,12 @@ class Battle::Battler
 
   def itemActive?(ignoreFainted = false)
     return false if fainted? && !ignoreFainted
-    return false if @effects[PBEffects::Embargo] > 0
-    return false if @battle.field.effects[PBEffects::MagicRoom] > 0
-    return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
     return false if hasActiveAbility?(:KLUTZ, ignoreFainted)
+    if !@effects[PBEffects::Permanence]
+      return false if @effects[PBEffects::Embargo] > 0
+      return false if @battle.field.effects[PBEffects::MagicRoom] > 0
+    end
+    return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
     return true
   end
 

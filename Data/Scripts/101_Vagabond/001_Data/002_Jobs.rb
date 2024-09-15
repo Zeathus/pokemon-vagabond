@@ -747,10 +747,10 @@ class JobEngineer < Job
   def rewards
       return [
           "Custom Pokémon",
-          @level < 2 ? "New Frame" : _INTL("{1} Frame", @dummy[0]),
-          @level < 3 ? "New Frame + More" : _INTL("{1} Frame + More", @dummy[1]),
-          @level < 4 ? "New Frame + More" : _INTL("{1} Frame + More", @dummy[2]),
-          @level < 5 ? "New Frame + More" : "RKS Frame + More",
+          @level < 2 ? "New Frame + New Moves & Stat Chips" : _INTL("{1} Frame + New Moves & Stat Chips", @dummy[0]),
+          @level < 3 ? "New Frame + Second Stat Chip Slot" : _INTL("{1} Frame + Second Stat Chip Slot", @dummy[1]),
+          @level < 4 ? "New Frame + New Moves & Stat Chips" : _INTL("{1} Frame + New Moves & Stat Chips", @dummy[2]),
+          @level < 5 ? "Final Frame" : "RKS Frame",
       ]
   end
 

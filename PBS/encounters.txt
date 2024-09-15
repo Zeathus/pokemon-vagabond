@@ -176,6 +176,10 @@ Cave,5
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
+[078] # Crosswoods Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
 [21] # Feldspar District
 Land,21
     25,GROWLITHE,8,12

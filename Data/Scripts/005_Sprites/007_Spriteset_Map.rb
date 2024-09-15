@@ -43,6 +43,8 @@ class Spriteset_Map
   @@viewport1.z = 0
   @@viewport3 = Viewport.new(0, 0, Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT)   # Flashing
   @@viewport3.z = 500
+  @@viewport_test = Viewport.new(0, 0, Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT)
+  @@viewport_test.z = 900
 
   # For access by Spriteset_Global.
   def self.viewport
@@ -63,6 +65,7 @@ class Spriteset_Map
       @character_sprites.push(sprite)
     end
     EventHandlers.trigger(:on_new_spriteset_map, self, @@viewport1)
+    #createWaterMap
     update
   end
 
@@ -78,6 +81,7 @@ class Spriteset_Map
     @panorama = nil
     @fog = nil
     @character_sprites.clear
+    @water_sprite&.dispose
   end
 
   def getAnimations
@@ -127,5 +131,347 @@ class Spriteset_Map
     @@viewport3.color = $game_screen.flash_color
     @@viewport1.update
     @@viewport3.update
+    @water_sprite&.update
+  end
+
+  class DummyTile
+    attr_accessor :filename
+    attr_accessor :src_rect
+
+    def initialize
+      @filename = ""
+      @src_rect = Rect.new(0, 0, 32, 32)
+    end
+  end
+
+  class WaterSprite < Sprite
+    def initialize(viewport, bitmap, map)
+      super(viewport)
+      @map = map
+      self.bitmap = bitmap
+      self.src_rect = Rect.new(0, 0, bitmap.width / 8, bitmap.height / 8)
+      @time = System.uptime
+      @frame = 0
+      @sun_bitmaps = [
+        Bitmap.new("Graphics/Pictures/LE.png"),
+        Bitmap.new("Graphics/Pictures/LE2.png")
+      ]
+      @sun = Sprite.new(viewport)
+      @sun.pattern = @sun_bitmaps[0]
+      @sun.pattern_tile = false
+      @sun.pattern_blend_type = 0
+      @sun.pattern_opacity = 192
+      @sun.bitmap = Bitmap.new(@sun.pattern.width, @sun.pattern.height)
+      @sun.zoom_x = 2
+      @sun.zoom_y = 2
+      @sun.z = 1
+      @sun.x = 120
+      @sun.y = 120
+      @sun_rect = Rect.new(0, 0, @sun.bitmap.width, @sun.bitmap.height)
+      @sun_origin = [Graphics.width / 2, Graphics.height + 150]
+    end
+
+    def update
+      self.x = -(@map.display_x.to_f / Game_Map::X_SUBPIXELS / 2).round * 2
+      self.y = -(@map.display_y.to_f / Game_Map::Y_SUBPIXELS / 2).round * 2
+      new_time = System.uptime
+      if new_time - @time > 0.1
+        @time = new_time
+        @frame = (@frame + 1) % 64
+        self.src_rect.x = (self.bitmap.width / 8) * (@frame % 8)
+        self.src_rect.y = (self.bitmap.height / 8) * (@frame / 8)
+        time_now = pbGetTimeNow
+        hour = time_now.hour
+        if hour >= 6 && hour < 20
+          @sun.pattern = @sun_bitmaps[0]
+          time_of_day = ((hour - 6) * 60 * 60 + time_now.min * 60 + time_now.sec).to_f / (14 * 60 * 60)
+        elsif hour < 4 || hour >= 20
+          @sun.pattern = @sun_bitmaps[1]
+          hour = (hour < 6) ? (hour + 4) : (hour - 20)
+          time_of_day = (hour * 60 * 60 + time_now.min * 60 + time_now.sec).to_f / (8 * 60 * 60)
+        else
+          time_of_day = 1.5
+        end
+        sun_angle = time_of_day * (Math::PI * 2 / 3) + Math::PI / 6
+        s = Math.sin(sun_angle)
+        c = Math.cos(sun_angle)
+        @sun.x = -200
+        @sun.y = Graphics.height + 150
+        @sun.x -= @sun_origin[0]
+        @sun.y -= @sun_origin[1]
+        new_sun_x = @sun.x * c - @sun.y * s
+        new_sun_y = @sun.x * s + @sun.y * c
+        @sun.x = ((new_sun_x + @sun_origin[0] - @sun.bitmap.width / 2) / 2).round * 2
+        @sun.y = ((new_sun_y + @sun_origin[1] - @sun.bitmap.height / 2) / 2).round * 2
+        pbDayNightTint(self)
+        pbDayNightTint(@sun)
+      end
+      self.bitmap.blt(
+        @sun_rect.x, @sun_rect.y,
+        @sun.bitmap,
+        Rect.new(0, 0, @sun_rect.width, @sun_rect.height)
+      )
+      @sun_rect.x = self.src_rect.x - (self.x - @sun.x) / 2
+      @sun_rect.y = self.src_rect.y - (self.y - @sun.y) / 2
+      @sun.bitmap.clear
+      @sun.bitmap.blt(0, 0, self.bitmap, @sun_rect)
+      self.bitmap.clear_rect(@sun_rect)
+      @sun.update
+      super
+    end
+
+    def dispose
+      @sun_bitmaps.each do |bm|
+        bm.dispose
+      end
+      @sun.bitmap = nil
+      @sun.dispose
+      super
+    end
+  end
+
+  def tileHasWater(tileset, tile)
+    pixel = tileset.get_pixel(tile.src_rect.x + 8 * 2, tile.src_rect.y + 8 * 2)
+    return true if pixel.alpha == 1
+    pixel = tileset.get_pixel(tile.src_rect.x * 2, tile.src_rect.y * 2)
+    return true if pixel.alpha == 1
+    pixel = tileset.get_pixel(tile.src_rect.x + 15 * 2, tile.src_rect.y * 2)
+    return true if pixel.alpha == 1
+    pixel = tileset.get_pixel(tile.src_rect.x * 2, tile.src_rect.y + 15 * 2)
+    return true if pixel.alpha == 1
+    pixel = tileset.get_pixel(tile.src_rect.x + 15 * 2, tile.src_rect.y + 15 * 2)
+    return true if pixel.alpha == 1
+    return false
+  end
+
+  def tileHasRiver(tileset, tile)
+    pixel = tileset.get_pixel(tile.src_rect.x + 8 * 2, tile.src_rect.y + 8 * 2)
+    return true if pixel.alpha == 1 && pixel.green == 0 && pixel.blue == 255
+    pixel = tileset.get_pixel(tile.src_rect.x * 2, tile.src_rect.y * 2)
+    return true if pixel.alpha == 1 && pixel.green == 0 && pixel.blue == 255
+    pixel = tileset.get_pixel(tile.src_rect.x + 15 * 2, tile.src_rect.y * 2)
+    return true if pixel.alpha == 1 && pixel.green == 0 && pixel.blue == 255
+    pixel = tileset.get_pixel(tile.src_rect.x * 2, tile.src_rect.y + 15 * 2)
+    return true if pixel.alpha == 1 && pixel.green == 0 && pixel.blue == 255
+    pixel = tileset.get_pixel(tile.src_rect.x + 15 * 2, tile.src_rect.y + 15 * 2)
+    return true if pixel.alpha == 1 && pixel.green == 0 && pixel.blue == 255
+    return false
+  end
+
+  def createWaterMap
+    if false
+      time_now = System.uptime
+      echoln "load start"
+      water_bitmap = Bitmap.new("test_file.png")
+      echoln "load end"
+      echoln (System.uptime - time_now).to_s
+      @water_sprite = WaterSprite.new(@@viewport1, water_bitmap, @map)
+      @water_sprite.z = 1
+      @water_sprite.zoom_x = 2
+      @water_sprite.zoom_y = 2
+      return
+    end
+    
+    echoln "watermap start"
+    tileset = $scene.map_renderer.tilesets[@map.tileset_name]
+    tile = DummyTile.new()
+    tile.filename = @map.tileset_name
+    blank = Color.new(0, 0, 0, 0)
+    water_bitmaps = []
+    for i in 0...64
+      water_bitmaps.push(Bitmap.new(@map.width * 16, @map.height * 16))
+    end
+
+    # Map out what tiles have water
+    water_map = []
+    for i in 0...@map.height
+      water_map.push([false] * @map.width)
+    end
+    for my in 0...(@map.height)
+      for mx in 0...(@map.width)
+        for i in 0...3
+          $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+          if tileHasWater(tileset, tile)
+            water_map[my][mx] = true
+            break
+          end
+        end
+      end
+    end
+
+    # Map out the movement of rivers
+    river_map = []
+    for i in 0...@map.height
+      river_map.push([[0, 0]] * @map.width)
+    end
+    for my in 0...(@map.height)
+      for mx in 0...(@map.width)
+        if water_map[my][mx]
+          for i in 0...3
+            $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+            if tileHasRiver(tileset, tile)
+              distance = [0.0, 0.0, 0.0]
+              while water_map[my][mx + distance[0]]
+                distance[0] += 1
+                if mx + distance[0] >= @map.width
+                  distance[0] = [distance[0], 10].max
+                  break
+                end
+              end
+              while water_map[my + distance[1]][mx]
+                distance[1] += 1
+                if my + distance[1] >= @map.height
+                  distance[1] = [distance[1], 10].max
+                  break
+                end
+              end
+              while water_map[my + distance[2]][mx + distance[2]]
+                distance[2] += 1
+                if mx + distance[2] >= @map.width || my + distance[2] >= @map.height
+                  distance[2] = [distance[2], 10].max
+                  break
+                end
+              end
+              #if mx - 1 < 0 || water_map[my][mx - 1]
+              #  distance[0] += 4
+              #end
+              #if my - 1 < 0 || water_map[my - 1][mx]
+              #  distance[1] += 4
+              #end
+              #if mx - 1 < 0 || my - 1 < 0 || water_map[my - 1][mx - 1]
+              #  distance[2] += 4
+              #end
+              distance[0] **= 2
+              distance[1] **= 2
+              distance[2] **= 2
+              total = distance[0] + distance[1] + distance[2]
+              if total > 0
+                river_map[my][mx] = [(distance[0] + distance[2] / 2) / total, (distance[1] + distance[2] / 2) / total]
+              end
+              break
+            end
+          end
+        end
+      end
+    end
+
+    # Create the entire water map
+    time_now = System.uptime
+    echoln "water start"
+    water = pbGetAutotile("water_dynamic")
+    for my in 0...(@map.height)
+      echoln _INTL("water {1}/{2}", my, @map.height)
+      for mx in 0...(@map.width)
+        if (mx + my * @map.width) % 100 == 0
+          Graphics.update
+          Input.update
+        end
+        for i in 0...3
+          $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+          for ty in 0...16
+            for tx in 0...16
+              pixel = tileset.get_pixel(tile.src_rect.x + tx * 2, tile.src_rect.y + ty * 2)
+              is_water = false
+              if pixel.alpha == 1
+                is_water = true
+                if pixel.green == 255 && pixel.blue == 255
+                  for frame in 0...64
+                    layer1 = water.get_pixel((mx * 16 + tx + frame / 2) % 32, (my * 16 + ty - frame / 2) % 32)
+                    layer2 = water.get_pixel((mx * 16 + tx - frame / 2) % 32, (my * 16 + ty + frame / 2) % 32 + 32)
+                    water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty,
+                      Color.new(
+                        layer1.red + (layer2.red * layer2.alpha / 255 / 4),
+                        layer1.green + (layer2.green * layer2.alpha / 255 / 4),
+                        layer1.blue + (layer2.blue * layer2.alpha / 255 / 4),
+                        160))
+                  end
+                else
+                  for frame in 0...64
+                    layer1 = water.get_pixel((mx * 16 + tx + frame / 2) % 32, (my * 16 + ty - frame / 2) % 32)
+                    layer1.alpha = 192
+                    water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty, layer1)
+                  end
+                end
+              elsif is_water && pixel.alpha > 200
+                is_water = false
+                for frame in 0...32
+                  water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty, blank)
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    echoln (System.uptime - time_now).to_s
+
+    time_now = System.uptime
+    echoln "ripples start"
+    # Create river ripples
+    for my in 0...(@map.height)
+      echoln _INTL("ripples {1}/{2}", my, @map.height)
+      for mx in 0...(@map.width)
+        if (mx + my * @map.width) % 100 == 0
+          Graphics.update
+          Input.update
+        end
+        flow = river_map[my][mx]
+        river_speed = 2.5
+        if flow[0] != 0 || flow[1] != 0
+          for ty in -8...24
+            real_y = my * 16 + ty
+            next if real_y < 0 || real_y >= @map.height * 16
+            for tx in -8...24
+              real_x = mx * 16 + tx
+              next if real_x < 0 || real_x >= @map.width * 16
+              for frame in 0...64
+                pixel = water_bitmaps[(frame + i * 16) % 64].get_pixel(real_x, real_y)
+                if pixel.alpha > 10
+                  opacity = 0.06
+                  dist = [-tx, -ty, tx - 16, tx - 16].max
+                  if dist > 0
+                    opacity = opacity * (8 - dist) / 8
+                  end
+                  water_pixel = water.get_pixel((real_x - frame * (flow[0] * river_speed).round) % 32, (real_y - frame * (flow[1] * river_speed).round) % 32 + 32)
+                  water_bitmaps[frame].set_pixel(real_x, real_y,
+                    Color.new(
+                      pixel.red + (water_pixel.red * water_pixel.alpha / 255 * opacity).floor,
+                      pixel.green + (water_pixel.green * water_pixel.alpha / 255 * opacity).floor,
+                      pixel.blue + (water_pixel.blue * water_pixel.alpha / 255 * opacity).floor,
+                      192))
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    echoln (System.uptime - time_now).to_s
+
+    echoln "Saving to file"
+    filename = "Map_water_test.dat"
+    full_bitmap = Bitmap.new(@map.width * 16 * 8, @map.height * 16 * 8)
+    for i in 0...64
+      full_bitmap.blt(@map.width * 16 * (i % 8), @map.height * 16 * (i / 8), water_bitmaps[i], Rect.new(0, 0, @map.width * 16, @map.height * 16))
+      water_bitmaps[i].dispose
+    end
+    full_bitmap.to_file("test_file.png")
+
+    @water_sprite = WaterSprite.new(@@viewport1, full_bitmap, @map)
+    @water_sprite.z = 1
+    @water_sprite.zoom_x = 2
+    @water_sprite.zoom_y = 2
+    water.dispose
+
+    echoln "watermap end"
+  end
+
+  def pbFindCharacterSprite(character)
+    for sprite in @character_sprites
+      if sprite.character == character
+        return sprite
+      end
+    end
+    return nil
   end
 end

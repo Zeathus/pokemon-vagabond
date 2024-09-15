@@ -48,6 +48,7 @@ Outdoor = true
 ShowArea = true
 Bicycle = true
 MapPosition = 0,7,5
+SnapEdges = true
 MapSize = 1,1
 #-------------------------------
 [009]   # Lazuli River
@@ -138,6 +139,11 @@ ShowArea = true
 MapPosition = 0,14,10
 SnapEdges = true
 MapSize = 1,1
+#-------------------------------
+[042]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
 #-------------------------------
 [044]   # Mt. Pegma 1F
 Name = Mt. Pegma 1F
@@ -253,6 +259,26 @@ MapPosition = 0,21,10
 SnapEdges = true
 MapSize = 2,11
 #-------------------------------
+[074]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
+#-------------------------------
+[075]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
+#-------------------------------
+[076]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
+#-------------------------------
+[077]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
+#-------------------------------
 [087]   # Pegma Quarry
 Name = Pegma Quarry
 Outdoor = true
@@ -336,6 +362,14 @@ MapSize = 1,1
 Name = Feldspar Gym 3F
 MapPosition = 0,21,5
 SnapEdges = true
+#-------------------------------
+[107]   # Nekane's Mind
+Name = Nekane's Mind
+SnapEdges = true
+BattleBack = memory
+#-------------------------------
+[109]   # Lazuli River
+Outdoor = true
 #-------------------------------
 [113]   # Lazuli District
 Name = Lazuli District
@@ -651,6 +685,7 @@ SnapEdges = true
 #-------------------------------
 [249]   # Scoria Grove
 Name = Scoria Grove
+Outdoor = true
 ShowArea = true
 MapPosition = 0,24,11
 SnapEdges = true

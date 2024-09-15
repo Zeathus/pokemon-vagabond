@@ -124,6 +124,10 @@ module PBEffects
   EverlastingFainted  = 119
   AffinityBoostNext   = 120
   LayOfTheLand        = 121
+  Permanence          = 122
+  Nihility            = 123
+  GigatonHammer       = 124
+  GigatonHammerTime   = 125
 
   #=============================================================================
   # These effects apply to a battler position

@@ -155,7 +155,20 @@ class Sprite_Character < RPG::Sprite
     self.visible = !@character.transparent
     if @tile_id == 0
       sx = @character.pattern * @cw
-      sy = ((@character.direction - 2) / 2) * @ch
+      if @character == $game_player && $game_variables
+        angle = $game_variables[PLAYER_ROTATION] || 0
+        direction = @character.direction
+        if angle > 60 && angle < 120
+          direction = [4, 8, 2, 6][direction / 2 -  1]
+        elsif angle >= 120 && angle <= 240
+          direction = [2, 6, 4, 8][direction / 2 -  1]
+        elsif angle > 240 && angle < 300
+          direction = [6, 2, 8, 4][direction / 2 -  1]
+        end
+        sy = ((direction - 2) / 2) * @ch
+      else
+        sy = ((@character.direction - 2) / 2) * @ch
+      end
       self.src_rect.set(sx, sy, @cw, @ch)
       self.oy = (@spriteoffset rescue false) ? @ch - 16 : @ch
       self.oy -= @character.bob_height

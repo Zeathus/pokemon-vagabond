@@ -868,7 +868,8 @@ class OuterDataBox < RPG::Sprite
       [:Unburden, "Unburden", false],
       [:Uproar, "Uproar", 0],
       [:WaterSport, "Water Sport", false],
-      [:WellRested, "Well Rested", 0]
+      [:WellRested, "Well Rested", 0],
+      [:Permanence, "Permanence", false]
     ]
   end
 
@@ -879,7 +880,6 @@ class OuterDataBox < RPG::Sprite
       [:Curse, "Cursed", false],
       [:Disable, "Disabled", 0],
       [:Encore, "Encored", 0],
-      [:Flinch, "Flinched", false],
       [:Foresight, "Identified", false],
       [:GastroAcid, "Nullified", false],
       [:HealBlock, "Heal Blocked", 0],
@@ -903,7 +903,8 @@ class OuterDataBox < RPG::Sprite
       [:Torment, "Tormented", false],
       [:Trapping, "Trapped", 0],
       [:Yawn, "Drowsy", 0],
-      [:CorrosiveAcid, "Corroded", false]
+      [:CorrosiveAcid, "Corroded", false],
+      [:Nihility, "Nihility", 0]
     ]
   end
 

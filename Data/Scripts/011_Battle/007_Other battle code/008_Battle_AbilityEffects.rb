@@ -2163,6 +2163,10 @@ Battle::AbilityEffects::OnEndOfUsingMove.add(:MAGICIAN,
         battle.pbHideAbilitySplash(b) if user.opposes?(b)
         next
       end
+      if b.effects[PBEffects::Permanence]
+        battle.pbDisplay(_INTL("{1}'s item cannot be stolen!", b.pbThis))
+        next
+      end
       user.item = b.item
       b.item = nil
       b.effects[PBEffects::Unburden] = true if b.hasActiveAbility?(:UNBURDEN)
@@ -2240,6 +2244,10 @@ Battle::AbilityEffects::AfterMoveUseFromTarget.add(:PICKPOCKET,
       end
       battle.pbHideAbilitySplash(user) if target.opposes?(user)
       battle.pbHideAbilitySplash(target)
+      next
+    end
+    if user.effects[PBEffects::Permanence]
+      battle.pbDisplay(_INTL("{1}'s item cannot be stolen!", b.pbThis))
       next
     end
     target.item = user.item

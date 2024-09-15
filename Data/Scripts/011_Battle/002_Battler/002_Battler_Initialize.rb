@@ -147,6 +147,7 @@ class Battle::Battler
     @lastRoundMoveFailed     = false
     @movesUsed               = []
     @turnCount               = 0
+    @causeOfFaint            = nil if !@fainted
     @effects[PBEffects::Attract]             = -1
     @battle.allBattlers.each do |b|   # Other battlers no longer attracted to self
       b.effects[PBEffects::Attract] = -1 if b.effects[PBEffects::Attract] == @index
@@ -282,6 +283,10 @@ class Battle::Battler
     @effects[PBEffects::EverlastingFainted]  = 0
     @effects[PBEffects::AffinityBoostNext]   = nil
     @effects[PBEffects::LayOfTheLand]        = false
+    @effects[PBEffects::Permanence]          = false
+    @effects[PBEffects::Nihility]            = 0
+    @effects[PBEffects::GigatonHammer]       = nil
+    @effects[PBEffects::GigatonHammerTime]   = 0
   end
 
   #=============================================================================

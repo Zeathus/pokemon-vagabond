@@ -139,3 +139,79 @@
 
 [MEDKIT,1]
 > Your Pokémon were fully healed!
+
+[INN,1]
+/speaker Inn_Clerk
+?> \GHow long do you wish to rest?
+    /choice Until morning (6 am)
+        /return 0
+    /choice Until noon (12 pm)
+        /return 1
+    /choice Until evening (6 pm)
+        /return 2
+    /choice Until night (12 am)
+        /return 3
+    /cancelchoice Never mind
+        /return -1
+?/>
+
+[INN,2]
+/speaker Inn_Clerk
+?> \GHow long do you wish to rest?
+    /choice Until morning (06:00)
+        /return 0
+    /choice Until noon (12:00)
+        /return 1
+    /choice Until evening (18:00)
+        /return 2
+    /choice Until night (00:00)
+        /return 3
+    /cancelchoice Never mind
+        /return -1
+?/>
+
+[INN,3]
+/speaker Inn_Clerk
+> \GEnjoy your stay!
+
+[INN,4]
+/speaker Inn_Clerk
+> \GPlease come again!
+
+[INN,5]
+/speaker Inn_Clerk
+> \GSorry, but you don't have enough money.
+
+[INN_BRECCIA,0]
+/speaker Inn_Clerk
+?> \GWelcome to the Breccia City Inn!\nWould you like to rest here? (Costs ${$game_variables[1]})
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[ESSENCE_INTRO,0]
+/speaker Clerk
+> Excuse me! I have something to tell you.
+
+[ESSENCE_INTRO,1]
+/speaker Clerk
+> I noticed you have stray [R]Essence[/] around you, which must mean you don't have an [R]Essence Siphon[/].
+> We provide these free of charge.\nHere you go!
+
+[ESSENCE_INTRO,2]
+/speaker Clerk
+> When you defeat Pokémon in battle, they leave behind what we call [R]Effort Essence[/].
+> The Essence Siphon gathers this essence so you can use it later [R]to make stat-raising items[/].
+> How do you make these items?\nBy talking to me of course!
+> I'll even give you some free samples!
+
+[ESSENCE_INTRO,3]
+/speaker Clerk
+> I will add more information on Effort Essence to your guide in case you want more details.
+> I hope you will find my services helpful.
+
+[ESSENCE_EXCHANGE,0]
+/speaker Clerk
+> Welcome to the Effort Exchange!

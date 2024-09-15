@@ -25,7 +25,7 @@ end
 #===============================================================================
 class Battle::Move::FrostbiteTargetSuperEffectiveAgainstWater < Battle::Move::FrostbiteTarget
   def pbCalcTypeModSingle(moveType, defType, user, target)
-    return Effectiveness::SUPER_EFFECTIVE_ONE if defType == :WATER
+    return Effectiveness::SUPER_EFFECTIVE_MULTIPLIER if defType == :WATER
     return super
   end
 end

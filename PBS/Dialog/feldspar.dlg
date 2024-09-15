@@ -235,7 +235,7 @@
 
 [PEGMA_GYM_RAPHAEL,5]
 /speaker Raphael
-> That's the TM for Fire Pledge. If you gather Water Pledge or Grass Pledge from other Gyms, you'll surely find it useful.
+> That's the TM for Flame Charge. When used, it raises the user's speed so they can blaze across the field.
 /if $quests[:UNKNOWNDESTINATION].complete?
     > By the way, I'm pretty sure Alister would like some assistance at the quarry.
     > You should give him a visit when you have the time.

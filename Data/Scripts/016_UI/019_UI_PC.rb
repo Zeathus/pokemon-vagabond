@@ -108,7 +108,7 @@ end
 #
 #===============================================================================
 def pbTrainerPC
-  pbMessage("\\se[PC open]" + _INTL("{1} booted up the PC.", $player.name))
+  pbMessage("\\se[PC_open]" + _INTL("{1} booted up the PC.", $player.name))
   pbTrainerPCMenu
   pbSEPlay("PC close")
 end
@@ -134,7 +134,7 @@ end
 def pbPokeCenterPC
   pbBootShellOS
   return
-  pbMessage("\\se[PC open]" + _INTL("{1} booted up the PC.", $player.name))
+  pbMessage("\\se[PC_open]" + _INTL("{1} booted up the PC.", $player.name))
   # Get all commands
   command_list = []
   commands = []

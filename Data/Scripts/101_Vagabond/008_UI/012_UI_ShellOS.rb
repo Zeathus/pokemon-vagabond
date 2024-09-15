@@ -51,7 +51,7 @@ class ShellOSScreen
       @sprites["overlay"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
       pbSetSystemFont(@sprites["overlay"].bitmap)
 
-      pbSEPlay("PC open")
+      pbSEPlay("PC_open")
       if setup
           pbSetupSequence()
       else

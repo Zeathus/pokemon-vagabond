@@ -295,7 +295,7 @@ module Settings
   # shown in the Area page when viewing that Pokédex list.
   def self.pokedex_names
     return [
-      [_INTL("National Pokédex"), 0],
+      [_INTL("Rokk Pokédex"), 0],
       [_INTL("Distortion Pokédex"), 1],
       _INTL("Combined Pokédex")
     ]
@@ -331,8 +331,8 @@ module Settings
   #   * Name of the graphic, found in the Graphics/UI/Town Map folder.
   #   * The graphic will always (true) or never (false) be shown on a wall map.
   REGION_MAP_EXTRAS = [
-    [0, 51, 16, 15, "hidden_Berth", false],
-    [0, 52, 20, 14, "hidden_Faraday", false]
+    #[0, 51, 16, 15, "hidden_Berth", false],
+    #[0, 52, 20, 14, "hidden_Faraday", false]
   ]
   # Whether the player can use Fly while looking at the Town Map. This is only
   # allowed if the player can use Fly normally.

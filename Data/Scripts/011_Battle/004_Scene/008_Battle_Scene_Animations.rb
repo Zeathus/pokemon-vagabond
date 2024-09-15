@@ -657,10 +657,60 @@ class Battle::Scene::Animation::BattlerFaint < Battle::Scene::Animation
     shadow.setVisible(delay, false)
     battler.setSE(delay, "Pkmn faint")
     battler.moveOpacity(delay, duration, 0)
-    battler.moveDelta(delay, duration, 0, cropY - battlerTop)
+    battler.moveDelta(delay, duration, 0, (cropY - battlerTop))
     battler.setCropBottom(delay, cropY)
     battler.setVisible(delay + duration, false)
+    battler.setOpacity(delay + duration, 0)
+  end
+end
+
+#===============================================================================
+# Shows a Pokémon unfainting
+#===============================================================================
+class Battle::Scene::Animation::BattlerUnfaint < Battle::Scene::Animation
+  def initialize(sprites, viewport, idxBattler, battle)
+    @idxBattler = idxBattler
+    @battle     = battle
+    super(sprites, viewport)
+  end
+
+  def createProcesses
+    batSprite = @sprites["pokemon_#{@idxBattler}"]
+    shaSprite = @sprites["shadow_#{@idxBattler}"]
+    # Set up battler/shadow sprite
+    battler = addSprite(batSprite, PictureOrigin::BOTTOM)
+    shadow  = addSprite(shaSprite, PictureOrigin::CENTER)
+    # Get approx duration depending on sprite's position/size. Min 20 frames.
+    battlerTop = batSprite.y - batSprite.height
+    cropY = Battle::Scene.pbBattlerPosition(@idxBattler, @battle.pbSideSize(@idxBattler))[1]
+    cropY += 8
+    duration = (cropY - battlerTop) / 8
+    duration = 10 if duration < 10   # Min 0.5 seconds
+    # Animation
+    # Play cry
+    delay = 10
+    cry = GameData::Species.cry_filename_from_pokemon(batSprite.pkmn, "_faint")
+    if cry   # Play a specific faint cry
+      battler.setSE(0, cry)
+      delay = (GameData::Species.cry_length(batSprite.pkmn, nil, nil, "_faint") * 20).ceil
+    else
+      cry = GameData::Species.cry_filename_from_pokemon(batSprite.pkmn)
+      if cry   # Play the regular cry at a lower pitch (75)
+        battler.setSE(0, cry, nil, 75)
+        delay = (GameData::Species.cry_length(batSprite.pkmn, nil, 75) * 20).ceil
+      end
+    end
+    delay += 2
+    # Sprite drops down
+    battler.setVisible(delay, true)
+    battler.setOpacity(delay, 0)
+    battler.setSE(delay, "Refresh", 100, 100)
+    battler.moveOpacity(delay, duration, 255)
+    battler.moveDelta(delay, 0, 0, (cropY - battlerTop))
+    battler.moveDelta(delay, duration, 0, -(cropY - battlerTop))
+    #battler.setCropBottom(delay, battlerTop - cropY)
     battler.setOpacity(delay + duration, 255)
+    shadow.setVisible(delay + duration, true)
   end
 end
 

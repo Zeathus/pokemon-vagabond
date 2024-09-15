@@ -97,7 +97,7 @@
 /speaker Leroy
 > If you are unfamiliar with Data Chips, try changing to the Data Chip page when editing movesets from the Summary.
 > For us to continue developing Silvally further, I need you to help me find more such chips.
-> They can be found just about anywhere, so be on the lookout.
+> They can be found just about anywhere, so be on the lookout. I need a [R]total of 16[/] to continue my research.
 /speaker 0
 > \ts[2]You got the job as an Engineer!
 > \ts[1]You can track how many Data Chips you have found in the Trainer menu. There it also says how many you need to progress.
@@ -105,3 +105,110 @@
 [JOB_ENGINEER_2,0]
 /speaker Leroy
 > I hope your Silvally is gaining valuable data. Let me know once you have collected 16 Data Chips total.
+
+[JOB_ENGINEER_2,1]
+/speaker Leroy
+> That looks like the face of someone who has gathered 16 Data Chips!
+> With this data, I can make a splendid new breakthrough in my research.
+> More precisely, I will develop the first [R]new frame[/] for Silvally.
+> Thus far, you have only had stat chips that alter Silvally's stats by a smidge.\nFrames however... They modify everything.
+> A frame will ultimately decide what kind of combatant Silvally is, be it offensive or defensive, fast or slow.
+
+[JOB_ENGINEER_2,2]
+/speaker Leroy
+> As you so graciously provided the data,\nI grant you the honor to choose which frame I develop first.
+
+[JOB_ENGINEER_2,3]
+/speaker Leroy
+?> I have [R]three frames[/] in the making.\nWhich frame should I develop first?
+    /choice Sharp Frame (Offensive)
+        /return 1
+    /choice Tank Frame (Defensive)
+        /return 2
+    /choice Slim Frame (Agile)
+        /return 3
+    /cancelchoice Let me think about it
+        /return 0
+?/>
+
+[JOB_ENGINEER_2,4]
+/speaker Leroy
+> You may now try out the new frame by [R]changing to it at the PC[/].
+> In addition, my reseach has provided us with [R]new Data Chip moves[/] for Silvally and other Pokémon.
+> These will surely make Silvally a much more flexible Pokémon.
+> Lastly, I have given you some [R]new stat chips[/] you can equip to Silvally.
+> They may not be the most useful, as they simply lower its stats, but maybe you will find some use for them.
+> For the next step of development, I need you to gather a total of [R]32 Data Chips[/].\nI wish you luck in finding them all.
+
+[JOB_ENGINEER_3,0]
+/speaker Leroy
+> I hope you are enjoying the new Silvally frame. Let me know once you have collected 32 Data Chips total.
+
+[JOB_ENGINEER_3,1]
+/speaker Leroy
+> Am I correct that you have acquired 32 Data Chips? Marvelous!
+> Let us get right to it then.
+
+[JOB_ENGINEER_3,2]
+/speaker Leroy
+?> I have [R]two more frames[/] in the making.\nWhich frame should I develop next?
+    /ifchoice !pbJob("Engineer").frames.include?(PBFrame::Sharp) Sharp Frame (Offensive)
+        /return 1
+    /ifchoice !pbJob("Engineer").frames.include?(PBFrame::Tank) Tank Frame (Defensive)
+        /return 2
+    /ifchoice !pbJob("Engineer").frames.include?(PBFrame::Slim) Slim Frame (Agile)
+        /return 3
+    /cancelchoice Let me think about it
+        /return 0
+?/>
+
+[JOB_ENGINEER_3,4]
+/speaker Leroy
+> Thanks to this research, Silvally has also been granted one of its most powerful upgrades yet.
+> You will now be able to [R]equip two different stat chips at once[/].\nI hope you make good use of this.
+> For the next step of development, I need you to gather a total of [R]64 Data Chips[/].\nI wish you luck in finding them all.
+
+[JOB_ENGINEER_FRAME,0]
+/speaker Leroy
+> There is no rush. You can take you time and think before you decide.
+
+[JOB_ENGINEER_FRAME,1]
+/speaker Leroy
+?> Are you certain this is the frame you want me to develop?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[JOB_ENGINEER_FRAME,2]
+/speaker Leroy
+> Then it is settled! Give me but a moment.
+/reset
+/fade black
+/se PC_open 100 100
+/wait 20
+/fade normal
+/speaker Leroy
+> That should do the trick! One of my greatest works if I do say so myself.
+
+[JOB_ENGINEER_SHARP,0]
+/speaker Leroy
+> The Sharp Frame has a strong build that trades some defense and speed to optimize for offense.
+> According to my plans, it would raise its base Attack and Special Attack by 15.
+> However, its Defense, Special Defense and Speed would be lowered by 15 as well.
+
+[JOB_ENGINEER_TANK,0]
+/speaker Leroy
+> The Tank Frame has a heavy build that trades some offense and speed to optimize for defense.
+> According to my plans, it would raise its base Defense and Special Defense by 15.
+> However, its Attack, Special Attack and Speed would be lowered by 15 as well.
+
+[JOB_ENGINEER_SLIM,0]
+/speaker Leroy
+> The Slim Frame has a light build that trades both offense and defense for increased speed.
+> According to my plans, it would raise its base Speed by 35.
+> However, its Attack, Defense, Special Attack and Special Defense would be lowered by 15 as well.
+
+[JOB_ENGINEER_REMINDER]
+> You have collected {pbJob("Engineer").requirement.to_s} Data Chips total.\nYou can now speak to Leroy at the G[.]P[.]O[.] HQ to continue his research.

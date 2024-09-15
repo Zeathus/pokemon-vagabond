@@ -214,7 +214,7 @@
 
 [LAZULI_GYM_LEROY,5]
 /speaker Leroy
-> This TM contains the move Water Pledge.<br>Try to use it with the other Pledge moves to wreak havoc!
+> This TM contains the move Chilling Water.\nIf an opponent's offense is a bit much, this can help hold them off!
 /if $quests[:UNKNOWNDESTINATION].complete?
     > I also wanted to mention that I work at the G[.]P[.]O[.] science facility, in the admin area.
     > Please do pay me a visit there.<br>I have something to show you.

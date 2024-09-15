@@ -1255,6 +1255,7 @@ class TalkMessageWindows
 
   def update
     @control_auto.update if @control_auto.visible
+    pbUpdateTextBubbles
     #@msgwindows.each { |w| w.update }
   end
 

@@ -6,9 +6,12 @@ Battle::AbilityEffects::PriorityChange.add(:HASTE,
 
 Battle::AbilityEffects::EndOfRoundEffect.add(:EVERLASTING,
   proc { |ability, battler, battle|
-    if battler.species == :SHEDINJA_R
-      if battler.form == 1 && battler.turnCount > battler.effects[PBEffects::EverlastingFainted]
-        battler.pbChangeForm(0,_INTL("{1} returned to its original form!", battler.pbThis))
+    if battler.species == :REVINJA
+      if battler.form == 1 && battle.turnCount > battler.effects[PBEffects::EverlastingFainted]
+        battle.pbShowAbilitySplash(battler)
+        pbSEPlay("Recovery", 100, 100)
+        battler.pbChangeForm(0,_INTL("{1} restored its original form!", battler.pbThis))
+        battle.pbHideAbilitySplash(battler)
       end
     end
   }
@@ -24,12 +27,6 @@ Battle::AbilityEffects::EndOfRoundEffect.add(:TWILIGHT,
           _INTL("{1} returned to its original form!", battler.pbThis))
       end
     end
-  }
-)
-
-Battle::AbilityEffects::DamageCalcFromTarget.add(:ILLUMINATE,
-  proc { |ability, user, target, move, mults, baseDmg, type|
-    mults[:base_damage_multiplier] /= 2 if type == :DARK
   }
 )
 

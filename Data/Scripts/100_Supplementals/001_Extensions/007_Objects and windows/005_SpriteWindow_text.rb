@@ -91,6 +91,15 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
           @fmtchars[i][1] -= add_x
           @fmtchars[i][2] -= add_y
           @lastDrawnChar = i
+        when "shakeslow"
+          speed = 5.0
+          add_x = Math.sin(@ef_frame * 12.0 / speed) * 1.0 + 1
+          add_x = add_x.floor if add_x > 0
+          add_x = add_x.ceil if add_x < 0
+          @fmtchars[i][1] += add_x
+          drawSingleFormattedChar(self.contents, @fmtchars[i])
+          @fmtchars[i][1] -= add_x
+          @lastDrawnChar = i
         end
         add = Math.sin(i / 2.0 + @ef_frame / speed)
       end

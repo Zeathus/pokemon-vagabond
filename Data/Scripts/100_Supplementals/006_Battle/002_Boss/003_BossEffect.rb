@@ -91,6 +91,13 @@ class BossEff_Item < BossEffect
         end
         return false
       end
+      if target.effects[PBEffects::Permanence]
+        if @showmsg
+          battle.pbDisplay(_INTL("But it failed to affect {1} because of its Permanence!",
+                                  target.pbThis(true)))
+        end
+        return true
+      end
     end
     target.item = @item
   end

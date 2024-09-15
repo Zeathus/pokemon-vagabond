@@ -316,8 +316,7 @@
 
 [BRECCIA_GYM_FAUNUS,5]
 /speaker Faunus
-> This TM contains the move Grass Pledge.
-> I think you will grow fond of it if you use it with another Pledge move in a double battle.
+> This TM contains the move Trailblaze. I think you will grow fond of it if you're in need of a speed boost.
 /if $quests[:UNKNOWNDESTINATION].complete?
     > If you are free, could you meet me at my house later?
     > I believe I can teach you something that will be useful during your travels.

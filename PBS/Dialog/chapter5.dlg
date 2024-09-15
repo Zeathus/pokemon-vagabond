@@ -419,3 +419,669 @@
 /event Eliana turn up
 /speaker Mesprit
 > With that settled, let me know when you are ready to enter Nekane's mind.
+
+[CH5_MIND,0]
+/speaker Mesprit
+> When you enter Nekane's mind, you might encounter remnants of her memories.
+> There is a chance that these are hostile, so make sure you bring capable Pokémon.
+?> Are you ready to enter Nekane's mind? You will not be able to leave until we complete the process.
+  /choice I'm ready
+    > Then let us begin.
+    /return true
+  /cancelchoice I need a moment
+    > Let me know when you are ready.
+    /return false
+?/>
+
+[CH5_MIND,1]
+/speaker Mesprit
+> Please make sure you have at least two Pokémon in your active party before we begin.
+
+[CH5_MIND,2]
+/speaker Mesprit
+> I will now project you into Nekane's mind.\nAwait further instructions once you arrive. Good luck.
+
+[CH5_MIND,3]
+/speaker Mesprit
+/portrait none
+> Good, you made it in safely.
+> This is only the outskirts of her mind.\nI need you to find the core first.
+
+[CH5_MIND,4]
+/speaker Nekane silhouette2
+> ... ... ...
+/speaker Mesprit
+/portrait none
+> As expected, this part of her mind is unresponsive.
+> Luckily, that is why we are here.
+> Your own emotions will be key to help her. You will have to look inside yourself.
+
+[CH5_MIND,5]
+/hidewindow 1
+> [R]Joy and happiness[/]... To many it is what keeps us alive and makes life worth living.
+?> What is [R]happiness[/] to you?
+  /savechoice what is happiness
+  /choice Laughing with friends
+    > I see... The time spent with those close to you and the connections you make are irreplaceable.
+  /choice Helping those in need
+    > I see... The joy of others is infectious. You cannot help but smile having made someone's day.
+  /choice Having time to myself
+    > I see... The peace and tranquility of having time to yourself, be it to pursue hobbies or to simply unwind.
+  /choice Overcoming challenges
+    > I see... Achieving personal goals brings a sense of fulfillment like no other.
+?/>
+> However, one cannot have joy without [R]sorrow[/]. It is the contrast that makes us appreciate the happy times.
+?> What is [R]sadness[/] to you?
+  /savechoice what is sadness
+  /choice Saying farewell
+    > It is never easy to say goodbye to someone you might never see again.
+    > Thus it is important to remember the time spent together. Eventually, the memories will bring more joy than sorrow.
+  /choice Seeing others in pain
+    > Whether it is from sympathy or empathy, the pain of others hurts you almost as much as it hurts them.
+    > This is a strength, not a weakness, as it allows you to form strong connections with people, and be happy together.
+  /choice Doubting myself
+    > Sometimes you are your own greatest enemy, be it from outside pressure or expectations you put on yourself.
+    > Despite this, you must persevere.\nThe light at the end of the tunnel might seem far away, but it is waiting for you.
+?/>
+> With these feelings at the forefront of your mind, let us awaken them in Nekane.
+
+[CH5_MIND,6]
+/speaker Mesprit
+/portrait none
+> I sense a presence. Prepare for battle!
+
+[CH5_MIND,7]
+/event set Nekane 2
+/event Nekane turn up
+/speaker Nekane silhouette2
+> What is this feeling in my chest..?
+> It is as if a whole new sense has surfaced within me...
+> Is it warm or cold..? I cannot tell...
+/speaker Mesprit
+/portrait none
+> She has become aware of the new emotions, even if she does not understand them.
+> We need to keep going while her mind is the most susceptible.
+
+[CH5_MIND,8]
+/hidewindow 1
+> There will be times when we are wronged. In those times, [Azelf]willpower[/] is necessary to protect ourselves.
+> However, for that willpower to kick in, we feel the [R]anger[/] that drives us.
+?> What is [R]anger[/] to you?
+  /savechoice what is anger
+  /choice My drive to fight back
+    > Ah, if you are mistreated or cornered, anger is what allows you to fight for yourself.
+  /choice An outlet to compose myself
+    > Ah, you avoid subjecting others to your anger to focus on recovering from the negative feelings yourself.
+?/>
+> On the other hand, anger is not always the best answer for self-preservation. Sometimes it is best to be cautious.
+> When a threat becomes too large, [R]fear[/] is what stirs us to be careful, or even simply flee.
+?> What is [R]fear[/] to you?
+  /savechoice what is fear
+  /choice Coming in harms way
+    > Recognizing danger to avoid it is one of fear's many purposes. It keeps us safe.
+  /choice The chance of failure
+    > It is not unusual to be fearful of falling short of your tasks or ambitions.
+    > This fear however, can encourage you to tread carefully to prevent failure.
+  /choice Facing the inevitable
+    > What cannot be avoided is often the scariest of all, be it a difficult decision or the end of a life.
+    > This fear however, prepares us for when the inevitable finally happens, helping us endure it.
+?/>
+> With these feelings at the forefront of your mind, let us awaken them in Nekane.
+
+[CH5_MIND,9]
+> Best not go that way.
+
+[CH5_MIND,10]
+/speaker Mesprit
+/portrait none
+> I sense a presence. Prepare for battle!
+
+[CH5_MIND,11]
+/event set Nekane 2
+/event Nekane turn up
+/speaker Nekane silhouette2
+> My heart... it beats so fast.
+> Is it telling me to stand my ground?\nIs it telling me to run?
+/speaker Mesprit
+/portrait none
+> Fear and anger are stressful to handle for the first time, but I am confident she will endure.
+> We have covered the basic emotions.\nNow we move on to the complex ones.
+
+[CH5_MIND,12]
+/hidewindow 1
+> We can often feel tense while waiting for something we know is coming.
+> If an important battle is ahead, the [R]anticipation[/] can make us feel both excited and nervous.
+> Though there are also cases where foresight is impossible, and we are taken by [R]surprise[/].
+> Such a case could be a sudden battle, or the mystery of what you find while adventuring.
+?> Do you prefer to [R]anticipate[/] what is ahead, or would you rather be [R]surprised[/]?
+  /savechoice anticipation or surprise
+  /choice I prefer to be ready ahead of time
+    > There is a certain safety to that awareness. I understand.
+  /choice I enjoy the thrill of the unexpected
+    > There is a unique enjoyment to being caught off guard. I understand.
+?/>
+> With these feelings at the forefront of your mind, let us awaken them in Nekane.
+
+
+[CH5_MIND,13]
+/event set Nekane 2
+/event Nekane turn up
+/speaker Nekane silhouette2
+/event Nekane exclaim
+> Oh! That new feeling was so sudden...
+/event Nekane emote ?
+> ...What is this other feeling?
+> I feel [R]the end approaching[/]...
+> It makes me... uneasy.\nWhat is going to happen?
+/speaker Mesprit
+/portrait none
+> Interesting... Her feelings seem tied to some memory deep within.
+> If only [Uxie]Uxie[/] was here.\nThey could recover those memories.
+> For now we focus on the mission at hand.
+> There is only one pair of emotions left.\nLet us keep the pace going.
+
+[CH5_MIND,14]
+/hidewindow 1
+> We encounter many people during our lifetime.
+> Some people we keep close, while we distance ourselves from others.
+> It is [R]trust[/] that makes the difference, and it builds upon all the prior emotions.
+?> What makes you [R]trust[/] someone?
+  /savechoice what is trust
+  /choice They make me feel happy
+    > A true friend values your happiness. Their presence alone can make your day or help you in sadder times.
+  /choice I feel safe with them
+    > A true friend is someone you can be transparent with. You know they will not hurt you or let you be hurt.
+  /choice They disprove my doubts
+    > While you may be skeptical about people at first, a true friend will break past your hesitation.
+?/>
+> Unfortunately, not all people are positive influences on our lives.
+> A feeling of [R]disgust[/] pushes us away from such people, and ensures we are in good company.
+?> What [R]pushes you away[/] from someone?
+  /savechoice what is disgust
+  /choice They make me feel sad
+    > If someone often makes you feel lesser than you would have without them, it is only natural avoid them.
+  /choice I feel uncomfortable around them
+    > If someone's presence fills you with unease, it is only natural to avoid them.
+  /choice They betray the trust I gave them
+    > Once you place your trust in someone, even if just a little, that trust is fragile.
+    > Even trust built upon years of friendship might never mend once broken.
+?/>
+> However, it can be worth giving people a second chance.
+> It is not easy to voice misgivings to those we care about, but it is often the first step to closer relationships.
+> With these feelings at the forefront of your mind, let us awaken them in Nekane.
+
+[CH5_MIND,15]
+/event set Nekane 1
+/event Nekane turn up
+/speaker Nekane silhouette2
+> Amethyst... Kira... <PLAYER>...
+> I have done nothing but exist, yet they have taken care of me.
+> <PLAYER>...\nWhy does that name feel important?
+
+# Screen shakes slightly
+
+[CH5_MIND,16]
+/speaker Mesprit
+/portrait none
+> What was that?
+
+[CH5_MIND,17]
+/speaker Mesprit
+/portrait none
+> Watch out! Something from deep within her mind is interfering!
+
+[CH5_MIND,18]
+/speaker Mesprit
+/portrait none
+> Whatever her mind has in store, you must get out of there, quickly!
+
+[CH5_MEANWHILE,0]
+/event set Kira 96
+/event Kira emote ?
+/speaker Kira nohat_annoyed
+> ...How did we end up all the way over here?
+/expression nohat_neutral
+> I'd best wake Amethyst up.
+
+[CH5_MEANWHILE,1]
+/event set Kira 96
+/speaker Amethyst worried
+> Azelf refuses to wake up...
+/speaker Kira
+> They're only fainted. We'll just have to carry them back for treatment.
+/speaker Amethyst
+> <PLAYER> isn't answering my calls either, but I think they're fine.
+> It would make sense for <PLAYER> to pull us here to safety after waking up themself.
+> They even left us some provisions in case we woke up.
+/reset
+/event Kira emote annoyed
+/speaker Kira lookaway
+> You put way too much faith in <PLAYER>.
+/expression annoyed
+> There's no way they'd wake up in time to have us in this good shape.
+> We must've been rescued by someone else, and <PLAYER> probably up and left us after waking up.
+> They seem to have taken Nekane with them too.
+/speaker Amethyst unsatisfied
+> I know it's hard for you to trust people, but you really should give the benefit of the doubt sometimes.
+/expression neutral
+> You may distrust <PLAYER>, but I choose to believe they left for good reason.\nMaybe to look for help.
+/speaker Kira lookaway
+> Of course you will, you always do.
+/expression neutral
+> After all, I wouldn't be where I am today without that trait of yours.
+> Either way, we won't get anywhere standing here arguing about it.\nLet's get Azelf back to HQ.
+/speaker Amethyst wink
+> Yeah, we need to get going.
+/expression neutral
+> I'll leave a note here for <PLAYER> in case they come back looking for us.
+
+[CH5_MEANWHILE,2]
+/speaker Eliana wonder
+> I hope everything is going alright down there...
+
+[CH5_MEANWHILE,3]
+/speaker Sableye
+/cry Sableye 100 100
+> Sableee!
+/speaker Eliana surprised
+> Fintan is on his way!?
+/expression neutral
+> I have to delay him!
+
+[CH5_MEANWHILE,4]
+/speaker Eliana happy
+> Oh, hi Fintan! What brings you here?
+/speaker Fintan
+> I was going to check on Mesprit.\nFor safety's sake.
+/speaker Eliana smile
+> You know what they say:\n"Great minds think alike"!
+/expression neutral
+> I've already checked for you, so you don't have to!
+/speaker Fintan smile
+> How considerate of you.\nHowever, it would still ease my mind to check myself just in case.
+
+[CH5_MEANWHILE,5]
+/speaker Eliana shout
+!> Fintan, wait!!!
+
+[CH5_MEANWHILE,6]
+/event set Fintan 44
+/event Fintan emote ?
+/speaker Fintan
+> What's the matter with you?\nWhat are you so riled up about?
+/speaker Eliana happy
+> Sorry about that...
+/expression think
+> You see, what I wanted to say was...
+/expression neutral
+> ...that I challenge you to a battle!
+
+[CH5_MEANWHILE,7]
+/speaker Eliana
+/expression smile
+> I was secretly training down here, and I want to show you my progress!
+/speaker Fintan smile
+> Why didn't you just say so?\nOf course I'll battle you.
+/expression neutral
+> Show me what you've got!
+
+[CH5_MEANWHILE,8]
+/speaker Fintan smile
+> I must say, I'm impressed. That was a brilliant display of battling prowess.
+/speaker Eliana happy
+> That means a lot coming from you!
+/speaker Fintan
+> I'll have to ask you for a rematch some other time.
+
+[CH5_MEANWHILE,9]
+/speaker Fintan smile
+> I admire the effort, but it looks like you still have a ways to go.
+/speaker Eliana sad
+> And I was trying so hard too...
+/speaker Fintan
+> I'll gladly give you some pointers another time.
+
+[CH5_MEANWHILE,10]
+/speaker Fintan
+> My check on Mesprit will also have to wait. For now I must head back and get my Pokémon treated.
+/expression smile
+> Thank you for the battle, Eliana.
+
+[CH5_MEANWHILE,11]
+/speaker Eliana wonder
+> That was way too close...\nI hope they're finished soon.
+
+[CH5_POST_MIND,0]
+/speaker Mesprit
+> That was close... Luckily I managed to pull you out of there in time.
+/speaker Nekane
+.> Why...
+/speaker Mesprit
+> There was also that strange Pokémon you faced... It was similar to a [R]Shedinja[/], but still very different.
+/speaker Nekane
+> Why can I not remember anything from before you found me?
+
+[CH5_POST_MIND,1]
+/speaker Nekane
+> I feel there is something important to remember, but it is too hard to make out...
+> Are Amethyst and Kira okay?
+
+[CH5_POST_MIND,2]
+/speaker Nekane
+> ...<shakeslow>Was it really okay to leave them in the desert?</shakeslow>
+/speaker Mesprit
+> Experiencing emotions for the first time can be a heavy burden...
+> All her unanswered questions are being answered by new emotions.
+
+[CH5_POST_MIND,3]
+/speaker Eliana shout
+!> Fintan is on his way!
+
+[CH5_POST_MIND,4]
+/speaker Eliana sad
+> That girl is shaking so much...
+
+[CH5_POST_MIND,5]
+/speaker Eliana neutral
+> What's the matter?
+/speaker Nekane
+> ...<shakeslow>Are Amethyst and Kira okay? Are they hurt?</shakeslow>
+/speaker Eliana
+> There's nothing to worry about. I left them food and water, and even some salve for their wounds.
+/expression smile
+> I guarantee you they're safe and sound!
+
+[CH5_POST_MIND,6]
+/speaker Nekane sleep
+> ...
+/expression happy
+> Thank you... The shaking stopped.
+/speaker Eliana
+> You'll meet them again in no time,\nas soon as...\wtnp[12]
+/expression surprised
+> Right, we need to get out of here!
+
+[CH5_POST_MIND,7]
+/speaker Eliana
+> I'll distract Fintan long enough for you to get by him.
+/speaker Mesprit
+> I will return to my Poké Ball.
+> Eliana risked much to help.\nThe least I can do is repay her kindness by staying here.
+> <PLAYER>, talk to [Azelf]Azelf[/] about what to do next. They will know what steps to take.
+/speaker Eliana
+> Let's go!
+
+[CH5_POST_MIND,8]
+/speaker Nekane
+> <PLAYER>...
+/reset
+/event Player emote ?
+/speaker Nekane
+?> Why did Eliana help me?\nIs she not an enemy?
+  /savechoice ch5 why eliana helped
+  /choice She is a kind person
+    > Kindness... Just for the sake of it.
+  /choice People are complicated
+    > They are... I still find it difficult to understand them.
+  /choice She has ulterior motives
+    > Ulterior motives... But she looked genuinely concerned.
+?/>
+> Do I need Azelf's help before I can begin to understand..?
+
+[CH5_POST_MIND,9]
+/event set Eliana 11
+/speaker Eliana
+> Sorry for the wait! I almost ended up battling Fintan again...
+> I guess this will be farewell for now.
+/reset
+/event Eliana emote frown
+/speaker Eliana sad
+> Next time we meet, it will be as enemies again...
+/reset
+/event Eliana emote ...
+/speaker Eliana sad
+> Can I ask you for one favor, while we're not enemies?
+?> Please do not tell anyone about how I helped you. If you do, I fear I would lose my friends here...
+  /savechoice ch5 secret
+  /choice I promise to keep it a secret
+    /expression happy
+    > Thank you, it means a lot!
+  /choice I can't lie to my friends
+    > If you can't be convinced otherwise, I can't do much else than hope you change your mind...
+?/>
+/expression neutral
+> That aside, I enjoyed working alongside you while it lasted.
+/expression smile
+> Goodbye for now!
+
+[CH5_POST_MIND,10]
+/speaker Amethyst
+/portrait 0
+> <PLAYER>, you finally picked up!\nI'm glad you're okay.
+> I assume Nekane is also there. Can you meet us back at HQ as soon as possible?
+
+[CH5_OFFICE,0]
+/event set Kira 2
+/event set Nekane 9
+/speaker Amethyst
+> Welcome back, safe and sound!
+/speaker Nekane
+> They are okay...
+/reset
+/event Nekane emote smile
+/speaker Amethyst surprised
+> Did Nekane just... [R]SMILE[/]!?
+/expression awkward
+> Does that mean you rescued Mesprit while we were out cold, <PLAYER>?
+/expression confused
+?> But if that's the case... Where's Mesprit?
+  /choice I failed...
+  /choice Mesprit was still captured.
+  /choice There were some complications...
+?/>
+/expression worried
+> So Mesprit still got captured...
+/reset
+/event Kira emote annoy
+/speaker Kira annoyed
+> Something doesn't add up here, and I expect you to [R]explain yourself[/].
+> Not only did you get Mesprit's help, but you also failed to rescue them.
+/expression lookaway
+> If you ask me, these two things cannot coincide.
+/reset
+> How you explain yourself will [R]alter part of the story, but not the end you reach[/].
+/speaker Kira annoyed
+?> How did you get Mesprit's help, but still fail to rescue them?
+  /savechoice ch5 explain yourself
+  /choice Eliana helped me get to Mesprit at their HQ.
+    /if pbGetChoiceValue("ch5 secret")=="I promise to keep it a secret"
+      /event Nekane emote ?
+    /end
+    > One of their admins... helped you?
+    /reset
+    /fade black
+    > You explain what happened, and why Eliana helped you.
+    /reset
+    /fade normal
+    /speaker Kira annoyed
+    > I had my suspicions about your relation to Eliana after our first encounter.
+    > However, you telling us about this poses a great risk to her position.
+    /expression lookaway
+    > As for not rescuing Mesprit while you had the chance...
+    /expression neutral
+    > ...I wouldn't have either, the risk was clearly too great.
+    > Your story checks out, I have no more questions.
+    /speaker Amethyst wink
+    > You've even got Kira's approval.\nThat's a rarity!
+    /speaker Kira lookaway
+    > Only for this specific case, they've still got ways to go.
+  /choice I can't tell you. I promised not to.
+    /if pbGetChoiceValue("ch5 secret")!="I promise to keep it a secret"
+      /event Nekane emote ?
+    /end
+    /expression lookaway
+    > It's bold of you to basically admit that you're hiding something.
+    > While I respect your guts, I already had my suspicions with you, and this doesn't ease them in the slighest.
+    /speaker Amethyst confused
+    > I can't really argue on that one...
+    /speaker Kira
+    > You've even got Amethyst suspicious of you. That's a rarity.
+    /speaker Amethyst confused
+    > While it is suspicious, I can't argue with the results either...
+    /expression awkward
+    > I mean, Nekane did turn out okay. Right?
+    /expression neutral
+    > I'm sure <PLAYER> has their reasons for keeping it secret.
+    > Being open about it is also a good sign in my book.
+    /speaker Kira lookaway
+    > Being open by saying you won't say anything... That's a new one.
+    /expression annoyed
+    > I won't let you out of my sight anytime soon. Watch your step.
+  /choice We got Mesprit's help before the D.A.O. ambushed us.
+    /if pbGetChoiceValue("ch5 secret")=="I can't lie to my friends"
+      /event Nekane emote ?
+    /end
+    /expression lookaway
+    > That sounds unlikely given that they got to the desert before us.
+    /speaker Amethyst confused
+    > Maybe the sandstorm delayed them or sent them off course?
+    /reset
+    /fade black
+    > You weave up a lie to hide Eliana's involvement.
+    /reset
+    /fade normal
+    /speaker Kira lookaway
+    > So you got there before them, like Amethyst said.
+    /expression annoyed
+    > However, because of the sandstorm, you had to get Mesprit's help right then and there.
+    > After which the D[.]A[.]O[.] ambushed you and captured Mesprit, correct?
+    /expression lookaway
+    > That still sounds very unlikely, but I can't disprove it either.
+    /expression annoyed
+    > I will accept that as the truth... [R]for now[/].
+    /speaker Amethyst wink
+    > You've even got Kira's approval.\nThat's a rarity!
+    /speaker Kira lookaway
+    > This is hardly approval.
+    /expression annoyed
+    > Time will tell if you were honest or not. Watch your step.
+?/>
+/speaker Amethyst worried
+> I just hope Mesprit is okay...
+/expression neutral
+> Azelf is recovering, but will be healthy again by tomorrow morning.
+> It's been a long day, so why don't we get some rest and continue where we left off tomorrow?
+
+[CH5_NOTE]
+> If you're looking for us, we woke up and left.
+> We're on our way to HQ to get Azelf treated, let's meet there later!
+> - Amethyst
+
+[CH5_INTERMISSION,0]
+/windowpos center
+/hidewindow 1
+/speaker <PLAYER2>
+/hidename 2
+/textpos middle
+> There it comes again...
+
+[CH5_INTERMISSION,1]
+/speaker <PLAYER2>
+> Unfortunately I don't have the time to figure out why I keep having these routine headaches.
+
+[CH5_INTERMISSION,2]
+/speaker <PLAYER2>
+> My mission is almost at hand. I can't let this chance slip me by, as [R]the great Amphi[/] only comes so often.
+
+[CH5_INTERMISSION,3]
+/speaker Eliana think
+> It's confusing how similar you two look...
+/reset
+/event Player emote ?
+/speaker <PLAYER2>
+> Eliana, what are you talking about?
+/speaker Eliana surprised
+> Ah, no, it's nothing!
+/expression think
+> I just came here to ask you something.
+/speaker <PLAYER2>
+> Of course, come on inside.
+
+[CH5_INTERMISSION,4]
+/speaker Eliana wonder
+> Okay, so this question is kind of hypothetical.
+/expression think
+> Imagine if someone did you a favor in good faith, but they wanted you to hide it from me and Fintan...
+/expression sad
+> What would you do?
+/speaker <PLAYER2>
+> That is an odd question to bring up so suddenly. Let me think...
+> I assume it has to be kept secret for their safety, and with that in mind...
+/if pbGetChoiceValue("ch5 secret")=="I promise to keep it a secret"
+  /if pbGetChoiceValue("ch5 explain yourself")=="Eliana helped me get to Mesprit at their HQ."
+    > I feel like I would promise them that I would hide it.
+    > However... If I was questioned by you or Fintan, I would have no choice but to come clean.
+    > Not lying to you comes before keeping a promise to a stranger.
+    /dialog CH5_INTERMISSION 5
+  /elsif pbGetChoiceValue("ch5 explain yourself")=="I can't tell you. I promised not to."
+    > I feel like I would promise them that I would hide it. It's the least I could do.
+    > However... If I was questioned by you or Fintan, I would say that I can't tell you.
+    > I much prefer that over lying to you.
+    /dialog CH5_INTERMISSION 6
+  /else
+    > I feel like I would promise them that I would hide it. It's the least I could do.
+    > If I was questioned by you or Fintan, I'm sorry to say that I would have to lie.
+    > That's the safest way to keep the secret, and I won't let their kindness be in vain.
+    /dialog CH5_INTERMISSION 6
+  /end
+# I can't lie to my friends
+/else
+  /if pbGetChoiceValue("ch5 explain yourself")=="Eliana helped me get to Mesprit at their HQ."
+    > I would still choose to be honest with you and Fintan.
+    > Once I got back to you, I would tell you everything as is, even at their risk.
+    > I can't make such a promise to a stranger.
+    /dialog CH5_INTERMISSION 5
+  /elsif pbGetChoiceValue("ch5 explain yourself")=="I can't tell you. I promised not to."
+    > I would feel very conflicted, as I don't want to lie to you or Fintan.
+    > However... After giving it some more thought, I would keep it a secret.
+    > Though, rather than lie to you, I would say that I can't tell you.
+    /dialog CH5_INTERMISSION 6
+  /else
+    > I would feel very conflicted, as I don't want to lie to you or Fintan.
+    > However... After giving it some more thought, I would have no other choice.
+    > That's the safest way to keep the secret, and I won't let their kindness be in vain.
+    /dialog CH5_INTERMISSION 6
+  /end
+/end
+
+# Eliana helped me get to Mesprit at their HQ.
+[CH5_INTERMISSION,5]
+/event set Eliana 9
+/reset
+/event Eliana emote sad
+/speaker Eliana sad
+> I see...
+/speaker <PLAYER2>
+> You sure are puzzling today. You seem worried, but I was sure that answer would put you at ease.
+/speaker Eliana sad
+> It's sort of complicated...
+/expression neutral
+> Thank you for sharing your thoughts though. I appreciate it!
+
+# Keeping the secret
+[CH5_INTERMISSION,6]
+/event set Eliana 9
+/reset
+/event Eliana emote smile
+/speaker Eliana smile
+> Phew, that's a relief...
+/speaker <PLAYER2>
+> You sure are puzzling today. You seem happy, but I was sure that answer would worry you.
+/speaker Eliana think
+> It's sort of complicated...
+/expression neutral
+> Thank you for sharing your thoughts though. I appreciate it!
+
+[CH5_INTERMISSION,7]
+/speaker <PLAYER2>
+> It's obvious that something happened, but I can't begin to imagine what...

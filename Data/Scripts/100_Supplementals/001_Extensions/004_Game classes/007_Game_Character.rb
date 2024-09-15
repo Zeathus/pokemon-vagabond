@@ -39,5 +39,12 @@ class Game_Character
     @proximity_texts = {} if !@proximity_texts
     return @proximity_texts
   end
+
+  def sprite
+    if $scene.is_a?(Scene_Map) && $scene.spriteset
+      return $scene.spriteset($game_map.map_id).pbFindCharacterSprite(self)
+    end
+    return nil
+  end
   
 end

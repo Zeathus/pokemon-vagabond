@@ -312,11 +312,34 @@ class PokemonBag_Scene
       end
       overlay.blt(598, y + boxheight - 18, @sliderbitmap.bitmap, Rect.new(36, 20, 36, 18))
     end
+    item = itemlist.in_pocket ? itemlist.item : nil
     # Set the selected item's icon
-    @sprites["itemicon"].item = itemlist.item
+    @sprites["itemicon"].item = item
     # Set the selected item's description
-    @sprites["itemtext"].text =
-      (itemlist.item) ? GameData::Item.get(itemlist.item).description : _INTL("Close bag.")
+    if item
+      description = GameData::Item.get(item).description
+      if item == :ESSENCESIPHON
+        essence = pbGetEffortEssence
+        description += _INTL("\nHP: {1} | Attack: {2} | Defense: {3}\nSp.Atk: {4} | Sp.Def: {5} | Speed: {6}",
+          essence[:HP], essence[:ATTACK], essence[:DEFENSE],
+          essence[:SPECIAL_ATTACK], essence[:SPECIAL_DEFENSE], essence[:SPEED])
+      end
+    elsif !itemlist.in_pocket
+      description = _INTL([
+        "This pocket holds general items.",
+        "This pocket holds items that can heal Pokémon or change their stats.",
+        "This pocket holds all types of Poké Balls.",
+        "This pocket holds items that have an effect when held in battle.",
+        "This pocket shows all items marked as favorites from other pockets.",
+        "This pocket holds all items that are only usable in battle.",
+        "This pocket holds all TMs used to teach Pokémon new moves.",
+        "This pocket holds all types of berries.",
+        "This pocket holds one-of-a-kind items with important purposes."
+      ][itemlist.pocket - 1])
+    else
+      description = _INTL("Close bag.")
+    end
+    @sprites["itemtext"].text = description
   end
 
   def pbRefreshFilter

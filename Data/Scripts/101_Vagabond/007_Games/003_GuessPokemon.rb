@@ -38,8 +38,8 @@ class Game_Guess_Pokemon
   end
 
   def get_species_bitmap(species,back=false)
-    battlername=sprintf("Graphics/Pokemon/%s/%s",
-      back ? "Back" : "Front", species.to_s)
+    battlername=sprintf("Graphics/Pokemon/%s/%s/%s",
+      back ? "Back" : "Front", species.to_s[0..0], species.to_s)
     bitmap=pbResolveBitmap(battlername)
     if bitmap
       bitmap = RPG::Cache.load_bitmap("", battlername)
@@ -319,22 +319,12 @@ class Game_Guess_Pokemon
   end
 
   def create_round(round)
-    species_keys = GameData::Species::DATA.keys
-    species_data = GameData::Species.get(species_keys[rand(species_keys.length)])
-    exclude = [
-      :SANDOLIN,
-      :SHEDINJA_R,
-      :LANTURN_R,
-      :WOBBUFFET_R,
-      :SOLLUNA,
-      :PLUSLE_R,
-      :MINUN_R,
-      :SUNFLORA_R
-    ]
+    dex_list = pbLoadRegionalDexes[0]
+    species_data = GameData::Species.get(dex_list[rand(511)])
     while true
       begin
-        while species_data.form != 0 || exclude.include?(species_data.species)
-          species_data = GameData::Species.get(species_keys[rand(species_keys.length)])
+        while species_data.form != 0
+          species_data = GameData::Species.get(dex_list[rand(511)])
         end
         species = species_data.species
 
@@ -343,7 +333,7 @@ class Game_Guess_Pokemon
       rescue
         msg = "Failed to get bitmap for " + species.to_s
         echoln msg
-        species_data = GameData::Species.get(species_keys[rand(species_keys.length)])
+        species_data = GameData::Species.get(dex_list[rand(511)])
       end
     end
 
@@ -400,7 +390,7 @@ class Game_Guess_Pokemon
   def guess_pokemon(species)
     while true
       if @round > 20 && @lives > 1
-        if @all_in == 1
+        if @all_in == 0
           loop do
             pbMessage("Are you ready to guess?\\ch[1,0,Yes,Go All In]")
             if $game_variables[1] == 1
@@ -503,7 +493,7 @@ class Game_Guess_Pokemon
     pbMessage("THAT!")
     pbMessage("POKEMON!")
     pbMessage("The first five rounds we will show different ways the image can be distorted. Then we go to the real thing!")
-
+    @round = 20
     while @round <= 100
       @lives_lost_this_round = 0
       @all_in = 0
@@ -618,7 +608,7 @@ class Game_Guess_Pokemon
       @round += 1
       if @round == 21
         pbMessage("Congratulations on passing round 20!\\wt[10]\\n...But the fun has just begun!")
-        pbMessage("You may now put all your lives on the line and\\nGo All In on your guesses.")
+        pbMessage("You may now put all your lives on the line and Go All In on your guesses.")
         pbMessage("If you guess correctly after going all in,\\nyou gain a life!")
         pbMessage("But if you guess incorrectly...\nYou lose all the lives you have!")
         pbMessage("Mind that you can only Go All In when you have multiple lives remaining.")

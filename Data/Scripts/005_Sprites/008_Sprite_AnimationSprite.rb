@@ -18,6 +18,7 @@ class SpriteAnimation
   def src_rect(*arg); @sprite.src_rect(*arg); end
   def opacity(*arg);  @sprite.opacity(*arg);  end
   def tone(*arg);     @sprite.tone(*arg);     end
+  def angle=(val);    @angle = val;           end
 
   def self.clear
     @@_animations.clear
@@ -205,7 +206,7 @@ class SpriteAnimation
       sprite.oy         = 96
       sprite.zoom_x     = cell_data[i, 3] / 100.0
       sprite.zoom_y     = cell_data[i, 3] / 100.0
-      sprite.angle      = cell_data[i, 4]
+      sprite.angle      = cell_data[i, 4] + (@angle || 0)
       sprite.mirror     = (cell_data[i, 5] == 1)
       sprite.tone       = self.tone
       sprite.opacity    = cell_data[i, 6] * self.opacity / 255.0
@@ -261,7 +262,7 @@ end
 # when its animation is finished. Used for grass rustling and so forth.
 #===============================================================================
 class AnimationContainerSprite < RPG::Sprite
-  def initialize(animID, map, tileX, tileY, viewport = nil, tinting = false, height = 3)
+  def initialize(animID, map, tileX, tileY, viewport = nil, tinting = false, height = 3, angle = 0)
     super(viewport)
     @tileX = tileX
     @tileY = tileY
@@ -269,6 +270,7 @@ class AnimationContainerSprite < RPG::Sprite
     setCoords
     pbDayNightTint(self) if tinting
     self.animation($data_animations[animID], true, height)
+    @animations[@animations.length - 1].angle = angle
   end
 
   def setCoords
@@ -301,8 +303,9 @@ class Spriteset_Map
     _animationSprite_initialize(map)
   end
 
-  def addUserAnimation(animID, x, y, tinting = false, height = 3)
-    sprite = AnimationContainerSprite.new(animID, self.map, x, y, @@viewport1, tinting, height)
+  def addUserAnimation(animID, x, y, tinting = false, height = 3, angle = 0)
+    sprite = AnimationContainerSprite.new(animID, self.map, x, y, @@viewport1, tinting, height, angle)
+    sprite.angle = angle
     addUserSprite(sprite)
     return sprite
   end

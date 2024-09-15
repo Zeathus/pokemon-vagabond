@@ -426,6 +426,10 @@ class Battle
       pbDisplay(_INTL("{1} can use items again!", battler.pbThis))
       battler.pbItemTerrainStatBoostCheck
     end
+    # Nihility
+    pbEORCountDownBattlerEffect(priority, PBEffects::Nihility) do |battler|
+      pbDisplay(_INTL("{1}'s Nihility wore off!", battler.pbThis))
+    end
     # Yawn
     pbEORCountDownBattlerEffect(priority, PBEffects::Yawn) do |battler|
       if battler.pbCanSleepYawn?
@@ -823,6 +827,7 @@ class Battle
       battler.effects[PBEffects::SpikyShield]      = false
       battler.effects[PBEffects::Spotlight]        = 0
       battler.effects[PBEffects::ThroatChop]       -= 1 if battler.effects[PBEffects::ThroatChop] > 0
+      battler.effects[PBEffects::GigatonHammerTime]-= 1 if battler.effects[PBEffects::GigatonHammerTime] > 0
       battler.lastHPLost                           = 0
       battler.lastHPLostFromFoe                    = 0
       battler.droppedBelowHalfHP                   = false

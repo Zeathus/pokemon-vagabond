@@ -7,6 +7,6 @@ Battle::AbilityEffects::CertainSwitching.add(:RUNAWAY,
 
 Battle::AbilityEffects::DamageCalcFromTarget.add(:ILLUMINATE,
   proc { |ability, user, target, move, mults, baseDmg, type|
-    mults[:base_damage_multiplier] /= 2 if type == :DARK && Supplementals::ILLUMINATE_DARK_RESIST
+    mults[:final_damage_multiplier] /= 2 if type == :DARK && Supplementals::ILLUMINATE_DARK_RESIST
   }
 )

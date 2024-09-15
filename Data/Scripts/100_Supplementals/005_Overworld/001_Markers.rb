@@ -24,12 +24,13 @@ def pbLoadQuestMarkers
     next if !active
     if type != 3 && marker.length > 4 && marker[4]
       quest_id = marker[4].to_sym
+      quest = $quests[quest_id]
       if type == 0
-        active = false if $quests[quest_id].status != 0
+        active = false if quest.status != 0 && (quest.type != PBQuestType::Main || quest.status > 0)
       else
-        active = false if $quests[quest_id].status != 1
+        active = false if quest.status != 1
       end
-      type += $quests[quest_id].type * 4
+      type += quest.type * 4
     end
     if active
       if type == 3

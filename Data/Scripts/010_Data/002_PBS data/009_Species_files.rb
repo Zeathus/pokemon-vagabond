@@ -7,7 +7,7 @@ module GameData
       try_gender  = (gender == 1) ? "_female" : ""
       try_shadow  = (shadow) ? "_shadow" : ""
       factors = []
-      factors.push([4, sprintf("%s shiny/", subfolder), try_subfolder]) if shiny
+      factors.push([4, sprintf("%s shiny/%s/", subfolder, species[0..0]), try_subfolder]) if shiny
       factors.push([3, try_shadow, ""]) if shadow
       factors.push([2, try_gender, ""]) if gender == 1
       factors.push([1, try_form, ""]) if form > 0

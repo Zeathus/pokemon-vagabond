@@ -87,6 +87,14 @@ class Sprite_Character < RPG::Sprite
       end
     end
     @dropshadow&.update
+    if $game_variables && $game_player == @character
+      target_angle = $game_variables[PLAYER_ROTATION] || 0
+      if self.angle < target_angle
+        self.angle = [self.angle + 2, target_angle].min
+      elsif self.angle > target_angle
+        self.angle = [self.angle - 2, target_angle].max
+      end
+    end
     if @partner
       sx = @character.pattern * @cw
       sy = ((@character.direction - 2) / 2) * @ch

@@ -1394,7 +1394,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_60
-Description = An item to be held by a Pokémon. It is a stiff, heavy brace that promotes strong growth but lowers Speed.
+Description = An item to be held by a Pokémon. You gain double the Effort Essence when the holder knocks out an opponent, but the holder's Speed is halved.
 #-------------------------------
 [POWERWEIGHT]
 Name = Power Weight
@@ -1403,7 +1403,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes HP gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 HP Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [POWERBRACER]
 Name = Power Bracer
@@ -1412,7 +1412,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes Attack gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 Attack Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [POWERBELT]
 Name = Power Belt
@@ -1421,7 +1421,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes Defense gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 Defense Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [POWERLENS]
 Name = Power Lens
@@ -1430,7 +1430,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes Sp. Atk gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 Special Attack Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [POWERBAND]
 Name = Power Band
@@ -1439,7 +1439,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes Sp. Def gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 Special Defense Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [POWERANKLET]
 Name = Power Anklet
@@ -1448,7 +1448,7 @@ Pocket = 4
 Price = 3000
 BPPrice = 10
 Flags = Fling_70
-Description = A Pokémon held item that promotes Speed gain on leveling, but reduces the Speed stat.
+Description = A Pokémon held item that creates 8 Speed Effort Essence when the holder knocks out an opponent, but halves the holder's Speed.
 #-------------------------------
 [LAXINCENSE]
 Name = Lax Incense
@@ -3301,10 +3301,11 @@ NamePlural = HP Ups
 PortionName = bottle of HP Up
 PortionNamePlural = bottles of HP Up
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the HP Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their HP Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [PROTEIN]
 Name = Protein
@@ -3312,10 +3313,11 @@ NamePlural = Proteins
 PortionName = bottle of Protein
 PortionNamePlural = bottles of Protein
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the Attack Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their Attack Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [IRON]
 Name = Iron
@@ -3323,10 +3325,11 @@ NamePlural = Irons
 PortionName = bottle of Iron
 PortionNamePlural = bottles of Iron
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the Defense Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their Defense Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [CALCIUM]
 Name = Calcium
@@ -3334,10 +3337,11 @@ NamePlural = Calciums
 PortionName = bottle of Calcium
 PortionNamePlural = bottles of Calcium
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the Sp. Atk Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their Special Attack Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [ZINC]
 Name = Zinc
@@ -3345,10 +3349,11 @@ NamePlural = Zincs
 PortionName = bottle of Zinc
 PortionNamePlural = bottles of Zinc
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the Sp. Def Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their Special Defense Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [CARBOS]
 Name = Carbos
@@ -3356,64 +3361,71 @@ NamePlural = Carbos
 PortionName = bottle of Carbos
 PortionNamePlural = bottles of Carbos
 Pocket = 2
-Price = 5000
+Price = 4000
+SellPrice = 400
 FieldUse = OnPokemon
 Flags = Fling_30
-Description = A nutritious drink for Pokémon. It increases the Speed Effort Level of a single Pokémon by 1 while the level is at least 3 and below 9.
+Description = A nutritious drink for Pokémon. It raises their Speed Effort Level by 1 while the level is at least 3 and below 9.
 #-------------------------------
 [HEALTHWING]
 Name = Health Wing
 NamePlural = Health Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the HP Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A hearty feather for use on Pokémon. It raises their HP Effort Level by 1 while the level is below 3.
 #-------------------------------
 [MUSCLEWING]
 Name = Muscle Wing
 NamePlural = Muscle Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the Attack Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A sharp feather for use on Pokémon. It raises their Attack Effort Level by 1 while the level is below 3.
 #-------------------------------
 [RESISTWING]
 Name = Resist Wing
 NamePlural = Resist Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the Defense Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A dense feather for use on Pokémon. It raises their Defense Effort Level by 1 while the level is below 3.
 #-------------------------------
 [GENIUSWING]
 Name = Genius Wing
 NamePlural = Genius Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the Sp. Atk Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A glossy feather for use on Pokémon. It raises their Special Attack Effort Level by 1 while the level is below 3.
 #-------------------------------
 [CLEVERWING]
 Name = Clever Wing
 NamePlural = Clever Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the Sp. Def Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A smooth feather for use on Pokémon. It raises their Special Defense Effort Level by 1 while the level is below 3.
 #-------------------------------
 [SWIFTWING]
 Name = Swift Wing
 NamePlural = Swift Wings
 Pocket = 2
-Price = 1000
+Price = 2000
+SellPrice = 200
 FieldUse = OnPokemon
 Flags = Fling_20
-Description = An item for use on a Pokémon. It increases the Speed Effort Level of a single Pokémon by 1 while the level is below 3.
+Description = A light feather for use on Pokémon. It raises their Speed Effort Level by 1 while the level is below 3.
 #-------------------------------
 [LONELYMINT]
 Name = Lonely Mint
@@ -4463,7 +4475,7 @@ Price = 3000
 FieldUse = TM
 Flags = Fling_80
 Move = TRAILBLAZE
-Description = A column of grass hits the foes. When used with its water equivalent, it creates a vast swamp.
+Description = The user attacks suddenly as if leaping out from tall grass. The user's nimble footwork boosts its Speed stat.
 #-------------------------------
 [TM50]
 Name = TM50
@@ -6991,58 +7003,58 @@ Flags = KeyItem
 Description = A device capable of recovering thoroughly corrupt data. With this you can get new moves from Data Chips.
 #-------------------------------
 [HEMATITEGEMSTONE]
-Name = Hematite Gemstone
-NamePlural = Hematite Gemstones
+Name = Hematite Jewel
+NamePlural = Hematite Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits a vigorous aura. It can increase a Pokemon's HP to its limits.
+Description = A jewel made of vigorous essence. It raises a Pokemon's HP Effort Level from 9 to its limits.
 #-------------------------------
 [HELIODORGEMSTONE]
-Name = Heliodor Gemstone
-NamePlural = Heliodor Gemstones
+Name = Heliodor Jewel
+NamePlural = Heliodor Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits a strengthening aura. It can increase a Pokemon's Attack to its limits.
+Description = A jewel made of mighty essence. It raises a Pokemon's Attack Effort Level from 9 to its limits.
 #-------------------------------
 [AEGIRINEGEMSTONE]
-Name = Aegirine Gemstone
-NamePlural = Aegirine Gemstones
+Name = Aegirine Jewel
+NamePlural = Aegirine Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits a protective aura. It can increase a Pokemon's Defense to its limits.
+Description = A jewel made of hardy essence. It raises a Pokemon's Defense Effort Level from 9 to its limits.
 #-------------------------------
 [AMETRINEGEMSTONE]
-Name = Ametrine Gemstone
-NamePlural = Ametrine Gemstones
+Name = Ametrine Jewel
+NamePlural = Ametrine Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits a resolute aura. It can increase a Pokemon's Special Attack to its limits.
+Description = A jewel made of rousing essence. It raises a Pokemon's Special Attack Effort Level from 9 to its limits.
 #-------------------------------
 [HOWLITEGEMSTONE]
-Name = Howlite Gemstone
-NamePlural = Howlite Gemstones
+Name = Howlite Jewel
+NamePlural = Howlite Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits a halcyon aura. It can increase a Pokemon's Special Defense to its limits.
+Description = A jewel made of resilient essence. It raises a Pokemon's Special Defense Effort Level from 9 to its limits.
 #-------------------------------
 [PHENACITEGEMSTONE]
-Name = Phenacite Gemstone
-NamePlural = Phenacite Gemstones
+Name = Phenacite Jewel
+NamePlural = Phenacite Jewels
 Pocket = 2
 Price = 10000
 FieldUse = OnPokemon
 Flags = Fling_80
-Description = A gemstone that emits an impulsive aura. It can increase a Pokemon's Speed to its limits.
+Description = A jewel made of lively essence. It raises a Pokemon's Speed Effort Level from 9 to its limits.
 #-------------------------------
 [TROPICALINCENSE]
 Name = Tropical Incense
@@ -7092,7 +7104,14 @@ Price = 1000
 SellPrice = 500
 Flags = Fling_30
 Description = An item to be held by a Pokémon. It strengthens the essence of the holder's held item, doubling its effect.
-
+#-------------------------------
+[ESSENCESIPHON]
+Name = Essence Siphon
+NamePlural = Essence Siphons
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = Collects Effort Essence from opponents.
 
 
 

@@ -1775,17 +1775,21 @@ class Battle
         end
       when "AttackerFaintsIfUserFaints"
         # Destiny Bond
-        score -= 50
-        # Prioritize more on less HP
-        if user.hp < user.totalhp * 0.5
-          score += (100 - [user.hp * 100 / user.totalhp, 100].min) * 2
+        if user.hasActiveAbility?(:EVERLASTING) && user.form == 0
+          score += 200
+        else
+          score -= 50
+          # Prioritize more on less HP
+          if user.hp < user.totalhp * 0.5
+            score += (100 - [user.hp * 100 / user.totalhp, 100].min) * 2
+          end
+          # Make sure more Pokemon are available
+          party_able = 0
+          for p in self.pbParty(user.index)
+            party_able += 1 if p.hp > 0
+          end
+          score -= 200 if party_able <= 1
         end
-        # Make sure more Pokemon are available
-        party_able = 0
-        for p in self.pbParty(user.index)
-          party_able += 1 if p.hp > 0
-        end
-        score -= 200 if party_able <= 1
       when "UserEnduresFaintingThisTurn"
         # Endure
         if user.effects[PBEffects::ProtectRate]==1
@@ -1883,7 +1887,8 @@ class Battle
       when "RemoveTargetItem", "CorrodeTargetItem"
         # Knock Off
         if !target.hasActiveAbility?(:STICKYHOLD) &&
-           !target.hasActiveAbility?(:SUCTIONCUPS)
+           !target.hasActiveAbility?(:SUCTIONCUPS) &&
+           !target.effects[PBEffects::Permanence]
           if target.item
             score += 25
           end
@@ -1891,7 +1896,8 @@ class Battle
       when "UserTakesTargetItem"
         # Covet / Thief
         if !target.hasActiveAbility?(:STICKYHOLD) &&
-           !target.hasActiveAbility?(:SUCTIONCUPS)
+           !target.hasActiveAbility?(:SUCTIONCUPS) &&
+           !target.effects[PBEffects::Permanence]
           if target.item && user.item == 0
             score += 25
           end
@@ -1899,7 +1905,8 @@ class Battle
       when "UserTargetSwapItems"
         # Switcheroo / Trick
         if !target.hasActiveAbility?(:STICKYHOLD) &&
-           !target.hasActiveAbility?(:SUCTIONCUPS)
+           !target.hasActiveAbility?(:SUCTIONCUPS) &&
+           !target.effects[PBEffects::Permanence]
           if target.item != user.item &&
              target.item != :FLAMEORB &&
              target.item != :FROSTORB &&

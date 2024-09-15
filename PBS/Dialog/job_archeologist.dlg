@@ -97,6 +97,16 @@
 /speaker Asako
 > This dictionary allows you to easily translate the ancient texts at any time. I hope you find it useful.
 
+[JOB_ARCHEOLOGIST_2]
+/speaker Asako
+> You have managed to conquer five ruins already, very impressive!
+> My investigation has also borne fruit, as I have information on more ruins for you!
+
+[JOB_ARCHEOLOGIST_3]
+/speaker Asako
+> You have conquered nine ruins? That means we're already halfway!
+> My investigation has also borne fruit, as I know the vague location of every remaining ruin.
+
 [JOB_ARCHEOLOGIST_HINT]
 /speaker Asako
 ?> I hope your search is going well.\nWhat ruin would you like a clue for?
@@ -108,33 +118,33 @@
     > My research suggests the Water-type ruins are somewhere along Lazuli River.
   /ifchoice $bag.quantity(:TM91)==0 Grass
     > My research suggests the Grass-type ruins are somewhere in the Breccia Undergrowth.
-  /ifchoice $bag.quantity(:TM82)==0 Flying
-    > My research suggests that these ruins are not implemented yet.
   /ifchoice $bag.quantity(:TM94)==0 Ice
-    > My research suggests that these ruins are not implemented yet.
+    > My research suggests the Ice-type ruins are somewhere near Mt[.] Pumice.
   /ifchoice $bag.quantity(:TM85)==0 Rock
-    > My research suggests that these ruins are not implemented yet.
+    > My research suggests the Rock-type ruins are in the lower floors of Mt[.] Pegma.
+  /ifchoice $bag.quantity(:TM83)==0 Poison
+    > My research suggests the Poison-type ruins are somewhere in the eastern sea.
   /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM92)==0 Electric
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM93)==0 Psychic
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM97)==0 Fairy
-    > My research suggests that these ruins are not implemented yet.
+    > My research suggests the Electric-type ruins are somewhere in the western sea.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM84)==0 Ground
+    > My research suggests the Ground-type ruins are not too deep inside Scoria Desert.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM88)==0 Steel
+    > My research suggests the Steel-type ruins are somewhere in Scoria Valley.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM86)==0 Bug
+    > My research suggests the Bug-type ruins are somewhere in the Gabbro area.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM95)==0 Dragon
+    > My research suggests the Dragon-type ruins are somewhere in the Gabbro area.
+  /ifchoice pbJob("RuinManiac").level>=2&&$bag.quantity(:TM96)==0 Dark
+    > My research suggests the Dark-type ruins are somewhere in the Smokey Forest.
   /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM81)==0 Fighting
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM83)==0 Poison
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM84)==0 Ground
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM88)==0 Steel
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM86)==0 Bug
-    > My research suggests that these ruins are not implemented yet.
+    > My research suggests the Fighting-type ruins are somewhere on Amphi Island.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM93)==0 Psychic
+    > My research suggests the Psychic-type ruins are on the back of a giant Pokémon.
   /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM87)==0 Ghost
-    > My research suggests that these ruins are somewhere in the Smokey Forest.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM96)==0 Dark
-    > My research suggests that these ruins are not implemented yet.
-  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM95)==0 Dragon
-    > My research suggests that these ruins are not implemented yet.
+    > My research suggests the Ghost-type ruins are within the Gabbro Ruins.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM82)==0 Flying
+    > My research suggests the Flying-type ruins are within the Scoria Desert Ruins.
+  /ifchoice pbJob("RuinManiac").level>=3&&$bag.quantity(:TM97)==0 Fairy
+    > My research suggests the Fairy-type ruins are within the Evergone Ruins.
   /cancelchoice Never mind
 ?/>

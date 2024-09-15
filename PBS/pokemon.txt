@@ -3734,6 +3734,7 @@ Generation = 1
 WildItemCommon = MYSTICWATER
 WildItemUncommon = MYSTICWATER
 WildItemRare = MYSTICWATER
+Evolutions = LAPRANESSE,Level,36
 RegionalNumbers = 8,0
 #-------------------------------
 [DITTO]
@@ -10146,6 +10147,7 @@ Habitat = Forest
 Category = Fruit
 Pokedex = It flies by flapping its broad leaves. The bunch of fruit that grows around its neck is deliciously sweet. In the spring, it scatters pollen from its neck.
 Generation = 3
+Evolutions = TROPICOPIA,Level,36
 RegionalNumbers = 2,0
 #-------------------------------
 [CHIMECHO]
@@ -10189,7 +10191,7 @@ CatchRate = 30
 Happiness = 35
 Abilities = PRESSURE,SUPERLUCK
 HiddenAbilities = JUSTIFIED
-Moves = 1,LEER,1,QUICKATTACK,2,FEINT,5,BITE,8,DETECT,12,SNARL,16,SLASH,22,TAUNT,25,KNOCKOFF,32,FOCUSENERGY,34,SUCKERPUNCH,42,RAZORWIND,46,SWORDSDANCE,55,FUTURESIGHT,58,PERISHSONG
+Moves = 1,LEER,1,QUICKATTACK,2,FEINT,5,BITE,8,DETECT,12,SNARL,16,SLASH,22,TAUNT,25,KNOCKOFF,27,PERMANENCE,32,FOCUSENERGY,34,SUCKERPUNCH,42,RAZORWIND,46,SWORDSDANCE,55,FUTURESIGHT,58,PERISHSONG
 TutorMoves = ECHOEDVOICE,FALSESWIPE,FACADE,DOUBLEEDGE,CLOSECOMBAT,AIRSLASH,ROCKSLIDE,STONEEDGE,HEX,SHADOWCLAW,SHADOWBALL,MYSTICALFIRE,FLAMETHROWER,FIREBLAST,TRAILBLAZE,CHARGEBEAM,THUNDERBOLT,THUNDER,ZENHEADBUTT,FUTURESIGHT,ICYWIND,ICEBEAM,BLIZZARD,SNARL,KNOCKOFF,DARKPULSE,THROATCHOP,PLAYROUGH,GENERICBOOST,GLOOMBOOST,HALLOWBOOST,THUNDERWAVE,WILLOWISP,CALMMIND,HONECLAWS,SWORDSDANCE,TORMENT,TAUNT,PROTECT,RAINDANCE,SUNNYDAY,SANDSTORM,SNOWSCAPE,WINDS,AERIALACE,SHOCKWAVE,THIEF,CURSE,PSYCHUP,STRENGTH,SUBSTITUTE,BOUNCE,HYPERBEAM,GIGAIMPACT,MEGAHORN
 EggMoves = ASSURANCE,BATONPASS,BITE,CURSE,DOUBLEEDGE,FEINT,HEX,MAGICCOAT,MEANLOOK,MEGAHORN,PERISHSONG,PLAYROUGH,SUCKERPUNCH,ZENHEADBUTT
 EggGroups = Field
@@ -21548,6 +21550,7 @@ Category = Blast Turtle
 Pokedex = It lives in volcanoes and eats sulfur and other minerals. Materials from the food it eats form the basis of its explosive shell.
 Generation = 7
 WildItemUncommon = CHARCOAL
+Evolutions = ARCHEBLAST,Level,36
 RegionalNumbers = 5,0
 #-------------------------------
 [TOGEDEMARU]
@@ -24817,6 +24820,31 @@ Pokedex = Calyrex is a merciful Pokémon, capable of providing healing and bless
 Generation = 8
 RegionalNumbers = 0,0
 #-------------------------------
+[OVERQWIL]
+Name = Overqwil
+Types = PSYCHIC,GRASS
+Affinities = PSYCHIC
+BaseStats = 100,80,80,80,80,80
+GenderRatio = Genderless
+GrowthRate = Medium
+BaseExp = 250
+EVs = HP,3
+CatchRate = 3
+Happiness = 100
+Abilities = UNNERVE
+Moves = 1,POUND,1,MEGADRAIN,1,CONFUSION,1,GROWTH,8,LIFEDEW,16,GIGADRAIN,24,PSYSHOCK,32,HELPINGHAND,40,AROMATHERAPY,48,ENERGYBALL,56,PSYCHIC,64,LEECHSEED,72,HEALPULSE,80,SOLARBEAM,88,FUTURESIGHT
+TutorMoves = POLLENPUFF,GIGADRAIN,ENERGYBALL,SOLARBEAM,PSYSHOCK,PSYCHIC,ZENHEADBUTT,FUTURESIGHT,SNARL,GENERICBOOST,MENTALBOOST,CALMMIND,AGILITY,PROTECT,SAFEGUARD,REFLECT,LIGHTSCREEN,SUNNYDAY,GRASSYTERRAIN,PSYCHICTERRAIN,TRICKROOM,WONDERROOM,MAGICROOM,MAGICALLEAF,HELPINGHAND,EXPANDINGFORCE,HYPERBEAM,GIGAIMPACT,METRONOME
+EggGroups = Undiscovered
+HatchSteps = 30720
+Height = 1.1
+Weight = 7.7
+Color = Green
+Shape = Bipedal
+Category = King
+Pokedex = Calyrex is a merciful Pokémon, capable of providing healing and blessings. It reigned over the Galar region in times of yore.
+Generation = 8
+RegionalNumbers = 0,0
+#-------------------------------
 [SPRIGATITO]
 Name = Sprigatito
 Types = GRASS
@@ -27467,8 +27495,8 @@ Generation = 50
 Evolutions = TROPIUS,Level,18
 RegionalNumbers = 1,0
 #-------------------------------
-[DENDROQUIUS]
-Name = Dendroquius
+[TROPICOPIA]
+Name = Tropicopia
 Types = GRASS,FLYING
 Affinities = DRAGON
 BaseStats = 120,95,75,65,110,80
@@ -27520,8 +27548,8 @@ Generation = 50
 Evolutions = TURTONATOR,Level,18
 RegionalNumbers = 4,0
 #-------------------------------
-[ARCHABLAST]
-Name = Archablast
+[ARCHEBLAST]
+Name = Archeblast
 Types = FIRE,DRAGON
 Affinities = DRAGON
 BaseStats = 90,85,135,30,120,85

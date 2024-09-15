@@ -22,7 +22,7 @@ def pbAllDataChipMoves
     [:SUBSTITUTE,4]
   ]
 
-  if $bag.quantity(:DATARECOVERYDEVICE)>0
+  if pbJob("Engineer").level >= 2
     moves += [
       [:ROOST,3],
       [:TERRAINPULSE,3],
@@ -31,19 +31,19 @@ def pbAllDataChipMoves
       [:SMARTSTRIKE,3],
       [:DRILLRUN,3],
       [:LIQUIDATION,3],
-      [:FREEZEDRY,4],
       [:SLUDGEWAVE,4],
+      [:FREEZEDRY,4],
+      [:EXPANDINGFORCE,4]
+    ]
+  end
+
+  if pbJob("Engineer").level >= 4
+    moves += [
+      [:BODYPRESS,4],
       [:DYNAMICPUNCH,4],
       [:INFERNO,4],
       [:ZAPCANNON,4],
       [:PERMAFROST,4],
-    ]
-  end
-
-  if $bag.quantity(:DATARECOVERYDEVICEV2)>0
-    moves += [
-      [:EXPANDINGFORCE,4],
-      [:BODYPRESS,4],
       [:EXPLOSION,4],
       [:HYPERBEAM,4],
       [:GIGAIMPACT,4],
@@ -51,7 +51,7 @@ def pbAllDataChipMoves
       [:MEGAHORN,5],
       [:DRACOMETEOR,5],
       [:SKYATTACK,5],
-      [:METRONOME,5],
+      [:METRONOME,5]
     ]
   end
 

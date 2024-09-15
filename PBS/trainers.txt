@@ -691,10 +691,25 @@ Pokemon = SABLEYE,26
     AbilityIndex = 2
     IV = 20,20,20,20,20,20
 #--------------
-[DAO_Fintan,Fintan] # Canjon Cavern
+[DAO_Fintan,Fintan] # Ch5 as Eliana
+LoseText = You've grown much stronger.
 Pokemon = ALAKAZAM,40
     Gender = M
-    Moves = PSYCHIC,FOCUSBLAST
+    Item = FOCUSSASH
+    Ability = MAGICGUARD
+    Moves = PSYCHIC,RECOVER,FUTURESIGHT,SHADOWBALL
+    IV = 31,31,31,31,31,31
+Pokemon = TALONFLAME,40
+    Gender = M
+    Ability = GALEWINGS
+    Moves = ACROBATICS,FLAMECHARGE,FLAIL,QUICKATTACK
+    IV = 31,31,31,31,31,31
+Pokemon = DECIDUEYE,40
+    Form = 1
+    Gender = M
+    Item = RAZORCLAW
+    Ability = SCRAPPY
+    Moves = TRIPLEARROWS,UTURN,SUCKERPUNCH,LEAFBLADE
     IV = 31,31,31,31,31,31
 #--------------
 [EARTHELDER,Uriel] # Amphi Town Elder
@@ -2432,3 +2447,11 @@ Pokemon = PANCHAM,32
 Pokemon = GOLBAT,33
 Pokemon = SANDILE,32
 Pokemon = DRILBUR,33
+#--------------
+[ROUGHNECK,B] # Nekane's Mind Battle
+Pokemon = GARBODOR,36
+    Ability = STENCH
+    Moves = SLUDGEBOMB,TOXIC,BODYPRESS,CURSE
+Pokemon = MIGHTYENA,36
+    Ability = INTIMIDATE
+    Moves = CRUNCH,FIREFANG,ICEFANG,THUNDERFANG

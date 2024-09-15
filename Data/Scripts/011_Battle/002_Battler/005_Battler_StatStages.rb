@@ -12,6 +12,13 @@ class Battle::Battler
     if hasActiveAbility?(:CONTRARY) && !ignoreContrary && !@battle.moldBreaker
       return pbCanLowerStatStage?(stat, user, move, showFailMsg, true)
     end
+    if user.effects[PBEffects::Nihility] > 0
+      if showFailMsg
+        @battle.pbDisplay(_INTL("{1}'s Nihility stopped it from raising its {2}!",
+                                pbThis, GameData::Stat.get(stat).name))
+      end
+      return false
+    end
     # Check the stat stage
     if statStageAtMax?(stat)
       if showFailMsg

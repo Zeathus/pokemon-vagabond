@@ -147,7 +147,10 @@ class Game_Player < Game_Character
     if !$game_temp.encounter_triggered
       x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
       y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
-      return if pbStairs(x_offset, y_offset)
+      if pbStairs(x_offset, y_offset)
+        check_event_trigger_touch(dir)
+        return
+      end
       return if pbEndSurf(x_offset, y_offset)
       if can_move_in_direction?(dir)
         x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
@@ -503,7 +506,8 @@ class Game_Player < Game_Character
     if was_jumping && !jumping? && !@transparent && (@tile_id > 0 || @character_name != "")
       if !$PokemonGlobal.surfing || $game_temp.ending_surf
         spriteset = $scene.spriteset(map_id)
-        spriteset&.addUserAnimation(Settings::DUST_ANIMATION_ID, self.x, self.y, true, 1)
+        angle = ($game_variables && $game_variables[PLAYER_ROTATION]) ? $game_variables[PLAYER_ROTATION] : 0
+        spriteset&.addUserAnimation(Settings::DUST_ANIMATION_ID, self.x, self.y, true, 1, angle)
       end
     end
   end

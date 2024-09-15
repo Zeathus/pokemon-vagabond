@@ -88,7 +88,9 @@ class Battle::Battler
     @pokemon.makeUnmega if mega?
     @pokemon.makeUnprimal if primal?
     # Do other things
-    @battle.pbClearChoice(@index)   # Reset choice
+    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0)
+      @battle.pbClearChoice(@index)   # Reset choice
+    end
     pbOwnSide.effects[PBEffects::LastRoundFainted] = @battle.turnCount
     if $game_temp.party_direct_damage_taken &&
        $game_temp.party_direct_damage_taken[@pokemonIndex] &&
@@ -98,12 +100,15 @@ class Battle::Battler
     # Check other battlers' abilities that trigger upon a battler fainting
     pbAbilitiesOnFainting
     if hasActiveAbility?(:EVERLASTING, true) && @form == 0
-      @hp = 0
+      @hp = 1
       @pokemon.hp = 1
       pbChangeForm(1, nil)
       @fainted = false
       @effects[PBEffects::EverlastingFainted] = @battle.turnCount
+      @battle.pbShowAbilitySplash(self)
       @battle.pbDisplayPaused(_INTL("{1} is Everlasting!", pbThis)) if showMessage
+      @battle.pbHideAbilitySplash(self)
+      @battle.scene.pbUnfaintBattler(self)
       return false
     end
     # Check for end of primordial weather

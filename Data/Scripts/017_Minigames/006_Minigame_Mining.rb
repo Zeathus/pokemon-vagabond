@@ -8,10 +8,13 @@ class MiningGameCounter < BitmapSprite
   attr_accessor :hits
   attr_accessor :durability_mod
 
-  def initialize(x, y)
-    @viewport = Viewport.new(x, y, 544, 60)
-    @viewport.z = 99999
+  def initialize(x, y, viewport)
+    @viewport = viewport
+    #@viewport = Viewport.new(x, y, 544, 60)
+    #@viewport.z = 99999
     super(544, 60, @viewport)
+    self.x = x
+    self.y = y
     @hits = 0
     @durability_mod = 1.5
     @image = AnimatedBitmap.new("Graphics/UI/Mining/cracks")
@@ -143,8 +146,8 @@ class MiningGameCursor < BitmapSprite
         if @hit == 1 && hit_frame < 3
           self.bitmap.blt(x - 64 + 112, y, @hitsbitmap.bitmap, Rect.new(160 * hit_frame, 160, 160, 160))
         end
-        if @hit == 3 && i < 3
-          self.bitmap.blt(x - 64 + 112, y, @hitsbitmap.bitmap, Rect.new(160 * i, 160 * 2, 160, 160))
+        if @hit == 3 && hit_frame < 3
+          self.bitmap.blt(x - 64 + 112, y, @hitsbitmap.bitmap, Rect.new(160 * hit_frame, 160 * 2, 160, 160))
         end
       end
     end
@@ -279,8 +282,10 @@ class MiningGameScene
       @sprites[_INTL("toolbg_{1}", i)].setBitmap(sprintf("Graphics/UI/Mining/toolicons"))
       @sprites[_INTL("toolbg_{1}", i)].src_rect.set(68 * i, 100, 68, 100)
     end
-    @sprites["crack"] = MiningGameCounter.new(112, 4)
-    @sprites["cursor"] = MiningGameCursor.new(110, (@tool_count > 2) ? 2 : 0)   # central position, pick
+    @sprites["crack"] = MiningGameCounter.new(112, 4, @viewport)
+    @sprites["crack"].z = 98
+    @sprites["cursor"] = MiningGameCursor.new(110, (@tool_count > 2) ? 2 : 0, @viewport)   # central position, pick
+    @sprites["cursor"].z = 99
     @sprites["tool"] = IconSprite.new(Graphics.width - 86, @tool_ypos, @viewport)
     @sprites["tool"].setBitmap(sprintf("Graphics/UI/Mining/toolicons"))
     @sprites["tool"].src_rect.set(68 * @sprites["cursor"].mode, 0, 68, 100)
@@ -603,8 +608,8 @@ class MiningGameScene
           burieditem = @items[index]
           revealeditems.bitmap.blt(112 + 32 * burieditem[1], 64 + (32 * burieditem[2]),
                                    @itembitmap.bitmap,
-                                   Rect.new(32 * ITEMS[burieditem[0]][2], 32 * ITEMS[burieditem[0]][3],
-                                            32 * ITEMS[burieditem[0]][4], 32 * ITEMS[burieditem[0]][5]))
+                                   Rect.new(32 * @all_items[burieditem[0]][2], 32 * @all_items[burieditem[0]][3],
+                                            32 * @all_items[burieditem[0]][4], 32 * @all_items[burieditem[0]][5]))
         end
         flash_alpha = lerp(alpha_start, alpha_end, flash_duration / 2, timer_start, System.uptime)
         revealeditems.color.alpha = flash_alpha
@@ -782,6 +787,19 @@ def pbMineQuarry(color = "none", tier = 0)
   if pbConfirmMessage(_INTL("You spot {1} objects in the wall.\\wt[4]\nDo you want to mine here?", color.downcase))
     items = pbMiningColorItems(color, tier)
     pbMiningGame(items)
+  end
+  if $quests[:DIGGYDIGGYHOLE].at_step?(1)
+    if pbJob("Miner").mined_any?
+      $quests[:DIGGYDIGGYHOLE].advance
+    end
+  elsif $quests[:DIGGINGDEEPER].at_step?(0)
+    if pbJob("Miner").mined?(:SUNSTONE) && pbJob("Miner").mined?(:MOONSTONE)
+      $quests[:DIGGINGDEEPER].advance
+    end
+  elsif $quests[:DAWNOFTHEDEEPSTONES].at_step?(0)
+    if pbJob("Miner").mined?(:DAWNSTONE) && pbJob("Miner").mined?(:DUSKSTONE) && pbJob("Miner").mined?(:SHINYSTONE)
+      $quests[:DAWNOFTHEDEEPSTONES].advance
+    end
   end
 end
 

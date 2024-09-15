@@ -2474,3 +2474,10 @@ Weight = 77.0
 Color = Blue
 Shape = Quadruped
 Generation = 9
+#-------------------------------
+[DECIDUEYE,1]
+Types = GRASS,FIGHTING
+Affinities = FLYING
+BaseStats = 88,112,80,60,95,95
+Abilities = OVERGROW
+HiddenAbilities = SCRAPPY

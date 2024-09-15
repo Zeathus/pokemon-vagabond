@@ -104,6 +104,7 @@ Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
 Step1 = Talk to Alister at the Pegma Quarry to see how you can help.
 Step2 = Excavate any item from layer 1 to prove your worth to Alister.
+Step3 = Tell Alister about your exploits.
 Done = You proved your worth to Alister and joined the Pegma Quarry operation!
 
 [DIGGINGDEEPER]
@@ -114,6 +115,7 @@ Description = Alister promised you a new mining tool and access to the next leve
 Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
 Step1 = Excavate a Sun Stone and a Moon Stone.
+Step2 = Tell Alister about your exploits.
 Done = "Thanks to your efforts, you gained access to floor B3F of the quarry, and got a new spelunky tool!"
 
 [DAWNOFTHEDEEPSTONES]
@@ -124,6 +126,7 @@ Description = Alister will keep you away from layer 4 unless you can excavate a 
 Location = Pegma Quarry
 FullLocation = at the Pegma Quarry
 Step1 = "Excavate a Dawn Stone, a Dusk Stone and a Shiny Stone."
+Step2 = Tell Alister about your exploits.
 Done = Thanks to your skill, you gained access to floor B4F of the quarry!
 
 # [210] Crafter
@@ -197,6 +200,7 @@ Description = Fisherman Ivan wants to teach you how to fish. He even gave you a 
 Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = Hook a Magikarp to show Ivan you have learned how to fish. It can be caught in Lazuli River.
+Step2 = Tell Ivan about your exploits.
 Done = You learned how to fish!
 Require = $game_switches[GPO_MEMBER]
 
@@ -208,6 +212,7 @@ Description = "Ivan sees potential in you. He has challenged you to hook a Seaki
 Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = Successfully hook a Staryu (found at sea) and a Poliwhirl (found in lakes).
+Step2 = Tell Ivan about your exploits!
 Done = "You hooked a Staryu and a Poliwhirl, and Ivan taught you the Powerful Hookset technique as a reward."
 
 [HOOKLINEANDSINKER]
@@ -218,6 +223,7 @@ Description = "Impressed by your efforts, Ivan has tasked you with a new challen
 Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = "Successfully hook a Gyarados, a Cloyster and a Mantine."
+Step2 = Tell Ivan about your exploits!
 Done = ???
 
 [BIGFISH]
@@ -228,6 +234,7 @@ Description = ???
 Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = "Successfully hook a Wailord, a Milotic and a Walrein."
+Step2 = Tell Ivan about your exploits!
 Done = ???
 
 [MASTEROFTHESEA]
@@ -238,6 +245,7 @@ Description = ???
 Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = Successfully hook a Wailord, a Milotic and a Walrein.
+Step2 = Tell Ivan about your exploits!
 Done = ???
 
 [THEFIRSTGYM]
@@ -354,6 +362,14 @@ Step3 = Use Luxray's Electrify to open the gate to D.A.O. HQ. Do so by opening t
 Step4 = Infiltrate D.A.O. HQ with Eliana and Nekane to find Mesprit.
 Step5 = Make your way through the basement at the D.A.O. HQ to find Mesprit.
 Step6 = Have Mesprit project you into Nekane's mind to unlock her capacity for emotions.
+Done = Eliana helped you into the D.A.O. HQ to meet Mesprit and grant Nekane emotions.
+
+[NEWFOUNDEMOTIONS]
+Name = Newfound Emotions
+Type = Main
+Exp = 120
+Description = "Azelf has told you that you can meet someone in Halcyon Forest that can help Nekane understand her emotions."
+Step1 = "Go to Halcyon Forest, north of the Crosswoods, to meet with the mystery person."
 Done = Temp
 
 [TEST]

@@ -148,6 +148,7 @@ class Battle
       rate = (speedPlayer * 128) / speedEnemy
       rate += @runCommand * 30
     end
+    rate = 256
     if rate >= 256 || @battleAI.pbAIRandom(256) < rate
       pbSEPlay("Battle flee")
       pbDisplayPaused(_INTL("You got away safely!"))

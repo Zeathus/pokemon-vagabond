@@ -372,6 +372,7 @@ end
 # Returns whether event is able to walk up to the player.
 def pbEventCanReachPlayer?(event, player, distance)
   return false if !pbEventFacesPlayer?(event, player, distance)
+  #return true if event.through
   delta_x = (event.direction == 6) ? 1 : (event.direction == 4) ? -1 : 0
   delta_y = (event.direction == 2) ? 1 : (event.direction == 8) ? -1 : 0
   case event.direction
@@ -705,6 +706,12 @@ def pbItemBall(item, quantity = 1, switch = "A")
       pbUpdateSceneMap
     end
     pbItemPickupAnimation(item, quantity, show_description)
+    if item == :DATACHIP
+      if pbJob("Engineer").progress >= pbJob("Engineer").requirement &&
+         pbJob("Engineer").progress - quantity < pbJob("Engineer").requirement
+        pbDialog("JOB_ENGINEER_REMINDER")
+      end
+    end
     return true
   end
   # Can't add the item
@@ -734,6 +741,12 @@ def pbReceiveItem(item, quantity = 1)
   show_description = !$bag.seen_item?(item)
   if $bag.add(item, quantity)   # If item can be added
     pbItemPickupAnimation(item, quantity, show_description)
+    if item == :DATACHIP
+      if pbJob("Engineer").progress >= pbJob("Engineer").requirement &&
+         pbJob("Engineer").progress - quantity < pbJob("Engineer").requirement
+        pbDialog("JOB_ENGINEER_REMINDER")
+      end
+    end
     return true
   end
   return false   # Can't add the item

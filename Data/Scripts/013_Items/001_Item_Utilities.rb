@@ -607,7 +607,7 @@ def pbLearnMove(pkmn, move, ignore_if_known = false, by_machine = false, &block)
     pbMessage(_INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]", pkmn_name, move_name))
     return
   end
-  msg = _INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]\\wt[16]\nForget a move to learn it?", pkmn_name, move_name)
+  msg = _INTL("\\se[]{1} can now learn {2}!\\se[Pkmn move learnt]\\wt[8]\nForget a move to learn it?", pkmn_name, move_name)
   if by_machine || pbConfirmMessage(msg)
     scene = PokemonSummaryScene.new()
     screen = PokemonSummary.new(scene)

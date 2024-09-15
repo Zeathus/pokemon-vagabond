@@ -187,6 +187,8 @@ def pbChangeWeatherOnCoords(coords, weather)
   if coords[0] == 27 && coords[1] == 13 # Scoria Desert
     if $quests && $quests[:GUARDIANOFEMOTION].active?
       weather = :NoxiousStorm
+    elsif $quests && $quests[:GUARDIANOFEMOTION].complete? && !$quests[:ELIANASFAVOR].complete?
+      weather = :Sun
     end
   end
   return weather

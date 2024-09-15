@@ -499,6 +499,19 @@ def pbFishingGame(encounter, tutorial=false, item=false)
       else
         pbJob("Fisher").register(encounter[0])
         WildBattle.start(encounter[0], encounter[1])
+        if $quests[:FISHYBUSINESS].at_step?(0)
+          if pbJob("Fisher").hooked?(:MAGIKARP)
+            $quests[:FISHYBUSINESS].advance
+          end
+        elsif $quests[:SMALLFRY].at_step?(0)
+          if pbJob("Fisher").hooked?(:POLIWHIRL) && pbJob("Fisher").hooked?(:STARYU)
+            $quests[:SMALLFRY].advance
+          end
+        elsif $quests[:HOOKLINEANDSINKER].at_step?(0)
+          if pbJob("Fisher").hooked?(:GYARADOS) && pbJob("Fisher").hooked?(:MANTINE) && pbJob("Fisher").hooked?(:CLOYSTER)
+            $quests[:HOOKLINEANDSINKER].advance
+          end
+        end
       end
       $game_temp.in_menu = false
       return true
