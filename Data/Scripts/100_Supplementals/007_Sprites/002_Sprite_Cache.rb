@@ -52,6 +52,7 @@ module Supplementals
     end
 
     def self.cache_directory(dir)
+      return if !FileTest.exist?(dir)
       to_cache = []
       Dir.all(dir).each do |f|
         if !FileTest.directory?(f)
