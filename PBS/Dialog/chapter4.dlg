@@ -60,7 +60,7 @@
     > Given how serious he was about his orders, I doubt we could hand him some nice tea and be on our way.
 ?/>
 /expression neutral
-> What are your thoughts Kira? You are by far the most familiar with this place.
+> What are your thoughts Kira?\nYou know this place best, right?
 /speaker Kira lookaway
 > It was truly inevitable that the question would go to me in the end.
 /expression annoyed
@@ -276,7 +276,7 @@
 /speaker Amethyst confused
 > Should we be worried?
 /speaker Kira
-> They couldn't even beat us three on two. I doubt they'll be a big hinderance.
+> They couldn't even beat us three on two. I doubt they'll be a problem.
 
 [CH4_PASSAGE,7] # Plays after progressing a little bit past the battle
 /speaker B1
@@ -390,7 +390,7 @@
 /speaker Amethyst confused
 > They really think you were the one who wronged them, huh.
 /speaker Kira
-?> L had that influence on people.\nI would know.
+?> L had that influence on people.\nI oughta know.
   /choice Who is L anyway?
     > Wouldn't you like to know. However, you're not privy to that information.
     > Let's just say he was my former boss and leave it at that.
@@ -441,7 +441,7 @@
 > Kira, are you okay!?
 /speaker Kira
 /portrait 0
-> I managed to get Sandslash out just time to divert the worst of the rubble.
+> I managed to get Sandslash out just in time to divert the worst of the rubble.
 # Transfer player to a separate dark map only showing Kira inside the rubble.
 # Sandslash is continuously ramming the boulders.
 
@@ -588,7 +588,7 @@
 > Maybe you can be one when you grow up!
 /speaker Kira
 /portrait 0
-> Aww... But it's so long until I'm grown up enough to be that brave...
+> Aww... But I wanna be brave now...
 
 [CH4_MEMORY,13]
 /speaker Kira's_Mom
@@ -650,7 +650,7 @@
 
 [CH4_MEMORY,24]
 /speaker Kira
-> Once more, with even more power!
+> Once more, with more power!
 
 [CH4_MEMORY,25]
 /speaker Kira
@@ -765,7 +765,7 @@
 /event Amethyst emote frown
 /event Player2 turn up
 /speaker Amethyst pinch
-> This sandstorm... is really...\ndoing its toll... on me...
+> This sandstorm... is really...\ntaking its toll... on me...
 .> My eyes... feel heavy...
 
 [CH4_DESERT,1]
@@ -822,7 +822,7 @@
 
 [CH4_DESERT,11]
 /speaker Kira annoyed
-> If things weren't going south already...
+> As if things weren't going south already...
 /expression neutral
 > I have to pull through.\nSandolin, let's go!
 

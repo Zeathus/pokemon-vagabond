@@ -13,6 +13,11 @@
 /cry KADABRA 100 100
 > Kadahbu!
 
+[POKEMON_GROWLITHE]
+/speaker Growlithe
+/cry GROWLITHE 100 100
+> Grooowl!
+
 [POKEMON_HEATMOR]
 /speaker Heatmor
 /cry HEATMOR 100 100

@@ -40,6 +40,7 @@ class Battle::Battler
   attr_accessor :tookMoveDamageThisRound   # Boolean for Focus Punch
   attr_accessor :tookDamageThisRound   # Boolean for whether self took damage this round
   attr_accessor :tookPhysicalHit
+  attr_accessor :tookSpecialHit
   attr_accessor :statsRaisedThisRound   # Boolean for whether self's stat(s) raised this round
   attr_accessor :statsLoweredThisRound   # Boolean for whether self's stat(s) lowered this round
   attr_accessor :canRestoreIceFace   # Whether Hail started in the round
@@ -317,6 +318,7 @@ class Battle::Battler
     ret = @types.uniq
     # Burn Up erases the Fire-type.
     ret.delete(:FIRE) if @effects[PBEffects::BurnUp]
+    ret.delete(:WATER) if @effects[PBEffects::Tsunami]
     # Roost erases the Flying-type. If there are no types left, adds the Normal-
     # type.
     if @effects[PBEffects::Roost]

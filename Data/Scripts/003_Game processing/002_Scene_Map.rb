@@ -214,6 +214,8 @@ class Scene_Map
         elsif $DEBUG
           $game_temp.debug_calling = true
         end
+      elsif Input.press?(Input::F8) && $DEBUG
+        pbEditMapMetadata($game_map.map_id)
       end
     end
     if !$game_player.moving?

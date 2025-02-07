@@ -8,6 +8,7 @@ class Game_Temp
   end
 
   def log_dialog(type, speaker, text, window_skin)
+    return if text.nil?
     log = self.dialog_log
     log.push([type, speaker, text, window_skin])
     if log.length > 32

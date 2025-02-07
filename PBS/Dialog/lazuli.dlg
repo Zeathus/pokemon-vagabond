@@ -17,7 +17,7 @@
 > Ya... do..?
 /speaker 0
 > There's a note stuck to the Slowpoke.
-> "I am doing maintenance on the city waterways. Knock on the city manholes if you need me.<br> - Gym Leader Leroy"
+> "I am doing maintenance on the city waterways. Knock on the city manholes if you need me.\n - Gym Leader Leroy"
 
 [LAZULI_GYM_SLOWPOKE,1]
 /speaker Slowpoke
@@ -435,3 +435,131 @@
 > Have you played the new game GoldeenEye yet?
 /speaker Gamer_2
 > Nah, man. That game's just another one of those Gloom-clones.
+
+[LAZULI_GAME_DOOR]
+/speaker Clerk
+> Sorry, but you may only enter if you're participating in a game.
+
+[LAZULI_GAME_WTP_CLERK,0]
+/speaker Clerk
+> Welcome to the Game Guild!
+
+[LAZULI_GAME_WTP_CLERK,1]
+/speaker Clerk
+> Are you interested in participating in our game show, Who's That Pokémon?
+> Normally playing a game here costs a Game Ticket, but you can play each game one time for free.
+
+[LAZULI_GAME_WTP_CLERK,2]
+/speaker Clerk
+/loop
+?> How can I help you?
+    /choice Play Who's That Pokémon
+        /return true
+    /choice How do I play?
+        > You will be shown a Pokémon that you have to name. The first few levels are easy introduction levels.
+        > There are 100 levels total that get harder and harder, but reaching level 100 is not expected.
+        > Think of it more as a high score game.
+        > You can answer wrong five times before you're out, but there are opportunities to gain more lives.
+        > The rest is probably best left for the game host to explain when you play.
+    /choice What's the prize?
+        > You can win a substantial amount of money from playing here.
+        > The further you get in the game, the more money you win.
+        > When you win the last level or lose on the way there, you will win the prize for the level you got to.
+    /cancelchoice Never mind
+        > Have a nice day.
+        /return false
+?/>
+/end
+
+[LAZULI_GAME_WTP_CLERK,3]
+/speaker Clerk
+?> Do you want to spend one of your Game Tickets to play Who's That Pokémon?
+    /choice Yes
+        > Then please proceed through the door to your left.
+        /return true
+    /cancelchoice No
+        > Have a nice day.
+        /return false
+?/>
+
+[LAZULI_GAME_WTP_CLERK,4]
+/speaker Clerk
+> I'm sorry, but you have no Game Tickets.
+
+[LAZULI_GAME_WTP_CLERK,5]
+/speaker Clerk
+?> Do you want to play your one free round of Who's That Pokémon?
+    /choice Yes
+        > Then please proceed through the door to your left.
+        /return true
+    /cancelchoice No
+        > Have a nice day.
+        /return false
+?/>
+
+[LAZULI_GAME_CLERK2]
+/speaker Clerk
+> Sorry, but this game is not ready yet.
+> You may however play a game by talking to the clerk next to me.
+
+[LAZULI_GAME_AFTER_GAME]
+/speaker Clerk
+> We hope you come again.
+
+[LAZULI_GAME_GENTLEMAN,0]
+/speaker Gentleman
+> Are you here to play some games? In that case, you might want to have this.
+
+[LAZULI_GAME_GENTLEMAN,1]
+/speaker Gentleman
+> The games you play by talking to the clerks costs a Game Ticket.
+> Though, you're allowed to play your first round of each game for free.
+
+[LAZULI_GAME_GENTLEMAN,2]
+/speaker Gentleman
+> I wish you the best of luck with the games.
+
+[LAZULI_GAME_TICKETTER,0]
+/speaker Clerk
+> Welcome! Here you can buy Game Tickets.
+
+[LAZULI_GAME_TICKETTER,1]
+/speaker Clerk
+?> \GWould you like a Game Ticket for ${pbGet(2)}?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        > Please come again!
+        /return false
+?/>
+
+[LAZULI_GAME_TICKETTER,2]
+/speaker Clerk
+> \GSorry, but you can't afford that.
+
+
+[LAZULI_GAME_TICKETTER,3]
+/speaker Clerk
+> \GHere you go!
+
+[LAZULI_GAME_TICKETTER,4]
+/speaker Clerk
+> As there are many people that want to play, Game Tickets get more expensive each time you buy one.
+
+[LAZULI_LAPRAS_HINT,0]
+/speaker Girl
+> I once saw a monster in Lazuli Lake while it was raining.
+> My running theory is that is only shows up while it's raining.
+> I really hope to see it again.
+
+[LAZULI_LAPRAS_HINT,1]
+/speaker Girl
+> Look look!
+> It's raining outside, and that monster is in Lazuli Lake again!
+> It looks so majestic...
+
+[LAZULI_LAPRAS_HINT,2]
+/speaker Girl
+> I saw someone fighting the monster in Lazuli Lake and capturing it.\nWas that you?
+> Ah, so it was a Lapras all along.\nThe battle was amazing, even from this distance.
+> I guess that means I won't see it when it rains anymore...

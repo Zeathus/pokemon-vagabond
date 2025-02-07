@@ -62,3 +62,23 @@
 [LAPIS_GPO_MAN]
 /speaker Man
 > This building is best known for the G[.]P[.]O[.] HQ which is on the bottom floor.
+
+[LAPIS_FISHERMAN,0]
+/speaker Fisherman
+> I was taught how to fish by Fisherman Ivan. He's very well-known by fishers.
+
+[LAPIS_FISHERMAN,1]
+/speaker Fisherman
+> If you want to learn to fish, I recommend visiting him. He lives by Lazuli Lake.
+
+[LAPIS_FISHERMAN,2]
+/speaker Fisherman
+> Oh, you were too?
+> He truly is a selfless guy.
+
+[LAPIS_HOTEL_ELEVATOR]
+> The elevator is only open to checked in guests.
+
+[LAPIS_RECEPTION]
+/speaker Receptionist
+> Sorry, but you need to be a registered guest to enter.

@@ -9291,3 +9291,112 @@ FunctionCode = LowerTargetDefense1
 Flags = CanProtect,CanMirrorMove,HighCriticalHitRate
 EffectChance = 50
 Description = The target is attacked with a sharp chop. Critical hits land more easily. Has a 50% chance to lower the target's Defense.
+#-------------------------------
+[TSUNAMI]
+Name = Tsunami
+Type = WATER
+Category = Special
+Power = 130
+Accuracy = 100
+TotalPP = 5
+Target = AllNearFoes
+FunctionCode = UserLosesWaterType
+Flags = CanProtect,CanMirrorMove
+Description = To inflict massive damage, the user expends all its internal water. The user will no longer be Water type.
+#-------------------------------
+[TORCHSONG]
+Name = Torch Song
+Type = FIRE
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = RaiseUserSpAtk1
+Flags = CanProtect,CanMirrorMove,Sound
+EffectChance = 100
+Description = The user blows out raging flames as if singing a song, scorching the target. This also boosts the user’s Sp. Atk stat.
+#-------------------------------
+[ARMORCANNON]
+Name = Armor Cannon
+Type = FIRE
+Category = Special
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = LowerUserDefSpDef1
+Flags = CanProtect,CanMirrorMove
+Description = The user shoots its own armor out as blazing projectiles. This also lowers the user’s Defense and Sp. Def stats.
+#-------------------------------
+[BITTERBLADE]
+Name = Bitter Blade
+Type = FIRE
+Category = Physical
+Power = 90
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = HealUserByHalfOfDamageDone
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user focuses its bitter feelings toward the world of the living into a slashing attack. The user’s HP is restored by up to half the damage taken by the target.
+#-------------------------------
+[JETPUNCH]
+Name = Jet Punch
+Type = WATER
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+Priority = 1
+FunctionCode = None
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user summons a torrent around its fist and punches at blinding speed. This move always goes first.
+#-------------------------------
+[MORTALSPIN]
+Name = Mortal Spin
+Type = POISON
+Category = Physical
+Power = 30
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = RemoveUserBindingAndEntryHazards
+Flags = Contact,CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user performs a spin attack that can also eliminate the effects of such moves as Bind, Wrap, and Leech Seed. This also poisons opposing Pokémon.
+#-------------------------------
+[REVIVALBLESSING]
+Name = Revival Blessing
+Type = NORMAL
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = DoesNothingUnusableInGravity
+Description = The user just flops and splashes around to no effect at all...
+#-------------------------------
+[SALTCURE]
+Name = Salt Cure
+Type = ROCK
+Category = Special
+Power = 35
+Accuracy = 85
+TotalPP = 10
+Target = NearOther
+FunctionCode = BindTarget
+Flags = CanProtect,CanMirrorMove
+Description = The target becomes trapped within a salty vortex of salt that cures for four to five turns.
+#-------------------------------
+[ICESPINNER]
+Name = Ice Spinner
+Type = ICE
+Category = Physical
+Power = 80
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = None
+Flags = CanProtect,CanMirrorMove
+Description = Spin-to-win.

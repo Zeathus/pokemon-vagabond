@@ -334,14 +334,14 @@ class Sprite_Character < RPG::Sprite
 
       if dif_y.abs > dif_x.abs
         @direction = (dif_y > 0) ? 6 : 0
-      elsif dif_x.abs > dif_y.abs
+      elsif dif_x.abs >= dif_y.abs && dif_x.abs != 0
         @direction = (dif_x > 0) ? 2 : 4
       end
     else
       sx = 0
       if dif_y.abs > dif_x.abs
         @direction = (dif_y > 0) ? 6 : 0
-      elsif dif_x.abs > dif_y.abs
+      elsif dif_x.abs >= dif_y.abs && dif_x.abs != 0
         @direction = (dif_x > 0) ? 2 : 4
       end
     end

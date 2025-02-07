@@ -200,12 +200,12 @@
 /elsif pbGetChoiceValue(:Starter) == :LAZU
     > Lazu has a [R]Dragon-type affinity[/], which pairs well with my Dragonair.
     > If Dragonair damages an opponent with a [R]Dragon-type move[/] before Lazu has had its turn, Lazu is [R]Affinity Boosted[/].
-    > The Affinity Boost makes Boomine [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
+    > The Affinity Boost makes Lazu [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
     > The power is usually boosted by 30%, but Lazu's [R]Aqua Vortex ability[/] increases it to a 60% boost for Water-type moves.
 /elsif pbGetChoiceValue(:Starter) == :PALMINO
     > Palmino has a [R]Dragon-type affinity[/], which pairs well with my Dragonair.
     > If Dragonair damages an opponent with a [R]Dragon-type move[/] before Palmino has had its turn, Palmino is [R]Affinity Boosted[/].
-    > The Affinity Boost makes Boomine [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
+    > The Affinity Boost makes Palmino [R]attack immediately[/] after Dragonair with a [R]guaranteed hit and boosted power[/].
     > The power is usually boosted by 30%, but Palmino's [R]Flora Vortex ability[/] increases it to a 60% boost for Grass-type moves.
 /end
 > Keep in mind that if all opponents damaged by Dragonair's move resists the attack, [R]the Affinity Boost is blocked[/].

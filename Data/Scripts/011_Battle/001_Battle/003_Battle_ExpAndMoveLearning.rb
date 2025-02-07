@@ -34,7 +34,11 @@ class Battle
       exp = (exp*1.5).floor if @smartWildBattle
       exp = (exp*3/2).floor if pbActiveDrink == "exp"
 
-      totalexp = (exp * 0.20).floor
+      multiplier = 0.20
+      if $game_variables[Supplementals::PLAYER_LEVEL] > 20
+        multiplier -= 0.10 * [($game_variables[Supplementals::PLAYER_LEVEL] - 20),50].min / 50
+      end
+      totalexp = (exp * multiplier).floor
 
       if expshare
         @sharedExpGained += totalexp

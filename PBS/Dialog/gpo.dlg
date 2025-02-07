@@ -261,7 +261,6 @@
 > Finally I can try out my new software!
 > ...Those 500 lines (+/-1000) of code weren't for nothing after all.
 > Let's see...\wtnp[1]
-> There...\wtnp[1]
 > Transfer that...\wtnp[1]
 > Load the array of areas...\wtnp[1]
 > Turn on switch 109...\wtnp[1]
@@ -275,7 +274,7 @@
 [GPO_HABITAT_DEX,4]
 /speaker Charles
 > Welp, that's an error if I've ever seen one.
-> ...now it's going in a loop.
+> ...Now it's going in a loop.
 > Let's tryyyyyy... copy pasting this from Naclstack Overflow.
 > Eh. I guess it's fine.
 
@@ -286,13 +285,26 @@
 > The developer gave you back your Pokédex.
 /speaker Charles
 > I added a Habitat Pokédex feature that allows you to keep track of Pokémon that can be found in areas you've visited.
-> It SHOULD be working fine now, except maybe a couple visual glitches here and there.
-> I'm sure I'll patch those out later (maybe).
-> Anyhow, as my beta tester, you should be rewarded as well.
-> If you catch every single Pokémon in an area, come see me and I will reward you for it.
-> The Habitat Pokédex will display which Pokémon are caught as well.
+# > It SHOULD be working fine now, except maybe a couple visual glitches here and there.
+# > I'm sure I'll patch those out later (maybe).
+> As my beta tester, you should be rewarded as well.
+> If you catch every single Pokémon in an area, come see me and I will reward you with [R]Data Chips[/].
+> The Habitat Pokédex will display which Pokémon you have caught as well.
 > I look forward to seeing the results!
 
 [GPO_HABITAT_DEX,6]
 /speaker Charles
-> I'm sorry, but my reward script is not finished yet.
+> I hope you're finding the Habitat Pokédex useful.
+> Tell me if you catch all the Pokémon in any new areas and I will reward you with [R]Data Chips[/].
+
+[GPO_HABITAT_DEX,7]
+/speaker Charles
+> Have you completed more areas in the Habitat Dex? Let's see...
+
+[GPO_HABITAT_DEX,8]
+/speaker Charles
+> You've finished the {$game_variables[1]}...
+
+[GPO_HABITAT_DEX,9]
+/speaker Charles
+> Well done! Here's your reward for your continued assistance.

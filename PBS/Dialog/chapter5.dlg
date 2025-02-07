@@ -393,7 +393,7 @@
 > Those were my thoughts exactly!\nI knew I couldn't leave that be...
 /speaker Mesprit
 > Indeed. What Azelf said about the lack of [Azelf]willpower[/] also appears to be true...
-> Unfortunately, I cannot comment on [Uxie]knowledge[/], as its logical nature constrasts too much with emotion.
+> Unfortunately, I cannot comment on [Uxie]knowledge[/], as its logical nature contrasts too much with emotion.
 > Luckily, the emotional issue I can do something about.
 /speaker Eliana surprised
 > You can!?
@@ -514,7 +514,7 @@
     > Ah, you avoid subjecting others to your anger to focus on recovering from the negative feelings yourself.
 ?/>
 > On the other hand, anger is not always the best answer for self-preservation. Sometimes it is best to be cautious.
-> When a threat becomes too large, [R]fear[/] is what stirs us to be careful, or even simply flee.
+> When a threat becomes too large, [R]fear[/] is what stirs us to be careful, or simply flee.
 ?> What is [R]fear[/] to you?
   /savechoice what is fear
   /choice Coming in harms way
@@ -785,20 +785,36 @@
 /speaker Eliana neutral
 > What's the matter?
 /speaker Nekane
-> ...<shakeslow>Are Amethyst and Kira okay? Are they hurt?</shakeslow>
+> ...<shakeslow>Are Amethyst and Kira okay?\nAre they hurt?</shakeslow>
 /speaker Eliana
 > There's nothing to worry about. I left them food and water, and even some salve for their wounds.
 /expression smile
 > I guarantee you they're safe and sound!
 
 [CH5_POST_MIND,6]
+/event set Eliana 8
+/event set Nekane 9
 /speaker Nekane sleep
 > ...
+/expression neutral
+> My hands stopped shaking...
+/expression thought
+> ...Though I still feel movements in my chest.
 /expression happy
-> Thank you... The shaking stopped.
-/speaker Eliana
-> You'll meet them again in no time,\nas soon as...\wtnp[12]
-/expression surprised
+> But I can move now, thank you.
+/reset
+/event Nekane emote ?
+/speaker Nekane confused
+> "Thank you"..? I said that suddenly, yet I do not know what it means...
+/speaker Eliana smile
+> It's what we say when we're grateful.
+/expression think
+> Oh, you probably don't know what feeling grateful means either.
+/expression neutral
+> So, being grateful is-\wtnp[12]
+/reset
+/event Eliana exclaim
+/speaker Eliana surprised
 > Right, we need to get out of here!
 
 [CH5_POST_MIND,7]
@@ -824,7 +840,7 @@
   /choice People are complicated
     > They are... I still find it difficult to understand them.
   /choice She has ulterior motives
-    > Ulterior motives... But she looked genuinely concerned.
+    > Ulterior motives...
 ?/>
 > Do I need Azelf's help before I can begin to understand..?
 
@@ -853,12 +869,30 @@
 > That aside, I enjoyed working alongside you while it lasted.
 /expression smile
 > Goodbye for now!
+# Eliana leaves
 
 [CH5_POST_MIND,10]
+/event set Nekane 12
+/event Nekane emote frown
+/speaker Nekane
+> Eliana left...
+> Is it really true that we are enemies now?
+# The player and Nekane turn to face each other
+
+[CH5_POST_MIND,11]
+/speaker Nekane
+> That thought... It makes me feel heavy...
+> I do not like this feeling...\n<PLAYER>, how do I make it go away?
+/reset
+/event Player emote sweat
+# The conversation is interrupted by Amethyst calling
+
+[CH5_POST_MIND,12]
 /speaker Amethyst
 /portrait 0
 > <PLAYER>, you finally picked up!\nI'm glad you're okay.
 > I assume Nekane is also there. Can you meet us back at HQ as soon as possible?
+# Automatically sent back to HQ
 
 [CH5_OFFICE,0]
 /event set Kira 2
@@ -871,7 +905,14 @@
 /event Nekane emote smile
 /speaker Amethyst surprised
 > Did Nekane just... [R]SMILE[/]!?
+/speaker Nekane
+> Did I do something weird?\nMy face moved on its own...
+/speaker Amethyst
 /expression awkward
+> Oh, no no no, it's perfectly normal!
+/speaker Nekane
+.> That is... normal?
+/speaker Amethyst awkward
 > Does that mean you rescued Mesprit while we were out cold, <PLAYER>?
 /expression confused
 ?> But if that's the case... Where's Mesprit?
@@ -947,7 +988,7 @@
     > Maybe the sandstorm delayed them or sent them off course?
     /reset
     /fade black
-    > You weave up a lie to hide Eliana's involvement.
+    > You weave a lie to hide Eliana's involvement.
     /reset
     /fade normal
     /speaker Kira lookaway
@@ -987,7 +1028,7 @@
 
 [CH5_INTERMISSION,1]
 /speaker <PLAYER2>
-> Unfortunately I don't have the time to figure out why I keep having these routine headaches.
+> Unfortunately I don't have the time to figure out why I keep having these headaches.
 
 [CH5_INTERMISSION,2]
 /speaker <PLAYER2>

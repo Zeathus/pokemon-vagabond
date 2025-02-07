@@ -17,6 +17,11 @@ class CenterCommandSprite < BitmapSprite
       end
   end
 
+  def text=(value)
+    @command = value
+    self.refresh
+  end
+
   def refresh
       self.bitmap.clear
       bg_bitmap = (@selected ? @selected_bitmap : @choice_bitmap).bitmap
@@ -46,6 +51,8 @@ class CenterCommandListSprite < BitmapSprite
       super(2, 2, viewport)
       @index = 0
       @commands = commands
+      @commands_shown = [@commands.length, 7].min
+      @scroll = 0
       @msgwindow = msgwindow
       pbSetSystemFont(self.bitmap)
       @max_width = 48
@@ -54,8 +61,8 @@ class CenterCommandListSprite < BitmapSprite
           @max_width = text_width if @max_width < text_width
       end
       @sprites = []
-      for i in 0...@commands.length
-          command = @commands[i]
+      for i in 0...@commands_shown
+          command = @commands[i + @scroll]
           sprite = CenterCommandSprite.new(viewport, command, @max_width)
           sprite.z = 1
           sprite.x = Graphics.width / 2 - sprite.bitmap.width / 2
@@ -69,8 +76,11 @@ class CenterCommandListSprite < BitmapSprite
                   sprite.y -= 48 if msgwindow
               end
           end
-          sprite.y += (i - @commands.length / 2.0) * 48
+          sprite.y += (i - @commands_shown / 2.0) * 48
           @sprites.push(sprite)
+      end
+      if @commands_shown < @commands.length
+
       end
       @rightarrow = AnimatedSprite.new("Graphics/UI/right_arrow",8,40,28,2,viewport)
       @rightarrow.z = 2
@@ -79,12 +89,57 @@ class CenterCommandListSprite < BitmapSprite
       @leftarrow.z = 2
       @leftarrow.zoom_x = -1
       @leftarrow.play
+      if @commands_shown < @commands.length
+        @downarrow = AnimatedSprite.new("Graphics/UI/down_arrow",8,28,40,2,viewport)
+        @downarrow.x = Graphics.width / 2 - 14
+        @downarrow.y = Graphics.height - 176
+        @downarrow.z = 5
+        @downarrow.play
+        @uparrow = AnimatedSprite.new("Graphics/UI/up_arrow",8,28,40,2,viewport)
+        @uparrow.x = Graphics.width / 2 - 14
+        @uparrow.y = 40
+        @uparrow.z = 2
+        @uparrow.play
+      end
+      self.update_scroll
       self.update
+  end
+
+  def refresh
+    for i in 0...@commands_shown
+        command = @commands[i + @scroll]
+        @sprites[i].text = command
+    end
   end
 
   def index=(value)
       @index = value
+      if @index >= @commands.length
+        echoln "Warning: cancelCmd index was out of bounds"
+        @index = @commands.length - 1
+      end
+      self.update_scroll
       self.update
+  end
+
+  def update_scroll
+    old_scroll = @scroll
+    while @index >= @commands_shown + @scroll
+      @scroll += 1
+    end
+    while @index < @scroll
+      @scroll -= 1
+    end
+    if @index == @scroll && @scroll > 0
+      @scroll -= 1
+    elsif @index == @scroll + @commands_shown - 1 && @scroll < @commands.length - @commands_shown
+      @scroll += 1
+    end
+    if @downarrow && @uparrow
+      @uparrow.visible = @scroll > 0
+      @downarrow.visible = @scroll < @commands.length - @commands_shown
+    end
+    self.refresh if old_scroll != @scroll
   end
 
   def z=(value)
@@ -98,22 +153,27 @@ class CenterCommandListSprite < BitmapSprite
 
   def update(input=true)
       if input
+          old_scroll = @scroll
           old_index = @index
-          @index += 1 if Input.trigger?(Input::DOWN)
-          @index -= 1 if Input.trigger?(Input::UP)
+          @index += 1 if Input.trigger?(Input::DOWN) || (Input.repeat?(Input::DOWN) && @index < @commands.length - 1)
+          @index -= 1 if Input.trigger?(Input::UP) || (Input.repeat?(Input::UP) && @index > 0)
           @index = 0 if @index >= @commands.length
           @index = @commands.length - 1 if @index < 0
+          self.update_scroll
           pbPlayCursorSE() if old_index != @index
       end
-      @rightarrow.x = @sprites[@index].x - @rightarrow.bitmap.width + 16
-      @rightarrow.y = @sprites[@index].y + 10
-      @leftarrow.x = @sprites[@index].x + @sprites[@index].bitmap.width + @leftarrow.bitmap.width - 16
-      @leftarrow.y = @sprites[@index].y + 10
+      sprite = @sprites[@index - @scroll]
+      @rightarrow.x = sprite.x - @rightarrow.bitmap.width + 16
+      @rightarrow.y = sprite.y + 10
+      @leftarrow.x = sprite.x + sprite.bitmap.width + @leftarrow.bitmap.width - 16
+      @leftarrow.y = sprite.y + 10
       @rightarrow.update
       @leftarrow.update
+      @uparrow&.update
+      @downarrow&.update
       for i in 0...@sprites.length
           sprite = @sprites[i]
-          sprite.selected = (i == @index)
+          sprite.selected = (i == @index - @scroll)
           sprite.update
       end
       super()
@@ -151,6 +211,7 @@ def pbCenterCommands(msgwindow, commands=nil,cmdIfCancel=0,defaultCmd=0)
   darken.z = -1
   cmdwindow=CenterCommandListSprite.new(viewport, commands, msgwindow)
   cmdwindow.opacity = 0
+  cmdwindow.index = defaultCmd
   20.times do
       Graphics.update
       Input.update

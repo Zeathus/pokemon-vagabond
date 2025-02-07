@@ -135,6 +135,7 @@ class Battle::Battler
     @tookMoveDamageThisRound = false
     @tookDamageThisRound     = false
     @tookPhysicalHit         = false
+    @tookSpecialHit          = false
     @statsRaisedThisRound    = false
     @statsLoweredThisRound   = false
     @canRestoreIceFace       = false
@@ -287,6 +288,7 @@ class Battle::Battler
     @effects[PBEffects::Nihility]            = 0
     @effects[PBEffects::GigatonHammer]       = nil
     @effects[PBEffects::GigatonHammerTime]   = 0
+    @effects[PBEffects::Tsunami]             = false
   end
 
   #=============================================================================

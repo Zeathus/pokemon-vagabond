@@ -2159,46 +2159,6 @@ Pokemon = BLISSEY,20
 Pokemon = BLISSEY,20
     Moves = HELPINGHAND
 #--------------
-[NURSERYAID,Margaret]
-LoseText = You're not just a kid...
-Pokemon = CHANSEY,30
-Pokemon = KANGASKHAN,30
-Pokemon = ALTARIA,30
-Pokemon = LEAVANNY,30
-#--------------
-[TWINS,Mia & Pia]
-LoseText = We need to work on our twin synergy.
-Pokemon = ELECTABUZZ,30
-Pokemon = MAGMAR,30
-Pokemon = VICTREEBEL,30
-Pokemon = VILEPLUME,30
-#--------------
-[OFFICEWORKER,Harold]
-LoseText = I need a break...
-Pokemon = GRANBULL,30
-Pokemon = DUSCLOPS,30
-Pokemon = PROBOPASS,30
-Pokemon = MUDSDALE,30
-#--------------
-[GUITARIST,Randal]
-LoseText = Want to do another Round?
-Pokemon = JOLTEON,30
-    Ability = VOLTABSORB
-    Moves = ROUND,THUNDERBOLT
-    Nature = TIMID
-    EV = 0,0,0,252,252,0
-Pokemon = SYLVEON,30
-    Ability = PIXILATE
-    Moves = ROUND,SHADOWBALL
-Pokemon = CHATOT,30
-    Ability = KEENEYE
-    Moves = ROUND,CHATTER
-    Nature = TIMID
-    EV = 0,0,0,252,252,0
-Pokemon = CLEFABLE,30
-    Ability = UNAWARE
-    Moves = ROUND,MOONBLAST
-#--------------
 [YOUNGSTER,Eric] #  Lazuli River Event
 LoseText = I was so close...
 Pokemon = PAWMI,9

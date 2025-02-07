@@ -149,7 +149,7 @@ class PokemonSummaryScene
     pbUpdateSpriteHash(@sprites)
   end
 
-  def pbStartScene(party,partyindex,machinemove=nil)
+  def pbStartScene(party, partyindex, machinemove = nil)
     @viewport=Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z=99999
     @party=party
@@ -271,8 +271,21 @@ class PokemonSummaryScene
     sprite.z = 10
     @sprites[_INTL("editmoves_keybinds_{1}", keybinds.length)] = sprite
 
-    if @machinemove == :NONE
+    if @machinemove == :LEVELUP
       @page=1
+      @sprites["movesel"].page = 0
+      @sprites["movesel"].side = 0
+      @sprites["movesel"].index = 0
+      drawPageMoves(@pokemon)
+    elsif @machinemove == :TM
+      @page=1
+      @sprites["movesel"].page = 1
+      @sprites["movesel"].side = 0
+      @sprites["movesel"].index = 0
+      drawPageMoves(@pokemon)
+    elsif @machinemove == :DATACHIP
+      @page=1
+      @sprites["movesel"].page = 2
       @sprites["movesel"].side = 0
       @sprites["movesel"].index = 0
       drawPageMoves(@pokemon)
@@ -1836,8 +1849,8 @@ class PokemonSummary
     @scene=scene
   end
 
-  def pbStartScreen(party,partyindex,machinemove=nil)
-    @scene.pbStartScene(party,partyindex,machinemove)
+  def pbStartScreen(party, partyindex, machinemove = nil)
+    @scene.pbStartScene(party, partyindex, machinemove)
     ret=@scene.pbScene
     @scene.pbEndScene
     return ret

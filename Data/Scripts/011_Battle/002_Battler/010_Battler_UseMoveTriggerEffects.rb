@@ -71,6 +71,14 @@ class Battle::Battler
         target.effects[PBEffects::MoveNext] = true
         target.effects[PBEffects::Quash]    = 0
       end
+      # Shell Trap Special (Boss-only)
+      if target.effects[PBEffects::ShellTrapSpecial] && move.specialMove? &&
+         @battle.choices[target.index][0] == :UseMove && !target.movedThisRound? &&
+         target.damageState.hpLost > 0 && !target.damageState.substitute
+        target.tookSpecialHit               = true
+        target.effects[PBEffects::MoveNext] = true
+        target.effects[PBEffects::Quash]    = 0
+      end
       # Grudge
       if target.effects[PBEffects::Grudge] && target.fainted? && !user.hasActiveItem?(:AEGISTALISMAN)
         user.pbSetPP(move, 0)

@@ -58,6 +58,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
     Input.update
     viewport.update
     pbUpdateSpriteHash(sprites)
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
   sprites["item"].zoom_x = 1.5
   sprites["item"].zoom_y = 1.5
@@ -79,6 +80,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
     Input.update
     viewport.update
     pbUpdateSpriteHash(sprites)
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
     i += 1
     i += 1 if Input.press?(Input::B)
   end
@@ -112,6 +114,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
       viewport.update
       desc_viewport.update
       pbUpdateSpriteHash(sprites)
+      pbUpdateSceneMap if $scene.is_a?(Scene_Map)
     end
     loop do
       timer += 1.0
@@ -121,6 +124,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
       viewport.update
       desc_viewport.update
       pbUpdateSpriteHash(sprites)
+      pbUpdateSceneMap if $scene.is_a?(Scene_Map)
       break if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK)
     end
     frames = (1..16).to_a
@@ -137,6 +141,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
       viewport.update
       desc_viewport.update
       pbUpdateSpriteHash(sprites)
+      pbUpdateSceneMap if $scene.is_a?(Scene_Map)
     end
     sprites["description"].dispose
     sprites["desc_box"].dispose
@@ -184,6 +189,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
     Input.update
     viewport.update
     pbUpdateSpriteHash(sprites)
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
     i += 1
     i += 1 if Input.press?(Input::B)
   end
@@ -226,6 +232,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
     Input.update
     viewport.update
     pbUpdateSpriteHash(sprites)
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
 
   sprites["item"].opacity = 0
@@ -239,6 +246,7 @@ def pbItemPickupAnimation(item, quantity = 1, show_description = false)
     Input.update
     viewport.update
     pbUpdateSpriteHash(sprites)
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
 
   pbDisposeSpriteHash(sprites)

@@ -10,6 +10,7 @@ module GameData
     attr_reader :stair_right
     attr_reader :stair_left
     attr_reader :stair_up
+    attr_reader :boulder_fillable
 
     alias sup_initialize initialize
     alias sup_can_surf_freely can_surf_freely
@@ -27,6 +28,7 @@ module GameData
       @stair_right            = hash[:stair_right]            || false
       @stair_left             = hash[:stair_left]             || false
       @stair_up               = hash[:stair_up]               || false
+      @boulder_fillable       = hash[:boulder_fillable]       || false
     end
 
     def has_land_encounters?
@@ -119,4 +121,17 @@ GameData::TerrainTag.register({
 GameData::TerrainTag.register({
   :id                     => :Overhang,
   :id_number              => 27
+})
+
+GameData::TerrainTag.register({
+  :id                     => :BoulderFillable,
+  :id_number              => 28,
+  :boulder_fillable       => true
+})
+
+GameData::TerrainTag.register({
+  :id                     => :BoulderFillableEdge,
+  :id_number              => 29,
+  :boulder_fillable       => true,
+  :ledge                  => true
 })

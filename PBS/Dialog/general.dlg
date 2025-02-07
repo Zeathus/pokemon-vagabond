@@ -191,6 +191,15 @@
         /return false
 ?/>
 
+[INN_LAPIS,0]
+/speaker Inn_Clerk
+?> \GWelcome to the Lapis Lazuli Hotel!\nWould you like to stay here? (Costs ${$game_variables[1]})
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
 [ESSENCE_INTRO,0]
 /speaker Clerk
 > Excuse me! I have something to tell you.

@@ -26,7 +26,7 @@ def pbStartGloom
 
   unit = [512 / mapX, 384 / mapY].min
 
-  viewport = Viewport.new(0, 0, 512, 384)
+  viewport = Viewport.new((Graphics.width - 512) / 2, (Graphics.height - 384) / 2, 512, 384)
   viewport.z = 999999
   viewsprite = Sprite.new(viewport)
   view = Bitmap.new(512, 384)
@@ -506,19 +506,19 @@ class GloomHUD < Sprite
     gray = Color.new(160,140,140)
     yellow = Color.new(252,252,160)
     textpos = [
-      [_INTL("{1}",player.ammo[player.weapon]),62,4,1,red1,red2,1],
-      [_INTL("{1}%",player.health),152,4,1,red1,red2,1],
-      [_INTL("{1}%",player.armor),354,4,1,red1,red2,1]
+      [_INTL("{1}",player.ammo[player.weapon]),62,8,1,red1,red2,1],
+      [_INTL("{1}%",player.health),152,8,1,red1,red2,1],
+      [_INTL("{1}%",player.armor),354,8,1,red1,red2,1]
     ]
     pbSetSystemFont(self.bitmap)
     pbDrawTextPositions(self.bitmap,textpos)
     textpos = [
-      [_INTL("2"),174,4,0,player.weapons[1] ? yellow : gray,red2,0],
-      [_INTL("3"),192,4,0,player.weapons[2] ? yellow : gray,red2,0],
-      [_INTL("4"),210,4,0,player.weapons[3] ? yellow : gray,red2,0],
-      [_INTL("{1} / 200",player.ammo[1]),504,0,1,yellow,red2,0],
-      [_INTL("{1} / 400",player.ammo[2]),504,14,1,yellow,red2,0],
-      [_INTL("{1} / 100",player.ammo[3]),504,28,1,yellow,red2,0]
+      [_INTL("2"),174,10,0,player.weapons[1] ? yellow : gray,red2,0],
+      [_INTL("3"),192,10,0,player.weapons[2] ? yellow : gray,red2,0],
+      [_INTL("4"),210,10,0,player.weapons[3] ? yellow : gray,red2,0],
+      [_INTL("{1} / 200",player.ammo[1]),504,6,1,yellow,red2,0],
+      [_INTL("{1} / 400",player.ammo[2]),504,20,1,yellow,red2,0],
+      [_INTL("{1} / 100",player.ammo[3]),504,34,1,yellow,red2,0]
     ]
     pbSetSmallestFont(self.bitmap)
     pbDrawTextPositions(self.bitmap,textpos)

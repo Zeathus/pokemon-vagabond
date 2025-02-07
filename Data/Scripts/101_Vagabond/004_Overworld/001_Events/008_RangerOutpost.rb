@@ -53,20 +53,54 @@ def pbRangerClerk(area)
 end
 
 def pbRangerNoticeBoard(area)
+  finished = []
   notices = []
+
+  addNotice = lambda { |boss, title, dialog, index = 0, condition = nil|
+    list = (condition.nil? ? pbBossDefeated?(boss) : condition) ? finished : notices
+    list.push([title, dialog, index])
+  }
+
   case area
   when "breccia"
-    notices.push("NOTICE_TROPIUS") if $game_switches[GYM_FAUNUS] && !pbBossDefeated?("Tropius")
-    notices.push(["NOTICE_VESPIQUEN",$game_self_switches[[62,34,"C"]] ? 1 : 0]) if !pbBossDefeated?("Vespiquen")
+    addNotice.call("Tropius", "Tropius Sighting", "NOTICE_TROPIUS") if $game_switches[GYM_FAUNUS]
+    addNotice.call("Vespiquen", "Queen Bee", "NOTICE_VESPIQUEN", 0, $game_self_switches[[62,34,"C"]])
+    addNotice.call("Vespiquen", "Queen Bee 2", "NOTICE_VESPIQUEN", 1) if $game_self_switches[[62,34,"C"]]
+    addNotice.call("Deino", "Panicked Deino", "NOTICE_DEINO") if $PokemonGlobal.visitedMaps[PBMaps::EvergoneRuins]
+  when "pegma"
+    addNotice.call("Turtonator", "Turtonator Territory", "NOTICE_TURTONATOR")
+    addNotice.call("Swampert", "Feldspar Lake Floor", "NOTICE_SWAMPERT")
+  when "lapis lazuli"
+    addNotice.call("Lapras", "Lazuli Lake Monster", "NOTICE_LAPRAS")
+    addNotice.call("RotomEasy", "Rotom Trio 1", "NOTICE_ROTOM_EASY") if $game_switches[6] # Defeated Leroy
+    addNotice.call("RotomHard", "Rotom Trio 2", "NOTICE_ROTOM_HARD") if $game_switches[6] # Defeated Leroy
   end
-  if notices.length == 0
+  if notices.length == 0 && finished.length == 0
     pbDialog("NOTICE_BOARD_EMPTY")
   else
-    notices.each do |i|
-      if i.is_a?(Array)
-        pbDialog(i[0], i[1])
+    options = notices.map { |i| i[0] }
+    options.push("Read old notices") if finished.length > 0
+    options.push("Leave")
+    loop do
+      choice = pbMessage("What notice do you want to read?", options, -1)
+      if choice >= 0 && choice < notices.length
+        notice = notices[choice]
+        pbDialog(_INTL(notice[1]), notice[2])
+      elsif choice == notices.length && finished.length > 0 # Read old notices
+        options = finished.map { |i| i[0] }
+        options.push("Leave")
+        loop do
+          choice = pbMessage("What notice do you want to read?", options, -1)
+          if choice >= 0 && choice < finished.length
+            notice = finished[choice]
+            pbDialog(_INTL(notice[1]), notice[2])
+          else
+            break
+          end
+        end
+        break
       else
-        pbDialog(i)
+        break
       end
     end
   end

@@ -472,6 +472,14 @@ class PBAnimation < Array
   end
 
   def playTiming(frame, bgGraphic, bgColor, foGraphic, foColor, oldbg = [], oldfo = [], user = nil)
+    oldbg[0] = 0 if oldbg[0].nil?
+    oldbg[1] = 0 if oldbg[1].nil?
+    oldbg[2] = 0 if oldbg[2].nil?
+    oldbg[3] = Color.new(0,0,0) if oldbg[3].nil?
+    oldfo[0] = 0 if oldfo[0].nil?
+    oldfo[1] = 0 if oldfo[1].nil?
+    oldfo[2] = 0 if oldfo[2].nil?
+    oldfo[3] = Color.new(0,0,0) if oldfo[3].nil?
     @timing.each do |i|
       next if !i.duration || i.duration <= 0
       next if i.frame + i.duration < frame || i.frame >= frame

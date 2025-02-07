@@ -134,13 +134,13 @@ class Battle
   def pbEORWishHealing
     @positions.each_with_index do |pos, idxPos|
       next if !pos || pos.effects[PBEffects::Wish] == 0
-      if pos.hasActiveAbility?(:TIMESKIP) && pos.effects[PBEffects::Wish] >= 2
-        @battle.pbCommonAnimation("TimeSkip",i,nil)
-        pbDisplay(_INTL("{1} activated {2}!",i.pbThis,"Time Skip"))
-        pos.effects[PBEffects::Wish] -= 2
-      else
+      #if pos.hasActiveAbility?(:TIMESKIP) && pos.effects[PBEffects::Wish] >= 2
+      #  @battle.pbCommonAnimation("TimeSkip",i,nil)
+      #  pbDisplay(_INTL("{1} activated {2}!",i.pbThis,"Time Skip"))
+      #  pos.effects[PBEffects::Wish] -= 2
+      #else
         pos.effects[PBEffects::Wish] -= 1
-      end
+      #end
       next if pos.effects[PBEffects::Wish] > 0
       next if !@battlers[idxPos] || !@battlers[idxPos].canHeal?
       wishMaker = pbThisEx(idxPos, pos.effects[PBEffects::WishMaker])
@@ -835,6 +835,7 @@ class Battle
       battler.tookMoveDamageThisRound              = false
       battler.tookDamageThisRound                  = false
       battler.tookPhysicalHit                      = false
+      battler.tookSpecialHit                       = false
       battler.statsRaisedThisRound                 = false
       battler.statsLoweredThisRound                = false
       battler.canRestoreIceFace                    = false

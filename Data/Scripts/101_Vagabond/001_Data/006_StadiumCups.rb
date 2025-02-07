@@ -28,31 +28,31 @@ def pbStadiumCups
     ])
 
     # Phantom Cup (Persona 5)
-    titles.push("Phantom")
-    descriptions.push("Face off against rebellious thieves from another realm.")
-    stats.push([40,2])
-    trainers.push([
-      [:LADY, "Haru", 0],
-      [:SCHOOLGIRL, "Futaba", 0],
-      [:CYCLIST_F, "Makoto", 0],
-      [:PAINTER, "Yusuke", 0],
-      [:LADY, "Ann", 0],
-      [:YOUNGSTER, "Ryuji", 0],
-      [:BURGLAR, "Morgana", 0],
-      [:GAMBLER, "Ren", 0]
-    ])
+    #titles.push("Phantom")
+    #descriptions.push("Face off against rebellious thieves from another realm.")
+    #stats.push([40,2])
+    #trainers.push([
+    #  [:LADY, "Haru", 0],
+    #  [:SCHOOLGIRL, "Futaba", 0],
+    #  [:CYCLIST_F, "Makoto", 0],
+    #  [:PAINTER, "Yusuke", 0],
+    #  [:LADY, "Ann", 0],
+    #  [:YOUNGSTER, "Ryuji", 0],
+    #  [:BURGLAR, "Morgana", 0],
+    #  [:GAMBLER, "Ren", 0]
+    #])
 
     # Aegis Cup (Xenoblade)
-    titles.push("Aegis")
-    descriptions.push("Battle a foreign party of unique opponents.")
-    stats.push([40,3])
-    trainers.push([
-      [:ROUGHNECK, "Zeke", 0],
-      [:VETERAN_F, "Morag", 0],
-      [:ENGINEER, "Tora", 0],
-      [:NURSE, "Nia", 0],
-      [:MINER, "Rex", 0]
-    ])
+    #titles.push("Aegis")
+    #descriptions.push("Battle a foreign party of unique opponents.")
+    #stats.push([40,3])
+    #trainers.push([
+    #  [:ROUGHNECK, "Zeke", 0],
+    #  [:VETERAN_F, "Morag", 0],
+    #  [:ENGINEER, "Tora", 0],
+    #  [:NURSE, "Nia", 0],
+    #  [:MINER, "Rex", 0]
+    #])
 
     if $DEBUG
       titles.push("May-Have-Been")

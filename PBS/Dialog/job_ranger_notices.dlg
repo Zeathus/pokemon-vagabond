@@ -1,6 +1,8 @@
 [NOTICE_BOARD_EMPTY]
 > There's nothing of interest on the notice board.
 
+### BRECCIA ###
+
 [NOTICE_TROPIUS]
 > <u>TROPIUS SIGHTING</u>\nA Tropius was recently seen flying above Breccia Outlook, a rare sight in Rokk.
 > Since then, the Tropius has been seen in passing around the Breccia Outlook, as if waiting for something or someone.
@@ -12,3 +14,32 @@
 [NOTICE_VESPIQUEN,1]
 > <u>QUEEN BEE</u>\nThe giant bee a crazed man was spreading word about was true.
 > The bee in question was a Vespiquen, and it is watching over Breccia Trail at this very moment.
+
+[NOTICE_DEINO]
+> <u>PANICKED DEINO</u>\nA Deino in Evergone Mangrove is hurt and is hiding in a cave in the area.
+> It is too scared to willingly accept help from humans. Another means to help it while it is defensive must be found.
+
+### PEGMA ###
+
+[NOTICE_TURTONATOR]
+> <u>TURTONATOR TERRITORY</u>\nA powerful Turtonator is reportedly occupying the lower floors of Mt[.] Pegma.
+> There are concerns that Turtonator's territorial behavior will cause harm to other wild Pokémon.
+
+[NOTICE_SWAMPERT]
+> <u>FELDSPAR LAKE FLOOR</u>\nA strong Pokémon is believed to be roaming the lake floor at Feldspar Lake.
+> It's too deep in the water to interact with. We must find a way to get it to the surface.
+
+### LAPIS LAZULI ###
+
+[NOTICE_LAPRAS]
+> <u>LAZULI LAKE MONSTER</u>\nThere have been rare sightings of a monster in Lazuli Lake.
+> The report came from a resident in the Lazuli District. They should be asked for further details.
+
+[NOTICE_ROTOM_EASY]
+> <u>ROTOM TRIO 1</u>\nA group of Rotom are causing havoc in a Lapis District maintenance room.
+> Two of the three Rotom have taken the form of appliances. A lawn mower and a laundry machine.
+
+[NOTICE_ROTOM_HARD]
+> <u>ROTOM TRIO 2</u>\nAn strong group of Rotom have gathered in a Lazuli District maintenance room.
+> The Rotom have taken the forms of a microwave, a refrigerator and a fan.
+> Their coordinated attacks have made it a challenge to stop them.

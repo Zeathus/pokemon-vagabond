@@ -173,6 +173,8 @@ end
 
 class PartyPokemonOptionSprite < Sprite
   attr_reader :selected
+  attr_accessor :x_offset
+  attr_accessor :y_offset
 
   def initialize(text,container,x_offset,y_offset,viewport=nil)
     super(viewport)
@@ -203,6 +205,7 @@ class PartyPokemonOptionSprite < Sprite
 
   def selected=(value)
     @selected=value
+    @container.refresh_hint(@text) if value
     refresh
   end
 
@@ -1604,6 +1607,10 @@ class QuickSummarySprite < Sprite
     super(value)
   end
 
+  def height
+    return @pbitmap.bitmap.height
+  end
+
   def refresh
     if @pokemon && @pokemon.species != @species
       self.pokemon = @pokemon
@@ -1701,6 +1708,49 @@ class QuickSummarySprite < Sprite
     end
   end
 
+  def refresh_hint(key = "Summary")
+    base = Color.new(248, 248, 248)
+    shadow = Color.new(104, 104, 104)
+    text = ""
+    x_pos = @pbitmap.bitmap.width / 2
+    y_pos = @pbitmap.bitmap.height - 52
+    case key
+    when "Summary"
+      text = "View details on stats, ability and more."
+    when "Raise Stats"
+      text = "Use items to change stat Effort Levels."
+    when "Level Up"
+      text = "Use money to level up instantly."
+    when "Moveset"
+      text = "Set moves learned from level up."
+    when "TMs"
+      text = "Set moves learned from technical machines."
+    when "Data Chips"
+      text = "Set moves unlocked with data chips."
+    when "Switch"
+      text = "Organize the party. Can also be done by pressing Z."
+    when "Use Item"
+      text = "Use an item on the Pokémon."
+    when "Held Item"
+      text = "Change or move the Pokémon's held item."
+    when "???"
+      text = "This option is unavailable."
+    when "Effort Levels"
+      text = "Choose a stat to raise."
+      x_pos += 144
+      y_pos += 12
+    when "SP"
+      text = "Select this for more info."
+      x_pos += 144
+      y_pos += 12
+    end
+    @overlay.bitmap.clear_rect(0, @pbitmap.bitmap.height - 96, @pbitmap.bitmap.width, 96)
+    pbSetSystemFont(@overlay.bitmap)
+    pbDrawTextPositions(@overlay.bitmap, [[
+      text, x_pos, y_pos, 2, base, shadow
+    ]])
+  end
+
   def add_child(key, value)
     @children[key] = value
   end
@@ -1724,6 +1774,230 @@ class QuickSummarySprite < Sprite
     @pbitmap.dispose
     @typebitmap.dispose
     @statuses.dispose
+    super
+  end
+end
+
+class EffortLevelSprite < Sprite
+  attr_accessor :spriteY
+
+  def initialize(pokemon, summary, viewport = nil)
+    super(viewport)
+    @pokemon = pokemon
+    @summary = summary
+    @pbitmap = AnimatedBitmap.new("Graphics/UI/Party/effort_levels")
+    self.bitmap = @pbitmap.bitmap
+    @overlay=Sprite.new(viewport)
+    @overlay.bitmap=Bitmap.new(@pbitmap.bitmap.width, @pbitmap.bitmap.height)
+    @overlay.z = self.z + 1
+    @arrow_stat = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @effortbitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Summary/effort_bar"))
+    @arrow_stat.z = self.z + 6
+    @arrow_stat.play
+    @item_icons = [
+      ItemIconSprite.new(0, 0, :NONE, viewport),
+      ItemIconSprite.new(0, 0, :NONE, viewport),
+      ItemIconSprite.new(0, 0, :NONE, viewport)
+    ]
+    @spriteY = 0
+    @index = 0
+    self.x = Graphics.width / 2 - @pbitmap.bitmap.width / 2
+    self.update
+  end
+
+  def pokemon=(value)
+    @pokemon = value
+    self.refresh
+  end
+
+  def z=(value)
+    @overlay.z = value + 1
+    @arrow_stat.z = value + 6
+    @item_icons.each do |i|
+      i.z = value + 2
+    end
+    super(value)
+  end
+
+  def index
+    return @index
+  end
+
+  def index=(value)
+    @index = value % 7
+  end
+
+  def update
+    self.y = @summary.y + @summary.height + @spriteY
+    @overlay.x = self.x
+    @overlay.y = self.y
+    @arrow_stat.x = self.x + 2
+    @arrow_stat.y = self.y + 36 + @index * 28
+    @arrow_stat.update
+    for i in 0...@item_icons.length
+      @item_icons[i].x = self.x + 452
+      @item_icons[i].y = self.y + 64 + 56 * i
+    end
+    super
+  end
+
+  def get_cost(el)
+    items = [
+      [:NONE, 0],
+      [:NONE, 0],
+      [:NONE, 0],
+      [:NONE, 0]
+    ]
+    case @index
+    when 0
+      items[0][0] = :HEALTHWING
+      items[1][0] = :HPUP
+      items[2][0] = :HEMATITEGEMSTONE
+      items[3][0] = :POMEGBERRY
+    when 1
+      items[0][0] = :MUSCLEWING
+      items[1][0] = :PROTEIN
+      items[2][0] = :HELIODORGEMSTONE
+      items[3][0] = :KELPSYBERRY
+    when 2
+      items[0][0] = :RESISTWING
+      items[1][0] = :IRON
+      items[2][0] = :AEGIRINEGEMSTONE
+      items[3][0] = :QUALOTBERRY
+    when 3
+      items[0][0] = :GENIUSWING
+      items[1][0] = :CALCIUM
+      items[2][0] = :AMETRINEGEMSTONE
+      items[3][0] = :HONDEWBERRY
+    when 4
+      items[0][0] = :CLEVERWING
+      items[1][0] = :ZINC
+      items[2][0] = :HOWLITEGEMSTONE
+      items[3][0] = :GREPABERRY
+    when 5
+      items[0][0] = :SWIFTWING
+      items[1][0] = :CARBOS
+      items[2][0] = :PHENACITEGEMSTONE
+      items[3][0] = :TAMATOBERRY
+    end
+    if el < 3
+      items[0][1] = 1
+    elsif el < 9
+      items[1][1] = 1
+    elsif el == 9
+      items[2][1] = 1
+    end
+    return items
+  end
+
+  def refresh
+    @overlay.bitmap.clear
+    return if !@pokemon
+    els = @pokemon.el
+    stat = [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED][@index]
+    cost = self.get_cost(els[stat] || 0)
+    for i in 0...@item_icons.length
+      @item_icons[i].item = cost[i][0]
+      @item_icons[i].visible = (cost[i][0] != :NONE)
+    end
+    base = Color.new(248,248,248)
+    shadow = Color.new(104,104,104)
+    base2 = Color.new(64,64,64)
+    shadow2 = Color.new(176,176,176)
+    base_stats = @pokemon.baseStats
+    this_level = @pokemon.level
+    this_IV    = @pokemon.calcIV
+    nature_mod = {}
+    GameData::Stat.each_main { |s| nature_mod[s.id] = 100 }
+    this_nature = @pokemon.nature_for_stats
+    if this_nature
+      this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
+    end
+    nextstats = {}
+    GameData::Stat.each_main do |s|
+      next_IV = Supplementals::EFFORT_LEVEL_IVS[[els[s.id] + 1, 10].min]
+      next_EV = Supplementals::EFFORT_LEVEL_EVS[[els[s.id] + 1, 10].min]
+      if s.id == :HP
+        nextstats[s.id] = @pokemon.calcHP(base_stats[s.id], this_level, next_IV, next_EV)
+      else
+        nextstats[s.id] = @pokemon.calcStat(base_stats[s.id], this_level, next_IV, next_EV, nature_mod[s.id])
+      end
+    end
+    sp = Supplementals::MAX_TOTAL_EFFORT_LEVEL - @pokemon.total_counting_els
+    next_sp = sp
+    next_sp -= 1 if stat && els[stat] < 10 && els[stat] >= 3
+    stat_y = -74
+    base_dark = Color.new(176,176,176)
+    shadow_dark = Color.new(64,64,64)
+    base_red = Color.new(255,160,160)
+    shadow_red = Color.new(150,0,0)
+    textpos = [
+      # Stats
+      [_INTL("HP"),72,116+stat_y,2,base,shadow],
+      [sprintf("%3d/%3d",@pokemon.hp,@pokemon.totalhp),166,116+stat_y,2,base2,shadow2],
+      [_INTL("Attack"),94,144+stat_y,2,base,shadow],
+      [sprintf("%d",@pokemon.attack),188,144+stat_y,2,base2,shadow2],
+      [_INTL("Defense"),94,172+stat_y,2,base,shadow],
+      [sprintf("%d",@pokemon.defense),188,172+stat_y,2,base2,shadow2],
+      [_INTL("Sp. Atk"),94,200+stat_y,2,base,shadow],
+      [sprintf("%d",@pokemon.spatk),188,200+stat_y,2,base2,shadow2],
+      [_INTL("Sp. Def"),94,228+stat_y,2,base,shadow],
+      [sprintf("%d",@pokemon.spdef),188,228+stat_y,2,base2,shadow2],
+      [_INTL("Speed"),94,256+stat_y,2,base,shadow],
+      [sprintf("%d",@pokemon.speed),188,256+stat_y,2,base2,shadow2],
+      [sprintf("%d",nextstats[:HP]),262,116+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",nextstats[:ATTACK]),262,144+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",nextstats[:DEFENSE]),262,172+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",nextstats[:SPECIAL_ATTACK]),262,200+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",nextstats[:SPECIAL_DEFENSE]),262,228+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",nextstats[:SPEED]),262,256+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:HP]),320,116+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:ATTACK]),320,144+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:DEFENSE]),320,172+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:SPECIAL_ATTACK]),320,200+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:SPECIAL_DEFENSE]),320,228+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [sprintf("%d",els[:SPEED]),320,256+stat_y,2,Color.new(64,64,64),Color.new(176,176,176)],
+      [_INTL("SP"),94,284+stat_y,2,base,shadow],
+      [sprintf("%d/%d", sp, Supplementals::MAX_TOTAL_EFFORT_LEVEL),188,284+stat_y,2,base,shadow],
+      [sprintf("%d/%d", next_sp, Supplementals::MAX_TOTAL_EFFORT_LEVEL),262,284+stat_y,2,next_sp < 0 ? base_red : base, next_sp < 0 ? shadow_red : shadow]
+    ]
+    if @index < 6
+      gem = GameData::Item.get(cost[2][0]).name
+      gem = gem[0...gem.index(" ")]
+      textpos += [
+        # Items
+        [GameData::Item.get(cost[0][0]).name, @overlay.bitmap.width - 134, 46, 0, base, shadow],
+        [GameData::Item.get(cost[1][0]).name, @overlay.bitmap.width - 134, 102, 0, base, shadow],
+        [gem, @overlay.bitmap.width - 134, 158, 0, base, shadow],
+        # Item Counts
+        [sprintf("%d / %d", $bag.quantity(cost[0][0]), cost[0][1]), @overlay.bitmap.width - (cost[0][1] == 1 ? 24 : 22), 68, 1,
+          cost[0][1] == 0 ? base_dark : (cost[0][1] > $bag.quantity(cost[0][0]) ? base_red : base),
+          cost[0][1] == 0 ? shadow_dark : (cost[0][1] > $bag.quantity(cost[0][0]) ? shadow_red : shadow)],
+        [sprintf("%d / %d", $bag.quantity(cost[1][0]), cost[1][1]), @overlay.bitmap.width - (cost[1][1] == 1 ? 24 : 22), 124, 1,
+          cost[1][1] == 0 ? base_dark : (cost[1][1] > $bag.quantity(cost[1][0]) ? base_red : base),
+          cost[1][1] == 0 ? shadow_dark : (cost[1][1] > $bag.quantity(cost[1][0]) ? shadow_red : shadow)],
+        [sprintf("%d / %d", $bag.quantity(cost[2][0]), cost[2][1]), @overlay.bitmap.width - (cost[2][1] == 1 ? 24 : 22), 180, 1,
+          cost[2][1] == 0 ? base_dark : (cost[2][1] > $bag.quantity(cost[2][0]) ? base_red : base),
+          cost[2][1] == 0 ? shadow_dark : (cost[2][1] > $bag.quantity(cost[2][0]) ? shadow_red : shadow)]
+      ]
+    end
+    effort_y = 46
+    for i in [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED]
+      effort = [els[i], Supplementals::MAX_EFFORT_LEVEL].min
+      effort_width = ((effort * 30.0) / Supplementals::MAX_EFFORT_LEVEL).floor * 2
+      effort_rect = Rect.new(0, 0, effort_width, @effortbitmap.bitmap.height)
+      @overlay.bitmap.blt(340, effort_y, @effortbitmap.bitmap, effort_rect)
+      effort_y += 28
+    end
+    pbSetSmallFont(@overlay.bitmap)
+    pbDrawTextPositions(@overlay.bitmap, textpos)
+  end
+
+  def dispose
+    @pbitmap.dispose
+    @overlay.dispose
+    @arrow_stat.dispose
+    @effortbitmap.dispose
     super
   end
 end
@@ -1855,8 +2129,15 @@ class PokemonScreen_Scene
     pbSetHelpText(starthelptext)
     @sprites["summary"]=QuickSummarySprite.new(@party[0], @viewport)
     @sprites["summary"].z = 24
+    @sprites["summaryheaders"]=IconSprite.new(0, 0, @viewport)
+    @sprites["summaryheaders"].setBitmap("Graphics/UI/Party/summary_headers")
+    @sprites["summaryheaders"].z = 25
+    @sprites["summaryheaders"].x = @sprites["summary"].x
+    @sprites["summaryheaders"].y = @sprites["summary"].y + 256
     @sprites["levelup"]=LevelUpSprite.new(nil, @sprites["summary"], @viewport)
     @sprites["levelup"].z = 22
+    @sprites["effort"]=EffortLevelSprite.new(nil, @sprites["summary"], @viewport)
+    @sprites["effort"].z = 28
     # Party Member Slots
     @sprites["member1"]=PartyMemberSprite.new(
       PBParty.getTrainerType(@tid),@tid,false,@viewport)
@@ -2055,17 +2336,17 @@ class PokemonScreen_Scene
 
   def pbPokemonMenuStart(index, cmds)
     @menuindex=0
-    x = 36
-    y = 262
+    x = 20
+    y = 294
     for i in 0...cmds.length
       @sprites[_INTL("button{1}",i)] = PartyPokemonOptionSprite.new(
         cmds[i], @sprites["summary"], x, y, @viewport
       )
-      if i % 2 == 0
-        y += 48
+      if i % 3 != 2
+        y += 52
       else
-        x += 176
-        y -= 48
+        x += 192
+        y -= 52 * 2
       end
     end
     @sprites["selected"].visible = false
@@ -2151,22 +2432,27 @@ class PokemonScreen_Scene
 
       if key == Input::DOWN
         @menuindex += 1
-        @menuindex = 0 if @menuindex >= menuitems
+        @menuindex -= 3 if @menuindex % 3 == 0
         update = true
       elsif key == Input::UP
         @menuindex -= 1
-        @menuindex = menuitems - 1 if @menuindex < 0
+        @menuindex += 3 if @menuindex % 3 == 2
         update = true
       elsif key == Input::RIGHT
-        @menuindex += 2
-        @menuindex = @menuindex % 2 == 0 ? 0 : 1 if @menuindex >= menuitems
+        @menuindex += 3
+        @menuindex -= 9 if @menuindex >= 9
         update = true
       elsif key == Input::LEFT
-        @menuindex -= 2
-        @menuindex = menuitems - (@menuindex % 2 == 0 ? 2 : 1) if @menuindex < 0
+        @menuindex -= 3
+        @menuindex += 9 if @menuindex < 0
         update = true
       end
 
+      if Input.trigger?(Input::ACTION)
+        pbPlayDecisionSE()
+        @menuindex = 6
+        return @menuindex
+      end
       if Input.trigger?(Input::USE)
         pbPlayDecisionSE()
         return @menuindex
@@ -2570,6 +2856,7 @@ class PokemonScreen_Scene
         @sprites["memchange"].y += 16
         if @sprites["summary"].y > Graphics.height - 264
           @sprites["summary"].y -= 24
+          @sprites["summaryheaders"].y = @sprites["summary"].y + 256
         end
       end
       pbUpdateSpriteHash(@sprites)
@@ -2588,6 +2875,7 @@ class PokemonScreen_Scene
         @sprites["memchange"].y += 16
         if @sprites["summary"].y > Graphics.height - 264
           @sprites["summary"].y -= 24
+          @sprites["summaryheaders"].y = @sprites["summary"].y + 256
         end
       end
       pbUpdateSpriteHash(@sprites)
@@ -2628,6 +2916,7 @@ class PokemonScreen_Scene
           end
         end
       end
+      @sprites["summaryheaders"].y = @sprites["summary"].y + 256
       pbUpdateSpriteHash(@sprites)
       Graphics.update
       Input.update
@@ -2981,7 +3270,7 @@ class PokemonScreen_Scene
     end
   end
 
-  def pbSummary(pkmnid,both=true,inbattle=false,moves=false)
+  def pbSummary(pkmnid,both = true, inbattle = false, moves = false)
     oldsprites=pbFadeOutAndHide(@sprites)
     scene=PokemonSummaryScene.new(inbattle)
     screen=PokemonSummary.new(scene)
@@ -3029,7 +3318,7 @@ class PokemonScreen_Scene
       end
       pkmnid = pkmnid % 3
     end
-    pkmn = party[screen.pbStartScreen(party,pkmnid,moves ? :NONE : nil)]
+    pkmn = party[screen.pbStartScreen(party, pkmnid, moves ? moves : nil)]
     new_index = pkmnid
     for i in 0...12
       if @sprites["pokemon#{i}"] && @sprites["pokemon#{i}"].pokemon == pkmn
@@ -3152,6 +3441,124 @@ class PokemonScreen_Scene
 
     5.times do
       @sprites["levelup"].spriteY += 6
+      pbUpdateSpriteHash(@sprites)
+      Graphics.update
+      Input.update
+    end
+  end
+
+  def pbHideSummaryButtons(cmds)
+    @sprites["summary"].refresh_hint("")
+    8.times do
+      @sprites["summaryheaders"].y += 32
+      for i in 0...cmds.length
+        @sprites[_INTL("button{1}",i)].y_offset += 32
+      end
+      pbUpdateSpriteHash(@sprites)
+      Graphics.update
+      Input.update
+    end
+  end
+
+  def pbShowSummaryButtons(cmds)
+    8.times do
+      @sprites["summaryheaders"].y -= 32
+      for i in 0...cmds.length
+        @sprites[_INTL("button{1}",i)].y_offset -= 32
+      end
+      pbUpdateSpriteHash(@sprites)
+      Graphics.update
+      Input.update
+    end
+    @sprites["summary"].refresh_hint(cmds[@menuindex])
+  end
+
+  def pbChangeEffortLevels(pkmn)
+    effort = @sprites["effort"]
+
+    els = pkmn.el
+    effort.pokemon = pkmn
+    effort.index = 0
+
+    8.times do
+      effort.spriteY -= 32
+      pbUpdateSpriteHash(@sprites)
+      Graphics.update
+      Input.update
+    end
+
+    @sprites["summary"].refresh_hint("Effort Levels")
+    effort.refresh
+
+    loop do
+      if Input.trigger?(Input::BACK)
+        pbPlayCancelSE
+        break
+      elsif Input.trigger?(Input::USE)
+        if effort.index == 6
+          pbDisplay("These are the Pokémon's Specialization Points (SP).\nWhen an Effort Level is above 3, it uses 1 SP per level.")
+          Graphics.update
+          Input.update
+          next
+        end
+        stat = [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED][effort.index]
+        if els[stat] == 10
+          pbDisplay("The stat cannot go any higher.")
+          Graphics.update
+          Input.update
+          next
+        end
+        if els[stat] >= 3 && pkmn.total_counting_els >= Supplementals::MAX_TOTAL_EFFORT_LEVEL
+          pbDisplay(sprintf("%s does not have enough SP.", pkmn.name))
+          Graphics.update
+          Input.update
+          next
+        end
+        cost = effort.get_cost(els[stat])
+        can_afford = true
+        used_item = nil
+        cost.each do |i|
+          used_item = i[0] if i[1] > 0
+          if i[1] > $bag.quantity(i[0]) && !($DEBUG && Input.press?(Input::CTRL))
+            can_afford = false
+            break
+          end
+        end
+        if !can_afford
+          pbDisplay("You don't have the necessary items.")
+          Graphics.update
+          Input.update
+          next
+        end
+        pbPlayDecisionSE
+        if pbDisplayConfirm(sprintf("Use a %s to raise %s's %s?", GameData::Item.get(used_item).name, pkmn.name, GameData::Stat.get(stat).name))
+          els[stat] += 1
+          $bag.remove(used_item, 1)
+          pkmn.el = els
+          pkmn.calc_stats
+          effort.refresh
+          pbSEPlay("Pkmn exp full")
+        end
+      elsif Input.repeat?(Input::UP)
+        pbPlayCursorSE
+        effort.index -= 1
+        effort.refresh
+      elsif Input.repeat?(Input::DOWN)
+        pbPlayCursorSE
+        effort.index += 1
+        effort.refresh
+      end
+      @sprites["summary"].refresh_hint(effort.index < 6 ? "Effort Levels" : "SP")
+      pbUpdateSpriteHash(@sprites)
+      Graphics.update
+      Input.update
+    end
+
+    @sprites["summary"].refresh_hint("")
+    effort.refresh
+
+    8.times do
+      effort.spriteY += 32
       pbUpdateSpriteHash(@sprites)
       Graphics.update
       Input.update
@@ -3731,18 +4138,38 @@ class PokemonScreen
             movecmds.push(move.id)
           end
         end
-        cmds = ["Stats", "Moves", "Use Item", "Held Item", "To Lead"]
-        cmds.push($game_variables[BADGE_COUNT] > 0 ? "Level Up" : "???")
+        cmds = [
+          # Column 1
+          "Summary",
+          "Raise Stats",
+          ($game_variables[BADGE_COUNT] > 0 ? "Level Up" : "???"),
+          # Column 2
+          "Moveset",
+          "TMs",
+          "Data Chips",
+          # Column 3
+          "Switch",
+          "Use Item",
+          "Held Item"
+        ]
         switch=false
         @scene.pbPokemonMenuStart(pkmnid, cmds)
         loop do
           cmd = @scene.pbPokemonMenu(pkmnid, cmds)
           if cmd < 0
             break
-          elsif cmds[cmd]=="Stats"
+          elsif cmds[cmd]=="Summary"
             @scene.pbSummary(pkmnid)
-          elsif cmds[cmd]=="Moves"
-            @scene.pbSummary(pkmnid, true, false, true)
+          elsif cmds[cmd]=="Raise Stats"
+            @scene.pbHideSummaryButtons(cmds)
+            @scene.pbChangeEffortLevels(pkmn)
+            @scene.pbShowSummaryButtons(cmds)
+          elsif cmds[cmd]=="Moveset"
+            @scene.pbSummary(pkmnid, true, false, :LEVELUP)
+          elsif cmds[cmd]=="TMs"
+            @scene.pbSummary(pkmnid, true, false, :TM)
+          elsif cmds[cmd]=="Data Chips"
+            @scene.pbSummary(pkmnid, true, false, :DATACHIP)
           elsif cmds[cmd]=="To Lead"
             newpkmnid = pkmnid < 6 ? 0 : 6
             pbSwitch(pkmnid, newpkmnid, true)

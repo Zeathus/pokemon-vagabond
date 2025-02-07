@@ -92,12 +92,17 @@ class Game_Player < Game_Character
     when :ice_sliding
       self.move_speed = 4 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
-    when :stair_up
-      self.move_speed = 2
-      new_charset = pbGetPlayerCharset(meta.walk_charset)
+    #when :stair_up
+    #  self.move_speed = 2
+    #  new_charset = pbGetPlayerCharset(meta.walk_charset)
     else   # :walking, :jumping, :walking_stopped
       self.move_speed = 3 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
+    end
+    if @direction == 8 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y + 1)
+      self.move_speed -= 1
+    elsif @direction == 2 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y)
+      self.move_speed -= 1
     end
     self.move_speed = 3 if @bumping
     @character_name = new_charset if new_charset
@@ -195,7 +200,7 @@ class Game_Player < Game_Character
     end
   end
 
-  def jump(x_plus, y_plus)
+  def jump(x_plus, y_plus, direction = 0)
     old_x = @x
     old_y = @y
     super
@@ -483,8 +488,6 @@ class Game_Player < Game_Character
           set_movement_type((faster) ? :surfing_fast : :surfing)
         elsif $PokemonGlobal&.bicycle
           set_movement_type((faster) ? :cycling_fast : :cycling)
-        elsif $game_player.pbTerrainTag.stair_up
-          set_movement_type((faster) ? :stair_up : :stair_up)
         else
           set_movement_type((faster) ? :running : :walking)
         end

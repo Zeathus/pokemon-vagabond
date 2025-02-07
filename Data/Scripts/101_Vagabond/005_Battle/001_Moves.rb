@@ -22,6 +22,26 @@ class Battle::Move::StartWindsWeather < Battle::Move::WeatherMove
 end
 
 #===============================================================================
+# User loses their Water type. Fails if user is not Water-type. (Tsunami)
+#===============================================================================
+class Battle::Move::UserLosesWaterType < Battle::Move
+  def pbMoveFailed?(user, targets)
+    if !user.pbHasType?(:WATER)
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectAfterAllHits(user, target)
+    if !user.effects[PBEffects::Tsunami]
+      user.effects[PBEffects::Tsunami] = true
+      @battle.pbDisplay(_INTL("{1} became dehydrated!", user.pbThis))
+    end
+  end
+end
+
+#===============================================================================
 # Inflicts target with Burn or Frostbite if user has it.
 # If not statuses, can also inflict during sun or snowscape/hail (Thermodynamics)
 #===============================================================================

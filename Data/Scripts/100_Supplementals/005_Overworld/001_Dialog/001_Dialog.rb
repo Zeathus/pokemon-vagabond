@@ -130,10 +130,6 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         pbTalk(question, msgwindows)
 
         answer = $game_variables[variable]
-        if choice_indexes[answer]
-          answer = choice_indexes[answer]
-          $game_variables[variable] = answer
-        end
 
         $game_temp.log_dialog(
           1,
@@ -141,6 +137,11 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           choices[answer],
           nil
         )
+        
+        if choice_indexes[answer]
+          answer = choice_indexes[answer]
+          $game_variables[variable] = answer
+        end
 
         if !(save_key.nil?)
           pbSetChoice(save_key, answer, choices[answer])

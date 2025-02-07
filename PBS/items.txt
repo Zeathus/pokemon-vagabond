@@ -506,7 +506,7 @@ Description = A shard of a pretty gem that sparkles in a red color. It can be so
 Name = Comet Shard
 NamePlural = Comet Shards
 Pocket = 1
-Price = 25000
+Price = 40000
 Flags = Fling_30
 Description = A shard which fell to the ground when a comet approached. A maniac will buy it for a high price.
 #-------------------------------
@@ -7112,7 +7112,14 @@ Pocket = 9
 Price = 0
 Flags = KeyItem
 Description = Collects Effort Essence from opponents.
-
+#-------------------------------
+[GAMETICKET]
+Name = Game Ticket
+NamePlural = Game Tickets
+Pocket = 1
+Price = 10000
+Flags = Fling_30
+Description = A ticket that lets you play and win prizes from certain games at the Lapis Lazuli City Game Guild.
 
 
 

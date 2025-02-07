@@ -120,6 +120,10 @@ Land,21
     15,TIMBURR,9,12
     15,PACHIRISU,9,12
     5,ROWLET,9,12
+FishingRod
+    60,POLIWAG,10,15
+    30,POLIWHIRL,15,20
+    10,POLIWRATH,20,25
 #-------------------------------
 [062] # Breccia Trail
 Land,21
@@ -177,6 +181,10 @@ Cave,5
     100,UNOWN,7,9
 #-------------------------------
 [078] # Crosswoods Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[134] # Mt. Pegma Ruins
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
@@ -267,6 +275,15 @@ Cave,5
     15,TYROGUE,15,19
     5,DURANT,15,19
 #-------------------------------
+[110] # Mt. Pegma B1F
+Cave,5
+    25,MAGBY,9,12
+    25,SLUGMA,9,12
+    15,TINKATUFF,9,12
+    15,CARBINK,9,12
+    15,HEATMOR,9,12
+    5,TORKOAL,9,12
+#-------------------------------
 [92] # Pegma Quarry B1F
 Cave,5
     100,GEODUDE,5,10,1
@@ -281,7 +298,7 @@ Cave,5
 #-------------------------------
 [95] # Pegma Quarry B4F
 Cave,5
-    100,GEODUDE,5,10,1
+    100,VOLCANION,5,10,1
 #-------------------------------
 [96] # Pegma Quarry B5F
 Cave,5
@@ -409,14 +426,17 @@ Cave,5
     15,SANDSHREW,25,30
     5,GIBLE,25,30
 #-------------------------------
-[143] # cave
-Cave,5
-    20,BUIZEL,5,8
-    20,PANPOUR,5,8
-    20,BUDEW,5,8
-    10,BIDOOF,5,8
-    10,FLABEBE,5,8,3
-    20,AZURILL,4,7
+[154] # Central East Sea
+Water,2
+    50,TENTACOOL,16,21
+    30,WINGULL,16,21
+    20,FINIZEN,16,21
+FishingRod
+    40,WAILMER,16,21
+    30,TENTACOOL,16,21
+    15,HORSEA,16,21
+    10,QWILFISH,16,21
+    5,FINIZEN,17,22
 #-------------------------------
 [173] # Lazuli River
 Land,21

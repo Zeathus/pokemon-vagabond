@@ -23,8 +23,8 @@ class Game_Guess_Pokemon
     return nil if round < 0
     return 0 if round == 0
     return 200 if round == 1
-    return 500000 if round == 50
-    return 2000000 if round == 100
+    return 250000 if round == 50
+    return 1000000 if round == 100
     return nil if round > 100
     prize = (round > 50) ? 500000 : 200
     for r in ((round > 50) ? 51 : 2)..round
@@ -34,7 +34,7 @@ class Game_Guess_Pokemon
       prize += 500 * r if r % 20 == 0
       prize += 1000 * r if r % 50 == 0
     end
-    return prize
+    return prize / 2
   end
 
   def get_species_bitmap(species,back=false)
@@ -275,11 +275,11 @@ class Game_Guess_Pokemon
     shadow3 = Color.new(70, 150, 90)
     shadow4 = Color.new(100, 190, 120)
     textpos = [
-      ["ROUND",Graphics.width/2 + 193,62,2,base,shadow1,true],
-      ["LIVES",Graphics.width/2 + 193,158,2,base,shadow2,true],
-      [@round.to_s,Graphics.width/2 + 193,92,2,base,shadow1,true],
-      [@lives.to_s,Graphics.width/2 + 193,188,2,base,shadow2,true],
-      ["PRIZE",Graphics.width/2 - 191,62,2,base,shadow3,true]
+      ["ROUND",Graphics.width/2 + 191,68,2,base,shadow1,true],
+      ["LIVES",Graphics.width/2 + 191,164,2,base,shadow2,true],
+      [@round.to_s,Graphics.width/2 + 191,98,2,base,shadow1,true],
+      [@lives.to_s,Graphics.width/2 + 191,194,2,base,shadow2,true],
+      ["PRIZE",Graphics.width/2 - 193,68,2,base,shadow3,true]
     ]
     prizepos = []
     i = 0
@@ -287,7 +287,7 @@ class Game_Guess_Pokemon
       str = p ? self.number_with_delimiter(p) : "-"
       str = "> " + str + " <" if i == 1
       shadow = (i == 1) ? shadow3 : shadow4
-      prizepos.push([str,Graphics.width/2 - 191,188 - i * 24,2,base,shadow,true])
+      prizepos.push([str,Graphics.width/2 - 193,194 - i * 24,2,base,shadow,true])
       i += 1
     end
     pbSetSystemFont(bitmap)
@@ -323,7 +323,7 @@ class Game_Guess_Pokemon
     species_data = GameData::Species.get(dex_list[rand(511)])
     while true
       begin
-        while species_data.form != 0
+        while species_data.form != 0 || [:ARCHEBLAST,:TROPICOPIA,:LAPRANESSE,:SANDOLIN].include?(species_data.species)
           species_data = GameData::Species.get(dex_list[rand(511)])
         end
         species = species_data.species
@@ -474,7 +474,6 @@ class Game_Guess_Pokemon
   end
 
   def start
-
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
 
     @sprites["pokemon"] = Sprite.new(@viewport)
@@ -489,11 +488,8 @@ class Game_Guess_Pokemon
     @sprites["hud"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
 
     pbMessage("Welcome to...")
-    pbMessage("WHO'S!")
-    pbMessage("THAT!")
-    pbMessage("POKEMON!")
+    pbMessage("WHO'S! THAT! POKEMON!")
     pbMessage("The first five rounds we will show different ways the image can be distorted. Then we go to the real thing!")
-    @round = 20
     while @round <= 100
       @lives_lost_this_round = 0
       @all_in = 0
@@ -523,7 +519,7 @@ class Game_Guess_Pokemon
         pbMessage("You won't see this distortion until the later rounds.")
       elsif @round == 6
         pbMessage("Now begins the real part of the show.\nAll Pokemon from here on are silhouettes!")
-        pbMessage("The following Pokemon are without any distiortions.")
+        pbMessage("The following Pokemon are without any distortions.")
       elsif @round == 10
         pbMessage("The following Pokemon will be rotated or flipped randomly.")
       elsif @round == 20
@@ -537,7 +533,7 @@ class Game_Guess_Pokemon
       elsif @round == 40
         pbMessage("The following Pokemon will be jumbled into 4 invididually flipped squares, then rotated or flipped.")
       elsif @round == 45
-        pbMessage("The following Pokemon will be jubmled into 9 individually flipped squares.")
+        pbMessage("The following Pokemon will be jumbled into 9 individually flipped squares.")
       elsif @round == 50
         pbMessage("The following Pokemon will be jumbled into 9 individually flipped squares, then rotated or flipped.")
       elsif @round == 70
@@ -547,6 +543,8 @@ class Game_Guess_Pokemon
       elsif @round == 100
         pbMessage("It's the final round! I have never seen anyone get this far, and neither did I think anyone would!")
         pbMessage("This final Pokemon is jumbled into 4 flipped squares, then 9 flipped squares, and finally rotated or flipped.")
+      else
+        pbMessage("Here is the next Pokémon.")
       end
 
       while !guess_pokemon(species)
@@ -563,6 +561,9 @@ class Game_Guess_Pokemon
           self.unveil
           self.wait(20)
           pbMessage(_INTL("It's {1}!", GameData::Species.get(species).name))
+          pbMessage("That concludes this game of Who's That Pokemon!")
+          pbMessage(_INTL("Our lucky contestant mananged to get away with a prize of ${1}!", self.round_prize(@round - 1)))
+          $player.money += self.round_prize(@round - 1)
           self.dispose
           return 0
         elsif @lives_lost_this_round >= 3
@@ -613,6 +614,14 @@ class Game_Guess_Pokemon
         pbMessage("But if you guess incorrectly...\nYou lose all the lives you have!")
         pbMessage("Mind that you can only Go All In when you have multiple lives remaining.")
       end
+    end
+
+    if @round > 100
+      pbMessage("I can't believe it...")
+      pbMessage("Someone beat all 100 levels of Who's That Pokémon!")
+      pbMessage("Congratulations on this momentous achievement.\nYou will walk away with a whole $1,000,000!")
+      $player.money += 1000000
+      self.dispose
     end
 
   end

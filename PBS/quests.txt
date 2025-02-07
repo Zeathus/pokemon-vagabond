@@ -62,6 +62,18 @@ Done = Channelle was happy to see the Pokémon you brought her. She even named h
 # Lapis District
 RequireMaps = 27
 
+[GROWLINGSTOMACH]
+Name = Growling Stomach
+Type = Basic
+Exp = 50
+Items = HPUP
+Description = "A cook in the Feldspar District is out of ingredients for her Growlithe's favorite treats."
+Location = Feldspar District
+FullLocation = in the Feldspar District of Pegma City
+Step1 = "Harvest three Rawst Berries from Feldspar Lake and deliver them to the cook."
+Done = "Thanks to your delivery, the Growlithe can once again eat his favorite treats."
+RequireMaps = 21
+
 # Ceramist Quest
 
 # Enchantress Quest

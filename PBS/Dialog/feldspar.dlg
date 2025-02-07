@@ -253,3 +253,168 @@
 [FELDSPAR_TUNNEL_SIGN]
 /textpos middle
 > Mt[.] Pegma<br>Tunnel to the Mica District
+
+[FELDSPAR_TERACE_WOMAN,0]
+/speaker Old_Woman
+> I love the view of the lake from my terace. You should have a look.
+
+[FELDSPAR_TERACE_WOMAN,1]
+/speaker Old_Woman
+> Isn't it beautiful? You can also see all the wild Pokémon enjoying themselves.
+
+[FELDSPAR_TERACE_WOMAN,2]
+/speaker Old_Woman
+> There's a path to the lake over there. Unfortunately I'm in no shape to visit it.
+
+[FELDSPAR_TERACE_WOMAN,3]
+/speaker Old_Woman
+> You seem the adventurous type though, so you should visit the lake if you have the chance.
+
+[FELDSPAR_LASS]
+/speaker Lass
+?> Is this your first time in Pegma City?
+    /choice Yes
+        > Welcome! This is the Feldspar District, where most of the main attractions are.
+        > You should definitely check out the Stadium while you're here.
+        > There's also the Mica District, but you'll have to pass through the Mt[.] Pegma caves to get there.
+    /cancelchoice No
+        > Welcome back!
+?/>
+
+[FELDSPAR_OLD_MAN]
+/speaker Old_Man
+> Did you know that Pegma City was actually the first settlement in the Rokk region?
+> The earth around Mt[.] Pegma is resource rich, so they started mining and exporting ore.
+> Next thing you know, a town had formed around the quarry, and soon there were settlements across the region.
+> That's also why the places here are named after different rocks.
+
+[FELDSPAR_BROTHER,0]
+/speaker Youngster
+> I've heard that if you head deeper down into Mt[.] Pegma, there are rivers of lava!
+> Don't worry, Mt[.] Pegma hasn't been an active volcano in over a thousand years.
+
+[FELDSPAR_BROTHER,1]
+/speaker Boy
+> I swear, my brother is so fascinated by lava that I'm afraid he'll try to go for a swim if he ever sees it in person.
+
+[FELDSPAR_CONTAINER_MAN]
+/speaker Man
+> Yes, I live in a container that is no longer in use.
+> What can I say? The rent is cheap.
+.> ...But I have no plumbing.
+
+[FELDSPAR_ROCK_COLLECTOR,0]
+/speaker Collector
+> You have the face of someone who wants a rock.
+> Luckily, I have the face of someone who has rocks.
+> This rock is now yours.
+
+[FELDSPAR_ROCK_COLLECTOR,1]
+/speaker Collector
+> Take good care of it.
+
+[FELDSPAR_ROCK_COLLECTOR,2]
+/speaker Collector
+> Always a pleasure to find another rock enjoyer.
+
+[FELDSPAR_ROCK_SON]
+/speaker Son
+> Mom talks about nothing but rocks.
+> Dad says it's becoming a problem.
+
+[FELDSPAR_DEITY]
+> There are tales that speak of a deity living at the top of Mt[.] Pegma.
+> They say that the deity grants us strength, making us more spirited and productive.
+> I wonder if the tales are true?
+
+[FELDSPAR_ARTIST]
+/speaker Artist
+> I actually live in Lapis Lazuli City, but I wanted to come here to practice painting mountains.
+> This container is so cheap that I can afford to stay here for a while!
+
+[FELDSPAR_COOK,0]
+/speaker Cook
+> My Growlithe is such a picky eater. He refuses to eat anything that's not made with Rawst Berries.
+> But I managed to burn the last Rawst Berries I had while cooking...\nIronic, I know.
+> They grow by the Feldspar Lake. If you go there, could you please bring three Rawst Berries with you?
+
+[FELDSPAR_COOK,1]
+/speaker Cook
+> If you go to Feldspar Lake, could you please bring me three Rawst Berries?
+
+[FELDSPAR_COOK,2]
+/speaker Cook
+?> You have the Rawst Berries? Great!\nMay I have three of them?
+    /choice Here you go
+        > Thank you so much! Now I can finally make some food Growlithe will like.
+        /return true
+    /cancelchoice I need them myself
+        > If you need them yourself, that's fair...
+        /return false
+?/>
+
+[FELDSPAR_COOK,3]
+/speaker Cook
+> I made this earlier, but it wasn't to Growlithe's taste. Maybe you will like it.
+
+[FELDSPAR_COOK,4]
+/speaker Cook
+> Thank you for the berries you brought. Growlithe is very thankful too.
+
+[FELDSPAR_STADIUM_VETERAN]
+/speaker Veteran
+> I hope there's an exciting match soon. Are you participating?
+
+[FELDSPAR_STADIUM_PACKER,0]
+/speaker Backpacker
+> I've followed many trainers going through the cups. Some even made it all the way to the Victory Cup!
+> That's the hardest cup there is, and it's still undefeated.
+> Rumors say that there's a special reward for the first trainer that beats it.
+
+[FELDSPAR_STADIUM_PACKER,1]
+/speaker Backpacker
+> I never thought I'd see the day that someone wins the Victory Cup!
+> And to think the reward was the Mythical Pokémon Victini... You're incredible!
+
+[FELDSPAR_STADIUM_WOMAN]
+/speaker Woman
+> The cups at the Stadium become available in tiers, where you have to beat specific cups to get the next tier.
+> All trainers have to start with the Tutorial Cup to challenge any other cups.
+> After that, the Start Up Cup and Affinity Cup each unlock a new tier of cups.
+> If you beat those, you're on the second-to-last tier, but I can't remember how you get to the final tier...
+
+[FELDSPAR_STADIUM_BOY]
+/speaker Youngster
+> I love Pokémon battles! The Stadium is my favorite place to be!
+
+[FELDSPAR_STADIUM_FAN,0]
+/speaker Stadium_Fan
+> I really want someone to root for, but none of the trainers here have really caught my eye yet...
+
+[FELDSPAR_STADIUM_FAN,1]
+/speaker Stadium_Fan
+> You just beat the Tutorial Cup, right? It might be an easy one, but I really liked how you battled!
+
+[FELDSPAR_STADIUM_FAN,2]
+/speaker Stadium_Fan
+> You're really moving up in the Stadium.\nI'm rooting for you!
+
+[FELDSPAR_STADIUM_FAN,3]
+/speaker Stadium_Fan
+> I've seen so many trainers struggle with the Affinity Cup. It really tests how well you can deal with Affinity Boosts.
+> I'm very impressed by how well you handled it!
+
+[FELDSPAR_STADIUM_FAN,4]
+/speaker Stadium_Fan
+> Wow, you've made it to the Victory Cup... Watching all your cups up to this point has got me so invested.
+> I have faith that you will be the first trainer to beat the Victory Cup, and I will watch your attempts until you win!
+
+[FELDSPAR_STADIUM_FAN,5]
+/speaker Stadium_Fan
+> You actually did it, you beat the hardest cup the Stadium has to offer.
+> Your battling prowess is really inspiring. Thank you for showcasing it here at the Stadium.
+> I want you to have this for letting me root for you all this time.
+
+[FELDSPAR_STADIUM_FAN,6]
+/speaker Stadium_Fan
+> I will make sure to be here to watch your battles whenever you come back to the Stadium!

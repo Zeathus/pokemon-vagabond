@@ -159,6 +159,7 @@ class Battle::Battler
       @effects[PBEffects::ExtraType] = nil
     end
     @effects[PBEffects::BurnUp] = false
+    @effects[PBEffects::Tsunami] = false
     @effects[PBEffects::Roost]  = false
   end
 
@@ -166,6 +167,7 @@ class Battle::Battler
     @types = @pokemon.types
     @effects[PBEffects::ExtraType] = nil
     @effects[PBEffects::BurnUp] = false
+    @effects[PBEffects::Tsunami] = false
     @effects[PBEffects::Roost]  = false
   end
 

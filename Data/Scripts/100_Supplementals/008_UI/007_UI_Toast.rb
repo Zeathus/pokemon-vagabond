@@ -219,6 +219,7 @@ def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
     Input.update
     pbUpdateSpriteHash(sprites)
     viewport.update
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
   textx = Graphics.width / 2 - sprites["display"].bitmap.text_size(title).width / 2
   textx2 = Graphics.width / 2 - sprites["display"].bitmap.text_size(subtitle).width / 2 if subtitle
@@ -255,12 +256,14 @@ def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
     Input.update
     pbUpdateSpriteHash(sprites)
     viewport.update
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
   time.times do
     Graphics.update
     Input.update
     pbUpdateSpriteHash(sprites)
     viewport.update
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
   32.times do
     sprites["display"].opacity -= 16
@@ -270,6 +273,7 @@ def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
     Input.update
     pbUpdateSpriteHash(sprites)
     viewport.update
+    pbUpdateSceneMap if $scene.is_a?(Scene_Map)
   end
   pbDisposeSpriteHash(sprites)
   viewport.dispose

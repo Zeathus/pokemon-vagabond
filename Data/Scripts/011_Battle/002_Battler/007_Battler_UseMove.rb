@@ -115,6 +115,7 @@ class Battle::Battler
     @effects[PBEffects::Charge]      = 0 if @effects[PBEffects::Charge] == 1
     @effects[PBEffects::GemConsumed] = nil
     @effects[PBEffects::ShellTrap]   = false
+    @effects[PBEffects::ShellTrapSpecial] = false
     @battle.allBattlers.each { |b| b.pbContinualAbilityChecks }   # Trace, end primordial weathers
   end
 

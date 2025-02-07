@@ -1,7 +1,8 @@
 # List of Pokemon that don't have their sprites sunk into the water
 OVERWORLD_WATER_ABOVE = [
   :SURSKIT, :MASQUERAIN,
-  :WINGULL, :PELIPPER
+  :WINGULL, :PELIPPER,
+  :SWABLU, :ALTARIA
 ]
 
 # List of Pokemon that are lowered less into the water than normal
@@ -223,7 +224,7 @@ class OverworldPokemon
         if @terrain==0 # Grass
           valid = true if @map.terrain_tag(new_x,new_y).has_land_encounters?
         elsif @terrain==1 # Cave
-          valid = true if @map.passable?(new_x,new_y,8)
+          valid = true if @map.passableStrict?(new_x,new_y,0)
         elsif @terrain==2 # Water
           valid = true if @map.terrain_tag(new_x,new_y).can_surf_freely
         end
@@ -275,7 +276,7 @@ class OverworldPokemon
   end
 
   def away
-    @time = @lifetime - rand(16) * 2
+    @time = @lifetime - rand(16) * 2 if @time < @lifetime - 32
   end
 
 end
@@ -291,33 +292,46 @@ class SpawnArea
   attr_reader :pokemon
   attr_reader :terrain
 
-  def initialize(viewport,map,terrain,x,y)
+  def initialize(viewport, map, terrain, x, y, data = nil)
     @viewport= viewport
     @map     = map
     @terrain = terrain
     @pokemon = []
-    @tiles   = []
     @x       = x
     @y       = y
-    @width   = 1
-    @height  = 1
-    self.BFS(x,y)
-    maxX=@x
-    maxY=@y
-    for tile in @tiles
-      @x = tile[0] if @x > tile[0]
-      @y = tile[1] if @y > tile[1]
-      maxX = tile[0] if maxX < tile[0]
-      maxY = tile[1] if maxY < tile[1]
+    if data
+      @tiles = data["tiles"]
+      @width = data["width"]
+      @height = data["height"]
+    else
+      @width   = 1
+      @height  = 1
+      @tiles   = []
+      self.BFS(x,y)
+      maxX=@x
+      maxY=@y
+      for tile in @tiles
+        @x = tile[0] if @x > tile[0]
+        @y = tile[1] if @y > tile[1]
+        maxX = tile[0] if maxX < tile[0]
+        maxY = tile[1] if maxY < tile[1]
+      end
+      @width = maxX - @x
+      @height = maxY - @y
     end
-    @width = maxX - @x
-    @height = maxY - @y
     divisor = 16.0
     if terrain == -1 || terrain.can_surf
       divisor = 32.0
     end
     @max_pkmn = (@tiles.length / divisor).ceil
     @repel_active = false
+  end
+
+  def self.from_dict(viewport, map, data)
+    terrain = data["terrain"]
+    terrain = GameData::TerrainTag.get(data["terrain"]) if terrain.is_a?(Symbol)
+    area = SpawnArea.new(viewport, map, terrain, data["x"], data["y"], data)
+    return area
   end
 
   def max_pkmn
@@ -530,6 +544,10 @@ class SpawnArea
 
 end
 
+def pbMapEncounterTileFile(map_id)
+  return sprintf("Data/EncounterTiles/Map%03d.rxdata", map_id)
+end
+
 class Spriteset_Map
 
   def despawnPokemon
@@ -546,6 +564,49 @@ class Spriteset_Map
 
   def initSpawnAreas
     $PokemonEncounters.setup(@map.map_id)
+
+    return if !(
+      $PokemonEncounters.has_water_encounters? ||
+      $PokemonEncounters.has_land_encounters? ||
+      $PokemonEncounters.has_land2_encounters? ||
+      $PokemonEncounters.has_land3_encounters? ||
+      $PokemonEncounters.has_land4_encounters? ||
+      $PokemonEncounters.has_cave_encounters? ||
+      $PokemonEncounters.has_flower_encounters?
+    )
+
+    recompile = false
+    tile_file = pbMapEncounterTileFile(@map.map_id)
+    if !FileTest.exist?(tile_file)
+      recompile = true
+    else 
+      begin
+        map_edit_time = -1
+        tile_edit_time = -1
+        File.open(pbMapFile(@map.map_id)) do |file|
+          map_edit_time = file.mtime.to_i
+        end
+        File.open(tile_file) do |file|
+          tile_edit_time = file.mtime.to_i
+        end
+        if map_edit_time > tile_edit_time
+          recompile = true
+        end
+      rescue SystemCallError
+        recompile = true
+      end
+    end
+
+    if !recompile
+      data = nil
+      pbRgssOpen(tile_file, "rb") { |f| data = Marshal.load(f) }
+      @spawn_areas = data.map { |area| SpawnArea.from_dict(@@viewport1, @map, area) }
+      initialSpawns
+      return
+    end
+
+    echoln "Recompiling encounter tiles..."
+
     count=0
     for y in 1...(@map.height - 1)
       for x in 1...(@map.width - 1)
@@ -555,7 +616,7 @@ class Spriteset_Map
         end
         next if x % 2 == y % 2
         visited = false
-        for area in @spawn_areas
+        @spawn_areas.each do |area|
           if area.include?(x,y)
             visited = true
             break
@@ -615,6 +676,23 @@ class Spriteset_Map
         end
       end
     end
+
+    # Save to file
+    if $DEBUG
+      data = []
+      @spawn_areas.each do |area|
+        data.push({
+          "tiles" => area.tiles,
+          "x" => area.x,
+          "y" => area.y,
+          "width" => area.width,
+          "height" => area.height,
+          "terrain" => area.terrain.is_a?(Symbol) ? area.terrain.id : area.terrain
+        })
+      end
+      File.open(tile_file, "wb") { |f| Marshal.dump(data, f) }
+    end
+
     initialSpawns
   end
 

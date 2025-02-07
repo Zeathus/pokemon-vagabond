@@ -15,6 +15,7 @@ module PBMaps
   ScoriaDesertPass  = 245
   ScoriaCanyon      = 216
   SouthGabbroRiver  = 220
+  CentralEastSea    = 154
   
   # Areas
   Crosswoods        = 7
@@ -38,6 +39,7 @@ module PBMaps
   MtPegma1F_2       = 44
   MtPegma2F         = 45
   MtPegma3F         = 47
+  MtPegmaB1F        = 110
   MtPegmaPeak       = 48
   LakeKirrock       = 46
   MicaQuarryB1F     = 92

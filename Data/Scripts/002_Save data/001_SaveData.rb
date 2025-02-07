@@ -55,9 +55,26 @@ module SaveData
   # @param file_path [String] path of the file to save into
   # @raise [InvalidValueError] if an invalid value is being saved
   def self.save_to_file(file_path)
+    self.backup(file_path)
     validate file_path => String
     save_data = self.compile_save_hash
     File.open(file_path, "wb") { |file| Marshal.dump(save_data, file) }
+  end
+
+  def self.backup(file_path)
+    if FileTest.exist?(file_path)
+      for j in 0...5
+        i = 5 - j
+        backup_name = file_path + ".bak" + i.to_s
+        prev_file = file_path
+        if i > 1
+          prev_file += ".bak" + (i - 1).to_s
+        end
+        if FileTest.exist?(prev_file)
+          File.copy(prev_file, backup_name)
+        end
+      end
+    end
   end
 
   # Deletes the save file (and a possible .bak backup file if one exists)

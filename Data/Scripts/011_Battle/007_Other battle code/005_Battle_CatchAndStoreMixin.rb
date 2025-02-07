@@ -92,20 +92,6 @@ module Battle::CatchAndStoreMixin
             stored_box = @peer.pbStorePokemon(pbPlayer, send_pkmn)
             pbPlayer.inactive_party.delete_at(party_index)
             pbDisplayPaused(_INTL("{1} has been sent to Box \"{2}\".", send_pkmn.name, @peer.pbBoxName(stored_box)))
-            # Rearrange all remembered properties of party Pokémon
-            (party_index...party_size).each do |idx|
-              if idx < party_size - 1
-                @initialItems[0][idx] = @initialItems[0][idx + 1]
-                $game_temp.party_levels_before_battle[idx] = $game_temp.party_levels_before_battle[idx + 1]
-                $game_temp.party_critical_hits_dealt[idx] = $game_temp.party_critical_hits_dealt[idx + 1]
-                $game_temp.party_direct_damage_taken[idx] = $game_temp.party_direct_damage_taken[idx + 1]
-              else
-                @initialItems[0][idx] = nil
-                $game_temp.party_levels_before_battle[idx] = nil
-                $game_temp.party_critical_hits_dealt[idx] = nil
-                $game_temp.party_direct_damage_taken[idx] = nil
-              end
-            end
             pbPlayer.inactive_party.push(pkmn)
             pbDisplayPaused(_INTL("{1} has been added to your inactive party.", pkmn.name))
             return

@@ -132,3 +132,33 @@ def pbPulseBitmapIn(bitmap, seconds, interval=0.2, invert = false)
   bitmap.dispose
   viewport.dispose
 end
+
+EventHandlers.add(:on_leave_tile, :footsteps,
+  proc { |event, old_map, x, y|
+    if event == $game_player && old_map == $game_map.map_id && [132,135].include?($game_map.map_id)
+      for i in 0...3
+        # Regular Sand
+        if [8369,8396,8407,8406].include?($game_map.data[x, y, i])
+          tile = [8407,8406,8406,8407][$game_player.direction / 2 - 1]
+          $game_map.set_tile(x, y, i, tile)
+        # Dark Sand
+        elsif [8452,8463,8462].include?($game_map.data[x, y, i])
+          tile = [8463,8462,8462,8463][$game_player.direction / 2 - 1]
+          $game_map.set_tile(x, y, i, tile)
+        # Cliff Edge Sand
+        elsif [8361,8409,8438,8439].include?($game_map.data[x, y, i])
+          tile = [8439,8438,8438,8439][$game_player.direction / 2 - 1]
+          $game_map.set_tile(x, y, i, tile)
+        # Cliff Edge Left Corner Sand
+        elsif [8408,8412,8413].include?($game_map.data[x, y, i])
+          tile = [8413,8412,8412,8413][$game_player.direction / 2 - 1]
+          $game_map.set_tile(x, y, i, tile)
+        # Cliff Edge Right Corner Sand
+        elsif [8410,8414,8415].include?($game_map.data[x, y, i])
+          tile = [8415,8414,8414,8415][$game_player.direction / 2 - 1]
+          $game_map.set_tile(x, y, i, tile)
+        end
+      end
+    end
+  }
+)

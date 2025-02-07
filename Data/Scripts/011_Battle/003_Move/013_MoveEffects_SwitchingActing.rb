@@ -448,15 +448,15 @@ class Battle::Move::UsedAfterUserTakesPhysicalDamage < Battle::Move
   end
 
   def pbDisplayUseMessage(user)
-    super if user.tookPhysicalHit
+    super if (user.tookPhysicalHit && user.effects[PBEffects::ShellTrap]) || (user.tookSpecialHit && user.effects[PBEffects::ShellTrapSpecial])
   end
 
   def pbMoveFailed?(user, targets)
-    if !user.effects[PBEffects::ShellTrap]
+    if !user.effects[PBEffects::ShellTrap] && !user.effects[PBEffects::ShellTrapSpecial]
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
-    if !user.tookPhysicalHit
+    if !(user.tookPhysicalHit && user.effects[PBEffects::ShellTrap]) && !(user.tookSpecialHit && user.effects[PBEffects::ShellTrapSpecial])
       @battle.pbDisplay(_INTL("{1}'s shell trap didn't work!", user.pbThis))
       return true
     end

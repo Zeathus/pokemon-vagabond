@@ -764,14 +764,14 @@ def pbEndSurf(_xOffset, _yOffset)
     # Check if there is water to jump up by one y-coordinate to emulate height sideways
     if ($game_player.direction == 4 || $game_player.direction == 6) && Supplementals::HIGH_WATER_EDGES
       target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1] - 1)
-      if !target_terrain.can_surf && !target_terrain.water_edge && $game_player.passable?(target_tile[0], target_tile[1] - 1, $game_player.direction)
+      if !target_terrain.can_surf && !target_terrain.water_edge && $game_player.passable?(target_tile[0], target_tile[1] - 1, 10 - $game_player.direction)
         target_tile[1] -= 1
         high_edge = true
       end
     end
     # Make sure terrain is walkable
     target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
-    if !target_terrain.can_surf && !target_terrain.water_edge && $game_map.passable?(target_tile[0], target_tile[1], $game_player.direction)
+    if !target_terrain.can_surf && !target_terrain.water_edge && $game_map.passable?(target_tile[0], target_tile[1], 10 - $game_player.direction)
       $game_player.direction_fix = true
       $game_temp.surf_base_coords = [$game_player.x, $game_player.y]
       success = false
@@ -1052,16 +1052,16 @@ def pbWaterfall
   return false
 end
 
-EventHandlers.add(:on_player_interact, :waterfall,
-  proc {
-    terrain = $game_player.pbFacingTerrainTag
-    if terrain.waterfall
-      pbWaterfall
-    elsif terrain.waterfall_crest
-      pbMessage(_INTL("A wall of water is crashing down with a mighty roar."))
-    end
-  }
-)
+#EventHandlers.add(:on_player_interact, :waterfall,
+#  proc {
+#    terrain = $game_player.pbFacingTerrainTag
+#    if terrain.waterfall
+#      pbWaterfall
+#    elsif terrain.waterfall_crest
+#      pbMessage(_INTL("A wall of water is crashing down with a mighty roar."))
+#    end
+#  }
+#)
 
 HiddenMoveHandlers::CanUseMove.add(:WATERFALL, proc { |move, pkmn, showmsg|
   next false if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_WATERFALL, showmsg)

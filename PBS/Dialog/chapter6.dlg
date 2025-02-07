@@ -16,8 +16,8 @@
 ?> Well then... As we learned yesterday, Nekane has successfully gained emotions from Mesprit.
   /choice Can she have willpower now?
     /speaker Azelf
-    > While it is possible to grant her willpower this very moment, she has yet to come to terms with her new emotions.
-  /choice She must get used to emotions.
+    > While it is possible to grant her willpower this very moment, she has not gotten used to her new emotions.
+  /choice She's not ready.
     /speaker Azelf
     > You are correct. While it is possible to grant her willpower this very moment, she is not ready.
 ?/>

@@ -1,4 +1,4 @@
-def pbFishingGame(encounter, tutorial=false, item=false)
+def pbFishingGame(encounter, tutorial=false, item=false, skip_reward=false)
 
   $game_temp.in_menu = true
 
@@ -25,6 +25,7 @@ def pbFishingGame(encounter, tutorial=false, item=false)
       sprites["pokeicon"].x = fish_x - 24
       sprites["pokeicon"].y = 8
       sprites["pokeicon"].z = 1001
+      sprites["pokeicon"].color = Color.new(0, 0, 0)
     else
       sprites["pokeicon"] = AnimatedSprite.new(
         GameData::Species.icon_filename(encounter[0], encounter[2]),2,64,64,1)
@@ -117,12 +118,23 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     switch = false
     last_goal = fish_x
     goal = -1
-    turn_around = 0
+    next_goal = -1
+    turn_around = true
+    turn_around_next = true
     move_time = 0
     knockback = 0
     knockback_timer = 0
     player_stun = 0
     caught = false
+
+    goal = 142 + rand(231)
+    while (goal - fish_x).abs < 48
+      goal = 142 + rand(231)
+    end
+    next_goal = 142 + rand(231)
+    while (next_goal - goal).abs < 48
+      next_goal = 142 + rand(231)
+    end
 
     stun_cooldown = 0
     stun_timer = 0
@@ -197,12 +209,19 @@ def pbFishingGame(encounter, tutorial=false, item=false)
             pbSEPlay("Battle damage weak")
             stun_cooldown += 180
             pokemon_stun = 30
+            goal = fish_x
+            next_goal = 142 + rand(231)
+            while (next_goal - goal).abs < 48
+              next_goal = 142 + rand(231)
+            end
+            turn_around = true
+            turn_around_next = true
             stun_timer = 8
             switch = false
             move_time = 0
             knockback = 0
             knockback_timer = 0
-            sprites["pokeicon"].y = 0
+            sprites["pokeicon"].y = item ? 8 : 0
           end
         end
 
@@ -315,14 +334,19 @@ def pbFishingGame(encounter, tutorial=false, item=false)
       sprites["reel"].bitmap.fill_rect(
         0,4,(reel*192.0/max_hp).floor,2,reel_colors[color+1])
 
+      turn_radius = 8 + 6.0 * speed
+
       if pokemon_stun <= 0
         case behaviour
         when "normal"
           if switch
             move = speed / 1.0
-            if turn_around > 0
-              turn_around -= 1
-              move *= [0.85, 0.7, 0.55, 0.4, 0.25, 0.1, -0.1, -0.25, -0.4, -0.55, -0.7, -0.85][turn_around / 2]
+            distance_from_goal = [(fish_x - goal).abs, (fish_x - last_goal).abs].min
+            should_turn = (fish_x - goal).abs < (fish_x - last_goal).abs ? turn_around_next : turn_around
+            if should_turn && distance_from_goal < turn_radius
+              distance_ratio = distance_from_goal / turn_radius
+              move = move * distance_ratio**0.5
+              move = 0.1 if move < 0.1
             end
             if goal < fish_x
               fish_x -= move
@@ -336,14 +360,14 @@ def pbFishingGame(encounter, tutorial=false, item=false)
             move_time = 0
             switch = true
             new_goal = 142 + rand(231)
-            while (new_goal - fish_x).abs < 48
+            while (new_goal - next_goal).abs < 48
               new_goal = 142 + rand(231)
             end
-            if (goal > last_goal) != (new_goal > goal)
-              turn_around = 24
-            end
+            turn_around = turn_around_next
+            turn_around_next = (goal > next_goal) != (next_goal > new_goal)
             last_goal = goal
-            goal = new_goal
+            goal = next_goal
+            next_goal = new_goal
           end
         when "passive"
           if switch
@@ -377,9 +401,12 @@ def pbFishingGame(encounter, tutorial=false, item=false)
         when "aggressive"
           if switch
             move = speed / 1.0
-            if turn_around > 0
-              turn_around -= 1
-              move *= [0.85, 0.7, 0.55, 0.4, 0.25, 0.1, -0.1, -0.25, -0.4, -0.55, -0.7, -0.85][turn_around / 2]
+            distance_from_goal = [(fish_x - goal).abs, (fish_x - last_goal).abs].min
+            should_turn = (fish_x - goal).abs < (fish_x - last_goal).abs ? turn_around_next : turn_around
+            if should_turn && distance_from_goal < turn_radius
+              distance_ratio = distance_from_goal / turn_radius
+              move = move * distance_ratio**0.5
+              move = 0.1 if move < 0.1
             end
             if goal < fish_x
               fish_x -= move
@@ -393,14 +420,14 @@ def pbFishingGame(encounter, tutorial=false, item=false)
             move_time = 0
             switch = true
             new_goal = 142 + rand(231)
-            while (new_goal - fish_x).abs < 48
+            while (new_goal - next_goal).abs < 48
               new_goal = 142 + rand(231)
             end
-            if (goal > last_goal) != (new_goal > goal)
-              turn_around = 24
-            end
+            turn_around = turn_around_next
+            turn_around_next = (goal > next_goal) != (next_goal > new_goal)
             last_goal = goal
-            goal = new_goal
+            goal = next_goal
+            next_goal = new_goal
           end
           if knockback <= 0 && rand(100/difficulty)==1
             knockback = 5 + (5*difficulty)
@@ -495,10 +522,10 @@ def pbFishingGame(encounter, tutorial=false, item=false)
     pbFishingEnd
     if caught
       if item
-        pbItemBall(encounter)
+        pbItemBall(encounter) if !skip_reward
       else
         pbJob("Fisher").register(encounter[0])
-        WildBattle.start(encounter[0], encounter[1])
+        WildBattle.start(encounter[0], encounter[1]) if !skip_reward
         if $quests[:FISHYBUSINESS].at_step?(0)
           if pbJob("Fisher").hooked?(:MAGIKARP)
             $quests[:FISHYBUSINESS].advance
@@ -556,6 +583,7 @@ def pbFishStats
     :OVERQWIL => [2, 1500, 5, "aggressive"],
     :CORSOLA => [1, 650, 2, "passive"],
     :CARVANHA => [1, 250, 4, "aggressive"],
+    :SWAMPERT => [2, 650, 5, "aggressive"],
     :SHARPEDO => [2, 500, 8, "aggressive"],
     :WAILMER => [1, 800, 3, "normal"],
     :WAILORD => [2, 1500, 3, "normal"],
@@ -577,7 +605,7 @@ def pbFishStats
     :CLAWITZER => [2, 800, 5, "aggressive"],
     :POPPLIO => [1, 650, 3, "normal"],
     :BRIONNE => [1, 800, 6, "normal"],
-    :PRIMARINA => [2, 1500, 8, "normal"],
+    :PRIMARINA => [2, 1500, 9, "normal"],
     :WIMPOD => [1, 350, 2, "sudden"],
     :CLOBBOPUS => [1, 500, 2, "aggressive"],
     :GRAPPLOCT => [2, 1000, 4, "aggressive"],

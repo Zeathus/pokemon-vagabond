@@ -224,6 +224,36 @@ def pbBossRuinFire
   pbBoss.add(t)
 end
 
+# --- Magcargo ---
+def pbBossRuinRock
+  pbBossRuinGeneral
+  pbModifier.hpmult = 2.0 + $PokemonSystem.difficulty
+  pbModifier.moves = [
+    :MUDSHOT,
+    :INCINERATE,
+    :POWERGEM,
+    :CLEARSMOG
+  ]
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.item = :WHITEHERB
+    pbModifier.moves[0] = :EARTHPOWER
+    pbModifier.moves[2] = :LAVAPLUME
+  end
+  pbModifier.ability = :MAGMAARMOR
+
+  # Uses Shell Smash every time it is hit by a move
+
+  t = BossTrigger.new(:Damaged)
+  t.effect(BossEff_Message.new(t, "The attack smashed Magcargo's shell!"))
+  t.effect(BossEff_ChangeStatQuick.new(t, [:DEFENSE, :SPECIAL_DEFENSE], -1))
+  if $PokemonSystem.difficulty >= 1
+    t.effect(BossEff_ChangeStatQuick.new(t, [:ATTACK, :SPECIAL_ATTACK, :SPEED], 2))
+  else
+    t.effect(BossEff_ChangeStatQuick.new(t, [:ATTACK, :SPECIAL_ATTACK, :SPEED], 1))
+  end
+  pbBoss.add(t)
+end
+
 # --- Corsola ---
 def pbBossRuinWater
   pbBossRuinGeneral
@@ -494,6 +524,142 @@ def pbBossTropius
   t.requires(BossReq_Interval.new(t, 3, 2))
   t.effect(BossEff_Ability.new(t, :CHLOROPHYLL))
   pbBoss.add(t)
+end
+
+def pbBossTurtonator
+  pbBossGeneral
+  pbModifier.moves = [
+    :DRAGONBREATH,
+    :FLAMEBURST,
+    :BLOCK,
+    :SMOG
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.moves[2] = :FIRESPIN
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.moves[1] = :LAVAPLUME
+  end
+  pbModifier.hpmult = 3.0 + $PokemonSystem.difficulty
+  pbModifier.ability = :SHELLARMOR
+  pbModifier.gender = 0
+  pbModifier.nature = :MODEST
+  pbModifier.item = :CHARCOAL if $PokemonSystem.difficulty >= 2
+
+  # Every other turn uses Shell Trap when hit by a physical or special move respectively
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Message.new(t, "Turtonator readies a trap for Physical moves."))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:Hit)
+  t.requires(BossReq_Interval.new(t, 2))
+  t.effect(BossEff_Message.new(t, "Turtonator's trap was activated!"))
+  t.requires(BossReq_Eval.new(t, "move.physical?"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::ShellTrap] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.tookPhysicalHit = true"))
+  t.effect(BossEff_UseMove.new(t, :SHELLTRAP))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:Hit)
+  t.requires(BossReq_Interval.new(t, 2, 1))
+  t.effect(BossEff_Message.new(t, "Turtonator's trap was activated!"))
+  t.requires(BossReq_Eval.new(t, "move.special?"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::ShellTrapSpecial] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.tookSpecialHit = true"))
+  t.effect(BossEff_UseMove.new(t, :SHELLTRAP))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Interval.new(t, 2, 1))
+  t.effect(BossEff_Message.new(t, "Turtonator readies a trap for Physical moves."))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Interval.new(t, 2))
+  t.effect(BossEff_Message.new(t, "Turtonator readies a trap for Special moves."))
+  pbBoss.add(t)
+end
+
+def pbBossLapras
+  pbBossGeneral
+  pbModifier.moves = [
+    :GROWL,
+    :POWDERSNOW,
+    :WATERPULSE,
+    :MIST
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.moves[1] = :AURORABEAM
+    pbModifier.moves[2] = :BRINE
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.moves[0] = :HYPERVOICE
+    pbModifier.moves[3] = :SURF
+    pbModifier.item = :SHELLBELL
+  end
+  pbModifier.hpmult = 2.0 + $PokemonSystem.difficulty
+  pbModifier.ability = :HYDRATION
+  pbModifier.gender = 1
+  pbModifier.nature = :CALM
+
+  # Uses rest every other turn
+  # Every single turn in hard mode
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Weather.new(t, :Rain, true))
+  if $PokemonSystem.difficulty < 2
+    t.requires(BossReq_Interval.new(t, 2))
+  end
+  t.effect(BossEff_Message.new(t, "Lapras using the rain to recover!"))
+  t.effect(BossEff_UseMove.new(t, :REST))
+  t.effect(BossEff_Eval.new(t, "if triggerer.abilityActive?; Battle::AbilityEffects.triggerEndOfRoundHealing(triggerer.ability, triggerer, battle); end"))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Weather.new(t, :Rain, false))
+  if $PokemonSystem.difficulty < 2
+    t.requires(BossReq_Interval.new(t, 2))
+  end
+  t.effect(BossEff_Message.new(t, "Lapras is trying to recover without the rain."))
+  t.effect(BossEff_UseMove.new(t, :LIFEDEW))
+  pbBoss.add(t)
+end
+
+def pbBossSwampert
+  pbBossGeneral
+  pbModifier.moves = [
+    :ROCKSLIDE,
+    :EARTHQUAKE,
+    :LIQUIDATION,
+    :TSUNAMI
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.item = :LIFEORB
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.moves[0] = :STONEEDGE
+  end
+  pbModifier.hpmult = 6.0 + $PokemonSystem.difficulty * 2
+  pbModifier.ability = :TORRENT
+  pbModifier.gender = 0
+  pbModifier.nature = :ADAMANT
+
+  # When hit by a super effective moves, uses Tsunami if it is still a Water-type
+
+  t = BossTrigger.new(:Damaged)
+  t.requires(BossReq_Eval.new(t, "triggerer.pbHasType?(:WATER)"))
+  t.requires(BossReq_Eval.new(t, "triggerer.damageState.typeMod > 1.1"))
+  t.effect(BossEff_Message.new(t, "Swampert is trying to avoid further super effective damage!"))
+  t.effect(BossEff_UseMove.new(t, :TSUNAMI))
+  pbBoss.add(t)
+
+  if $PokemonSystem.difficulty >= 2
+    t = BossTrigger.new(:EndOfTurn)
+    t.effect(BossEff_Message.new(t, "Swampert is bracing itself!"))
+    t.effect(BossEff_UseMove.new(t, :BULKUP))
+    pbBoss.add(t)
+  end
 end
 
 def pbPuzzleBossDeino

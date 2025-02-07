@@ -698,7 +698,7 @@ def pbItemBall(item, quantity = 1, switch = "A")
   show_description = !$bag.seen_item?(item)
   if $bag.add(item, quantity)   # If item can be picked up
     event_id = nil
-    event_id = @event_id if $game_map.events[@event_id].character_name == "Object ball"
+    event_id = @event_id if @event_id && $game_map.events[@event_id].character_name == "Object ball"
     if event_id
       pbSEPlay("Battle recall", 100)
       $game_self_switches[[$game_map.map_id, event_id, switch]] = true

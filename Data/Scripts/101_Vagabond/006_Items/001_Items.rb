@@ -49,7 +49,7 @@ end
 
 ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
     notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
-    if !$game_player.pbFacingTerrainTag.can_fish || (!$PokemonGlobal.surfing && !notCliff)
+    if !$game_player.pbFacingTerrainTag.can_fish #|| (!$PokemonGlobal.surfing && !notCliff)
         pbMessage(_INTL("Can't use that here."))
         next 0
     end
@@ -58,15 +58,45 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
         next 0
     end
     pbFishingBegin
-    facingEvent = $game_player.pbFacingEvent
-    if facingEvent && facingEvent.name.include?("Item") &&
-        !$game_self_switches[[$game_map.map_id,facingEvent.id,"A"]]
+    facingEvent = $game_player.pbFacingEvent(true)
+    if facingEvent && facingEvent.name.include?("Item") && !$game_self_switches[[$game_map.map_id,facingEvent.id,"A"]]
         item = facingEvent.name + ""
         item.gsub!("Item(",":")
         item.gsub!(")","")
         item = eval(item)
         if pbFishingGame(item,false,true)
             $game_self_switches[[$game_map.map_id,facingEvent.id,"A"]] = true
+            $game_map.need_refresh = true
+        end
+    echoln facingEvent.name if facingEvent
+    elsif facingEvent && facingEvent.name.include?("WhenFished") && !$game_self_switches[[$game_map.map_id,facingEvent.id,"B"]]
+        command = facingEvent.name + ""
+        command.gsub!("WhenFished(","")
+        command.gsub!(")","")
+        command = command.split(",")
+        pokemon = nil
+        item = nil
+        # Before fishing
+        case command[0]
+        when "Swampert"
+            $game_self_switches[[$game_map.map_id,facingEvent.id,"A"]] = true
+            $game_map.need_refresh = true
+            pokemon = [command[0].upcase.to_sym, command[1], 0]
+        end
+        if pokemon
+            if pbFishingGame(pokemon, false, false, true)
+                # Landing the hook
+                case command[0]
+                when "Swampert"
+                    $game_self_switches[[$game_map.map_id,facingEvent.id,"B"]] = true
+                    $game_map.need_refresh = true
+                end
+            end
+        end
+        # After fishing
+        case command[0]
+        when "Swampert"
+            $game_self_switches[[$game_map.map_id,facingEvent.id,"A"]] = false
             $game_map.need_refresh = true
         end
     else

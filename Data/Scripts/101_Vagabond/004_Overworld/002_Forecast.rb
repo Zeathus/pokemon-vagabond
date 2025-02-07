@@ -20,12 +20,12 @@ end
 
 def pbGenerateSingleForecast
   areas = [
-    [[[10.5, 5],[7, 5]],[:BrecciaTrail,:BrecciaCity,:BrecciaUndergrowth,:BrecciaOutlook]],
-    [[[14, 7],[14, 9.5]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
-    [[[21, 6]],[:MicaDistrict,:FeldsparDistrict,:MtPegmaHillside,:MtPegmaPeak]],
-    [[[17.5, 5]],[:QuartzPassing]],
-    [[[23, 15]],[:CanjonValley]],
-    [[[27, 13]],[:ScoriaDesert]]
+    [[[10, 6.5],[7.5, 6.5]],[:BrecciaTrail,:BrecciaCity,:BrecciaUndergrowth,:BrecciaOutlook]],
+    [[[12.5, 8],[12.5, 11.5]],[:LazuliRiver,:LazuliDistrict,:LapisDistrict]],
+    [[[17.5, 5.5], [14.5, 5.5]],[:QuartzPassing,:FeldsparDistrict]],
+    [[[20, 8]],[:MicaDistrict,:MtPegmaHillside]],
+    #[[[20.5, 14]],[:CanjonValley]],
+    [[[24, 14.5]],[:ScoriaDesert]]
   ]
 
   dry_areas = [
@@ -146,6 +146,7 @@ def pbUpdateWeather
         if pbGetTimeNow.hour < 18
           new_weather = :None
         end
+        new_weather = :None
       end
     end
     if new_weather != $game_screen.weather_type

@@ -128,6 +128,8 @@ module PBEffects
   Nihility            = 123
   GigatonHammer       = 124
   GigatonHammerTime   = 125
+  ShellTrapSpecial    = 126
+  Tsunami             = 127
 
   #=============================================================================
   # These effects apply to a battler position
