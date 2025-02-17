@@ -413,6 +413,7 @@ class Battle::Battler
       :SHIELDSDOWN,
       :STANCECHANGE,
       :ZENMODE,
+      :EVERLASTING,
       # Appearance-changing abilities
       :ILLUSION,
       :IMPOSTER,

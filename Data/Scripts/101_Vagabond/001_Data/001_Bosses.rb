@@ -16,9 +16,9 @@ def pbBossGeneral
   pbPokemonBossBGM
 end
 
-def pbBossRuinGeneral
+def pbBossRuinGeneral(rematch = false)
   if $PokemonSystem.level_sync?
-    setBattleRule("levelsync", pbRuinBossLevel)
+    setBattleRule("levelsync", pbRuinBossLevel(rematch ? -1 : 0))
   end
   pbBossGeneral
   setBattleRule("disablepokeballs")
@@ -54,8 +54,8 @@ def pbBossGiratina1
 end
 
 # --- Dunsparce ---
-def pbBossRuinNormal
-  pbBossRuinGeneral
+def pbBossRuinNormal(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.optimize
   pbModifier.hpmult = 3.0
   pbModifier.moves = [
@@ -89,8 +89,8 @@ def pbBossRuinNormal
 end
 
 # --- Primeape ---
-def pbBossRuinFighting
-  pbBossRuinGeneral
+def pbBossRuinFighting(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 2.0
 
   # Start: Gets +4 Attack/Speed
@@ -117,8 +117,8 @@ def pbBossRuinFighting
 end
 
 # --- Skarmory ---
-def pbBossRuinSteel
-  pbBossRuinGeneral
+def pbBossRuinSteel(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 3.0
   pbModifier.moves = [
     :SPIKES,
@@ -145,8 +145,8 @@ def pbBossRuinSteel
 end
 
 # --- Spiritomb ---
-def pbBossRuinGhost
-  pbBossRuinGeneral
+def pbBossRuinGhost(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 3.0
   pbModifier.hpmult += ($game_variables[RUINS_DONE] / 4.0).floor
   pbModifier.moves = [
@@ -192,8 +192,8 @@ def pbBossRuinGhost
 end
 
 # --- Darmanitan ---
-def pbBossRuinFire
-  pbBossRuinGeneral
+def pbBossRuinFire(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 1.0
   pbModifier.moves = [
     :BULKUP
@@ -225,8 +225,8 @@ def pbBossRuinFire
 end
 
 # --- Magcargo ---
-def pbBossRuinRock
-  pbBossRuinGeneral
+def pbBossRuinRock(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 2.0 + $PokemonSystem.difficulty
   pbModifier.moves = [
     :MUDSHOT,
@@ -255,8 +255,8 @@ def pbBossRuinRock
 end
 
 # --- Corsola ---
-def pbBossRuinWater
-  pbBossRuinGeneral
+def pbBossRuinWater(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = 3.0
   pbModifier.moves = [
     :RECOVER,
@@ -288,8 +288,8 @@ def pbBossRuinWater
 end
 
 # --- Shiinotic ---
-def pbBossRuinGrass
-  pbBossRuinGeneral
+def pbBossRuinGrass(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = ($PokemonSystem.difficulty > 1) ? 3.0 : 2.0
   pbModifier.moves = [
     :STRENGTHSAP,
@@ -315,8 +315,8 @@ def pbBossRuinGrass
 end
 
 # --- Krookodile ---
-def pbBossRuinGround
-  pbBossRuinGeneral
+def pbBossRuinGround(rematch = false)
+  pbBossRuinGeneral(rematch)
   pbModifier.hpmult = ($PokemonSystem.difficulty > 1) ? 3.0 : 2.0
   pbModifier.moves = [
     ($PokemonSystem.difficulty > 0) ? :EARTHQUAKE : :BULLDOZE,

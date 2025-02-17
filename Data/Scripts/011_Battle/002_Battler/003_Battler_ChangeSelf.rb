@@ -72,7 +72,7 @@ class Battle::Battler
     PBDebug.log("[Pokémon fainted] #{pbThis} (#{@index})") if !showMessage
     @battle.scene.pbFaintBattler(self)
     @battle.pbSetDefeated(self) if opposes?
-    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0)
+    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0 && isSpecies?(:REVINJA))
       pbInitEffects(false)
       # Reset status
       self.status      = :NONE
@@ -88,7 +88,7 @@ class Battle::Battler
     @pokemon.makeUnmega if mega?
     @pokemon.makeUnprimal if primal?
     # Do other things
-    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0)
+    if !(hasActiveAbility?(:EVERLASTING, true) && @form == 0 && isSpecies?(:REVINJA))
       @battle.pbClearChoice(@index)   # Reset choice
     end
     pbOwnSide.effects[PBEffects::LastRoundFainted] = @battle.turnCount
@@ -99,7 +99,7 @@ class Battle::Battler
     end
     # Check other battlers' abilities that trigger upon a battler fainting
     pbAbilitiesOnFainting
-    if hasActiveAbility?(:EVERLASTING, true) && @form == 0
+    if hasActiveAbility?(:EVERLASTING, true) && @form == 0 && isSpecies?(:REVINJA)
       @hp = 1
       @pokemon.hp = 1
       pbChangeForm(1, nil)

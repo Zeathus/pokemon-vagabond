@@ -1504,7 +1504,12 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_own", @spriteBaseX + 206, @spriteBaseY + 6]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_own", @spriteBaseX + 204, @spriteBaseY + 4]])
+  end
+  
+  def draw_uncatchable_icon
+    return if !@battler.opposes?(0)   # Draw for foe Pokémon only
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_uncatchable", @spriteBaseX + 204, @spriteBaseY + 4]])
   end
   
   def refresh
@@ -1517,7 +1522,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     draw_status
     draw_shiny_icon
     draw_special_form_icon
-    draw_owned_icon
+    @battler.battle.disablePokeBalls ? draw_uncatchable_icon : draw_owned_icon
     refresh_hp
     refreshExp
   end
