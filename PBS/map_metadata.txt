@@ -474,6 +474,11 @@ SnapEdges = true
 Name = Feldspar Gym 4F
 MapPosition = 0,18,6
 #-------------------------------
+[106]   # Scoria Valley
+MapPosition = 0,20,17
+SnapEdges = true
+MapSize = 2,1111
+#-------------------------------
 [107]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
@@ -673,7 +678,8 @@ MapPosition = 0,7,5
 SnapEdges = true
 MapSize = 1,1
 #-------------------------------
-[163]   # Central East Sea
+[163]   # East Sea
+Name = Central East Sea
 Outdoor = true
 ShowArea = true
 MapPosition = 0,15,16
