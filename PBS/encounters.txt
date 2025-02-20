@@ -468,6 +468,19 @@ FishingRod
     40,KRABBY,20,25
     10,KINGLER,25,30
 #-------------------------------
+[106] # Scoria Valley
+Land2,21
+    25,DARUMAKA,22,27
+    20,BRAMBLIN,22,27
+    20,NACLI,22,27
+    15,SCRAGGY,22,27
+    15,RHYHORN,22,27
+    5,SKARMORY,22,27
+FishingRod
+    50,MAGIKARP,15,25
+    40,KRABBY,20,25
+    10,KINGLER,25,30
+#-------------------------------
 [245] # Scoria Desert Passage
 Cave,5
     30,ROGGENROLA,20,25

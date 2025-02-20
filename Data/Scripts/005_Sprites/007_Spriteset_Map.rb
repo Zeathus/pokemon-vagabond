@@ -474,4 +474,208 @@ class Spriteset_Map
     end
     return nil
   end
+
+  def createPNG
+    echoln "map start"
+    tileset = $scene.map_renderer.tilesets[@map.tileset_name]
+    tile = DummyTile.new()
+    tile.filename = @map.tileset_name
+    echoln @map.tileset_name
+    blank = Color.new(0, 0, 0, 0)
+    map_bitmap = Bitmap.new(@map.width * 32, @map.height * 32)
+
+    # Map out what tiles have water
+    for my in 0...(@map.height)
+      for mx in 0...(@map.width)
+        for i in 0...3
+          next if @map.data[mx, my, i] < 384 # auto tile
+          $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+          map_bitmap.blt(mx * 32, my * 32, tileset, tile.src_rect)
+        end
+      end
+    end
+
+    map_bitmap.to_file("test_map.png")
+  end
+
+  def createHeightMap
+    echoln "map start"
+    tileset = $scene.map_renderer.tilesets[@map.tileset_name]
+    tile = DummyTile.new()
+    tile.filename = @map.tileset_name
+    echoln @map.tileset_name
+    blank = Color.new(0, 0, 0, 0)
+    tile_height_bitmap = AnimatedBitmap.new("Graphics/Testing/HeightMaps/" + @map.tileset_name).deanimate
+    tile_height_map = TilemapRenderer::TilesetWrapper.wrapTileset(tile_height_bitmap)
+    map_bitmap = Bitmap.new(@map.width * 32, @map.height * 32)
+
+    heights = []
+    for i in 0...3
+      heights.push([])
+      for y in 0...(@map.height * 16)
+        heights[i].push([0] * (@map.width * 16))
+      end
+    end
+
+    updates = 0
+    # Map out in columns
+    for i in 0...3
+      echoln _INTL("layer {1}/{2}", i + 1, 3)
+      for x in 0...(@map.width * 16)
+        height = 0
+        for oy in 1..(@map.height * 16)
+          if (x + oy * @map.width) % 3000 == 0
+            Graphics.update
+            Input.update
+            updates += 1
+          end
+          y = @map.height * 16 - oy
+          mx = (x / 16).floor
+          my = (y / 16).floor
+          if @map.data[mx, my, i] >= 384 # not auto tile
+            $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+            tx = x % 16
+            ty = y % 16
+            pixel = tile_height_map.get_pixel(tile.src_rect.x + tx * 2, tile.src_rect.y + ty * 2)
+            if pixel.alpha == 255
+              height += pixel.red
+            elsif pixel.alpha == 254
+              height -= pixel.red
+            end
+            height = 0 if height < 0
+            height = height.floor
+          end
+          next if y + height >= @map.height * 16
+          if height > heights[i][y][x]
+            heights[i][y][x] = height
+          end
+        end
+      end
+    end
+
+    for y in 0...(@map.height * 16)
+      for x in 0...(@map.width * 16)
+        height = heights[0][y][x] + heights[1][y][x] + heights[2][y][x]
+        map_bitmap.fill_rect(x * 2, y * 2, 2, 2, Color.new(height * 4, 0, 0, 255))
+      end
+    end
+
+    echoln _INTL("Update seconds: {1}", updates / 60)
+
+    map_bitmap.to_file("test_height_map.png")
+
+    tile_height_map.dispose
+    
+    return
+
+    # Create the entire water map
+    time_now = System.uptime
+    echoln "water start"
+    water = pbGetAutotile("water_dynamic")
+    for my in 0...(@map.height)
+      echoln _INTL("water {1}/{2}", my, @map.height)
+      for mx in 0...(@map.width)
+        if (mx + my * @map.width) % 100 == 0
+          Graphics.update
+          Input.update
+        end
+        for i in 0...3
+          $scene.map_renderer.tilesets.set_src_rect(tile, @map.data[mx, my, i])
+          for ty in 0...16
+            for tx in 0...16
+              pixel = tileset.get_pixel(tile.src_rect.x + tx * 2, tile.src_rect.y + ty * 2)
+              is_water = false
+              if pixel.alpha == 1
+                is_water = true
+                if pixel.green == 255 && pixel.blue == 255
+                  for frame in 0...64
+                    layer1 = water.get_pixel((mx * 16 + tx + frame / 2) % 32, (my * 16 + ty - frame / 2) % 32)
+                    layer2 = water.get_pixel((mx * 16 + tx - frame / 2) % 32, (my * 16 + ty + frame / 2) % 32 + 32)
+                    water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty,
+                      Color.new(
+                        layer1.red + (layer2.red * layer2.alpha / 255 / 4),
+                        layer1.green + (layer2.green * layer2.alpha / 255 / 4),
+                        layer1.blue + (layer2.blue * layer2.alpha / 255 / 4),
+                        160))
+                  end
+                else
+                  for frame in 0...64
+                    layer1 = water.get_pixel((mx * 16 + tx + frame / 2) % 32, (my * 16 + ty - frame / 2) % 32)
+                    layer1.alpha = 192
+                    water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty, layer1)
+                  end
+                end
+              elsif is_water && pixel.alpha > 200
+                is_water = false
+                for frame in 0...32
+                  water_bitmaps[frame].set_pixel(mx * 16 + tx, my * 16 + ty, blank)
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    echoln (System.uptime - time_now).to_s
+
+    time_now = System.uptime
+    echoln "ripples start"
+    # Create river ripples
+    for my in 0...(@map.height)
+      echoln _INTL("ripples {1}/{2}", my, @map.height)
+      for mx in 0...(@map.width)
+        if (mx + my * @map.width) % 100 == 0
+          Graphics.update
+          Input.update
+        end
+        flow = river_map[my][mx]
+        river_speed = 2.5
+        if flow[0] != 0 || flow[1] != 0
+          for ty in -8...24
+            real_y = my * 16 + ty
+            next if real_y < 0 || real_y >= @map.height * 16
+            for tx in -8...24
+              real_x = mx * 16 + tx
+              next if real_x < 0 || real_x >= @map.width * 16
+              for frame in 0...64
+                pixel = water_bitmaps[(frame + i * 16) % 64].get_pixel(real_x, real_y)
+                if pixel.alpha > 10
+                  opacity = 0.06
+                  dist = [-tx, -ty, tx - 16, tx - 16].max
+                  if dist > 0
+                    opacity = opacity * (8 - dist) / 8
+                  end
+                  water_pixel = water.get_pixel((real_x - frame * (flow[0] * river_speed).round) % 32, (real_y - frame * (flow[1] * river_speed).round) % 32 + 32)
+                  water_bitmaps[frame].set_pixel(real_x, real_y,
+                    Color.new(
+                      pixel.red + (water_pixel.red * water_pixel.alpha / 255 * opacity).floor,
+                      pixel.green + (water_pixel.green * water_pixel.alpha / 255 * opacity).floor,
+                      pixel.blue + (water_pixel.blue * water_pixel.alpha / 255 * opacity).floor,
+                      192))
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    echoln (System.uptime - time_now).to_s
+
+    echoln "Saving to file"
+    filename = "Map_water_test.dat"
+    full_bitmap = Bitmap.new(@map.width * 16 * 8, @map.height * 16 * 8)
+    for i in 0...64
+      full_bitmap.blt(@map.width * 16 * (i % 8), @map.height * 16 * (i / 8), water_bitmaps[i], Rect.new(0, 0, @map.width * 16, @map.height * 16))
+      water_bitmaps[i].dispose
+    end
+    full_bitmap.to_file("test_file.png")
+
+    @water_sprite = WaterSprite.new(@@viewport1, full_bitmap, @map)
+    @water_sprite.z = 1
+    @water_sprite.zoom_x = 2
+    @water_sprite.zoom_y = 2
+    water.dispose
+
+    echoln "watermap end"
+  end
 end

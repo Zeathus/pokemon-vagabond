@@ -475,9 +475,12 @@ Name = Feldspar Gym 4F
 MapPosition = 0,18,6
 #-------------------------------
 [106]   # Scoria Valley
-MapPosition = 0,20,17
+Name = Scoria Valley
+Outdoor = true
+ShowArea = true
+MapPosition = 0,20,16
 SnapEdges = true
-MapSize = 2,1111
+MapSize = 2,111111
 #-------------------------------
 [107]   # Nekane's Mind
 Name = Nekane's Mind
@@ -684,7 +687,7 @@ Outdoor = true
 ShowArea = true
 MapPosition = 0,15,16
 SnapEdges = true
-MapSize = 4,1111
+MapSize = 5,1111111111
 #-------------------------------
 [166]   # Breccia Ruins
 Name = Breccia Ruins
