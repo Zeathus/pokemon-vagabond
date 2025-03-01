@@ -30,27 +30,27 @@
 
     // Enable F1 to open the keybinding menu.
     //
-    // "enableSettings": true,
+    "enableSettings": false,
 
     // The names of each input, as seen in the F1 keybinding menu. The names
     // have no other use.
     //
     "bindingNames": {
-      "c": "Use",
-      "b": "Back",
-      "a": "Action",
-      "x": "JumpUp",
-      "y": "JumpDown",
-      "z": "Special",
-      "l": "(unused)",
-      "r": "(unused)"
+      "c": "Confirm",
+      "b": "Cancel",
+      "a": "Menu",
+      "x": "Special",
+      "y": "Page Up",
+      "z": "Page Down",
+      "l": "Page Left",
+      "r": "Page Right"
     },
 
     // The name of this game's save folder. If undefined, the save folder's name
     // will be the "Game Title" as defined in RPG Maker XP. It should not
     // contain any accented characters.
     //
-    // "dataPathApp": "Pokemon Essentials v21",
+    "dataPathApp": "Pokemon Vagabond",
 
     // If defined, the game's save folder goes into a folder with this name (in
     // C:\Users\USERNAME\AppData\Roaming). If undefined, the game's save folder
@@ -151,9 +151,9 @@
     // refresh rate cannot be determined, this option is force-disabled. This
     // option may be force-disabled at build time.
     //
-    "syncToRefreshrate": true,
+    // "syncToRefreshrate": true,
 
     // The game's frame rate, if "syncToRefreshrate" is false.
     //
-    // "fixedFramerate": 60,
+    "fixedFramerate": 60,
 }

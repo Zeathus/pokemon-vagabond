@@ -551,7 +551,7 @@ module InputCode
       dir = System.data_directory
       delim = dir[dir.length - 1]
       dir = dir[0...(dir.length - 1)]
-      dir = dir[0..(dir.rindex("/") || dir.rindex("\\"))] + "mkxp-z" + delim
+      dir = dir[0..(dir.rindex("/") || dir.rindex("\\"))] + "Pokemon Vagabond" + delim
       keybinds_file = _INTL("{1}{2}",
         dir, "keybindings.mkxp1")
       File.open(keybinds_file, "r") do |file|
@@ -568,12 +568,89 @@ module InputCode
   end
 end
 
+module Input
+
+  unless defined?(_press?)
+    class << Input
+      alias _press? press?
+    end
+  end
+
+  unless defined?(_trigger?)
+    class << Input
+      alias _trigger? trigger?
+    end
+  end
+
+  unless defined?(_repeat?)
+    class << Input
+      alias _repeat? repeat?
+    end
+  end
+
+  def self.press?(input)
+    input = $Keybinds.convert(input)
+    return _press?(input)
+  end
+
+  def self.trigger?(input)
+    input = $Keybinds.convert(input)
+    return _trigger?(input)
+  end
+
+  def self.repeat?(input)
+    input = $Keybinds.convert(input)
+    return _repeat?(input)
+  end
+
+end
+
 class KeybindList
   def initialize
     @keybinds = InputCode.read_keybinds
   end
 
+  def convert(input, ab_swap = false)
+    control_style = $PokemonSystem ? $PokemonSystem.control_style : 0
+    if control_style == 0
+      # Keyboard specific (Rotate A, S, D for better controller defaults)
+      case input
+      when Input::JUMPUP
+        input = Input::JUMPDOWN
+      when Input::JUMPDOWN
+        input = Input::SPECIAL
+      when Input::SPECIAL
+        input = Input::JUMPUP
+      end
+    else
+      # Controller specific (Make L and R be page up/down)
+      case input
+      when Input::JUMPUP
+        input = Input::L
+      when Input::JUMPDOWN
+        input = Input::R
+      when Input::SPECIAL # Shift like on keyboard
+        input = Input::JUMPUP
+      end
+      if control_style == 1 && !ab_swap
+        # Nintendo Specific (swap A/B and X/Y)
+        case input
+        when Input::USE
+          input = Input::BACK
+        when Input::BACK
+          input = Input::USE
+        when Input::ACTION
+          input = Input::JUMPUP 
+        when Input::JUMPUP
+          input = Input::ACTION
+        end
+      end
+    end
+    return input
+  end
+
   def key(input)
+    input = convert(input, true)
     keybind = nil
     for k in @keybinds
       if k.target == input
@@ -591,19 +668,33 @@ class KeybindList
   end
 
   def rect(input)
+    input = convert(input, true)
     keybind = nil
+    src_type = 0
+    control_style = $PokemonSystem ? $PokemonSystem.control_style : 0
     for k in @keybinds
       if k.target == input
-        if k.src_type == 1
+        if control_style == 0 && k.src_type == 1
           if !keybind || k.input_code < keybind.input_code
             keybind = k
+            src_type = k.src_type
           end
+        elsif control_style > 0 && k.src_type == 2
+          if !keybind || k.input_code < keybind.input_code
+            keybind = k
+            src_type = k.src_type
+          end
+        elsif control_style > 0 && k.src_type == 3
+          # echoln _INTL("axis {1}", k.input_code)
+        elsif control_style > 0 && k.src_type == 4
+          # echoln _INTL("jhat {1}", k.input_code)
         end
       end
     end
     if keybind
       id = keybind.input_code
-      return Rect.new((id%16)*28,(id/16).floor*28,28,28)
+      y_offset = src_type <= 1 ? 0 : (28 * (16 + control_style * 2))
+      return Rect.new((id%16)*28,y_offset+(id/16).floor*28,28,28)
     end
     return Rect.new(0, 0, 28, 28)
   end

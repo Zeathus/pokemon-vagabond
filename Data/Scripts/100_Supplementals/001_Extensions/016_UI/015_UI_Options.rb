@@ -4,6 +4,7 @@ class PokemonSystem
   attr_accessor :auto_surf
   attr_accessor :bag_mode
   attr_accessor :showexpgain
+  attr_accessor :control_style
 
   alias sup_initialize initialize
 
@@ -15,6 +16,7 @@ class PokemonSystem
     @bag_mode        = 0
     @showexpgain     = 0
     @force_sync      = 1
+    @control_style   = 0
   end
 
   def level_sync?
@@ -43,6 +45,14 @@ class PokemonSystem
 
   def force_sync=(value)
     @force_sync = value
+  end
+
+  def control_style
+    return @control_style || 0
+  end
+
+  def control_style=(value)
+    @control_style = value
   end
 end
 
@@ -109,12 +119,22 @@ MenuHandlers.add(:options_menu, :lock_difficulty, {
   "disabled"    => proc { $PokemonSystem.lock_difficulty }
 })
 
+MenuHandlers.add(:options_menu, :control_style, {
+  "name"        => _INTL("Control Style"),
+  "order"       => 990,
+  "type"        => EnumOption,
+  "parameters"  => [_INTL("Keyboard"), _INTL("Nintendo"), _INTL("Xbox"), _INTL("Playstation")],
+  "description" => _INTL("Changes the button prompt style.\n\"Nintendo\" makes A/B and X/Y correct."),
+  "get_proc"    => proc { next $PokemonSystem.control_style },
+  "set_proc"    => proc { |value, _scene| $PokemonSystem.control_style = value }
+})
+
 MenuHandlers.add(:options_menu, :controls, {
   "name"        => _INTL("Controls"),
   "order"       => 1000,
   "type"        => ButtonOption,
   "parameters"  => nil,
-  "description" => _INTL("Change the current controls."),
+  "description" => _INTL("Change individual controls."),
   "get_proc"    => nil,
   "set_proc"    => proc { |value, _scene|
     System.show_settings
