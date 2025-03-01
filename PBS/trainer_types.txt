@@ -520,9 +520,9 @@ BaseMoney = 200
 SkillLevel = 200
 BattleBGM = Battle! VS Gym Leader (Fighting Spirit)
 #------------------
-[LEADER_4]
+[LEADER_Garnet]
 Name = Gym Leader
-Gender = Male
+Gender = Female
 BaseMoney = 200
 SkillLevel = 200
 BattleBGM = Battle! VS Gym Leader (Fighting Spirit)

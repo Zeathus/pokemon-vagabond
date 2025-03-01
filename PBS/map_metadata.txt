@@ -959,3 +959,9 @@ SnapEdges = true
 [252]   # D.A.O. HQ B2F
 Name = D.A.O. HQ B2F
 MapPosition = 0,22,11
+#-------------------------------
+[165]   # Scoria Gym 2F
+Name = Scoria Gym 2F
+MapPosition = 0,20,14
+SnapEdges = true
+MapSize = 1,1

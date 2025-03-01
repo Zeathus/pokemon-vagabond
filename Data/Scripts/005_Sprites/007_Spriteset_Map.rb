@@ -510,10 +510,13 @@ class Spriteset_Map
     map_bitmap = Bitmap.new(@map.width * 32, @map.height * 32)
 
     heights = []
+    offsets = []
     for i in 0...3
       heights.push([])
+      offsets.push([])
       for y in 0...(@map.height * 16)
         heights[i].push([0] * (@map.width * 16))
+        offsets[i].push([0] * (@map.width * 16))
       end
     end
 
@@ -523,8 +526,10 @@ class Spriteset_Map
       echoln _INTL("layer {1}/{2}", i + 1, 3)
       for x in 0...(@map.width * 16)
         height = 0
+        ground_levels = []
+        ground_level = 0
         for oy in 1..(@map.height * 16)
-          if (x + oy * @map.width) % 3000 == 0
+          if (x + oy * @map.width) % 10000 == 0
             Graphics.update
             Input.update
             updates += 1
@@ -537,18 +542,29 @@ class Spriteset_Map
             tx = x % 16
             ty = y % 16
             pixel = tile_height_map.get_pixel(tile.src_rect.x + tx * 2, tile.src_rect.y + ty * 2)
-            if pixel.alpha == 255
-              height += pixel.red
-            elsif pixel.alpha == 254
-              height -= pixel.red
+            alpha = pixel.alpha.to_i
+            if alpha > 0
+              is_up = (alpha & 1 == 1)
+              set_ground_level = (alpha & 2 == 0)
+              if set_ground_level
+                ground_levels.push(height)
+                ground_level = height
+              end
+              if is_up
+                height += pixel.red
+              else
+                height -= pixel.red
+                ground_level = [ground_level, height].min
+                while ground_levels.length > 0 && ground_levels[ground_levels.length - 1] > height
+                  ground_levels.pop
+                end
+              end
             end
-            height = 0 if height < 0
             height = height.floor
           end
-          next if y + height >= @map.height * 16
-          if height > heights[i][y][x]
-            heights[i][y][x] = height
-          end
+          # next if y + height >= @map.height * 16
+          heights[i][y][x] = height
+          offsets[i][y][x] = ground_level #(ground_levels.length < 1 ? 0 : ground_levels[ground_levels.length - 1])
         end
       end
     end
@@ -556,7 +572,8 @@ class Spriteset_Map
     for y in 0...(@map.height * 16)
       for x in 0...(@map.width * 16)
         height = heights[0][y][x] + heights[1][y][x] + heights[2][y][x]
-        map_bitmap.fill_rect(x * 2, y * 2, 2, 2, Color.new(height * 4, 0, 0, 255))
+        offset = offsets[0][y][x] + offsets[1][y][x] + offsets[2][y][x]
+        map_bitmap.fill_rect(x * 2, y * 2, 2, 2, Color.new(height, 0, offset, 255))
       end
     end
 

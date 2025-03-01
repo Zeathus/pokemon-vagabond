@@ -39,7 +39,6 @@ def pbRecipes(id)
       ["Silver Gauntlets",[:METALCOAT,1,:BABIRIBERRY,3,:METALPOWDER,1],[:SILVERGAUNTLETS,1]],
       ["Rocky Helmet",[:YELLOWSHARD,7,:METALCOAT,1],[:ROCKYHELMET,1]],
       ["Sturdy Helmet",[:GREENSHARD,7,:METALCOAT,1],[:STURDYHELMET,1]],
-      ["Heavy Stone",[:HARDSTONE,1,:IRONBALL,1],[:HEAVYSTONE,1]],
     # ["Hazard Armor",[:BLUESHARD,9,:METALPOWDER,1,:QUICKPOWDER,1],[:HAZARDARMOR,1]],
       ["Assault Vest",[:REDSHARD,9,:METALPOWDER,1,:PROTECTOR,1],[:ASSAULTVEST,1]],
       ["Full Incense",[:LAGGINGTAIL,1,:IRONBALL,1],[:FULLINCENSE,1]],
@@ -65,10 +64,21 @@ def pbRecipes(id)
       ["Sea Incense",[:MYSTICWATER,2,:MISTYSEED,2,:WATERSTONE,1],[:SEAINCENSE,1]],
       ["Wave Incense",[:MYSTICWATER,2,:MISTYSEED,2,:WATERSTONE,1],[:WAVEINCENSE,1]]
     ]
+  when "garnet"
+    trades = [
+      ["Eviolite",[],[:EVIOLITE,1]],
+      ["Light Clay",[],[:LIGHTCLAY,1]],
+      ["Sandstone Slab",[],[:SANDSTONESLAB,1]],
+      ["Rock Head",[],[:ROCKHEAD,1]],
+      ["Groundwire",[],[:GROUNDWIRE,1]],
+      ["Terracotta Dumbell",[],[:TERACOTTADUMBELL,1]],
+      ["Rock Incense",[:HARDSTONE,2],[:ROCKINCENSE,1]],
+      ["Lax Incense",[],[:LAXINCENSE,1]],
+      ["Protector",[],[:PROTECTOR,1]]
+    ]
   end
 
   # Spiritual Crafter should create Odd Incense and Pure Incense
-  # Ceramist should create Rock Incense and Lax Incense
 
   #if pbQuest(:UnitedCraftmanship).status>=1
   #  if id=="pent"

@@ -2401,17 +2401,17 @@ Pokemon = ROSERADE,70
 #--------------
 [BGANG,B Gang]
 LoseText = They're too strong!
-Pokemon = HOUNDOUR,32
-Pokemon = POOCHYENA,33
-Pokemon = PANCHAM,32
-Pokemon = GOLBAT,33
+Pokemon = TRUBBISH,32
+Pokemon = PAWNIARD,33
+Pokemon = SCRAGGY,32
+Pokemon = BRAMBLIN,33
 Pokemon = SANDILE,32
-Pokemon = DRILBUR,33
+Pokemon = TRAPINCH,33
 #--------------
 [ROUGHNECK,B] # Nekane's Mind Battle
 Pokemon = GARBODOR,36
     Ability = STENCH
     Moves = SLUDGEBOMB,TOXIC,BODYPRESS,CURSE
-Pokemon = MIGHTYENA,36
+Pokemon = SCRAFTY,36
     Ability = INTIMIDATE
-    Moves = CRUNCH,FIREFANG,ICEFANG,THUNDERFANG
+    Moves = BRICKBREAK,PAYBACK,LOWKICK,FACADE

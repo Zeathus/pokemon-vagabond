@@ -304,7 +304,14 @@ Step5 = Find Steve in the first layer quarry zone.
 Step6 = Report back to Raphael and the supervisor.
 Done = You rescued Steve and successfully fixed the ore shortage.
 
-# [1004] Scoria Gym
+[SCORIAGYM]
+Name = Scoria Gym
+Type = Main
+Exp = 60
+Description = None
+Step1 = None
+Step2 = None
+Done = None
 
 # [1005] Gabbro Gym
 

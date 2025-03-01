@@ -95,3 +95,194 @@
 /speaker J
 > K isn't with you, {pbPlayerPseudonym}?\nI bet he's off on a cool mission.
 > Well, a friend of K is a friend of J!
+
+[SCORIA_GYM_POT_SUN]
+?> The pot depicts a sun.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_SUN,1]
+?> Do you want to place the sun pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_SUN,2]
+?> Do you want to swap this pot for the sun pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_MOON]
+?> The pot depicts a moon.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_MOON,1]
+?> Do you want to place the moon pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_MOON,2]
+?> Do you want to swap this pot for the moon pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_FISH]
+?> The pot depicts a fish.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_FISH,1]
+?> Do you want to place the fish pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_FISH,2]
+?> Do you want to swap this pot for the fish pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_DRAGON]
+?> The pot depicts a dragon.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_DRAGON,1]
+?> Do you want to place the dragon pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_DRAGON,2]
+?> Do you want to swap this pot for the dragon pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_JEWEL]
+?> The pot depicts a jewel.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_JEWEL,1]
+?> Do you want to place the jewel pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_JEWEL,2]
+?> Do you want to swap this pot for the jewel pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_HEART]
+?> The pot depicts a heart.\nPick it up?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_HEART,1]
+?> Do you want to place the heart pot here?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_HEART,2]
+?> Do you want to swap this pot for the heart pot?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[SCORIA_GYM_POT_NONE]
+> You can put a pot here.
+
+[SCORIA_GYM_POT_CARRIED]
+> You can only carry one pot at a time.
+
+[SCORIA_GYM_POT_DONE]
+> You have completed the puzzle!\n(Which means you cannot pick up the pot)
+
+[SCORIA_GYM_CLOSED]
+> The trapdoor is locked shut.\nYou must complete the puzzle to open it.
+
+[SCORIA_GYM_CLOSED,1]
+> The trapdoor is locked shut.\nThe puzzle does not look to be ready.
+
+[SCORIA_GYM_HINT_1,0]
+/textpos center
+> The sun and moon are far apart.
+
+[SCORIA_GYM_HINT_1,1]
+/textpos center
+> Jewels shine next to the moon.
+
+[SCORIA_GYM_HINT_1,2]
+/textpos center
+> The sun rises from the east.
+
+[SCORIA_GYM_HINT_1,3]
+/textpos center
+> The dragon roars in broad daylight.
+
+[SCORIA_GYM_QUEST_HINT,0]
+/textpos center
+> The gym leader makes pottery.
+
+[SCORIA_GYM_QUEST_HINT,1]
+/textpos center
+> The gym leader's house is up high.
+
+[SCORIA_GYM_QUEST_HINT,2]
+/textpos center
+> The gym leader lives in Scoria City.
+
+[SCORIA_GYM_QUEST_HINT,3]
+/textpos center
+> One must go outside Scoria City to reach the gym leader's house.
