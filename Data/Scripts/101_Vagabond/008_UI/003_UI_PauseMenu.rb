@@ -484,6 +484,10 @@ class PauseScreen
     @viewport.visible = false
   end
 
+  def refresh
+    @sprites["controls"].refresh
+  end
+
   def update
     for i in 0...9
       if i != 4
@@ -925,6 +929,7 @@ def pbPauseMenu
           scene = PokemonOption_Scene.new
           screen = PokemonOptionScreen.new(scene)
           screen.pbStartScreen
+          $pause_screen.refresh
           pbUpdateSceneMap
         }
       end
