@@ -689,6 +689,12 @@ MapPosition = 0,15,16
 SnapEdges = true
 MapSize = 5,1111111111
 #-------------------------------
+[165]   # Scoria Gym 2F
+Name = Scoria Gym 2F
+MapPosition = 0,20,14
+SnapEdges = true
+MapSize = 1,1
+#-------------------------------
 [166]   # Breccia Ruins
 Name = Breccia Ruins
 MapPosition = 0,7,7
@@ -757,6 +763,9 @@ Name = Sanctuary
 Name = ?DarkVoid?
 ShowArea = true
 #-------------------------------
+[196]   # Scoria Gym 1F
+MapPosition = 0,20,14
+#-------------------------------
 [198]   # Scoria City
 Name = Scoria City
 Outdoor = true
@@ -777,6 +786,13 @@ MapPosition = 0,17,5
 [201]   # Pegma Stadium
 Name = Pegma Stadium
 MapPosition = 0,17,5
+#-------------------------------
+[202]   # Scoria House
+MapPosition = 0,20,14
+MapSize = 2,1111
+#-------------------------------
+[203]   # Scoria Gym B1F
+MapPosition = 0,20,15
 #-------------------------------
 [208]   # Evergone Mangrove
 Name = Evergone Mangrove
@@ -959,9 +975,3 @@ SnapEdges = true
 [252]   # D.A.O. HQ B2F
 Name = D.A.O. HQ B2F
 MapPosition = 0,22,11
-#-------------------------------
-[165]   # Scoria Gym 2F
-Name = Scoria Gym 2F
-MapPosition = 0,20,14
-SnapEdges = true
-MapSize = 1,1
