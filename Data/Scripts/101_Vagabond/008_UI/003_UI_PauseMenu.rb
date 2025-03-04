@@ -517,7 +517,7 @@ class PauseScreen
     focus_quest_priority = -999
     $quests.each { |quest|
       if quest.type == PBQuestType::Main && quest.active?
-        priority = MAIN_QUEST_DISPLAY_PRIORITY.index(quest.quest_id)
+        priority = MAIN_QUEST_DISPLAY_PRIORITY.index(quest.quest_id) || -1
         if priority > focus_quest_priority
           focus_quest = quest
           focus_quest_priority = priority

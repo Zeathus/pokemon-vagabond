@@ -6874,9 +6874,9 @@ Price = 500
 Flags = Fling_80
 Description = The pendant depicts a fairy as a symbol of joy and life. Some avid collectors have a few more Joy Pendants than necessary. The holder takes 20% less damage from Fairy-type moves.
 #-------------------------------
-[TERRACOTTADUMBBELL]
-Name = Terracotta Dumbbell
-NamePlural = Terracotta Dumbbells
+[BRICKDUMBBELL]
+Name = Brick Dumbbell
+NamePlural = Brick Dumbbells
 Pocket = 4
 Price = 500
 Flags = Fling_80

@@ -151,6 +151,12 @@ def pbItemHint(item)
     return text_mining
   when :LEAFSTONE, :FIRESTONE, :THUNDERSTONE, :WATERSTONE, :ICYSTONE
     return pbFormatHint(text_mining, text_mall)
+  when :SUNSTONE, :MOONSTONE
+    return text_mining
+  when :EVERSTONE
+    return text_mining
+  when :FROSTORB, :FLAMEORB
+    return text_scoria_market
   end
   return nil
 end

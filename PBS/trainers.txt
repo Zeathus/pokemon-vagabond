@@ -2415,3 +2415,32 @@ Pokemon = GARBODOR,36
 Pokemon = SCRAFTY,36
     Ability = INTIMIDATE
     Moves = BRICKBREAK,PAYBACK,LOWKICK,FACADE
+#--------------
+[ROUGHNECK,U,0] # Scoria Gym Quest
+LoseText = What a pain...
+Pokemon = PAWNIARD,17
+Pokemon = PAWNIARD,17
+#--------------
+[ROUGHNECK,U,1] # Scoria Gym Quest
+LoseText = What a pain...
+Pokemon = PAWNIARD,27
+Pokemon = PAWNIARD,27
+Pokemon = BISHARP,27
+#--------------
+[ROUGHNECK,U,2] # Scoria Gym Quest
+LoseText = What a pain...
+Pokemon = PAWNIARD,37
+Pokemon = PAWNIARD,37
+Pokemon = BISHARP,37
+#--------------
+[ROUGHNECK,U,3] # Scoria Gym Quest
+LoseText = What a pain...
+Pokemon = PAWNIARD,47
+Pokemon = PAWNIARD,47
+Pokemon = BISHARP,47
+#--------------
+[ROUGHNECK,U,4] # Scoria Gym Quest
+LoseText = What a pain...
+Pokemon = PAWNIARD,57
+Pokemon = PAWNIARD,57
+Pokemon = BISHARP,57

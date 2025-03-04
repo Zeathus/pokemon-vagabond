@@ -605,6 +605,7 @@ def pbBossLapras
 
   # Uses rest every other turn
   # Every single turn in hard mode
+  # Uses Life Dew instead if not raining
 
   t = BossTrigger.new(:EndOfTurn)
   t.requires(BossReq_Weather.new(t, :Rain, true))

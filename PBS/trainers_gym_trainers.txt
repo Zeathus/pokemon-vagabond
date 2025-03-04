@@ -379,3 +379,126 @@ Pokemon = NINETALES,59
 Pokemon = TALONFLAME,59
     AbilityIndex = 0
 #--------------
+[BACKPACKER_M,Todd] # Scoria Gym
+LoseText = There are five clues here, will they be enough?
+Pokemon = HIPPOPOTAS,18
+    AbilityIndex = 0
+Pokemon = NIDORINO,18
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_M,Todd,1] # Scoria Gym
+LoseText = There are five clues here, will they be enough?
+Pokemon = HIPPOPOTAS,28
+    AbilityIndex = 0
+Pokemon = NIDORINO,28
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_M,Todd,2] # Scoria Gym
+LoseText = There are five clues here, will they be enough?
+Pokemon = HIPPOWDON,38
+    AbilityIndex = 0
+Pokemon = NIDORINO,38
+    AbilityIndex = 0
+Pokemon = RHYHORN,38
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_M,Todd,3] # Scoria Gym
+LoseText = There are five clues here, will they be enough?
+Pokemon = HIPPOWDON,48
+    AbilityIndex = 0
+Pokemon = NIDOKING,48
+    AbilityIndex = 0
+Pokemon = RHYDON,48
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_M,Todd,4] # Scoria Gym
+LoseText = There are five clues here, will they be enough?
+Pokemon = HIPPOWDON,58
+    AbilityIndex = 0
+Pokemon = NIDOKING,58
+    AbilityIndex = 0
+Pokemon = RHYPERIOR,58
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_F,Becky] # Scoria Gym
+LoseText = Some of the pots have the same symbol, so they can be interchanged.
+Pokemon = TRAPINCH,18
+    AbilityIndex = 0
+Pokemon = NIDORINA,18
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_F,Becky,1] # Scoria Gym
+LoseText = Some of the pots have the same symbol, so they can be interchanged.
+Pokemon = TRAPINCH,28
+    AbilityIndex = 0
+Pokemon = NIDORINA,28
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_F,Becky,2] # Scoria Gym
+LoseText = Some of the pots have the same symbol, so they can be interchanged.
+Pokemon = VIBRAVA,38
+    AbilityIndex = 0
+Pokemon = NIDORINA,38
+    AbilityIndex = 0
+Pokemon = SANDSLASH,38
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_F,Becky,3] # Scoria Gym
+LoseText = Some of the pots have the same symbol, so they can be interchanged.
+Pokemon = FLYGON,48
+    AbilityIndex = 0
+Pokemon = NIDOQUEEN,48
+    AbilityIndex = 0
+Pokemon = SANDSLASH,48
+    AbilityIndex = 0
+#--------------
+[BACKPACKER_F,Becky,4] # Scoria Gym
+LoseText = Some of the pots have the same symbol, so they can be interchanged.
+Pokemon = FLYGON,58
+    AbilityIndex = 0
+Pokemon = NIDOQUEEN,58
+    AbilityIndex = 0
+Pokemon = SANDSLASH,58
+    AbilityIndex = 0
+#--------------
+[PAINTER,Edward] # Scoria Gym
+LoseText = I taught Garnet how to make patterns for her pots. She's gotten very talented.
+Pokemon = GOLETT,18
+    AbilityIndex = 0
+Pokemon = BALTOY,18
+    AbilityIndex = 0
+#--------------
+[PAINTER,Edward,1] # Scoria Gym
+LoseText = I taught Garnet how to make patterns for her pots. She's gotten very talented.
+Pokemon = GOLETT,28
+    AbilityIndex = 0
+Pokemon = BALTOY,28
+    AbilityIndex = 0
+#--------------
+[PAINTER,Edward,2] # Scoria Gym
+LoseText = I taught Garnet how to make patterns for her pots. She's gotten very talented.
+Pokemon = GOLETT,38
+    AbilityIndex = 0
+Pokemon = CLAYDOL,38
+    AbilityIndex = 0
+Pokemon = RHYHORN,38
+    AbilityIndex = 0
+#--------------
+[PAINTER,Edward,3] # Scoria Gym
+LoseText = I taught Garnet how to make patterns for her pots. She's gotten very talented.
+Pokemon = GOLURK,48
+    AbilityIndex = 0
+Pokemon = CLAYDOL,48
+    AbilityIndex = 0
+Pokemon = RHYDON,48
+    AbilityIndex = 0
+#--------------
+[PAINTER,Edward,4] # Scoria Gym
+LoseText = I taught Garnet how to make patterns for her pots. She's gotten very talented.
+Pokemon = GOLURK,58
+    AbilityIndex = 0
+Pokemon = CLAYDOL,58
+    AbilityIndex = 0
+Pokemon = RHYPERIOR,58
+    AbilityIndex = 0
+#--------------

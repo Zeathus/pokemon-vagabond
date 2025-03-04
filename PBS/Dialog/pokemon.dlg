@@ -77,3 +77,8 @@
 /speaker Chimecho
 /cry CHIMECHO 100 100
 > Rrreaaaan!
+
+[POKEMON_PAWNIARD]
+/speaker Pawniard
+/cry PAWNIARD 100 100
+> Pawwi!

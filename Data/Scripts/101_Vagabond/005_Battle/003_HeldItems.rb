@@ -59,7 +59,7 @@ Battle::ItemEffects::DamageCalcFromTarget.add(:JOYPENDANT,
   }
 )
 
-Battle::ItemEffects::DamageCalcFromTarget.add(:TERRACOTTADUMBBELL,
+Battle::ItemEffects::DamageCalcFromTarget.add(:BRICKDUMBBELL,
   proc { |item, user, target, move, mults, baseDmg, type|
     mults[:final_damage_multiplier] *= 0.8 if type == :FIGHTING
   }

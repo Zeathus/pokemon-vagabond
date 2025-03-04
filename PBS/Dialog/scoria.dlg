@@ -96,6 +96,9 @@
 > K isn't with you, {pbPlayerPseudonym}?\nI bet he's off on a cool mission.
 > Well, a friend of K is a friend of J!
 
+[SCORIA_FIREPLACE]
+> There are pieces of hardened clay in the fire.
+
 [SCORIA_GYM_POT_SUN]
 ?> The pot depicts a sun.\nPick it up?
   /choice Yes
@@ -271,6 +274,26 @@
 /textpos center
 > The dragon roars in broad daylight.
 
+[SCORIA_GYM_HINT_2,0]
+/textpos center
+> The fish got separated when escaping the dragon.
+
+[SCORIA_GYM_HINT_2,1]
+/textpos center
+> The dragon collects treasure.
+
+[SCORIA_GYM_HINT_2,2]
+/textpos center
+> The jewel behind the moond is unseen by the dragon.
+
+[SCORIA_GYM_HINT_2,3]
+/textpos center
+> Both fish are to the right of jewels.
+
+[SCORIA_GYM_HINT_2,4]
+/textpos center
+> The moon rose from the east, but has started to set.
+
 [SCORIA_GYM_QUEST_HINT,0]
 /textpos center
 > The gym leader makes pottery.
@@ -286,3 +309,164 @@
 [SCORIA_GYM_QUEST_HINT,3]
 /textpos center
 > One must go outside Scoria City to reach the gym leader's house.
+
+[SCORIA_GYM_QUEST,0]
+/textpos center
+> I'm looking for rascals in Scoria City.\nYou can likely find me by the oasis.
+> Whew, being a gym leader sure gives some tiring duties around town!\nIt leaves no time for hobbies!
+> ...Why did I write that on the sign?\nForce of habit.\n- Garnet
+
+[SCORIA_GYM_QUEST,1]
+/speaker Garnet
+?> Hey! Did you see the sign in my house?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    > Ah, never mind then.
+    /return false
+?/>
+
+[SCORIA_GYM_QUEST,2]
+/speaker Garnet
+> Fantastic! Then you must want to challenge my gym, which by extension means that you might want to help me!
+> A group of Pawniard have been stealing from the market recently.
+> Though, Pawniard aren't native to Scoria. So they must have trainers hiding about.
+> I'm looking for those trainers, but the Pawniard might also be hiding.
+> If you could take a crack at finding them, that would be fantastic.\nI believe there are four in total.
+
+[SCORIA_GYM_QUEST,3]
+/speaker Garnet
+> I'm looking for the Pawniard's trainers.
+> If you could take a crack at finding the Pawniard, that would be fantastic.\nI believe there are four in total.
+
+[SCORIA_GYM_QUEST,4]
+/speaker Garnet
+> Good find! I'll watch over it while you keep searching.
+
+[SCORIA_GYM_QUEST,5]
+/speaker Garnet
+> Nice catch! You're coming with me li'l guy.
+
+[SCORIA_GYM_QUEST,6]
+/speaker Garnet
+> Hiding by my pots? Very sneaky.\nI'll take care of it from here.
+
+[SCORIA_GYM_QUEST,7]
+/speaker Garnet
+> Quite the daredevil, hiding by the cliff.\nI'll keep an eye on it.
+
+[SCORIA_GYM_QUEST,8]
+/speaker Garnet
+> That should be all of them.\nNow where are those trainers...
+
+[SCORIA_GYM_QUEST,9]
+/speaker Q
+> Those Pawniard don't belong to you.
+
+[SCORIA_GYM_QUEST,10]
+/speaker Garnet
+> Keep your Pokémon away from our market!
+/speaker U
+> Why pay when we can simply get it for free?
+/speaker Q
+> Exactly, you are not worth our money.
+
+[SCORIA_GYM_QUEST,11]
+/speaker Garnet
+> Looks like we have to fight. I'll take on this one, and you take the other!
+
+[SCORIA_GYM_QUEST,12]
+/speaker Q
+> Good grief... If that's how you wanna be.
+/speaker U
+> Fine, we'll stay away (for now), but you haven't seen the last of us!
+
+[SCORIA_GYM_QUEST,13]
+/speaker Garnet
+> That's that dealt with...
+> You made this whole ordeal much smoother than it could've been. Thanks!
+> Hmm... I know how I can repay the favor. Please come with me.
+
+[SCORIA_GYM_QUEST,14]
+/speaker Garnet
+> Welcome to my little workshop!\nThough I guess you already visited.
+> Here I make pots and other ceramics.
+> If you come visit, I'll gladly make you some useful items if you have the materials.
+> I'll also have the gym ready for you.\nI won't go easy on you just 'cause you helped me!
+
+[SCORIA_GARNET]
+/speaker Garnet
+> Hey! Want me to make you something?
+
+[PEGMA_GYM_GARNET,0]
+/speaker Garnet
+> You did a fantastic job solving the riddles to get here.
+?> I won't go easy on you, so you'd better not go easy on me either.\nAre you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /dialog PEGMA_GYM_GARNET 2
+        /return false
+?/>
+
+[PEGMA_GYM_GARNET,1]
+/speaker Garnet
+?> I won't go easy on you, so you'd better not go easy on me either.\nAre you ready?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /dialog PEGMA_GYM_GARNET 2
+        /return false
+?/>
+
+[PEGMA_GYM_GARNET,2]
+/speaker Garnet
+> Got other duties? I'll be waiting.
+
+[PEGMA_GYM_GARNET,3]
+/speaker Garnet
+> You really didn't disappoint. That was a fantastic battle!
+> As a sign of your strength, I give you the [R]Ceramic Badge[/]!
+
+[PEGMA_GYM_GARNET,4]
+> \ts[5]<PLAYER> got the [R]Ceramic Badge[/]!\wtnp[60]
+/speaker Garnet
+> \ts[1]This is also for you.
+
+[PEGMA_GYM_GARNET,5]
+/speaker Garnet
+> That TM contains Bulldoze. It will hit every Pokémon on the field and lower their speed.
+> I'll be back better next time we fight!
+
+[PEGMA_GYM_GARNET,6]
+/speaker Garnet
+> I'll be back better next time we fight!
+
+[SCORIA_GYM_B1F_GARNET]
+/speaker Garnet
+/portrait 0
+> Can you mold yourself a victory?
+
+[SCORIA_GYM_1F_TODD,0]
+/speaker Todd
+> You'll have to defeat me if you want these pots!
+
+[SCORIA_GYM_1F_TODD,1]
+/speaker Todd
+> There are five clues here, will they be enough?
+
+[SCORIA_GYM_1F_BECKY,0]
+/speaker Becky
+> Are you figuring out the order yet?
+
+[SCORIA_GYM_1F_BECKY,1]
+/speaker Becky
+> Some of the pots have the same symbol, so they can be interchanged.
+
+[SCORIA_GYM_1F_EDWARD,0]
+/speaker Edward
+> The pots here are quite nicely crafted, wouldn't you agree?
+
+[SCORIA_GYM_1F_EDWARD,1]
+/speaker Edward
+> I taught Garnet how to make patterns for her pots. She's gotten very talented.

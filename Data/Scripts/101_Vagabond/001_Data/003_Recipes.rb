@@ -66,15 +66,15 @@ def pbRecipes(id)
     ]
   when "garnet"
     trades = [
-      ["Eviolite",[],[:EVIOLITE,1]],
-      ["Light Clay",[],[:LIGHTCLAY,1]],
-      ["Sandstone Slab",[],[:SANDSTONESLAB,1]],
-      ["Rock Head",[],[:ROCKHEAD,1]],
-      ["Groundwire",[],[:GROUNDWIRE,1]],
-      ["Terracotta Dumbell",[],[:TERACOTTADUMBELL,1]],
-      ["Rock Incense",[:HARDSTONE,2],[:ROCKINCENSE,1]],
-      ["Lax Incense",[],[:LAXINCENSE,1]],
-      ["Protector",[],[:PROTECTOR,1]]
+      ["Eviolite",[:EVERSTONE,1,:SUNSTONE,1,:MOONSTONE,1],[:EVIOLITE,1]],
+      ["Light Clay",[:FROSTORB,1,:FLAMEORB,1],[:LIGHTCLAY,1]],
+      ["Sandstone Slab",[:SOFTSAND,1,:SHUCABERRY,3,:SMOOTHROCK,1],[:SANDSTONESLAB,1]],
+      ["Rock Head",[:HARDSTONE,1,:CHARTIBERRY,3,:EVERSTONE,1],[:ROCKHEAD,1]],
+      ["Groundwire",[:MAGNET,1,:WACANBERRY,3,:YELLOWSHARD,2],[:GROUNDWIRE,1]],
+      ["Brick Dumbbell",[:BLACKBELT,1,:CHOPLEBERRY,3,:REDSHARD,2],[:BRICKDUMBBELL,1]],
+      ["Rock Incense",[:HARDSTONE,2,:EVERSTONE,2],[:ROCKINCENSE,1]],
+      ["Lax Incense",[:BRIGHTPOWDER,2],[:LAXINCENSE,1]],
+      ["Protector",[:HARDSTONE,1,:IRONBALL,1,:REDSHARD,2],[:PROTECTOR,1]]
     ]
   end
 

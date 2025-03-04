@@ -308,10 +308,11 @@ Done = You rescued Steve and successfully fixed the ore shortage.
 Name = Scoria Gym
 Type = Main
 Exp = 60
-Description = None
-Step1 = None
-Step2 = None
-Done = None
+Description = The Scoria City gym leader has other duties. Help her to make the gym available!
+Step1 = Find the gym leader. The sign in her house said she is around the oasis.
+Step2 = Help Garnet find the four Pawniard hiding around Scoria City.
+Step3 = Defeat the Roughnecks that appear after finding all Pawniard.
+Done = You helped Garnet stop the Pawniard stealing from the market!
 
 # [1005] Gabbro Gym
 
