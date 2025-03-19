@@ -26,6 +26,19 @@ def pbTalk(text, msgwindows = nil)
   msgwindows.dispose if create_window
 end
 
+def pbSpeech(name, expression="neutral", phrase=nil)
+  if phrase.nil?
+    phrase = name
+    name = nil
+  end
+  msgwindows = TalkMessageWindows.new
+  msgwindows.focused.portrait.set(name, expression)
+  msgwindows.display(phrase)
+  msgwindows.dispose
+  Graphics.update
+  Input.update
+end
+
 def pbShout(text, msgwindows = nil)
   create_window = msgwindows.nil?
   msgwindows = TalkMessageWindows.new if create_window

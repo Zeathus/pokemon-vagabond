@@ -468,6 +468,11 @@ class SpawnArea
         end
       end
       @pokemon.push(pkmn)
+      if initial
+        30.times do
+          pkmn.update(false)
+        end
+      end
     end
   end
   
@@ -625,10 +630,12 @@ class Spriteset_Map
         if !visited
           tag = @map.terrain_tag(x,y,true)
           if tag.can_surf_freely && $PokemonEncounters.has_water_encounters?
-            count+=1
-            area = SpawnArea.new(@@viewport1,@map,tag,x,y)
-            if area.tiles.length > 3
-              @spawn_areas.push(area)
+            if !($game_map.events.any? { |id, event| event.x == x && event.y == y })
+              count+=1
+              area = SpawnArea.new(@@viewport1,@map,-1,x,y)
+              if area.tiles.length > 6
+                @spawn_areas.push(area)
+              end
             end
           elsif $PokemonEncounters.has_cave_encounters? &&
               @map.passable?(x,y,2) &&

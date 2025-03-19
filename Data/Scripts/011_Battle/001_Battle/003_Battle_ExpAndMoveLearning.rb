@@ -47,12 +47,34 @@ class Battle
       end
 
       # Calculate EV and Exp gains for the participants
-      if numPartic>0
-        # Gain EVs and Exp for participants
-        eachInTeam(0,0) do |pkmn,i|
-          next if !pkmn.able?
-          next unless b.participants.include?(i)
-          pbGainEVsOne(i,b)
+      if Supplementals::NO_EV_GAIN
+        if numPartic > 0 || expShare.length > 0 || expAll
+          # Gain EVs and Exp for participants
+          eachInTeam(0, 0) do |pkmn, i|
+            next if !pkmn.able?
+            next unless b.participants.include?(i) || expShare.include?(i)
+            pbGainEVsOne(i, b)
+            pbGainExpOne(i, b, numPartic, expShare, expAll, !pkmn.shadowPokemon?)
+          end
+          # Gain EVs and Exp for all other Pokémon because of Exp All
+          if expAll
+            showMessage = true
+            eachInTeam(0, 0) do |pkmn, i|
+              next if !pkmn.able?
+              next if b.participants.include?(i) || expShare.include?(i)
+              pbDisplayPaused(_INTL("Your other Pokémon also gained Exp. Points!")) if showMessage
+              showMessage = false
+              pbGainEVsOne(i, b)
+              pbGainExpOne(i, b, numPartic, expShare, expAll, false)
+            end
+          end
+        end
+      else
+        if numPartic > 0
+          eachInTeam(0,0) do |pkmn,i|
+            next unless b.participants.include?(i)
+            pbGainEVsOne(i,b)
+          end
         end
       end
       b.participants = []

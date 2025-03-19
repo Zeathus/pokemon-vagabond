@@ -175,7 +175,7 @@ class Battle
         faintedStart.each { |f| fainted.push(f) }
 
         # If the first opposing pokemon has affinity boosted any partners
-        affinityboost = [false, false, false, false, false, false] # Keep
+        affinityboost = [false, false, false, false, false, false]
 
         # Simulate each battler using their moves in the correct order
         queue_pos = -1
@@ -811,10 +811,10 @@ class Battle
             for k in 0...4
               m = battler.moves[k]
               if pbCanChooseMove?(i, k, false)
-                if m.function_code == "0ED" # Baton Pass
+                if m.function_code == "SwitchOutUserPassOnEffects" # Baton Pass
                   passmove = k
                   break
-                elsif m.function_code == "0EE" # U-turn / Volt Switch
+                elsif m.function_code == "SwitchOutUserDamagingMove" # U-turn / Volt Switch
                   # Avoid being redirected and not switching
                   stopped = false
                   eachBattler do |b|
@@ -835,7 +835,7 @@ class Battle
                       passdamage = damage
                     end
                   end
-                elsif m.function_code == "151" # Parting Shot
+                elsif m.function_code == "LowerTargetAtkSpAtk1SwitchOutUser" # Parting Shot
                   passmove = k
                   break
                 end

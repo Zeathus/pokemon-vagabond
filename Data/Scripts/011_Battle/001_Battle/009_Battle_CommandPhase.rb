@@ -185,8 +185,8 @@ class Battle
         @megaEvolution[side][i] = -1 if megaEvo >= 0
       end
     end
-    # Choose actions for the round (player first, then AI)
-    pbCommandPhaseLoop(false)   # AI chooses their actions  
+    # Choose actions for the round (AI starts as thread, then Player goes)
+    pbCommandPhaseLoop(false)   # AI chooses their actions
     pbCommandPhaseLoop(true)    # Player chooses their actions
     @battleAI.pbThreadJoin
     if @decision != 0   # Battle ended, stop choosing actions

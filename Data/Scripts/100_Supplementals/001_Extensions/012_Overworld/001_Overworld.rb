@@ -30,7 +30,7 @@ EventHandlers.add(:on_enter_map, :map_update,
   }
 )
 
-# Show grass rustle animation
+# Check for overhangs above player
 EventHandlers.add(:on_step_taken, :overhang_check,
   proc { |event|
     next if !$scene.is_a?(Scene_Map)

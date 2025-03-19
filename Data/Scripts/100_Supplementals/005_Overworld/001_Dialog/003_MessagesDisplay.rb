@@ -1249,7 +1249,10 @@ class TalkMessageWindows
 
   def dispose
     @msgwindows.each { |w| w.dispose }
+    @control_skip.dispose
+    @control_next.dispose
     @control_log.dispose
+    @control_auto.dispose
     @viewport.dispose
   end
 

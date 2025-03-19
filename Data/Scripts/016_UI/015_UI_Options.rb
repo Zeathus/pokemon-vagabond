@@ -221,8 +221,8 @@ class Window_PokemonOption < Window_DrawableCommand
         ivalue = 0
         @options[index].values.each do |value|
           pbDrawShadowText(self.contents, xpos, rect.y, optionwidth, rect.height, value,
-                           (ivalue == self[index]) ? SEL_VALUE_BASE_COLOR : (@options[index].disabled? ? DISABLED_BASE_COLOR : self.baseColor),
-                           (ivalue == self[index]) ? SEL_VALUE_SHADOW_COLOR : (@options[index].disabled? ? DISABLED_SHADOW_COLOR : self.shadowColor))
+            (ivalue == self[index]) ? SEL_VALUE_BASE_COLOR : (@options[index].disabled? ? DISABLED_BASE_COLOR : self.baseColor),
+            (ivalue == self[index]) ? SEL_VALUE_SHADOW_COLOR : (@options[index].disabled? ? DISABLED_SHADOW_COLOR : self.shadowColor))
           xpos += self.contents.text_size(value).width
           xpos += spacing
           ivalue += 1
