@@ -90,7 +90,10 @@ class Battle
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
   attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
+  attr_accessor :levelSync        # If the player's level should be scaled down
   attr_accessor :playerUseAI      # Whether the player should be AI controlled
+  attr_accessor :noItems          # Whether the Player can access the Bag
+  attr_accessor :keepBGM          # If the BGM kept playing from before battle, and should do so after
   attr_accessor :predictingDamage
 
   def pbRandom(x); return rand(x); end
@@ -174,7 +177,10 @@ class Battle
     @mega_rings        = []
     GameData::Item.each { |item| @mega_rings.push(item.id) if item.has_flag?("MegaRing") }
     @smartWildBattle   = false
+    @levelSync         = 0
     @playerUseAI       = false
+    @noItems           = false
+    @keepBGM           = false
     @predictingDamage  = false
     @battleAI          = AI.new(self)
   end

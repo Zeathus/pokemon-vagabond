@@ -23,6 +23,7 @@ class PokemonBag
     @registered_items = []
     @ready_menu_selection = [0, 0, 1]   # Used by the Ready Menu to remember cursor positions
     @favorites            = []
+    @seen_items           = {}
   end
 
   def add_favorite(item)
@@ -108,6 +109,10 @@ class PokemonBag
     if ret && Supplementals::BAG_POCKET_AUTO_SORT[pocket - 1]
       @pockets[pocket].sort! { |a, b| GameData::Item.keys.index(a[0]) <=> GameData::Item.keys.index(b[0]) }
     end
+    @seen_items = {} if @seen_items.nil?
+    if ret && (@seen_items[item_data.id].nil? || @seen_items[item_data.id] < 1)
+      @seen_items[item_data.id] = 1 if ret
+    end
     return ret
   end
 
@@ -172,6 +177,12 @@ class PokemonBag
   def unregister(item)
     item_data = GameData::Item.try_get(item)
     @registered_items.delete(item_data.id) if item_data
+  end
+
+  def seen_item?(item)
+    item_data = GameData::Item.try_get(item)
+    @seen_items = {} if @seen_items.nil?
+    return (@seen_items[item_data.id] && @seen_items[item_data.id] >= 1)
   end
 
   #-----------------------------------------------------------------------------

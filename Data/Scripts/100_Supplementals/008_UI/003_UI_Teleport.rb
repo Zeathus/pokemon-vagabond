@@ -74,7 +74,7 @@ class PokemonTeleportMapScene
       end
     end
     @sprites["mapbottom"]=MapBottomSprite.new(@viewport)
-    @sprites["mapbottom"].mapname=pbGetMessage(MessageTypes::RegionNames,mapindex)
+    @sprites["mapbottom"].mapname=pbGetMessage(@map.name,mapindex)
     @sprites["mapbottom"].maplocation=pbGetMapLocation(@mapX,@mapY)
     @sprites["mapbottom"].mapdetails=pbGetMapDetails(@mapX,@mapY)
     if @destlist
@@ -343,7 +343,7 @@ def pbRemoveDestination(mapid)
   $game_variables[TELEPORT_LIST]=destinations
 end
 
-def pbTeleportDialog(name="Teleporter", nodialog=false, map=TELEPORT_MAP)
+def pbTeleportDialog(name="Teleporter", nodialog=false)
   destinations=$game_variables[TELEPORT_LIST]
 
   if destinations.length <= 1
@@ -395,7 +395,8 @@ end
 
 def pbTeleport(id, list=$game_variables[TELEPORT_LIST])
   destination = list[id]
-  for i in 0..4
+  i = 0
+  while i <= 3 || $game_screen.tone_changing?
     pbToneChangeAll(Tone.new(255,255,255),20) if i==2
     for j in 0..3
       $game_player.turn_up if j==0
@@ -404,6 +405,13 @@ def pbTeleport(id, list=$game_variables[TELEPORT_LIST])
       $game_player.turn_left if j==3
       pbWait(4)
     end
+  end
+  for j in 0..3
+    $game_player.turn_up if j==0
+    $game_player.turn_right if j==1
+    $game_player.turn_down if j==2
+    $game_player.turn_left if j==3
+    pbWait(4)
   end
   Kernel.pbCancelVehicles
   $game_temp.player_new_map_id=destination[0]

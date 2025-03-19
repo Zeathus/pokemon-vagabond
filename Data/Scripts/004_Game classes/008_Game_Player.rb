@@ -91,12 +91,17 @@ class Game_Player < Game_Character
     when :ice_sliding
       self.move_speed = 4 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
-    when :stair_up
-      self.move_speed = 2
-      new_charset = pbGetPlayerCharset(meta.walk_charset)
+    #when :stair_up
+    #  self.move_speed = 2
+    #  new_charset = pbGetPlayerCharset(meta.walk_charset)
     else   # :walking, :jumping, :walking_stopped
       self.move_speed = 3 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
+    end
+    if @direction == 8 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y + 1)
+      self.move_speed -= 1
+    elsif @direction == 2 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y)
+      self.move_speed -= 1
     end
     self.move_speed = 3 if @bumping
     @character_name = new_charset if new_charset
@@ -146,7 +151,11 @@ class Game_Player < Game_Character
     if !$game_temp.encounter_triggered
       x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
       y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
-      return if pbStairs(x_offset, y_offset)
+      if pbStairs(x_offset, y_offset)
+        check_event_trigger_touch(dir)
+        return
+      end
+      return if pbEndSurf(x_offset, y_offset)
       if can_move_in_direction?(dir)
         x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
         y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
@@ -162,8 +171,6 @@ class Game_Player < Game_Character
           $game_player.through = true
           $stats.waterfalls_descended += 1
         end
-        # Jumping out of surfing back onto land
-        return if pbEndSurf(x_offset, y_offset)
         # General movement
         turn_generic(dir, true)
         if !$game_temp.encounter_triggered
@@ -480,8 +487,6 @@ class Game_Player < Game_Character
           set_movement_type((faster) ? :surfing_fast : :surfing)
         elsif $PokemonGlobal&.bicycle
           set_movement_type((faster) ? :cycling_fast : :cycling)
-        elsif $game_player.pbTerrainTag.stair_up
-          set_movement_type((faster) ? :stair_up : :stair_up)
         else
           set_movement_type((faster) ? :running : :walking)
         end

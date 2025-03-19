@@ -120,6 +120,9 @@ module PBEffects
   WeightChange        = 115
   Yawn                = 116
   WellRested          = 117
+  Permanence          = 122
+  GigatonHammer       = 124
+  GigatonHammerTime   = 125
 
   #=============================================================================
   # These effects apply to a battler position

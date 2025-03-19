@@ -54,24 +54,39 @@ end
 class EnumOption
   include PropertyMixin
   attr_reader :values
+  attr_accessor :disabled_proc
+  attr_accessor :confirm_proc
 
   def initialize(name, values, get_proc, set_proc)
     @name     = name
     @values   = values.map { |val| _INTL(val) }
     @get_proc = get_proc
     @set_proc = set_proc
+    @disabled_proc = nil
+    @confirm_proc = nil
   end
 
   def next(current)
+    return current if self.disabled? || !self.confirm?
     index = current + 1
     index = @values.length - 1 if index > @values.length - 1
     return index
   end
 
   def prev(current)
+    return current if self.disabled? || !self.confirm?
     index = current - 1
     index = 0 if index < 0
     return index
+  end
+
+  def confirm?
+    return true if !@confirm_proc
+    return @confirm_proc.call
+  end
+
+  def disabled?
+    return @disabled_proc&.call
   end
 end
 
@@ -154,6 +169,8 @@ class Window_PokemonOption < Window_DrawableCommand
   SEL_NAME_SHADOW_COLOR  = Color.new(248, 176, 80)
   SEL_VALUE_BASE_COLOR   = Color.new(248, 48, 24)
   SEL_VALUE_SHADOW_COLOR = Color.new(248, 136, 128)
+  DISABLED_BASE_COLOR    = Color.new(128, 128, 128)
+  DISABLED_SHADOW_COLOR  = Color.new(64, 64, 64)
 
   def initialize(options, x, y, width, height)
     @options = options
@@ -204,8 +221,8 @@ class Window_PokemonOption < Window_DrawableCommand
         ivalue = 0
         @options[index].values.each do |value|
           pbDrawShadowText(self.contents, xpos, rect.y, optionwidth, rect.height, value,
-                           (ivalue == self[index]) ? SEL_VALUE_BASE_COLOR : self.baseColor,
-                           (ivalue == self[index]) ? SEL_VALUE_SHADOW_COLOR : self.shadowColor)
+            (ivalue == self[index]) ? SEL_VALUE_BASE_COLOR : (@options[index].disabled? ? DISABLED_BASE_COLOR : self.baseColor),
+            (ivalue == self[index]) ? SEL_VALUE_SHADOW_COLOR : (@options[index].disabled? ? DISABLED_SHADOW_COLOR : self.shadowColor))
           xpos += self.contents.text_size(value).width
           xpos += spacing
           ivalue += 1
@@ -287,6 +304,8 @@ class PokemonOption_Scene
       @options.push(
         hash["type"].new(name, hash["parameters"], hash["get_proc"], hash["set_proc"])
       )
+      @options[@options.length - 1].disabled_proc = hash["disabled"] if hash["disabled"]
+      @options[@options.length - 1].confirm_proc = hash["confirm"] if hash["confirm"]
       @hashes.push(hash)
     end
     # Create sprites

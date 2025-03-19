@@ -13,7 +13,8 @@ class Battle::Move::HealUserFullyAndFallAsleep < Battle::Move::HealingMove
   end
 
   def pbHealAmount(user)
-    return user.totalhp - user.hp
+    return 0 if user.hp % user.totalhp == 0
+    return user.totalhp - (user.hp % user.totalhp)
   end
 
   def pbEffectGeneral(user)

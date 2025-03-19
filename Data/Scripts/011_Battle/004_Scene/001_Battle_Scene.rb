@@ -366,7 +366,7 @@ class Battle::Scene
     @abortable = false
     pbShowWindow(BLANK)
     # Fade out all sprites
-    pbBGMFade(1.0)
+    pbBGMFade(1.0) if !@battle.keepBGM
     pbFadeOutAndHide(@sprites)
     pbDisposeSprites
   end

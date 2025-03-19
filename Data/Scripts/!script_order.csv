@@ -443,6 +443,7 @@
 004_InGameTime
 005_OverworldPokemon
 006_Items
+007_Signs
 @@@001_Dialog
 001_Dialog
 002_Talk
@@ -469,6 +470,7 @@
 001_CriticalAnimation
 @@007_Sprites
 001_Sprite_DropShadow
+002_Sprite_Cache
 @@008_UI
 001_HardcodedFont
 002_UI_Help

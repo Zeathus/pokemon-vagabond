@@ -1,5 +1,20 @@
 class Game_Temp
   attr_accessor :textSize
+
+  def dialog_log
+    # Dialog log is a list of [speaker, text]
+    @dialog_log = [] if !@dialog_log
+    return @dialog_log
+  end
+
+  def log_dialog(type, speaker, text, window_skin)
+    return if text.nil?
+    log = self.dialog_log
+    log.push([type, speaker, text, window_skin])
+    if log.length > 32
+      log.shift
+    end
+  end
 end
 
 def pbTalk(text, msgwindows = nil)
@@ -9,6 +24,19 @@ def pbTalk(text, msgwindows = nil)
   msgwindows.display(text)
 
   msgwindows.dispose if create_window
+end
+
+def pbSpeech(name, expression="neutral", phrase=nil)
+  if phrase.nil?
+    phrase = name
+    name = nil
+  end
+  msgwindows = TalkMessageWindows.new
+  msgwindows.focused.portrait.set(name, expression)
+  msgwindows.display(phrase)
+  msgwindows.dispose
+  Graphics.update
+  Input.update
 end
 
 def pbShout(text, msgwindows = nil)
@@ -97,6 +125,7 @@ end
 
 def pbShowUnownText(text)
   text.gsub!("\n","")
+  text.gsub!("\\n", " \n")
   showtext = ""
   alpha = "abcdefghijklmnopqrstuvwxyz!?"
   size1 = "aijlprtvyz!?"
@@ -113,7 +142,7 @@ def pbShowUnownText(text)
       char = "qmark" if char == "?"
       showtext += _INTL("<icon=unown_{1}>",char)
     else
-      if char == " " && length >= 340
+      if char == "\n" || (char == " " && length >= 340)
         showtext += " \n"
         length = 0
       else

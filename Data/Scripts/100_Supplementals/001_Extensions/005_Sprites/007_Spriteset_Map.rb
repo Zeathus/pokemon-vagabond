@@ -17,9 +17,7 @@ class Spriteset_Map
     @spawn_areas = []
     initSpawnAreas if Supplementals::OVERWORLD_POKEMON
 
-    $game_screen.vfx(PBVFX::None)
-    $game_screen.weather(0, 0, 0)
-
+    pbUpdateSigns
     pbUpdateMarkers
   end
 

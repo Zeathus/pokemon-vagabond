@@ -180,9 +180,19 @@ class Game_Map
       newy -= 1
     end
     return false if !valid?(newx, newy)
+    if self_event && self_event.character_name[/boulder/]
+      [2, 1, 0].each do |j|
+        facing_tile_id = data[newx, newy, j]
+        next if facing_tile_id == 0
+        facing_terrain = GameData::TerrainTag.try_get(@terrain_tags[facing_tile_id])
+        return true if facing_terrain.boulder_fillable
+        break if @passages[facing_tile_id] & 0x0f == 0x0f
+      end
+    end
     [2, 1, 0].each do |i|
       tile_id = data[x, y, i]
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      next if self_event && self_event.character_name[/boulder/] && terrain.boulder_fillable
       # If already on water, only allow movement to another water tile
       if self_event && terrain.can_surf_freely
         [2, 1, 0].each do |j|
@@ -260,7 +270,9 @@ class Game_Map
     [2, 1, 0].each do |i|
       tile_id = data[x, y, i]
       next if tile_id == 0
-      next if GameData::TerrainTag.try_get(@terrain_tags[tile_id]).ignore_passability
+      terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      next if terrain.ignore_passability
+      next if self_event && self_event.character_name[/boulder/] && terrain.boulder_fillable
       return false if @passages[tile_id] & 0x0f != 0
       return true if @priorities[tile_id] == 0
     end

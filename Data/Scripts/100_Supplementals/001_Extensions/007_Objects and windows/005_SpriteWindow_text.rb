@@ -12,8 +12,9 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
   def update
     sup_update
     if @arrow
-      @arrow.x  = self.x + self.width / 2
-      @arrow.y  = self.y + self.height
+      bm = @sprites["side3"].bitmap
+      bm.clear_rect(Rect.new(bm.width / 2 - @arrow.bitmap.width / 2, 0, @arrow.bitmap.width, @arrow.bitmap.height))
+      bm.blt(bm.width / 2 - @arrow.bitmap.width / 2, 0, @arrow.bitmap, Rect.new(0, 0, @arrow.bitmap.width, @arrow.bitmap.height))
     end
   end
 
@@ -23,19 +24,8 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
       @arrow = nil
     end
     if arrow_skin
-      @arrow = IconSprite.new(0, 0, @viewport)
-      @arrow.setBitmap(arrow_skin)
-      @arrow.ox = @arrow.bitmap.width / 2
-      @arrow.oy = @arrow.bitmap.height
-      @arrow.x  = self.x + self.width / 2
-      @arrow.y  = self.y + self.height
-      @arrow.z  = 100
+      @arrow = AnimatedBitmap.new(arrow_skin)
     end
-  end
-
-  def opacity=(value)
-    super(value)
-    @arrow.opacity = value if @arrow
   end
 
   def updateEffect
@@ -100,6 +90,15 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
           drawSingleFormattedChar(self.contents, @fmtchars[i])
           @fmtchars[i][1] -= add_x
           @fmtchars[i][2] -= add_y
+          @lastDrawnChar = i
+        when "shakeslow"
+          speed = 5.0
+          add_x = Math.sin(@ef_frame * 12.0 / speed) * 1.0 + 1
+          add_x = add_x.floor if add_x > 0
+          add_x = add_x.ceil if add_x < 0
+          @fmtchars[i][1] += add_x
+          drawSingleFormattedChar(self.contents, @fmtchars[i])
+          @fmtchars[i][1] -= add_x
           @lastDrawnChar = i
         end
         add = Math.sin(i / 2.0 + @ef_frame / speed)

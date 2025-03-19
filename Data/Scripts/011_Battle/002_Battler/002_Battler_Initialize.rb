@@ -135,6 +135,7 @@ class Battle::Battler
     @tookMoveDamageThisRound = false
     @tookDamageThisRound     = false
     @tookPhysicalHit         = false
+    @tookSpecialHit          = false
     @statsRaisedThisRound    = false
     @statsLoweredThisRound   = false
     @canRestoreIceFace       = false
@@ -147,6 +148,7 @@ class Battle::Battler
     @lastRoundMoveFailed     = false
     @movesUsed               = []
     @turnCount               = 0
+    @causeOfFaint            = nil if !@fainted
     @effects[PBEffects::Attract]             = -1
     @battle.allBattlers.each do |b|   # Other battlers no longer attracted to self
       b.effects[PBEffects::Attract] = -1 if b.effects[PBEffects::Attract] == @index
@@ -278,6 +280,9 @@ class Battle::Battler
     @effects[PBEffects::WeightChange]        = 0
     @effects[PBEffects::Yawn]                = 0
     @effects[PBEffects::WellRested]          = 0
+    @effects[PBEffects::Permanence]          = false
+    @effects[PBEffects::GigatonHammer]       = nil
+    @effects[PBEffects::GigatonHammerTime]   = 0
   end
 
   #=============================================================================

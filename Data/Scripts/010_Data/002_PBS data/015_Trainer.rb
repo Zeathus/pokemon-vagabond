@@ -35,6 +35,7 @@ module GameData
       "Nature"       => [:nature,          "e", :Nature],
       "IV"           => [:iv,              "uUUUUU"],
       "EV"           => [:ev,              "uUUUUU"],
+      "EL"           => [:el,              "uUUUUU"],
       "Happiness"    => [:happiness,       "u"],
       "Shiny"        => [:shininess,       "b"],
       "SuperShiny"   => [:super_shininess, "b"],
@@ -95,6 +96,7 @@ module GameData
         GameData::Stat.each_main do |s|
           pkmn[:iv][s.id] ||= 0 if pkmn[:iv]
           pkmn[:ev][s.id] ||= 0 if pkmn[:ev]
+          pkmn[:el][s.id] ||= 0 if pkmn[:el]
         end
       end
       @pbs_file_suffix = hash[:pbs_file_suffix] || ""
@@ -163,6 +165,13 @@ module GameData
             pkmn.ev[s.id] = [pkmn_data[:level] * 3 / 2, Pokemon::EV_LIMIT / 6].min
           end
         end
+        GameData::Stat.each_main do |s|
+          if pkmn_data[:el]
+            els = pkmn.el
+            els[s.id] = pkmn_data[:el][s.id]
+            pkmn.el = els
+          end
+        end
         pkmn.happiness = pkmn_data[:happiness] if pkmn_data[:happiness]
         if !nil_or_empty?(pkmn_data[:real_name])
           pkmn.name = pbGetMessageFromHash(MessageTypes::POKEMON_NICKNAMES, pkmn_data[:real_name])
@@ -196,7 +205,7 @@ module GameData
       case key
       when "Gender"
         ret = ["male", "female"][ret] if ret
-      when "IV", "EV"
+      when "IV", "EV", "EL"
         if ret
           new_ret = []
           GameData::Stat.each_main do |s|

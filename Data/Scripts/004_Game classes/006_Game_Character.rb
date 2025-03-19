@@ -28,6 +28,8 @@ class Game_Character
   attr_reader   :jump_speed
   attr_accessor :walk_anime
   attr_writer   :bob_height
+  attr_accessor :always_on_top
+  attr_accessor :always_on_bottom
 
   def initialize(map = nil)
     @map                       = map
@@ -70,6 +72,7 @@ class Game_Character
     @step_anime                = false   # Whether character should animate while still
     @direction_fix             = false
     @always_on_top             = false
+    @always_on_bottom          = false
     @anime_count               = 0   # Time since pattern was last changed
     @stop_count                = 0   # Time since character last finished moving
     @bumping                   = false   # Used by the player only when walking into something
@@ -195,11 +198,20 @@ class Game_Character
     return self.map.terrain_tag(@x, @y)
   end
 
+  def force_bush_depth(depth)
+    @forced_bush_depth = depth
+    calculate_bush_depth
+  end
+
   def bush_depth
     return @bush_depth || 0
   end
 
   def calculate_bush_depth
+    if @forced_bush_depth
+      @bush_depth = @forced_bush_depth
+      return
+    end
     if @tile_id > 0 || @always_on_top || jumping?
       @bush_depth = 0
       return
@@ -343,6 +355,7 @@ class Game_Character
 
   def screen_z(height = 0)
     return 999 if @always_on_top
+    return 0 if @always_on_bottom
     z = screen_y_ground
     if @tile_id > 0
       begin
@@ -778,7 +791,7 @@ class Game_Character
     @direction_fix = last_direction_fix
   end
 
-  def jump(x_plus, y_plus)
+  def jump(x_plus, y_plus, direction = 0)
     if x_plus != 0 || y_plus != 0
       if x_plus.abs > y_plus.abs
         (x_plus < 0) ? turn_left : turn_right
@@ -786,6 +799,9 @@ class Game_Character
         (y_plus < 0) ? turn_up : turn_down
       end
       each_occupied_tile { |i, j| return if !passable?(i + x_plus, j + y_plus, 0) }
+      if direction != 0 && $game_map
+        each_occupied_tile { |i, j| return if !$game_map.passable?(i + x_plus, j + y_plus, 10 - direction, self) }
+      end
     end
     @jump_initial_x = @x
     @jump_initial_y = @y
@@ -805,10 +821,10 @@ class Game_Character
     old_x = @x
     old_y = @y
     case self.direction
-    when 2 then jump(0, distance)    # down
-    when 4 then jump(-distance, 0)   # left
-    when 6 then jump(distance, 0)    # right
-    when 8 then jump(0, -distance)   # up
+    when 2 then jump(0, distance, 2)    # down
+    when 4 then jump(-distance, 0, 4)   # left
+    when 6 then jump(distance, 0, 6)    # right
+    when 8 then jump(0, -distance, 8)   # up
     end
     return @x != old_x || @y != old_y
   end

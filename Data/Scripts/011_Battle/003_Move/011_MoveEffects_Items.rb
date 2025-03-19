@@ -11,6 +11,7 @@ class Battle::Move::UserTakesTargetItem < Battle::Move
     return if target.unlosableItem?(target.item)
     return if user.unlosableItem?(target.item)
     return if target.hasActiveAbility?(:STICKYHOLD) && !@battle.moldBreaker
+    return if target.effects[PBEffects::Permanence]
     itemName = target.itemName
     user.item = target.item
     # Permanently steal the item from wild Pokémon
@@ -104,6 +105,13 @@ class Battle::Move::UserTargetSwapItems < Battle::Move
       end
       return true
     end
+    if target.effects[PBEffects::Permanence]
+      if show_message
+        @battle.pbDisplay(_INTL("But it failed to affect {1} because of its Permanence!",
+                                target.pbThis(true)))
+      end
+      return true
+    end
     return false
   end
 
@@ -182,6 +190,7 @@ class Battle::Move::RemoveTargetItem < Battle::Move
     return if target.damageState.unaffected || target.damageState.substitute
     return if !target.item || target.unlosableItem?(target.item)
     return if target.hasActiveAbility?(:STICKYHOLD) && !@battle.moldBreaker
+    return if target.effects[PBEffects::Permanence]
     itemName = target.itemName
     target.pbRemoveItem(false)
     @battle.pbDisplay(_INTL("{1} dropped its {2}!", target.pbThis, itemName))
@@ -198,6 +207,7 @@ class Battle::Move::DestroyTargetBerryOrGem < Battle::Move
               !(Settings::MECHANICS_GENERATION >= 6 && target.item.is_gem?))
     return if target.unlosableItem?(target.item)
     return if target.hasActiveAbility?(:STICKYHOLD) && !@battle.moldBreaker
+    return if target.effects[PBEffects::Permanence]
     item_name = target.itemName
     target.pbRemoveItem
     @battle.pbDisplay(_INTL("{1}'s {2} was incinerated!", target.pbThis, item_name))
@@ -229,6 +239,13 @@ class Battle::Move::CorrodeTargetItem < Battle::Move
                                   target.pbThis(true), target.abilityName))
         end
         @battle.pbHideAbilitySplash(target)
+      end
+      return true
+    end
+    if target.effects[PBEffects::Permanence]
+      if show_message
+        @battle.pbDisplay(_INTL("{1} is unaffected because of its Permanence!",
+                                target.pbThis(true)))
       end
       return true
     end
@@ -387,6 +404,7 @@ class Battle::Move::UserConsumeTargetBerry < Battle::Move
     return if target.damageState.unaffected || target.damageState.substitute
     return if !target.item || !target.item.is_berry? || target.unlosableItem?(target.item)
     return if target.hasActiveAbility?(:STICKYHOLD) && !@battle.moldBreaker
+    return if target.effects[PBEffects::Permanence]
     item = target.item
     itemName = target.itemName
     user.setBelched

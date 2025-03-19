@@ -17,11 +17,11 @@ class TextBubble
   end
 
   def get_character
-      if partner
+      if @partner
           if getPartyActive(0) == @event_id
-              return $game_player.sprite
+              return $game_player.sprite rescue nil
           elsif getPartyActive(1) == @event_id
-              return $game_player.sprite.partner
+              return $game_player.sprite.partner rescue nil
           end
           return nil
       else
@@ -45,6 +45,7 @@ class TextBubble
           @sprite.setArrow("Graphics/Windowskins/mini_msg_arrow")
           @sprite.text = ""
           @sprite.resizeToFit(text, Graphics.width * 2 / 5)
+          @sprite.height += 2
           @sprite.x = character.x - @sprite.width / 2
           @sprite.y = character.y - @sprite.height - character.bitmap.height / 4
           @sprite.letterbyletter = true
@@ -52,7 +53,7 @@ class TextBubble
           @sprite.text = text
           @sprite.contents.font.name = "Small"
           @sprite.resume
-          @sprite.waitcount = 40
+          @sprite.waitcount = 0.5
           @sprite.opacity = 0
       end
       character.set_text_bubble(self)
@@ -61,13 +62,19 @@ class TextBubble
 
   def update
       character = self.get_character
+      if character.nil?
+          self.dispose
+          return
+      end
+      max_opacity = 160
       if @time < 180 && @sprite.busy?
           @time += 1
           @sprite.opacity = @time * 16
-          @time = 180 if @sprite.opacity >= 255
+          @time = 180 if @sprite.opacity >= max_opacity
       elsif !@sprite.busy?
           @time -= 1
-          @sprite.opacity = @time * 16
+          @sprite.opacity = [@time * 16, max_opacity].min
+          @sprite.contents_opacity = [@time * 16, 255].min
       end
       @sprite.x = character.x - @sprite.width / 2
       @sprite.y = character.y - @sprite.height - character.bitmap.height / 4

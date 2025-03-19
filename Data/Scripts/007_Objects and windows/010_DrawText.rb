@@ -72,7 +72,7 @@ end
 #===============================================================================
 # Format text
 #===============================================================================
-FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2|wave|wavebow|shake)(\s*\=\s*([^>]*))?>/i
+FORMATREGEXP = /<(\/?)(c|c2|c3|o|fn|br|fs|i|b|r|pg|pog|u|s|icon|img|ac|ar|al|outln|outln2|wave|wavebow|shake|shakeslow)(\s*\=\s*([^>]*))?>/i
 
 def fmtEscape(text)
   if text[/[&<>]/]
@@ -550,7 +550,7 @@ def getFormattedText(bitmap, xDst, yDst, widthDst, heightDst, text, lineheight =
           rightalign = 1
           lastword = [characters.length, x]
         end
-      when "wave", "wavebow", "shake"
+      when "wave", "wavebow", "shake", "shakeslow"
         if endtag
           effectstack.pop
         else
@@ -974,7 +974,7 @@ def drawSingleFormattedChar(bitmap, ch)
     bitmap.font.italic = ch[7] if bitmap.font.italic != ch[7]
     bitmap.font.name = ch[12] if bitmap.font.name != ch[12]
     offset = 0
-    if ch[9]   # shadow
+    if ch[9] || ch[16]   # shadow
       bitmap.font.color = ch[9]
       if (ch[16] & 1) != 0   # outline
         offset = 1

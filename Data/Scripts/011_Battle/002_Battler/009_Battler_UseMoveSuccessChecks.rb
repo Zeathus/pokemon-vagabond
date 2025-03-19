@@ -94,6 +94,14 @@ class Battle::Battler
       end
       return false
     end
+    # Gigaton Hammer
+    if @effects[PBEffects::GigatonHammerTime] > 0 && @effects[PBEffects::GigatonHammer] == move.id
+      if showMessages
+        msg = _INTL("{1} cannot be used twice in a row!", move.name)
+        (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
+      end
+      return false
+    end
     # Belch
     return false if !move.pbCanChooseMove?(self, commandPhase, showMessages)
     return true

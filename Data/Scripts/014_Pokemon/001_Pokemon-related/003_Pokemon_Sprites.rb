@@ -133,7 +133,8 @@ class PokemonIconSprite < Sprite
       return
     end
     @species = @pokemon.species
-    @animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(value))
+    #@animBitmap = AnimatedBitmap.new(GameData::Species.icon_filename_from_pokemon(value))
+    @animBitmap = Supplementals::Cache.get(GameData::Species.icon_filename_from_pokemon(value))
     self.bitmap = @animBitmap.bitmap
     self.src_rect.width  = @animBitmap.height
     self.src_rect.height = @animBitmap.height

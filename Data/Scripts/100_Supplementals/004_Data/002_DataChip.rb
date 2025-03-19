@@ -66,7 +66,7 @@ def pbHasDataChipMove(move)
 end
 
 def pbGetDataChipMoves(pokemon)
-  return [] if !pokemon || pokemon.egg? || (pokemon.isShadow? rescue false)
+  return [] if !pokemon || pokemon.egg? || (pokemon.shadowPokemon? rescue false)
   allMoves = pbAllDataChipMoves
   chipMoves=[]
   # First add unlocked moves
@@ -97,7 +97,7 @@ def pbGetDataChipMoves(pokemon)
 end
 
 def pbGetTMMoves(pokemon)
-  return [] if !pokemon || pokemon.egg? || (pokemon.isShadow? rescue false)
+  return [] if !pokemon || pokemon.egg? || (pokemon.shadowPokemon? rescue false)
   moves=[]
   GameData::Item.each { |i|
     if i.is_TM? && $bag.quantity(i) > 0
@@ -136,6 +136,14 @@ def pbGetLevelUpMoves(pokemon)
       end
     end
   end
-  level_moves.sort! {|a,b| a[1]<=>b[1]}
+  level_moves.sort! {|a,b|
+    if a[1] == 0 or b[1] == 0
+      a[1]<=>b[1]
+    elsif a[1] > pokemon.level || b[1] > pokemon.level
+      a[1]<=>b[1]
+    else
+      b[1]<=>a[1]
+    end
+  }
   return level_moves
 end 

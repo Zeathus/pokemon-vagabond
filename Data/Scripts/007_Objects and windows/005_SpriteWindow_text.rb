@@ -416,20 +416,22 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     return pos
   end
 
-  def skipAhead
+  def skipAhead(skip_pauses = false)
     return if !busy?
     return if @textchars[@curchar] == "\n"
     resume
-    if curcharSkip(true)
+    while curcharSkip(true)
       visiblelines = (self.height - self.borderY) / @lineHeight
       if @textchars[@curchar] == "\n" && @linesdrawn >= visiblelines - 1
         @scroll_timer_start = System.uptime
-      elsif @textchars[@curchar] == "\1"
+      elsif @textchars[@curchar] == "\1" && !skip_pauses
         @pausing = true if @curchar < @numtextchars - 1
         self.startPause
         refresh
       end
+      break if !skip_pauses || @curchar >= @textchars.length
     end
+    self.stopPause if skip_pauses
   end
 
   def allocPause

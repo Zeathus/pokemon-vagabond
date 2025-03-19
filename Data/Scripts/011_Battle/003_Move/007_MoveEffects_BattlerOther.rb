@@ -414,6 +414,8 @@ class Battle::Move::CureUserBurnPoisonParalysis < Battle::Move
       @battle.pbDisplay(_INTL("{1} cured its poisoning!", user.pbThis))
     when :PARALYSIS
       @battle.pbDisplay(_INTL("{1} cured its paralysis!", user.pbThis))
+    when :FROSTBITE
+      @battle.pbDisplay(_INTL("{1} cured its frostbite!", user.pbThis))
     end
   end
 end

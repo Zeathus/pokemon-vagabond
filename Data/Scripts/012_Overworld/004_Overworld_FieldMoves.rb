@@ -725,43 +725,44 @@ end
 
 def pbEndSurf(_xOffset, _yOffset)
   return false if !$PokemonGlobal.surfing
-  x = $game_player.x
-  y = $game_player.y
-  if $game_map.terrain_tag(x, y).can_surf && (!$game_player.pbFacingTerrainTag.can_surf || $game_player.pbFacingTerrainTag.water_edge)
-    if $game_player.pbFacingTerrainTag.water_edge
-      up = false
-      if Supplementals::HIGH_WATER_EDGES
-        if $game_player.direction == 4
-          up = !$game_map.terrain_tag(x-2,y-1).can_surf
-        elsif $game_player.direction == 6
-          up = !$game_map.terrain_tag(x+2,y-1).can_surf
-        end
+  #player_terrain = $game_map.terrain_tag($game_player.x, $game_player.y)
+  facing_terrain = $game_player.pbFacingTerrainTag
+  if !facing_terrain.can_surf || facing_terrain.water_edge
+    target_tile = [$game_player.x, $game_player.y]
+    # Calculate tile to land on
+    target_tile[0] += facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 6
+    target_tile[0] -= facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 4
+    target_tile[1] += facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 2
+    target_tile[1] -= facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 8
+    high_edge = false
+    # Check if there is water to jump up by one y-coordinate to emulate height sideways
+    if ($game_player.direction == 4 || $game_player.direction == 6) && Supplementals::HIGH_WATER_EDGES
+      target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1] - 1)
+      if !target_terrain.can_surf && !target_terrain.water_edge && $game_player.passable?(target_tile[0], target_tile[1] - 1, 10 - $game_player.direction)
+        target_tile[1] -= 1
+        high_edge = true
       end
-      if (up && pbJumpToward(2,false,true,-1)) ||
-         (!$game_player.pbFacingSecondTerrainTag.can_surf && pbJumpToward(2,false,true))
-        $game_map.autoplayAsCue
-        $game_player.increase_steps
-        result=$game_player.check_event_trigger_here([1,2])
-        pbOnStepTaken(result)
-      end
-      return true
-    else
-      $game_temp.surf_base_coords = [x, y]
-      up = false
-      if Supplementals::HIGH_WATER_EDGES
-        if $game_player.direction == 4
-          up = !$game_map.terrain_tag(x-1,y-1).can_surf
-        elsif $game_player.direction == 6
-          up = !$game_map.terrain_tag(x+1,y-1).can_surf
-        end
-      end
+    end
+    # Make sure terrain is walkable
+    target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
+    if !target_terrain.can_surf && !target_terrain.water_edge && $game_map.passable?(target_tile[0], target_tile[1], 10 - $game_player.direction)
       $game_player.direction_fix = true
-      if (up && pbJumpToward(1, false, true, -1)) ||
-         (!$game_player.pbFacingTerrainTag.can_surf && pbJumpToward(1, false, true))
+      $game_temp.surf_base_coords = [$game_player.x, $game_player.y]
+      success = false
+      if ($game_player.direction == 2 || $game_player.direction == 8)
+        if pbJumpToward((target_tile[1] - $game_player.y).abs, false, true)
+          success = true
+        end
+      elsif ($game_player.direction == 4 || $game_player.direction == 6) 
+        if pbJumpToward((target_tile[0] - $game_player.x).abs, false, true, target_tile[1] - $game_player.y)
+          success = true
+      end
+      if success
         $game_map.autoplayAsCue
         $game_player.increase_steps
         result = $game_player.check_event_trigger_here([1, 2])
         pbOnStepTaken(result)
+        $game_player.sprite.snapPartner(false)
       end
       $game_temp.surf_base_coords = nil
       $game_player.direction_fix = false
@@ -773,50 +774,32 @@ end
 
 def pbStartSurf(confirm = true)
   return false if $PokemonGlobal.surfing
-  terrain = $game_player.pbFacingTerrainTag
+  facing_terrain = $game_player.pbFacingTerrainTag
+  return false if $game_player.can_move_in_direction?($game_player.direction)
   notCliff = $game_map.passable?($game_player.x, $game_player.y, $game_player.direction)
-  if terrain.can_surf && !$PokemonGlobal.surfing && notCliff
-    if terrain.water_edge
-      down = false
-      if Supplementals::HIGH_WATER_EDGES
-        if $game_player.direction == 4
-          terrain2 = $game_map.terrain_tag($game_player.x - 2, $game_player.y + 1)
-          down = terrain2.can_surf && !terrain2.water_edge
-        elsif $game_player.direction == 6
-          terrain2 = $game_map.terrain_tag($game_player.x + 2, $game_player.y + 1)
-          down = terrain2.can_surf && !terrain2.water_edge
-        end
+  if (facing_terrain.can_surf || facing_terrain.water_edge) && notCliff
+    # Calculate tile to land in the water on
+    target_tile = [$game_player.x, $game_player.y]
+    target_tile[0] += facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 6
+    target_tile[0] -= facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 4
+    target_tile[1] += facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 2
+    target_tile[1] -= facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 8
+    high_edge = false
+    # Check if there is water to drop down by one y-coordinate to emulate height sideways
+    if ($game_player.direction == 4 || $game_player.direction == 6) && Supplementals::HIGH_WATER_EDGES
+      target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1] + 1)
+      if target_terrain.can_surf && !target_terrain.water_edge
+        target_tile[1] += 1
+        high_edge = true
       end
-      if down
-        pbSurf(confirm, true, true)
-        return true
-      else
-        terrain2 = $game_player.pbFacingSecondTerrainTag
-        if terrain2.can_surf && !terrain2.water_edge
-          pbSurf(confirm, true)
-          return true
-        end
-      end
-    else
-      down = false
-      if Supplementals::HIGH_WATER_EDGES
-        if $game_player.direction == 4
-          terrain2 = $game_map.terrain_tag($game_player.x - 1, $game_player.y + 1)
-          down = terrain2.can_surf && !terrain2.water_edge
-        elsif $game_player.direction == 6
-          terrain2 = $game_map.terrain_tag($game_player.x + 1, $game_player.y + 1)
-          down = terrain2.can_surf && !terrain2.water_edge
-        end
-      end
-      if down
-        $game_player.direction_fix = true
-        pbSurf(confirm, false, true)
-        $game_player.direction_fix = false
-        return true
-      else
-        pbSurf(confirm)
-        return true
-      end
+    end
+    # Make sure terrain is surfable
+    target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
+    if target_terrain.can_surf && !target_terrain.water_edge
+      $game_player.direction_fix = true
+      pbSurf(confirm, facing_terrain.water_edge, high_edge)
+      $game_player.direction_fix = false
+      return true
     end
   end
   return false
@@ -826,7 +809,7 @@ EventHandlers.add(:on_player_interact, :start_surfing,
   proc {
     next if $PokemonGlobal.surfing
     next if $game_map.metadata&.always_bicycle
-    next if !$game_player.pbFacingTerrainTag.can_surf_freely
+    #next if !$game_player.pbFacingTerrainTag.can_surf_freely
     next if !$game_map.passable?($game_player.x, $game_player.y, $game_player.direction, $game_player)
     pbStartSurf(true)
   }

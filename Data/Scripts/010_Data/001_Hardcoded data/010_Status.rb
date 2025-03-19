@@ -72,7 +72,7 @@ GameData::Status.register({
   :id            => :FROZEN,
   :name          => _INTL("Frozen"),
   :animation     => "Frozen",
-  :icon_position => 4
+  :icon_position => 8
 })
 
 
@@ -80,5 +80,5 @@ GameData::Status.register({
   :id            => :FROSTBITE,
   :name          => _INTL("Frostbite"),
   :animation     => "Frozen",
-  :icon_position => 5
+  :icon_position => 4
 })

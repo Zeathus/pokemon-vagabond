@@ -1,6 +1,7 @@
 class Game_Character
   attr_accessor :marker_id
   attr_accessor :marker_text
+  attr_accessor :proximity_texts
 
   alias sup_initialize initialize
 
@@ -8,6 +9,7 @@ class Game_Character
     sup_initialize(map)
     @marker_id   = -1
     @marker_text = nil
+    @proximity_texts = {}
   end
   
   def direction_fix=(value)
@@ -28,6 +30,18 @@ class Game_Character
 
   def setOpacity(op)
     @opacity = op
+  end
+
+  def proximity_texts
+    @proximity_texts = {} if !@proximity_texts
+    return @proximity_texts
+  end
+
+  def sprite
+    if $scene.is_a?(Scene_Map) && $scene.spriteset
+      return $scene.spriteset($game_map.map_id).pbFindCharacterSprite(self)
+    end
+    return nil
   end
   
 end

@@ -680,7 +680,7 @@ module Compiler
             raise _INTL("Expected a species entry line for encounter type {1} for map {2}.",
                         GameData::EncounterType.get(current_type).real_name, encounter_hash[:map]) + "\n" + FileLineData.linereport
           end
-          values = get_csv_record(line, [nil, "vevV", nil, :Species])
+          values = get_csv_record(line, [nil, "vevVV", nil, :Species])
           values[3] = values[2] if !values[3]
           if values[2] > max_level
             raise _INTL("Level number {1} is not valid (max. {2}).", values[2], max_level) + "\n" + FileLineData.linereport
@@ -689,6 +689,7 @@ module Compiler
           elsif values[2] > values[3]
             raise _INTL("Minimum level is greater than maximum level.") + "\n" + FileLineData.linereport
           end
+          values[4] = 0 if values[4].nil?
           encounter_hash[:types][current_type].push(values)
         elsif line[/^\[\s*(.+)\s*\]$/]   # Map ID line
           values = $~[1].split(",").collect! { |v| v.strip.to_i }
@@ -915,6 +916,23 @@ module Compiler
         pkmn[:ev] = ev_hash
         if ev_total > Pokemon::EV_LIMIT
           raise _INTL("Invalid EV set (must sum to {1} or less).", Pokemon::EV_LIMIT) + "\n" + FileLineData.linereport
+        end
+      end
+      # Ensure valid ELs, convert ELs to hash format
+      if pkmn[:el]
+        el_hash = {}
+        el_total = 0
+        GameData::Stat.each_main do |s|
+          next if s.pbs_order < 0
+          el_hash[s.id] = pkmn[:el][s.pbs_order] || pkmn[:el][0]
+          el_total += [el_hash[s.id] - 3, 0].max
+          if el_hash[s.id] > Supplementals::MAX_EFFORT_LEVEL
+            raise _INTL("Invalid EL: {1} (must be 0-{2}).", el_hash[s.id], Supplementals::MAX_EFFORT_LEVEL) + "\n" + FileLineData.linereport
+          end
+        end
+        pkmn[:el] = el_hash
+        if el_total > Supplementals::MAX_TOTAL_EFFORT_LEVEL
+          raise _INTL("Invalid EL set (ELs above 3 must sum to {1} or less).", Supplementals::MAX_TOTAL_EFFORT_LEVEL) + "\n" + FileLineData.linereport
         end
       end
       # Ensure valid happiness

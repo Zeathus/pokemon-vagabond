@@ -2,6 +2,8 @@
 # Pokémon icons
 #===============================================================================
 class PokemonBoxIcon < IconSprite
+  attr_reader :pokemon
+
   def initialize(pokemon, viewport = nil)
     super(0, 0, viewport)
     @pokemon = pokemon
@@ -23,7 +25,8 @@ class PokemonBoxIcon < IconSprite
 
   def refresh
     return if !@pokemon
-    self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
+    #self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
+    self.setCachedBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
     self.src_rect = Rect.new(0, 0, self.bitmap.height, self.bitmap.height)
   end
 
@@ -1864,6 +1867,10 @@ class PokemonStorageScreen
     end
     command = pbShowCommands(_INTL("Release this Pokémon?"), [_INTL("No"), _INTL("Yes")])
     if command == 1
+      if pokemon.item
+        $bag.pbStoreItem(pokemon.item)
+        pbDisplay(_INTL("Returned the held {1} to the Bag.",(pokemon.item.name)))
+      end
       pkmnname = pokemon.name
       @scene.pbRelease(selected, heldpoke)
       if heldpoke

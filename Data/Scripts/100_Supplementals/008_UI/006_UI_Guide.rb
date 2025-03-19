@@ -24,11 +24,16 @@ class KeybindSprite < BitmapSprite
     super(224, 28, viewport)
     @input = input
     @name  = name
+    @time = 0
     @baseColor = Color.new(252,252,252)
     @shadowColor = Color.new(0,0,0)
     self.x = x
     self.y = y
-    @keybind_icons = AnimatedBitmap.new("Graphics/UI/keybinds")
+    if @input.is_a?(String)
+      @source_bitmap = AnimatedBitmap.new("Graphics/Messages/autorun")
+    else
+      @keybind_icons = AnimatedBitmap.new("Graphics/UI/keybinds")
+    end
     self.refresh
   end
 
@@ -41,21 +46,33 @@ class KeybindSprite < BitmapSprite
 
   def refresh
     self.bitmap.clear
-    if @input.is_a?(Array)
-      x = 0
+    x = 0
+    if @input.is_a?(String)
+      if @input == "autorun"
+        self.bitmap.blt(x, 0, @source_bitmap.bitmap, Rect.new(0, 28 * (@time / 16).floor, 46, 28))
+      end
+      x += @source_bitmap.bitmap.width
+    elsif @input.is_a?(Array)
       for i in @input
         self.bitmap.blt(x, 0, @keybind_icons.bitmap, $Keybinds.rect(i))
         x += 28
       end
-      textpos = [[@name,x+6,4,0,@baseColor,@shadowColor,true]]
-      pbSetSmallFont(self.bitmap)
-      pbDrawTextPositions(self.bitmap, textpos)
     else
-      self.bitmap.blt(0, 0, @keybind_icons.bitmap, $Keybinds.rect(@input))
-      textpos = [[@name,34,4,0,@baseColor,@shadowColor,true]]
-      pbSetSmallFont(self.bitmap)
-      pbDrawTextPositions(self.bitmap, textpos)
+      self.bitmap.blt(x, 0, @keybind_icons.bitmap, $Keybinds.rect(@input))
+      x += 28
     end
+    textpos = [[@name,x + 6,4,0,@baseColor,@shadowColor,true]]
+    pbSetSmallFont(self.bitmap)
+    pbDrawTextPositions(self.bitmap, textpos)
+  end
+
+  def update
+    @time += 1
+    @time = 0 if @time >= 64
+    if @input.is_a?(String) && @time % 16 == 0
+      self.refresh
+    end
+    super
   end
 
   def dispose
@@ -269,11 +286,12 @@ def pbHasGuide(guide)
   return $game_variables[Supplementals::GUIDE_LIST][guide]
 end
 
-def pbAddGuide(guide)
+def pbAddGuide(guide, silent = false)
   pbInitGuides if $game_variables[Supplementals::GUIDE_LIST].is_a?(Numeric)
   if !$game_variables[Supplementals::GUIDE_LIST][guide]
     $game_variables[Supplementals::GUIDE_LIST][guide] = true
     $game_variables[Supplementals::NEW_GUIDE] = guide
+    pbToast(TopWindowToast.new(_INTL("New Guide Available\n{1}", guide))) if !silent
   end
 end
 

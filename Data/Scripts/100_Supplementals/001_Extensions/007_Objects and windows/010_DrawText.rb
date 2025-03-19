@@ -15,9 +15,18 @@ def drawSingleFormattedChar(bitmap, ch)
     rects = charRects(ch[0], bitmap.font.name)
     if ch[9] # shadow
       if (ch[16] & 1) != 0 # outline
-        offset=1
+        offset = 1
+        rects.each do |r|
+          bitmap.fill_rect(
+            ch[1] + (r[0] - 1 + offset) * sp,
+            ch[2] + (r[1] - 1) * sp,
+            ((r[2] + 2) * sp).ceil,
+            ((r[3] + 2) * sp).ceil,
+            ch[9]
+          )
+        end
       elsif (ch[16] & 2) != 0 # outline 2
-        offset=2
+        offset = 2
       else
         rects.each do |r|
           bitmap.fill_rect(
@@ -32,7 +41,7 @@ def drawSingleFormattedChar(bitmap, ch)
     end
     rects.each do |r|
       bitmap.fill_rect(
-        ch[1] + r[0] * sp,
+        ch[1] + (r[0] + offset) * sp,
         ch[2] + r[1] * sp,
         (r[2] * sp).ceil,
         (r[3] * sp).ceil,

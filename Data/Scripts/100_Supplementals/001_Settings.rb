@@ -204,6 +204,9 @@ module Supplementals
   # Used to make a trainer not suddenly change levels if you do a battle or two before rechallenging them
   MAX_RECENT_TRAINERS = 16
 
+  # Stop normal EV gain for battles. Generally used if you use Effort Essence instead.
+  NO_EV_GAIN = true
+
   #=============================================================================
   ### MESSAGES ###
   #=============================================================================

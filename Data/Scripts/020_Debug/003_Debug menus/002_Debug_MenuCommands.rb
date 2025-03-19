@@ -883,7 +883,7 @@ MenuHandlers.add(:debug_menu, :add_item, {
 })
 
 MenuHandlers.add(:debug_menu, :fill_bag, {
-  "name"        => _INTL("Fill Bag"),
+  "name"        => _INTL("Fill bag"),
   "parent"      => :items_menu,
   "description" => _INTL("Empties the Bag and then fills it with a certain number of every item."),
   "effect"      => proc {

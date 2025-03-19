@@ -75,7 +75,9 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   end
   # Play battle music
   bgm = pbGetWildBattleBGM([]) if !bgm
-  pbBGMPlay(bgm)
+  if bgm != -1
+    pbBGMPlay(bgm)
+  end
   # Determine location of battle
   location = 0   # 0=outside, 1=inside, 2=cave, 3=water
   if $PokemonGlobal.surfing || $PokemonGlobal.diving

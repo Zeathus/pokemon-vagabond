@@ -32,6 +32,20 @@ def pbDialog(name, index = 0, msgwindows = nil)
 
 end
 
+def pbTryDialog(name, index = 0, msgwindows = nil)
+  full_name = _INTL("{1}_{2}", name.upcase, index)
+  dialog = $GameDialog[full_name]
+
+  if !dialog
+    echoln _INTL("No such dialog: '{1}'", full_name)
+    return false
+  end
+
+  pbDialog(name, index, msgwindows)
+
+  return true
+end
+
 def pbRunDialogFeed(dialog, msgwindows = nil)
   ret = [0]
 
@@ -67,6 +81,7 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           next if !eval(action[3][i][4])
         end
         choices.push(_format(action[3][i][1]))
+        choice_indexes.push(i)
         cancel = i+1 if action[3][i][3]
       end
       if question
@@ -80,6 +95,15 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         pbTalk(question, msgwindows)
 
         answer = $game_variables[variable]
+
+
+        $game_temp.log_dialog(
+          1,
+          $player.name,
+          choices[answer],
+          nil
+        )
+
         if choice_indexes[answer]
           answer = choice_indexes[answer]
           $game_variables[variable] = answer
@@ -102,7 +126,6 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       command = action[1]
       args = []
       args = action[2...action.length] if action.length > 2
-
       case command
       when "hold"
         msgwindows.holding = true
@@ -173,7 +196,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
       when "addpauses"
         msgwindows.focused.add_pauses = args[0]
       when "wait"
-        args[0].times do
+        start_time = System.uptime
+        while System.uptime < start_time + args[0]
           Graphics.update
           Input.update
           msgwindows.update
@@ -200,8 +224,8 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
         when "gray"
           tone = Tone.new(0, 0, 0, 255)
         end
-        $game_screen.start_tone_change(tone, args[0] * Graphics.frame_rate / 20)
-        pbWait(args[0] * Graphics.frame_rate / 20)
+        $game_screen.start_tone_change(tone, args[0])
+        pbWait(args[0].to_f / 20.0)
       when "eval"
         eval(args[0])
       when "se"

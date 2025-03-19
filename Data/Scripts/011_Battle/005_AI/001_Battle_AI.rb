@@ -9,6 +9,7 @@ class Battle::AI
 
   def initialize(battle)
     @battle = battle
+    @threads = []
   end
 
   def create_ai_objects
@@ -47,7 +48,14 @@ class Battle::AI
   # Choose an action.
   def pbDefaultChooseEnemyCommand(idxBattler)
     if Supplementals::USE_NEW_BATTLE_AI && idxBattler.is_a?(Array)
-      return @battle.pbChooseMovesNew(idxBattler)
+      ret = @battle.pbChooseMovesNew(idxBattler)
+      idxBattler.each do |b|
+        set_up(b)
+        if @battle.choices[b][0] == :UseMove && pbEnemyShouldMegaEvolve?
+          @battle.pbRegisterMegaEvolution(b)
+        end
+      end
+      return
     end
     set_up(idxBattler)
     ret = false
@@ -78,6 +86,19 @@ class Battle::AI
   def pbDefaultChooseNewEnemy(idxBattler)
     set_up(idxBattler)
     return choose_best_replacement_pokemon(idxBattler, true)
+  end
+
+  def pbThreadChooseEnemyCommand(idxBattler)
+    @threads.push(Thread.new {
+      pbDefaultChooseEnemyCommand(idxBattler)
+    })
+  end
+
+  def pbThreadJoin
+    @threads.each do |t|
+      t.join
+    end
+    @threads = []
   end
 end
 

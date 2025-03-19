@@ -42,11 +42,25 @@ def pbStairs(xOffset,yOffset)
       if $game_player.direction==4 # Left
         $game_player.move_lower_left
         return true
+      elsif $game_player.direction == 6 # Right
+        if $game_map.stairsRight?($game_player.x + 1 ,$game_player.y - 1)
+          $game_player.move_upper_right
+          return true
+        else
+          return false
+        end
       end
     elsif $game_map.stairsLeft?($game_player.x,$game_player.y)
       if $game_player.direction==6 # Right
         $game_player.move_lower_right
         return true
+      elsif $game_player.direction==4 # Left
+        if $game_map.stairsRight?($game_player.x - 1 ,$game_player.y - 1)
+          $game_player.move_upper_left
+          return true
+        else
+          return false
+        end
       end
     end
   end

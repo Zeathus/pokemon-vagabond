@@ -170,6 +170,8 @@ module Scaling
 
   def Scaling.wild(pokemon)
     species, level = Scaling.wild_core(pokemon.species, pokemon.level)
+
+    echoln _INTL("Scaling: {1} was scaled from level {2} to {3}", pokemon.name, pokemon.level, level)
     
     pokemon.species = species
     pokemon.level = level
@@ -183,7 +185,7 @@ module Scaling
     # Update level if player level is at least 10 above
     if level <= player_level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
       level_dif = player_level - level - Supplementals::WILD_POKEMON_LEVEL_DIFFERENCE
-      level = [level + level_dif / 2, level_old + Supplementals::WILD_POKEMON_MAX_SCALING].max
+      level = [level + level_dif / 2, old_level + Supplementals::WILD_POKEMON_MAX_SCALING].min
     end
 
     evolve = (rand < Supplementals::WILD_POKEMON_EVOLVE_CHANCE)
@@ -269,6 +271,7 @@ module Scaling
         pkmn.name = GameData::Species.get(pkmn.species).name if species_changed
         pkmn.reset_moves if new_level - original_level > 10 and original_level < 30
         pkmn.calc_stats
+        echoln _INTL("Scaling: {1} was scaled from level {2} to {3}", pkmn.name, original_level, new_level)
       end
     end
   end
@@ -277,8 +280,8 @@ module Scaling
     case $PokemonSystem.difficulty
     when 0 # Easy
       pkmn.level -= 1
-      pkmn.natureflag = PBNatures::SERIOUS
-      pkmn.iv = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
+      pkmn.nature = :SERIOUS
+      pkmn.el = pbStatArrayToHash([0, 0, 0, 0, 0, 0])
       pkmn.calc_stats
     when 1 # Normal
       pkmn.calc_stats

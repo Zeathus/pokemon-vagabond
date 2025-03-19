@@ -291,6 +291,7 @@ class Battle
           end
         end
         fname = _INTL("Logs/wild_{1}.txt", party_str)
+        echoln _INTL("Writing log to '{1}'", fname)
         @battle_log = File.open(fname,"w")
       elsif trainerBattle? && @opponent.length < 3
         fname = _INTL("Logs/trainer_{1}_{2}_{3}.txt",
@@ -299,6 +300,7 @@ class Battle
                       @opponent[0].id.to_s)
         fname.gsub!("???", "QMARKS")
         fname.gsub!("?", "Q")
+        echoln _INTL("Writing log to '{1}'", fname)
         @battle_log = File.open(fname,"w")
       end
     end
@@ -432,6 +434,12 @@ class Battle
     oldDecision = @decision
     @decision = 4 if @decision == 1 && wildBattle? && @caughtPokemon.length > 0
     case oldDecision
+    if @levelSync != 0
+      for i in 0...@party1.length
+        @party1[i].exp = $game_temp.original_exp[i] if $game_temp.original_exp[i]
+        @party1[i].calc_stats
+      end
+    end
     ##### WIN #####
     when 1
       PBDebug.log("")

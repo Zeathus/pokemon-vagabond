@@ -1,4 +1,4 @@
-class Sprite_Character
+class Sprite_Character < RPG::Sprite
 
   alias sup_initialize initialize
   alias sup_dispose dispose
@@ -9,11 +9,28 @@ class Sprite_Character
     @marker      = nil
     @marker_text = nil
     @text_bubble = nil
+    @proximity_textboxes = {}
     if Supplementals::CHARACTER_DROP_SHADOWS
       @dropshadow = DropShadowSprite.new(self, character, viewport)
     end
     sup_initialize(viewport, character)
-    @dropshadow.update
+    @dropshadow&.update
+  end
+
+  def color=(value)
+    super(value)
+    @marker&.color = value
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.color = value
+    end
+  end
+
+  def tone=(value)
+    super(value)
+    @marker&.tone = value
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.tone = value
+    end
   end
 
   def set_text_bubble(value)
@@ -24,6 +41,9 @@ class Sprite_Character
     @dropshadow&.dispose
     @marker&.dispose
     @text_bubble&.on_event_dispose
+    @proximity_textboxes.each do |direction, textbox|
+      textbox.dispose
+    end
     sup_dispose
   end
 
@@ -79,6 +99,58 @@ class Sprite_Character
         @marker.oy = 40
       end
       @marker&.update
+    end
+    if $game_player && ($game_player.x - @character.x).abs < 4 && ($game_player.y - (@character.y + 1)).abs < 5
+      #echoln @character.proximity_texts.length.to_s if @character.id == 38
+      @character.proximity_texts.each do |direction, text|
+        textbox = @proximity_textboxes[direction]
+        if textbox
+          if textbox.opacity < 255
+            textbox.opacity += 8
+            textbox.contents_opacity += 8
+          end
+        else
+          textbox = Window_AdvancedTextPokemon.new("", 1)
+          textbox.viewport = self.viewport
+          textbox.setSkin("Graphics/Windowskins/floating_text", false)
+          textbox.text = ""
+          textbox.resizeToFit(text, Graphics.width * 2 / 5)
+          textbox.letterbyletter = false
+          textbox.text = text
+          textbox.contents.font.name = "Small"
+          textbox.opacity = 0
+          textbox.contents_opacity = 0
+          textbox.z = 99999
+          @proximity_textboxes[direction] = textbox
+        end
+      end
+    else
+      cleared = false
+      @proximity_textboxes.each do |direction, textbox|
+        textbox.opacity -= 8
+        textbox.contents_opacity -= 8
+        if textbox.opacity <= 0
+          textbox.dispose
+          cleared = true
+        end
+      end
+      @proximity_textboxes = {} if cleared
+    end
+    @proximity_textboxes.each do |direction, textbox|
+      case direction
+      when :left
+        textbox.x = self.x - textbox.width - self.src_rect.width / 4 - 8
+        textbox.y = self.y - textbox.height / 2 - self.src_rect.height / 2
+      when :right
+        textbox.x = self.x + self.src_rect.width / 4 + 8
+        textbox.y = self.y - textbox.height / 2 - self.src_rect.height / 2
+      when :top
+        textbox.x = self.x - textbox.width / 2
+        textbox.y = self.y - textbox.height - self.src_rect.height + 4
+      when :bottom
+        textbox.x = self.x - textbox.width / 2
+        textbox.y = self.y - 4
+      end
     end
   end
 

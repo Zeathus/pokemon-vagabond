@@ -33,9 +33,6 @@ def pbLoadQuestMarkers
     end
     if active
       if type == 3
-        if marker[4] == "RuinBoss"
-          marker[4] = _INTL("Lv. {1}", pbRuinBossLevel)
-        end
         pbQuestBubble(event,type,marker[4])
       else
         pbQuestBubble(event,type)

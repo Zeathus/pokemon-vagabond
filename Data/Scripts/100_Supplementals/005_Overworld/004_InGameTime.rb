@@ -80,7 +80,7 @@ class CustomTime
     end
   end
 
-  def forwardToTime(h, m)
+  def forwardToTime(h, m = 0)
     self.day += 1
     self.hour = h
     self.min = m
@@ -151,5 +151,9 @@ module PBDayNight
       return "evening"
     end
     return "day"
+  end
+
+  def self.updateTone
+    @dayNightToneLastUpdate = 0
   end
 end

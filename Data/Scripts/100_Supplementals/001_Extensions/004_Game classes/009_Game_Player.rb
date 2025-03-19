@@ -1,5 +1,7 @@
 class Game_Player < Game_Character
 
+  attr_accessor :under_overhang
+
   def sprite
     if $scene.is_a?(Scene_Map) && $scene.spriteset
       return $scene.spritesetGlobal.playersprite
@@ -25,6 +27,12 @@ class Game_Player < Game_Character
 
   def show_as_species(value)
     @shown_as_species = value
+  end
+
+  def pattern_update_speed
+    return @jump_time * 2 if jumping?
+    ret = [@move_time, 0.25].max * 2
+    return ret
   end
 
 end

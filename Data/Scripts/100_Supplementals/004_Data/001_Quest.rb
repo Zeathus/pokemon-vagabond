@@ -21,10 +21,12 @@ class QuestList
         unlocked += 1
       end
     }
-    if unlocked == 1
-      pbToast(TopWindowToast.new(_INTL("A new quest is available!")))
-    elsif unlocked > 1
-      pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
+    if self.enabled?
+      if unlocked == 1
+        pbToast(TopWindowToast.new(_INTL("A new quest is available!")))
+      elsif unlocked > 1
+        pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
+      end
     end
   end
 
@@ -46,8 +48,8 @@ class QuestList
   end
 
   def update
-    return if !self.enabled?
     self.do_unlocks
+    return if !self.enabled?
     self.do_auto_finishes
   end
 
@@ -244,7 +246,7 @@ class QuestState
     if @status < 1
       if !silent
         if self.type == PBQuestType::Main
-          pbTitleDisplay("Main Quest", self.display_name)
+          pbTitleDisplay("Main Quest", self.display_name(self.status))
         else
           pbToast(TopWindowToast.new(_INTL("Quest Discovered!\n{1}", GameData::Quest.get(@quest_id).name))) if !silent
         end
@@ -272,7 +274,7 @@ class QuestState
 
   def finish(silent=false)
     if @status < 2
-      pbTitleDisplay(self.display_name, "Quest Completed!") if !silent
+      pbTitleDisplay(self.display_name(self.status), "Quest Completed!") if !silent
       if self.money > 0
         pbMessage(_INTL("{1} received ${2}!", $player.name, self.money))
         $player.money += money
@@ -328,8 +330,8 @@ class QuestState
     return GameData::Quest.get(@quest_id).name
   end
 
-  def display_name
-    return GameData::Quest.get(@quest_id).display_name
+  def display_name(status=0)
+    return GameData::Quest.get(@quest_id).display_name(status)
   end
 
   def type

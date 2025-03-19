@@ -122,7 +122,9 @@ def pbWildModify(pokemon)
       pokemon.moves.push(Pokemon::Move.new(m))
     end
   end
-  pokemon.form = mod.form if mod.form
+  if mod.form
+    pokemon.form = mod.form
+  end
   pokemon.calc_stats
   pokemon.hp = pokemon.totalhp * mod.hpmult if mod.hpmult
   pokemon.hp = mod.hp if mod.hp

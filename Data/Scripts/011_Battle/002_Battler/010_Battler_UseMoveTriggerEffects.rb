@@ -82,6 +82,10 @@ class Battle::Battler
          user.effects[PBEffects::DestinyBondTarget] < 0
         user.effects[PBEffects::DestinyBondTarget] = target.index
       end
+      # Record target for EV gain
+      if target.fainted?
+        target.causeOfFaint = user
+      end
     end
   end
 

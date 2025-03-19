@@ -340,7 +340,7 @@ class PokemonEncounters
       level = [level + rand(1..4), GameData::GrowthRate.max_level].min
     end
     # Return [species, level]
-    return [encounter[1], level]
+    return [encounter[1], level, encounter[4]]
   end
 
   # For the given map, randomly chooses a species and level from the encounter

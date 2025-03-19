@@ -40,10 +40,12 @@ class Battle::Battler
   attr_accessor :tookMoveDamageThisRound   # Boolean for Focus Punch
   attr_accessor :tookDamageThisRound   # Boolean for whether self took damage this round
   attr_accessor :tookPhysicalHit
+  attr_accessor :tookSpecialHit
   attr_accessor :statsRaisedThisRound   # Boolean for whether self's stat(s) raised this round
   attr_accessor :statsLoweredThisRound   # Boolean for whether self's stat(s) lowered this round
   attr_accessor :canRestoreIceFace   # Whether Hail started in the round
   attr_accessor :damageState
+  attr_accessor :causeOfFaint
 
   # These arrays should all have the same number of values in them
   STAT_STAGE_MULTIPLIERS    = [2, 2, 2, 2, 2, 2, 2, 3, 4, 5, 6, 7, 8]
@@ -219,7 +221,9 @@ class Battle::Battler
 
   def pbThis(lowerCase = false)
     if opposes?
-      if @battle.trainerBattle?
+      if name == "???"
+        return lowerCase ? _INTL("the mysterious Pokémon") : _INTL("The mysterious Pokémon")
+      elsif @battle.trainerBattle?
         return lowerCase ? _INTL("the opposing {1}", name) : _INTL("The opposing {1}", name)
       else
         return lowerCase ? _INTL("the wild {1}", name) : _INTL("The wild {1}", name)
@@ -422,10 +426,12 @@ class Battle::Battler
 
   def itemActive?(ignoreFainted = false)
     return false if fainted? && !ignoreFainted
-    return false if @effects[PBEffects::Embargo] > 0
-    return false if @battle.field.effects[PBEffects::MagicRoom] > 0
-    return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
     return false if hasActiveAbility?(:KLUTZ, ignoreFainted)
+    if !@effects[PBEffects::Permanence]
+      return false if @effects[PBEffects::Embargo] > 0
+      return false if @battle.field.effects[PBEffects::MagicRoom] > 0
+      return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
+    end
     return true
   end
 

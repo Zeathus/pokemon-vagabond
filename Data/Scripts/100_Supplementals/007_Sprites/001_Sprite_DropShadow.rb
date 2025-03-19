@@ -26,7 +26,8 @@ class DropShadowSprite
     return if disposed?
     if @event && @event!=$game_player
       if (@event.character_name[/trainer/] || @event.character_name[/NPC/] ||
-          @event.character_name[/pkmn/]) && !@event.character_name[/member/]
+        @event.character_name[/pkmn/]) && !@event.character_name[/member/] &&
+        !@event.name[/noshadow/]
         # Just-in-time creation of sprite
         if !@sprite
           @sprite=Sprite.new(@viewport)

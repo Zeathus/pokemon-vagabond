@@ -599,7 +599,12 @@ class Battle
           anyNear = allOtherSideBattlers(battler).any? { |other| nearBattlers?(other.index, battler.index) }
           break if anyNear
         end
-        break if anyNear
+        anyOpposingWithNoTargets = false
+        allOtherSideBattlers(side).each do |battler|
+          anyOpposingWithNoTargets = allOtherSideBattlers(battler).all? { |other| !nearBattlers?(other.index, battler.index) }
+          break if anyOpposingWithNoTargets
+        end
+        next if anyNear && !anyOpposingWithNoTargets
         # No battlers on this side are near any battlers on the other side; try
         # to move them
         # NOTE: If we get to here (assuming both sides are of size 3 or less),
@@ -798,6 +803,7 @@ class Battle
       battler.effects[PBEffects::SpikyShield]      = false
       battler.effects[PBEffects::Spotlight]        = 0
       battler.effects[PBEffects::ThroatChop]       -= 1 if battler.effects[PBEffects::ThroatChop] > 0
+      battler.effects[PBEffects::GigatonHammerTime]-= 1 if battler.effects[PBEffects::GigatonHammerTime] > 0
       battler.lastHPLost                           = 0
       battler.lastHPLostFromFoe                    = 0
       battler.droppedBelowHalfHP                   = false
@@ -805,6 +811,7 @@ class Battle
       battler.tookMoveDamageThisRound              = false
       battler.tookDamageThisRound                  = false
       battler.tookPhysicalHit                      = false
+      battler.tookSpecialHit                       = false
       battler.statsRaisedThisRound                 = false
       battler.statsLoweredThisRound                = false
       battler.canRestoreIceFace                    = false

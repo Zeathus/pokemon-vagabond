@@ -122,12 +122,11 @@ class Battle::Scene
 
     pbSEPlay("Thunder3")
     60.times do
-      Graphics.update
-      @viewport.update
+      pbGraphicsUpdate
       Input.update
       @sprites["crit_bar"].update
       @sprites["crit_pkmn"].update
-      pbWait(1)
+      pbWait(0.01)
     end
 
     @sprites["crit_bar"].dispose

@@ -14,6 +14,7 @@ class Battle
       next unless b&.opposes?   # Can only gain Exp from fainted foes
       next if b.participants.length == 0
       next unless b.fainted? || b.captured
+      pbGainEffortEssence(b)
       # Count the number of participants
       numPartic = 0
       b.participants.each do |partic|
@@ -30,29 +31,57 @@ class Battle
         end
       end
       # Calculate EV and Exp gains for the participants
-      if numPartic > 0 || expShare.length > 0 || expAll
-        # Gain EVs and Exp for participants
-        eachInTeam(0, 0) do |pkmn, i|
-          next if !pkmn.able?
-          next unless b.participants.include?(i) || expShare.include?(i)
-          pbGainEVsOne(i, b)
-          pbGainExpOne(i, b, numPartic, expShare, expAll, !pkmn.shadowPokemon?)
-        end
-        # Gain EVs and Exp for all other Pokémon because of Exp All
-        if expAll
-          showMessage = true
+      if Supplementals::NO_EV_GAIN
+        if numPartic > 0 || expShare.length > 0 || expAll
+          # Gain EVs and Exp for participants
           eachInTeam(0, 0) do |pkmn, i|
             next if !pkmn.able?
-            next if b.participants.include?(i) || expShare.include?(i)
-            pbDisplayPaused(_INTL("Your other Pokémon also gained Exp. Points!")) if showMessage
-            showMessage = false
+            next unless b.participants.include?(i) || expShare.include?(i)
             pbGainEVsOne(i, b)
-            pbGainExpOne(i, b, numPartic, expShare, expAll, false)
+            pbGainExpOne(i, b, numPartic, expShare, expAll, !pkmn.shadowPokemon?)
+          end
+          # Gain EVs and Exp for all other Pokémon because of Exp All
+          if expAll
+            showMessage = true
+            eachInTeam(0, 0) do |pkmn, i|
+              next if !pkmn.able?
+              next if b.participants.include?(i) || expShare.include?(i)
+              pbDisplayPaused(_INTL("Your other Pokémon also gained Exp. Points!")) if showMessage
+              showMessage = false
+              pbGainEVsOne(i, b)
+              pbGainExpOne(i, b, numPartic, expShare, expAll, false)
+            end
+          end
+        end
+      else
+        if numPartic > 0
+          eachInTeam(0,0) do |pkmn,i|
+            next unless b.participants.include?(i)
+            pbGainEVsOne(i,b)
           end
         end
       end
       # Clear the participants array
       b.participants = []
+    end
+  end
+
+  def pbGainEffortEssence(defeatedBattler)
+    essenceYield = defeatedBattler.pokemon.evYield
+    attacker = defeatedBattler.causeOfFaint
+    if attacker
+      # Modify EV yield based on pkmn's held item
+      if !Battle::ItemEffects.triggerEVGainModifier(attacker.item, attacker, essenceYield)
+        Battle::ItemEffects.triggerEVGainModifier(@initialItems[0][attacker.pokemonIndex], attacker, essenceYield)
+      end
+      # Double EV gain because of Pokérus
+      if attacker.pokerusStage >= 1   # Infected or cured
+        essenceYield.each_key { |stat| essenceYield[stat] *= 2 }
+      end
+      essenceHeld = pbGetEffortEssence
+      essenceYield.each_key { |stat|
+        essenceHeld[stat] = [essenceHeld[stat] + essenceYield[stat], 1000].min
+      }
     end
   end
 

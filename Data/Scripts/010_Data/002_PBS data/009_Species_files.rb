@@ -69,16 +69,19 @@ module GameData
     end
 
     def self.front_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false)
+      return nil if species.nil?
       filename = self.front_sprite_filename(species, form, gender, shiny, shadow)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
     def self.back_sprite_bitmap(species, form = 0, gender = 0, shiny = false, shadow = false)
+      return nil if species.nil?
       filename = self.back_sprite_filename(species, form, gender, shiny, shadow)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
 
     def self.egg_sprite_bitmap(species, form = 0)
+      return nil if species.nil?
       filename = self.egg_sprite_filename(species, form)
       return (filename) ? AnimatedBitmap.new(filename) : nil
     end
@@ -111,11 +114,13 @@ module GameData
     #===========================================================================
 
     def self.egg_icon_filename(species, form)
+      return nil if species.nil?
       ret = self.check_egg_graphic_file("Graphics/Pokemon/Eggs/", species, form, "_icon")
       return (ret) ? ret : pbResolveBitmap("Graphics/Pokemon/Eggs/000_icon")
     end
 
     def self.icon_filename(species, form = 0, gender = 0, shiny = false, shadow = false, egg = false)
+      return nil if species.nil?
       return self.egg_icon_filename(species, form) if egg
       return self.check_graphic_file("Graphics/Pokemon/", species, form, gender, shiny, shadow, "Icons")
     end

@@ -5,6 +5,10 @@ class PortraitSprite < IconSprite
     @msgwindow  = msgwindow
     @character  = nil
     @expression = "neutral"
+    @new_character  = @character
+    @new_expression = @expression
+    @bounce_on_change = true
+    @bounce_timer = 0
     @position   = 1 # 0 = left, 1 = right, 2 = center, 3 = far left, 4 = far right
     self.refresh
   end
@@ -15,30 +19,48 @@ class PortraitSprite < IconSprite
     else
       @character = nil
     end
+    @new_character = @character
     if expr
       @expression = expr.downcase
     else
       @expression = "neutral"
     end
+    @new_expression = @expression
     self.refresh(true)
   end
 
   def character=(value)
     if value && value != "none"
-      @character = value.downcase
+      value = value.downcase
     else
-      @character = nil
+      value = nil
     end
-    self.refresh(true)
+    if value != @character && value != @new_character
+      @new_character = value
+      if !value.nil? && @bounce_on_change
+        @bounce_timer = 8
+      else
+        @character = value
+        self.refresh(true)
+      end
+    end
   end
 
   def expression=(value)
     if value
-      @expression = value.downcase
+      value = value.downcase
     else
-      @expression = "neutral"
+      value = "neutral"
     end
-    self.refresh(true)
+    if value != @expression && value != @new_expression
+      @new_expression = value
+      if !value.nil? && @bounce_on_change
+        @bounce_timer = 12
+      else
+        @expression = value
+        self.refresh(true)
+      end
+    end
   end
 
   def position=(value)
@@ -53,7 +75,7 @@ class PortraitSprite < IconSprite
       self.setBitmap(self.portrait_file)
     end
     if self.bitmap
-      self.y = @msgwindow.y - self.bitmap.height + 2
+      self.y = @msgwindow.y - self.bitmap.height + 4
       case @position
       when 0
         self.x = @msgwindow.x + 10
@@ -67,7 +89,21 @@ class PortraitSprite < IconSprite
         self.x = @msgwindow.x + @msgwindow.width - self.bitmap.width + 32
       end
     end
-    self.z = @msgwindow.z
+    self.z = @msgwindow.z - 3
+  end
+
+  def update
+    if @bounce_timer > 0
+      @bounce_timer -= 1
+      if @bounce_timer == 6
+        @character = @new_character
+        @expression = @new_expression
+        self.refresh(true)
+      end
+      self.y = @msgwindow.y - self.bitmap.height + [4, 4, 2, 2, 4, 4, 8, 8, 4, 4, 2, 2][@bounce_timer]
+    end
+    self.update_parts if self.bitmap
+    super
   end
 
   def portrait_file
@@ -129,6 +165,15 @@ class NameBoxSprite < IconSprite
     self.refresh
   end
 
+  def display_name
+    return nil if @hide_name == 2
+    display_name = (@show_name || @real_name)
+    return nil if display_name.nil?
+    display_name = $player.name if display_name.downcase == "<player>"
+    display_name = "???" if @hide_name == 1
+    return display_name
+  end
+
   def refresh(redraw = false)
     self.visible = (!(@real_name.nil?)) && @msgwindow.visible && (@hide_name != 2)
     @overlay.visible = self.visible
@@ -141,8 +186,7 @@ class NameBoxSprite < IconSprite
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       textpos = [[
-        ((@hide_name == 1) ? "???" : (@show_name || @real_name)),
-        self.bitmap.width / 2, 12, 2, base, shadow
+        self.display_name, self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
@@ -210,6 +254,7 @@ class TalkMessageWindowWrapper
     @coinwindow = nil
     @battlepointswindow&.dispose
     @battlepointswindow = nil
+    @hasAutoClose = false
     if full
       if !@message_position || @message_position <= 2
         if $game_system
@@ -265,6 +310,7 @@ class TalkMessageWindowWrapper
     else
       skin = MessageConfig.pbGetSpeechFrame
     end
+    @window_skin = skin
     @msgwindow.setSkin(skin)
   end
 
@@ -388,6 +434,7 @@ class TalkMessageWindowWrapper
         end
       when "wtnp", "^"
         text = text.sub(/\001\z/, "")   # fix: '$' can match end of line as well
+        @hasAutoClose = true
       when "se"
         if @controls[i][2] == 0
           @startSE = param
@@ -514,7 +561,7 @@ class TalkMessageWindowWrapper
     @msgwindow&.update
     @msgwindow&.updateEffect
     @namebox&.update
-    @portaits&.each { |p| p.update }
+    @portraits&.each { |p| p.update }
     @facewindow&.update
     @goldwindow&.update
     @coinwindow&.update
@@ -551,15 +598,26 @@ class TalkMessageWindowWrapper
     @text = value
   end
 
+  def text
+    return @text
+  end
+
+  def format_name(value)
+    value = value + ""
+    symbols = [".", "!", "?", ",", ":", ";"]
+    symbols.each do |i|
+      value.gsub!(i, _INTL("[{1}]", i))
+    end
+    value.gsub!("<", "(")
+    value.gsub!(">", ")")
+    value.gsub!("\\", "/")
+    return value
+  end
+
   def format_text(value)
     value = _format(value)
 
     value.gsub!("\\n", "\n")
-
-    # Insert player information
-    if $player
-      value.gsub!("<PLAYER>", $player.name)
-    end
 
     # Colors
     for i in ["R", "G", "B", "Y", "P", "O", "W", "RBOW", "RBOW2"]
@@ -649,8 +707,8 @@ class TalkMessageWindowWrapper
     end
 
     if @namebox&.real_name
-      base   = Dialog::getCharColor(@namebox.real_name, 0, @message_frame == 0)
-      shadow = Dialog::getCharColor(@namebox.real_name, 1, @message_frame == 0)
+      base   = Dialog.getCharColor(@namebox.real_name, 0, @message_frame == 0)
+      shadow = Dialog.getCharColor(@namebox.real_name, 1, @message_frame == 0)
       base   = Dialog.defaultTextColor(0, @message_frame == 0) if !base
       shadow = Dialog.defaultTextColor(1, @message_frame == 0) if !shadow
       if base && shadow
@@ -659,20 +717,40 @@ class TalkMessageWindowWrapper
       end
     end
 
+    # Insert player information
+    if $player
+      value.gsub!("<PLAYER>", self.format_name($player.name))
+    end
+
+    value.gsub!("\\rightarrow", "→")
+    value.gsub!("\\leftarrow", "←")
+    value.gsub!("\\downarrow", "↓")
+    value.gsub!("\\uparrow", "↑")    
+
     if @add_pauses
       i = 1
       brackets = 0
-      while i < value.length
+      while i < value.length - 1
         if value[i] == "["
           brackets += 1
         elsif value[i] == "]"
           brackets -= 1
         elsif brackets == 0 && value[i - 1] != "\\"
           case value[i]
-          when ".", "!", "?"
-            add = "\\wt[8]"
+          when "."
+            if ".!?)".include?(next_char)
+              add = "\\wt[4]"
+            else
+              add = "\\wt[8]"
+            end
             value = (value[0..i] + add + value[(i+1)...value.length])
             i += add.length
+          when "!", "?"
+            if next_char != "!" && next_char != "?"
+              add = "\\wt[8]"
+              value = (value[0..i] + add + value[(i+1)...value.length])
+              i += add.length
+            end
           when ",", ":", ";"
             add = "\\wt[6]"
             value = (value[0..i] + add + value[(i+1)...value.length])
@@ -684,6 +762,11 @@ class TalkMessageWindowWrapper
     end
 
     value.gsub!("[.]", ".")
+    value.gsub!("[!]", ".")
+    value.gsub!("[?]", ".")
+    value.gsub!("[,]", ".")
+    value.gsub!("[:]", ".")
+    value.gsub!("[;]", ".")
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
 
@@ -710,8 +793,13 @@ class TalkMessageWindowWrapper
     return @namebox
   end
 
+  def window_skin
+    return @window_skin || MessageConfig.pbGetSpeechFrame
+  end
+
   def window_skin=(value)
     value = MessageConfig.pbGetSpeechFrame if value.nil?
+    @window_skin = value
     @msgwindow.setSkin(value)
   end
 
@@ -725,6 +813,46 @@ class TalkMessageWindowWrapper
 
   def textspeed=(value)
     @msgwindow.textspeed = value
+  end
+
+  def waitcount
+    return @msgwindow.waitcount
+  end
+
+  def busy?
+    return @msgwindow.busy?
+  end
+
+  def pausing?
+    return @msgwindow.pausing?
+  end
+
+  def canSkipAhead
+    return !@hasAutoClose
+  end
+
+  def skipAhead
+    if !@msgwindow.pausing?
+      if !@hasAutoClose && @msgwindow.position > 1
+        @msgwindow.skipAhead(true)
+        @controls.length.times do |i|
+          next if !@controls[i]
+          next if @controls[i][2] > @msgwindow.position
+          control = @controls[i][0]
+          param = @controls[i][1]
+          case control
+          when "ts"     # Change text speed
+            @msgwindow.textspeed = (param == "") ? -999 : param.to_i
+          when "se"     # Play SE
+            pbSEPlay(pbStringToAudioFile(param))
+          when "me"     # Play ME
+            pbMEPlay(pbStringToAudioFile(param))
+          end
+          @controls[i] = nil
+        end
+      end
+      Input.update
+    end
   end
 
   def reposition
@@ -864,6 +992,12 @@ class TalkMessageWindows
         window.showCommands()
         $game_map.need_refresh = true if $game_map
       end
+      $game_temp.log_dialog(
+        0,
+        window.namebox.display_name,
+        window.text,
+        window.window_skin
+      )
       window.finish
       window.close
     end
@@ -939,6 +1073,7 @@ class TalkMessageWindows
   end
 
   def update
+    pbUpdateTextBubbles
     #@msgwindows.each { |w| w.update }
   end
 
