@@ -84,7 +84,7 @@ GameData::TerrainTag.register({
   :id_number              => 22,
   :shows_dust_particle    => true,
   :battle_environment     => :Rock,
-  :land2_wild_encounters   => true
+  :land2_wild_encounters  => true
 })
 
 GameData::TerrainTag.register({
