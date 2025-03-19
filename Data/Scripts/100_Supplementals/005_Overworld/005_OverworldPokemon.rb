@@ -49,7 +49,6 @@ class OverworldPokemon
     @species = species
     @form = form ? form : 0
     @lvl = lvl
-    @sprite = IconSprite.new(0,0,@viewport)
     src_bitmap = Supplementals::Cache.get(GameData::Species.icon_filename(species, @form))
     @sprite = BitmapSprite.new(src_bitmap.bitmap.width, src_bitmap.bitmap.height, @viewport)
     @sprite.bitmap.blt(0, 0, src_bitmap.bitmap, Rect.new(0, 0, src_bitmap.bitmap.width, src_bitmap.bitmap.height))
