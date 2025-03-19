@@ -1,5 +1,5 @@
 #===============================================================================
-# Pokémon sprite (used out of battle)
+# Pokémon sprite (used out of battle).
 #===============================================================================
 class PokemonSprite < Sprite
   def initialize(viewport = nil)
@@ -77,29 +77,31 @@ class PokemonSprite < Sprite
   end
 end
 
-
-
 #===============================================================================
-# Pokémon icon (for defined Pokémon)
+# Pokémon icon (for defined Pokémon).
 #===============================================================================
 class PokemonIconSprite < Sprite
   attr_accessor :selected
   attr_accessor :active
   attr_reader   :pokemon
 
+  # Time in seconds for one animation cycle of this Pokémon icon. It is doubled
+  # if the Pokémon is at 50% HP or lower, and doubled again if it is at 25% HP
+  # or lower. The icon doesn't animate at all if the Pokémon is fainted.
+  ANIMATION_DURATION = 0.25
+
   def initialize(pokemon, viewport = nil)
     super(viewport)
-    @selected     = false
-    @active       = false
-    @numFrames    = 0
-    @currentFrame = 0
-    @counter      = 0
-    self.pokemon  = pokemon
-    @logical_x    = 0   # Actual x coordinate
-    @logical_y    = 0   # Actual y coordinate
-    @adjusted_x   = 0   # Offset due to "jumping" animation in party screen
-    @adjusted_y   = 0   # Offset due to "jumping" animation in party screen
-    @species      = nil
+    @selected      = false
+    @active        = false
+    @frames_count  = 0
+    @current_frame = 0
+    self.pokemon   = pokemon
+    @logical_x     = 0   # Actual x coordinate
+    @logical_y     = 0   # Actual y coordinate
+    @adjusted_x    = 0   # Offset due to "jumping" animation in party screen
+    @adjusted_y    = 0   # Offset due to "jumping" animation in party screen
+    @species       = nil
   end
 
   def dispose
@@ -127,8 +129,7 @@ class PokemonIconSprite < Sprite
     if !@pokemon
       @species = nil
       self.bitmap = nil
-      @currentFrame = 0
-      @counter = 0
+      @current_frame = 0
       return
     end
     @species = @pokemon.species
@@ -136,8 +137,8 @@ class PokemonIconSprite < Sprite
     self.bitmap = @animBitmap.bitmap
     self.src_rect.width  = @animBitmap.height
     self.src_rect.height = @animBitmap.height
-    @numFrames    = @animBitmap.width / @animBitmap.height
-    @currentFrame = 0 if @currentFrame >= @numFrames
+    @frames_count = @animBitmap.width / @animBitmap.height
+    @current_frame = 0 if @current_frame >= @frames_count
     changeOrigin
   end
 
@@ -169,20 +170,18 @@ class PokemonIconSprite < Sprite
     end
   end
 
-  # How long to show each frame of the icon for
-  def counterLimit
-    return 0 if @pokemon.fainted?    # Fainted - no animation
-    # ret is initially the time a whole animation cycle lasts. It is divided by
-    # the number of frames in that cycle at the end.
-    ret = Graphics.frame_rate / 4               # Green HP - 0.25 seconds
-    if @pokemon.hp <= @pokemon.totalhp / 4      # Red HP - 1 second
-      ret *= 4
-    elsif @pokemon.hp <= @pokemon.totalhp / 2   # Yellow HP - 0.5 seconds
-      ret *= 2
+  def update_frame
+    if @pokemon.fainted?
+      @current_frame = 0
+      return
     end
-    ret /= @numFrames
-    ret = 1 if ret < 1
-    return ret
+    duration = ANIMATION_DURATION
+    if @pokemon.hp <= @pokemon.totalhp / 4      # Red HP - 1 second
+      duration *= 4
+    elsif @pokemon.hp <= @pokemon.totalhp / 2   # Yellow HP - 0.5 seconds
+      duration *= 2
+    end
+    @current_frame = (@frames_count * (System.uptime % duration) / duration).floor
   end
 
   def update
@@ -194,21 +193,12 @@ class PokemonIconSprite < Sprite
     @animBitmap.update
     self.bitmap = @animBitmap.bitmap
     # Update animation
-    cl = self.counterLimit
-    if cl == 0
-      @currentFrame = 0
-    else
-      @counter += 1
-      if @counter >= cl
-        @currentFrame = (@currentFrame + 1) % @numFrames
-        @counter = 0
-      end
-    end
-    self.src_rect.x = self.src_rect.width * @currentFrame
+    update_frame
+    self.src_rect.x = self.src_rect.width * @current_frame
     # Update "jumping" animation (used in party screen)
     if @selected
       @adjusted_x = 4
-      @adjusted_y = (@currentFrame >= @numFrames / 2) ? -2 : 6
+      @adjusted_y = (@current_frame >= @frames_count / 2) ? -2 : 6
     else
       @adjusted_x = 0
       @adjusted_y = 0
@@ -218,10 +208,8 @@ class PokemonIconSprite < Sprite
   end
 end
 
-
-
 #===============================================================================
-# Pokémon icon (for species)
+# Pokémon icon (for species).
 #===============================================================================
 class PokemonSpeciesIconSprite < Sprite
   attr_reader :species
@@ -229,15 +217,17 @@ class PokemonSpeciesIconSprite < Sprite
   attr_reader :form
   attr_reader :shiny
 
+  # Time in seconds for one animation cycle of this Pokémon icon.
+  ANIMATION_DURATION = 0.25
+
   def initialize(species, viewport = nil)
     super(viewport)
-    @species      = species
-    @gender       = 0
-    @form         = 0
-    @shiny        = 0
-    @numFrames    = 0
-    @currentFrame = 0
-    @counter      = 0
+    @species       = species
+    @gender        = 0
+    @form          = 0
+    @shiny         = 0
+    @frames_count  = 0
+    @current_frame = 0
     refresh
   end
 
@@ -302,16 +292,6 @@ class PokemonSpeciesIconSprite < Sprite
     end
   end
 
-  # How long to show each frame of the icon for
-  def counterLimit
-    # ret is initially the time a whole animation cycle lasts. It is divided by
-    # the number of frames in that cycle at the end.
-    ret = Graphics.frame_rate / 4   # 0.25 seconds
-    ret /= @numFrames
-    ret = 1 if ret < 1
-    return ret
-  end
-
   def refresh
     @animBitmap&.dispose
     @animBitmap = nil
@@ -321,9 +301,13 @@ class PokemonSpeciesIconSprite < Sprite
     self.bitmap = @animBitmap.bitmap
     self.src_rect.width  = @animBitmap.height
     self.src_rect.height = @animBitmap.height
-    @numFrames = @animBitmap.width / @animBitmap.height
-    @currentFrame = 0 if @currentFrame >= @numFrames
+    @frames_count = @animBitmap.width / @animBitmap.height
+    @current_frame = 0 if @current_frame >= @frames_count
     changeOrigin
+  end
+
+  def update_frame
+    @current_frame = (@frames_count * (System.uptime % ANIMATION_DURATION) / ANIMATION_DURATION).floor
   end
 
   def update
@@ -332,11 +316,7 @@ class PokemonSpeciesIconSprite < Sprite
     @animBitmap.update
     self.bitmap = @animBitmap.bitmap
     # Update animation
-    @counter += 1
-    if @counter >= self.counterLimit
-      @currentFrame = (@currentFrame + 1) % @numFrames
-      @counter = 0
-    end
-    self.src_rect.x = self.src_rect.width * @currentFrame
+    update_frame
+    self.src_rect.x = self.src_rect.width * @current_frame
   end
 end

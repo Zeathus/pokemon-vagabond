@@ -201,11 +201,11 @@ def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
   viewport.z = 99999
   sprites = {}
   sprites["shadowl"] = Sprite.new(viewport)
-  sprites["shadowl"].bitmap=RPG::Cache.load_bitmap("","Graphics/Pictures/Toasts/ui_shadow_left")
+  sprites["shadowl"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_left")
   sprites["shadowl"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
   sprites["shadowl"].x=-Graphics.width
   sprites["shadowr"] = Sprite.new(viewport)
-  sprites["shadowr"].bitmap=RPG::Cache.load_bitmap("","Graphics/Pictures/Toasts/ui_shadow_right")
+  sprites["shadowr"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_right")
   sprites["shadowr"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
   sprites["shadowr"].x=Graphics.width
   sprites["display"] = Sprite.new(viewport)

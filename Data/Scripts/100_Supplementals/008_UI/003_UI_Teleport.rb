@@ -58,7 +58,7 @@ class PokemonTeleportMapScene
     end
     addBackgroundOrColoredPlane(@sprites,"background","mapbg",Color.new(0,0,0),@viewport)
     @sprites["map"]=IconSprite.new(0,0,@viewport)
-    @sprites["map"].setBitmap("Graphics/Pictures/#{@map[1]}")
+    @sprites["map"].setBitmap("Graphics/UI/#{@map[1]}")
     @sprites["map"].x+=(Graphics.width-@sprites["map"].bitmap.width)/2
     @sprites["map"].y+=(Graphics.height-@sprites["map"].bitmap.height)/2
     for hidden in REGIONMAPEXTRAS
@@ -69,7 +69,7 @@ class PokemonTeleportMapScene
           @sprites["map2"].x=@sprites["map"].x; @sprites["map2"].y=@sprites["map"].y
         end
         pbDrawImagePositions(@sprites["map2"].bitmap,[
-           ["Graphics/Pictures/#{hidden[4]}",hidden[2]*SQUAREWIDTH,hidden[3]*SQUAREHEIGHT,0,0,-1,-1]
+           ["Graphics/UI/#{hidden[4]}",hidden[2]*SQUAREWIDTH,hidden[3]*SQUAREHEIGHT,0,0,-1,-1]
         ])
       end
     end
@@ -78,7 +78,7 @@ class PokemonTeleportMapScene
     @sprites["mapbottom"].maplocation=pbGetMapLocation(@mapX,@mapY)
     @sprites["mapbottom"].mapdetails=pbGetMapDetails(@mapX,@mapY)
     if @destlist
-      teleport_icon="Graphics/Pictures/mapTeleport"
+      teleport_icon="Graphics/UI/mapTeleport"
       for dest in @destlist
         dest_id = _INTL("teleport{1}",dest[0])
         @sprites[dest_id]=IconSprite.new(0,0,@viewport)
@@ -99,7 +99,7 @@ class PokemonTeleportMapScene
         for j in TOP..BOTTOM
           healspot=pbGetHealingSpot(i,j)
           if healspot && $PokemonGlobal.visitedMaps[healspot[0]]
-            @sprites["point#{k}"]=AnimatedSprite.create("Graphics/Pictures/mapFly",2,30)
+            @sprites["point#{k}"]=AnimatedSprite.create("Graphics/UI/mapFly",2,30)
             @sprites["point#{k}"].viewport=@viewport
             @sprites["point#{k}"].x=-SQUAREWIDTH/2+(i*SQUAREWIDTH)+(Graphics.width-@sprites["map"].bitmap.width)/2
             @sprites["point#{k}"].y=-SQUAREHEIGHT/2+(j*SQUAREHEIGHT)+(Graphics.height-@sprites["map"].bitmap.height)/2
@@ -109,7 +109,7 @@ class PokemonTeleportMapScene
         end
       end
     end
-    @sprites["cursor"]=AnimatedSprite.create("Graphics/Pictures/mapCursor",2,15)
+    @sprites["cursor"]=AnimatedSprite.create("Graphics/UI/mapCursor",2,15)
     @sprites["cursor"].viewport=@viewport
     @sprites["cursor"].play
     @sprites["cursor"].x=-SQUAREWIDTH/2+(@mapX*SQUAREWIDTH)+(Graphics.width-@sprites["map"].bitmap.width)/2
