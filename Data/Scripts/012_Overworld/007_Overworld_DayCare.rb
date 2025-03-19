@@ -237,11 +237,11 @@ class DayCare
     #       rerolls. Essentials doesn't have this bug, meaning eggs are slightly
     #       more likely to be shiny (in Gen 8+ mechanics) than in Gen 8 itself.
     def set_shininess(egg, mother, father)
-      shiny_retries = 0
+      shiny_retries = 16
+      shiny_retries *= 2 if $bag.has?(:SHINYCHARM)
       if father.owner.language != mother.owner.language
-        shiny_retries += (Settings::MECHANICS_GENERATION >= 8) ? 6 : 5
+        shiny_retries += 8
       end
-      shiny_retries += 2 if $bag.has?(:SHINYCHARM)
       return if shiny_retries == 0
       shiny_retries.times do
         break if egg.shiny?
@@ -390,8 +390,8 @@ class DayCare
       # Make an egg available at the Day Care
       if !@egg_generated && count == 2
         compat = compatibility
-        egg_chance = [0, 20, 50, 70][compat]
-        egg_chance = [0, 40, 80, 88][compat] if $bag.has?(:OVALCHARM)
+        egg_chance = [0, 30, 60, 80][compat]
+        egg_chance = [0, 50, 80, 90][compat] if $bag.has?(:OVALCHARM)
         @egg_generated = true if rand(100) < egg_chance
       end
       # Have one deposited Pokémon learn an egg move from the other
@@ -434,15 +434,16 @@ class DayCare
     $game_variables[compat_var] = $PokemonGlobal.day_care.get_compatibility if compat_var > 0
   end
 
-  def self.deposit(party_index)
+  def self.deposit(member_index, party_index)
     $stats.day_care_deposits += 1
     day_care = $PokemonGlobal.day_care
-    pkmn = $player.party[party_index]
+    pkmn = getPartyPokemon(member_index)[party_index]
     raise _INTL("No Pokémon at index {1} in party.", party_index) if pkmn.nil?
     day_care.slots.each do |slot|
       next if slot.filled?
       slot.deposit(pkmn)
-      $player.party.delete_at(party_index)
+      getPartyPokemon(member_index).delete_at(party_index)
+      # $player.party.delete_at(party_index)
       day_care.reset_egg_counters
       return
     end
@@ -454,11 +455,20 @@ class DayCare
     slot = day_care[index]
     if !slot.filled?
       raise _INTL("No Pokémon found in slot {1}.", index)
-    elsif $player.party_full?
-      raise _INTL("No room in party for Pokémon.")
+    #elsif $player.party_full?
+    #  raise _INTL("No room in party for Pokémon.")
     end
     $stats.day_care_levels_gained += slot.level_gain
-    $player.party.push(slot.pokemon)
+    if $player.party.length < 3
+      pbMessage(_INTL("{1} was added to your party.", slot.pokemon.name))
+      $player.party.push(slot.pokemon)
+    elsif $player.inactive_party.length < 3
+      pbMessage(_INTL("{1} was added to your inactive party.", slot.pokemon.name))
+      $player.inactive_party.push(slot.pokemon)
+    else
+      pbMessage(_INTL("{1} was sent to the PC.", slot.pokemon.name))
+      pbAddPokemonSilent(slot.pokemon)
+    end
     slot.reset
     day_care.reset_egg_counters
   end
@@ -486,12 +496,58 @@ class DayCare
   end
 
   def self.collect_egg
+    command = pbMessage(_INTL("Where would you like to send the egg?"), [_INTL("Party"), _INTL("PC"), _INTL("Cancel")], 3)
+    if command != 2
+      day_care = $PokemonGlobal.day_care
+      egg = day_care.generate_egg
+      raise _INTL("Couldn't generate the egg.") if egg.nil?
+      # raise _INTL("No room in party for egg.") if $player.party_full?
+      if command == 0
+        if $player.party.length < 3
+          pbMessage(_INTL("The egg was added to your party."))
+          $player.party.push(egg)
+        elsif $player.inactive_party.length < 3
+          pbMessage(_INTL("The egg was added to your inactive party."))
+          $player.inactive_party.push(egg)
+        else
+          pbMessage(_INTL("Your party is full.\nChoose a Pokémon to send to the PC."))
+          pbChoosePokemonScreen(1, 99999) { |member, pkmnidx|
+            if !member && !pkmnidx
+              true
+            else
+              pkmn = getPartyPokemon(member)[pkmnidx]
+              $PokemonStorage.pbStoreCaught(pkmn)
+              getPartyPokemon(member)[pkmnidx] = egg
+              pbMessage(_INTL("{1} was sent to the PC.", pkmn.name))
+              true
+            end
+          }
+        end
+      elsif command == 1
+        pbMessage(_INTL("The egg was sent to the PC."))
+        $PokemonStorage.pbStoreCaught(egg)
+      end
+      day_care.reset_egg_counters
+    end
+  end
+
+  def self.update_characters(c1, c2)
     day_care = $PokemonGlobal.day_care
-    egg = day_care.generate_egg
-    raise _INTL("Couldn't generate the egg.") if egg.nil?
-    raise _INTL("No room in party for egg.") if $player.party_full?
-    $player.party.push(egg)
-    day_care.reset_egg_counters
+    c = [c1, c2]
+    for i in 0...2
+      if day_care[i].filled?
+        c[i].sprite_grid_size = [2, 1]
+        character_name = GameData::Species.icon_filename_from_pokemon(day_care[i].pokemon)
+        character_name.gsub!("Graphics/", "../")
+        character_name.gsub!(".png", "")
+        c[i].character_name = character_name
+        c[i].opacity = 255
+      else
+        c[i].character_name = "nothing"
+        c[i].opacity = 0
+      end
+    end
+    # get_self.character_name = "../Pokemon/Icons/" + letter + "/" + name
   end
 
   #-----------------------------------------------------------------------------

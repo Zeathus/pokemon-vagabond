@@ -390,6 +390,7 @@ Type = Main
 Exp = 120
 Description = "Azelf has told you that you can meet someone in Halcyon Forest that can help Nekane understand her emotions."
 Step1 = "Go to Halcyon Forest, north of the Crosswoods, to meet with the mystery person."
+Step2 = "Head inside Halcyon Hollow to meet Duke."
 Done = Temp
 
 [TEST]

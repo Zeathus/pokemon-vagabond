@@ -32,3 +32,66 @@
 [CW_SIGN_LAPIS_LAZULI]
 /textpos middle
 > South to Lapis Lazuli City<br>The waterway city that serves as a hub for seafaring and sustainable energy
+
+[HALCYON_HOLLOW_BOOK,0]
+> The book details abstract concepts like order and chaos.
+
+[HALCYON_HOLLOW_CLOCK]
+> The grandfather clock appears to be off by a few minutes.
+
+[HALCYON_HOLLOW_DOOR]
+> The door is locked.
+
+[HALCYON_HOLLOW_SHELF,0]
+> The bookshelf is lined with books about mythology. There's even a book on the Lake Guardians!
+?> Do you want to read the book on the Lake Guardians?
+    /choice Read Page 1 (Origin)
+        /dialog HALCYON_HOLLOW_SHELF 1
+    /choice Read Page 2 (Present)
+        /dialog HALCYON_HOLLOW_SHELF 2
+    /choice Read Page 3 (The Red Chain)
+        /dialog HALCYON_HOLLOW_SHELF 3
+    /cancelchoice No
+        /return true
+?/>
+
+[HALCYON_HOLLOW_SHELF,1]
+> The lake guardians are a trio of Pokémon consisting of Azelf, Uxie and Mesprit, that each reside at a respective lake.
+> Ancient myths tell that when the universe was created, they were born to bring key human traits to the world.
+> First, Mesprit granted humans emotions, allowing us to love, but also hate.
+> Second, Azelf infused humans with willpower, allowing us to act and want.
+> Third and last, Uxie bestowed humans the capacity for knowledge, so they could learn and grow.
+?> Keep reading?
+    /choice Yes
+        /dialog HALCYON_HOLLOW_SHELF 2
+    /cancelchoice No
+        /return true
+?/>
+
+[HALCYON_HOLLOW_SHELF,2]
+> Today, the existence of the lake guardians have been documented by a multitude of sightings.
+> While they most often hide at their lake away from civilisation, some few people have even met them in person.
+> It is believed that to this day, their presence contribute to the stability of mankind's minds.
+?> Keep reading?
+    /choice Yes
+        /dialog HALCYON_HOLLOW_SHELF 3
+    /cancelchoice No
+        /return true
+?/>
+
+[HALCYON_HOLLOW_SHELF,3]
+> A less documented ability of the lake guardians is their power to create [R]the red chain[/].
+> While precise conclusions cannot be made, several myths from around the world tell of similar traits.
+> When all three lake guardians gather, they together can create the red chain.
+> Anything that is enveloped by the red chain is bound and subdued, its powers contained by the chain.
+> This serves not only to restrain, but also to repair a broken state of that which is contained.
+> Ancient mythology speaks of not only of cases where the red chain has subdued cataclysmic powers.
+> There are also those where they have restored powers of good that had been severed. 
+
+[HALCYON_HOLLOW_SHELF,4]
+> There are loads of books about various fields of study filling the bookshelf, from physics to archeology.
+> ...You also see a book explaining simple magic tricks and sleight of hand.
+
+[HALCYON_HOLLOW_GLASS,0]
+> It's a giant hourglass with sand trickling down.
+> What could it be counting down towards?

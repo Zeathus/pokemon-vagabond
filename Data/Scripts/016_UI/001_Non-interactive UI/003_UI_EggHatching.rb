@@ -267,3 +267,22 @@ EventHandlers.add(:on_player_step_taken, :hatch_eggs,
     end
   }
 )
+
+EventHandlers.add(:on_player_step_taken, :hatch_eggs_inactive,
+  proc {
+    $player.inactive_party.each do |egg|
+      next if egg.steps_to_hatch <= 0
+      egg.steps_to_hatch -= 1
+      $player.pokemon_party.each do |pkmn|
+        next if !pkmn.ability&.has_flag?("FasterEggHatching")
+        egg.steps_to_hatch -= 1
+        break
+      end
+      egg.steps_to_hatch -= 2 if pbActiveDrink == "hatch"
+      if egg.steps_to_hatch <= 0
+        egg.steps_to_hatch = 0
+        pbHatch(egg)
+      end
+    end
+  }
+)

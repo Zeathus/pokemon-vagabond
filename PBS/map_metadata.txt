@@ -253,6 +253,7 @@ MapPosition = 0,13,13
 #-------------------------------
 [058]   # Halcyon Clearing
 Name = Halcyon Clearing
+Outdoor = true
 MapPosition = 0,12,2
 SnapEdges = true
 MapSize = 2,11
@@ -280,7 +281,6 @@ MapSize = 3,111111
 [063]   # Halcyon Hollow
 Name = Halcyon Hollow
 MapPosition = 0,14,2
-SnapEdges = true
 #-------------------------------
 [065]   # Lapis Lazuli Gym
 Name = Lapis Lazuli Gym
@@ -764,6 +764,7 @@ Name = ?DarkVoid?
 ShowArea = true
 #-------------------------------
 [196]   # Scoria Gym 1F
+Name = Scoria Gym 1F
 MapPosition = 0,20,14
 #-------------------------------
 [198]   # Scoria City
@@ -788,11 +789,27 @@ Name = Pegma Stadium
 MapPosition = 0,17,5
 #-------------------------------
 [202]   # Scoria House
+Name = Scoria House
 MapPosition = 0,20,14
 MapSize = 2,1111
 #-------------------------------
 [203]   # Scoria Gym B1F
+Name = Scoria Gym B1F
 MapPosition = 0,20,15
+#-------------------------------
+[204]   # Breccia Ranch
+Name = Breccia Ranch
+Outdoor = true
+ShowArea = true
+MapPosition = 0,7,8
+SnapEdges = true
+MapSize = 2,1111
+#-------------------------------
+[205]   # Daycare
+Name = Daycare
+Outdoor = true
+MapPosition = 0,8,8
+SnapEdges = true
 #-------------------------------
 [208]   # Evergone Mangrove
 Name = Evergone Mangrove

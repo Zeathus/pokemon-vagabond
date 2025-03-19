@@ -48,3 +48,372 @@
 > A trip through the forest doesn't sound half-bad either. Especially after our desert trip...
 /speaker Kira
 > Then let's get going.
+
+[CH6_CLEARING,0]
+/event set Kira 23
+/event Kira emote ?
+/speaker Kira
+> So where is this person we're supposed to meet?
+/speaker Azelf
+> If I were to guess, they are simply waiting to make a dramatic entrance.
+/speaker Duke
+/hidename 1
+/portrait none
+!> DRAMATIC YOU SAY?
+
+[CH6_CLEARING,1]
+/speaker Duke
+/hidename 1
+/portrait none
+> Greetings... It is I...\wtnp[10]
+
+[CH6_CLEARING,2]
+/speaker Duke huzzah
+!> DUKE!
+
+[CH6_CLEARING,3]
+/speaker Amethyst
+> Oh, it's the Psychic I met at Evergone Crater!
+/speaker Duke point
+> Indeed! Did you miss me?
+/expression neutral
+> Long time no see, <PLAYER> and Azelf.\nI take it you have need of me?
+/speaker Azelf
+> Well, I suggested that we ask you to help Nekane here with an issue.
+/speaker Duke
+> Is she having trouble adjusting to her newfound emotions?
+/speaker Kira annoyed
+> How would you know that's why we came?
+/speaker Duke heh
+> Just simple context clues.
+/expression neutral
+> However, this is no place to have such a discussion. I have a better place in mind.
+> Welcome to...\wtnp[10]
+
+[CH6_CLEARING,4]
+/speaker Duke huzzah
+> \ts[0]Welcome to\ts[1] the Halcyon Hollow, my humble abode.
+/expression neutral
+> Meet me inside.
+
+[CH6_CLEARING,5]
+/speaker Kira annoyed
+> THIS theater kid convinced you to take <PLAYER> along with you?
+/speaker Amethyst awkward
+> Well, I also battled them to test their skills first.
+/speaker Kira neutral
+> That aside...\nAzelf, how do you know Duke?
+/speaker Azelf
+> We have been acquainted for some time.
+> Duke actually warned me about the Mt[.] Pegma incident before it happened.\nHe told me <PLAYER> would come.
+/speaker Kira neutral
+> He knew the D[.]A[.]O[.] would raid Mt[.] Pegma before we did?
+> That does give his Psychic title some credibility. I'll admit that.
+/expression annoyed
+?> <PLAYER>, how do you know Duke?
+  /choice I met him in the woods
+    > You... met him in the woods?
+  /choice We teamed up until I met Amethyst
+    > So he helped you in battle. I see.
+  /choice He gave me directions to Evergone Mangrove
+    > So he helped you get there, where you met Amethyst.
+?/>
+> I guess you don't know him that well then. At least not as much as Azelf.
+> I'll take Azelf at their word.\nLet's head on inside.
+
+[CH6_HOLLOW,0]
+/event set Kira 13
+/speaker Duke
+> Welcome! Make yourself at home.
+/speaker Amethyst confused
+> It's a little cramped in here for this many people...
+/speaker Duke
+> Well, it is a home for one person, and being within a tree does not really allow for easy expansion.
+/speaker Azelf
+> You see, Duke is [R]not attuned to any of the lake guardians[/]. Neither emotions, willpower, nor knowledge.
+/speaker Kira
+> Wait... If Duke isn't attuned to willpower, how can he hear you?
+/speaker Duke point
+> I simply mastered a psychic technique to communicate with all three, despite being attuned to neither of them.
+/speaker Amethyst
+> ...I didn't think such a thing was possible. That's very impressive.
+/speaker Azelf
+> Duke also has a way with words, so I am certain he can put Nekane at ease.
+/speaker Duke
+> Trying to butter me up, are you?\nI'll allow it.
+> But yes, I do believe I can provide Nekane with the counseling she needs.
+> Thus I request you all to wait outside and leave Nekane with me for a moment.
+> Though I need Azelf to stay.
+/speaker Kira
+> If Azelf is here to keep watch, it should be fine to comply.
+/speaker Amethyst
+> Sounds good to me! We'll wait outside.
+
+[CH6_THERAPY,0]
+/speaker Duke glasses
+> Azelf, you have already gathered what my plan is by the energy of my will, correct?
+/speaker Azelf
+> I have, yes.
+/speaker Duke glasses
+> Good, then please follow my cue when the time is right.
+/expression glasses_huzzah
+> Let the counseling begin!
+
+[CH6_THERAPY,1]
+/windowpos center
+> Choose how Duke responds to help Nekane understand her emotions.
+> Your choices will affect Nekane's comfort and stress.
+> If she gets comfortable enough, you win! ...But if she gets too stressed, you lose and have to try again.
+
+[CH6_THERAPY,2]
+/speaker Duke glasses
+> First, let me reintroduce myself.
+/expression glasses_point
+> My name is Duke, and I shall be your counselor today.
+/expression glasses
+> Please, do tell me a bit about yourself.
+/speaker Nekane thought
+> ...
+/expression neutral
+> My name is Nekane. That is what <PLAYER> and Amethyst decided to call me.
+> They have taken care of me since I got here.
+> I... do not really know anything else about myself...
+
+[CH6_THERAPY,3]
+/speaker Duke glasses
+> I see...
+/loop
+?> (I sensed that her lack of memories troubled her just now.)
+  /choice How does that make you feel?
+    /speaker Nekane
+    > Feel... It makes me feel... some way I have not felt before.
+    > Is that... normal?
+    /speaker Duke glasses
+    > What you feel must be [R]uncertainty[/].\nIt is a perfectly normal feeling.
+    > In fact, <PLAYER> has a similar memory situation, so you likely share that feeling.
+    /speaker Nekane
+    > <PLAYER>... has the same feeling?
+    /reset
+    /eval pbCounseling.changeValues(+0.3,-0.2)
+    /break
+  /choice That must make you feel unsure of yourself.
+    /speaker Nekane
+    > It makes me feel... some way I have not felt before.
+    > Is that... normal?
+    /speaker Duke glasses
+    > What you feel must be [R]uncertainty[/].\nIt is a perfectly normal feeling.
+    > In fact, <PLAYER> has a similar memory situation. You likely share that feeling.
+    /speaker Nekane
+    > <PLAYER>... has the same feeling?
+    /reset
+    /eval pbCounseling.changeValues(+0.3,-0.1)
+    /break
+  /choice That sounds pretty bad.
+    /speaker Nekane
+    > Is that very bad? Am I in trouble?
+    /reset
+    /eval pbCounseling.changeValues(0,+0.2)
+    /speaker Duke glasses
+    > (I should avoid insinuating, as that will negatively influence her perception.)
+?/>
+/end
+
+[CH6_THERAPY,4]
+/speaker Duke glasses
+> Would you like to discuss this kind of feeling further?
+/speaker Nekane neutral
+> ...I do not know if I want to or not.
+/speaker Duke glasses
+> (I get the feeling the best decision is to move on for now. Only Uxie could assist fully on this matter.)
+> Can you recall any similarly strong feelings you have had?
+/speaker Nekane thought
+> ...
+/expression neutral
+> When Mesprit granted me emotions...
+/loop
+/speaker Nekane neutral
+> In my mind I could see Amethyst, Kira and Azelf left behind in the desert.
+?> Something was happening to me.\nI could not stop shaking.
+  /choice But they turned out fine.
+    /speaker Nekane
+    > I guess so... Was it not that important?
+    /speaker Duke glasses
+    > (While that did not upset her, it would be better to ask questions where she has to think for herself.)
+  /choice Did you worry if they were okay?
+    /speaker Nekane
+    > Worry? Is that what it is called?
+    /reset
+    /eval pbCounseling.changeValues(+0.2,-0.1)
+    /speaker Duke glasses
+    > Indeed. You worry when you feel someone you care about might be unwell.
+    > It can also be called "concern".
+    /speaker Nekane
+    > Worry...
+    /break
+  /choice Did you feel like you betrayed them?
+    /speaker Nekane
+    > Did I... betray them?\nWill they abandon me..?
+    /reset
+    /eval pbCounseling.changeValues(0,+0.2)
+    /speaker Duke glasses
+    > (I should avoid insinuating, as that will negatively influence her perception.)
+?/>
+/end
+
+[CH6_THERAPY,5]
+/speaker Nekane
+/portrait none
+> ...That must be why they looked for me when I wandered into Smokey Forest.
+/reset
+/eval pbCounseling.changeValues(+0.1,0)
+
+[CH6_THERAPY,6]
+/speaker Nekane
+> But... I think there was more than just worry. I felt like... I had done something wrong.
+> Why am I feeling all these other emotions at the same time?
+/speaker Duke glasses_point
+> You pose an excellent question.
+/expression glasses
+> Emotions are not so simple as for there to be only one at once.
+> Most times, there are multiple emotions competing for your attention.
+/loop
+/speaker Nekane
+> Feelings really are complicated...
+/speaker Duke glasses
+?> (This is my opening...)
+  /choice You felt guilt and anxiety.
+    > (No, saying that is not the way to go.\nI can make better use of this opening.)
+  /choice Emotions are quite perplexing are they not?
+    /speaker Nekane
+    > They really are... But I think that also makes them interesting in a way?
+    /break
+  /choice Maybe you can fully understand them someday.
+    /speaker Nekane
+    > I find it very difficult... I do not even know the words to describe these things...
+    /reset
+    /eval pbCounseling.changeValues(0,+0.1)
+    /speaker Duke glasses
+    > (Leaving Nekane entirely by herself on this is not the way to go.)
+?/>
+/end
+
+[CH6_THERAPY,7]
+/speaker Duke glasses
+> (That's the cue.)
+/speaker Duke glasses_huzzah
+> (Azelf, NOW!)
+/speaker Azelf
+> On it!
+
+[CH6_THERAPY,8]
+/speaker Nekane shocked
+> ...!
+/speaker Duke glasses
+> Please, do finish your previous thought.
+/speaker Nekane shocked
+> ...
+/expression thought
+> ...Okay.
+/expression neutral
+> Feelings... They are difficult to grasp.\nI [R]want to[/] learn to understand them.
+/speaker Duke glasses
+> (Bingo. Time for round 2.)
+
+[CH6_THERAPY,9]
+/speaker Nekane
+?> How can I begin to truly understand my emotions?
+  /choice Would you like me to help?
+    > Yes, but I can also continue learning from Kira, Amethyst and <PLAYER> too.
+    /reset
+    /eval pbCounseling.changeValues(+0.3,-0.2)
+  /choice Would you like to learn by yourself?
+     > Yes, I am ready to try to learn, but I think I need some help to get started.
+    /reset
+    /eval pbCounseling.changeValues(+0.3,-0.2)
+?/>
+
+[CH6_THERAPY,10]
+/speaker Duke glasses
+> Excellent.
+> Do you know how to write?
+/speaker Nekane
+> Yes. Amethyst taught me. How so?
+/speaker Duke glasses_point
+> Perfect. Give me just a moment.
+
+[CH6_THERAPY,11]
+/speaker Duke glasses
+> The book in front of you is a blank journal.
+
+[CH6_THERAPY,12]
+/speaker Nekane
+> What am I to do with a blank book?
+/speaker Duke glasses
+> That book will now be dubbed your [R]"Journal of Feelings"[/].
+> Whenever you experience something that made you feel a certain way, try to put it into words in this journal.
+> I also recommend you to write about past events too.
+/speaker Nekane
+> I see... I think that makes sense.
+> I will try to write about the events we just discussed.
+
+[CH6_THERAPY,13]
+> Scribble... Scribble...
+
+[CH6_THERAPY,14]
+/eval pbCounseling.changeValues(+0.1,-0.1)
+/speaker Nekane thought
+> That is odd...
+/expression neutral
+/loop
+> All I did was write a little, but I no longer feel those emotions as strongly as before.
+?> I think the feeling became something else?
+  /choice Why not try putting it into words?
+    /expression thought
+    > Hmm...
+    /expression neutral
+    > I somehow feel... lighter, but not physically.
+    > It does not really make sense to me.\nIs there a word for this?
+    /speaker Duke glasses
+    > You must be thinking of [R]relief[/].
+    /speaker Nekane
+    > I see... relief.
+    /expression happy
+    > It is a good feeling.\nI will write it down.
+    /break
+  /choice Likely relief or comfort
+    /speaker Duke glasses
+    > (It is probably better to not give away the answer immediately.)
+    /speaker Nekane neutral
+?/>
+/end
+
+[CH6_THERAPY,15]
+> Scribble... Scribble...
+/reset
+/eval pbCounseling.changeValues(+0.1,-0.1)
+
+[CH6_THERAPY,16]
+/speaker Duke glasses_point
+> Now I believe there is only one more thing you must do.
+/speaker Nekane
+> What would that be?
+/speaker Duke glasses
+> To write your name on the book's cover.\nThen it is truly yours.
+/speaker Nekane happy
+> Yes. I like that idea.
+
+[CH6_THERAPY,17]
+> Scribble... Scribble...
+
+[CH6_THERAPY,18]
+/speaker Nekane happy
+> There! I will keep this journal with me from now on.
+/reset
+/eval pbCounseling.changeValues(+0.1,-0.1)
+
+[CH6_THERAPY,19]
+/speaker Duke glasses
+> With that, I believe we can call the others back in.
+> Would be you be so kind, Azelf?
+/speaker Azelf
+> Of course.

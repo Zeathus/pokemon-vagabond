@@ -88,39 +88,39 @@ def pbItemHint(item)
   when :DURINBERRY
   when :BELUEBERRY
   when :OCCABERRY
-    return text_scoria_market
+    return text_berries
   when :PASSHOBERRY
-    return text_scoria_market
+    return text_berries
   when :WACANBERRY
-    return text_scoria_market
+    return text_berries
   when :RINDOBERRY
-    return text_scoria_market
+    return text_berries
   when :YACHEBERRY
-    return text_scoria_market
+    return text_berries
   when :CHOPLEBERRY
-    return text_scoria_market
+    return text_berries
   when :KEBIABERRY
-    return text_scoria_market
+    return text_berries
   when :SHUCABERRY
-    return text_scoria_market
+    return text_berries
   when :COBABERRY
-    return text_scoria_market
+    return text_berries
   when :PAYAPABERRY
-    return text_scoria_market
+    return text_berries
   when :TANGABERRY
-    return text_scoria_market
+    return text_berries
   when :CHARTIBERRY
-    return text_scoria_market
+    return text_berries
   when :KASIBBERRY
-    return text_scoria_market
+    return text_berries
   when :HABANBERRY
-    return text_scoria_market
+    return text_berries
   when :COLBURBERRY
-    return text_scoria_market
+    return text_berries
   when :BABIRIBERRY
-    return text_scoria_market
+    return text_berries
   when :CHILANBERRY
-    return text_scoria_market
+    return text_berries
   when :LIECHIBERRY
   when :GANLONBERRY
   when :SALACBERRY

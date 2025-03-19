@@ -364,7 +364,7 @@ module Settings
   MORE_ABILITIES_AFFECT_WILD_ENCOUNTERS    = (MECHANICS_GENERATION >= 8)
   # Whether shiny wild Pokémon are more likely to appear if the player has
   # previously defeated/caught lots of other Pokémon of the same species.
-  HIGHER_SHINY_CHANCES_WITH_NUMBER_BATTLED = (MECHANICS_GENERATION >= 8)
+  HIGHER_SHINY_CHANCES_WITH_NUMBER_BATTLED = false
   # Whether overworld weather can set the default terrain effect in battle.
   # Storm weather sets Electric Terrain, and fog weather sets Misty Terrain.
   OVERWORLD_WEATHER_SETS_BATTLE_TERRAIN    = (MECHANICS_GENERATION >= 8)

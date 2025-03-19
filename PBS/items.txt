@@ -7064,6 +7064,22 @@ Price = 2000
 Flags = Fling_10
 Description = An item to be held by a Pokémon. It has a curious aroma that boosts the power of Grass-type moves.
 #-------------------------------
+[INFERNOINCENSE]
+Name = Inferno Incense
+NamePlural = Inferno Incenses
+Pocket = 1
+Price = 2000
+Flags = Fling_10
+Description = An item to be held by a Pokémon. It has a intense aroma that boosts the power of Fire-type moves.
+#-------------------------------
+[AURORAINCENSE]
+Name = Aurora Incense
+NamePlural = Aurora Incenses
+Pocket = 1
+Price = 2000
+Flags = Fling_10
+Description = An item to be held by a Pokémon. It has a chilling aroma that boosts the power of Ice-type moves.
+#-------------------------------
 [MINERKIT]
 Name = Miner's Kit
 NamePlural = Miner's Kits

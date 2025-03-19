@@ -128,8 +128,8 @@ class Sprite_Character < RPG::Sprite
       RPG::Cache.retain("Graphics/Characters/", @character_name, @character_hue) if @character == $game_player
       @charbitmapAnimated = true
       @spriteoffset = @character_name[/offset/i]
-      @cw = @charbitmap.width / 4
-      @ch = @charbitmap.height / 4
+      @cw = @charbitmap.width / self.sprite_grid_size[0]
+      @ch = @charbitmap.height / self.sprite_grid_size[1]
       self.ox = @cw / 2
     else
       self.bitmap = nil
@@ -154,7 +154,7 @@ class Sprite_Character < RPG::Sprite
     end
     self.visible = !@character.transparent
     if @tile_id == 0
-      sx = @character.pattern * @cw
+      sx = (@character.pattern % self.sprite_grid_size[0]) * @cw
       if @character == $game_player && $game_variables
         angle = $game_variables[PLAYER_ROTATION] || 0
         direction = @character.direction
@@ -167,7 +167,7 @@ class Sprite_Character < RPG::Sprite
         end
         sy = ((direction - 2) / 2) * @ch
       else
-        sy = ((@character.direction - 2) / 2) * @ch
+        sy = (((@character.direction - 2) / 2) % self.sprite_grid_size[1]) * @ch
       end
       self.src_rect.set(sx, sy, @cw, @ch)
       self.oy = (@spriteoffset rescue false) ? @ch - 16 : @ch

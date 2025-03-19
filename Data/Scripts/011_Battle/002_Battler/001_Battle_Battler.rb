@@ -223,7 +223,7 @@ class Battle::Battler
   def pbThis(lowerCase = false)
     if opposes?
       if name == "???"
-        return _INTL("the mysterious Pokémon")
+        return lowerCase ? _INTL("the mysterious Pokémon") : _INTL("The mysterious Pokémon")
       elsif @battle.trainerBattle?
         return lowerCase ? _INTL("the opposing {1}", name) : _INTL("The opposing {1}", name)
       else
@@ -434,8 +434,8 @@ class Battle::Battler
     if !@effects[PBEffects::Permanence]
       return false if @effects[PBEffects::Embargo] > 0
       return false if @battle.field.effects[PBEffects::MagicRoom] > 0
+      return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
     end
-    return false if @battle.corrosiveGas[@index % 2][@pokemonIndex]
     return true
   end
 

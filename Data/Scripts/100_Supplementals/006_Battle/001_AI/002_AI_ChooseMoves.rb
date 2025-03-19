@@ -175,7 +175,7 @@ class Battle
         faintedStart.each { |f| fainted.push(f) }
 
         # If the first opposing pokemon has affinity boosted any partners
-        affinityboost = [false, false, false, false, false, false]
+        affinityboost = [false, false, false, false, false, false] # Keep
 
         # Simulate each battler using their moves in the correct order
         queue_pos = -1

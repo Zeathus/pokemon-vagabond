@@ -28,8 +28,8 @@ def pbRecipes(id)
       ["All-Seeing Totem",[:WIDELENS,1,:SILVERPOWDER,1,:MENTALHERB,1],[:ALLSEEINGTOTEM,1]],
       # Prevents the foe from inducing confusion on the holder
       ["Mental Ward",[:BLUESHARD,3,:PERSIMBERRY,2,:PRETTYWING,1],[:MENTALWARD,1]],
-      ["Rose Incense",[:MIRACLESEED,2,:GRASSYSEED,2,:LEAFSTONE,1],[:ROSEINCENSE,1]],
-      ["Tropical Incense",[:MIRACLESEED,2,:GRASSYSEED,2,:LEAFSTONE,1],[:TROPICALINCENSE,1]]
+      ["Rose Incense",[:MIRACLESEED,1,:GRASSYSEED,2,:LEAFSTONE,1],[:ROSEINCENSE,1]],
+      ["Tropical Incense",[:MIRACLESEED,1,:GRASSYSEED,2,:LEAFSTONE,1],[:TROPICALINCENSE,1]]
     ]
   when "allon"
     trades = [
@@ -42,7 +42,8 @@ def pbRecipes(id)
     # ["Hazard Armor",[:BLUESHARD,9,:METALPOWDER,1,:QUICKPOWDER,1],[:HAZARDARMOR,1]],
       ["Assault Vest",[:REDSHARD,9,:METALPOWDER,1,:PROTECTOR,1],[:ASSAULTVEST,1]],
       ["Full Incense",[:LAGGINGTAIL,1,:IRONBALL,1],[:FULLINCENSE,1]],
-      ["Luck Incense",[:BIGNUGGET,1],[:LUCKINCENSE,1]]
+      ["Luck Incense",[:BIGNUGGET,1],[:LUCKINCENSE,1]],
+      ["Inferno Incense",[:CHARCOAL,1,:RAWSTBERRY,2,:FIRESTONE,1],[:INFERNOINCENSE,1]]
     ]
   when "channelle"
     trades = [
@@ -61,8 +62,9 @@ def pbRecipes(id)
       ["Noxious Choker",[:TOXICORB,1,:BLACKSLUDGE,1],[:NOXIOUSCHOKER,1]],
       # Protection from curses (Curse, Destiny Bond, Spite, Grudge, Perish Song)
       ["Aegis Talisman",[:HEARTSCALE,2,:PEARLSTRING,1,:CLEANSETAG,1],[:AEGISTALISMAN,1]],
-      ["Sea Incense",[:MYSTICWATER,2,:MISTYSEED,2,:WATERSTONE,1],[:SEAINCENSE,1]],
-      ["Wave Incense",[:MYSTICWATER,2,:MISTYSEED,2,:WATERSTONE,1],[:WAVEINCENSE,1]]
+      ["Sea Incense",[:MYSTICWATER,1,:MISTYSEED,2,:WATERSTONE,1],[:SEAINCENSE,1]],
+      ["Wave Incense",[:MYSTICWATER,1,:MISTYSEED,2,:WATERSTONE,1],[:WAVEINCENSE,1]],
+      ["Aurora Incense",[:NEVERMELTICE,1,:MISTYSEED,2,:WATERSTONE,1],[:AURORAINCENSE,1]]
     ]
   when "garnet"
     trades = [
@@ -72,8 +74,8 @@ def pbRecipes(id)
       ["Rock Head",[:HARDSTONE,1,:CHARTIBERRY,3,:EVERSTONE,1],[:ROCKHEAD,1]],
       ["Groundwire",[:MAGNET,1,:WACANBERRY,3,:YELLOWSHARD,2],[:GROUNDWIRE,1]],
       ["Brick Dumbbell",[:BLACKBELT,1,:CHOPLEBERRY,3,:REDSHARD,2],[:BRICKDUMBBELL,1]],
-      ["Rock Incense",[:HARDSTONE,2,:EVERSTONE,2],[:ROCKINCENSE,1]],
-      ["Lax Incense",[:BRIGHTPOWDER,2],[:LAXINCENSE,1]],
+      ["Rock Incense",[:HARDSTONE,1,:EVERSTONE,2],[:ROCKINCENSE,1]],
+      ["Lax Incense",[:BRIGHTPOWDER,1],[:LAXINCENSE,1]],
       ["Protector",[:HARDSTONE,1,:IRONBALL,1,:REDSHARD,2],[:PROTECTOR,1]]
     ]
   end

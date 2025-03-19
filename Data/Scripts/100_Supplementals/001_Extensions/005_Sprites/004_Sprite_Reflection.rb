@@ -4,7 +4,7 @@ class Sprite_Reflection
 
   def update
     sup_update
-    @sprite.visible = false if $game_switches[Supplementals::HIDE_REFLECTIONS]
+    @sprite.visible = false if @sprite && $game_switches[Supplementals::HIDE_REFLECTIONS]
   end
 
 end

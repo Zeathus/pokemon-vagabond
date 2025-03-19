@@ -542,7 +542,7 @@ def pbBossTurtonator
   end
   pbModifier.hpmult = 3.0 + $PokemonSystem.difficulty
   pbModifier.ability = :SHELLARMOR
-  pbModifier.gender = 0
+  pbModifier.gender = 1
   pbModifier.nature = :MODEST
   pbModifier.item = :CHARCOAL if $PokemonSystem.difficulty >= 2
 

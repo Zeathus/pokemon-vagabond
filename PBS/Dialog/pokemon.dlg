@@ -82,3 +82,33 @@
 /speaker Pawniard
 /cry PAWNIARD 100 100
 > Pawwi!
+
+[POKEMON_SKIDDO]
+/speaker Skiddo
+/cry SKIDDO 100 100
+> Sk'doo!
+
+[POKEMON_GOGOAT]
+/speaker Gogoat
+/cry GOGOAT 100 100
+> G'goo!
+
+[POKEMON_MUDBRAY]
+/speaker Mudbray
+/cry MUDBRAY 100 100
+> Braaaay!
+
+[POKEMON_MUDSDALE]
+/speaker Mudsdale
+/cry MUDSDALE 100 100
+> Daaaale...
+
+[POKEMON_MAREEP]
+/speaker Mareep
+/cry MAREEP 100 100
+> Mreeep!
+
+[POKEMON_MILTANK]
+/speaker Miltank
+/cry MILTANK 100 100
+> Mmooo!

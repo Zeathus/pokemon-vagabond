@@ -22,12 +22,16 @@ class DropShadowSprite
     @disposed
   end
 
+  def visible=(value)
+    @sprite.visible = value if @sprite
+  end
+
   def update(tilemap=nil)
     return if disposed?
     if @event && @event!=$game_player
       if (@event.character_name[/trainer/] || @event.character_name[/NPC/] ||
-          @event.character_name[/pkmn/]) && !@event.character_name[/member/] &&
-          !@event.name[/noshadow/]
+          @event.character_name[/pkmn/] || @event.name[/_shadow/]) &&
+          !@event.character_name[/member/] && !@event.name[/noshadow/]
         # Just-in-time creation of sprite
         if !@sprite
           @sprite=Sprite.new(@viewport)
@@ -38,8 +42,6 @@ class DropShadowSprite
           @sprite.bitmap.fill_rect(6,12,20,2,Color.new(0,0,0))
         end
         if @sprite
-          @sprite.visible
-          @rsprite.visible
           @sprite.visible = @rsprite.visible
           if @sprite.visible
             @sprite.x = @rsprite.x - 16
@@ -50,6 +52,7 @@ class DropShadowSprite
         end
       else
         if @sprite
+          echoln "Test 4"
           @sprite.dispose
           @sprite=nil
         end

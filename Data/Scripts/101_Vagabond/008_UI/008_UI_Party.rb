@@ -3631,12 +3631,19 @@ class PokemonScreen
         elsif oldid <= 5 && newid <= 5
           tmpA = oldid < 3 ? @party[oldid % 3] : @inactive_party[oldid % 3]
           tmpB = newid < 3 ? @party[newid % 3] : @inactive_party[newid % 3]
-          (oldid < 3 ? @party : @inactive_party)[oldid % 3] = tmpB
-          (newid < 3 ? @party : @inactive_party)[newid % 3] = tmpA
-          @party.compact!
-          @inactive_party.compact!
-          @scene.pbHardRefresh if !instant
-          @scene.pbUpdateQuickSummary
+          if ((tmpA.egg? && !tmpB.egg? && newid < 3) ||
+              (tmpB.egg? && !tmpA.egg? && oldid < 3)) &&
+             $player.able_pokemon_count <= 1
+            # An egg is being moved from inactive to active, swapping a non-egg pokemon
+            pbDisplay("You need at least one non-egg Pokémon in your party.")
+          else
+            (oldid < 3 ? @party : @inactive_party)[oldid % 3] = tmpB
+            (newid < 3 ? @party : @inactive_party)[newid % 3] = tmpA
+            @party.compact!
+            @inactive_party.compact!
+            @scene.pbHardRefresh if !instant
+            @scene.pbUpdateQuickSummary
+          end
         else
           pbDisplay("You can't swap Pokemon between characters.")
         end

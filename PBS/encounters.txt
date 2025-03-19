@@ -102,10 +102,6 @@ FishingRod
     15,POLIWHIRL,15,20
 #-------------------------------
 [058] # Halcyon Clearing
-Water,2
-    40,WOOPER,10,13,1
-    30,MARILL,10,13
-    30,PSYDUCK,10,13
 FishingRod
     40,MAGIKARP,10,15
     45,POLIWAG,10,15
@@ -124,6 +120,15 @@ FishingRod
     60,POLIWAG,10,15
     30,POLIWHIRL,15,20
     10,POLIWRATH,20,25
+#-------------------------------
+[204] # Breccia Ranch
+Land,21
+    25,MAREEP,9,12
+    25,MUDBRAY,9,12
+    15,STUFFUL,9,12
+    15,HAPPINY,9,12
+    15,SWABLU,9,12
+    5,MILTANK,9,12
 #-------------------------------
 [062] # Breccia Trail
 Land,21

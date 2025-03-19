@@ -533,6 +533,7 @@
 003_OresToAlloys
 @@@003_Cutscenes
 001_NekaneTransform
+002_NekaneGainTrait
 @@005_Battle
 001_Moves
 002_Abilities
@@ -566,6 +567,7 @@
 018_UI_HabitatDex
 019_UI_StarterChoice
 020_UI_EffortEssence
+021_UI_Counseling
 @@009_Graphics
 001_ParticleEffects
 002_Utils

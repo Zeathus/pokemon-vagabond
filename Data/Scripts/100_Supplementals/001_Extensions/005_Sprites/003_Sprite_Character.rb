@@ -426,4 +426,9 @@ class Sprite_Character < RPG::Sprite
     self.y = screen_y(owner, @real_y)
   end
 
+  def sprite_grid_size
+    return @character.sprite_grid_size if @character.sprite_grid_size
+    return [4, 4]
+  end
+
 end
