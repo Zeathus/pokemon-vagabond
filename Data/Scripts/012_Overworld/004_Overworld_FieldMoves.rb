@@ -756,6 +756,7 @@ def pbEndSurf(_xOffset, _yOffset)
       elsif ($game_player.direction == 4 || $game_player.direction == 6) 
         if pbJumpToward((target_tile[0] - $game_player.x).abs, false, true, target_tile[1] - $game_player.y)
           success = true
+        end
       end
       if success
         $game_map.autoplayAsCue
