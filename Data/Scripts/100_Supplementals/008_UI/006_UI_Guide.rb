@@ -73,7 +73,7 @@ class KeybindSprite < BitmapSprite
     if @input.is_a?(String)
       @source_bitmap = AnimatedBitmap.new("Graphics/Messages/autorun")
     else
-      @keybind_icons = AnimatedBitmap.new("Graphics/UI/keybinds")
+      @source_bitmap = AnimatedBitmap.new("Graphics/UI/keybinds")
     end
     self.refresh
   end
@@ -95,11 +95,11 @@ class KeybindSprite < BitmapSprite
       x += @source_bitmap.bitmap.width
     elsif @input.is_a?(Array)
       for i in @input
-        self.bitmap.blt(x, 0, @keybind_icons.bitmap, $Keybinds.rect(i))
+        self.bitmap.blt(x, 0, @source_bitmap.bitmap, $Keybinds.rect(i))
         x += 28
       end
     else
-      self.bitmap.blt(x, 0, @keybind_icons.bitmap, $Keybinds.rect(@input))
+      self.bitmap.blt(x, 0, @source_bitmap.bitmap, $Keybinds.rect(@input))
       x += 28
     end
     textpos = [[@name,x + 6,4,0,@baseColor,@shadowColor,true]]
@@ -117,7 +117,7 @@ class KeybindSprite < BitmapSprite
   end
 
   def dispose
-    @keybind_icons.dispose
+    @source_bitmap.dispose
     super
   end
 
