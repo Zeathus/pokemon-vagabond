@@ -632,7 +632,7 @@ class Spriteset_Map
           if tag.can_surf_freely && $PokemonEncounters.has_water_encounters?
             if !($game_map.events.any? { |id, event| event.x == x && event.y == y })
               count+=1
-              area = SpawnArea.new(@@viewport1,@map,-1,x,y)
+              area = SpawnArea.new(@@viewport1,@map,tag,x,y)
               if area.tiles.length > 6
                 @spawn_areas.push(area)
               end
@@ -760,8 +760,10 @@ end
 class PokemonEncounters
 
   def pbSpawnType(terrain)
-    if self.has_cave_encounters? && terrain == -1
-      return :Cave
+    if terrain == -1
+      if self.has_cave_encounters?
+        return :Cave
+      end
     elsif self.has_water_encounters? && terrain.can_surf_freely
       return :Water
     elsif self.has_cave_encounters?
