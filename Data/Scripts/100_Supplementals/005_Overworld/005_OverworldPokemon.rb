@@ -704,7 +704,6 @@ class Spriteset_Map
   end
 
   def initialSpawns
-    return if $game_switches && $game_switches[NO_WILD_POKEMON]
     20.times do
       @spawn_areas.each do |area|
         if area.inRange(13,11)

@@ -118,9 +118,10 @@ class PortraitSprite < IconSprite
         @expression = @new_expression
         self.refresh(true)
       end
-      self.y = @msgwindow.y - self.bitmap.height + [4, 4, 2, 2, 4, 4, 8, 8, 4, 4, 2, 2][@bounce_timer]
+      if self.bitmap
+        self.y = @msgwindow.y - self.bitmap.height + [4, 4, 2, 2, 4, 4, 8, 8, 4, 4, 2, 2][@bounce_timer]
+      end
     end
-    self.update_parts if self.bitmap
     super
   end
 
@@ -324,7 +325,7 @@ class NameBoxSprite < IconSprite
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       textpos = [[
-        self.display_name, self.bitmap.width / 2, 18, 2, base, shadow
+        self.display_name, self.bitmap.width / 2, 14, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
@@ -703,7 +704,7 @@ class TalkMessageWindowWrapper
     @msgwindow&.update
     @msgwindow&.updateEffect
     @namebox&.update
-    @portraits&.each { |p| p.update }
+    @portraits&.each { |p| p&.update }
     @facewindow&.update
     @goldwindow&.update
     @coinwindow&.update

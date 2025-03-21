@@ -99,9 +99,9 @@ class Game_Player < Game_Character
       self.move_speed = 3 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
     end
-    if @direction == 8 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y + 1)
+    if @direction == 8 && $game_map && $game_player.y >= 0 && $game_map.stairsUp?($game_player.x, $game_player.y + 1)
       self.move_speed -= 1
-    elsif @direction == 2 && $game_map && $game_map.stairsUp?($game_player.x, $game_player.y)
+    elsif @direction == 2 && $game_map && $game_player.y < $game_map.height - 1 && $game_map.stairsUp?($game_player.x, $game_player.y)
       self.move_speed -= 1
     end
     self.move_speed = 3 if @bumping
