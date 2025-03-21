@@ -325,7 +325,7 @@ class NameBoxSprite < IconSprite
       base   = Dialog.defaultTextColor(0, true) if !base
       shadow = Dialog.defaultTextColor(1, true) if !shadow
       textpos = [[
-        self.display_name, self.bitmap.width / 2, 14, 2, base, shadow
+        self.display_name, self.bitmap.width / 2, 18, 2, base, shadow
       ]]
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
