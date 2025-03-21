@@ -559,7 +559,7 @@ module InputCode
       end
     rescue
       echo "Failed to load keybinds file. Loading default.\n"
-      keybinds_file = _INTL("Data/default_keys.mkxp1")
+      keybinds_file = _INTL("default_keys.mkxp1")
       File.open(keybinds_file, "r") do |file|
         keybinds = InputCode.read_keybinds_file(file)
       end
