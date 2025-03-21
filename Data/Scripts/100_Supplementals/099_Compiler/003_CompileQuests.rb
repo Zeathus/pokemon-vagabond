@@ -43,11 +43,10 @@ def compile_quests(path = "PBS/quests.txt")
         case key
         when "Items"
           item_array = []
-          for i in 0...value.length / 2
-            item_array.push([value[i * 2], value[i * 2 + 1] || 1, i])
+          for i in 0...value.length
+            item_array.push([value[i][0], value[i][1] || 1, i])
           end
-          item_array.sort! { |a, b| (a[0] == b[0]) ? a[2] <=> b[2] : a[0] <=>b [0] }
-          item_array.each { |arr| arr.pop }
+          item_array.sort! { |a, b| (a[0] == b[0]) ? a[2] <=> b[2] : a[0] <=> b[0] }
           contents[key] = item_array
         when "RequireMaps", "RequireQuests"
           contents[key] = [contents[key]] if !contents[key].is_a?(Array)

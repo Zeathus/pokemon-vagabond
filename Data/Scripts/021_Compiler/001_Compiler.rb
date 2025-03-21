@@ -514,7 +514,7 @@ module Compiler
   # Unused
   # @deprecated This method is slated to be removed in v22.
   def pbGetCsvRecord(rec, lineno, schema)
-    Deprecation.warn_method("pbGetCsvRecord", "v22", "get_csv_record")
+    # Deprecation.warn_method("pbGetCsvRecord", "v22", "get_csv_record")
     record = []
     repeat = false
     schema_length = schema[1].length
