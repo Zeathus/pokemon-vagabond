@@ -70,6 +70,7 @@ Name = Breccia Undergrowth
 Outdoor = true
 ShowArea = true
 Bicycle = true
+VFX = 1
 MapPosition = 0,7,6
 SnapEdges = true
 BattleBack = woodland
@@ -499,7 +500,6 @@ Outdoor = true
 [110]   # Mt. Pegma B1F
 Name = Mt. Pegma B1F
 MapPosition = 0,19,6
-Environment = Cave
 #-------------------------------
 [111]   # Mt. Pegma B1F
 Name = Mt. Pegma B1F
@@ -682,7 +682,7 @@ SnapEdges = true
 MapSize = 1,1
 #-------------------------------
 [163]   # East Sea
-Name = Central East Sea
+Name = East Sea
 Outdoor = true
 ShowArea = true
 MapPosition = 0,15,16
@@ -803,13 +803,29 @@ Outdoor = true
 ShowArea = true
 MapPosition = 0,7,8
 SnapEdges = true
-MapSize = 2,1111
+MapSize = 2,111111
 #-------------------------------
 [205]   # Daycare
 Name = Daycare
 Outdoor = true
 MapPosition = 0,8,8
 SnapEdges = true
+#-------------------------------
+[206]   # Central West Sea
+Name = Central West Sea
+Outdoor = true
+ShowArea = true
+MapPosition = 0,9,15
+SnapEdges = true
+MapSize = 3,111111
+#-------------------------------
+[207]   # West Sea
+Name = West Sea
+Outdoor = true
+ShowArea = true
+MapPosition = 0,7,11
+SnapEdges = true
+MapSize = 2,1111111111
 #-------------------------------
 [208]   # Evergone Mangrove
 Name = Evergone Mangrove
@@ -894,12 +910,14 @@ Bicycle = true
 MapPosition = 0,25,6
 MapSize = 1,1
 #-------------------------------
-[220]   # South Gabbro River
-Name = South Gabbro River
+[220]   # Amphi Wilds
+Name = Amphi Wilds
 Outdoor = true
 ShowArea = true
-MapPosition = 0,24,4
-MapSize = 2,1011
+VFX = 2
+MapPosition = 0,0,0
+SnapEdges = true
+MapSize = 1,1
 #-------------------------------
 [221]   # Amphi Town
 Name = Amphi Town
@@ -992,3 +1010,15 @@ SnapEdges = true
 [252]   # D.A.O. HQ B2F
 Name = D.A.O. HQ B2F
 MapPosition = 0,22,11
+#-------------------------------
+[253]   # West Sea Ruins
+Name = West Sea Ruins
+MapPosition = 0,8,14
+#-------------------------------
+[254]   # West Sea Ruins
+Name = West Sea Ruins
+MapPosition = 0,8,14
+#-------------------------------
+[255]   # West Sea Ruins Chamber
+Name = West Sea Ruins Chamber
+MapPosition = 0,8,14

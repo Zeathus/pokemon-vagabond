@@ -1,13 +1,10 @@
 class Spriteset_Map
-  @@viewport1b = Viewport.new(0, 0, Settings::SCREEN_WIDTH, Settings::SCREEN_HEIGHT) # Visual Effects
-  @@viewport1b.z = 101
-
   alias sup_initialize initialize
   alias sup_dispose dispose
   alias sup_update update
 
   def initialize(map = nil)
-    @vfx = RPG::VFX.new(@viewport1b)
+    @vfx = RPG::VFX.new(@@viewport1)
 
     sup_initialize(map)
 
@@ -29,13 +26,14 @@ class Spriteset_Map
 
   def update
     if self.map == $game_map
-      @vfx.type = $game_screen.vfx_type
+      if @vfx.type != $game_screen.vfx_type
+        @vfx.type = $game_screen.vfx_type
+      end
     else
       @vfx.type = PBVFX::None
     end
     sup_update
     @vfx.update
-    @@viewport1b.update
     updateOverworldPokemon if @spawn_areas && Supplementals::OVERWORLD_POKEMON
   end
 

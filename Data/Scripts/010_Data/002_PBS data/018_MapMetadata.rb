@@ -8,6 +8,7 @@ module GameData
     attr_reader :always_bicycle
     attr_reader :teleport_destination
     attr_reader :weather
+    attr_reader :vfx
     attr_reader :town_map_position
     attr_reader :dive_map_id
     attr_reader :dark_map
@@ -39,6 +40,7 @@ module GameData
       "BicycleAlways"     => [:always_bicycle,       "b"],
       "HealingSpot"       => [:teleport_destination, "vuu"],
       "Weather"           => [:weather,              "eu", :Weather],
+      "VFX"               => [:vfx,                  "u"],
       "MapPosition"       => [:town_map_position,    "uuu"],
       "DiveMap"           => [:dive_map_id,          "v"],
       "DarkMap"           => [:dark_map,             "b"],
@@ -70,6 +72,7 @@ module GameData
         ["BicycleAlways",     BooleanProperty,         _INTL("If true, the bicycle will be mounted automatically on this map and cannot be dismounted.")],
         ["HealingSpot",       MapCoordsProperty,       _INTL("Map ID of this Pokémon Center's town, and X and Y coordinates of its entrance within that town.")],
         ["Weather",           WeatherEffectProperty,   _INTL("Weather conditions in effect for this map.")],
+        ["VFX",               VFXEffectProperty,       _INTL("VFX overlay in effect for this map.")],
         ["MapPosition",       RegionMapCoordsProperty, _INTL("Identifies the point on the regional map for this map.")],
         ["DiveMap",           MapProperty,             _INTL("Specifies the underwater layer of this map. Use only if this map has deep water.")],
         ["DarkMap",           BooleanProperty,         _INTL("If true, this map is dark and a circle of light appears around the player. Flash can be used to expand the circle.")],
@@ -98,6 +101,7 @@ module GameData
       @always_bicycle       = hash[:always_bicycle]
       @teleport_destination = hash[:teleport_destination]
       @weather              = hash[:weather]
+      @vfx                  = hash[:vfx]
       @town_map_position    = hash[:town_map_position]
       @dive_map_id          = hash[:dive_map_id]
       @dark_map             = hash[:dark_map]

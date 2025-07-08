@@ -155,7 +155,7 @@ module BattleAnimationEditor
         cmd2 = pbShowCommands(helpwindow,
                               [_INTL("Load Animation"),
                                _INTL("Rename"),
-                               _INTL("Delete")], -1)
+                               _INTL("Delete")], -1, 0, false)
         case cmd2
         when 0   # Load Animation
           canvas.loadAnimation(animations[cmdwin.index])

@@ -3,7 +3,7 @@ def pbNekaneGainTrait(trait)
   words = []
   if trait == "emotion"
     words = [
-      "Joy",
+      "Comfort",
       "Sadness",
       "Anger",
       "Guilt",
@@ -11,10 +11,10 @@ def pbNekaneGainTrait(trait)
       "Happiness",
       "Trust",
       "Fear",
-      "Disgust",
+      "Bonds",
       "Surprise",
       "Anticipation",
-      "Grief",
+      "Enjoyment",
       "Uncertainy",
       "Worry",
       "Love",
@@ -178,7 +178,7 @@ def pbNekaneGainTrait(trait)
   background.zoom_x = 1
   background.zoom_y = 1
 
-  for i in 0...32
+  for i in 0...64
     word_sprites[i].dispose
   end
   background.dispose

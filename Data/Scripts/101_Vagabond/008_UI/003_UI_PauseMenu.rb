@@ -495,6 +495,7 @@ class PauseScreen
       end
     end
     @sprites["controls"].index = @index
+    pbUpdateSceneMap
   end
 
   def pbStartPauseScreen

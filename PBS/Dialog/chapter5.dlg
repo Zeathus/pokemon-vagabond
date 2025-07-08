@@ -231,7 +231,7 @@
 
 [CH5_GROVE,3]
 > You can use Luxray's [R]Electrify skill[/] while Eliana is in your party.
-> To use Electrify, open the Field Action menu (default: D). When used, Electrify will activate all devices around you.
+> To use Electrify, open the Field Action menu (default: A). When used, Electrify will activate all devices around you.
 
 [CH5_HQ,0]
 /speaker Eliana smile
@@ -617,20 +617,29 @@
 > Amethyst... Kira... <PLAYER>...
 > I have done nothing but exist, yet they have taken care of me.
 > <PLAYER>...\nWhy does that name feel important?
-
-# Screen shakes slightly
+/speaker Mesprit
+/portrait none
+> Excellent work, <PLAYER>.
+> I can sense that she is ready.\nPlease take a step back.
 
 [CH5_MIND,16]
 /speaker Mesprit
 /portrait none
-> What was that?
+> All done!\nNow let us get you out of there.
+
+# Screen shakes slightly
 
 [CH5_MIND,17]
 /speaker Mesprit
 /portrait none
-> Watch out! Something from deep within her mind is interfering!
+> What was that?
 
 [CH5_MIND,18]
+/speaker Mesprit
+/portrait none
+> Watch out! Something from deep within her mind is interfering!
+
+[CH5_MIND,19]
 /speaker Mesprit
 /portrait none
 > Whatever her mind has in store, you must get out of there, quickly!

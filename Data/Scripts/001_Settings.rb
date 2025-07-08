@@ -296,7 +296,7 @@ module Settings
   def self.pokedex_names
     return [
       [_INTL("Rokk Pokédex"), 0],
-      [_INTL("Distortion Pokédex"), 1],
+      [_INTL("Reverse Pokédex"), 1],
       _INTL("Combined Pokédex")
     ]
   end
@@ -322,6 +322,11 @@ module Settings
   # Town Map
   #-----------------------------------------------------------------------------
 
+  SMOKEY_FOREST       = 114
+  TORTERRA_WEST       = 161
+  TORTERRA_EAST       = 162
+  TORTERRA_SOUTH      = 163
+
   # A set of arrays, each containing details of a graphic to be shown on the
   # region map if appropriate. The values for each array are as follows:
   #   * Region number.
@@ -331,8 +336,10 @@ module Settings
   #   * Name of the graphic, found in the Graphics/UI/Town Map folder.
   #   * The graphic will always (true) or never (false) be shown on a wall map.
   REGION_MAP_EXTRAS = [
-    #[0, 51, 16, 15, "hidden_Berth", false],
-    #[0, 52, 20, 14, "hidden_Faraday", false]
+    [0, SMOKEY_FOREST, 15, 10, "hidden_Smokey", false],
+    [0, TORTERRA_WEST, 9, 13, "hidden_Amphi", false],
+    [0, TORTERRA_EAST, 15, 14, "hidden_Amphi", false],
+    [0, TORTERRA_SOUTH, 4, 16, "hidden_Amphi", false]
   ]
   # Whether the player can use Fly while looking at the Town Map. This is only
   # allowed if the player can use Fly normally.

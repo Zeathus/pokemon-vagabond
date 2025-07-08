@@ -4,29 +4,22 @@ def pbMiniQuests
 
   if pbGetTimeNow.day != day || !$game_variables[MINIQUESTLIST].is_a?(Array)
     quests = []
-    max = 3
-    max += 1 if count >= 1
-    max += 1 if count >= 2
-    max += 1 if count >= 6
-    max += 1 if count >= 12
-    max += 1 if count >= 20
+    level = pbJob("G.P.O.").level
+    max = 5 + level
     for i in 0...max
-      if count==0
-        dif=0
-      elsif count==1
-        dif=0
-        dif=1 if i > 3
-      elsif count < 6
-        dif=rand(2)+rand(2)
-      elsif count < 12
-        dif=rand(2)+rand(2)+rand(2)
-      elsif count < 20
-        dif=rand(2)+rand(3)
-      elsif count < 30
-        dif=rand(2)+rand(4)
-      else
-        dif=rand(3)+rand(3)
-        dif+=1 if dif==4 && rand(3)==0
+      dif = 0
+      case level
+      when 1
+        dif = 0
+      when 2
+        dif = rand(2)
+      when 3
+        dif = rand(2)+rand(2)
+      when 4
+        dif = rand(2)+rand(3)
+      when 5
+        dif = rand(4)
+        # dif+=1 if dif==3 && rand(3)==0 # Master difficulty tasks don't work yet
       end
       quests.push(MiniQuest.generate(dif))
     end
@@ -40,23 +33,20 @@ def pbRemoveMiniQuestFromList(quest)
   quests = $game_variables[MINIQUESTLIST]
   for i in 0...quests.length
     if quests[i]==quest
-      count = $game_variables[MINIQUESTCOUNT]
-      if count==0
-        dif=0
-      elsif count==1
-        dif=0
-        dif=1 if i > 3
-      elsif count < 6
-        dif=rand(2)+rand(2)
-      elsif count < 12
-        dif=rand(2)+rand(2)+rand(2)
-      elsif count < 20
-        dif=rand(2)+rand(3)
-      elsif count < 30
-        dif=rand(2)+rand(4)
-      else
-        dif=rand(3)+rand(3)
-        dif+=1 if dif==4 && rand(3)==0
+      level = pbJob("G.P.O.").level
+      dif = 0
+      case level
+      when 1
+        dif = 0
+      when 2
+        dif = rand(2)
+      when 3
+        dif = rand(2)+rand(2)
+      when 4
+        dif = rand(2)+rand(3)
+      when 5
+        dif = rand(4)
+        # dif+=1 if dif==3 && rand(3)==0 # Master difficulty tasks don't work yet
       end
       quests[i] = MiniQuest.generate(dif)
     end
@@ -76,37 +66,26 @@ def pbMiniQuestMenu
     names.push(q.name)
   end
 
-  sprites["searchtitle"]=Window_AdvancedTextPokemon.newWithSize("",2,-16,Graphics.width,64,viewport)
-  sprites["searchtitle"].windowskin=nil
-  sprites["searchtitle"].baseColor=Color.new(248,248,248)
-  sprites["searchtitle"].shadowColor=Color.new(0,0,0)
-  sprites["searchtitle"].text=_ISPRINTF("<b><outln2><ac>Tasks</ac><outln><b>")
-  sprites["searchlist"]=Window_ComplexCommandPokemon.newEmpty(-6,32,258,352,viewport)
-  sprites["searchlist"].baseColor=Color.new(88,88,80)
-  sprites["searchlist"].shadowColor=Color.new(168,184,184)
+  sprites["searchlist"]=Window_ComplexCommandPokemon.newEmpty(90,72,308,422,viewport)
+  sprites["searchlist"].baseColor=Color.new(248,248,248)
+  sprites["searchlist"].shadowColor=Color.new(88,88,80)
   sprites["searchlist"].commands=[
-    "Quests",
+    "G.P.O. Tasks",
     names + ["Cancel"]
   ]
-  sprites["auxlist"]=Window_UnformattedTextPokemon.newWithSize("",254,32,264,194,viewport)
-  sprites["auxlist"].baseColor=Color.new(88,88,80)
-  sprites["auxlist"].shadowColor=Color.new(168,184,184)
-  sprites["messagebox"]=Window_UnformattedTextPokemon.newWithSize("",254,226,264,158,viewport)
-  sprites["messagebox"].baseColor=Color.new(88,88,80)
-  sprites["messagebox"].shadowColor=Color.new(168,184,184)
+  sprites["auxlist"]=Window_UnformattedTextPokemon.newWithSize("",400,72,284,224,viewport)
+  sprites["auxlist"].baseColor=Color.new(248,248,248)
+  sprites["auxlist"].shadowColor=Color.new(88,88,80)
+  sprites["messagebox"]=Window_UnformattedTextPokemon.newWithSize("",400,296,284,198,viewport)
+  sprites["messagebox"].baseColor=Color.new(248,248,248)
+  sprites["messagebox"].shadowColor=Color.new(88,88,80)
   sprites["messagebox"].letterbyletter=false
-
-  sprites["difficulty"]=IconSprite.new(384,342,viewport)
-  sprites["difficulty"].setBitmap("Graphics/UI/Stadium/difficulty")
-  sprites["difficulty"].src_rect = Rect.new(0,0,120,22)
-  sprites["difficulty"].z=999
 
   sprites["searchlist"].index=1
   searchlist=sprites["searchlist"]
   sprites["messagebox"].visible=true
   sprites["auxlist"].visible=true
   sprites["searchlist"].visible=true
-  sprites["searchtitle"].visible=true
   pbRefreshMiniQuestMenu(sprites,quests)
   pbFadeInAndShow(sprites)
   pbActivateWindow(sprites,"searchlist"){
@@ -161,19 +140,23 @@ def pbRefreshMiniQuestMenu(sprites,quests)
   searchlist=sprites["searchlist"]
   messagebox=sprites["messagebox"]
   auxlist=sprites["auxlist"]
-  difficulty=sprites["difficulty"]
   index = searchlist.index-1
   if quests[index]
     quest = quests[index]
     auxlist.text = quest.description
+    difficulty = [
+      "Rookie",
+      "Intermediate",
+      "Advanced",
+      "Expert",
+      "Master"
+    ][quest.difficulty]
     messagebox.text = sprintf(
-      "%s\nMoney: $%d\nItem: %s\nDifficulty: ",
-      quest.trainer,quest.rewardMoney,PBItems.getName(quest.rewardItem))
-    difficulty.src_rect.width = 20 * (quest.difficulty + 1)
+      "%s\nDifficulty: %s\nRewards:\n   Money: $%d\n   Item:   %s",
+      quest.trainer,difficulty,quest.money,GameData::Item.get(quest.items[0][0]).name)
   else
     auxlist.text=""
     messagebox.text=""
-    difficulty.src_rect.width=0
   end
 
 end

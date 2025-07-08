@@ -9400,3 +9400,72 @@ Target = NearOther
 FunctionCode = None
 Flags = CanProtect,CanMirrorMove
 Description = Spin-to-win.
+#-------------------------------
+[BUTTERFLYEFFECT]
+Name = Butterfly Effect
+Type = BUG
+Category = Special
+Power = 120
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = AttackTwoTurnsLater
+Description = The user directs the threads of causality to hit the target two turns after this move is used.
+#-------------------------------
+[WIRETAP]
+Name = Wiretap
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 20
+Target = FoeSide
+FunctionCode = AddWiretapToFoeSide
+Description = The user plants a wiretap around the foe. The wiretap reveals the items held by foes that switch into battle.
+#-------------------------------
+[CONTAGION]
+Name = Contagion
+Type = POISON
+Category = Status
+Accuracy = 95
+TotalPP = 20
+Target = AllNearOthers
+FunctionCode = PoisonTarget
+Flags = CanProtect,CanMirrorMove
+Description = The user spreads poisonous particles across the field. It may poison Pokémon around the user.
+#-------------------------------
+[BARBBARRAGE]
+Name = Barb Barrage
+Type = POISON
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = DoublePowerIfTargetPoisoned
+Flags = CanProtect,CanMirrorMove
+Description =  	The user launches countless toxic barbs to inflict damage. This may also poison the target. This move’s power is doubled if the target is already poisoned.
+#-------------------------------
+[STRIKEWEAKNESS]
+Name = Strike Weakness
+Type = DARK
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = AlwaysCriticalHit
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user attacks the target's weak point. This attack always results in a critical hit. Power is increased equal to your current critical hit rate.
+#-------------------------------
+[FEIGNWEAKNESS]
+Name = Feign Weakness
+Type = FAIRY
+Category = Special
+Power = 100
+Accuracy = 100
+TotalPP = 15
+Priority = 2
+Target = NearOther
+FunctionCode = AlwaysCriticalHit
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user pretends to reveal their weak point to the target, making the target lower their guard and target the user. If the target damages the user this turn, the damage taken is halved and the user counterattacks.

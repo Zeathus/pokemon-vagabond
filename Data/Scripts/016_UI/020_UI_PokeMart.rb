@@ -404,6 +404,7 @@ class PokemonMart_Scene
     refreshed_after_busy = false
     timer_start = System.uptime
     loop do
+      pbUpdateSceneMap
       Graphics.update
       Input.update
       self.update
@@ -431,6 +432,7 @@ class PokemonMart_Scene
     yielded = false
     pbPlayDecisionSE
     loop do
+      pbUpdateSceneMap
       Graphics.update
       Input.update
       wasbusy = cw.busy?
@@ -463,6 +465,7 @@ class PokemonMart_Scene
     cw.index = 0
     pbPlayDecisionSE
     loop do
+      pbUpdateSceneMap
       cw.visible = !dw.busy?
       Graphics.update
       Input.update
@@ -498,6 +501,7 @@ class PokemonMart_Scene
       pbBottomRight(numwindow)
       numwindow.y -= helpwindow.height
       loop do
+        pbUpdateSceneMap
         Graphics.update
         Input.update
         numwindow.update
@@ -551,6 +555,7 @@ class PokemonMart_Scene
     pbActivateWindow(@sprites, "itemwindow") do
       pbRefresh
       loop do
+        pbUpdateSceneMap
         Graphics.update
         Input.update
         olditem = itemwindow.item

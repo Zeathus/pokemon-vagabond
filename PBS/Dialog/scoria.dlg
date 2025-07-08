@@ -470,3 +470,11 @@
 [SCORIA_GYM_1F_EDWARD,1]
 /speaker Edward
 > I taught Garnet how to make patterns for her pots. She's gotten very talented.
+
+[SCORIA_BAR_ARGUMENT]
+/speaker Roughneck_1
+> This bar ain't big enough for the both of us.
+/speaker Roughneck_2
+> Get your head outta your rear.\nThere are MULTIPLE free seats here.
+/speaker Roughneck_1
+> Darn you and your logic.\nThis is EXACTLY why I can't stand you.

@@ -22,7 +22,7 @@ def pbLoadQuestMarkers
       end
     end
     next if !active
-    if type != 3 && marker.length > 4 && marker[4]
+    if type < 3 && marker.length > 4 && marker[4]
       quest_id = marker[4].to_sym
       quest = $quests[quest_id]
       if type == 0
@@ -33,16 +33,22 @@ def pbLoadQuestMarkers
       type += quest.type * 4
     end
     if active
+      text = nil
+      icon = nil
+      if type == 5
+        icon = "Graphics/Icons/field_boss"
+        type = 3
+      end
       if type == 3
         if marker[4] == "RuinBoss"
-          marker[4] = _INTL("Lv. {1}", pbRuinBossLevel)
+          text = _INTL("Lv. {1}", pbRuinBossLevel)
         elsif marker[4] == "RuinBossRematch"
-          marker[4] = _INTL("Lv. {1}", pbRuinBossLevel(-1))
+          text = _INTL("Lv. {1}", pbRuinBossLevel(-1))
+        else
+          text = marker[4]
         end
-        pbQuestBubble(event,type,marker[4])
-      else
-        pbQuestBubble(event,type)
       end
+      pbQuestBubble(event, type, text, icon)
     end
   end
 end
@@ -77,7 +83,8 @@ def pbShowMarkers
   pbUpdateMarkers
 end
 
-def pbQuestBubble(event, id = 0, text = nil)
+def pbQuestBubble(event, id = 0, text = nil, icon = nil)
   event.marker_id = id
   event.marker_text = text
+  event.marker_icon = icon
 end 

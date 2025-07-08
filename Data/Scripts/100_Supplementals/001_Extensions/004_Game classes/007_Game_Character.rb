@@ -1,6 +1,7 @@
 class Game_Character
   attr_accessor :marker_id
   attr_accessor :marker_text
+  attr_accessor :marker_icon
   attr_accessor :proximity_texts
   attr_accessor :sprite_grid_size
 
@@ -11,6 +12,7 @@ class Game_Character
     sup_initialize(map)
     @marker_id   = -1
     @marker_text = nil
+    @marker_icon = nil
     @proximity_texts = {}
   end
   

@@ -306,7 +306,7 @@
 [CH2_GPO_INTRO,10]
 /speaker Kira
 > Took you long enough.
-> Anyway, we should get going. Mt[.] Pegma will stay void of operations if we don't head there to find nothing.
+> We should get going. The sooner we check Mt[.] Pegma, the sooner I can debunk your "visions".
 /speaker Amethyst
 > I will stay here. Nekane is likely still feeling uneasy, so I should be here in case she needs me.
 
@@ -426,7 +426,7 @@
 /speaker Azelf
 > Yes, that is the short version, but not everyone can hear me.
 > It is not safe here anymore, may I join you?
-> While I do not know their intentions, I am sure they will target my siblings Uxie and Mesprit next.
+> While I do not know their intentions, I am sure they will target my siblings next.
 > I wish to make sure they are safe.\nYou did say that was "part of the job", correct?
 /speaker Kira
 > I sure did.
@@ -455,9 +455,17 @@
 > \ts[2]The books in my room...\nWith strange glyphs...
 > \ts[2]I wanted to know what they were.
 /speaker Kira lookaway
-..> \ts[1](...Always going that extra mile, huh.)
+.> \ts[1](...Always going that extra mile, huh[.])
+/expression neutral
+> Did you ask anyone about that Absol?
+/speaker Amethyst confused
+> Yes, but I didn't learn anything useful.\nIt seems no modern records have information on it.
+/speaker Kira lookaway
+> Shame. I'll admit I was curious.
+/expression neutral
+> I guess that means it's report time?
 /speaker Amethyst
-> I'll get Nekane back to her room, gimme a second.
+> Yep! I'll take Nekane to her room.
 
 [CH2_REPORT,1]
 /speaker Amethyst
@@ -502,14 +510,12 @@
 /expression confused
 > Whatever could their motive be for capturing one of the Lake Guardians?
 /speaker Azelf
-> I do not know their exact motives. All I know is that they must not succeed.
-> They are likely also going after the other Lake Guardians, Uxie and Mesprit.
+> While their exact motives are unclear, I know that they must not succeed.
+> They are likely also seeking the other Lake Guardians, Uxie and Mesprit.
 /speaker Kira
-> And how can you be so sure of that?
+> I guess you three ARE more useful as a set...
 /speaker Azelf
-> While I cannot divulge the source of this information yet, please know that it is most credible.
-/speaker Kira
-> There's not much reason to doubt one of the Lake Guardians, so I'll take you at your word.
+> Overlooking how you made us sound like collectibles, those are my thoughts exactly.
 /speaker Amethyst
 > ...\wtnp[10]
 /expression awkward

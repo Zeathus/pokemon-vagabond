@@ -6965,3 +6965,9 @@ BackSprite = 0,0
 FrontSprite = 0,0
 ShadowX = 0
 ShadowSize = 2
+#-------------------------------
+[MISTAROS]
+BackSprite = -3,6
+FrontSprite = 1,5
+ShadowX = 0
+ShadowSize = 3

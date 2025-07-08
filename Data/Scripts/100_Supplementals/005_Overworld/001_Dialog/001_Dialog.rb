@@ -23,6 +23,7 @@ DIALOG_FILES = [
   "quests_minor",
   "gpo",
   "evergone",
+  "job_gpo",
   "job_fisher",
   "job_botanist",
   "job_miner",
@@ -34,7 +35,8 @@ DIALOG_FILES = [
   "cerise",
   "dao",
   "stadium",
-  "stadium_trainers"
+  "stadium_trainers",
+  "sea"
 ]
 
 def pbDialog(name, index = 0, msgwindows = nil)
@@ -235,6 +237,7 @@ def pbRunDialogFeed(dialog, msgwindows = nil)
           Graphics.update
           Input.update
           msgwindows.update
+          pbUpdateSceneMap
         end
       when "rest"
         old_vis = []

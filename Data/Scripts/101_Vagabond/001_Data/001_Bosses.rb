@@ -336,31 +336,49 @@ def pbBossRuinGround(rematch = false)
   pbBoss.add(t)
 end
 
-# --- Chimecho ---
-def pbBossSmokeyForest
-  pbBossGeneral
-  pbModifier.hpmult = [2.0, 3.0, 4.0, 4.0][$PokemonSystem.difficulty]
-  pbModifier.item = :AEGISTALISMAN
-  pbModifier.moves = [:ECHOEDVOICE]
+# --- Eelektross ---
+def pbBossRuinElectric(rematch = false)
+  pbBossRuinGeneral(rematch)
+  pbModifier.hpmult = 3.0 + $PokemonSystem.difficulty
+  pbModifier.moves = [
+    :CHARGEBEAM,
+    :THUNDERWAVE,
+    :THUNDERBOLT,
+    :GIGADRAIN
+  ]
+  pbModifier.item = :MAGNET if $PokemonSystem.difficulty > 1
+  pbModifier.ability = :LEVITATE
 
-  # Start: Sets infinite Misty Terrain and gains Pixilate
-  # Each Turn: Powers up Echoed Voice one turn
-  # Counters: Protect, Soundproof
+  # Uses Charge at the start of battle and at the end of each turn.
 
   t = BossTrigger.new(:Start)
-  t.effect(BossEff_Terrain.new(t, :Misty, 999))
-  t.effect(BossEff_Ability.new(t, :PIXILATE))
-  t.effect(BossEff_Message.new(t, "What's this?\nThe Chimecho has the Pixilate ability!"))
+  t.effect(BossEff_Message.new(t, "TRIGGERER is charging up regularly!"))
+  t.effect(BossEff_UseMove.new(t, :CHARGE))
   pbBoss.add(t)
 
   t = BossTrigger.new(:EndOfTurn)
-  t.requires(BossReq_Terrain.new(t, :Misty, false))
-  t.effect(BossEff_Terrain.new(t, :Misty, 999))
+  t.effect(BossEff_UseMove.new(t, :CHARGE))
   pbBoss.add(t)
+end
 
-  t = BossTrigger.new(:EndOfTurn)
-  t.effect(BossEff_Message.new(t, "Chimecho's voice echoes through the forest."))
-  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::EchoedVoiceCounter] += 1"))
+# --- Mistaros ---
+def pbBossSmokeyForest
+  pbBossGeneral
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+  pbModifier.hpmult = [2.0, 3.0, 4.0, 4.0][$PokemonSystem.difficulty]
+  pbModifier.ability = :MISTYSURGE
+  pbModifier.moves = [
+    :THUNDERPUNCH,
+    :DRAGONCLAW,
+    :BITE,
+    :MIST
+  ]
+  pbModifier.nature = :IMPISH
+  pbModifier.moves[0] = :ELECTROBALL if $PokemonSystem.difficulty == 0
+  pbModifier.moves[3] = :FIREPUNCH if $PokemonSystem.difficulty >= 2
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Dialog.new(t, "CH3_MISTAROS", 0))
   pbBoss.add(t)
 end
 
@@ -663,6 +681,166 @@ def pbBossSwampert
   end
 end
 
+def pbBossPrimarina
+  pbBossGeneral
+  pbModifier.moves = [
+    :DISARMINGVOICE,
+    :ICYWIND,
+    :SPARKLINGARIA,
+    :WATERPULSE
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.moves[0] = :MOONBLAST
+    pbModifier.moves[3] = :HYPERVOICE
+    pbModifier.item = :THROATSPRAY
+  end
+  pbModifier.hpmult = 4.0 + $PokemonSystem.difficulty * 2
+  pbModifier.ability = :TORRENT
+  pbModifier.gender = 1
+  pbModifier.nature = :MODEST
+end
+
+def pbBossClawitzer
+  pbBossGeneral
+  # Clauncher
+  pbModifier.moves = [
+    :HEALPULSE,
+    :WATERPULSE,
+    :CHILLINGWATER,
+    :HELPINGHAND
+  ]
+  # Clawitzer
+  pbModifier.next.moves = [
+    :WATERPULSE,
+    :DRAGONPULSE,
+    :AURASPHERE,
+    :DARKPULSE
+  ]
+  # Clauncher
+  pbModifier.next.next.moves = [
+    :HEALPULSE,
+    :WATERPULSE,
+    :CHILLINGWATER,
+    :HELPINGHAND
+  ]
+  pbModifier.hpmult = 2.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  pbModifier.next.hpmult = 4.0 + $PokemonSystem.difficulty
+  pbModifier.next.next.hpmult = 2.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.next.item = :EXPERTBELT
+    pbModifier.moves[3] = :AURASPHERE
+    pbModifier.next.next.moves[3] = :DARKPULSE
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.item = :SITRUSBERRY
+    pbModifier.next.next.item = :SITRUSBERRY
+  end
+  pbModifier.ability = :MEGALAUNCHER
+  pbModifier.next.ability = :MEGALAUNCHER
+  pbModifier.next.next.ability = :MEGALAUNCHER
+  pbModifier.gender = 0
+  pbModifier.next.gender = 0
+  pbModifier.next.next.gender = 0
+  pbModifier.nature = :BOLD
+  pbModifier.next.nature = :MODEST
+  pbModifier.next.next.nature = :CALM
+end
+
+def pbBossOverqwil
+  pbBossGeneral
+  # Qwilfish
+  pbModifier.moves = [
+    :BARBBARRAGE,
+    :TOXIC,
+    :TOXICSPIKES,
+    :BITE
+  ]
+  # Overqwil
+  pbModifier.next.moves = [
+    :BARBBARRAGE,
+    :CRUNCH,
+    :STOCKPILE,
+    :LIQUIDATION
+  ]
+  # Qwilfish
+  pbModifier.next.next.moves = [
+    :BARBBARRAGE,
+    :TOXIC,
+    :TOXICSPIKES,
+    :BITE
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.moves[3] = :CRUNCH
+    pbModifier.next.next.moves[3] = :CRUNCH
+    pbModifier.next.item = :BLACKSLUDGE
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.item = :BLACKSLUDGE
+    pbModifier.next.next.item = :BLACKSLUDGE
+  end
+  pbModifier.hpmult = 2.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  pbModifier.next.hpmult = 4.0 + $PokemonSystem.difficulty
+  pbModifier.next.next.hpmult = 2.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  pbModifier.form = 1
+  pbModifier.next.form = 1
+  pbModifier.next.next.form = 1
+  pbModifier.ability = :POISONPOINT
+  pbModifier.next.ability = :INTIMIDATE
+  pbModifier.next.next.ability = :POISONPOINT
+  pbModifier.gender = 0
+  pbModifier.next.gender = 0
+  pbModifier.next.next.gender = 0
+  pbModifier.nature = :RELAXED
+  pbModifier.next.nature = :ADAMANT
+  pbModifier.next.next.nature = :SASSY
+end
+
+def pbBossPalafin
+  pbBossGeneral
+  # Overqwil
+  pbModifier.moves = [
+    :BARBBARRAGE,
+    :CRUNCH,
+    :TOXICSPIKES,
+    :LIQUIDATION
+  ]
+  # Palafin
+  pbModifier.next.moves = [
+    :WAVECRASH,
+    :DRAINPUNCH,
+    :IRONHEAD,
+    :JETPUNCH
+  ]
+  # Clawitzer
+  pbModifier.next.next.moves = [
+    :WATERPULSE,
+    :DRAGONPULSE,
+    :AURASPHERE,
+    :DARKPULSE
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.item = :BLACKSLUDGE
+    pbModifier.next.next.item = :EXPERTBELT
+  end
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.next.item = :LIFEORB
+  end
+  pbModifier.hpmult = 3.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  pbModifier.next.hpmult = 4.0 + $PokemonSystem.difficulty
+  pbModifier.next.next.hpmult = 3.0 + ($PokemonSystem.difficulty >= 2 ? 1 : 0)
+  pbModifier.form = 1
+  pbModifier.next.form = 1
+  pbModifier.ability = :INTIMIDATE
+  pbModifier.next.ability = :ZEROTOHERO
+  pbModifier.next.next.ability = :MEGALAUNCHER
+  pbModifier.gender = 0
+  pbModifier.next.gender = 0
+  pbModifier.next.next.gender = 0
+  pbModifier.nature = :ADAMANT
+  pbModifier.next.nature = :JOLLY
+  pbModifier.next.next.nature = :MODEST
+end
+
 def pbPuzzleBossDeino
   pbBossGeneral
   pbModifier.gender=0
@@ -749,13 +927,30 @@ end
 def pbMiniBossAbsol
   pbBossGeneral
   pbModifier.hpmult = 2.0
-  pbModifier.nature = :MODEST
+  pbModifier.nature = :JOLLY
   pbModifier.moves = [
     :SLASH,
     ($PokemonSystem.difficulty > 1 ? :KNOCKOFF : :TAUNT),
     :QUICKATTACK,
     :LEER
   ]
+end
+
+def pbBossCausol
+  pbBossGeneral
+  $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
+  pbModifier.hpmult = 3.0
+  pbModifier.nature = :TIMID
+  pbModifier.ability = :BATTLEARMOR
+  pbModifier.moves = [
+    :DRAININGKISS,
+    ($PokemonSystem.difficulty > 1 ? :BITTERMALICE : :TAUNT),
+    :SNARL,
+    :FEINT
+  ]
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_Dialog.new(t, "CH1_CAUSOL", 2))
+  pbBoss.add(t)
 end
 
 # --- Chapter 4 Archeops ---
@@ -835,7 +1030,6 @@ def pbBossMindRevinja
 
   pbModifier.optimize
   pbModifier.moves = [:SHADOWBALL,:PSYCHIC,:DESTINYBOND]
-  pbModifier.name = "???"
 end
 
 def pbTestBoss

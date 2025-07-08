@@ -107,6 +107,9 @@ end
 def pbWildModify(pokemon)
   mod = $game_variables[Supplementals::WILD_MODIFIER]
 
+  if mod.form
+    pokemon.form = mod.form
+  end
   pokemon.name = mod.name if mod.name
   pokemon.ability = mod.ability if mod.ability
   pokemon.gender = mod.gender if mod.gender
@@ -121,9 +124,6 @@ def pbWildModify(pokemon)
     mod.moves.each do |m|
       pokemon.moves.push(Pokemon::Move.new(m))
     end
-  end
-  if mod.form
-    pokemon.form = mod.form
   end
   pokemon.calc_stats
   pokemon.hp = pokemon.totalhp * mod.hpmult if mod.hpmult

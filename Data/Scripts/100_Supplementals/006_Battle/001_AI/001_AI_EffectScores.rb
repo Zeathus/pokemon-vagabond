@@ -209,7 +209,14 @@ class Battle
 
       # Return here if no extra effect is needed
       func = move.function_code
-      return score if func == "None" || func == "DoesNothingUnusableInGravity" || func == "Struggle" || (target && target.damageState.substitute && !move.soundMove?)
+      if func == "None" ||
+         func == "DoesNothingUnusableInGravity" ||
+         func == "Struggle" ||
+         (target && target.damageState.substitute && !move.soundMove?)
+        if !move.soundMove?
+          return score
+        end
+      end
 
       effscore = 0
 
@@ -495,6 +502,10 @@ class Battle
         # Sp. Atk +3
         if func == "RaiseUserSpAtk3"
            statscore += 50 * statscore_mods[:SPECIAL_ATTACK] if has_special
+        end
+
+        if user.item && user.item.id == :THROATSPRAY && move.soundMove?
+          statscore += 30 * statscore_mods[:SPECIAL_ATTACK] if has_special
         end
       end
 
@@ -872,9 +883,11 @@ class Battle
         score += 10 * user.pbOwnSide.effects[PBEffects::Spikes]
         score += 15 * user.pbOwnSide.effects[PBEffects::ToxicSpikes]
         score += 20 if user.pbOwnSide.effects[PBEffects::StealthRock]
+        score += 5  if user.pbOwnSide.effects[PBEffects::Wiretap]
         score -= 10 * user.pbOpposingSide.effects[PBEffects::Spikes]
         score -= 15 * user.pbOpposingSide.effects[PBEffects::ToxicSpikes]
         score -= 20 if user.pbOpposingSide.effects[PBEffects::StealthRock]
+        score -= 5  if user.pbOwnSide.effects[PBEffects::Wiretap]
       when "ResetTargetStatStages"
         # Clear Smog
         GameData::Stat.each_main do |s|
@@ -1663,6 +1676,8 @@ class Battle
         end
         if target.hp < target.totalhp * 0.75
           score -= [50, 100 - [target.hp * 100 / target.totalhp, 100].min].min
+        elsif target.hp > target.totalhp && target.hp % target.totalhp != 0
+          score += 30
         end
       when "HealUserAndAlliesQuarterOfTotalHP", "HealUserAndAlliesQuarterOfTotalHPCureStatus"
         if target.hp < target.totalhp * 0.75
@@ -2906,6 +2921,18 @@ class Battle
           # Extra points if removing other weather
           if pbWeather != :None
             score += 10
+          end
+        end
+      when "AddWiretapToFoeSide"
+        # Wiretap
+        removedRecently = false
+        user.eachOpposing do |b|
+          removedRecently = true if b.lastMoveUsed == :RAPIDSPIN || b.lastMoveUsed == :DEFOG
+        end
+        # Do not use against Magic Bounce and do not spam against Rapid Spin / Defog
+        if !removedRecently && user.opposingHasActiveAbility?(:MAGICBOUNCE)
+          if !user.pbOpposingSide.effects[PBEffects::Wiretap]
+            score += 25
           end
         end
       end

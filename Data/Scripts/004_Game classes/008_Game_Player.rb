@@ -58,7 +58,7 @@ class Game_Player < Game_Character
     return false if !$player.has_running_shoes && !$PokemonGlobal.diving &&
                     !$PokemonGlobal.surfing && !$PokemonGlobal.bicycle
     return false if jumping?
-    return false if pbTerrainTag.must_walk
+    return false if pbTerrainTag.must_walk && $game_map.terrain_tag(@move_initial_x, @move_initial_y).must_walk
     return ($PokemonSystem.runstyle == 1) ^ Input.press?(Input::BACK)
   end
 
@@ -77,7 +77,7 @@ class Game_Player < Game_Character
       if !@move_route_forcing
         self.move_speed = (type == :surfing_jumping) ? 3 : 4
       end
-      new_charset = pbGetPlayerCharset(meta.surf_charset)
+      new_charset = pbGetPlayerCharset(type == :surfing_jumping ? meta.walk_charset : meta.surf_charset)
     when :descending_waterfall, :ascending_waterfall
       self.move_speed = 2 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.surf_charset)
@@ -99,9 +99,9 @@ class Game_Player < Game_Character
       self.move_speed = 3 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.walk_charset)
     end
-    if @direction == 8 && $game_map && $game_player.y >= 0 && $game_map.stairsUp?($game_player.x, $game_player.y + 1)
+    if @direction == 8 && $game_map && @y >= 0 && $game_map.stairsUp?(@x, @y + 1)
       self.move_speed -= 1
-    elsif @direction == 2 && $game_map && $game_player.y < $game_map.height - 1 && $game_map.stairsUp?($game_player.x, $game_player.y)
+    elsif @direction == 2 && $game_map && @y < $game_map.height - 1 && $game_map.stairsUp?(@x, @y)
       self.move_speed -= 1
     end
     self.move_speed = 3 if @bumping
@@ -184,7 +184,7 @@ class Game_Player < Game_Character
           increase_steps
         end
       elsif !check_event_trigger_touch(dir)
-        return if $PokemonSystem.auto_surf == 0 && pbStartSurf(false)
+        return if $PokemonSystem.auto_surf && pbStartSurf(false)
         bump_into_object
       end
     end
@@ -429,12 +429,12 @@ class Game_Player < Game_Character
   #-----------------------------------------------------------------------------
 
   def update
-    last_real_x = @real_x
-    last_real_y = @real_y
+    @last_real_x = @real_x
+    @last_real_y = @real_y
     @last_terrain_tag = pbTerrainTag
     super
     update_stop if $game_temp.in_menu && @stopped_last_frame
-    update_screen_position(last_real_x, last_real_y)
+    update_screen_position(@last_real_x, @last_real_y)
     # Update dependent events
     if (!@moved_last_frame || @stopped_last_frame) && (moving? || jumping?) && !@bumping
       $game_temp.followers.move_followers
@@ -534,8 +534,12 @@ class Game_Player < Game_Character
     if $PokemonGlobal&.surfing || $PokemonGlobal&.diving
       bob_pattern = (4 * System.uptime / SURF_BOB_DURATION).to_i % 4
       @pattern = bob_pattern if !@lock_pattern
+      @pattern = 1 if jumping?
       @pattern_surf = bob_pattern
       @bob_height = (bob_pattern >= 2) ? 2 : 0
+      @anime_count = 0
+    elsif jumping?
+      @pattern = 1
       @anime_count = 0
     else
       @bob_height = 0

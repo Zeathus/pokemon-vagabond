@@ -1107,6 +1107,39 @@ def pbDrawOutlineText(bitmap, x, y, width, height, string, baseColor, shadowColo
   end
 end
 
+def pbDrawThickOutlineText(bitmap, x, y, width, height, string, baseColor, shadowColor = nil, innerShadowColor = nil, align = 0)
+  return if !bitmap || !string
+  width = (width < 0) ? bitmap.text_size(string).width + 4 : width
+  height = (height < 0) ? bitmap.text_size(string).height + 4 : height
+  skew = 0
+  if shadowColor && shadowColor.alpha > 0
+    bitmap.font.color = shadowColor
+    bitmap.draw_text(x - 4, y - 4, width, height, string, align, 0, skew)
+    bitmap.draw_text(x, y - 4, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 4, y - 4, width, height, string, align, 0, skew)
+    bitmap.draw_text(x - 4, y, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 4, y, width, height, string, align, 0, skew)
+    bitmap.draw_text(x - 4, y + 4, width, height, string, align, 0, skew)
+    bitmap.draw_text(x, y + 4, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 4, y + 4, width, height, string, align, 0, skew)
+  end
+  if innerShadowColor && innerShadowColor.alpha > 0
+    bitmap.font.color = innerShadowColor
+    bitmap.draw_text(x - 2, y - 2, width, height, string, align, 0, skew)
+    bitmap.draw_text(x, y - 2, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 2, y - 2, width, height, string, align, 0, skew)
+    bitmap.draw_text(x - 2, y, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 2, y, width, height, string, align, 0, skew)
+    bitmap.draw_text(x - 2, y + 2, width, height, string, align, 0, skew)
+    bitmap.draw_text(x, y + 2, width, height, string, align, 0, skew)
+    bitmap.draw_text(x + 2, y + 2, width, height, string, align, 0, skew)
+  end
+  if baseColor && baseColor.alpha > 0
+    bitmap.font.color = baseColor
+    bitmap.draw_text(x, y, width, height, string, align, 0, skew)
+  end
+end
+
 # Draws text on a bitmap. _textpos_ is an array of text commands. Each text
 # command is an array that contains the following:
 #  0 - Text to draw
@@ -1131,6 +1164,12 @@ def pbDrawTextPositions(bitmap, textpos)
     end
     i[6] = :none if !i[5]   # No shadow color given, draw plain text
     case i[6]
+    when 2   # thick outline text
+      if i[5] && i[5].is_a?(Array)
+        pbDrawThickOutlineText(bitmap, x, y, textsize.width, textsize.height, i[0], i[4], i[5][0], i[5][1])
+      else
+        pbDrawThickOutlineText(bitmap, x, y, textsize.width, textsize.height, i[0], i[4], i[5])
+      end
     when :outline, true, 1   # outline text
       pbDrawOutlineText(bitmap, x, y, textsize.width, textsize.height, i[0], i[4], i[5])
     when :none

@@ -885,6 +885,30 @@ end
 #===============================================================================
 #
 #===============================================================================
+module VFXEffectProperty
+  def self.set(_settingname, oldsetting)
+    oldsetting = 0 if !oldsetting
+    options = []
+    ids = []
+    default = 0
+    (0...PBVFX.count).each do |i|
+      default = ids.length if i == oldsetting
+      options.push(PBVFX.getName(i))
+      ids.push(i)
+    end
+    cmd = pbMessage(_INTL("Choose a VFX effect."), options, -1, nil, default)
+    return nil if cmd < 0 || ids[cmd] == 0
+    return ids[cmd]
+  end
+
+  def self.format(value)
+    return (value) ? PBVFX.getName(value) : "-"
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
 module MapProperty
   def self.set(settingname, oldsetting)
     chosenmap = pbListScreen(settingname, MapLister.new(oldsetting || 0))

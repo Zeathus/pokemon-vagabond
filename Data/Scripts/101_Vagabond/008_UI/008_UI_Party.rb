@@ -1616,7 +1616,14 @@ class QuickSummarySprite < Sprite
       self.pokemon = @pokemon
     end
     @overlay.bitmap.clear
-    if @pokemon
+    if @pokemon && @pokemon.egg?
+      # Draw name
+      textpos = [
+        ["Egg", 318, 22, 2, Color.new(248,248,248), Color.new(104,104,104)]
+      ]
+      pbSetSystemFont(@overlay.bitmap)
+      pbDrawTextPositions(@overlay.bitmap, textpos)
+    elsif @pokemon
       base=Color.new(64,64,64)
       shadow=Color.new(176,176,176)
       base2=Color.new(248,248,248)
@@ -3616,6 +3623,10 @@ class PokemonScreen
   end
 
   def pbSwitch(oldid,newid,instant=false)
+    @party = @scene.party
+    @inactive_party = @scene.inactive_party
+    @pparty = @scene.pparty
+    @inactive_pparty = @scene.inactive_pparty
     if oldid != newid
       pbSEPlay("GUI party switch")
       if [3,4,5,9,10,11].include?(oldid) || [3,4,5,9,10,11].include?(newid)
@@ -4168,14 +4179,30 @@ class PokemonScreen
           elsif cmds[cmd]=="Summary"
             @scene.pbSummary(pkmnid)
           elsif cmds[cmd]=="Raise Stats"
+            if pkmn.egg?
+              pbMessage("You can't raise the stats of eggs.")
+              next
+            end
             @scene.pbHideSummaryButtons(cmds)
             @scene.pbChangeEffortLevels(pkmn)
             @scene.pbShowSummaryButtons(cmds)
           elsif cmds[cmd]=="Moveset"
+            if pkmn.egg?
+              pbMessage("You can't change an egg's moves.")
+              next
+            end
             @scene.pbSummary(pkmnid, true, false, :LEVELUP)
           elsif cmds[cmd]=="TMs"
+            if pkmn.egg?
+              pbMessage("You can't change an egg's moves.")
+              next
+            end
             @scene.pbSummary(pkmnid, true, false, :TM)
           elsif cmds[cmd]=="Data Chips"
+            if pkmn.egg?
+              pbMessage("You can't change an egg's moves.")
+              next
+            end
             @scene.pbSummary(pkmnid, true, false, :DATACHIP)
           elsif cmds[cmd]=="To Lead"
             newpkmnid = pkmnid < 6 ? 0 : 6
@@ -4186,6 +4213,10 @@ class PokemonScreen
             switch=true
             break
           elsif cmds[cmd]=="Use Item"
+            if pkmn.egg?
+              pbMessage("You can't use items on eggs.")
+              next
+            end
             item = @scene.pbUseItem($bag,pkmn) {
               @scene.pbSetHelpText((@party.length>1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
             }
@@ -4195,6 +4226,10 @@ class PokemonScreen
             end
             @scene.refresh_summary
           elsif cmds[cmd]=="Held Item"
+            if pkmn.egg?
+              pbMessage("Eggs can't hold items.")
+              next
+            end
             if pkmn.hasItem?
               itemcommands = []
               cmdGiveItem     = -1
@@ -4342,6 +4377,10 @@ class PokemonScreen
             end
             @scene.refresh_summary
           elsif cmds[cmd]=="Level Up"
+            if pkmn.egg?
+              pbMessage("You can't level up eggs.")
+              next
+            end
             @scene.pbPokemonMenuEnd(pkmnid, cmds)
             @scene.pbLevelUp(pkmn)
             break

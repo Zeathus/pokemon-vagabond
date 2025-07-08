@@ -38,12 +38,39 @@ class MapBottomSprite < Sprite
 
   def refresh
     bitmap.clear
+    c = @maplocation == "" ? nil : pbGetCompletion(@maplocation, @mapdetails)
     textpos = [
-      [@mapname,                     160,  34, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
-      [@maplocation,                 160, 394, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+      [@mapname,                     160,  34, :left,  TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+      [@maplocation,                 160, 394, :left,  TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
       [@mapdetails, Graphics.width - 160, 394, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR]
     ]
+    if c
+      textpos += [
+        [_INTL("Items"),        178, 394 + 48,      :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [_INTL("Trainers"),     418, 394 + 48,      :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [_INTL("Quests"),       178, 394 + 48 + 40, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [_INTL("Field Bosses"), 418, 394 + 48 + 40, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [_INTL("Pokedex"),      178, 394 + 48 + 80, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [_INTL("Secrets"),      418, 394 + 48 + 80, :left, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.items_max)),    Graphics.width - 400, 394 + 48,      :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.trainers_max)), Graphics.width - 160, 394 + 48,      :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.quests_max)),   Graphics.width - 400, 394 + 48 + 40, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.bosses_max)),   Graphics.width - 160, 394 + 48 + 40, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.caught_max)),   Graphics.width - 400, 394 + 48 + 80, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s", zero_dash(c.secrets_max)),  Graphics.width - 160, 394 + 48 + 80, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.items, c.items_max)),       Graphics.width - 400 - 26, 394 + 48,      :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.trainers, c.trainers_max)), Graphics.width - 160 - 26, 394 + 48,      :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.quests, c.quests_max)),     Graphics.width - 400 - 26, 394 + 48 + 40, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.bosses, c.bosses_max)),     Graphics.width - 160 - 26, 394 + 48 + 40, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.caught, c.caught_max)),     Graphics.width - 400 - 26, 394 + 48 + 80, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR],
+        [sprintf("%2s /", zero_dash(c.secrets, c.secrets_max)),   Graphics.width - 160 - 26, 394 + 48 + 80, :right, TEXT_MAIN_COLOR, TEXT_SHADOW_COLOR]
+      ]
+    end
     pbDrawTextPositions(bitmap, textpos)
+  end
+
+  def zero_dash(val, val2 = 0)
+    return (val == 0 && val2 == 0) ? "-" : val.to_s
   end
 end
 

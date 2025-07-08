@@ -41,6 +41,7 @@ module GameData
     attr_reader :unmega_form
     attr_reader :mega_message
     attr_reader :pbs_file_suffix
+    attr_reader :reverse_of
 
     DATA = {}
     DATA_FILENAME = "species.dat"
@@ -108,6 +109,7 @@ module GameData
         ret["Evolutions"]     = [:evolutions,         "*ses", nil, :Evolution]
         ret["Evolution"]      = [:evolutions,         "^seS", nil, :Evolution]
       end
+      ret["Reverse"]          = [:reverse_of,         "s"]
       return ret
     end
 
@@ -145,7 +147,8 @@ module GameData
         ["WildItemCommon",    GameDataPoolProperty.new(:Item),    _INTL("Item(s) commonly held by wild Pokémon of this species.")],
         ["WildItemUncommon",  GameDataPoolProperty.new(:Item),    _INTL("Item(s) uncommonly held by wild Pokémon of this species.")],
         ["WildItemRare",      GameDataPoolProperty.new(:Item),    _INTL("Item(s) rarely held by wild Pokémon of this species.")],
-        ["Evolutions",        EvolutionsProperty.new,             _INTL("Evolution paths of this species.")]
+        ["Evolutions",        EvolutionsProperty.new,             _INTL("Evolution paths of this species.")],
+        ["Reverse",           StringProperty,                     _INTL("What species this is a reverse form of.")]
       ]
     end
 
@@ -219,11 +222,16 @@ module GameData
       @unmega_form        = hash[:unmega_form]        || 0
       @mega_message       = hash[:mega_message]       || 0
       @pbs_file_suffix    = hash[:pbs_file_suffix]    || ""
+      @reverse_of         = hash[:reverse_of]
     end
 
     # @return [String] the translated name of this species
     def name
-      return pbGetMessageFromHash(MessageTypes::SPECIES_NAMES, @real_name)
+      if @reverse_of.nil? || ($player && $player.pokedex.unlocked?(1))
+        return pbGetMessageFromHash(MessageTypes::SPECIES_NAMES, @real_name)
+      else
+        return pbGetMessageFromHash(MessageTypes::SPECIES_NAMES, @reverse_of) + "?"
+      end
     end
 
     # @return [String] the translated name of this form of this species

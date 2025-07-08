@@ -18,7 +18,7 @@
 /expression awkward
 > Ehm, I don't think that's a good idea.
 /expression worried
-> We got an anonymous report that told of someone being lost, maybe even unconscious, deep in the woods.
+> We got an anonymous report that told of a lost person, maybe even unconscious, deep in the woods.
 > The Evergone Mangrove is home to many wild Pokémon. It can be very dangerous.
 /expression neutral
 > That's why I'm here on a solo mission, to more easily avoid being spotted by the wild Pokémon.
@@ -28,9 +28,9 @@
 /hidename 1
 > How would you...\wtnp[10]
 /expression neutral
-> Oh, are you a Psychic?
+> Oh, are you a psychic?
 /speaker Duke point
-> Of course I am!<br>Perhaps even the greatest Psychic!
+> Of course I am!<br>Perhaps even the greatest psychic!
 /expression neutral
 > That is precisely why I am here before you, presenting you with this prime opportunity.
 > <PLAYER> here has already proven their strength as can be shown from their gym badge.
@@ -38,7 +38,7 @@
 > I foresee a terrible fate upon you if you do not bring <PLAYER> along, and we do not want that now, do we?
 /speaker Amethyst confused
 /hidename 1
-> It's hard to argue if a Psychic says so... Hmmmmmmm...
+> It's hard to argue if a psychic says so... Hmmmmmmm...
 /expression neutral
 > I guess it's better to be safe than sorry. However...
 
@@ -63,7 +63,7 @@
 > Anyway, my name is [B]Amethyst[/].\nGlad to meet you!
 /hidename 0
 > Your name was <PLAYER> if I recall correctly.
-> How about you, Psy-\wtnp[20]
+> How about you, psy-\wtnp[20]
 /speaker Duke point
 > DUKE! The one and only!
 /expression neutral
@@ -94,7 +94,7 @@
 
 [CH1_NO_SURF,1]
 /speaker Amethyst
-> Let's not stray too far from out from the mission in Evergone Mangrove.
+> Let's not stray too far from the mission in Evergone Mangrove.
 
 [CH1_NO_SURF,2]
 /speaker Amethyst
@@ -124,21 +124,39 @@
 /speaker Nekane unknown
 /hidename 1
 > \ts[4]... ... ...\wtnp[40]
+/reset
 /wait 20
+/speaker Nekane unknown
 > \ts[4]This is the end... isn't it?\wtnp[40]
+/reset
 /wait 20
+/speaker Nekane unknown
 > \ts[4]I'm going to disappear... but...\wtnp[40]
+/reset
 /wait 20
+/speaker Nekane unknown
 > \ts[4]I will remember you...\wtnp[40]
+/reset
 /wait 20
+/speaker Nekane unknown
 > \ts[4]And if you somehow make it...\wtnp[40]
+/reset
 /wait 20
+/speaker Nekane unknown
 > \ts[4]...please remember me too.\wtnp[40]
 
 [CH1_RUINS_MEMORY,4]
 /windowpos middle
 /hidewindow 1
 > \ts[4]Remember... Nekane...\wtnp[60]
+
+[CH1_RUINS_MEMORY,5]
+/event set Amethyst 10
+/event Amethyst emote ?
+/speaker Amethyst confused
+> Are you okay?\nYou spaced out for a bit.
+/expression worried
+> I saw an unconscious girl just ahead.\nWe can't just wait around!
 
 [CH1_NEKANE,0]
 /speaker Nekane sleep
@@ -149,7 +167,45 @@
 
 [CH1_NEKANE,1]
 /speaker Amethyst
-> This must be the lost person.<br>I'll try to get her back on her feet.
+> This must be the lost person.\nHow did she get all the way out here?
+> I'll check on-\wtnp[8]
+/cry CAUSOL 100 100
+/speaker Causol
+/hidename 1
+!> SOOOOOOL!
+
+[CH1_CAUSOL,0]
+/cry CAUSOL 100 100
+/speaker Causol
+/hidename 1
+!> SOOOOOOL!
+
+[CH1_CAUSOL,1]
+/speaker Amethyst pinch
+> Looks like this thing wants to fight...
+/expression neutral
+> Get ready!
+
+[CH1_CAUSOL,2]
+/speaker Amethyst confused
+> I've never seen this Pokémon before...
+/expression neutral
+> It looks almost like Absol, but not quite. We have to be careful.
+> You can try to catch it, but you [R]can't catch Pokémon[/] while their [R]HP is over 100%[/].
+
+[CH1_CAUSOL,3]
+/speaker Amethyst pinch
+> Phew... What even was that?\nMy Pokédex gave no results for it.
+
+[CH1_CAUSOL,4]
+/speaker Amethyst pinch
+/expression smile
+> You managed to catch it though, nice!
+
+[CH1_CAUSOL,5]
+/speaker Amethyst neutral
+/expression neutral
+> Anyway, I need to check on the girl.
 
 [CH1_NEKANE,2]
 /speaker Amethyst
@@ -163,7 +219,7 @@
 > Were you here when it happened?
 /speaker Nekane
 /hidename 1
-> \ts[2]When what happened?<br>All my thoughts are too blurry to make out.
+> \ts[2]When what happened?<br>My thoughts are too blurry to make out.
 
 [CH1_NEKANE,3]
 /speaker Amethyst
@@ -280,18 +336,18 @@ U> When the balance of the world is broken the world itself falls thereafter
 [CH1_OFFICE,2]
 /event set Amethyst 1
 /speaker Amethyst
-> Welcome back, Kira!<br>How'd the mission in Scoria City go?
+> Welcome back, Kira!\nHow'd the mission in Scoria City go?
 /speaker Kira annoyed
-> Everything was handled professionally, but you know that I dislike returning there.
+> Everything was handled professionally, but you know I hate going back there.
 /speaker Amethyst
-> Any other person would take at least twice as long to finish such a mission.
-> You know as well as me that you are more familiar in Scoria than anyone here.
+> Any other person would've taken ages to finish such a mission.
+> We both know that you're more familiar in Scoria than anyone here.
 /speaker Kira lookaway
 > ...Which will continue to be the case until someone else has missions there.
 /expression annoyed
-> On a more important matter: Who's this new guy?
+> On a more important note:\nWho's the new guy?
 /speaker Amethyst
-> This is <PLAYER>.<br>I met them at Evergone Crater, and they helped me rescue a girl from the woods.
+> This is <PLAYER>.\nI met them at Evergone Crater, and they helped me rescue a girl in the woods.
 ?> <PLAYER>, this is Kira, my assistant.
     /savechoice kira introduction
     /choice Nice to meet you!
@@ -299,17 +355,16 @@ U> When the balance of the world is broken the world itself falls thereafter
         > I hope it will be "nice to meet you" too.
     /choice What was your mission?
         /speaker Kira
-        > Had to investigate some shady people doing shady deals.<br>The details are not for you to know.
+        > Had to investigate some shady people doing shady deals.\nThe details are not for you to know.
     /choice Are you a cowboy?
         /speaker Kira annoyed
         > Talking about my hat, are you?
-        > No, I am not a cowboy, but think what you will.
+        > No, I'm not a cowboy, but think what you will.
 ?/>
 /speaker Kira neutral
-> So this guy offered to help you at Evergone Crater?
-> A stranger appearing out of thin air to help you through some dangerous place.<br>Sounds awfully convenient.
+> So, a stranger appeared out of thin air to help you through some dangerous place.\nSounds awfully convenient.
 /speaker Amethyst
-> Yeah. A Psychic said I would need their help, and everything went smoothly!
+> Yeah. A psychic said I would need their help, and everything went smoothly!
 /speaker Kira lookaway
 > I was being sarcastic...
 /expression annoyed
@@ -338,15 +393,28 @@ U> When the balance of the world is broken the world itself falls thereafter
         /event Player turn up
         /event Amethyst turn up
         /speaker Kira annoyed
-        > That excuse does not help your case, as you just brought the Psychic's integrity into question instead.
+        > That excuse does not help your case, as you just brought the psychic's integrity into question instead.
 ?/>
 /speaker Amethyst worried
 > Leave them be, Kira.
 /expression neutral
-> They offered help when I needed it,<br>and that's enough for now.
-> It's been a long day, and I think we could all use some rest.<br><PLAYER> can use the guest room.
+> Without <PLAYER>, that weird Absol we fought might've gotten the better of me.
+/speaker Kira annoyed
+> What do you mean by "weird Absol"?
+/reset
+/pokemon CAUSOL CH1_OFFICE_CAUSOL
+/speaker Amethyst
+> It's been a long day, and I think we could all use some rest.\n<PLAYER> can use the guest room.
 /speaker Kira annoyed
 > Fine.
+
+[CH1_OFFICE_CAUSOL]
+/speaker Amethyst
+> Here, my Pokédex got a picture.\nIt gave no matches though.
+/speaker Kira
+> Absol didn't have black fur last time I checked. I'd ask some of our researchers if I were you.
+/speaker Amethyst
+> I'll make sure to do that tomorrow.
 
 [CH1_INTERMISSION,0]
 /windowpos center

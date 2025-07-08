@@ -1,0 +1,127 @@
+[GPO_MINI_QUEST,0]
+/speaker Receptionist
+?> What brings you here today?
+    /choice Accept tasks
+        /return true
+    /choice About tasks
+        /dialog GPO_ABOUT_TASKS
+        /return false
+    /cancelchoice Never mind
+        /return false
+?/>
+
+[GPO_MINI_QUEST,1]
+/speaker Receptionist
+?> I hope your task is going well.\nWhat brings you here today?
+    /choice Complete task
+        /return 1
+    /choice Abandon task
+        /return 2
+    /choice About tasks
+        /dialog GPO_ABOUT_TASKS
+        /return 0
+    /cancelchoice Never mind
+        /return 0
+?/>
+
+[GPO_ACCEPT_TASK,0]
+/speaker Receptionist
+> You can view the task in your quest log.\nGood luck with your task.
+
+[GPO_ACCEPT_TASK,1]
+/speaker Receptionist
+?> It looks like you already what you need for the task.\nWould you like to deliver it now?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[GPO_COMPLETE_TASK,0]
+/speaker Receptionist
+> You have yet to meet the requirements of your current task.
+> Please check the task again to make sure you have everything in order.
+
+[GPO_COMPLETE_TASK,1]
+/speaker Receptionist
+> Please choose the {pbGet(2).name} you wish to deliver.
+/reset
+/eval $game_variables[1] = pbDeliverPokemon(pbGet(2).species)
+/if $game_variables[1]
+/else
+    > Changed your mind on that one?\nLet me know once you have the one you want to deliver.
+    /return false
+/end
+/return true
+
+[GPO_COMPLETE_TASK,2]
+/speaker Receptionist
+?> Do you want to deliver the {pbGet(2).name}?\nYou currently have {$bag.quantity(pbGet(2).id)} on you.
+    /choice Deliver
+        /return true
+    /cancelchoice Never mind
+        > Changed your mind?\nLet me know once you have the one you want to deliver.
+        /return false
+?/>
+
+[GPO_TASK_REWARD,0]
+/speaker Receptionist
+> \GThank you. Your efforts are greatly appreciated.
+/eval $player.money += pbGet(2)
+/se purchase 100 100
+> \GPlease take these ${pbGet(2)} and this {pbGet(3)} for your work.
+
+[GPO_ABANDON_TASK,0]
+/speaker Receptionist
+?> Are you sure you wish to abandon your current task?
+    /choice Abandon the task
+        > No worries. We will have the task forwarded to someone else.
+        > Have a nice day.
+        /return true
+    /cancelchoice Keep the task
+        > Let me know if you change your mind.
+        > Good luck with your task. Have a nice day.
+        /return false
+?/>
+
+[GPO_ABOUT_TASKS]
+/speaker Receptionist
+> Tasks are requested by various people around the region.
+> By completing them, you earn money and items based on the difficulty of the task.
+> You can only accept one task at a time, but you can abandon it if you cannot complete it.
+> We receive a new set of tasks to choose from each day, so you're free to check frequently for tasks suitable for you.
+> You will gain access to more difficult tasks as your G[.]P[.]O[.] rank increases. Difficult tasks grant better rewards.
+> You can see your progress towards the next rank in the Trainer menu at any time.
+
+[GPO_PROMOTION,0]
+/speaker Receptionist
+> You completed your first ever task,\ngood job!
+> Here's a gift to commemorate the event.
+
+[GPO_PROMOTION,1]
+/speaker Receptionist
+> You have completed enough rookie tasks to qualify for a promotion, congratulations!
+> Welcome to the intermediate ranks.\nYou can now take on harder tasks.
+> Here's a gift to commemorate the event.
+
+[GPO_PROMOTION,2]
+/speaker Receptionist
+> You have completed enough intermediate tasks to qualify for a promotion, congratulations!
+> Welcome to the advanced ranks.\nYou can now take on harder tasks.
+> Here's a gift to commemorate the event.
+
+[GPO_PROMOTION,3]
+/speaker Receptionist
+> You have completed enough advanced tasks to qualify for a promotion, congratulations!
+> Welcome to the expert ranks.\nYou can now take on harder tasks.
+> Here's a gift to commemorate the event.
+
+[GPO_PROMOTION,4]
+/speaker Receptionist
+> You have completed enough expert tasks to qualify for a promotion, congratulations!
+> Welcome to the master ranks, the highest of all the ranks that very few reach.
+> Here's a gift to commemorate this very special occasion.
+
+[GPO_TASK_END]
+/speaker Receptionist
+> Let me know when you are ready for your next task.

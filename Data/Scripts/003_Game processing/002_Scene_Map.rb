@@ -218,6 +218,8 @@ class Scene_Map
         end
       elsif Input.press?(Input::F8) && $DEBUG
         pbEditMapMetadata($game_map.map_id)
+      elsif Input.press?(Input::F7) && $DEBUG
+        echoln _INTL("{1} {2}", $game_map.display_x, $game_map.display_y)
       end
     end
     if !$game_player.moving?

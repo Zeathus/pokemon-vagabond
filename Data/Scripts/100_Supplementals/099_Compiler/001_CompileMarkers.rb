@@ -59,7 +59,7 @@ module Compiler
         arg.strip!
         if cmd == "MarkerType"
           if markertype >= 0
-            if markertype == 3
+            if markertype >= 3
               markers.push([event.id,page,markertype,markerreqs,markertext])
             else
               markers.push([event.id,page,markertype,markerreqs,markerquest])
@@ -72,11 +72,13 @@ module Compiler
           arg = "1" if arg=="!"
           arg = "2" if arg=="..."
           arg = "3" if arg.downcase=="text"
+          arg = "4" if arg.downcase=="boss"
+          arg = "5" if arg.downcase=="fieldboss"
           markertype = arg.to_i
         elsif cmd == "MarkerQuest"
           if [0,1,2].include?(markertype)
             markerquest = arg
-          elsif markertype == 3
+          elsif markertype >= 3
             raise "MarkerType Text does not support MarkerQuest."
           else
             raise "MarkerType must be set before MarkerQuest."
@@ -89,14 +91,14 @@ module Compiler
             raise "MarkerType must be set before MarkerReq."
           end
         elsif cmd == "MarkerText"
-          if markertype == 3
+          if markertype >= 3
             markertext = arg
           else
             raise "MarkerType Text must be set before MarkerText."
           end
         end
       end
-      if markertype == 3
+      if markertype >= 3
         markers.push([event.id,page,markertype,markerreqs,markertext])
       else
         markers.push([event.id,page,markertype,markerreqs,markerquest])

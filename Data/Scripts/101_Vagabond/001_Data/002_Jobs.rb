@@ -131,6 +131,7 @@ class JobGPO < Job
 
   def initialize
       super("G.P.O.", "Amethyst", "job_gpo", "Boss")
+      @tasks_done = 0
   end
 
   def quests
@@ -158,6 +159,7 @@ class JobGPO < Job
   end
 
   def progress_text
+      return _INTL("---") if @level >= 5
       return _INTL("Completed {1} / {2} {3}", self.progress, self.requirement, self.rewards[self.level - 1])
   end
 
@@ -166,7 +168,16 @@ class JobGPO < Job
   end
 
   def progress
-      return 0
+      return @tasks_done || 0
+  end
+
+  def add_progress
+    @tasks_done = 0 if !@tasks_done
+    @tasks_done += 1
+  end
+
+  def reset_progress
+    @tasks_done = 0
   end
 
 end
@@ -212,7 +223,7 @@ class JobBotanist < Job
   end
 
   def requirement
-      return [0,16,24,32,48][@level]
+      return [0,16,24,32,48,48][@level]
   end
 
   def progress
@@ -489,10 +500,10 @@ class JobRanger < Job
   def rewards
       return [
           "Registered Ranger",
-          "???",
-          "???",
-          "???",
-          "???"
+          "Ranger Shop",
+          "Strong Poké Balls",
+          "Special Poké Balls",
+          "Lower Prices"
       ]
   end
 
@@ -501,7 +512,7 @@ class JobRanger < Job
   end
 
   def requirement
-      return 10
+      return [0,5,10,20,40,40][@level]
   end
 
   def progress

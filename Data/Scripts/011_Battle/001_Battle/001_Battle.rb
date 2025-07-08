@@ -816,7 +816,6 @@ class Battle
     @field.terrainDuration = duration
     terrain_data = GameData::BattleTerrain.try_get(@field.terrain)
     pbCommonAnimation(terrain_data.animation) if terrain_data
-    pbHideAbilitySplash(user) if user
     case @field.terrain
     when :Electric
       pbDisplay(_INTL("An electric current runs across the battlefield!"))
@@ -827,6 +826,7 @@ class Battle
     when :Psychic
       pbDisplay(_INTL("The battlefield got weird!"))
     end
+    pbHideAbilitySplash(user) if user
     # Check for abilities/items that trigger upon the terrain changing
     allBattlers.each { |b| b.pbAbilityOnTerrainChange }
     allBattlers.each { |b| b.pbItemTerrainStatBoostCheck }

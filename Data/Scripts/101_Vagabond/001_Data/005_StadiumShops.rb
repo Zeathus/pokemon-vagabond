@@ -18,7 +18,7 @@ def pbStadiumShop1
     [:TM104, 160], # Hone Claws
     [:TM107, 160], # Agility
     [:TM110, 320], # Taunt
-    [:TM116, 640] # Defog
+    [:TM115, 640] # Tailwind
   ]
 
   items = items.sort_by { |k| k[1] }

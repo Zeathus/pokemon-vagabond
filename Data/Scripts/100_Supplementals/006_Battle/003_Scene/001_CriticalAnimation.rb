@@ -116,9 +116,9 @@ class Battle::Scene
 
   def pbCriticalAnimation(user)
     @sprites["crit_bar"]=CriticalSprite.new(user, @viewport)
-    @sprites["crit_bar"].z = 200
+    @sprites["crit_bar"].z = 10000
     @sprites["crit_pkmn"]=CriticalSpritePokemon.new(user, @viewport)
-    @sprites["crit_pkmn"].z = 201
+    @sprites["crit_pkmn"].z = 10001
 
     pbSEPlay("Thunder3")
     60.times do

@@ -112,3 +112,19 @@
 /speaker Miltank
 /cry MILTANK 100 100
 > Mmooo!
+
+[POKEMON_CLAWITZER,1]
+/cry CLAWITZER 100 100
+> Claaaaa!
+
+[POKEMON_OVERQWIL,1]
+/cry OVERQWIL 100 100
+> Qwiiiii!
+
+[POKEMON_MISTAROS]
+/cry MISTAROS 100 100
+> Rooooos!
+
+[POKEMON_PALAFIN,1]
+/cry PALAFIN 100 100
+!> PALAAA!

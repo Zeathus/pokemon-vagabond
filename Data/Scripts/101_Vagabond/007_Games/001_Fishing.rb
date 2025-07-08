@@ -561,7 +561,7 @@ def pbFishStats
     :TENTACOOL => [1, 250, 3, "normal"],
     :TENTACRUEL => [2, 800, 4, "normal"],
     :SHELLDER => [1, 350, 2, "passive"],
-    :CLOYSTER => [2, 1250, 3, "passive"],
+    :CLOYSTER => [2, 1000, 3, "passive"],
     :KRABBY => [1, 250, 3, "aggressive"],
     :KINGLER => [2, 800, 3, "aggressive"],
     :HORSEA => [1, 250, 4, "sudden"],
@@ -610,7 +610,8 @@ def pbFishStats
     :CLOBBOPUS => [1, 500, 2, "aggressive"],
     :GRAPPLOCT => [2, 1000, 4, "aggressive"],
     :FINIZEN => [1, 500, 5, "normal"],
-    :PALAFIN => [2, 650, 6, "aggressive"]
+    :PALAFIN => [2, 650, 6, "aggressive"],
+    :PINCURCHIN => [1, 800, 3, "passive"]
   }
   return {
     #Surf/Land :SQUIRTLE => [],

@@ -67,14 +67,14 @@ class Battle::Scene
     sprites["beam"] = IconSprite.new(0,112,@viewport)
     sprites["beam"].setBitmap("Graphics/UI/Battle/affinityboost_bg")
     sprites["beam"].src_rect = Rect.new(0,0,512,108)
-    sprites["beam"].z = 101
+    sprites["beam"].z = 10001
     sprites["beam"].mirror = opponent
 
     ### Text
     sprites["text"] = IconSprite.new(176,134,@viewport)
     sprites["text"].setBitmap("Graphics/UI/Battle/affinityboost_text")
     sprites["text"].src_rect = Rect.new(0,0,512,108)
-    sprites["text"].z = 102
+    sprites["text"].z = 10002
     sprites["text"].opacity = 0
     sprites["text"].x += opponent ? 70 : -70
 
@@ -109,14 +109,14 @@ class Battle::Scene
 
     if rand < 60
       sprites["pkmn1"] = PokemonIconSprite.new(attacker.pokemon,@viewport)
-      sprites["pkmn1"].z = 104
+      sprites["pkmn1"].z = 10004
       sprites["pkmn1"].x = -64 + 32
       sprites["pkmn1"].y = 120 + 32
       sprites["pkmn1"].setOffset(PictureOrigin::CENTER)
       sprites["pkmn1"].mirror = true
 
       sprites["pkmn2"] = partner ? PokemonIconSprite.new(partner.pokemon,@viewport) : Sprite.new(@viewport)
-      sprites["pkmn2"].z = 103
+      sprites["pkmn2"].z = 10003
       sprites["pkmn2"].x = 506 + 32
       sprites["pkmn2"].y = 120 + 32
       sprites["pkmn2"].setOffset(PictureOrigin::CENTER) if partner

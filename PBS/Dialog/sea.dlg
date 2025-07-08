@@ -1,0 +1,28 @@
+[SEA_PRIMARINA_PUZZLE,0]
+?> The monument has a peculiar hole.\nDo you want blow into it?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[SEA_PRIMARINA_PUZZLE,1]
+?> The monument has a peculiar hole.\nDo you want blow into it?
+    /choice Blow normally
+        /return 0
+    /choice Blow slowly
+        /return 1
+    /cancelchoice Leave it be
+        /return 2
+?/>
+
+[SEA_SPECIES_CONFLICT,0]
+> The Qwilfish and Clauncher are fighting. It's not safe to pass.
+
+[SEA_SPECIES_CONFLICT_BOSS]
+?> Do you wish to challenge them?
+    /choice Proceed
+        /return true
+    /cancelchoice Retreat
+        /return false
+?/>

@@ -4,14 +4,15 @@
 def pbGetHabitatList
   return [
     ["Crosswoods Area", :Crosswoods, :HalcyonForest, :HalcyonClearing],
-    ["Breccia Area", :BrecciaUndergrowth, :BrecciaTrail],
+    ["Breccia Area", :BrecciaUndergrowth, :BrecciaTrail, :BrecciaRanch],
     ["Evergone Mangrove", :EvergoneMangrove, :EvergoneCrater, :EvergoneHill, :EvergoneStairway],
     ["Lapis Lazuli Area", :LazuliRiver, :LapisDistrict, :LapisLazuliPark],
     ["Mt. Pegma Area", :FeldsparDistrict, :QuartzPassing, :MtPegmaHillside, :PegmaFalls],
     ["Mt. Pegma Interior", :MtPegma1F, :MtPegma2F, :MtPegma3F, :MtPegmaB1F],
     ["Pegma Quarry", :MicaQuarryB1F, :MicaQuarryB2F, :MicaQuarryB3F, :MicaQuarryB4F, :MicaQuarryB5F],
-    ["Scoria Area", :ScoriaCity, :ScoriaCanyon, :ScoriaDesert, :ScoriaDesertUnder, :ScoriaDesertPass],
-    ["East Sea Area", :CentralEastSea]
+    ["Scoria Area", :ScoriaCity, :ScoriaCanyon, :ScoriaValley, :ScoriaDesert, :ScoriaDesertUnder, :ScoriaDesertPass],
+    ["East Sea Area", :CentralEastSea, :EastSea],
+    ["West Sea Area", :CentralWestSea, :WestSea]
   ]
 end
   
@@ -368,9 +369,6 @@ class PokemonHabitatMapScene
     end
     pbDrawMapList
     pbDrawAreaLocations
-    @sprites["mapbottom"]=MapBottomSprite.new(@viewport)
-    @sprites["mapbottom"].maplocation=@map.name
-    @sprites["mapbottom"].mapdetails=_INTL("")
     return true
   end
 

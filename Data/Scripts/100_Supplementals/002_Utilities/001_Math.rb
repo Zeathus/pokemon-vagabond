@@ -19,4 +19,10 @@ def pbHueShift(color, hue)
 
   return Color.new(r,g,b)    
 
-end 
+end
+
+def clamp(val, min, max)
+  return min if val < min
+  return max if val > max
+  return val
+end

@@ -237,6 +237,7 @@ class Game_Map
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
       passage = @passages[tile_id]
       if terrain
+        terrain = convert_terrain_tag(terrain, tile_id, x, y, i)
         # Ignore bridge tiles if not on a bridge
         next if terrain.bridge && $PokemonGlobal.bridge == 0
         # Make water tiles passable if player is surfing
@@ -320,10 +321,20 @@ class Game_Map
         return terrain if terrain.id == :Overhang
         next if terrain.ignore_passability || @priorities[tile_id] != 0
         next if !countBridge && terrain.bridge && $PokemonGlobal.bridge == 0
+        terrain = convert_terrain_tag(terrain, tile_id, x, y, i)
         return terrain
       end
     end
     return GameData::TerrainTag.get(:None)
+  end
+
+  def convert_terrain_tag(terrain, tile_id, x, y, layer)
+    if terrain.id == :WaterWithEdges
+      return GameData::TerrainTag.get(tile_id % 48 == 0 ? :Water : :WaterEdge)
+    elsif terrain.id == :WaterWithFlatEdges
+      return GameData::TerrainTag.get(tile_id % 48 == 0 ? :Water : :WaterFlatEdge)
+    end
+    return terrain
   end
 
   # Unused.

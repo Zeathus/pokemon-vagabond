@@ -6,16 +6,20 @@ module PBMaps
   LazuliRiver       = 9
   MtPegmaHillside   = 14
   BrecciaTrail      = 62
+  BrecciaRanch      = 204
   QuartzPassing     = 72
   PegmaFalls        = 73
-  CanjonValley      = 106
   LakeCanjon        = 107
   ScoriaDesert      = 132
   ScoriaDesertUnder = 135
   ScoriaDesertPass  = 245
   ScoriaCanyon      = 216
+  ScoriaValley      = 106
   SouthGabbroRiver  = 220
   CentralEastSea    = 154
+  EastSea           = 163
+  CentralWestSea    = 206
+  WestSea           = 207
   
   # Areas
   Crosswoods        = 7
@@ -78,16 +82,6 @@ module PBMaps
   GPO_Pokecare      = 56
   GPO_Admin         = 57
   Amethysts_Office  = 40
-  
-  def PBMaps.hasSpikes(map = nil)
-    map = $game_map.map_id if !map
-    map = getID(PBMaps,map) if map.is_a?(Symbol)
-    spike_maps = [
-      PBMaps::CanjonValley
-    ]
-    return true if spike_maps.include?(map)
-    return false
-  end
   
   def PBMaps.hasLights(map = nil)
     map = $game_map.map_id if !map

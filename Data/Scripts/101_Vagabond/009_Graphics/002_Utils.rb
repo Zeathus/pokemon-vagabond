@@ -40,11 +40,11 @@ def perfectlySpacedLines(bitmap,normtext,boxheight,lines,maxlines)
       end
     end
     word[2] = min_y + lineheight * index
-    if lines == 2 && maxlines == 2 && bitmap.font.name=="Small"
+    if lines == 2 && maxlines == 2 && bitmap.font.name=="small"
       word[2]+=2
-    elsif lines == 3 && maxlines == 3 && bitmap.font.name=="Smallest"
+    elsif lines == 3 && maxlines == 3 && bitmap.font.name=="smallest"
       word[2]-=2
-    elsif lines == 2 && maxlines == 3 && bitmap.font.name=="Smallest"
+    elsif lines == 2 && maxlines == 3 && bitmap.font.name=="smallest"
       word[2] = min_y + (lineheight - 4) * index + 4
     end
   end

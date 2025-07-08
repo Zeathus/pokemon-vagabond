@@ -49,42 +49,49 @@ class PokemonLoadPanel < Sprite
     return if disposed?
     @refreshing = true
     if !self.bitmap || self.bitmap.disposed?
-      self.bitmap = Bitmap.new(@bgbitmap.width, 222)
+      self.bitmap = Bitmap.new(@bgbitmap.width, 302)
       pbSetSystemFont(self.bitmap)
     end
     if @refreshBitmap
       @refreshBitmap = false
       self.bitmap&.clear
       if @isContinue
-        self.bitmap.blt(0, 0, @bgbitmap.bitmap, Rect.new(0, (@selected) ? 222 : 0, @bgbitmap.width, 222))
+        self.bitmap.blt(0, 0, @bgbitmap.bitmap, Rect.new(0, (@selected) ? 302 : 0, @bgbitmap.width, 302))
       else
-        self.bitmap.blt(0, 0, @bgbitmap.bitmap, Rect.new(0, 444 + ((@selected) ? 46 : 0), @bgbitmap.width, 46))
+        self.bitmap.blt(0, 0, @bgbitmap.bitmap, Rect.new(0, 604 + ((@selected) ? 46 : 0), @bgbitmap.width, 46))
       end
       textpos = []
       if @isContinue
         textpos.push([@title, 32, 16, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
-        textpos.push([_INTL("Badges:"), 32, 118, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
-        textpos.push([@trainer.badge_count.to_s, 206, 118, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
-        textpos.push([_INTL("Pokédex:"), 32, 150, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
-        textpos.push([@trainer.pokedex.seen_count.to_s, 206, 150, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
-        textpos.push([_INTL("Time:"), 32, 182, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([_INTL("Party Members:"), 224, 118, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        if false
+          # check if main story is done, then show completion percentage instead
+        else
+          textpos.push([_INTL("Chapter:"), 32, 150, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+          textpos.push(["?", 200, 150, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        end
+        textpos.push([_INTL("Badges:"), 32, 182, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([@trainer.badge_count.to_s, 200, 182, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([_INTL("Pokédex:"), 32, 214, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([@trainer.pokedex.seen_count.to_s, 200, 214, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([_INTL("Time:"), 32, 246, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
         hour = @totalsec / 60 / 60
         min  = @totalsec / 60 % 60
         if hour > 0
-          textpos.push([_INTL("{1}h {2}m", hour, min), 206, 182, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+          textpos.push([_INTL("{1}h {2}m", hour, min), 200, 246, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
         else
-          textpos.push([_INTL("{1}m", min), 206, 182, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+          textpos.push([_INTL("{1}m", min), 200, 246, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
         end
         if @trainer.male?
-          textpos.push([@trainer.name, 112, 70, :left, MALE_TEXT_COLOR, MALE_TEXT_SHADOW_COLOR])
+          textpos.push([@trainer.name, 32, 118, :left, MALE_TEXT_COLOR, MALE_TEXT_SHADOW_COLOR])
         elsif @trainer.female?
-          textpos.push([@trainer.name, 112, 70, :left, FEMALE_TEXT_COLOR, FEMALE_TEXT_SHADOW_COLOR])
+          textpos.push([@trainer.name, 32, 118, :left, FEMALE_TEXT_COLOR, FEMALE_TEXT_SHADOW_COLOR])
         else
-          textpos.push([@trainer.name, 112, 70, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
+          textpos.push([@trainer.name, 32, 118, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
         end
         mapname = pbGetMapNameFromId(@mapid)
         mapname.gsub!(/\\PN/, @trainer.name)
-        textpos.push([mapname, 386, 16, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
+        textpos.push([mapname, 426, 16, :right, TEXT_COLOR, TEXT_SHADOW_COLOR])
       else
         textpos.push([@title, 32, 14, :left, TEXT_COLOR, TEXT_SHADOW_COLOR])
       end
@@ -112,7 +119,7 @@ class PokemonLoad_Scene
       @sprites["panel#{i}"].x = 48
       @sprites["panel#{i}"].y = y
       @sprites["panel#{i}"].pbRefresh
-      y += (show_continue && i == 0) ? 224 : 48
+      y += (show_continue && i == 0) ? 288 : 48
     end
     @sprites["cmdwindow"] = Window_CommandPokemon.new([])
     @sprites["cmdwindow"].viewport = @viewport
@@ -162,27 +169,63 @@ class PokemonLoad_Scene
     end
   end
 
-  def pbSetParty(trainer)
+  def pbSetParty(trainer, game_variables)
     return if !trainer || !trainer.party
-    meta = GameData::PlayerMetadata.get(trainer.character_ID)
-    if meta
-      filename = pbGetPlayerCharset(meta.walk_charset, trainer, true)
-      @sprites["player"] = TrainerWalkingCharSprite.new(filename, @viewport)
-      if !@sprites["player"].bitmap
-        raise _INTL("Player character {1}'s walking charset was not found (filename: \"{2}\").", trainer.character_ID, filename)
+    if game_variables
+      party_members = []
+      for i in 1...PBParty.len
+        if game_variables[PARTY][i]
+          party_members.push(i)
+        end
       end
-      charwidth  = @sprites["player"].bitmap.width
-      charheight = @sprites["player"].bitmap.height
-      @sprites["player"].x = 112 - (charwidth / 8)
-      @sprites["player"].y = 112 - (charheight / 8)
-      @sprites["player"].z = 99999
+      @sprites["member0"] = TrainerWalkingCharSprite.new("member0_walk", @viewport)
+      charwidth  = @sprites["member0"].bitmap.width
+      charheight = @sprites["member0"].bitmap.height
+      @sprites["member0"].x = 112 - (charwidth / 8)
+      @sprites["member0"].y = 112 - (charheight / 8)
+      @sprites["member0"].z = 99999
+      a = 0
+      party_members.each_with_index do |p, i|
+        @sprites["member#{p}"] = TrainerWalkingCharSprite.new("member#{p}_walk", @viewport)
+        if !@sprites["member#{p}"].bitmap
+          echoln "Failed to find sprite for 'member#{p}_walk'"
+          next
+        end
+        charwidth  = @sprites["member#{p}"].bitmap.width
+        charheight = @sprites["member#{p}"].bitmap.height
+        @sprites["member#{p}"].x = 120 - (charwidth / 8) + (56 * (a % 4 + 3))
+        @sprites["member#{p}"].y = 208 - (charheight / 8) + 66 * (a / 4)
+        @sprites["member#{p}"].z = 99999
+        a += 1
+      end
+    else
+      meta = GameData::PlayerMetadata.get(trainer.character_ID)
+      if meta
+        filename = pbGetPlayerCharset(meta.walk_charset, trainer, true)
+        @sprites["player"] = TrainerWalkingCharSprite.new(filename, @viewport)
+        if !@sprites["player"].bitmap
+          raise _INTL("Player character {1}'s walking charset was not found (filename: \"{2}\").", trainer.character_ID, filename)
+        end
+        charwidth  = @sprites["player"].bitmap.width
+        charheight = @sprites["player"].bitmap.height
+        @sprites["player"].x = 112 - (charwidth / 8)
+        @sprites["player"].y = 112 - (charheight / 8)
+        @sprites["player"].z = 99999
+      end
     end
     trainer.party.each_with_index do |pkmn, i|
       @sprites["party#{i}"] = PokemonIconSprite.new(pkmn, @viewport)
       @sprites["party#{i}"].setOffset(PictureOrigin::CENTER)
-      @sprites["party#{i}"].x = 334 + (66 * (i % 2))
-      @sprites["party#{i}"].y = 112 + (50 * (i / 2))
+      @sprites["party#{i}"].x = 112 + (56 * (i + 1))
+      @sprites["party#{i}"].y = 120
       @sprites["party#{i}"].z = 99999
+    end
+    trainer.inactive_party.each_with_index do |pkmn, i|
+      @sprites["party#{i+3}"] = PokemonIconSprite.new(pkmn, @viewport)
+      @sprites["party#{i+3}"].setOffset(PictureOrigin::CENTER)
+      @sprites["party#{i+3}"].x = 112 + (56 * (i + 4))
+      @sprites["party#{i+3}"].y = 120 #+ (50 * i)
+      @sprites["party#{i+3}"].z = 99999
     end
   end
 
@@ -309,7 +352,7 @@ class PokemonLoadScreen
     commands[cmd_quit = commands.length]      = _INTL("Quit Game")
     map_id = show_continue ? @save_data[:map_factory].map.map_id : 0
     @scene.pbStartScene(commands, show_continue, @save_data[:player], @save_data[:stats], map_id)
-    @scene.pbSetParty(@save_data[:player]) if show_continue
+    @scene.pbSetParty(@save_data[:player], @save_data[:variables]) if show_continue
     @scene.pbStartScene2
     loop do
       command = @scene.pbChoose(commands)

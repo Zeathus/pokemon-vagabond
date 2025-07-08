@@ -1233,12 +1233,14 @@ class Battle::Move::LowerTargetEvasion1RemoveSideEffects < Battle::Move::TargetS
     return false if targetSide.effects[PBEffects::StealthRock] ||
                     targetSide.effects[PBEffects::Spikes] > 0 ||
                     targetSide.effects[PBEffects::ToxicSpikes] > 0 ||
-                    targetSide.effects[PBEffects::StickyWeb]
+                    targetSide.effects[PBEffects::StickyWeb] ||
+                    targetSide.effects[PBEffects::Wiretap]
     return false if Settings::MECHANICS_GENERATION >= 6 &&
                     (targetOpposingSide.effects[PBEffects::StealthRock] ||
                     targetOpposingSide.effects[PBEffects::Spikes] > 0 ||
                     targetOpposingSide.effects[PBEffects::ToxicSpikes] > 0 ||
-                    targetOpposingSide.effects[PBEffects::StickyWeb])
+                    targetOpposingSide.effects[PBEffects::StickyWeb] ||
+                    targetOpposingSide.effects[PBEffects::Wiretap])
     return false if Settings::MECHANICS_GENERATION >= 8 && @battle.field.terrain != :None
     return super
   end
@@ -1294,6 +1296,13 @@ class Battle::Move::LowerTargetEvasion1RemoveSideEffects < Battle::Move::TargetS
       target.pbOwnSide.effects[PBEffects::StickyWeb]      = false
       target.pbOpposingSide.effects[PBEffects::StickyWeb] = false if Settings::MECHANICS_GENERATION >= 6
       @battle.pbDisplay(_INTL("{1} blew away sticky webs!", user.pbThis))
+    end
+    if target.pbOwnSide.effects[PBEffects::Wiretap] ||
+       (Settings::MECHANICS_GENERATION >= 6 &&
+       target.pbOpposingSide.effects[PBEffects::Wiretap])
+      target.pbOwnSide.effects[PBEffects::Wiretap]      = false
+      target.pbOpposingSide.effects[PBEffects::Wiretap] = false if Settings::MECHANICS_GENERATION >= 6
+      @battle.pbDisplay(_INTL("{1} blew away the wiretap!", user.pbThis))
     end
     if Settings::MECHANICS_GENERATION >= 8 && @battle.field.terrain != :None
       case @battle.field.terrain

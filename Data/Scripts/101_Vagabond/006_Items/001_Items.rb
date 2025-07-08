@@ -1,4 +1,5 @@
 def pbFishingBegin
+    $PokemonGlobal.fishing = true
     $game_player.set_movement_type($PokemonGlobal.surfing ? :surf_fishing : :fishing)
     $game_player.lock_pattern = true
     $game_player.pattern = 3
@@ -45,6 +46,7 @@ def pbFishingEnd
     $game_player.lock_pattern = false
     $game_player.y_offset -= 16 if !$PokemonGlobal.surfing
     $game_player.straighten
+    $PokemonGlobal.fishing = false
 end
 
 ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
@@ -68,7 +70,6 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
             $game_self_switches[[$game_map.map_id,facingEvent.id,"A"]] = true
             $game_map.need_refresh = true
         end
-    echoln facingEvent.name if facingEvent
     elsif facingEvent && facingEvent.name.include?("WhenFished") && !$game_self_switches[[$game_map.map_id,facingEvent.id,"B"]]
         command = facingEvent.name + ""
         command.gsub!("WhenFished(","")
@@ -110,7 +111,8 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
             time = rand(5..10)
             message = ""
             time.times { message += ".   " }
-            (pbFishStats[encounter[0]][0] + 1).times { message += "!" } if encounter
+            exclamation_marks = pbFishStats[encounter[0]][0] + 1
+            exclamation_marks.times { message += "!" } if encounter
             if pbWaitMessage(msgwindow, time)
                 pbFishingEnd
                 pbMessage(_INTL("There was no bite..."))
@@ -118,7 +120,10 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
                 break
             end
             if encounter
-                $scene.spriteset.addUserAnimation(Settings::EXCLAMATION_ANIMATION_ID, $game_player.x, $game_player.y, true, 3)
+                exclaim_id = Settings::EXCLAMATION_ANIMATION_ID
+                exclaim_id = 33 if exclamation_marks == 2
+                exclaim_id = 34 if exclamation_marks == 3
+                $scene.spriteset.addUserAnimation(exclaim_id, $game_player.x, $game_player.y, true, 3)
                 duration = rand(5..10) / 10.0
                 if pbWaitForInput(msgwindow, message, duration)
                     break

@@ -73,6 +73,27 @@
 > According to the musician, Nekane should be somewhere in that forest.
 > We should make sure we search it thoroughly.
 
+[CH3_MISTAROS]
+/speaker Amethyst confused
+> First that Absol, now this Ampharos...
+/speaker Kira annoyed
+> Ampharos or not, that beast must be the source of this dense mist.
+/speaker Amethyst
+> Looks like it, so we know what we must do.
+/speaker Kira
+> Say no more.
+
+[CH3_CHIMECHO,0]
+> The Chimecho sounds thankful.
+
+[CH3_CHIMECHO,1]
+/speaker Amethyst
+> Nice, a Dusk Stone!
+> If you don't have any other plans for it, that stone can [R]evolve my Misdreavus[/].
+
+[CH3_CHIMECHO,2]
+> Chimecho returned to the forest.
+
 [CH3_SEPARATED,0]
 /event Player emote confused
 /wait 20

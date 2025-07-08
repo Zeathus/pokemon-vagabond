@@ -486,21 +486,45 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
     return false
   end
   $stats.fly_count += 1
-  dir = 0
-  directions = [2, 4, 8, 6]
-  speed = 14
-  while speed > 6
-    $game_player.direction = directions[dir]
-    dir = (dir - 1) % 4
-    pbWait(speed / 60.0)
-    speed -= 1
+  start_time = System.uptime
+  time_now = System.uptime
+  while (time_now - start_time) * 6 < Math::PI
+    scaled_time = (time_now - start_time) * 6
+    $game_player.sprite.zoom_x = 1.25 - (Math.cos(scaled_time) + 1) / 8
+    $game_player.sprite.zoom_y = 0.5 + (Math.cos(scaled_time) + 1) / 4
+    tone = [255, (1 - (Math.cos(scaled_time) + 1) / 2) * 255].min
+    $game_player.tone = Tone.new(tone, tone, tone, tone)
+    time_now = System.uptime
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
   end
-  pbSEPlay("Flash")
-  $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 10.0 * Graphics.frame_rate / 20.0)
-  13.times do
-    $game_player.direction = directions[dir]
-    dir = (dir - 1) % 4
-    pbWait(speed / 60.0)
+  pbSEPlay("Wind1")
+  start_time = System.uptime
+  time_now = System.uptime
+  while (time_now - start_time) * 6 < Math::PI
+    scaled_time = (time_now - start_time) * 6
+    $game_player.sprite.zoom_x = 1.25 - (1 - Math.cos(scaled_time / 2)) * 1.25
+    $game_player.sprite.zoom_y = 0.5 + (1 - Math.cos(scaled_time / 2))
+    if scaled_time >= Math::PI / 2
+      $game_player.y_offset = -((1 - Math.cos(scaled_time - Math::PI / 2)) * 256).floor
+    end
+    tone = [510, 255 + (1 - (Math.cos(scaled_time) + 1) / 2) * 255].min
+    $game_player.tone = Tone.new(tone, tone, tone, tone)
+    new_time_now = System.uptime
+    if scaled_time < Math::PI * 2 / 3 && (new_time_now - start_time) * 6 >= Math::PI * 2 / 3
+      $game_screen.start_tone_change(Tone.new(255, 255, 255, 0), 5.0 * Graphics.frame_rate / 20.0)
+    end
+    time_now = new_time_now
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
+  end
+  $game_player.sprite.zoom_x = 0
+  while $game_screen.tone.red < 255
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
   end
   $game_temp.player_new_map_id    = $game_temp.fly_destination[0]
   $game_temp.player_new_x         = $game_temp.fly_destination[1]
@@ -513,8 +537,49 @@ def pbFlyToNewLocation(pkmn = nil, move = :FLY)
   $game_player.always_on_top = false
   yield if block_given?
   pbWait(0.25)
-  $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 10.0 * Graphics.frame_rate / 30.0)
-  pbWait(0.5)
+  $game_screen.start_tone_change(Tone.new(0, 0, 0, 0), 5.0 * Graphics.frame_rate / 20.0)
+  pbWait(0.25)
+  pbSEPlay("Wind1", 100, 80)
+  start_time = System.uptime
+  time_now = System.uptime
+  while (time_now - start_time) * 6 < Math::PI
+    reverse_time = Math::PI - (time_now - start_time) * 6
+    $game_player.sprite.zoom_x = 1.25 - (1 - Math.cos(reverse_time / 2)) * 1.25
+    $game_player.sprite.zoom_y = 0.5 + (1 - Math.cos(reverse_time / 2))
+    if reverse_time >= Math::PI / 2
+      $game_player.y_offset = -((1 - Math.cos(reverse_time - Math::PI / 2)) * 256).floor
+    else
+      $game_player.y_offset = 0
+    end
+    tone = [510, 255 + (1 - (Math.cos(reverse_time) + 1) / 2) * 255].min
+    $game_player.tone.set(tone, tone, tone, tone)
+    time_now = System.uptime
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
+  end
+  $game_player.y_offset = 0
+  start_time = System.uptime
+  time_now = System.uptime
+  while (time_now - start_time) * 6 < Math::PI
+    reverse_time = Math::PI - (time_now - start_time) * 6
+    $game_player.sprite.zoom_x = 1.25 - (Math.cos(reverse_time) + 1) / 8
+    $game_player.sprite.zoom_y = 0.5 + (Math.cos(reverse_time) + 1) / 4
+    tone = [255, (1 - (Math.cos(reverse_time) + 1) / 2) * 255].min
+    $game_player.tone.set(tone, tone, tone, tone)
+    time_now = System.uptime
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
+  end
+  $game_player.sprite.zoom_x = 1.0
+  $game_player.sprite.zoom_y = 1.0
+  $game_player.tone.set(0, 0, 0, 0)
+  while $game_screen.tone.red > 0
+    pbUpdateSceneMap
+    Graphics.update
+    Input.update
+  end
   pbEraseEscapePoint
   $game_temp.fly_destination = nil
   return true
@@ -652,24 +717,24 @@ HiddenMoveHandlers::UseMove.add(:ROCKSMASH, proc { |move, pokemon|
 #===============================================================================
 # Strength
 #===============================================================================
-def pbStrength
+def pbStrength(object = "boulder")
   if !(hasPartyMember(:Kira) && $game_switches[HAS_STRENGTH])
     return false
   end
   if $PokemonMap.strengthUsed
-    pbMessage(_INTL("Strength made it possible to move boulders around."))
+    pbMessage(_INTL("Strength made it possible to move {1} around.", object))
     return false
   end
   move = :STRENGTH
   movefinder = Pokemon.new(:SANDOLIN, 5)
   if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_STRENGTH, false) || (!$DEBUG && !movefinder)
-    pbMessage(_INTL("It's a big boulder, but a Pokémon may be able to push it aside."))
+    pbMessage(_INTL("It's a big {1}, but a Pokémon may be able to push it aside.", object))
     return false
   end
   speciesname = (movefinder) ? movefinder.name : $player.name
-  if pbConfirmMessage(_INTL("The big boulder looks pushable.\nWould you like to call {1}?", speciesname))
+  if pbConfirmMessage(_INTL("The big {1} looks pushable.\nWould you like to call {2}?", object, speciesname))
     pbHiddenMoveAnimation(movefinder)
-    pbMessage(_INTL("{1} made it possible to move boulders around!", speciesname))
+    pbMessage(_INTL("{1} made it possible to move {2}s around!", speciesname, object))
     $PokemonMap.strengthUsed = true
     return true
   end
@@ -679,7 +744,8 @@ end
 EventHandlers.add(:on_player_interact, :strength_event,
   proc {
     facingEvent = $game_player.pbFacingEvent
-    pbStrength if facingEvent && facingEvent.name[/strengthboulder/i]
+    pbStrength("boulder") if facingEvent && facingEvent.name[/strengthboulder/i]
+    pbStrength("log") if facingEvent && facingEvent.name[/strengthlog/i]
   }
 )
 
@@ -704,7 +770,7 @@ HiddenMoveHandlers::UseMove.add(:STRENGTH, proc { |move, pokemon|
 #===============================================================================
 # Surf
 #===============================================================================
-def pbSurf(confirm = true, edge = false, down = false)
+def pbSurf(confirm = true, target_tile = false)
   return false if !hasPartyMember(PBParty::Amethyst)
   return false if $game_player.pbFacingEvent
   return false if !$game_player.can_ride_vehicle_with_follower?
@@ -713,11 +779,11 @@ def pbSurf(confirm = true, edge = false, down = false)
       pbDialog("CH1_NO_SURF", 0)
       return false
     end
-    if $quests[:UNKNOWNDESTINATION].at_step?(1) && [27, 14].include?($game_map.map_id)
+    if $quests[:UNKNOWNDESTINATION].at_step?(1) && [204, 27, 14].include?($game_map.map_id)
       pbDialog("CH1_NO_SURF", 1)
       return false
     end
-    if $quests[:UNKNOWNDESTINATION].at_step?(2) && [14].include?($game_map.map_id)
+    if $quests[:UNKNOWNDESTINATION].at_step?(2) && [204, 14].include?($game_map.map_id)
       pbDialog("CH1_NO_SURF", 2)
       return false
     end
@@ -731,20 +797,25 @@ def pbSurf(confirm = true, edge = false, down = false)
     pbCancelVehicles
     #surfbgm = GameData::Metadata.get.surf_BGM
     #pbCueBGM(surfbgm, 0.5) if surfbgm
-    pbStartSurfing(edge, down)
+    pbStartSurfing(target_tile)
     return true
   end
   return false
 end
 
-def pbStartSurfing(edge = false, down = false)
+def pbStartSurfing(target_tile = nil)
   pbCancelVehicles
   $PokemonEncounters.reset_step_count
   $PokemonGlobal.surfing = true
   $stats.surf_count += 1
   pbUpdateVehicle
-  $game_temp.surf_base_coords = $map_factory.getFacingCoords($game_player.x, $game_player.y, $game_player.direction)
-  pbJumpToward(edge ? 2 : 1, false, false, down ? 1 : 0)
+  if target_tile
+    $game_temp.surf_base_coords = [target_tile[0], target_tile[1]]
+    pbJump(target_tile[0] - $game_player.x, target_tile[1] - $game_player.y, true)
+  else
+    $game_temp.surf_base_coords = $map_factory.getFacingCoords($game_player.x, $game_player.y, $game_player.direction)
+    pbJumpToward(1, true, false, 0)
+  end
   $game_temp.surf_base_coords = nil
   $game_player.check_event_trigger_here([1, 2])
 end
@@ -773,14 +844,14 @@ def pbEndSurf(_xOffset, _yOffset)
     target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
     if !target_terrain.can_surf && !target_terrain.water_edge && $game_map.passable?(target_tile[0], target_tile[1], 10 - $game_player.direction)
       $game_player.direction_fix = true
-      $game_temp.surf_base_coords = [$game_player.x, $game_player.y]
+      $game_temp.surf_base_coords = [$game_player.x, $game_player.y, true]
       success = false
       if ($game_player.direction == 2 || $game_player.direction == 8)
-        if pbJumpToward((target_tile[1] - $game_player.y).abs, false, true)
+        if pbJumpToward((target_tile[1] - $game_player.y).abs, true, true)
           success = true
         end
       elsif ($game_player.direction == 4 || $game_player.direction == 6) 
-        if pbJumpToward((target_tile[0] - $game_player.x).abs, false, true, target_tile[1] - $game_player.y)
+        if pbJumpToward((target_tile[0] - $game_player.x).abs, true, true, target_tile[1] - $game_player.y)
           success = true
         end
       end
@@ -794,6 +865,71 @@ def pbEndSurf(_xOffset, _yOffset)
       $game_temp.surf_base_coords = nil
       $game_player.direction_fix = false
       return true
+    elsif target_terrain.water_edge
+      success = false
+      if $game_player.direction == 2
+        if !$game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] + 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] += 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] - 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] -= 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf && $game_map.passable?(target_tile[0], target_tile[1] + 1, 10 - $game_player.direction)
+          target_tile[1] += 1
+          success = true
+        end
+      elsif $game_player.direction == 4
+        if !$game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf && $game_map.passable?(target_tile[0], target_tile[1] + 1, 10 - $game_player.direction)
+          target_tile[1] += 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf && $game_map.passable?(target_tile[0], target_tile[1] - 1, 10 - $game_player.direction)
+          target_tile[1] -= 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] - 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] -= 1
+          success = true
+        end
+      elsif $game_player.direction == 6
+        if !$game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf && $game_map.passable?(target_tile[0], target_tile[1] + 1, 10 - $game_player.direction)
+          target_tile[1] += 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf && $game_map.passable?(target_tile[0], target_tile[1] - 1, 10 - $game_player.direction)
+          target_tile[1] -= 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] + 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] += 1
+          success = true
+        end
+      elsif $game_player.direction == 8
+        if !$game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] + 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] += 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf && $game_map.passable?(target_tile[0] - 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[0] -= 1
+          success = true
+        elsif !$game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf && $game_map.passable?(target_tile[0] - 1, target_tile[1], 10 - $game_player.direction)
+          target_tile[1] -= 1
+          success = true
+        end
+      end
+      if success
+        $game_player.direction_fix = true
+        $game_temp.surf_base_coords = [$game_player.x, $game_player.y, true]
+        success = false
+        if pbJump(target_tile[0] - $game_player.x, target_tile[1] - $game_player.y, true, true)
+          success = true
+        end
+        if success
+          $game_map.autoplayAsCue
+          $game_player.increase_steps
+          result = $game_player.check_event_trigger_here([1, 2])
+          pbOnStepTaken(result)
+          $game_player.sprite.snapPartner(false)
+        end
+        $game_temp.surf_base_coords = nil
+        $game_player.direction_fix = false
+        return true
+      end
     end
   end
   return false
@@ -813,7 +949,7 @@ def pbStartSurf(confirm = true)
     target_tile[1] -= facing_terrain.water_edge ? 2 : 1 if $game_player.direction == 8
     high_edge = false
     # Check if there is water to drop down by one y-coordinate to emulate height sideways
-    if ($game_player.direction == 4 || $game_player.direction == 6) && Supplementals::HIGH_WATER_EDGES
+    if ($game_player.direction == 4 || $game_player.direction == 6) && !facing_terrain.water_flat_edge && Supplementals::HIGH_WATER_EDGES
       target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1] + 1)
       if target_terrain.can_surf && !target_terrain.water_edge
         target_tile[1] += 1
@@ -824,9 +960,62 @@ def pbStartSurf(confirm = true)
     target_terrain = $game_map.terrain_tag(target_tile[0], target_tile[1])
     if target_terrain.can_surf && !target_terrain.water_edge
       $game_player.direction_fix = true
-      pbSurf(confirm, facing_terrain.water_edge, high_edge)
+      pbSurf(confirm, target_tile)
       $game_player.direction_fix = false
       return true
+    elsif target_terrain.water_edge
+      success = false
+      if $game_player.direction == 2
+        if $game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf
+          target_tile[0] += 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf
+          target_tile[0] -= 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf
+          target_tile[1] += 1
+          success = true
+        end
+      elsif $game_player.direction == 4
+        if $game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf
+          target_tile[1] += 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf
+          target_tile[1] -= 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf
+          target_tile[0] -= 1
+          success = true
+        end
+      elsif $game_player.direction == 6
+        if $game_map.terrain_tag(target_tile[0], target_tile[1] + 1).can_surf
+          target_tile[1] += 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf
+          target_tile[1] -= 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf
+          target_tile[0] += 1
+          success = true
+        end
+      elsif $game_player.direction == 8
+        if $game_map.terrain_tag(target_tile[0] + 1, target_tile[1]).can_surf
+          target_tile[0] += 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0] - 1, target_tile[1]).can_surf
+          target_tile[0] -= 1
+          success = true
+        elsif $game_map.terrain_tag(target_tile[0], target_tile[1] - 1).can_surf
+          target_tile[1] -= 1
+          success = true
+        end
+      end
+      if success
+        $game_player.direction_fix = true
+        pbSurf(confirm, target_tile)
+        $game_player.direction_fix = false
+        return true
+      end
     end
   end
   return false

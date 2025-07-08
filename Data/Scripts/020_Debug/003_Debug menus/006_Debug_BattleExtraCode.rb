@@ -144,7 +144,8 @@ module Battle::DebugVariables
     PBEffects::Swamp              => {name: "Swamp duration",                         default: 0},
     PBEffects::Tailwind           => {name: "Tailwind duration",                      default: 0},
     PBEffects::ToxicSpikes        => {name: "Toxic Spikes layers (0-2)",              default: 0, max: 2},
-    PBEffects::WideGuard          => {name: "Wide Guard applies this round",          default: false}
+    PBEffects::WideGuard          => {name: "Wide Guard applies this round",          default: false},
+    PBEffects::Wiretap            => {name: "Wiretap exists",                         default: false}
   }
 
   FIELD_EFFECTS = {

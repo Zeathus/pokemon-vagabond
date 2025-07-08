@@ -167,7 +167,7 @@
     > This will be a huge help, thank ya so much!
     # This continues in BRECCIA_PENT 4, 5 or 6
 /else
-    > Do you want to keep that one for yourself?\nNo problem, ya can come back with another one.
+    > Do you want to keep that one yourself?\nNo problem, ya can come back with another one later.
     /return false
 /end
 /return true
@@ -751,3 +751,7 @@
 > I've been doing statistical analysis on the eggs produced at this ranch.
 > My estimates indicate that Pokémon hatched from their eggs are as much as 16 times more likely to be shiny.
 > That is compared to finding one randomly in the wild.
+
+[RANCH_SIGN_LOOP]
+/textpos middle
+> Breccia Ranch Loop\nFollow this trail to end up on the opposite side of the ranch.

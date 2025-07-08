@@ -142,13 +142,16 @@
 > This place welcomes criminals with nowhere else to go, but only the most underhanded have a real future here.
 > Anonymity is key to these people, hence the pseudonym, G.
 > While we're here, we'll be going by K, A, N and {pbPlayerPseudonym}, got it?
+/name K
 /if pbPlayerPseudonym.length > 1
   > <PLAYER> is {pbPlayerPseudonym}, to be clear.
 /end
 > We're looking for a guy known as J.\nHe likely has the goggles we're after.
 /speaker Amethyst wink
+/name A
 > Got it, K!
 /speaker Kira lookaway
+/name K
 > You're having fun with this, aren't you..?
 
 [CH4_SECRET_MARKET,2]
@@ -156,6 +159,7 @@
 /hidename 1
 > K, is that you!?
 /speaker Kira
+/name K
 > Sounds like J is still around.
 
 [CH4_SECRET_MARKET,3]
@@ -164,11 +168,13 @@
 > Boy, I haven't seen you in AGES!
 > You're even wearing that funny cowboy hat still. You must really be yearning for the good old days!
 /speaker Kira lookaway
+/name K
 > ...Good to see you too, J.
 /speaker J
 > Sorry, I got a bit overexcited.
 > Who're your new companions?
 /speaker Kira
+/name K
 > From my left to your left, it's A, N and {pbPlayerPseudonym}.\nThe latter two are companions by happenstance.
 /speaker J
 /if pbPlayerPseudonym == "J"
@@ -181,6 +187,7 @@
 /end
 > Why are you here anyway?
 /speaker Kira
+/name K
 > We simply needed a way into Scoria Desert while it's off-limits, and this was our only option.
 > Not only that, but we also needed to find some goggles to protect ourselves from the storm.
 /speaker J
@@ -188,6 +195,7 @@
 > These prototype Go-Goggles were smuggled from Hoenn. They're super rare and not officially released yet.
 > It's said that you can see better with them in a sandstorm than you can without them in clear weather!
 /speaker Kira
+/name K
 > You can drop the act, J.\nI know your game already.
 ?> Those goggles are regular Go-Goggles, acquired legally. You just say they aren't to ramp up the prices.
   /choice So he's scamming people?
@@ -201,25 +209,30 @@
 
 [CH4_SECRET_MARKET,4]
 /speaker Kira
+/name K
 > Thanks J, I knew I could count on you.
 /speaker J
 > Man, it's really been a long time, huh?
 > It feels like yesterday that you were off doing L's dirty work.
 /speaker Kira lookaway
+/name K
 > We're in a hurry, so I don't have much time to reminisce. Not that I really want to either.
 /speaker J
 > No worries, K. I understand.\nGlad to see you're doing well.
 > If you're ever in the area, come by my shop!
 > I'll even give you extra special [R]<wave>suggested retail prices</wave>[/] for my stuff!
 /speaker Kira
+/name K
 > Sounds like a plan. See you around, J.
 
 [CH4_SECRET_MARKET,5]
 /speaker Kira
+/name K
 > With the goggles settled, it's about time we head for Scoria Desert.
 > There's a cave entrance south of here that will get us there.
 > You can check out J's stock first too. I'm sure he has some useful stuff.
 /speaker Amethyst wink
+/name A
 > Let's show that storm who's boss!
 
 [CH4_PASSAGE,0]
@@ -253,8 +266,10 @@
 
 [CH4_PASSAGE,3]
 /speaker Amethyst confused
+/name A
 > K, do you know these ruffians?
 /speaker Kira
+/name K
 > I've got no clue who they are. There are too many of these kinda guys to count.
 # They turn towards each other
 
@@ -274,8 +289,10 @@
 
 [CH4_PASSAGE,6]
 /speaker Amethyst confused
+/name A
 > Should we be worried?
 /speaker Kira
+/name K
 > They couldn't even beat us three on two. I doubt they'll be a problem.
 
 [CH4_PASSAGE,7] # Plays after progressing a little bit past the battle
@@ -296,19 +313,23 @@
 
 [CH4_PASSAGE,9]
 /speaker Amethyst
+/name A
 > Watch out!\wtnp[4]
 # Kira and Amethyst jumps out of the way
 
 [CH4_PASSAGE,10]
 /speaker Kira
+/name K
 > We might have a problem on our hands...
 
 [CH4_PASSAGE,11]
 /speaker Amethyst
+/name A
 > Hey! Be careful where you throw those things!
 /speaker B2
 > This time you've got nowhere to run!
 /speaker Amethyst confused
+/name A
 > But we didn't even run last time?
 /speaker B1
 > Your semantics are useless.\nWe've got you cornered!
@@ -328,6 +349,7 @@
 > I told you we should've bought them in bulk!
 /event Amethyst move up
 /speaker Amethyst
+/name A
 > Excuse me, may I have a word?
 /event B2 turn right
 /speaker B2
@@ -339,6 +361,7 @@
 /event set B2 6
 /event set B3 7
 /speaker Amethyst
+/name A
 > <wave>HELLOOOOO!!!</wave>
 /event B2 turn left
 /speaker B1
@@ -368,6 +391,7 @@
 /event B2 turn down
 > AHEM...\nYou can ask your question, but be quick.
 /speaker Amethyst confused
+/name A
 > Okay...
 /expression neutral
 > What vendetta do you have against K anyway?
@@ -380,6 +404,7 @@
 > He did all his tasks so effortlessly that there was no room for us anymore.
 > Because of K, we were thrown away, no longer of use to L.
 /speaker Amethyst confused
+/name A
 > Sounds more like you should have a problem with L, not K...
 /speaker B2
 > Don't you dare insult L! He will see our value again once we eliminate K for good.
@@ -388,8 +413,10 @@
 
 [CH4_PASSAGE,15] # After the B gang has left
 /speaker Amethyst confused
+/name A
 > They really think you were the one who wronged them, huh.
 /speaker Kira
+/name K
 ?> L had that influence on people.\nI oughta know.
   /choice Who is L anyway?
     > Wouldn't you like to know. However, you're not privy to that information.
@@ -421,6 +448,7 @@
 
 [CH4_PASSAGE,18]
 /speaker Kira
+/name K
 !> WATCH OUT!\wtnp[10]
 # The player is already ahead, and Kira rams into Amethyst to push her out of the way
 # Kira disappears under a mountain of boulders, his hat lying on the ground just outside the hill.
@@ -776,7 +804,7 @@
 /event set Kira 96
 /event Kira emote ...
 /speaker Kira annoyed
-> Damn, she's completely out.\nWe need to find somewhere more humid, and fast.
+> Damn, she's completely out.\nWe need to find somewhere humid, fast.
 
 [CH4_DESERT,3]
 /speaker Kira annoyed

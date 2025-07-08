@@ -33,6 +33,7 @@ class OverworldPokemon
     @map_y = y
     @new_x = x
     @new_y = y
+    @offset_y = 0
     @area = area
     if terrain == -1
       @terrain = 1
@@ -102,7 +103,9 @@ class OverworldPokemon
         end
       end
     elsif @terrain == 2 # Water
-      if !OVERWORLD_WATER_ABOVE.include?(@species)
+      if OVERWORLD_WATER_ABOVE.include?(@species)
+        @offset_y = -12
+      else
         if OVERWORLD_WATER_FLOAT.include?(@species)
           @sprite.bitmap.fill_rect(0,54,128,10,Color.new(0,0,0,0))
           for y in 50...54
@@ -152,7 +155,7 @@ class OverworldPokemon
   def updateStill
     return if !@sprite || @sprite.disposed?
     @sprite.x = @map_x * 32 - (@map.display_x / 4) + 16
-    @sprite.y = @map_y * 32 - (@map.display_y / 4)
+    @sprite.y = @map_y * 32 - (@map.display_y / 4) + @offset_y
     @sprite.y += 10 if @terrain == 2 # Water
     @sprite.mirror = @mirror
     @sprite.update
@@ -173,7 +176,7 @@ class OverworldPokemon
     return if !@sprite || @sprite.disposed?
     @sprite.src_rect.x = ((@time % 30 < 15) ? 0 : 64)
     @sprite.x = @map_x * 32 - (@map.display_x / 4) + 16
-    @sprite.y = @map_y * 32 - (@map.display_y / 4)
+    @sprite.y = @map_y * 32 - (@map.display_y / 4) + @offset_y
     @sprite.y += 10 if @terrain == 2 # Water
     @sprite.mirror = @mirror
     @sprite.z = screen_y_ground
@@ -226,7 +229,7 @@ class OverworldPokemon
         elsif @terrain==1 # Cave
           valid = true if @map.passableStrict?(new_x,new_y,0)
         elsif @terrain==2 # Water
-          valid = true if @map.terrain_tag(new_x,new_y).can_surf_freely
+          valid = true if @map.terrain_tag(new_x,new_y).can_surf_freely && !@map.terrain_tag(new_x,new_y).force_move
         end
         valid = !tileOccupied(new_x,new_y) if valid
         dirs.push(i) if valid
@@ -272,7 +275,7 @@ class OverworldPokemon
   end
 
   def screen_y_ground
-    return @sprite.y + Game_Map::TILE_HEIGHT
+    return @sprite.y + Game_Map::TILE_HEIGHT - @offset_y
   end
 
   def away
@@ -629,7 +632,7 @@ class Spriteset_Map
         end
         if !visited
           tag = @map.terrain_tag(x,y,true)
-          if tag.can_surf_freely && $PokemonEncounters.has_water_encounters?
+          if tag.can_surf_freely && !tag.force_move && $PokemonEncounters.has_water_encounters?
             if !($game_map.events.any? { |id, event| event.x == x && event.y == y })
               count+=1
               area = SpawnArea.new(@@viewport1,@map,tag,x,y)

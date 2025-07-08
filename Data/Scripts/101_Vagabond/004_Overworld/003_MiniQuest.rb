@@ -52,7 +52,6 @@ class MiniQuest
   # type 1 = Category Catching
   # type 2 = Item Fetching
   # type 3 = Lost Pokemon
-  attr_accessor(:type)
   attr_accessor(:difficulty) # 0 to 4 (5)
   attr_accessor(:requirements) # Array that varies by quest type
   attr_accessor(:rewards) # Array [money, item]
@@ -77,20 +76,18 @@ class MiniQuest
     tname = pbRandomName(gender)
 
     req = []
-    bst_range = [
-      0...250,
-      200...300,
-      300...350,
-      350...450,
-      450...550,
-      550...700][difficulty]
     if type==0
-      rand = rand(807)+1
-      blacklist = pbLegendaryPokemon + pbStaticPokemon
-      while blacklist.include?(rand) || !bst_range.include?(pbBST(rand))
-        rand = rand(807)+1
-      end
-      species=rand
+      blacklist = [
+        :ARCHEBLAST,
+        :TROPICOPIA,
+        :LAPRANESSE,
+        :SANDOLIN,
+        :TYPENULL,
+        :SILVALLY
+      ]
+      dex_list = pbLoadRegionalDexes[0]
+      species_data = self.generate_pokemon(difficulty)
+      species = species_data.species
       req.push(species) # Pokemon
       # Might include catch rate later
       #dexdata=pbOpenDexData
@@ -117,19 +114,320 @@ class MiniQuest
     return self.new(tname, ttype, type, difficulty, req, [money,item])
   end
 
+  def self.generate_pokemon(difficulty)
+    # Currently ends at regional dex #287
+    return GameData::Species.get([
+      [ # Difficulty 1
+        :ZIGZAGOON,
+        :PIDGEY,
+        :HOPPIP,
+        :SKIPLOOM,
+        :CATERPIE,
+        :METAPOD,
+        :WEEDLE,
+        :KAKUNA,
+        :SEEDOT,
+        :NICKIT,
+        :NATU,
+        :EEVEE,
+        :MAGIKARP,
+        :WOOPER,
+        :POLIWAG,
+        :SNIVY,
+        :ODDISH,
+        :TAILLOW,
+        :COMBEE,
+        :CUTIEFLY,
+        :FLABEBE,
+        :CHERUBI,
+        :SWABLU,
+        :GOSSIFLEUR,
+        :SEWADDLE,
+        :MINCCINO,
+        :NINCADA,
+        :ROWLET,
+        :TIMBURR,
+        :STUFFUL,
+        :MAREEP,
+        :MUDBRAY,
+        :AZURILL,
+        :MARILL,
+        :PAWMI,
+        :BUDEW,
+        :PSYDUCK,
+        :SHINX,
+        :SPOINK,
+        :SNUBBULL,
+        :DUCKLETT,
+        :WINGULL,
+        :TRUBBISH,
+        :MEOWTH,
+        :SKITTY,
+        :CHINGLING,
+        :MUNCHLAX,
+        :DRIFLOON,
+        :MIMEJR,
+        :BONSLY,
+        :VULPIX,
+        :FLETCHLING,
+        :NIDORANfE,
+        :NIDORANmA,
+        :SALANDIT,
+        :NUMEL,
+        :GROWLITHE,
+        :ROCKRUFF,
+        :GEODUDE,
+        :DIGLETT,
+        :ARON,
+        :TINKATINK,
+        :MAGBY,
+        :TYROGUE,
+        :SPEAROW,
+        :MAKUHITA,
+        :SKIDDO,
+        :MACHOP,
+        :MUDKIP,
+        :KRABBY,
+        :MORELULL,
+        :MURKROW,
+        :PUMPKABOO,
+        :RALTS,
+        :DEWPIDER,
+        :WIMPOD,
+        :SLUGMA,
+        :SCRAGGY,
+        :DODUO,
+        :HELIOPTILE,
+        :SCORBUNNY,
+        :FERROSEED,
+        :CHARCADET,
+        :FENNEKIN,
+        :CACNEA,
+        :BRAMBLIN,
+        :SANDILE,
+        :HIPPOPOTAS,
+        :TRAPINCH,
+        :ROGGENROLA,
+        :NACLI,
+        :SANDSHREW,
+        :DARUMAKA,
+        :ARCHEN,
+        :TENTACOOL,
+        :FINIZEN,
+        :STARYU,
+        :CLAUNCHER,
+        :HORSEA,
+        :WAILMER,
+        :SHELLOS,
+        :CLOBBOPUS,
+        :SLOWPOKE,
+        :MANTYKE
+      ],
+      [ # Difficulty 2
+        :LINOONE,
+        :PIDGEOTTO,
+        :JUMPLUFF,
+        :BUTTERFREE,
+        :BEEDRILL,
+        :NUZLEAF,
+        :THIEVUL,
+        :XATU,
+        :CLODSIRE,
+        :POLIWHIRL,
+        :SERVINE,
+        :GLOOM,
+        :SWELLOW,
+        :FLOETTE,
+        :CHERRIM,
+        :ELDEGOSS,
+        :SWADLOON,
+        :NINJASK,
+        :DARTRIX,
+        :GURDURR,
+        :PACHIRISU,
+        :FLAAFFY,
+        :MILTANK,
+        :HAPPINY,
+        :AZUMARILL,
+        :PAWMO,
+        :ROSELIA,
+        :GOLDUCK,
+        :LUXIO,
+        :GRUMPIG,
+        :GRANBULL,
+        :SWANNA,
+        :INDEEDEE,
+        :PELIPPER,
+        :PERSIAN,
+        :MRMIME,
+        #:ROTOM,
+        :FLETCHINDER,
+        :NIDORINA,
+        :NIDORINO,
+        :CAMERUPT,
+        #:LYCANROC,
+        :GRAVELER,
+        :DUGTRIO,
+        :TINKATUFF,
+        :MAGMAR,
+        :ONIX,
+        :FEAROW,
+        :GOGOAT,
+        :MACHOKE,
+        :MARSHTOMP,
+        :SHIINOTIC,
+        :GOURGEIST,
+        :KIRLIA,
+        :CARNIVINE,
+        :ABSOL,
+        :DURANT,
+        :MAGCARGO,
+        :CARBINK,
+        :HEATMOR,
+        :TORKOAL,
+        :RHYHORN,
+        :DODRIO,
+        :RABOOT,
+        :SKARMORY,
+        :BRAIXEN,
+        :CACTURNE,
+        :KROKOROK,
+        :MARACTUS,
+        :VIBRAVA,
+        :BOLDORE,
+        :NACLSTACK,
+        :SANDSLASH,
+        :TIRTOUGA,
+        :TENTACRUEL,
+        :QWILFISH,
+        :SHUCKLE,
+        :SEADRA,
+        :CORSOLA,
+        :GASTRODON,
+        :MANTINE
+      ],
+      [ # Difficulty 3
+        :PALMINO,
+        :TROPIUS,
+        :BOOMINE,
+        :TURTONATOR,
+        :LAZU,
+        :LAPRAS,
+        :PIDGEOT,
+        :VAPOREON,
+        :JOLTEON,
+        :FLAREON,
+        :LEAFEON,
+        :GLACEON,
+        :GYARADOS,
+        :POLIWRATH,
+        :SERPERIOR,
+        :VILEPLUME,
+        :RIBOMBEE,
+        :ALTARIA,
+        :CINCCINO,
+        :SHEDINJA,
+        :DECIDUEYE,
+        :BEWEAR,
+        :AMPHAROS,
+        :CHANSEY,
+        :MUDSDALE,
+        :LUXRAY,
+        :GARBODOR,
+        :DELCATTY,
+        :CHIMECHO,
+        :SNORLAX,
+        :DRIFBLIM,
+        :SUDOWOODO,
+        :NINETALES,
+        :TALONFLAME,
+        :ARCANINE,
+        :LAIRON,
+        :TINKATON,
+        :HITMONCHAN,
+        :HITMONLEE,
+        :HITMONTOP,
+        :HARIYAMA,
+        :SWAMPERT,
+        :KINGLER,
+        :GARDEVOIR,
+        :ARAQUANID,
+        :GOLISOPOD,
+        :SCRAFTY,
+        :RHYDON,
+        :HELIOLISK,
+        :CINDERACE,
+        :FERROTHORN,
+        :ARMAROUGE,
+        :CERULEDGE,
+        :DELPHOX,
+        :BRAMBLEGHAST,
+        :KROOKODILE,
+        :HIPPOWDON,
+        :FLYGON,
+        :GARGANACL,
+        :DARMANITAN,
+        :ARCHEOPS,
+        :CARRACOSTA,
+        :PALAFIN,
+        :OVERQWIL,
+        :STARMIE,
+        :CLAWITZER,
+        :WAILORD,
+        :GRAPPLOCT,
+        :SLOWBRO,
+        :SLOWKING
+      ],
+      [ # Difficulty 4
+        :TROPICOPIA,
+        :ARCHEBLAST,
+        :LAPRANESSE,
+        :SHIFTRY,
+        :ESPEON,
+        :UMBREON,
+        :SYLVEON,
+        :POLITOED,
+        :BELLOSSOM,
+        :VESPIQUEN,
+        :FLORGES,
+        :LEAVANNY,
+        :CONKELDURR,
+        :BLISSEY,
+        :PAWMOT,
+        :ROSERADE,
+        :NIDOQUEEN,
+        :NIDOKING,
+        :SALAZZLE,
+        :GOLEM,
+        :AGGRON,
+        :MAGMORTAR,
+        :STEELIX,
+        :MACHAMP,
+        :HONCHKROW,
+        :GALLADE,
+        :RHYPERIOR,
+        :GIGALITH,
+        :KINGDRA
+      ],
+      [ # Difficulty 5
+        :DITTO
+      ]
+    ][difficulty].shuffle[0])
+  end
+
   def name
     vocals = ['A','E','I','O','U','Y']
-    if type==0
-      species = PBSpecies.getName(requirements[0])
+    if @type==0
+      species = GameData::Species.get(requirements[0]).name
       if vocals.include?(species[0..0])
         return _INTL("Catch an {1}",species)
       else
         return _INTL("Catch a {1}",species)
       end
-    elsif type==1
+    elsif @type==1
       return "Category"
-    elsif type==2
-      item = PBItems.getName(requirements[0])
+    elsif @type==2
+      item = GameData::Item.get(requirements[0]).name
       if vocals.include?(item[0..0])
         return _INTL("Find an {1}",item)
       else
@@ -139,8 +437,16 @@ class MiniQuest
     return "N/A"
   end
 
+  def display_name(status=0)
+    return self.name
+  end
+
+  def location
+    return "???"
+  end
+
   def trainer
-    typename = PBTrainers.getName(@trainertype)
+    typename = GameData::TrainerType.get(@trainertype).name
     if typename.length > 11 && typename.include?(" ")
       typename = typename[(typename.index(" ")+1)..typename.length]
     end
@@ -152,22 +458,31 @@ class MiniQuest
     return ret
   end
 
-  def rewardMoney
+  def money
     return @rewards[0]
   end
 
-  def rewardItem
-    return @rewards[1]
+  def items
+    return [[@rewards[1], 1]]
+  end
+
+  def exp
+    return 0
+  end
+
+  def steps
+    return [pbGetStepDescription]
   end
 
   def pbGetStepDescription
-    ret = "G.P.O. TASK\n"
+    ret = "G.P.O. Task:\n"
     ret += self.name + " and return it to HQ.\n\n"
-    ret += "REWARD\n"
-    ret += "Money: $" + rewardMoney.to_s + "\n"
-    ret += "Item: " + PBItems.getName(rewardItem) + "\n\n"
-    ret += "SUBMITTED BY\n" + self.trainer
+    ret += "Requested by:\n" + self.trainer
     return ret
+  end
+
+  def hide_items
+    return false
   end
 
   def mapguide
@@ -186,13 +501,17 @@ class MiniQuest
     return false
   end
 
+  def type
+    return 15
+  end
+
   def canComplete?
-    if type==0 # Catching
+    if @type==0 # Catching
       species = requirements[0]
       return true if pbHasInParty?(species)
-    elsif type==1 # Category Catching
+    elsif @type==1 # Category Catching
       return false
-    elsif type==2 # Item Fetching
+    elsif @type==2 # Item Fetching
       item = requirements[0]
       return true if $bag.quantity(item)>0
     end
@@ -200,59 +519,34 @@ class MiniQuest
   end
 
   def complete
-    if type==0 # Catching
-      species = PBSpecies.getName(requirements[0])
-      if pbNumberInParty(requirements[0])>1
-        pbSpeech("Receptionist", "none",
-          _INTL("Do you want to deliver the first {1} in your party?",species),
-          false,["Yes","No"])
-      else
-        pbSpeech("Receptionist", "none",
-          _INTL("Do you want to deliver the {1} in your party?",species),
-          false,["Yes","No"])
-      end
-      if pbGet(1)==0
-        if !pbRemoveSpecies(requirements[0])
-          pbSpeech("Receptionist", "none",
-            "You do not have the required Pokémon.")
-          return false
-        end
-      else
-        pbSpeech("Receptionist", "none",
-          "Please come back when you have the Pokémon you wish to deliver.")
+    if @type==0 # Catching
+      species = GameData::Species.get(requirements[0])
+      pbSet(2, species)
+      if !pbDialog("GPO_COMPLETE_TASK", 1)
         return false
       end
-    elsif type==1 # Category Catching
+    elsif @type==1 # Category Catching
       return
-    elsif type==2 # Item Fetching
-      item = PBItems.getName(requirements[0])
-      pbSpeech("Receptionist", "none",
-        _INTL("Do you want to deliver the {1}?",item),
-        false,["Yes","No"])
-      if pbGet(1)==0
-        $bag.pbDeleteItem(requirements[0],1)
-      else
-        pbSpeech("Receptionist", "none",
-          "Please come back when you wish to deliver the item.")
+    elsif @type==2 # Item Fetching
+      item = GameData::Item.get(requirements[0])
+      pbSet(2, item)
+      if !pbDialog("GPO_COMPLETE_TASK", 2)
         return false
       end
+      $bag.remove(requirements[0],1)
     end
-    pbSpeech("Receptionist", "none", "\\GThank you, your efforts are greatly appreciated.")
-    if @day <= pbGetTimeNow.day
-      bonus=(rewards[0]*0.5).round
-      $player.money+=rewards[0]+bonus
-      pbSEPlay("purchase",100,100)
-      pbText(_INTL("\\GPLAYER received ${1}!BREAK(+${2} bonus for efficient work)",rewards[0],bonus))
-    else
-      $player.money+=rewards[0]
-      pbSEPlay("purchase",100,100)
-      pbText(_INTL("\\GPLAYER received ${1}!",rewards[0]))
-    end
-    Kernel.pbReceiveItem(rewards[1],1)
+    pbSet(2, @rewards[0])
+    pbSet(3, GameData::Item.get(@rewards[1]).name)
+    pbDialog("GPO_TASK_REWARD", 0)
+    pbReceiveItem(@rewards[1])
     pbRemoveMiniQuestFromList($game_variables[CURRENTMINIQUEST])
-    $game_variables[CURRENTMINIQUEST]=0
-    $game_variables[MINIQUESTCOUNT]+=1
+    $game_variables[CURRENTMINIQUEST] = 0
+    $game_variables[MINIQUESTCOUNT] += 1
+    if pbJob("G.P.O.").level <= @difficulty + 1 && pbJob("G.P.O.").level < 5
+      pbJob("G.P.O.").add_progress
+    end
     pbMiniQuestPromotion($game_variables[MINIQUESTCOUNT])
+    pbDialog("GPO_TASK_END")
     return true
   end
 
@@ -260,84 +554,25 @@ end
 
 def pbMiniQuestPromotion(count)
   refresh=false
-  if count==1
-    pbSpeech("Receptionist", "none",
-      "You completed your first task, good job!")
-    pbSpeech("Receptionist", "none",
-      "You have been promoted from Newbie to Beginner.")
-    pbSpeech("Receptionist", "none",
-      "Your selection of tasks has expanded as well.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:POKEBALL,20)
-    refresh=true
-  elsif count==2
-    pbSpeech("Receptionist", "none",
-      "You've completed multiple tasks, and have therefore been promoted from Beginner to Novice!")
-    pbSpeech("Receptionist", "none",
-      "Your selection of tasks has expanded and more difficult tasks will be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:GREATBALL,20)
-    refresh=true
-  elsif count==6
-    pbSpeech("Receptionist", "none",
-      "You've completed many tasks, and have therefore been promoted from Novice to Competent!")
-    pbSpeech("Receptionist", "none",
-      "Your selection of tasks has expanded and more difficult tasks will be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:ULTRABALL,20)
-    refresh=true
-  elsif count==12
-    pbSpeech("Receptionist", "none",
-      "You've completed a lot tasks, and have therefore been promoted from Competent to Proficient!")
-    pbSpeech("Receptionist", "none",
-      "Your selection of tasks has expanded and more difficult tasks will be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:ABILITYCAPSULE,2)
-    refresh=true
-  elsif count==20
-    pbSpeech("Receptionist", "none",
-      "You've completed a large amount of tasks, and have therefore been promoted from Proficient to Expert!")
-    pbSpeech("Receptionist", "none",
-      "Your selection of tasks has expanded to the maximum and more difficult tasks will be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:BOTTLECAP,5)
-    refresh=true
-  elsif count==30
-    pbSpeech("Receptionist", "none",
-      "Few have completed as many tasks as you, you're therefore promoted from Expert to Elite!")
-    pbSpeech("Receptionist", "none",
-      "Very difficult tasks will now be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:GOLDBOTTLECAP,1)
-    refresh=true
-  elsif count==100
-    pbSpeech("Receptionist", "none",
-      "You've completed 100 tasks! Amazing! You have been promoted from Elite to Master!")
-    pbSpeech("Receptionist", "none",
-      "The highest difficulty of tasks we get will be given to you.")
-    pbSpeech("Receptionist", "none",
-      "Here is your reward for this achievement.")
-    Kernel.pbReceiveItem(:MASTERBALL,1)
-    refresh=true
-  elsif count==1000
-    pbSpeech("Receptionist", "none",
-      "You have completed 1000 tasks!? Why? Just WHY?WT Do you not have anything better to do?")
-    pbSpeech("Receptionist", "none",
-      "Well, since you did all that work, you have been specially \"promoted\" from Master to 'Why?'")
-    pbSpeech("Receptionist", "none",
-      "Your task selection is the same as before.")
-    pbSpeech("Receptionist", "none",
-      "We don't have any more rewards, so... take this.")
-    Kernel.pbReceiveItem(:PRETTYWING,1)
-  end
-  if refresh
-    $game_variables[MINIQUESTLIST]=0
+  if count == 1 # Small reward for first job
+    pbDialog("GPO_PROMOTION", 0)
+    pbReceiveItem(:POKEBALL,10)
+  elsif pbJob("G.P.O.").progress >= pbJob("G.P.O.").requirement
+    pbDialog("GPO_PROMOTION", pbJob("G.P.O.").level)
+    case pbJob("G.P.O.").level
+    when 1
+      pbReceiveItem(:GREATBALL,10)
+    when 2
+      pbReceiveItem(:ULTRABALL,10)
+    when 3
+      pbReceiveItem(:ABILITYPATCH,1)
+    when 4
+      pbReceiveItem(:MASTERBALL,1)
+    end
+    pbJob("G.P.O.").level += 1
+    pbJob("G.P.O.").reset_progress
+    # Reset the list of tasks
+    $game_variables[MINIQUESTLIST] = 0
   end
 end
 
@@ -400,6 +635,12 @@ def pbRandomRewardItem(difficulty)
      :SCOPELENS,
      :WIDELENS,
      :ZOOMLENS,
+     :HEALTHWING,
+     :MUSCLEWING,
+     :RESISTWING,
+     :GENIUSWING,
+     :CLEVERWING,
+     :SWIFTWING,
      [:DEEPSEATOOTH,
       :DEEPSEASCALE],
      [:UPGRADE,
@@ -451,10 +692,7 @@ def pbRandomRewardItem(difficulty)
      :IRON,
      :CALCIUM,
      :ZINC,
-     :CARBOS,
-     :WHETSTONE,
-     :BOTTLECAP,
-     :BOTTLECAP],
+     :CARBOS],
     # Difficulty 3
     [:NUGGET,
      [:SUNSTONE,
@@ -472,7 +710,7 @@ def pbRandomRewardItem(difficulty)
     # Difficulty 4
     [:BIGNUGGET,
      :PPMAX,
-     :HABILITYCAPSULE,
+     :ABILITYPATCH,
      :GOLDBOTTLECAP],
     # Difficulty 5
     [:COMETSHARD,
@@ -489,18 +727,16 @@ end
 def pbRandomQuestItem(difficulty)
   items = [
     # Difficulty 0
-    [:ESCAPEROPE,
-     :TINYMUSHROOM,
+    [:TINYMUSHROOM,
      :HEARTSCALE,
-     :SHOALSHELL],
+     :EVERSTONE,
+     :ENERGYPOWDER],
     # Difficulty 1
     [:HONEY,
      :PEARL,
      :RAREBONE,
      :IRONBALL,
-     :METALPOWDER,
-     :QUICKPOWDER,
-     :BERRYJUICE],
+     :OVALSTONE],
     # Difficulty 2
     [:BIGMUSHROOM,
      :SHELLBELL,

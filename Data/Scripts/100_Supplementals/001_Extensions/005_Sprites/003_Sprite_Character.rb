@@ -10,10 +10,15 @@ class Sprite_Character < RPG::Sprite
     @marker_id   = -1
     @marker      = nil
     @marker_text = nil
+    @marker_icon = nil
     @text_bubble = nil
     @proximity_textboxes = {}
-    if Supplementals::CHARACTER_DROP_SHADOWS && !@isPartner
-      @dropshadow = DropShadowSprite.new(self, character, viewport)
+    if Supplementals::CHARACTER_DROP_SHADOWS
+      if @isPartner
+        @dropshadow = DropShadowSprite.new(self, $game_player, viewport, @isPartner)
+      else
+        @dropshadow = DropShadowSprite.new(self, character, viewport, @isPartner)
+      end
     end
     sup_initialize(viewport, character)
     @dropshadow&.update
@@ -94,6 +99,7 @@ class Sprite_Character < RPG::Sprite
       elsif self.angle > target_angle
         self.angle = [self.angle - 2, target_angle].max
       end
+      @dropshadow.angle = self.angle if @dropshadow
     end
     if @partner
       sx = @character.pattern * @cw
@@ -103,6 +109,7 @@ class Sprite_Character < RPG::Sprite
     if @marker_id != @character.marker_id
       @marker_id = @character.marker_id
       @marker_text = @character.marker_text
+      @marker_icon = @character.marker_icon
       if @marker_id == -1
         @marker&.dispose
       else
@@ -118,9 +125,17 @@ class Sprite_Character < RPG::Sprite
             bm = Bitmap.new(text_width + 8, 48)
             pbSetSmallFont(bm)
           end
-          src_bm = RPG::Cache.load_bitmap("","Graphics/UI/Quests/markers")
-          bm.blt(bm.width / 2 - 16, 0, src_bm, Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48))
-          src_bm.dispose
+          x_offset = 0
+          x_offset = 1 if @character_name[/pkmn/]
+          if @marker_icon.nil?
+            src_bm = RPG::Cache.load_bitmap("", "Graphics/UI/Quests/markers")
+            bm.blt(bm.width / 2 - 16 + x_offset, 0, src_bm, Rect.new(32 * (@marker_id % 4), 48 * (@marker_id / 4).floor, 32, 48))
+            src_bm.dispose
+          else
+            src_bm = RPG::Cache.load_bitmap("", @marker_icon)
+            bm.blt(bm.width / 2 - src_bm.width / 2 + x_offset, 22, src_bm, Rect.new(0, 0, src_bm.width, src_bm.height))
+            src_bm.dispose
+          end
           pbDrawTextPositions(bm, [[_INTL(@marker_text), bm.width / 2, 6, 2, Color.new(252,252,252), Color.new(0,0,0), true]])
           @marker.bitmap = bm
         else
@@ -161,7 +176,7 @@ class Sprite_Character < RPG::Sprite
           textbox.resizeToFit(text, Graphics.width * 2 / 5)
           textbox.letterbyletter = false
           textbox.text = text
-          textbox.contents.font.name = "Small"
+          textbox.contents.font.name = "small"
           textbox.opacity = 0
           textbox.contents_opacity = 0
           textbox.z = 99999
@@ -208,6 +223,7 @@ class Sprite_Character < RPG::Sprite
         @text_bubble = nil
       end
     end
+    @dropshadow&.update
     RPG::Sprite.instance_method(:update).bind(self).call
     fullcharactername = _INTL("{1}_{2}", @character, (run ? "run" : "walk"))
     if @charactername != fullcharactername
@@ -215,19 +231,35 @@ class Sprite_Character < RPG::Sprite
       @charbitmap.dispose if @charbitmap
       @charbitmap = AnimatedBitmap.new("Graphics/Characters/"+fullcharactername,
                                   owner.character.character_hue)
-      @charbitmapAnimated=true
+      @charbitmapAnimated = true
       @bushbitmap.dispose if @bushbitmap
-      @bushbitmap=nil
+      @bushbitmap = nil
       @cw = @charbitmap.width / 4
       @ch = @charbitmap.height / 4
       self.ox = @cw / 2
       self.oy = @ch
     end
+    self.ox = @cw / 2
+    self.oy = @ch
+    self.oy -= owner.character.y_offset if !$PokemonGlobal.fishing
     @charbitmap.update if @charbitmapAnimated
     self.bitmap = @charbitmap.bitmap
     self.visible = owner.visible
     self.visible = false if !@visibility || $PokemonGlobal.surfing
+    @dropshadow.visible = self.visible && @character != "member-1"
     self.z = owner.z
+
+    oldbushdepth = @bush_depth
+    @bush_depth = partnerBushDepth
+    if oldbushdepth != @bush_depth || (@bush_depth > 0 && !@bushbitmap)
+      if @bush_depth == 0
+        @bushbitmap&.dispose
+        @bushbitmap = nil
+      else
+        @bushbitmap = BushBitmap.new(@charbitmap, false, @bush_depth) if !@bushbitmap
+      end
+    end
+    self.bitmap = @bushbitmap.bitmap if @bushbitmap
 
     time_now = System.uptime
     @p_last_update_time = time_now if !@p_last_update_time || @p_last_update_time > time_now
@@ -272,6 +304,7 @@ class Sprite_Character < RPG::Sprite
     
     if owner.character.x == @target_x && owner.character.y == @target_y
       self.visible = false
+      @dropshadow.visible = false
     end
     
     target_real_x = @target_x * Game_Map::REAL_RES_X
@@ -354,7 +387,12 @@ class Sprite_Character < RPG::Sprite
       self.z = owner.z - 1
     end
 
-    pbDayNightTint(self)
+    self.tone.set(
+      owner.tone.red,
+      owner.tone.green,
+      owner.tone.blue,
+      owner.tone.gray
+    )
 
     self.zoom_x = owner.zoom_x
     self.zoom_y = owner.zoom_y
@@ -375,8 +413,16 @@ class Sprite_Character < RPG::Sprite
     if @jump_fraction
       jump_progress = (@jump_fraction - 0.5).abs   # 0.5 to 0 to 0.5
       ret += @jump_peak * ((4 * (jump_progress**2)) - 1)
+    elsif $game_map.swamp?(@target_x, @target_y)
+      ret += 6
     end
     return ret
+  end
+
+  def partner_jump_y
+    return 0 if !@jumping || !@jump_fraction
+    jump_progress = (@jump_fraction - 0.5).abs   # 0.5 to 0 to 0.5
+    return @jump_peak * ((4 * (jump_progress**2)) - 1)
   end
 
   def snapPartner(behind = true)
@@ -429,6 +475,21 @@ class Sprite_Character < RPG::Sprite
   def sprite_grid_size
     return @character.sprite_grid_size if @character.sprite_grid_size
     return [4, 4]
+  end
+  
+  def partnerBushDepth
+    return 0 if !@target_x || !@target_y
+    if $game_map && $game_map.bush?(@target_x, @target_y)
+      return Supplementals::BUSH_DEPTH
+    elsif $game_map && $game_map.swamp?(@target_x, @target_y)
+      return Supplementals::SWAMP_DEPTH
+    else
+      return 0
+    end
+  end
+
+  def bush_depth
+    return @bush_depth
   end
 
 end

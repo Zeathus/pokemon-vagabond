@@ -77,7 +77,7 @@ def pbShopMall(type="general")
     ]
   when "field"
     return [
-      :POKEBALL, :GREATBALL, :ULTRABALL,
+      :POKEBALL, :GREATBALL, :ULTRABALL, :LUXURYBALL,
       :REPEL, :SUPERREPEL, :MAXREPEL
     ]
   when "vitamins"

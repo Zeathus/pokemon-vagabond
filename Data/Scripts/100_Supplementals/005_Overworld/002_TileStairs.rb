@@ -66,3 +66,20 @@ def pbStairs(xOffset,yOffset)
   end
   return false
 end 
+
+def pbForceMoveTile
+  if !$DEBUG || !Input.press?(Input::CTRL)
+    force_move = $game_player.pbTerrainTag.force_move
+    if force_move
+      x_offset = (force_move == 4) ? -1 : (force_move == 6) ? 1 : 0
+      y_offset = (force_move == 8) ? -1 : (force_move == 2) ? 1 : 0
+      $game_player.direction = force_move
+      if pbEndSurf(x_offset, y_offset)
+        return
+      elsif $game_player.can_move_in_direction?(force_move)
+        $game_player.move_generic(force_move)
+        return
+      end
+    end
+  end
+end

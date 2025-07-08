@@ -129,6 +129,13 @@ Land,21
     15,HAPPINY,9,12
     15,SWABLU,9,12
     5,MILTANK,9,12
+Water,2
+    70,WINGULL,10,13
+    30,MANTYKE,10,13
+FishingRod
+    55,SHELLDER,10,15
+    30,SKRELP,10,15
+    15,PINCURCHIN,15,20
 #-------------------------------
 [062] # Breccia Trail
 Land,21
@@ -190,6 +197,10 @@ Cave,5
     100,UNOWN,7,9
 #-------------------------------
 [134] # Mt. Pegma Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[254] # Crosswoods Ruins
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
@@ -433,15 +444,68 @@ Cave,5
 #-------------------------------
 [154] # Central East Sea
 Water,2
-    50,TENTACOOL,16,21
+    40,TENTACOOL,16,21
     30,WINGULL,16,21
-    20,FINIZEN,16,21
+    20,WAILMER,16,21
+    10,FINIZEN,16,21
 FishingRod
     40,WAILMER,16,21
     30,TENTACOOL,16,21
     15,HORSEA,16,21
-    10,QWILFISH,16,21
+    10,WAILORD,25,30
     5,FINIZEN,17,22
+#-------------------------------
+[163] # East Sea
+Land2,21
+    30,NACLI,20,25
+    25,SHUCKLE,20,25
+    15,CORSOLA,20,25
+    15,CLAUNCHER,20,25
+    15,SHELLOS,20,25,1
+Water,2
+    40,TENTACOOL,16,21
+    30,FINIZEN,16,21
+    15,CLAUNCHER,16,21
+    15,QWILFISH,16,21,1
+FishingRod
+    40,HORSEA,16,21
+    20,QWILFISH,16,21,1
+    20,CLAUNCHER,16,21
+    10,CORSOLA,25,30
+    5,SEADRA,17,22
+#-------------------------------
+[207] # West Sea
+Water,2
+    55,MANTYKE,10,13
+    30,WINGULL,10,13
+    10,FINIZEN,10,13
+    5,PELIPPER,11,14
+FishingRod
+    40,CHINCHOU,15,25
+    30,MANTYKE,15,25
+    15,SKRELP,15,25
+    10,MANTINE,15,25
+    5,LANTURN,15,25
+#-------------------------------
+[206] # Central West Sea
+Land,21
+    40,SLOWPOKE,20,25
+    25,CLOBBOPUS,20,25
+    15,DUNSPARCE,20,25
+    15,SCYTHER,20,25
+    5,TURTWIG,15,20
+Water,2
+    40,MANTYKE,10,13
+    30,WINGULL,10,13
+    15,MANTINE,10,13
+    10,SLOWPOKE,10,13
+    5,POPPLIO,11,14
+FishingRod
+    40,SHELLDER,15,25
+    30,MANTYKE,15,25
+    15,CHINCHOU,15,25
+    10,CLOYSTER,20,25
+    5,POPPLIO,15,20
 #-------------------------------
 [173] # Lazuli River
 Land,21

@@ -73,6 +73,7 @@ class Game_Temp
     when "showparty"              then rules["showParty"]           = true
     when "noplayerlevelupdate"    then rules["noPlayerLevelUpdate"] = true
     when "keepbgm"                then rules["keepBGM"]             = true
+    when "endproc"                then rules["endProc"]             = var
     else
       raise _INTL("Battle rule \"{1}\" does not exist.", rule)
     end
@@ -91,7 +92,7 @@ def setBattleRule(*args)
     else
       case arg.downcase
       when "terrain", "weather", "environment", "environ", "backdrop", "levelmod",
-           "battleback", "base", "outcome", "outcomevar", "startover", "levelsync"
+           "battleback", "base", "outcome", "outcomevar", "startover", "levelsync", "endproc"
         r = arg
         next
       end
@@ -164,6 +165,11 @@ module BattleCreationHelperMethods
     pbMessage(_INTL("SKIPPING BATTLE...")) if !trainer_battle && $player.pokemon_count > 0
     pbMessage(_INTL("SKIPPING BATTLE...")) if trainer_battle && $DEBUG
     pbMessage(_INTL("AFTER WINNING...")) if trainer_battle && $player.able_pokemon_count > 0
+    if $game_temp.battle_rules["endProc"]
+      $game_temp.battle_rules["endProc"].call(1)
+      $game_map.need_refresh = true
+      pbUpdateSceneMap
+    end
     $game_temp.clear_battle_rules
     if $game_temp.memorized_bgm && $game_system.is_a?(Game_System)
       $game_system.bgm_pause
@@ -334,7 +340,7 @@ module BattleCreationHelperMethods
     end
   end
 
-  def after_battle(outcome, can_lose, start_over = false)
+  def after_battle(outcome, can_lose, start_over = false, end_proc = false)
     $player.party.each do |pkmn|
       pkmn.statusCount = pkmn.statusCount.abs   # Bad poison becomes regular
       pkmn.makeUnmega
@@ -347,6 +353,11 @@ module BattleCreationHelperMethods
         pkmn.makeUnmega
         pkmn.makeUnprimal
       end
+    end
+    if end_proc
+      end_proc.call(outcome)
+      $game_map.need_refresh = true
+      pbUpdateSceneMap
     end
     if [2, 5].include?(outcome) && (can_lose || start_over)   # if loss or draw
       $player.heal_party
@@ -361,11 +372,11 @@ module BattleCreationHelperMethods
         commands = ["Retry the battle", "Return to Pokémon Center"]
         pbMessageDisplay(msgwindow, message, true,
           proc { |msgwindow|
-            next Kernel.pbShowCommands(msgwindow, commands, 1, 0)
+            next pbSet(1, Kernel.pbShowCommands(msgwindow, commands, 1, 0))
           })
         pbDisposeMessageWindow(msgwindow)
         Input.update
-        if pbGet(1)==0
+        if pbGet(1) == 0
           can_lose = true
           pbCancelVehicles
           $game_temp.player_new_map_id = start_over[0]
@@ -432,6 +443,7 @@ class WildBattle
     level_mod        = $game_temp.battle_rules["levelMod"] || false
     level_sync       = $game_temp.battle_rules["levelSync"] || false
     keep_bgm         = $game_temp.battle_rules["keepBGM"] || false
+    end_proc         = $game_temp.battle_rules["endProc"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable)
@@ -491,7 +503,7 @@ class WildBattle
     pbBattleAnimation(keep_bgm ? -1 : pbGetWildBattleBGM(foe_party), (foe_party.length == 1) ? 0 : 2, foe_party) do
       $scene.spriteset.despawnPokemon if Supplementals::OVERWORLD_POKEMON
       pbSceneStandby { outcome = battle.pbStartBattle }
-      BattleCreationHelperMethods.after_battle(outcome, can_lose)
+      BattleCreationHelperMethods.after_battle(outcome, can_lose, start_over, end_proc)
     end
     Input.update
     # Save the result of the battle in a Game Variable (1 by default)
@@ -590,6 +602,7 @@ class TrainerBattle
     level_sync       = $game_temp.battle_rules["levelSync"] || false
     no_player_level_update = $game_temp.battle_rules["noPlayerLevelUpdate"] || false
     keep_bgm         = $game_temp.battle_rules["keepBGM"] || false
+    end_proc         = $game_temp.battle_rules["endProc"] || false
     # Skip battle if the player has no able Pokémon, or if holding Ctrl in Debug mode
     if BattleCreationHelperMethods.skip_battle?
       return BattleCreationHelperMethods.skip_battle(outcome_variable, true)
@@ -652,7 +665,7 @@ class TrainerBattle
         pbSceneStandby {
           outcome = battle.pbStartBattle
         }
-        BattleCreationHelperMethods.after_battle(outcome, can_lose, start_over)
+        BattleCreationHelperMethods.after_battle(outcome, can_lose, start_over, end_proc)
       end
       break if outcome != -1 # Do-over
     end

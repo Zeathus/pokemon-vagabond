@@ -209,7 +209,8 @@ class QuestInfoSprite < IconSprite
       "Engineer",
       "Professor",
       "Ranger",
-      "Archeologist"
+      "Archeologist",
+      "G.P.O."
     ][quest.type]
     status_text = [
       "Unavailable",

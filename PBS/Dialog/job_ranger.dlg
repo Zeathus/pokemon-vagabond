@@ -28,6 +28,19 @@
         /return -1
 ?/>
 
+[RANGER_CLERK,3]
+/speaker Ranger
+?> How may I help you?
+    /choice Rest
+        /return 0
+    /choice Shop
+        /return 2
+    /choice Report
+        /return 1
+    /cancelchoice Never mind
+        /return -1
+?/>
+
 [RANGER_CLERK_REST]
 /speaker Ranger
 ?> How long do you wish to rest?
@@ -95,11 +108,8 @@
 
 [RANGER_CLERK_RECRUIT_ME,3]
 /speaker Ranger
-> We call these "field bosses", and they can usually be differentiated from regular wild Pokémon by three things.
-> 1) They do not roam tall grass like other Pokémon.
-> 2) Their HP is significantly higher than other Pokémon.
-> 3) Some of them have special effects that occur during battle.
-> Sightings of such Pokémon are reported on the notice board inside the outpost.
+> We call these "field bosses", and you can recognize them by the <icon=field_boss> icon above them.
+> Sightings of such Pokémon are reported on the notice board inside the outpost,\nif you need somewhere to start.
 
 [RANGER_CLERK_RECRUIT_ME,4]
 /speaker Ranger
@@ -127,8 +137,40 @@
 > \ts[2]You got the job as a Ranger!
 > \ts[1]You can track how many field bosses you need to defeat in the Trainer menu.
 /speaker Ranger
-> We're glad to have you on our team. Please report back whenever you have an update or need information.
+> We're glad to have you on our team. Please report back whenever you are ready to rank up.
+> You can also see what benefits you gain from the next rank in the Trainer menu.
 
 [RANGER_CLERK_REPORT]
 /speaker Ranger
-> Reporting is not implemented yet.
+> Reporting in, are we?\nLet me check your efforts...
+> I see you have taken care of {pbJob("Ranger").progress} field bosses. You need to handle {pbJob("Ranger").requirement} to qualify for the next rank.
+> Please report back once you meet the requirements.
+
+[RANGER_CLERK_REPORT,1]
+/speaker Ranger
+> Reporting in, are we? You're already the highest rank, there's not much reason for you to report anymore.
+
+[RANGER_CLERK_RANK_UP]
+/speaker Ranger
+> Reporting in, are we?\nLet me check your efforts...
+> Congratulations! You have handled the {pbJob("Ranger").requirement} field bosses required to reach rank {pbJob("Ranger").level + 1}.
+
+[RANGER_CLERK_RANK_UP,1]
+/speaker Ranger
+> With this new rank, you have gained access to the [R]Ranger Shop[/], where you get special deals on certain items.
+> Talk to me or another clerk when you want to check it out.\nI hope you enjoy our selection!
+
+[RANGER_CLERK_RANK_UP,2]
+/speaker Ranger
+> With this new rank, we have some new Poké Balls for you to purchase.
+> The selection varies from outpost to outpost, so pay each a visit!
+
+[RANGER_CLERK_RANK_UP,3]
+/speaker Ranger
+> With this new rank, we have even more Poké Balls for you to purchase.
+> The selection again varies from outpost to outpost, so pay each a visit!
+
+[RANGER_CLERK_RANK_UP,4]
+/speaker Ranger
+> With the top rank, we've reduced the prices of all items we have available.
+> That's the least we could do to reward all your hard work.

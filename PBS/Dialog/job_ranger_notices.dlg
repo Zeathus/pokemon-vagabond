@@ -19,6 +19,9 @@
 > <u>PANICKED DEINO</u>\nA Deino in Evergone Mangrove is hurt and is hiding in a cave in the area.
 > It is too scared to willingly accept help from humans. Another means to help it while it is defensive must be found.
 
+[NOTICE_DRAGALGE]
+> <u></u>
+
 ### PEGMA ###
 
 [NOTICE_TURTONATOR]
@@ -40,6 +43,25 @@
 > Two of the three Rotom have taken the form of appliances. A lawn mower and a laundry machine.
 
 [NOTICE_ROTOM_HARD]
-> <u>ROTOM TRIO 2</u>\nAn strong group of Rotom have gathered in a Lazuli District maintenance room.
+> <u>ROTOM TRIO 2</u>\nA strong group of Rotom have gathered in a Lazuli District maintenance room.
 > The Rotom have taken the forms of a microwave, a refrigerator and a fan.
 > Their coordinated attacks have made it a challenge to stop them.
+
+[NOTICE_PRIMARINA]
+> <u>SEA MELODY</u>\nA series of rock formations can be found in the central sea.
+> The rangers have tried, but failed, to uncover their purpose.
+
+[NOTICE_CLAUNCHER_QWILFISH,0]
+> <u>CLAUNCHER TERRITORY</u>\nThere is an ongoing conflict between the Clauncher and Qwilfish in the eastern sea.
+> The conflict has escalated to a point where it has started affecting the other wildlife there.
+> We believe the conflict will end if both their leaders are defeated, but we have failed to lure them out.
+
+[NOTICE_CLAUNCHER_QWILFISH,1]
+> <u>QWILFISH TERRITORY</u>\nThere is an ongoing conflict between the Clauncher and Qwilfish in the eastern sea.
+> The conflict has escalated to a point where it has started affecting the other wildlife there.
+> We believe the conflict will end if both their leaders are defeated, but we have failed to lure them out.
+
+[NOTICE_CLAUNCHER_QWILFISH,2]
+> <u>PALAFIN'S TREATY</u>\nThe conflict at the eastern sea reached its climax.
+> However, a Palafin managed to put an end to it, uniting the two leaders.
+> They now await a mighty challenger at the eastern sea.

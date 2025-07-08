@@ -1091,15 +1091,17 @@ class OuterSwitchBox < IconSprite
     if @pokemon
       pbSetSmallestFont(@overlay.bitmap)
       textpos = [
-        [_INTL("{1}", @pokemon.level), 24, 52, 2, base, shadow],
+        [_INTL("{1}", @pokemon.egg? ? "-" : @pokemon.level), 24, 52, 2, base, shadow],
         [@pokemon.name.upcase, 44, 52, 0, base, shadow]
       ]
       pbDrawTextPositions(@overlay.bitmap, textpos)
       imagepos = []
-      for i in 0...@pokemon.types.length
-        imagepos.push(["Graphics/UI/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
+      if !@pokemon.egg?
+        for i in 0...@pokemon.types.length
+          imagepos.push(["Graphics/UI/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
+        end
+        imagepos.push(["Graphics/UI/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
       end
-      imagepos.push(["Graphics/UI/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
       pbDrawImagePositions(@overlay.bitmap, imagepos)
 
       hptextpos = [[_ISPRINTF("{1: 3d}/{2: 3d}", @pokemon.hp, @pokemon.totalhp),

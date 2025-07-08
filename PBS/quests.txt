@@ -242,16 +242,16 @@ Location = Lazuli River
 FullLocation = at Lazuli River
 Step1 = "Successfully hook a Gyarados, a Cloyster and a Mantine."
 Step2 = Tell Ivan about your exploits!
-Done = ???
+Done = "You hooked all three, and Ivan taught you the Quick Move technique as a reward."
 
 [BIGFISH]
 Name = Big Fish
 Type = Fisher
 Exp = 150
-Description = ???
+Description = "With a new technique on hand, Ivan has challenged you to hook a Wailord, a Seadra and a Wailrein."
 Location = Lazuli River
 FullLocation = at Lazuli River
-Step1 = "Successfully hook a Wailord, a Milotic and a Walrein."
+Step1 = "Successfully hook a Wailord, a Seadra and a Walrein."
 Step2 = Tell Ivan about your exploits!
 Done = ???
 

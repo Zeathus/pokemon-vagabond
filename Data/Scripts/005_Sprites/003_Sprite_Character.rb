@@ -70,7 +70,7 @@ class Sprite_Character < RPG::Sprite
     if !@isPartner && (!character || character == $game_player || (character.name[/reflection/i] rescue false))
       @reflection = Sprite_Reflection.new(self, viewport)
     end
-    #@surfbase = Sprite_SurfBase.new(self, viewport) if character == $game_player
+    @surfbase = Sprite_SurfBase.new(self, viewport) if character == $game_player
     self.zoom_x = TilemapRenderer::ZOOM_X
     self.zoom_y = TilemapRenderer::ZOOM_Y
     update if !@isPartner
@@ -92,8 +92,8 @@ class Sprite_Character < RPG::Sprite
     @charbitmap = nil
     @reflection&.dispose
     @reflection = nil
-    #@surfbase&.dispose
-    #@surfbase = nil
+    @surfbase&.dispose
+    @surfbase = nil
     @character = nil
     super
   end
@@ -179,6 +179,13 @@ class Sprite_Character < RPG::Sprite
       else
         pbDayNightTint(self)
       end
+      if @character.tone
+        self.tone.set(
+          self.tone.red + @character.tone.red,
+          self.tone.green + @character.tone.green,
+          self.tone.blue + @character.tone.blue,
+          self.tone.gray + @character.tone.gray)
+      end
     end
     this_x = @character.screen_x
     this_x = ((this_x - (Graphics.width / 2)) * TilemapRenderer::ZOOM_X) + (Graphics.width / 2) if TilemapRenderer::ZOOM_X != 1
@@ -195,6 +202,6 @@ class Sprite_Character < RPG::Sprite
       @character.animation_id = 0
     end
     @reflection&.update
-    #@surfbase&.update
+    @surfbase&.update
   end
 end

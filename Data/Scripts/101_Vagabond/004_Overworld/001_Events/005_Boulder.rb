@@ -2,11 +2,12 @@ def pbIsFillable(terrain_tag, has_boulder)
   return terrain_tag.boulder_fillable && ((has_boulder && terrain_tag.ledge) || !terrain_tag.ledge)
 end
 
-def pbFallInHole
+def pbFallInHole(type = "Boulder")
   boulder = get_self
   hole = nil
+  hole_name = type + " Hole"
   for e in $game_map.events.values
-    if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+    if e.name.include?(hole_name) && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
       if e.x == boulder.x and e.y == boulder.y
         hole = e
         break

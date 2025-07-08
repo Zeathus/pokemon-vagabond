@@ -122,7 +122,7 @@
 
 [TELEPORT_TUTORIAL]
 > You can [R]teleport[/] to key locations you have been to before from the map, such as the Crosswoods and this city.
-> The map can be opened either from the Phone or a shortcut on the Pause Menu (default: D).
+> The map can be opened either from the Phone or a shortcut on the Pause Menu (default: A).
 
 [INACTIVE_PARTY_TUTORIAL]
 > When your party is full, you can decide to send the caught Pokémon to the PC boxes, party, or [R]inactive party[/].
@@ -224,3 +224,8 @@
 [ESSENCE_EXCHANGE,0]
 /speaker Clerk
 > Welcome to the Effort Exchange!
+
+[TEST]
+> <outln>ABC abc</outln>
+.> <outln>ABC abc</outln>
+..> <outln>ABC abc</outln>

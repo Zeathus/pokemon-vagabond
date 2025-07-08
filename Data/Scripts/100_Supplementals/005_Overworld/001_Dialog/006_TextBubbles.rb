@@ -52,7 +52,7 @@ class TextBubble
           @sprite.letterbyletter = true
           @sprite.textspeed = 4 / 80.0
           @sprite.text = text
-          @sprite.contents.font.name = "Small"
+          pbSetSmallFont(@sprite.contents)
           @sprite.resume
           @sprite.waitcount = 0.5
           @sprite.opacity = 0

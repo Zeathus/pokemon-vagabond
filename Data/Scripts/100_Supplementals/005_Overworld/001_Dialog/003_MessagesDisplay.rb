@@ -275,7 +275,7 @@ class NameBoxSprite < IconSprite
     @position   = 0 # 0 = left, 1 = right, 2 = center
     self.setBitmap(Dialog::getNameBox(@real_name))
     @overlay    = Sprite.new(viewport)
-    @overlay.bitmap = Bitmap.new(self.bitmap.width, self.bitmap.height)
+    @overlay.bitmap = Bitmap.new(self.bitmap.width * 2, self.bitmap.height)
     pbSetSystemFont(@overlay.bitmap)
     self.refresh(true)
   end
@@ -316,26 +316,26 @@ class NameBoxSprite < IconSprite
   def refresh(redraw = false)
     self.visible = (!(@real_name.nil?)) && @msgwindow.visible && (@hide_name != 2)
     @overlay.visible = self.visible
+    self.visible = false
     return if @real_name.nil? || (@hide_name == 2)
     if redraw
       self.setBitmap(Dialog::getNameBox(@real_name))
       @overlay.bitmap.clear
-      base   = Dialog::getCharColor(@real_name, 0, true)
-      shadow = Dialog::getCharColor(@real_name, 1, true)
-      base   = Dialog.defaultTextColor(0, true) if !base
-      shadow = Dialog.defaultTextColor(1, true) if !shadow
+      base   = Dialog.defaultTextColor(0, true)
+      shadow = Dialog::getCharColor(@real_name, 2, true, true) || Dialog.defaultTextColor(2, true)
       textpos = [[
-        self.display_name, self.bitmap.width / 2, 18, 2, base, shadow
+        self.display_name.upcase, 4, 18, 0, base, shadow, 2
       ]]
+      pbSetBoldFont(@overlay.bitmap)
       pbDrawTextPositions(@overlay.bitmap, textpos)
     end
     if @msgwindow.y < self.bitmap.height
-      self.y = @msgwindow.y + @msgwindow.height + 2
+      self.y = @msgwindow.y + @msgwindow.height - 30
     else
-      self.y = @msgwindow.y - self.bitmap.height - 2
+      self.y = @msgwindow.y - self.bitmap.height + 26
     end
     if @position == 0
-      self.x = @msgwindow.x + 2
+      self.x = @msgwindow.x + 24
     elsif @position == 1
       self.x = @msgwindow.x + @msgwindow.width - self.bitmap.width - 2
     else
@@ -763,14 +763,18 @@ class TalkMessageWindowWrapper
     value.gsub!("\\n", "\n")
 
     # Colors
-    for i in ["R", "G", "B", "Y", "P", "O", "W", "RBOW", "RBOW2"]
+    ["R", "G", "B", "Y", "P", "O", "W"].each do |i|
       value.gsub!(_INTL("[{1}]", i), _INTL("[{1}]", i.downcase))
       value.gsub!(_INTL("[/{1}]", i), "[/]")
       value.gsub!(_INTL("[/{1}]", i.downcase), "[/]")
     end
+    ["RBOW", "RBOW2"].each do |i|
+      value.gsub!(_INTL("[{1}]", i), _INTL("[{1}]", i.downcase))
+      value.gsub!(_INTL("[/{1}]", i), _INTL("[/{1}]", i.downcase))
+    end
     value.gsub!("[r]","<c2=3aff043c>")
     value.gsub!("[g]","<c2=4bd20664>")
-    value.gsub!("[b]",shadowctag(Color.new(136, 165, 248, 255), Color.new(41, 112, 188, 255)))
+    value.gsub!("[b]",shadowctag(Color.new(176, 205, 248, 255), Color.new(41, 112, 188, 255)))
     value.gsub!("[y]","<c2=43DF129B>")
     value.gsub!("[p]","<c2=7EFF7C1F>")
     value.gsub!("[o]","<c2=473F017F>")
@@ -820,6 +824,8 @@ class TalkMessageWindowWrapper
         new_str += "</c2>"
       end
 
+      echoln old_str
+      echoln new_str
       value.gsub!("[rbow]"+old_str+"[/rbow]",new_str)
 
     end

@@ -17,6 +17,7 @@ class QuestList
     unlocked = 0
     self.each { |quest|
       if quest.unlock? && quest.status == -1
+        echoln quest.name
         quest.status = 0
         unlocked += 1
       end

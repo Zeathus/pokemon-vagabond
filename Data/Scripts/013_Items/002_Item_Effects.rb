@@ -1030,43 +1030,43 @@ ItemHandlers::UseOnPokemon.add(:TAMATOBERRY, proc { |item, qty, pkmn, scene|
 })
 
 ItemHandlers::UseOnPokemon.add(:ABILITYCAPSULE, proc { |item, qty, pkmn, scene|
-  if scene.pbConfirm(_INTL("Do you want to change {1}'s Ability?", pkmn.name))
-    abils = pkmn.getAbilityList
-    abil1 = nil
-    abil2 = nil
-    abils.each do |i|
-      abil1 = i[0] if i[1] == 0
-      abil2 = i[0] if i[1] == 1
-    end
-    if abil1.nil? || abil2.nil? || pkmn.hasHiddenAbility? || pkmn.isSpecies?(:ZYGARDE)
-      scene.pbDisplay(_INTL("It won't have any effect."))
-      next false
-    end
-    newabil = (pkmn.ability_index + 1) % 2
-    newabilname = GameData::Ability.get((newabil == 0) ? abil1 : abil2).name
+  abils = pkmn.getAbilityList
+  abil1 = nil
+  abil2 = nil
+  abils.each do |i|
+    abil1 = i[0] if i[1] == 0
+    abil2 = i[0] if i[1] == 1
+  end
+  if abil1.nil? || abil2.nil? || pkmn.hasHiddenAbility? || pkmn.isSpecies?(:ZYGARDE)
+    scene.pbDisplay(_INTL("It won't have any effect."))
+    next false
+  end
+  newabil = (pkmn.ability_index + 1) % 2
+  newabilname = GameData::Ability.get((newabil == 0) ? abil1 : abil2).name
+  if scene.pbConfirm(_INTL("Do you want to change {1}'s ability to {2}?", pkmn.name, newabilname))
     pkmn.ability_index = newabil
     pkmn.ability = nil
     scene.pbRefresh
-    scene.pbDisplay(_INTL("{1}'s Ability changed! Its Ability is now {2}!", pkmn.name, newabilname))
+    scene.pbDisplay(_INTL("{1}'s ability changed! Its ability is now {2}!", pkmn.name, newabilname))
     next true
   end
   next false
 })
 
 ItemHandlers::UseOnPokemon.add(:ABILITYPATCH, proc { |item, qty, pkmn, scene|
-  if scene.pbConfirm(_INTL("Do you want to change {1}'s Ability?", pkmn.name))
-    abils = pkmn.getAbilityList
-    new_ability_id = nil
-    abils.each { |a| new_ability_id = a[0] if a[1] == 2 }
-    if !new_ability_id || pkmn.hasHiddenAbility? || pkmn.isSpecies?(:ZYGARDE)
-      scene.pbDisplay(_INTL("It won't have any effect."))
-      next false
-    end
-    new_ability_name = GameData::Ability.get(new_ability_id).name
+  abils = pkmn.getAbilityList
+  new_ability_id = nil
+  abils.each { |a| new_ability_id = a[0] if a[1] == 2 }
+  if !new_ability_id || pkmn.hasHiddenAbility? || pkmn.isSpecies?(:ZYGARDE)
+    scene.pbDisplay(_INTL("It won't have any effect."))
+    next false
+  end
+  new_ability_name = GameData::Ability.get(new_ability_id).name
+  if scene.pbConfirm(_INTL("Do you want to change {1}'s ability to {2}?", pkmn.name, new_ability_name))
     pkmn.ability_index = 2
     pkmn.ability = nil
     scene.pbRefresh
-    scene.pbDisplay(_INTL("{1}'s Ability changed! Its Ability is now {2}!", pkmn.name, new_ability_name))
+    scene.pbDisplay(_INTL("{1}'s ability changed! Its ability is now {2}!", pkmn.name, new_ability_name))
     next true
   end
   next false

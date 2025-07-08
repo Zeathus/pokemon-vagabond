@@ -8,6 +8,8 @@ class Game_Character
   attr_reader   :real_y
   attr_writer   :x_offset   # In pixels, positive shifts sprite to the right
   attr_writer   :y_offset   # In pixels, positive shifts sprite down
+  attr_writer   :x_shadow_offset   # In pixels, positive shifts sprite's shadow to the right
+  attr_writer   :x_shadow_offset   # In pixels, positive shifts sprite's shadow down
   attr_accessor :width
   attr_accessor :height
   attr_accessor :sprite_size
@@ -35,6 +37,8 @@ class Game_Character
   attr_reader   :jump_time
   attr_reader   :jump_timer
   attr_reader   :jump_peak
+  attr_reader   :jump_fraction
+  attr_accessor :tone
 
   def initialize(map = nil)
     @map                       = map
@@ -47,6 +51,8 @@ class Game_Character
     @real_y                    = 0
     @x_offset                  = 0
     @y_offset                  = 0
+    @x_shadow_offset           = 0
+    @y_shadow_offset           = 0
     @width                     = 1
     @height                    = 1
     @sprite_size               = [Game_Map::TILE_WIDTH, Game_Map::TILE_HEIGHT]
@@ -92,10 +98,13 @@ class Game_Character
     @moveto_happened           = false
     @locked                    = false
     @prelock_direction         = 0
+    @tone                      = Tone.new(0, 0, 0, 0)
   end
 
   def x_offset; return @x_offset || 0; end
   def y_offset; return @y_offset || 0; end
+  def x_shadow_offset; return @x_shadow_offset || 0; end
+  def y_shadow_offset; return @y_shadow_offset || 0; end
 
   def at_coordinate?(check_x, check_y)
     return check_x >= @x && check_x < @x + @width &&
@@ -240,7 +249,7 @@ class Game_Character
       else
         @bush_depth = Supplementals::SWAMP_DEPTH
       end
-    elsif this_map && this_map[0].bush?(this_map[1], this_map[2]) && !moving?
+    elsif this_map && this_map[0].bush?(this_map[1], this_map[2])
       @bush_depth = Supplementals::BUSH_DEPTH
     else
       @bush_depth = 0
@@ -374,7 +383,7 @@ class Game_Character
       ret += @jump_peak * ((4 * (jump_progress**2)) - 1)
     end
     this_map = (self.map.valid?(@x, @y)) ? [self.map, @x, @y] : $map_factory&.getNewMap(@x, @y)
-    if this_map[0].swamp?(this_map[1], this_map[2])
+    if this_map[0].swamp?(this_map[1], this_map[2]) && @bush_depth > 0
       ret += 6
     end
     ret += self.y_offset
@@ -392,7 +401,6 @@ class Game_Character
         raise "Event's graphic is an out-of-range tile (event #{@id}, map #{self.map.map_id})"
       end
     end
-    z += 1 if self == $game_player
     # Add z if height exceeds 32
     return z + ((height > Game_Map::TILE_HEIGHT) ? Game_Map::TILE_HEIGHT - 1 : 0)
   end

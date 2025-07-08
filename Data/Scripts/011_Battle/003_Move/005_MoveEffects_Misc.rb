@@ -483,7 +483,8 @@ class Battle::Move::SwapSideEffects < Battle::Move
     ]
     @boolean_effects = [
       PBEffects::StealthRock,
-      PBEffects::StickyWeb
+      PBEffects::StickyWeb,
+      PBEffects::Wiretap
     ]
   end
 
@@ -595,6 +596,10 @@ class Battle::Move::RemoveUserBindingAndEntryHazards < Battle::Move::StatUpMove
     if user.pbOwnSide.effects[PBEffects::StickyWeb]
       user.pbOwnSide.effects[PBEffects::StickyWeb] = false
       @battle.pbDisplay(_INTL("{1} blew away sticky webs!", user.pbThis))
+    end
+    if user.pbOwnSide.effects[PBEffects::Wiretap]
+      user.pbOwnSide.effects[PBEffects::Wiretap] = false
+      @battle.pbDisplay(_INTL("{1} blew away the wiretap!", user.pbThis))
     end
   end
 

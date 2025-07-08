@@ -3774,7 +3774,7 @@ Description = An ultra-performance Ball that provides a higher Pokémon catch ra
 Name = Great Ball
 NamePlural = Great Balls
 Pocket = 3
-Price = 600
+Price = 500
 BattleUse = OnFoe
 Flags = PokeBall
 Description = A good, high-performance Ball that provides a higher Pokémon catch rate than a standard Poké Ball.
@@ -6736,7 +6736,7 @@ NamePlural = All-Seeing Totems
 Pocket = 4
 Price = 500
 Flags = Fling_80
-Description = A miniature totem sculpture with a single staring eye. It increases the holders' powder-move accuracy by 25%.
+Description = A miniature totem sculpture with a single staring eye. It increases the holder's powder-move accuracy by 25%.
 #-------------------------------
 [MENTALWARD]
 Name = Mental Ward
@@ -6952,7 +6952,7 @@ NamePlural = Aegis Talismans
 Pocket = 4
 Price = 1000
 Flags = Fling_80
-Description = A warding talisman that shields the holder from a variety of curses, including those afflicted by Curse, Destiny Bond and Spite)
+Description = A warding talisman that shields the holder from a variety of curses, including those afflicted by Curse, Destiny Bond and Spite.
 #-------------------------------
 [ZENCHARM]
 Name = Zen Charm
@@ -7102,7 +7102,7 @@ NamePlural = Go-Goggles
 Pocket = 9
 Price = 0
 Flags = KeyItem
-Description = Goggles developed by Silph Co. in Hoenn. They protect your eyes during even the harshest sandstorms.
+Description = Goggles developed by the Devon Corporation in Hoenn. They protect your eyes during even the harshest sandstorms.
 #-------------------------------
 [FROSTORB]
 Name = Frost Orb

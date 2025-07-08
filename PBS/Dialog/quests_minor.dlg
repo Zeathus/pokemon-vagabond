@@ -55,6 +55,7 @@
 /fade normal
 /wait 10
 > That should do the trick.
+> Please take these [R]Data Chips[/] as thanks for informing me too!
 
 [SICKZAGOON,5]
 /dialog SICKZAGOON 0
@@ -68,6 +69,3 @@
 [SICKZAGOON,7]
 /speaker Duke
 > We need to find a doctor for the Zigzagoon before we continue.
-
-[SICKZAGOON,8]
-> Please take these as thanks for informing me too!

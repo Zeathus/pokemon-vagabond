@@ -49,6 +49,9 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       levelups = [i]
       for j in 0...party.length
         thispoke = party[j]
+
+        next if thispoke.egg?
+
         growth_rate = thispoke.growth_rate
 
         exp = (j < inactive_start) ? active_exp : inactive_exp
@@ -91,6 +94,9 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
       levelups = [i+active.length]
       for j in 0...party.length
         thispoke = party[j]
+        
+        next if thispoke.egg?
+
         growth_rate = thispoke.growth_rate
 
         exp = inactive_exp

@@ -12,16 +12,16 @@ def drawSingleFormattedChar(bitmap, ch)
     bitmap.font.name = ch[12] if bitmap.font.name != ch[12]
     offset = 0
     sp = $game_temp.textSize ? $game_temp.textSize : 2
-    rects = charRects(ch[0], bitmap.font.name)
+    rects = ($BitmapFonts[bitmap.font.name][ch[0]] || $BitmapFonts[bitmap.font.name]["?"]).rects
     if ch[9] # shadow
       if (ch[16] & 1) != 0 # outline
         offset = 1
         rects.each do |r|
           bitmap.fill_rect(
-            ch[1] + (r[0] - 1 + offset) * sp,
-            ch[2] + (r[1] - 1) * sp,
-            ((r[2] + 2) * sp).ceil,
-            ((r[3] + 2) * sp).ceil,
+            ch[1] + (r.x - 1 + offset) * sp,
+            ch[2] + (r.y - 1) * sp,
+            ((r.width + 2) * sp).ceil,
+            ((r.height + 2) * sp).ceil,
             ch[9]
           )
         end
@@ -30,10 +30,10 @@ def drawSingleFormattedChar(bitmap, ch)
       else
         rects.each do |r|
           bitmap.fill_rect(
-            ch[1] + r[0] * sp,
-            ch[2] + r[1] * sp,
-            ((r[2] + 1) * sp).ceil,
-            ((r[3] + 1) * sp).ceil,
+            ch[1] + r.x * sp,
+            ch[2] + r.y * sp,
+            ((r.width + 1) * sp).ceil,
+            ((r.height + 1) * sp).ceil,
             ch[9]
           )
         end
@@ -41,10 +41,10 @@ def drawSingleFormattedChar(bitmap, ch)
     end
     rects.each do |r|
       bitmap.fill_rect(
-        ch[1] + (r[0] + offset) * sp,
-        ch[2] + r[1] * sp,
-        (r[2] * sp).ceil,
-        (r[3] * sp).ceil,
+        ch[1] + (r.x + offset) * sp,
+        ch[2] + r.y * sp,
+        (r.width * sp).ceil,
+        (r.height * sp).ceil,
         ch[8]
       )
     end

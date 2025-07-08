@@ -470,5 +470,11 @@ class Battle
         battler.pbItemStatRestoreCheck
       end
     end
+    # Wiretap
+    if battler_side.effects[PBEffects::Wiretap] && !battler.fainted?
+      if battler.item
+        pbDisplay(_INTL("The wiretap revealed {1}'s {2}!", battler.pbThis, GameData::Item.get(battler.item).name))
+      end
+    end
   end
 end

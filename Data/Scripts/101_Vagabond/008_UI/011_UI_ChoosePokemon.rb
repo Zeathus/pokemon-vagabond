@@ -100,6 +100,7 @@ class ChoosePokemonSprite < IconSprite
     @icon.pokemon = value
     @hp = @pokemon ? @pokemon.hp : 0
     @totalhp = @pokemon ? @pokemon.totalhp : 1
+    @item.visible = !@pokemon.item.nil?
     self.refresh
   end
 
@@ -107,24 +108,28 @@ class ChoosePokemonSprite < IconSprite
     super(value)
     @icon.visible = value
     @overlay.visible = value
+    @item.visible = value
   end
 
   def color=(value)
     super(value)
     @icon.color = value
     @overlay.color = value
+    @item.color = value
   end
 
   def opacity=(value)
     super(value)
     @icon.opacity = value
     @overlay.opacity = value
+    @item.opacity = value
   end
 
   def dispose
     super
     @icon.dispose
     @overlay.dispose
+    @item.dispose
   end
 
 end

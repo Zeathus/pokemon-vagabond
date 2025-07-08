@@ -165,6 +165,8 @@ EventHandlers.add(:on_step_taken, :auto_move_player,
       pbTraverseWaterfall
     elsif currentTag.ice || $PokemonGlobal.ice_sliding
       pbSlideOnIce
+    elsif currentTag.force_move
+      pbForceMoveTile
     end
   }
 )
@@ -250,6 +252,21 @@ EventHandlers.add(:on_enter_map, :set_weather,
     end
     next if old_weather == new_weather
     $game_screen.weather(new_weather, 9, 0)
+  }
+)
+
+# Changes the overworld vfx.
+EventHandlers.add(:on_enter_map, :set_vfx,
+  proc { |old_map_id|   # previous map ID, is 0 if no map ID
+    next if old_map_id == 0 || old_map_id == $game_map.map_id
+    old_vfx = $game_screen.vfx_type
+    new_vfx = 0
+    new_map_metadata = $game_map.metadata
+    if new_map_metadata&.vfx
+      new_vfx = new_map_metadata.vfx
+    end
+    next if old_vfx == new_vfx
+    $game_screen.vfx(new_vfx)
   }
 )
 
@@ -610,6 +627,24 @@ def pbJumpToward(dist = 1, playSound = false, cancelSurf = false, dist2 = 0)
   when 6 then $game_player.jump(dist, dist2)    # right
   when 8 then $game_player.jump(dist2, -dist)   # up
   end
+  if $game_player.x != x || $game_player.y != y
+    pbSEPlay("Player jump") if playSound
+    $PokemonEncounters.reset_step_count if cancelSurf
+    $game_temp.ending_surf = true if cancelSurf
+    while $game_player.jumping?
+      Graphics.update
+      Input.update
+      pbUpdateSceneMap
+    end
+    return true
+  end
+  return false
+end
+
+def pbJump(ox, oy, playSound = false, cancelSurf = false)
+  x = $game_player.x
+  y = $game_player.y
+  $game_player.jump(ox, oy)
   if $game_player.x != x || $game_player.y != y
     pbSEPlay("Player jump") if playSound
     $PokemonEncounters.reset_step_count if cancelSurf

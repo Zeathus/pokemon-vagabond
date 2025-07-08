@@ -36,7 +36,7 @@ class Battle::Move::UserLosesWaterType < Battle::Move
   def pbEffectAfterAllHits(user, target)
     if !user.effects[PBEffects::Tsunami]
       user.effects[PBEffects::Tsunami] = true
-      @battle.pbDisplay(_INTL("{1} became dehydrated!", user.pbThis))
+      @battle.pbDisplay(_INTL("{1} became dehydrated.\nIt is no longer Water-type!", user.pbThis))
     end
   end
 end
@@ -463,6 +463,27 @@ class Battle::Move::CannotUseTwiceInARow < Battle::Move
     end
     user.effects[PBEffects::GigatonHammer] = @id
     user.effects[PBEffects::GigatonHammerTime] = 2
+  end
+end
+
+#===============================================================================
+# Entry hazard. Plants a wiretap on the opposing side. (Wiretap)
+#===============================================================================
+class Battle::Move::AddWiretapToFoeSide < Battle::Move
+  def canMagicCoat?; return true; end
+
+  def pbMoveFailed?(user, targets)
+    if user.pbOpposingSide.effects[PBEffects::Wiretap]
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectGeneral(user)
+    user.pbOpposingSide.effects[PBEffects::Wiretap] = true
+    @battle.pbDisplay(_INTL("A wiretap is listening in on {1}!",
+                            user.pbOpposingTeam(true)))
   end
 end
 

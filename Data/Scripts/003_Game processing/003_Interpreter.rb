@@ -383,49 +383,55 @@ class Interpreter
   end
 
   # Used in boulder events. Allows an event to be pushed.
-  def pbPushThisEvent(strength = false)
+  def pbPushThisEvent(strength = false, sliding = false)
     event = get_self
-    old_x  = event.x
-    old_y  = event.y
+    old_x = event.x
+    old_y = event.y
     # Apply strict version of passable, which treats tiles that are passable
     # only from certain directions as fully impassible
-    return if !event.can_move_in_direction?($game_player.direction, true)
-    $stats.strength_push_count += 1
-    case $game_player.direction
-    when 2 then event.move_down
-    when 4 then event.move_left
-    when 6 then event.move_right
-    when 8 then event.move_up
-    end
-    $PokemonMap&.addMovedEvent(@event_id)
-    if old_x != event.x || old_y != event.y
-      if strength
-        pbSEPlay("Strength push")
-        if $game_player.direction != 2
-          anim_x = old_x
-          anim_x += (event.width - 1) if $game_player.direction == 4
-          if $game_player.direction == 8
-            for i in 0...event.width
-              $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x+i,old_y,true,$game_player)
-            end
-          else
-            for i in 0...event.height
-              $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x,old_y-i,true,$game_player)
+    ret = false
+    i = 0
+    loop do
+      break if !event.can_move_in_direction?($game_player.direction, true)
+      $stats.strength_push_count += 1
+      case $game_player.direction
+      when 2 then event.move_down
+      when 4 then event.move_left
+      when 6 then event.move_right
+      when 8 then event.move_up
+      end
+      $PokemonMap&.addMovedEvent(@event_id)
+      if old_x != event.x || old_y != event.y
+        if strength
+          pbSEPlay("Strength push") if i % 2 == 0
+          if $game_player.direction != 2 && i == 0
+            anim_x = old_x
+            anim_x += (event.width - 1) if $game_player.direction == 4
+            if $game_player.direction == 8
+              for i in 0...event.width
+                $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x+i,old_y,true,$game_player)
+              end
+            else
+              for i in 0...event.height
+                $scene.spriteset.addUserAnimation(Settings::DUST_ANIMATION_ID,anim_x,old_y-i,true,$game_player)
+              end
             end
           end
         end
+        $game_player.lock
+        loop do
+          Graphics.update
+          Input.update
+          pbUpdateSceneMap
+          break if !event.moving?
+        end
+        $game_player.unlock
+        ret = true
       end
-      $game_player.lock
-      loop do
-        Graphics.update
-        Input.update
-        pbUpdateSceneMap
-        break if !event.moving?
-      end
-      $game_player.unlock
-      return true
+      break if !sliding
+      i += 1
     end
-    return false
+    return ret
   end
 
   def pbPushThisBoulder
@@ -439,6 +445,26 @@ class Interpreter
     for e in $game_map.events.values
       if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
         e.through = false
+      end
+    end
+    return ret
+  end
+
+  # 0 = up/down, 1 = right/left
+  def pbPushThisLog(direction)
+    ret = false
+    if (direction == 0 && ($game_player.direction == 2 || $game_player.direction == 8)) ||
+       (direction == 1 && ($game_player.direction == 4 || $game_player.direction == 6))
+      for e in $game_map.events.values
+        if e.name.include?("Log Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+          e.through = true
+        end
+      end
+      ret = pbPushThisEvent(true, true) if $PokemonMap.strengthUsed
+      for e in $game_map.events.values
+        if e.name.include?("Log Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
+          e.through = false
+        end
       end
     end
     return ret

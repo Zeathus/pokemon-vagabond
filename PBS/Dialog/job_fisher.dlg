@@ -89,3 +89,22 @@
 /speaker Ivan
 > The Pokémon are Gyarados, Mantine and Cloyster.
 > Gyarados can be found where there are [R]waterfalls[/]. While both Mantine and Cloyster are found at the [R]western sea[/].
+
+[JOB_FISHER_3,2]
+/speaker Ivan
+> You managed to hook all the three Pokémon? Very impressive, those were far more challenging than the previous.
+
+[JOB_FISHER_3,3]
+/speaker Ivan
+> To celebrate your achievement I will [R]teach you a new technique[/].
+> This technique is called [R]Quick Move[/] and it allows you to move the green bar quicker than usual.
+> You simply need to hold down a button to do so. Try it the next time you fish!
+
+[JOB_FISHER_4,0]
+/speaker Ivan
+> As for your next targets...\nThese will be a real challenge.
+
+[JOB_FISHER_4,1]
+/speaker Ivan
+> The Pokémon are Wailord, Seadra and Wailrein.
+> Wailord and Seadra can be found [R]at sea[/]. For Walrein however, you will have to explore [R]icy waters[/] to the north-east.

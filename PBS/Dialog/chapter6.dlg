@@ -73,7 +73,7 @@
 
 [CH6_CLEARING,3]
 /speaker Amethyst
-> Oh, it's the Psychic I met at Evergone Crater!
+> Oh, it's the psychic I met at Evergone Crater!
 /speaker Duke point
 > Indeed! Did you miss me?
 /expression neutral
@@ -97,6 +97,10 @@
 > Meet me inside.
 
 [CH6_CLEARING,5]
+/event set Kira 23
+/event Kira emote ...
+
+[CH6_CLEARING,6]
 /speaker Kira annoyed
 > THIS theater kid convinced you to take <PLAYER> along with you?
 /speaker Amethyst awkward
@@ -108,7 +112,7 @@
 > Duke actually warned me about the Mt[.] Pegma incident before it happened.\nHe told me <PLAYER> would come.
 /speaker Kira neutral
 > He knew the D[.]A[.]O[.] would raid Mt[.] Pegma before we did?
-> That does give his Psychic title some credibility. I'll admit that.
+> That does give his psychic title some credibility. I'll admit that.
 /expression annoyed
 ?> <PLAYER>, how do you know Duke?
   /choice I met him in the woods
@@ -124,7 +128,7 @@
 [CH6_HOLLOW,0]
 /event set Kira 13
 /speaker Duke
-> Welcome! Make yourself at home.
+> Welcome! Make yourselves at home.
 /speaker Amethyst confused
 > It's a little cramped in here for this many people...
 /speaker Duke
@@ -317,7 +321,7 @@
 /expression neutral
 > Feelings... They are difficult to grasp.\nI [R]want to[/] learn to understand them.
 /speaker Duke glasses
-> (Bingo. Time for round 2.)
+> (Bingo[.])
 
 [CH6_THERAPY,9]
 /speaker Nekane
@@ -417,3 +421,100 @@
 > Would be you be so kind, Azelf?
 /speaker Azelf
 > Of course.
+
+[CH6_AFTER,0]
+/speaker Amethyst
+> Sooo... how did it go?
+/speaker Duke
+> Why not see for yourself?
+
+[CH6_AFTER,1]
+/speaker Amethyst
+> She's... writing by herself?
+/expression confused
+> That's odd. When I was teaching her, she had to be told exactly what to write.
+
+[CH6_AFTER,2]
+/speaker Duke
+> Indeed!
+/expression point
+> I just mixed her natural curiosity about emotions with some [Azelf]willpower[/], and gave it a good stir.
+/expression heh
+> It's an improvised recipe, but I'd say the results speak for themselves.
+/speaker Amethyst surprised
+> So Azelf has already granted her willpower!?
+/expression awkward
+?> You sure work fast!
+  /choice I don't have to enter her mind?
+  /choice Mesprit had me enter her mind.
+?/>
+/speaker Azelf
+> Mesprit had you go through all that?
+> If so, granting her those emotions must have been much more difficult than usual.
+> Luckily, it was not necessary this time. Her curiosity and the emotions you granted her was a good enough catalyst.
+/speaker Duke
+> Her understanding of emotions is still surface-level.
+> The book she is writing in is a journal. She will write about her experiences to better understand them.
+/speaker Amethyst smile
+> Kind of like a diary!
+/expression neutral
+> I used to write a diary when I was younger, and it really helped me work through some things.
+/speaker Kira
+> The one you keep in your top desk drawer and write in when you think I'm not looking?
+/speaker Amethyst awkward
+> I've no idea what you're on about!
+/expression ahem
+> Anyway...
+/expression neutral
+> You've been a great help Duke.
+/speaker Duke point
+> Always a pleasure.
+/speaker Amethyst
+> All that's left now is to find Uxie, preferably before the D[.]A[.]O[.] do.
+> Do you have any idea where to look?
+/speaker Duke heh
+> Uxie and I are acquainted, so of course I do.
+/expression neutral
+> Are you familiar with the island shrouded in fog to the south?
+/speaker Amethyst surprised
+> Is Uxie really on Gabbro Island!?
+/expression neutral
+> But there are no records of anyone successfully getting there...
+> Whenever anyone enters the fog, they always eventually return to where they started.
+/speaker Duke point
+> That's because they don't know the correct way.
+/expression neutral
+> To reach Gabbro Island, one must travel atop [R]The Great Amphi[/].
+/speaker Kira annoyed
+> The Great Amphi?
+/speaker Duke
+> Yes. It is the name of an island that moves at will.
+> Every few years, the island visits our region.
+/speaker Kira annoyed
+> No shot an island can move.\nI'll believe it when I see it.
+/speaker Amethyst
+> It sounds like The Great Amphi is our ONLY shot...
+> ...But sounds like it could be years until we can.
+/speaker Duke point
+> Not necessarily.
+/expression neutral
+> According to my estimates, The Great Amphi arrives to our sea... [R]tomorrow[/].
+/speaker Amethyst surprised
+> Tomorrow!?
+/speaker Duke
+> Indeed. If you head out to sea at daybreak, there will be a new island to find.
+> ...But if you don't act quickly, the D[.]A[.]O[.] might get there first.
+/speaker Kira lookaway
+> So you're saying they might already know this...
+/expression annoyed
+> I guess we have no choice but to take a look.
+/speaker Amethyst worried
+> Yeah, we have to act fast.
+/expression neutral
+> We might never have learned how to get there without your help Duke. Thank you!
+> If you'd like, you're more than welcome to join us there.
+/speaker Duke
+> While a reunion with Uxie is tempting, I must unfortunately decline.
+> Time is ticking, and I still have matters I must attend to...
+/speaker Amethyst
+> I understand.\nThen we'll be on our way!

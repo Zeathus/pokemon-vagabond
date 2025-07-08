@@ -14,6 +14,8 @@ class Sprite_SurfBase
     @chs = @surfbitmap.height / 4
     @cwd = @divebitmap.width / 4
     @chd = @divebitmap.height / 4
+    @spawn_time = 0
+    @despawn_time = 0
     update
   end
 
@@ -44,6 +46,8 @@ class Sprite_SurfBase
     return if disposed?
     if !$PokemonGlobal.surfing && !$PokemonGlobal.diving
       # Just-in-time disposal of sprite
+      @despawn_time = 0
+      @spawn_time = 0
       if @sprite
         @sprite.dispose
         @sprite = nil
@@ -51,7 +55,10 @@ class Sprite_SurfBase
       return
     end
     # Just-in-time creation of sprite
-    @sprite = Sprite.new(@viewport) if !@sprite
+    if !@sprite
+      @sprite = Sprite.new(@viewport)
+      @spawn_time = System.uptime
+    end
     return if !@sprite
     if $PokemonGlobal.surfing
       @sprite.bitmap = @surfbitmap.bitmap
@@ -74,6 +81,9 @@ class Sprite_SurfBase
       spr_y += (Game_Map::TILE_HEIGHT / 2) + 16
       spr_y = ((spr_y - (Graphics.height / 2)) * TilemapRenderer::ZOOM_Y) + (Graphics.height / 2) if TilemapRenderer::ZOOM_Y != 1
       @sprite.y = spr_y
+      if $game_temp.surf_base_coords[2] && @despawn_time == 0
+        @despawn_time = System.uptime
+      end
     else
       @sprite.x = @parent_sprite.x
       @sprite.y = @parent_sprite.y
@@ -87,5 +97,19 @@ class Sprite_SurfBase
     @sprite.tone    = @parent_sprite.tone
     @sprite.color   = @parent_sprite.color
     @sprite.opacity = @parent_sprite.opacity
+    if @spawn_time + 0.2 > System.uptime
+      progress = (((System.uptime - @spawn_time) / 0.2) * 255).floor
+      @sprite.color   = Color.new(255, 255, 255, 300 - progress)
+      @sprite.opacity = progress * 2
+      @sprite.zoom_x  = [progress * 2.0 / 255, 1].min
+      @sprite.zoom_y  = [progress * 2.0 / 255, 1].min
+    elsif @despawn_time != 0 && @despawn_time + 0.1 <= System.uptime
+      progress = 255 - [(((System.uptime - 0.1 - @despawn_time) / 0.2) * 255).floor, 255].min
+      @sprite.color   = Color.new(255, 255, 255, 300 - progress)
+      @sprite.opacity = progress * 2
+      @sprite.zoom_x  = [progress * 2.0 / 255, 1].min
+      @sprite.zoom_y  = [progress * 2.0 / 255, 1].min
+    end
+    self.visible = @parent_sprite.visible
   end
 end

@@ -515,7 +515,7 @@ class PokemonSummaryScene
       eggstate=_INTL("It doesn't seem close to hatching.") if pokemon.steps_to_hatch<10200
       eggstate=_INTL("It moves occasionally. Getting closer.") if pokemon.steps_to_hatch<2550
       eggstate=_INTL("Sounds are coming from inside!") if pokemon.steps_to_hatch<1275
-      textpos.push([eggstate,432,544,2,base,shadow])
+      smalltextpos.push([eggstate,432,544,2,base,shadow])
     end
     if pokemon.hasItem?
       smalltextpos.push([GameData::Item.get(pokemon.item).name,678,236,2,base,shadow])
@@ -555,15 +555,15 @@ class PokemonSummaryScene
       smalltextpos += [
         [_INTL("HP"),126,116+256,2,base,shadow],
         [sprintf("%3d/%3d",pokemon.hp,pokemon.totalhp),220,116+256,2,base2,shadow2],
-        [_INTL("Attack"),148,144+256,2,statshadows[:ATTACK][0],statshadows[:ATTACK][1]],
+        [_INTL("Attack"),148,144+256,2,base,shadow],
         [sprintf("%d",pokemon.attack),242,144+256,2,base2,shadow2],
-        [_INTL("Defense"),148,172+256,2,statshadows[:DEFENSE][0],statshadows[:DEFENSE][1]],
+        [_INTL("Defense"),148,172+256,2,base,shadow],
         [sprintf("%d",pokemon.defense),242,172+256,2,base2,shadow2],
-        [_INTL("Sp. Atk"),148,200+256,2,statshadows[:SPECIAL_ATTACK][0],statshadows[:SPECIAL_ATTACK][1]],
+        [_INTL("Sp. Atk"),148,200+256,2,base,shadow],
         [sprintf("%d",pokemon.spatk),242,200+256,2,base2,shadow2],
-        [_INTL("Sp. Def"),148,228+256,2,statshadows[:SPECIAL_DEFENSE][0],statshadows[:SPECIAL_DEFENSE][1]],
+        [_INTL("Sp. Def"),148,228+256,2,base,shadow],
         [sprintf("%d",pokemon.spdef),242,228+256,2,base2,shadow2],
-        [_INTL("Speed"),148,256+256,2,statshadows[:SPEED][0],statshadows[:SPEED][1]],
+        [_INTL("Speed"),148,256+256,2,base,shadow],
         [sprintf("%d",pokemon.speed),242,256+256,2,base2,shadow2],
         [sprintf("%d",basestats[:HP]),318,116+256,2,Color.new(64,64,64),Color.new(176,176,176)],
         [sprintf("%d",basestats[:ATTACK]),318,144+256,2,Color.new(64,64,64),Color.new(176,176,176)],
@@ -578,6 +578,14 @@ class PokemonSummaryScene
         [sprintf("%d",els[:SPECIAL_DEFENSE]),374,228+256,2,Color.new(64,64,64),Color.new(176,176,176)],
         [sprintf("%d",els[:SPEED]),374,256+256,2,Color.new(64,64,64),Color.new(176,176,176)]
       ]
+      for i in GameData::Nature.get(pokemon.nature).stat_changes
+        y_pos = [116,144,172,200,228,256][[:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED].index(i[0])] + 256
+        if i[1] > 0
+          smalltextpos.push(["↑", 100, y_pos, 0, base, shadow])
+        elsif i[1] < 0
+          smalltextpos.push(["↓", 100, y_pos, 0, base, shadow])
+        end
+      end
       effort_y = 376
       for i in [:HP, :ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED]
         effort = [els[i], Supplementals::MAX_EFFORT_LEVEL].min
@@ -849,21 +857,30 @@ class PokemonSummaryScene
       else
         smalltextpos.push([_INTL("{1}x", chips),508,542,2,base2,shadow2])
       end
-      statshadows = getNatureStatColors(pokemon)
       smalltextpos += [
         [_INTL("HP"),124,200+294,2,base,shadow],
         [sprintf("%3d/%3d",pokemon.hp,pokemon.totalhp),218,200+294,2,base2,shadow2],
-        [_INTL("Attack"),146,228+294,2,statshadows[:ATTACK][0],statshadows[:ATTACK][1]],
+        [_INTL("Attack"),146,228+294,2,base,shadow],
         [sprintf("%d",pokemon.attack),240,228+294,2,base2,shadow2],
-        [_INTL("Defense"),146,256+294,2,statshadows[:DEFENSE][0],statshadows[:DEFENSE][1]],
+        [_INTL("Defense"),146,256+294,2,base,shadow],
         [sprintf("%d",pokemon.defense),240,256+294,2,base2,shadow2],
-        [_INTL("Speed"),146+190,200+294,2,statshadows[:SPEED][0],statshadows[:SPEED][1]],
+        [_INTL("Speed"),146+190,200+294,2,base,shadow],
         [sprintf("%d",pokemon.speed),240+190,200+294,2,base2,shadow2],
-        [_INTL("Sp. Atk"),146+190,228+294,2,statshadows[:SPECIAL_ATTACK][0],statshadows[:SPECIAL_ATTACK][1]],
+        [_INTL("Sp. Atk"),146+190,228+294,2,base,shadow],
         [sprintf("%d",pokemon.spatk),240+190,228+294,2,base2,shadow2],
-        [_INTL("Sp. Def"),146+190,256+294,2,statshadows[:SPECIAL_DEFENSE][0],statshadows[:SPECIAL_DEFENSE][1]],
+        [_INTL("Sp. Def"),146+190,256+294,2,base,shadow],
         [sprintf("%d",pokemon.spdef),240+190,256+294,2,base2,shadow2]
       ]
+      for i in GameData::Nature.get(pokemon.nature).stat_changes
+        stat_pos = [:HP, :ATTACK, :DEFENSE, :SPEED, :SPECIAL_ATTACK, :SPECIAL_DEFENSE].index(i[0])
+        x_pos = 98 + (stat_pos < 3 ? 0 : 192)
+        y_pos = 494 + 28 * (stat_pos % 3)
+        if i[1] > 0
+          smalltextpos.push(["↑", x_pos, y_pos, 0, base, shadow])
+        elsif i[1] < 0
+          smalltextpos.push(["↓", x_pos, y_pos, 0, base, shadow])
+        end
+      end
     end
     smallesttextpos=[]
     imagepos=[]
@@ -1410,7 +1427,7 @@ class PokemonSummaryScene
     forceleft=false
     up_frames = 0
     down_frames = 1
-    if @machinemove && @machinemove != :NONE
+    if @machinemove && @machinemove != :NONE && @listMoves[@sprites["movesel"].page].length > 0
       move = @listMoves[@sprites["movesel"].page][selmove][0]
       drawSelectedMove(@pokemon,0,move,[false,false,true,false])
     else

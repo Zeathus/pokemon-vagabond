@@ -29,7 +29,9 @@ def pbGenerateSingleForecast
   ]
 
   dry_areas = [
-    PBMaps::CanjonValley
+    PBMaps::ScoriaValley,
+    PBMaps::ScoriaCity,
+    PBMaps::ScoriaCanyon
   ]
 
   desert_areas = [
@@ -157,7 +159,6 @@ def pbUpdateWeather
       end
     end
   end
-  pbUpdateVFX
 end
 
 EventHandlers.add(:on_enter_map, :update_weather,

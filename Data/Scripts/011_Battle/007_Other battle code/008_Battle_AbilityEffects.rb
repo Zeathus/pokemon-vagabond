@@ -2748,7 +2748,7 @@ Battle::AbilityEffects::OnSwitchIn.add(:DROUGHT,
 Battle::AbilityEffects::OnSwitchIn.add(:ELECTRICSURGE,
   proc { |ability, battler, battle, switch_in|
     next if battle.field.terrain == :Electric
-    battle.pbShowAbilitySplash(battler)
+    battle.pbShowAbilitySplash(battler, true)
     battle.pbStartTerrain(battler, :Electric)
     # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -2838,7 +2838,7 @@ Battle::AbilityEffects::OnSwitchIn.add(:FRISK,
 Battle::AbilityEffects::OnSwitchIn.add(:GRASSYSURGE,
   proc { |ability, battler, battle, switch_in|
     next if battle.field.terrain == :Grassy
-    battle.pbShowAbilitySplash(battler)
+    battle.pbShowAbilitySplash(battler, true)
     battle.pbStartTerrain(battler, :Grassy)
     # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -2910,7 +2910,7 @@ Battle::AbilityEffects::OnSwitchIn.add(:MIMICRY,
 Battle::AbilityEffects::OnSwitchIn.add(:MISTYSURGE,
   proc { |ability, battler, battle, switch_in|
     next if battle.field.terrain == :Misty
-    battle.pbShowAbilitySplash(battler)
+    battle.pbShowAbilitySplash(battler, true)
     battle.pbStartTerrain(battler, :Misty)
     # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -2991,7 +2991,7 @@ Battle::AbilityEffects::OnSwitchIn.add(:PRIMORDIALSEA,
 Battle::AbilityEffects::OnSwitchIn.add(:PSYCHICSURGE,
   proc { |ability, battler, battle, switch_in|
     next if battle.field.terrain == :Psychic
-    battle.pbShowAbilitySplash(battler)
+    battle.pbShowAbilitySplash(battler, true)
     battle.pbStartTerrain(battler, :Psychic)
     # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
