@@ -720,7 +720,7 @@ class MiningGameScene
       elsif Input.trigger?(Input::BACK)   # Quit
         msgwindow = pbCreateMessageWindow(nil, nil)
         msgwindow.z += 3
-        command = pbMessageDisplay(msgwindow, _INTL("Are you sure you want to give up?"), true,
+        command = pbMessageDisplay(msgwindow, _INTL("Are you sure you want to stop mining?"), true,
                     proc { |msgwindow|
                       next Kernel.pbShowCommands(msgwindow, ["Yes", "No"], -1, 0)
                     })
@@ -728,26 +728,24 @@ class MiningGameScene
         break if command == 0
       end
     end
-    pbGiveItems
   end
 
   def pbGiveItems
     if @itemswon.length > 0
+      rewards = []
       @itemswon.each do |i|
         pbJob("Miner").register(i)
         next if NON_ITEMS.include?(i)
-        if $bag.add(i)
-          pbMessage(_INTL("One {1} was obtained.", GameData::Item.get(i).name) + "\\se[Mining item get]\\wtnp[30]")
-        else
-          pbMessage(_INTL("One {1} was found, but you have no room for it.",
-                          GameData::Item.get(i).name))
-        end
+        $bag.add(i)
+        rewards.push(i)
       end
+      pbShowRewardList("S P O I L S", rewards)
     end
   end
 
   def pbEndScene
     pbFadeOutAndHide(@sprites)
+    pbGiveItems
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
   end

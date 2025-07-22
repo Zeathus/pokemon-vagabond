@@ -22,6 +22,7 @@ def pbLoadQuestMarkers
       end
     end
     next if !active
+    real_type = type
     if type < 3 && marker.length > 4 && marker[4]
       quest_id = marker[4].to_sym
       quest = $quests[quest_id]
@@ -35,7 +36,7 @@ def pbLoadQuestMarkers
     if active
       text = nil
       icon = nil
-      if type == 5
+      if real_type == 5
         icon = "Graphics/Icons/field_boss"
         type = 3
       end

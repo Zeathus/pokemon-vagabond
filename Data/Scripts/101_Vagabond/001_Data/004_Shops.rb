@@ -101,6 +101,7 @@ def pbShopMall(type="general")
     ]
   when "tech"
     return [
+      :LINKINGCORD,
       :UPGRADE,
       :ELECTIRIZER, :MAGMARIZER,
       :CELLBATTERY, :EJECTBUTTON,

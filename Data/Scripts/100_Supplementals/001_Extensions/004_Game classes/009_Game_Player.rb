@@ -32,6 +32,7 @@ class Game_Player < Game_Character
   def pattern_update_speed
     return @jump_time * 2 if jumping?
     ret = [@move_time, 0.25].max * 2
+    ret *= 0.75 if self.sprinting != 0
     return ret
   end
 

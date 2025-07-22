@@ -1027,6 +1027,9 @@ class Pokemon
   # @param item_used [Symbol, GameData::Item, nil] the item being used
   # @return [Symbol, nil] the ID of the species to evolve into
   def check_evolution_on_use_item(item_used)
+    if item_used == :LINKINGCORD
+      return check_evolution_on_trade(nil)
+    end
     return check_evolution_internal do |pkmn, new_species, method, parameter|
       success = GameData::Evolution.get(method).call_use_item(pkmn, parameter, item_used)
       next (success) ? new_species : nil

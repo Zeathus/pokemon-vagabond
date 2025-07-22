@@ -60,6 +60,7 @@ ItemHandlers::UseFromBag.add(:ITEMFINDER, proc { |item|
 ItemHandlers::UseFromBag.copy(:ITEMFINDER, :DOWSINGMCHN, :DOWSINGMACHINE)
 
 ItemHandlers::UseFromBag.add(:TOWNMAP, proc { |item|
+  pbMessage("Test 1")
   pbFadeOutIn do
     scene = PokemonRegionMap_Scene.new(-1, false)
     screen = PokemonRegionMapScreen.new(scene)
@@ -227,7 +228,7 @@ ItemHandlers::UseInField.add(:SACREDASH, proc { |item|
     next false
   end
   canrevive = false
-  $player.pokemon_party.each do |i|
+  $player.full_pokemon_party.each do |i|
     next if !i.fainted?
     canrevive = true
     break
@@ -309,8 +310,17 @@ ItemHandlers::UseInField.add(:ITEMFINDER, proc { |item|
 ItemHandlers::UseInField.copy(:ITEMFINDER, :DOWSINGMCHN, :DOWSINGMACHINE)
 
 ItemHandlers::UseInField.add(:TOWNMAP, proc { |item|
-  pbShowMap(-1, false) if $game_temp.fly_destination.nil?
-  pbFlyToNewLocation
+  pbFadeOutIn(99998) {
+    scene = PokemonRegionMap_Scene.new(-1, false)
+    screen = PokemonRegionMapScreen.new(scene)
+    ret = screen.pbStartScreen
+    if ret
+      $game_temp.fly_destination = ret
+    end
+  }
+  if $game_temp.fly_destination
+    pbFlyToNewLocation(:TOWNMAP)
+  end
   next true
 })
 

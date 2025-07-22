@@ -525,6 +525,7 @@ def pbFishingGame(encounter, tutorial=false, item=false, skip_reward=false)
         pbItemBall(encounter) if !skip_reward
       else
         pbJob("Fisher").register(encounter[0])
+        pbModifier.form = encounter[2]
         WildBattle.start(encounter[0], encounter[1]) if !skip_reward
         if $quests[:FISHYBUSINESS].at_step?(0)
           if pbJob("Fisher").hooked?(:MAGIKARP)

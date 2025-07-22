@@ -218,11 +218,14 @@
 /if $quests[:UNKNOWNDESTINATION].complete?
     > I also wanted to mention that I work at the G[.]P[.]O[.] science facility, in the admin area.
     > Please do pay me a visit there.<br>I have something to show you.
+    > 'Twas a pleasure to make your acquaintance.
+    /return true
 /else
     > You look like you have something to do.<br>I am sure we will meet again in due time.
     > I may have use of your help with something over at the G[.]P[.]O[.]
+    > 'Twas a pleasure to make your acquaintance.
+    /return false
 /end
-> 'Twas a pleasure to make your acquaintance.
 
 [LAZULI_GYM_LEROY,6]
 /event set Leroy 4

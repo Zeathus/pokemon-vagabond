@@ -73,7 +73,7 @@ class BossEff_Item < BossEffect
     @showmsg = showmsg
   end
   def activate(battle, triggerer, target)
-    if !force
+    if !@force
       if target.unlosableItem?(target.item)
         battle.pbDisplay(_INTL("But it failed!")) if @showmsg
         return false
@@ -96,10 +96,11 @@ class BossEff_Item < BossEffect
           battle.pbDisplay(_INTL("But it failed to affect {1} because of its Permanence!",
                                   target.pbThis(true)))
         end
-        return true
+        return false
       end
     end
     target.item = @item
+    return true
   end
 end
 

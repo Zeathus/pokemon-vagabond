@@ -84,6 +84,7 @@ def pbRangerNoticeBoard(area)
     addNotice.call("Vespiquen", "Queen Bee", "NOTICE_VESPIQUEN", 0, $game_self_switches[[62,34,"C"]])
     addNotice.call("Vespiquen", "Queen Bee 2", "NOTICE_VESPIQUEN", 1) if $game_self_switches[[62,34,"C"]]
     addNotice.call("Deino", "Panicked Deino", "NOTICE_DEINO") if $PokemonGlobal.visitedMaps[PBMaps::EvergoneRuins]
+    addNotice.call("Dragalge", "Speedy Seahorse", "NOTICE_DRAGALGE") if $quests[:NEKANEGONEMISSING].complete?
   when "pegma"
     addNotice.call("Turtonator", "Turtonator Territory", "NOTICE_TURTONATOR")
     addNotice.call("Swampert", "Feldspar Lake Floor", "NOTICE_SWAMPERT")
@@ -129,12 +130,12 @@ end
 
 def pbRangerShop(area)
   items_and_prices = [
-    [:POKEBALL, 100]
+    [:POKEBALL, 150]
   ]
   level = pbJob("Ranger").level
   if level >= 2
     items_and_prices = [
-      [:POKEBALL, 100],
+      [:POKEBALL, 150],
       [:GREATBALL, 300],
       [:ULTRABALL, 600],
       [:MAXREPEL, 600],

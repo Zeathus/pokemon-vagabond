@@ -78,9 +78,11 @@ class PokemonEntryScene
     @sprites = {}
     @viewport = Viewport.new(128, 80, Graphics.width - 256, Graphics.height - 192)
     @viewport.z = 99999
+    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport2.z = 99999
     if USEKEYBOARD
       @sprites["entry"] = Window_TextEntry_Keyboard.new(
-        initialText, 0, 0, 400 - 112, 96, helptext, true
+        initialText, 0, 0, 560, 96, helptext, true
       )
       Input.text_input = true
     else
@@ -116,6 +118,8 @@ class PokemonEntryScene
     @sprites["helpwindow"].visible = USEKEYBOARD
     @sprites["helpwindow"].baseColor = Color.new(16, 24, 32)
     @sprites["helpwindow"].shadowColor = Color.new(168, 184, 184)
+    @sprites["control_input"] = KeybindSprite.new(Input::F9, "Change to virtual keyboard", 132, 476, @viewport2)
+    @sprites["control_input"].z = 99999
     addBackgroundPlane(@sprites, "background", "Naming/bg_2", @viewport)
     case subject
     when 1   # Player
@@ -188,6 +192,9 @@ class PokemonEntryScene
       elsif Input.triggerex?(:RETURN) && @sprites["entry"].text.length >= @minlength
         ret = @sprites["entry"].text
         break
+      elsif Input.triggerex?(:F9)
+        ret = -1
+        break
       end
       @sprites["helpwindow"].update
       @sprites["entry"].update
@@ -250,6 +257,7 @@ class PokemonEntryScene
     pbFadeOutAndHide(@sprites)
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
+    @viewport2.dispose
     Input.text_input = false if USEKEYBOARD
   end
 end
@@ -371,6 +379,8 @@ class PokemonEntryScene2
   def pbStartScene(helptext, minlength, maxlength, initialText, subject = 0, pokemon = nil)
     @viewport = Viewport.new(128, 80, Graphics.width - 256, Graphics.height - 192)
     @viewport.z = 99999
+    @viewport2 = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport2.z = 99999
     @helptext = helptext
     @helper = CharacterEntryHelper.new(initialText)
     # Create bitmaps
@@ -398,6 +408,8 @@ class PokemonEntryScene2
     @sprites = {}
     @sprites["bg"] = IconSprite.new(0, 0, @viewport)
     @sprites["bg"].setBitmap("Graphics/UI/Naming/bg")
+    @sprites["control_input"] = KeybindSprite.new(Input::F9, "Change to keyboard input", 132, 476, @viewport2)
+    @sprites["control_input"].z = 99999
     case subject
     when 1   # Player
       meta = GameData::PlayerMetadata.get($player.character_ID)
@@ -463,7 +475,7 @@ class PokemonEntryScene2
     @maxlength = maxlength
     @maxlength.times do |i|
       @sprites["blank#{i}"] = Sprite.new(@viewport)
-      @sprites["blank#{i}"].x = 160 + (24 * i)
+      @sprites["blank#{i}"].x = 128 + (24 * i)
       @sprites["blank#{i}"].bitmap = @bitmaps[@bitmaps.length - 1]
       @blanks[i] = 0
     end
@@ -506,10 +518,10 @@ class PokemonEntryScene2
     bgoverlay.clear
     pbSetSystemFont(bgoverlay)
     textPositions = [
-      [@helptext, 160, 18, :left, Color.new(16, 24, 32), Color.new(168, 184, 184)]
+      [@helptext, 128, 18, :left, Color.new(16, 24, 32), Color.new(168, 184, 184)]
     ]
     chars = @helper.textChars
-    x = 172
+    x = 140
     chars.each do |ch|
       textPositions.push([ch, x, 54, :center, Color.new(16, 24, 32), Color.new(168, 184, 184)])
       x += 24
@@ -715,6 +727,9 @@ class PokemonEntryScene2
           # Auto-switch to lowercase letters after the first uppercase letter is selected
           pbChangeTab(1) if @mode == 0 && @helper.cursor == 1
         end
+      elsif Input.trigger?(Input::F9)
+        ret = -1
+        break
       end
     end
     Input.update
@@ -729,6 +744,7 @@ class PokemonEntryScene2
     @bitmaps.clear
     pbDisposeSpriteHash(@sprites)
     @viewport.dispose
+    @viewport2.dispose
   end
 end
 
@@ -753,17 +769,24 @@ end
 #===============================================================================
 def pbEnterText(helptext, minlength, maxlength, initialText = "", mode = 0, pokemon = nil, nofadeout = false)
   ret = ""
-  if ($PokemonSystem.textinput == 1 rescue false)   # Keyboard
-    pbFadeOutIn(99999, nofadeout) do
-      sscene = PokemonEntryScene.new
-      sscreen = PokemonEntry.new(sscene)
-      ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
+  loop do
+    if ($PokemonSystem.textinput == 1 rescue false)   # Keyboard
+      pbFadeOutIn(99999, nofadeout) do
+        sscene = PokemonEntryScene.new
+        sscreen = PokemonEntry.new(sscene)
+        ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
+      end
+    else   # Cursor
+      pbFadeOutIn(99999, nofadeout) do
+        sscene = PokemonEntryScene2.new
+        sscreen = PokemonEntry.new(sscene)
+        ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
+      end
     end
-  else   # Cursor
-    pbFadeOutIn(99999, nofadeout) do
-      sscene = PokemonEntryScene2.new
-      sscreen = PokemonEntry.new(sscene)
-      ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
+    break if ret.is_a?(String)
+    if ret == -1
+      $PokemonSystem.textinput = ($PokemonSystem.textinput + 1) % 2
+      ret = ""
     end
   end
   return ret

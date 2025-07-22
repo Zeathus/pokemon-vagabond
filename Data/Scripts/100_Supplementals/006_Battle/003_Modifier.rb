@@ -107,8 +107,17 @@ end
 def pbWildModify(pokemon)
   mod = $game_variables[Supplementals::WILD_MODIFIER]
 
+  if mod.moves
+    pokemon.moves = []
+    mod.moves.each do |m|
+      pokemon.moves.push(Pokemon::Move.new(m))
+    end
+  end
   if mod.form
     pokemon.form = mod.form
+    if mod.moves.nil?
+      pokemon.reset_moves
+    end
   end
   pokemon.name = mod.name if mod.name
   pokemon.ability = mod.ability if mod.ability
@@ -119,12 +128,6 @@ def pbWildModify(pokemon)
   pokemon.status = mod.status if mod.status
   pokemon.iv = pbStatArrayToHash(mod.iv) if mod.iv
   pokemon.ev = pbStatArrayToHash(mod.ev) if mod.ev
-  if mod.moves
-    pokemon.moves = []
-    mod.moves.each do |m|
-      pokemon.moves.push(Pokemon::Move.new(m))
-    end
-  end
   pokemon.calc_stats
   pokemon.hp = pokemon.totalhp * mod.hpmult if mod.hpmult
   pokemon.hp = mod.hp if mod.hp

@@ -586,7 +586,7 @@
 /speaker Kira
 /portrait 0
 > Mom... We're stuck... *sob*
-/speaker Kira's Mom
+/speaker Kira's_Mom
 > Don't worry Kira, I will find a way out.
 
 [CH4_MEMORY,11]

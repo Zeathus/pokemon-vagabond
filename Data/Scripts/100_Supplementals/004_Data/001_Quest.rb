@@ -87,6 +87,7 @@ module GameData
     attr_reader(:exp)           # Exp reward multiplier, is divided by 100
     attr_reader(:items)         # Item rewarded by the quest
     attr_reader(:hide_items)    # Show item as unknown
+    attr_reader(:give_items)    # Whether items are given automatically on quest finish
     attr_reader(:hide_name)     # If the quest name and area is shown or not
     attr_reader(:require_maps)  # IDs of required maps to be visited for unlock
     attr_reader(:require_quests)# IDs for finished quests for unlock
@@ -116,6 +117,7 @@ module GameData
         "Exp"           => [0, "u"],
         "Items"         => [0, "*eU", :Item, nil],
         "HideItems"     => [0, "b"],
+        "GiveItems"     => [0, "b"],
         "HideName"      => [0, "b"],
         "RequireMaps"   => [0, "*u"],
         "RequireQuests" => [0, "*e", :Quest],
@@ -146,6 +148,7 @@ module GameData
       @exp            = hash[:exp]            || 0
       @items          = hash[:items]          || []
       @hide_items     = hash[:hide_items]     || false
+      @give_items     = hash[:give_items]     || false
       @hide_name      = hash[:hide_name]      || false
       @require_maps   = hash[:require_maps]   || []
       @require_quests = hash[:require_quests] || []
@@ -278,8 +281,10 @@ class QuestState
         pbMessage(_INTL("{1} received ${2}!", $player.name, self.money))
         $player.money += money
       end
-      for item in self.items
-        pbReceiveItem(item[0],item[1] || 1)
+      if self.give_items
+        for item in self.items
+          pbReceiveItem(item[0],item[1] || 1)
+        end
       end
       exp_reward = self.real_exp
       if exp_reward > 0
@@ -380,6 +385,10 @@ class QuestState
 
   def hide_items
     return GameData::Quest.get(@quest_id).hide_items
+  end
+
+  def give_items
+    return GameData::Quest.get(@quest_id).give_items
   end
 
   def hide_name

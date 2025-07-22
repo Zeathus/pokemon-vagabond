@@ -182,6 +182,11 @@
 > \ts[5]Duke has joined the party!
 > \ts[1]You can now press Z to open the menu.
 
+[PROLOGUE_DUKE_BLOCK]
+/speaker Duke
+> I have something to tell you about battling.
+> Let us battle at least one trainer before we stray too far.
+
 [PROLOGUE_AFFINITY_BOOST_TUTORIAL,0]
 /speaker Duke
 > <PLAYER>, do you know about affinities and [R]Affinity Boosts[/]?

@@ -686,7 +686,7 @@ Pocket = 1
 Price = 300
 FieldUse = OnPokemon
 Flags = Fling_10
-Description = A flower nectar obtained at Ula'ula Meadow. It changes the form of certain species of Pokémon.
+Description = A red flower nectar. It changes the form of certain species of Pokémon.
 #-------------------------------
 [YELLOWNECTAR]
 Name = Yellow Nectar
@@ -697,7 +697,7 @@ Pocket = 1
 Price = 300
 FieldUse = OnPokemon
 Flags = Fling_10
-Description = A flower nectar obtained at Melemele Meadow. It changes the form of certain species of Pokémon.
+Description = A yellow flower nectar. It changes the form of certain species of Pokémon.
 #-------------------------------
 [PINKNECTAR]
 Name = Pink Nectar
@@ -708,7 +708,7 @@ Pocket = 1
 Price = 300
 FieldUse = OnPokemon
 Flags = Fling_10
-Description = A flower nectar obtained from shrubs on Royal Avenue. It changes the form of certain species of Pokémon.
+Description = A pink flower nectar. It changes the form of certain species of Pokémon.
 #-------------------------------
 [PURPLENECTAR]
 Name = Purple Nectar
@@ -719,7 +719,7 @@ Pocket = 1
 Price = 300
 FieldUse = OnPokemon
 Flags = Fling_10
-Description = A flower nectar obtained at Poni Meadow. It changes the form of certain species of Pokémon.
+Description = A purple flower nectar. It changes the form of certain species of Pokémon.
 #-------------------------------
 [AIRBALLOON]
 Name = Air Balloon
@@ -7136,8 +7136,25 @@ Pocket = 1
 Price = 10000
 Flags = Fling_30
 Description = A ticket that lets you play and win prizes from certain games at the Lapis Lazuli City Game Guild.
-
-
+#-------------------------------
+[LINKINGCORD]
+Name = Linking Cord
+NamePlural = Linking Cords
+Pocket = 1
+Price = 5000
+BPPrice = 5
+FieldUse = OnPokemon
+Flags = EvolutionStone,Fling_30
+Description = A string exuding a mysterious energy that makes you feel a strange sense of connection. It can evolve Pokémon that usually evolve by trade.
+#-------------------------------
+[SPRINTINGSHOES]
+Name = Gale Shoes
+NamePlural = Gale Shoes
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = High-quality shoes for running. When used, you will keep running at high speed until you hit a wall or press an action button.
 
 
 

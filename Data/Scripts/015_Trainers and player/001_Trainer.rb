@@ -58,6 +58,10 @@ class Trainer
     return @party.find_all { |p| p && !p.egg? }
   end
 
+  def full_pokemon_party
+    return (@party + (@inactive_party || [])).find_all { |p| p && !p.egg? }
+  end
+
   def able_party
     return @party.find_all { |p| p && !p.egg? && !p.fainted? }
   end
@@ -163,15 +167,19 @@ class Trainer
   def heal_party
     @party.each { |pkmn| pkmn.heal }
     @inactive_party.each { |pkmn| pkmn.heal }
-    members = $game_variables[PARTY_POKEMON] + $game_variables[INACTIVE_POKEMON]
-    if members.is_a?(Array)
-      members.each { |party|
-        if party.is_a?(Array)
-          party.each { |pkmn|
-            pkmn.heal
-          }
-        end
-      }
+    begin
+      members = $game_variables[PARTY_POKEMON] + $game_variables[INACTIVE_POKEMON]
+      if members.is_a?(Array)
+        members.each { |party|
+          if party.is_a?(Array)
+            party.each { |pkmn|
+              pkmn.heal
+            }
+          end
+        }
+      end
+    rescue
+      echoln "Error healing party members"
     end
   end
 

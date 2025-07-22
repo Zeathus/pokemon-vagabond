@@ -62,7 +62,7 @@ class KeybindSprite < BitmapSprite
   attr_accessor :shadowColor
 
   def initialize(input, name, x, y, viewport)
-    super(224, 28, viewport)
+    super(300, 28, viewport)
     @input = input
     @name  = name
     @time = 0

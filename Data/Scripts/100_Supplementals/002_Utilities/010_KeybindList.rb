@@ -662,7 +662,12 @@ class KeybindList
       end
     end
     if keybind
-      InputCode.getName(keybind.input_code)
+      return InputCode.getName(keybind.input_code)
+    else
+      case input
+      when Input::F9
+        InputCode.getName(InputCode::F9)
+      end
     end
     return "Unknown Input"
   end
@@ -691,8 +696,16 @@ class KeybindList
         end
       end
     end
+    id = -1
     if keybind
       id = keybind.input_code
+    else
+      case input
+      when Input::F9
+        id = InputCode::F9
+      end
+    end
+    if id >= 0
       y_offset = src_type <= 1 ? 0 : (28 * (16 + control_style * 2))
       return Rect.new((id%16)*28,y_offset+(id/16).floor*28,28,28)
     end

@@ -69,11 +69,11 @@ class Battle
       if attacker.pokerusStage >= 1   # Infected or cured
         essenceYield.each_key { |stat| essenceYield[stat] *= 2 }
       end
-      essenceHeld = pbGetEffortEssence
-      essenceYield.each_key { |stat|
-        essenceHeld[stat] = [essenceHeld[stat] + essenceYield[stat], 1000].min
-      }
     end
+    essenceHeld = pbGetEffortEssence
+    essenceYield.each_key { |stat|
+      essenceHeld[stat] = [essenceHeld[stat] + essenceYield[stat], 1000].min
+    }
   end
 
   def pbGainEVsOne(idxParty, defeatedBattler)

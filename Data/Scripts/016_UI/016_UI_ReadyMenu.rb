@@ -329,7 +329,7 @@ def pbUseKeyItem
       real_moves.push([move, i]) if pbCanUseHiddenMove?(pkmn, move, false)
     end
   end
-  real_items = []
+  real_items = [:TOWNMAP]
   $bag.registered_items.each do |i|
     itm = GameData::Item.get(i).id
     real_items.push(itm) if $bag.has?(itm)

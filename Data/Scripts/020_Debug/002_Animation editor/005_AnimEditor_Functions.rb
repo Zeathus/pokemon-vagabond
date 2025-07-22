@@ -282,8 +282,8 @@ module BattleAnimationEditor
     previewsprite.z = previewwin.z + 1
     sliderwin2.z = previewwin.z + 2
     set0 = sliderwin2.addSlider(_INTL("Pattern:"), -2, 1000, cel[AnimFrame::PATTERN])
-    set1 = sliderwin2.addSlider(_INTL("X:"), -64, 512 + 64, cel[AnimFrame::X])
-    set2 = sliderwin2.addSlider(_INTL("Y:"), -64, 384 + 64, cel[AnimFrame::Y])
+    set1 = sliderwin2.addSlider(_INTL("X:"), -256, 512 + 64, cel[AnimFrame::X])
+    set2 = sliderwin2.addSlider(_INTL("Y:"), -256, 384 + 64, cel[AnimFrame::Y])
     set3 = sliderwin2.addSlider(_INTL("Zoom X:"), 5, 1000, cel[AnimFrame::ZOOMX])
     set4 = sliderwin2.addSlider(_INTL("Zoom Y:"), 5, 1000, cel[AnimFrame::ZOOMY])
     set5 = sliderwin2.addSlider(_INTL("Angle:"), 0, 359, cel[AnimFrame::ANGLE])

@@ -308,11 +308,8 @@ class MiniQuest
       ],
       [ # Difficulty 3
         :PALMINO,
-        :TROPIUS,
         :BOOMINE,
-        :TURTONATOR,
         :LAZU,
-        :LAPRAS,
         :PIDGEOT,
         :VAPOREON,
         :JOLTEON,
@@ -379,9 +376,6 @@ class MiniQuest
         :SLOWKING
       ],
       [ # Difficulty 4
-        :TROPICOPIA,
-        :ARCHEBLAST,
-        :LAPRANESSE,
         :SHIFTRY,
         :ESPEON,
         :UMBREON,
@@ -482,6 +476,10 @@ class MiniQuest
   end
 
   def hide_items
+    return false
+  end
+
+  def give_items
     return false
   end
 
@@ -705,17 +703,14 @@ def pbRandomRewardItem(difficulty)
      :LIFEORB,
      :PPUP,
      :ABILITYCAPSULE,
-     :ASSAULTVEST,
-     :BOTTLECAP],
+     :ASSAULTVEST],
     # Difficulty 4
     [:BIGNUGGET,
      :PPMAX,
-     :ABILITYPATCH,
-     :GOLDBOTTLECAP],
+     :ABILITYPATCH],
     # Difficulty 5
     [:COMETSHARD,
-     :MASTERBALL,
-     :GOLDBOTTLECAP]
+     :MASTERBALL]
   ][difficulty]
   item = items.shuffle[0]
   while item.is_a?(Array)

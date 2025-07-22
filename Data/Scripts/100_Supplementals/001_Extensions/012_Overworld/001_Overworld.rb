@@ -23,6 +23,18 @@ EventHandlers.add(:on_step_taken, :surf_ripple,
   }
 )
 
+# Show sprinting dust trail
+EventHandlers.add(:on_step_taken, :sprinting_dust,
+  proc { |event|
+    next if !$game_player || $game_player.sprinting == 0
+    next if !$scene.is_a?(Scene_Map)
+    event.each_occupied_tile do |x, y|
+      spriteset = $scene.spriteset(event.map_id)
+      spriteset&.addUserAnimation(Settings::DUST_ANIMATION_ID, x, y, true, 1)
+    end
+  }
+)
+
 # Force cycling/walking.
 EventHandlers.add(:on_enter_map, :map_update,
   proc { |_old_map_id|

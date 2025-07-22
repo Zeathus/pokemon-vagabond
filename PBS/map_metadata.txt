@@ -631,6 +631,10 @@ Name = Mt. Pegma Ruins Chamber
 MapPosition = 0,19,6
 BattleBack = ruins_boss
 #-------------------------------
+[144]   # Ivan's House
+Name = Ivan's House
+MapPosition = 0,13,9
+#-------------------------------
 [145]   # Pegma Hillside Ruins
 Name = Amphi Cave Ruins
 MapPosition = 0,20,9
@@ -1022,3 +1026,10 @@ MapPosition = 0,8,14
 [255]   # West Sea Ruins Chamber
 Name = West Sea Ruins Chamber
 MapPosition = 0,8,14
+#-------------------------------
+[257]   # Gabbro Swamp
+Name = Gabbro Swamp
+Outdoor = true
+ShowArea = true
+VFX = 3
+SnapEdges = true

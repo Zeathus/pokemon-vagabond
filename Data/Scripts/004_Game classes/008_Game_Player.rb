@@ -47,14 +47,31 @@ class Game_Player < Game_Character
     return $PokemonGlobal.followers.length == 0
   end
 
+  def sprinting
+    return @sprinting || 0
+  end
+
+  def sprinting=(value)
+    @sprinting = value
+  end
+
+  def start_sprinting
+    return @start_sprinting || false
+  end
+
+  def start_sprinting=(direction)
+    @start_sprinting = true
+    @sprinting = direction
+  end
+
   #-----------------------------------------------------------------------------
 
-  def can_run?
+  def can_run?(ignore_interpreter = false)
     return @move_speed > 3 if @move_route_forcing
     return false if @bumping
     return true if $game_switches && $game_switches[FORCED_RUNNING]
-    return false if $game_temp.in_menu || $game_temp.in_battle ||
-                    $game_temp.message_window_showing || pbMapInterpreterRunning?
+    return false if !ignore_interpreter && ($game_temp.in_menu || $game_temp.in_battle ||
+                    $game_temp.message_window_showing || pbMapInterpreterRunning?)
     return false if !$player.has_running_shoes && !$PokemonGlobal.diving &&
                     !$PokemonGlobal.surfing && !$PokemonGlobal.bicycle
     return false if jumping?
@@ -86,6 +103,9 @@ class Game_Player < Game_Character
         self.move_speed = (type == :cycling_jumping) ? 3 : 5
       end
       new_charset = pbGetPlayerCharset(meta.cycle_charset)
+    when :sprinting
+      self.move_speed = 6 if !@move_route_forcing
+      new_charset = pbGetPlayerCharset(meta.run_charset)
     when :running
       self.move_speed = 4 if !@move_route_forcing
       new_charset = pbGetPlayerCharset(meta.run_charset)
@@ -104,6 +124,7 @@ class Game_Player < Game_Character
     elsif @direction == 2 && $game_map && @y < $game_map.height - 1 && $game_map.stairsUp?(@x, @y)
       self.move_speed -= 1
     end
+    self.move_speed += $game_variables[MOVE_SPEED_MOD]
     self.move_speed = 3 if @bumping
     @character_name = new_charset if new_charset
   end
@@ -134,6 +155,7 @@ class Game_Player < Game_Character
     @move_initial_y = @y
     @move_timer = 0.0
     @bumping = true
+    @sprinting = false
   end
 
   def add_move_distance_to_stats(distance = 1)
@@ -432,6 +454,25 @@ class Game_Player < Game_Character
     @last_real_x = @real_x
     @last_real_y = @real_y
     @last_terrain_tag = pbTerrainTag
+    if self.sprinting != 0
+      if self.start_sprinting
+        if !@sprint_timer || System.uptime - @sprint_timer > 0.25
+          @sprint_timer = System.uptime
+          pbSEPlay("Sprint", 80, 100)
+        end
+      else
+        if !@sprint_timer || System.uptime - @sprint_timer > 0.2
+          @sprint_timer = System.uptime
+          pbSEPlay("Sprint", 80, 125)
+        end
+        if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK) || Input.trigger?(Input::ACTION)
+          @sprinting = 0
+        else
+          dir = Input.dir4
+          self.sprinting = dir if dir != 0
+        end
+      end
+    end
     super
     update_stop if $game_temp.in_menu && @stopped_last_frame
     update_screen_position(@last_real_x, @last_real_y)
@@ -449,26 +490,43 @@ class Game_Player < Game_Character
       move_forward
     elsif !pbMapInterpreterRunning? && !$game_temp.message_window_showing &&
           !$game_temp.in_mini_update && !$game_temp.in_menu
-      # Move player in the direction the directional button is being pressed
-      if @moved_last_frame ||
-         (dir > 0 && dir == @lastdir && System.uptime - @lastdirframe >= 0.075)
+      if self.sprinting != 0
+        @start_sprinting = false
+        if dir == 0
+          dir = self.sprinting
+        else
+          self.sprinting = dir
+        end
         case dir
         when 2 then move_down
         when 4 then move_left
         when 6 then move_right
         when 8 then move_up
         end
-      elsif dir != @lastdir
-        case dir
-        when 2 then turn_down
-        when 4 then turn_left
-        when 6 then turn_right
-        when 8 then turn_up
+      else
+        # Move player in the direction the directional button is being pressed
+        if @moved_last_frame ||
+          (dir > 0 && dir == @lastdir && System.uptime - @lastdirframe >= 0.075)
+          case dir
+          when 2 then move_down
+          when 4 then move_left
+          when 6 then move_right
+          when 8 then move_up
+          end
+        elsif dir != @lastdir
+          case dir
+          when 2 then turn_down
+          when 4 then turn_left
+          when 6 then turn_right
+          when 8 then turn_up
+          end
         end
       end
       # Record last direction input
       @lastdirframe = System.uptime if dir != @lastdir
       @lastdir = dir
+    elsif !self.start_sprinting
+      @sprinting = 0
     end
   end
 
@@ -488,6 +546,8 @@ class Game_Player < Game_Character
           set_movement_type((faster) ? :surfing_fast : :surfing)
         elsif $PokemonGlobal&.bicycle
           set_movement_type((faster) ? :cycling_fast : :cycling)
+        elsif self.sprinting != 0
+          set_movement_type(:sprinting)
         else
           set_movement_type((faster) ? :running : :walking)
         end
@@ -611,6 +671,7 @@ def pbCancelVehicles(destination = nil, cancel_swimming = true)
   $PokemonGlobal.surfing = false if cancel_swimming
   $PokemonGlobal.diving  = false if cancel_swimming
   $PokemonGlobal.bicycle = false if !destination || !pbCanUseBike?(destination)
+  $game_player.sprinting = false
   pbUpdateVehicle
 end
 

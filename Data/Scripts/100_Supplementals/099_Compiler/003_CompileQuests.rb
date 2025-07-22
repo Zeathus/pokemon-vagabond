@@ -102,6 +102,7 @@ def compile_quests(path = "PBS/quests.txt")
         :exp                   => contents["Exp"],
         :items                 => contents["Items"],
         :hide_items            => contents["HideItems"],
+        :give_items            => contents["GiveItems"],
         :hide_name             => contents["HideName"],
         :require_maps          => contents["RequireMaps"],
         :require_quests        => contents["RequireQuests"],

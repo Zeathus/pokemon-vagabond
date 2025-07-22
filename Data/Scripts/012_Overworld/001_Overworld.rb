@@ -9,7 +9,7 @@ EventHandlers.add(:on_frame_update, :pokerus_counter,
     next if !last
     now = pbGetTimeNow
     if last.year != now.year || last.month != now.month || last.day != now.day
-      $player.pokemon_party.each { |pkmn| pkmn.lowerPokerusCount }
+      $player.full_pokemon_party.each { |pkmn| pkmn.lowerPokerusCount }
       $PokemonGlobal.pokerusTime = now
     end
   }

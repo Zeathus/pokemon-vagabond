@@ -700,6 +700,24 @@ def pbBossPrimarina
   pbModifier.nature = :MODEST
 end
 
+def pbBossDragalge
+  pbBossGeneral
+  pbModifier.moves = [
+    :DRAGONPULSE,
+    :ACID,
+    :MUDDYWATER,
+    :SLUDGEBOMB
+  ]
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.moves[1] = :SLUDGEWAVE
+    pbModifier.item = :BLACKSLUDGE
+  end
+  pbModifier.hpmult = 3.0 + $PokemonSystem.difficulty * 2
+  pbModifier.ability = :ADAPTABILITY
+  pbModifier.gender = 0
+  pbModifier.nature = :MODEST
+end
+
 def pbBossClawitzer
   pbBossGeneral
   # Clauncher

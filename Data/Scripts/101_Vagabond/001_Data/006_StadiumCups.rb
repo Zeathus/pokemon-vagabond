@@ -62,17 +62,17 @@ def pbStadiumCups
         [:JANUS, "Janus", 0],
         [:OLDPROTAGONIST, "Indigo", 0]
       ])
-    end
 
-    titles.push("Echo")
-    descriptions.push("This cup was sponsored by Pokémon Echoes, releasing within the next 30 years.")
-    stats.push([40,3])
-    trainers.push([
-      [:LASS, "Amy", 0],
-      [:ACETRAINER_M, "Kanai", 0],
-      [:VETERAN_M, "Alcar", 0],
-      [:PSYCHIC_M, "Arglos", 0]
-    ])
+      titles.push("Echo")
+      descriptions.push("This cup was sponsored by Pokémon Echoes, releasing within the next 30 years.")
+      stats.push([40,3])
+      trainers.push([
+        [:LASS, "Amy", 0],
+        [:ACETRAINER_M, "Kanai", 0],
+        [:VETERAN_M, "Alcar", 0],
+        [:PSYCHIC_M, "Arglos", 0]
+      ])
+    end
 
     # Affinity Cup
     if pbStadiumHasWonCup("Start Up")

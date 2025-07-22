@@ -196,7 +196,7 @@ class Battle::Move::SwitchOutTargetStatusMove < Battle::Move
   end
 
   def pbEffectAgainstTarget(user, target)
-    @battle.decision = 3 if target.wild? && !@battle.smartWildBattle   # Escaped from battle
+    @battle.decision = 3 if (target.wild? || user.wild?) && !@battle.smartWildBattle   # Escaped from battle
   end
 
   def pbSwitchOutTargetEffect(user, targets, numHits, switched_battlers)

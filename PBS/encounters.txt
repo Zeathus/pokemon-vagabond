@@ -507,23 +507,24 @@ FishingRod
     10,CLOYSTER,20,25
     5,POPPLIO,15,20
 #-------------------------------
-[173] # Lazuli River
+[173] # Along Lazuli River
 Land,21
-    20,BUIZEL,5,8
-    20,BUDEW,5,8
-    20,BIDOOF,5,8
-    20,PIDOVE,5,8
-    10,BOUNSWEET,4,7
-    10,SOBBLE,5,8
+    25,BUDEW,12,15
+    25,SWABLU,12,15
+    15,AZURILL,12,15
+    20,SEWADDLE,12,15
+    10,SWADLOON,12,15
+    5,ROSELIA,12,15
 Water,2
-    30,SURSKIT,10,13
-    20,DUCKLETT,10,13
-    20,PSYDUCK,10,13
-    30,BUIZEL,11,14
+    40,DUCKLETT,10,13
+    30,SWABLU,10,13
+    15,PSYDUCK,10,13
+    10,MARILL,11,14
+    5,AZUMARILL,12,15
 FishingRod
     40,MAGIKARP,5,10
-    30,POLIWAG,5,10
-    30,FINNEON,5,10
+    40,POLIWAG,5,10
+    20,POLIWHIRL,10,15
 #-------------------------------
 [198] # Scoria City
 Land,21

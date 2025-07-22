@@ -170,3 +170,31 @@ ItemHandlers::UseOnPokemon.add(:HONEYEDBERRY, proc { |item, pkmn, scene|
     scene.pbDisplay(_INTL("{1}'s happiness increased a lot!", pkmn.name))
     next changeHappiness("honeyedberry")
 })
+
+ItemHandlers::UseInField.add(:SPRINTINGSHOES, proc { |item|
+    if $PokemonGlobal.surfing
+        pbMessage(_INTL("You cannot sprint while surfing."))
+        next false
+    end
+    if $game_player.sprinting != 0
+        $game_player.sprinting = 0
+    else
+        $game_player.start_sprinting = $game_player.direction
+        $game_player.step_anime = true
+        start_time = System.uptime
+        dust_time = 0
+        while System.uptime - start_time < 1
+            Graphics.update
+            Input.update
+            pbUpdateSceneMap
+            if System.uptime - dust_time > 0.2
+                spriteset = $scene.spriteset($game_map.map_id)
+                angle = ($game_variables && $game_variables[PLAYER_ROTATION]) ? $game_variables[PLAYER_ROTATION] : 0
+                spriteset&.addUserAnimation(Settings::DUST_ANIMATION_ID, $game_player.x, $game_player.y, true, 1, angle)
+                dust_time = System.uptime
+            end
+        end
+        $game_player.step_anime = false
+    end
+    next true
+})

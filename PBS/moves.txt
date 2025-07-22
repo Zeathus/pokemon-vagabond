@@ -4947,7 +4947,7 @@ TotalPP = 15
 Target = NearOther
 FunctionCode = None
 Flags = Contact,CanProtect,CanMirrorMove
-Description = The target is slugged with a punch thrown at maximum power. It can also be used to move heavy boulders.
+Description = The target is slugged with a punch thrown at maximum power. Some say it used to move boulders, but not anymore.
 #-------------------------------
 [TRIATTACK]
 Name = Tri Attack

@@ -196,7 +196,7 @@ class Scene_Map
       if Input.trigger?(Input::USE)
         $game_temp.interact_calling = true
       elsif Input.trigger?(Input::ACTION)
-        if !$game_system.menu_disabled && !$game_player.moving?
+        if !$game_system.menu_disabled && !$game_player.moving? && $game_player.sprinting == 0
           $game_temp.menu_calling = true
           $game_temp.menu_beep = true
         end

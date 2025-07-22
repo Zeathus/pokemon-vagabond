@@ -3642,7 +3642,8 @@ class PokemonScreen
         elsif oldid <= 5 && newid <= 5
           tmpA = oldid < 3 ? @party[oldid % 3] : @inactive_party[oldid % 3]
           tmpB = newid < 3 ? @party[newid % 3] : @inactive_party[newid % 3]
-          if ((tmpA.egg? && !tmpB.egg? && newid < 3) ||
+          if tmpA && tmpB &&
+             ((tmpA.egg? && !tmpB.egg? && newid < 3) ||
               (tmpB.egg? && !tmpA.egg? && oldid < 3)) &&
              $player.able_pokemon_count <= 1
             # An egg is being moved from inactive to active, swapping a non-egg pokemon

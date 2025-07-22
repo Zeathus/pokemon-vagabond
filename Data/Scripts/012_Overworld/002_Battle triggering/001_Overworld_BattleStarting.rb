@@ -771,7 +771,7 @@ EventHandlers.add(:on_end_battle, :evolve_and_black_out,
     # Check for blacking out or gaining Pickup/Huney Gather items
     case decision
     when 1, 4   # Win, capture
-      $player.pokemon_party.each do |pkmn|
+      $player.full_pokemon_party.each do |pkmn|
         pbPickup(pkmn)
         pbHoneyGather(pkmn)
       end
