@@ -13,7 +13,7 @@ class Battle::Scene
   # Called whenever the battle begins.
   def pbStartBattle(battle)
     @battle   = battle
-    @viewport = Viewport.new(128, 92, 512, 384)
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
     @lastCmd  = Array.new(@battle.battlers.length, 0)
     @lastMove = Array.new(@battle.battlers.length, 0)

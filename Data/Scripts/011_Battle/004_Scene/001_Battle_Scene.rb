@@ -5,8 +5,8 @@ class Battle::Scene
   attr_reader   :sprites
   attr_reader   :outer
 
-  BATTLE_VIEW_WIDTH    = 512
-  BATTLE_VIEW_HEIGHT   = 384
+  BATTLE_VIEW_WIDTH    = 768
+  BATTLE_VIEW_HEIGHT   = 576
 
   USE_ABILITY_SPLASH   = (Settings::MECHANICS_GENERATION >= 5)
   MESSAGE_PAUSE_TIME   = 1.0   # In seconds
@@ -16,11 +16,11 @@ class Battle::Scene
   # The number of party balls to show in each side's lineup.
   NUM_BALLS            = Settings::MAX_PARTY_SIZE
   # Centre bottom of the player's side base graphic
-  PLAYER_BASE_X        = 128
-  PLAYER_BASE_Y        = BATTLE_VIEW_HEIGHT - 80
+  PLAYER_BASE_X        = 224
+  PLAYER_BASE_Y        = BATTLE_VIEW_HEIGHT - 144
   # Centre middle of the foe's side base graphic
-  FOE_BASE_X           = BATTLE_VIEW_WIDTH - 128
-  FOE_BASE_Y           = (BATTLE_VIEW_HEIGHT * 3 / 4) - 132
+  FOE_BASE_X           = BATTLE_VIEW_WIDTH - 192
+  FOE_BASE_Y           = (BATTLE_VIEW_HEIGHT * 3 / 4) - 128
   # Default focal points of user and target in animations - do not change!
   # Is the centre middle of each sprite
   FOCUSUSER_X          = 128
@@ -47,8 +47,8 @@ class Battle::Scene
     # Shift depending on index (no shifting needed for sideSize of 1)
     case sideSize
     when 2
-      ret[0] += [-48, 48, 32, -32][index]
-      ret[1] += [  0,  0, 16, -16][index]
+      ret[0] += [-80, 64, 80, -64][index]
+      ret[1] += [ -8,  4,  8,  -4][index]
     when 3
       ret[0] += [-80, 80,  0,  0, 80, -80][index]
       ret[1] += [  0,  0,  8, -8, 16, -16][index]

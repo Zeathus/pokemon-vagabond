@@ -19,9 +19,11 @@ class Battle::Scene::Outer
     @viewport.z = @parent.z
     @sprites["border"] = IconSprite.new(0, 0, @viewport)
     @sprites["border"].setBitmap("Graphics/UI/Battle/border")
+    @sprites["border"].visible = false
     #@sprites["border"].z = 999
     @sprites["outerOverlay"] = IconSprite.new(0,0,@viewport)
     @sprites["outerOverlay"].setBitmap("Graphics/UI/Battle/outer_overlay")
+    @sprites["outerOverlay"].visible = false
     # Create message box graphic
     messageBox = pbAddSprite("messageBox",0,576-100,
       "Graphics/UI/Battle/overlay_message",@viewport)
