@@ -132,3 +132,11 @@ def pbMapFile(map_id, compressed=false)
   end
   return sprintf("Data/Map%03d.rxdata", map_id)
 end
+
+def pbMapCentered?
+  screen_offset_x = (Graphics.width - Game_Map::TILE_WIDTH) * Game_Map::X_SUBPIXELS / 2
+  screen_offset_y = (Graphics.height - Game_Map::TILE_HEIGHT) * Game_Map::Y_SUBPIXELS / 2
+  current_tile_x = ($game_map.display_x + screen_offset_x) / Game_Map::REAL_RES_X
+  current_tile_y = ($game_map.display_y + screen_offset_y) / Game_Map::REAL_RES_Y
+  return (current_tile_x == $game_player.x && current_tile_y == $game_player.y)
+end

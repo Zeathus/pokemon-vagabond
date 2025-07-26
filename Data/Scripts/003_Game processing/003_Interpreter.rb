@@ -390,7 +390,7 @@ class Interpreter
     # Apply strict version of passable, which treats tiles that are passable
     # only from certain directions as fully impassible
     ret = false
-    i = 0
+    distance = 0
     loop do
       break if !event.can_move_in_direction?($game_player.direction, true)
       $stats.strength_push_count += 1
@@ -403,8 +403,8 @@ class Interpreter
       $PokemonMap&.addMovedEvent(@event_id)
       if old_x != event.x || old_y != event.y
         if strength
-          pbSEPlay("Strength push") if i % 2 == 0
-          if $game_player.direction != 2 && i == 0
+          pbSEPlay("Strength push") if distance % 2 == 0
+          if $game_player.direction != 2 && distance == 0
             anim_x = old_x
             anim_x += (event.width - 1) if $game_player.direction == 4
             if $game_player.direction == 8
@@ -423,13 +423,21 @@ class Interpreter
           Graphics.update
           Input.update
           pbUpdateSceneMap
+          if ($game_player.direction == 2 || $game_player.direction == 8) ? (distance >= 4) : (distance >= 7)
+            case $game_player.direction
+            when 2 then $game_map.scroll_down(8)
+            when 4 then $game_map.scroll_left(8)
+            when 6 then $game_map.scroll_right(8)
+            when 8 then $game_map.scroll_up(8)
+            end
+          end
           break if !event.moving?
         end
         $game_player.unlock
         ret = true
       end
       break if !sliding
-      i += 1
+      distance += 1
     end
     return ret
   end

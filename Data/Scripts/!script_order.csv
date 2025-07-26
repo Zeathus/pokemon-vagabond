@@ -570,6 +570,7 @@
 020_UI_EffortEssence
 021_UI_Counseling
 022_UI_ShowRewardList
+023_UI_BattleStatus
 @@009_Graphics
 001_ParticleEffects
 002_Utils

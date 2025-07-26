@@ -929,6 +929,7 @@ Outdoor = true
 ShowArea = true
 Bicycle = true
 MapPosition = 0,24,3
+SnapEdges = true
 #-------------------------------
 [222]   # Amphi Woods
 Name = Amphi Woods
