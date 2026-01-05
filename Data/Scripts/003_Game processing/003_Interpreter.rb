@@ -449,7 +449,7 @@ class Interpreter
         e.through = true
       end
     end
-    ret = pbPushThisEvent(true) if $PokemonMap.strengthUsed
+    ret = pbPushThisEvent(true) if ($PokemonMap.strengthUsed || $game_map.map_id == 260)
     for e in $game_map.events.values
       if e.name.include?("Boulder Hole") && !$game_self_switches[[$game_map.map_id, e.id, "A"]]
         e.through = false

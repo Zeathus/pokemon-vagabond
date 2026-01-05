@@ -80,6 +80,7 @@ class Game_Player < Game_Character
   end
 
   def set_movement_type(type)
+    type = $game_variables[FORCED_MOVE_TYPE] if self == $game_player && $game_variables[FORCED_MOVE_TYPE] != 0
     meta = GameData::PlayerMetadata.get($player&.character_ID || 1)
     new_charset = nil
     case type
@@ -123,6 +124,8 @@ class Game_Player < Game_Character
       self.move_speed -= 1
     elsif @direction == 2 && $game_map && @y < $game_map.height - 1 && $game_map.stairsUp?(@x, @y)
       self.move_speed -= 1
+    #elsif !self.jumping? && (@direction == 4 || @direction == 6) && ($game_map.stairsLeft?(@x, @y) || $game_map.stairsRight?(@x, @y))
+    #  self.move_speed -= 0.25
     end
     self.move_speed += $game_variables[MOVE_SPEED_MOD]
     self.move_speed = 3 if @bumping
@@ -175,7 +178,7 @@ class Game_Player < Game_Character
       x_offset = (dir == 4) ? -1 : (dir == 6) ? 1 : 0
       y_offset = (dir == 8) ? -1 : (dir == 2) ? 1 : 0
       if pbStairs(x_offset, y_offset)
-        check_event_trigger_touch(dir)
+        check_event_trigger_touch(dir) if !moving?
         return
       end
       return if pbEndSurf(x_offset, y_offset)

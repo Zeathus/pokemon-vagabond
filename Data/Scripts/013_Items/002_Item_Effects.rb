@@ -60,7 +60,6 @@ ItemHandlers::UseFromBag.add(:ITEMFINDER, proc { |item|
 ItemHandlers::UseFromBag.copy(:ITEMFINDER, :DOWSINGMCHN, :DOWSINGMACHINE)
 
 ItemHandlers::UseFromBag.add(:TOWNMAP, proc { |item|
-  pbMessage("Test 1")
   pbFadeOutIn do
     scene = PokemonRegionMap_Scene.new(-1, false)
     screen = PokemonRegionMapScreen.new(scene)

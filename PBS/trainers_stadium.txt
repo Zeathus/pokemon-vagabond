@@ -400,6 +400,7 @@ Pokemon = SNORLAX,50
     Moves = PROTECT,RETURN,EXPLOSION,EARTHQUAKE
     Nature = CAREFUL
     EV = 188,0,104,0,0,216
+    Happiness = 255
 #--------------
 [VETERAN_M,Ray Rizzo] # VGC Cup 2011
 Pokemon = TERRAKION,50
@@ -564,6 +565,7 @@ Pokemon = KANGASKHAN,50
     Moves = RETURN,LOWKICK,SUCKERPUNCH,FAKEOUT
     Nature = ADAMANT
     EV = 180,252,4,60,0,12
+    Happiness = 255
 Pokemon = LANDORUS,50
     Form = 1
 Pokemon = THUNDURUS,50

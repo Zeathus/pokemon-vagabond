@@ -856,7 +856,7 @@ def pbEndSurf(_xOffset, _yOffset)
         end
       end
       if success
-        $game_map.autoplayAsCue
+        # $game_map.autoplayAsCue
         $game_player.increase_steps
         result = $game_player.check_event_trigger_here([1, 2])
         pbOnStepTaken(result)
@@ -920,7 +920,7 @@ def pbEndSurf(_xOffset, _yOffset)
           success = true
         end
         if success
-          $game_map.autoplayAsCue
+          # $game_map.autoplayAsCue
           $game_player.increase_steps
           result = $game_player.check_event_trigger_here([1, 2])
           pbOnStepTaken(result)
@@ -1042,7 +1042,7 @@ EventHandlers.add(:on_step_taken, :surf_jump,
     if $game_temp.ending_surf
       pbCancelVehicles
       $PokemonEncounters.reset_step_count
-      $game_map.autoplayAsCue   # Play regular map BGM
+      # $game_map.autoplayAsCue   # Play regular map BGM
       $game_temp.ending_surf = false
     end
   }

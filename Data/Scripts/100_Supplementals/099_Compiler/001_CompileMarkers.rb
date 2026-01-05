@@ -2,7 +2,7 @@ module Compiler
   module_function
 
   def pbLoadMarkerComments(silent=false)
-    mapdata=MapData.new
+    mapdata = MapData.new
     t = Time.now.to_i
     Graphics.update
     $Markers = []

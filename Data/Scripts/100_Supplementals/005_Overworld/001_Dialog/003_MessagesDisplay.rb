@@ -230,12 +230,16 @@ class PortraitSprite < IconSprite
   end
 
   def portrait_file
+    charname = @character.downcase
+    if charname == "nekane" && $game_variables[NEKANE_STATE] == 2
+      charname = "nekane2"
+    end
     files = (@position == 0 || @position == 3) ? [
-        _INTL("Graphics/Messages/{1}/left/{2}", @character, @expression),
-        _INTL("Graphics/Messages/{1}/left/neutral", @character)
+        _INTL("Graphics/Messages/{1}/left/{2}", charname, @expression),
+        _INTL("Graphics/Messages/{1}/left/neutral", charname)
       ] : [
-        _INTL("Graphics/Messages/{1}/{2}", @character, @expression),
-        _INTL("Graphics/Messages/{1}/neutral", @character)
+        _INTL("Graphics/Messages/{1}/{2}", charname, @expression),
+        _INTL("Graphics/Messages/{1}/neutral", charname)
       ]
     files.each do |file|
       if pbResolveBitmap(file)
@@ -772,13 +776,23 @@ class TalkMessageWindowWrapper
       value.gsub!(_INTL("[{1}]", i), _INTL("[{1}]", i.downcase))
       value.gsub!(_INTL("[/{1}]", i), _INTL("[/{1}]", i.downcase))
     end
-    value.gsub!("[r]","<c2=3aff043c>")
-    value.gsub!("[g]","<c2=4bd20664>")
-    value.gsub!("[b]",shadowctag(Color.new(176, 205, 248, 255), Color.new(41, 112, 188, 255)))
-    value.gsub!("[y]","<c2=43DF129B>")
-    value.gsub!("[p]","<c2=7EFF7C1F>")
-    value.gsub!("[o]","<c2=473F017F>")
-    value.gsub!("[w]","<c2=7FFF2D49>")
+    if @namebox.real_name && ["azelf", "mesprit", "uxie", "fintan"].include?(@namebox.real_name.downcase)
+      value.gsub!("[r]","<c2=043c3aff>")
+      value.gsub!("[g]","<c2=06644bd2>")
+      value.gsub!("[b]",shadowctag(Color.new(41, 112, 188, 255), Color.new(176, 205, 248, 255)))
+      value.gsub!("[y]","<c2=129B43DF>")
+      value.gsub!("[p]","<c2=7C1F7EFF>")
+      value.gsub!("[o]","<c2=017F473F>")
+      value.gsub!("[w]","<c2=2D497FFF>")
+    else
+      value.gsub!("[r]","<c2=3aff043c>")
+      value.gsub!("[g]","<c2=4bd20664>")
+      value.gsub!("[b]",shadowctag(Color.new(176, 205, 248, 255), Color.new(41, 112, 188, 255)))
+      value.gsub!("[y]","<c2=43DF129B>")
+      value.gsub!("[p]","<c2=7EFF7C1F>")
+      value.gsub!("[o]","<c2=473F017F>")
+      value.gsub!("[w]","<c2=7FFF2D49>")
+    end
     value.gsub!("[/]","</c2>")
 
     temp = value + ""
@@ -824,8 +838,6 @@ class TalkMessageWindowWrapper
         new_str += "</c2>"
       end
 
-      echoln old_str
-      echoln new_str
       value.gsub!("[rbow]"+old_str+"[/rbow]",new_str)
 
     end
@@ -912,11 +924,11 @@ class TalkMessageWindowWrapper
     end
 
     value.gsub!("[.]", ".")
-    value.gsub!("[!]", ".")
-    value.gsub!("[?]", ".")
-    value.gsub!("[,]", ".")
-    value.gsub!("[:]", ".")
-    value.gsub!("[;]", ".")
+    value.gsub!("[!]", "!")
+    value.gsub!("[?]", "?")
+    value.gsub!("[,]", ",")
+    value.gsub!("[:]", ":")
+    value.gsub!("[;]", ";")
 
     value = _INTL("\\l[{1}]{2}", @line_count, value) if @line_count != Supplementals::MESSAGE_WINDOW_LINES
 

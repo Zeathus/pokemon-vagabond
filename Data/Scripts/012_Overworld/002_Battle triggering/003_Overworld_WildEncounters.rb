@@ -324,6 +324,24 @@ class PokemonEncounters
       encounter = enc
       break
     end
+    # Potentially override encounter if there's a chain going
+    if $game_variables[CHAIN_LENGTH] >= 3 &&
+       $game_variables[CHAIN_MAP] == $game_map.map_id &&
+       $game_variables[CHAIN_SPECIES] != encounter[1]
+      force_chance = 10
+      force_chance = 15 if $game_variables[CHAIN_LENGTH] >= 10
+      force_chance = 20 if $game_variables[CHAIN_LENGTH] >= 15
+      force_chance = 25 if $game_variables[CHAIN_LENGTH] >= 20
+      if rand(100) < force_chance
+        # Check if the chain pokemon exists in the encounter list, and override it
+        enc_list.each do |enc|
+          if enc[1] == $game_variables[CHAIN_SPECIES]
+            encounter = enc
+            break
+          end
+        end
+      end
+    end
     # Get the chosen species and level
     level = rand(encounter[2]..encounter[3])
     # Some abilities alter the level of the wild Pokémon
@@ -338,6 +356,9 @@ class PokemonEncounters
       level = [level - rand(1..4), 1].max
     elsif $PokemonMap.higher_level_wild_pokemon
       level = [level + rand(1..4), GameData::GrowthRate.max_level].min
+    end
+    if [223, 224, 225, 226, 227].include?($game_map.map_id)
+      encounter[1] = pbAmphiWoodsEncounter
     end
     # Return [species, level]
     return [encounter[1], level, encounter[4]]
@@ -406,6 +427,11 @@ def pbGenerateWildPokemon(species, level, isRoamer = false)
   # same species
   shiny_retries = 0
   shiny_retries += 2 if $bag.has?(:SHINYCHARM)
+  if $game_variables[CHAIN_SPECIES] == species &&
+     $game_variables[CHAIN_LENGTH] > 1 &&
+     $game_variables[CHAIN_MAP] == $game_map.map_id
+    shiny_retries += [$game_variables[CHAIN_LENGTH], 50].min * ($bag.has?(:SHINYCHARM) ? 2 : 1)
+  end
   if Settings::HIGHER_SHINY_CHANCES_WITH_NUMBER_BATTLED
     values = [0, 0]
     case $player.pokedex.battled_count(species)
@@ -440,6 +466,13 @@ def pbGenerateWildPokemon(species, level, isRoamer = false)
       if !isRoamer && (Settings::MORE_ABILITIES_AFFECT_WILD_ENCOUNTERS || (rand(100) < 50))
         genwildpoke.nature = first_pkmn.nature
       end
+    end
+  end
+  if $game_variables[CHAIN_SPECIES] == species &&
+     $game_variables[CHAIN_LENGTH] > 10 &&
+     $game_variables[CHAIN_MAP] == $game_map.map_id
+    if rand(10) < ([$game_variables[CHAIN_LENGTH], 50].min / 10).floor
+      genwildpoke.ability_index = 2
     end
   end
   # Trigger events that may alter the generated Pokémon further

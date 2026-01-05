@@ -36,6 +36,10 @@ class Game_Player < Game_Character
     return ret
   end
 
+  def bumping?
+    return @bumping
+  end
+
 end
 
 alias sup_pbGetPlayerCharset pbGetPlayerCharset

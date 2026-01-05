@@ -113,8 +113,8 @@ class PokemonEggHatch_Scene
       pbMessage(_INTL("{1}'s data was added to the Pokédex.", @pokemon.name)) { update }
       $player.pokedex.register_last_seen(@pokemon)
       pbFadeOutIn do
-        scene = PokemonPokedexInfo_Scene.new
-        screen = PokemonPokedexInfoScreen.new(scene)
+        scene = PokemonPokedex_Scene.new
+        screen = PokemonPokedexScreen.new(scene)
         screen.pbDexEntry(@pokemon.species)
       end
     end
@@ -234,8 +234,8 @@ def pbHatch(pokemon)
       pbMessage(_INTL("{1}'s data was added to the Pokédex.", speciesname))
       $player.pokedex.register_last_seen(pokemon)
       pbFadeOutIn do
-        scene = PokemonPokedexInfo_Scene.new
-        screen = PokemonPokedexInfoScreen.new(scene)
+        scene = PokemonPokedex_Scene.new
+        screen = PokemonPokedexScreen.new(scene)
         screen.pbDexEntry(pokemon.species)
       end
     end
@@ -261,6 +261,10 @@ EventHandlers.add(:on_player_step_taken, :hatch_eggs,
       end
       egg.steps_to_hatch -= 2 if pbActiveDrink == "hatch"
       if egg.steps_to_hatch <= 0
+        if $game_temp.in_menu
+          egg.steps_to_hatch = 1
+          next
+        end
         egg.steps_to_hatch = 0
         pbHatch(egg)
       end
@@ -280,6 +284,10 @@ EventHandlers.add(:on_player_step_taken, :hatch_eggs_inactive,
       end
       egg.steps_to_hatch -= 2 if pbActiveDrink == "hatch"
       if egg.steps_to_hatch <= 0
+        if $game_temp.in_menu
+          egg.steps_to_hatch = 1
+          next
+        end
         egg.steps_to_hatch = 0
         pbHatch(egg)
       end

@@ -166,7 +166,8 @@ class PokemonStorage
       end
       if x == -1
         return self.party[y] if y < Settings::MAX_PARTY_SIZE
-        return $player.inactive_party[y - Settings::MAX_PARTY_SIZE]
+        return $player.inactive_party[y - Settings::MAX_PARTY_SIZE] if y < MAX_PARTY_BOX_SIZE
+        return getPartyPokemon(:Nekane)[y - MAX_PARTY_BOX_SIZE]
       end
       return @boxes[x][y]
     end
@@ -176,8 +177,10 @@ class PokemonStorage
     if x == -1
       if y < Settings::MAX_PARTY_SIZE
         self.party[y] = value
-      else
+      elsif y < MAX_PARTY_BOX_SIZE
         $player.inactive_party[y - Settings::MAX_PARTY_SIZE] = value
+      else
+        getPartyPokemon(:Nekane)[y - MAX_PARTY_BOX_SIZE] = value
       end
     else
       @boxes[x][y] = value
@@ -200,9 +203,12 @@ class PokemonStorage
       if self.party.length < Settings::MAX_PARTY_SIZE
         self.party[self.party.length] = self[boxSrc, indexSrc]
         self.party.compact!
-      else
+      elsif self.party.length < MAX_PARTY_BOX_SIZE
         $player.inactive_party[$player.inactive_party.length] = self[boxSrc, indexSrc]
         $player.inactive_party.compact!
+      else
+        getPartyPokemon(:Nekane)[getPartyPokemon(:Nekane).length] = self[boxSrc, indexSrc]
+        getPartyPokemon(:Nekane).compact!
       end
     else   # Copying into box
       pkmn = self[boxSrc, indexSrc]
@@ -270,7 +276,8 @@ class PokemonStorage
       self[box, index] = nil
       if box == -1
         self.party.compact! if index < Settings::MAX_PARTY_SIZE
-        $player.inactive_party.compact! if index >= Settings::MAX_PARTY_SIZE
+        $player.inactive_party.compact! if index >= Settings::MAX_PARTY_SIZE && index < MAX_PARTY_BOX_SIZE
+        getPartyPokemon(:Nekane).compact! if index >= MAX_PARTY_BOX_SIZE && index < MAX_PARTY_BOX_SIZE + 3
       end
     end
   end

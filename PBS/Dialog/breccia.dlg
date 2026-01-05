@@ -556,6 +556,62 @@
 /reset
 > Zorua looks sad.
 
+[RANCH_RUNNER,0]
+/speaker Running_Guy
+> Have you seen these shoes!?\nI can sprint so fast in them!
+?> Tell you what... I'll let you try them, and if you can clear my challenge, I'll give you my extra pair!
+    /choice You're on!
+        > I like your enthusiasm!
+        /return true
+    /cancelchoice I like being slow
+        > Ah, more of a Trick Room trainer? Lame.
+        /return false
+?/>
+
+[RANCH_RUNNER,1]
+/speaker Running_Guy
+> OK! Here's the deets.
+> I've set up a course where you have to run one whole lap around the ranch.
+> Once you start running, you can't stop. If you bump into anything that stops you in your tracks, you're out!
+> With that out of the way...\n3... 2... 1... GO!\wtnp[8]
+
+[RANCH_RUNNER,2]
+/speaker Running_Guy
+!> OUT!
+
+[RANCH_RUNNER,3]
+/speaker Running_Guy
+> That's the wrong way!
+
+[RANCH_RUNNER,4]
+/speaker Running_Guy
+> What an incredible performance!
+
+[RANCH_RUNNER,5]
+/speaker Running_Guy
+?> Do you wanna try again?
+    /choice I've got it this time!
+        /return true
+    /cancelchoice I'm good
+        /return false
+?/>
+
+[RANCH_RUNNER,6]
+/speaker Running_Guy
+> You know the deets already.\n3... 2... 1... GO!\wtnp[8]
+
+[RANCH_RUNNER,7]
+/speaker Running_Guy
+> That was mad impressive.\nYou've earned these.
+
+[RANCH_RUNNER,8]
+/speaker Running_Guy
+> See ya around!
+
+[RANCH_RUNNER,9]
+/speaker Running_Guy
+> You've got real sprinting skills!\nI know you'll love the shoes.
+
 [DAYCARE,0]
 /speaker Daycare_Lady
 > Welcome to the Breccia Ranch Daycare!
@@ -755,3 +811,31 @@
 [RANCH_SIGN_LOOP]
 /textpos middle
 > Breccia Ranch Loop\nFollow this trail to end up on the opposite side of the ranch.
+
+[FACTORY_LOCKED_DOOR]
+> The door is locked.
+
+[FACTORY_LOCKED_DOOR,1]
+> The Factory Key worked!\nThe door is unlocked.
+
+[FACTORY_CLOSED_GATE]
+> The gate won't budge.
+
+[FACTORY_PC_OFF]
+> The computer won't turn on.
+
+[FACTORY_PICTURE]
+> The picture shows an older man wearing an old fashioned suit.
+
+[FACTORY_PC_ON]
+?> The computer appears to be working.
+    /choice Use it
+        /return true
+    /cancelchoice Leave it be
+        /return false
+?/>
+
+[FACTORY_NOTE,0]
+> There's a note on the ground.
+> "If you need me for anything, remain here and I will be back soon[.]"
+> "My Klefki snatched my keys and ran off again, that mischievous thing[.]"

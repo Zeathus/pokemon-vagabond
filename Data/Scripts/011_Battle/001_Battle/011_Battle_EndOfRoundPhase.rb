@@ -195,6 +195,7 @@ class Battle
       next if !battler.canHeal?
       hpGain = battler.totalhp / 16
       hpGain = (hpGain * 1.3).floor if battler.hasActiveItem?(:BIGROOT)
+      hpGain = (hpGain * 1.3).floor if battler.amplifyItem? && battler.hasActiveItem?(:BIGROOT)
       battler.pbRecoverHP(hpGain)
       pbDisplay(_INTL("Aqua Ring restored {1}'s HP!", battler.pbThis(true)))
     end
@@ -204,6 +205,7 @@ class Battle
       next if !battler.canHeal?
       hpGain = battler.totalhp / 16
       hpGain = (hpGain * 1.3).floor if battler.hasActiveItem?(:BIGROOT)
+      hpGain = (hpGain * 1.3).floor if battler.amplifyItem? && battler.hasActiveItem?(:BIGROOT)
       battler.pbRecoverHP(hpGain)
       pbDisplay(_INTL("{1} absorbed nutrients with its roots!", battler.pbThis))
     end
@@ -258,6 +260,14 @@ class Battle
         if battler.effects[PBEffects::WellRested] == 0
           pbDisplay(_INTL("{1} is no longer well rested.", battler.pbThis))
         end
+      end
+    end
+    # Tick down Dual Stance
+    priority.each do |battler|
+      next if battler.effects[PBEffects::DualStance] <= 0
+      battler.effects[PBEffects::DualStance] -= 1
+      if battler.effects[PBEffects::DualStance] == 0
+        pbDisplay(_INTL("{1}'s physical and special stats returned to normal.", battler.pbThis))
       end
     end
     # Damage from poisoning
@@ -364,7 +374,11 @@ class Battle
     return if !battler.takesIndirectDamage?
     hpLoss = (Settings::MECHANICS_GENERATION >= 6) ? battler.totalhp / 8 : battler.totalhp / 16
     if @battlers[battler.effects[PBEffects::TrappingUser]].hasActiveItem?(:BINDINGBAND)
-      hpLoss = (Settings::MECHANICS_GENERATION >= 6) ? battler.totalhp / 6 : battler.totalhp / 8
+      if @battlers[battler.effects[PBEffects::TrappingUser]].amplifyItem?
+        hpLoss = (Settings::MECHANICS_GENERATION >= 6) ? battler.totalhp / 4 : battler.totalhp / 4
+      else
+        hpLoss = (Settings::MECHANICS_GENERATION >= 6) ? battler.totalhp / 6 : battler.totalhp / 8
+      end
     end
     @scene.pbDamageAnimation(battler)
     battler.pbTakeEffectDamage(hpLoss, false) do |hp_lost|

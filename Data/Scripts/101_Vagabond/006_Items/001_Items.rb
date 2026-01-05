@@ -111,7 +111,7 @@ ItemHandlers::UseInField.add(:FISHINGROD, proc { |item|
             time = rand(5..10)
             message = ""
             time.times { message += ".   " }
-            exclamation_marks = pbFishStats[encounter[0]][0] + 1
+            exclamation_marks = encounter ? (pbFishStats[encounter[0]][0] + 1) : 1
             exclamation_marks.times { message += "!" } if encounter
             if pbWaitMessage(msgwindow, time)
                 pbFishingEnd
@@ -171,6 +171,10 @@ ItemHandlers::UseOnPokemon.add(:HONEYEDBERRY, proc { |item, pkmn, scene|
     next changeHappiness("honeyedberry")
 })
 
+ItemHandlers::UseFromBag.add(:SPRINTINGSHOES, proc { |item|
+  next 2
+})
+
 ItemHandlers::UseInField.add(:SPRINTINGSHOES, proc { |item|
     if $PokemonGlobal.surfing
         pbMessage(_INTL("You cannot sprint while surfing."))
@@ -197,4 +201,13 @@ ItemHandlers::UseInField.add(:SPRINTINGSHOES, proc { |item|
         $game_player.step_anime = false
     end
     next true
+})
+
+ItemHandlers::UseFromBag.add(:BOOKOFELEMENTS, proc { |item|
+  next 2
+})
+
+ItemHandlers::UseInField.add(:BOOKOFELEMENTS, proc { |item|
+  pbCommonEvent(13)
+  next true
 })

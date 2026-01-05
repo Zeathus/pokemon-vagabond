@@ -31,6 +31,8 @@ module GameData
       @stair_right            = hash[:stair_right]            || false
       @stair_left             = hash[:stair_left]             || false
       @stair_up               = hash[:stair_up]               || false
+      @sideways_right         = hash[:sideways_right]         || false
+      @sideways_left          = hash[:sideways_left]          || false
       @boulder_fillable       = hash[:boulder_fillable]       || false
       @force_move             = hash[:force_move]             || false
     end
@@ -195,4 +197,25 @@ GameData::TerrainTag.register({
   :id                     => :WaterWithFlatEdges,
   :id_number              => 36,
   :can_fish               => true
+})
+
+GameData::TerrainTag.register({
+  :id                     => :SidewaysRight,
+  :id_number              => 37,
+  :sideways_right         => true
+})
+
+GameData::TerrainTag.register({
+  :id                     => :SidewaysLeft,
+  :id_number              => 38,
+  :sideways_left          => true
+})
+
+
+GameData::TerrainTag.register({
+  :id                     => :DistortionGrass,
+  :id_number              => 39,
+  :shows_purple_rustle    => true,
+  :land_wild_encounters   => true,
+  :battle_environment     => :DistortionWorld
 })

@@ -231,19 +231,21 @@ class Battle::Battler
   #=============================================================================
   def pbInflictStatus(newStatus, newStatusCount = 0, msg = nil, user = nil)
     if Supplementals::FADE_MAJOR_STATUS_CONDITIONS
-      case newStatus
-      when :POISON
-        if newStatusCount > 0
-          newStatusCount = -Supplementals::TOXIC_TURNS
-        else
-          newStatusCount = Supplementals::POISON_TURNS
+      if newStatusCount == 0
+        case newStatus
+        when :POISON
+          if newStatusCount > 0
+            newStatusCount = -Supplementals::TOXIC_TURNS
+          else
+            newStatusCount = Supplementals::POISON_TURNS
+          end
+        when :BURN
+          newStatusCount = Supplementals::BURN_TURNS
+        when :PARALYSIS
+          newStatusCount = Supplementals::PARALYSIS_TURNS
+        when :FROSTBITE
+          newStatusCount = Supplementals::FROSTBITE_TURNS
         end
-      when :BURN
-        newStatusCount = Supplementals::BURN_TURNS
-      when :PARALYSIS
-        newStatusCount = Supplementals::PARALYSIS_TURNS
-      when :FROSTBITE
-        newStatusCount = Supplementals::FROSTBITE_TURNS
       end
     else
       if newStatus == :POISON && newStatusCount > 0

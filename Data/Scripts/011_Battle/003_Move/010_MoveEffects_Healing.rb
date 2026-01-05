@@ -159,6 +159,7 @@ class Battle::Move::HealUserByTargetAttackLowerTargetAttack1 < Battle::Move
       user.pbItemHPHealCheck
     elsif user.canHeal?
       healAmt = (healAmt * 1.3).floor if user.hasActiveItem?(:BIGROOT)
+      healAmt = (healAmt * 1.3).floor if user.amplifyItem? && user.hasActiveItem?(:BIGROOT)
       user.pbRecoverHP(healAmt)
       @battle.pbDisplay(_INTL("{1}'s HP was restored.", user.pbThis))
     end

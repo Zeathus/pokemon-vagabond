@@ -93,6 +93,7 @@ def compile_quests(path = "PBS/quests.txt")
         :name                  => contents["Name"],
         :type                  => contents["Type"],
         :description           => contents["Description"],
+        :chapter               => contents["Chapter"],
         :location              => contents["Location"],
         :full_location         => contents["FullLocation"],
         :done                  => contents["Done"],
@@ -112,6 +113,7 @@ def compile_quests(path = "PBS/quests.txt")
         :auto_finish           => contents["AutoFinish"],
         :show_available        => contents["ShowAvailable"]
       }
+
       # Add quest's data to records
       GameData::Quest.register(quest_hash)
       quest_names.push(quest_hash[:name])

@@ -1151,8 +1151,8 @@ Description = The Pokémon can be heavily customized.
 Name = Earth Adept
 Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
 #-------------------------------
-[WINDADEPT]
-Name = Wind Adept
+[AIRADEPT]
+Name = Air Adept
 Description = Stats and type change depending on the number of Ground (HP), Flying (Speed), Fire (Atk/Def) and Water (SpAtk/SpDef) type moves.
 #-------------------------------
 [FIREADEPT]
@@ -1221,7 +1221,7 @@ Description = Not implemented. Does nothing.
 #-------------------------------
 [ZEROTOHERO]
 Name = Zero to Hero
-Description = Not implemented. Does nothing.
+Description = The Pokémon transforms into its Hero Form when it switches out.
 #-------------------------------
 [EARTHEATER]
 Name = Earth Eater
@@ -1319,6 +1319,14 @@ Description = Not implemented. Does nothing.
 Name = Poison Puppeteer
 Description = Not implemented. Does nothing.
 #-------------------------------
+[ADVERSARY]
+Name = Adversary
+Description = The Pokémon transforms into its Villain Form when an opposing Pokémon enters the field on a turn after this Pokémon entered the field.
+#-------------------------------
+[EXPUNGE]
+Name = Expunge
+Description = If the Pokémon has a major status condition (Poison, Burn, etc.), making contact with it transfers the condition to the other Pokémon.
+#-------------------------------
 [AMALGAMATE]
 Name = Amalgamate
 Description = When given most items to hold that has an effect when held, the item is absorbed causing the Pokémon to evolve based on the item.
@@ -1327,10 +1335,18 @@ Description = When given most items to hold that has an effect when held, the it
 Name = Stagnant
 Description = The Pokémon absorbed an Everstone that rendered it unable to ever evolve.
 #-------------------------------
+[AMPLIFY]
+Name = Amplify
+Description = The effect of items held by the Pokémon are doubled.
+#-------------------------------
 [DEIFIED]
 Name = Deified
 Description = Raises Special Attack when hit by a Fairy-type move.
 #-------------------------------
 [LAYOFTHELAND]
 Name = Lay of the Land
-Description = Increases the power of Nature Power by 50%. The Pokémon can permanently learn any moves its Nature Power has turned into.
+Description = Increases the power of Nature Power by 50%. The Pokémon permanently learns any moves its Nature Power has turned into.
+#-------------------------------
+[SQUALL]
+Name = Squall
+Description = When the weather is windy, all of the Pokémon's attacks land critical hits.

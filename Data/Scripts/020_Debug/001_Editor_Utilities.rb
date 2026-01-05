@@ -66,9 +66,8 @@ def pbMapTree
   maplevels = []
   retarray = []
   mapinfos.each_key do |i|
-    info = mapinfos[i]
-    level = -1
-    while info
+    level = 0
+    while info && info.parent_id != 0
       info = mapinfos[info.parent_id]
       level += 1
     end

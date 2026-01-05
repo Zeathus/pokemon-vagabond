@@ -32,6 +32,7 @@ class Game_Character
   attr_writer   :bob_height
   attr_accessor :always_on_top
   attr_accessor :always_on_bottom
+  attr_accessor :below_map
   attr_reader   :move_time
   attr_reader   :move_timer
   attr_reader   :jump_time
@@ -84,6 +85,7 @@ class Game_Character
     @direction_fix             = false
     @always_on_top             = false
     @always_on_bottom          = false
+    @below_map                 = false
     @anime_count               = 0   # Time since pattern was last changed
     @stop_count                = 0   # Time since character last finished moving
     @bumping                   = false   # Used by the player only when walking into something
@@ -392,8 +394,9 @@ class Game_Character
 
   def screen_z(height = 0)
     return 999 if @always_on_top
-    return 0 if @always_on_bottom
     z = screen_y_ground
+    z = 0 if @always_on_bottom
+    z -= 99999 if @below_map
     if @tile_id > 0
       begin
         return z + (self.map.priorities[@tile_id] * 32)
@@ -414,6 +417,12 @@ class Game_Character
 
   def jumping?
     return !@jump_timer.nil?
+  end
+
+  def moving_diagonally?
+    if @x != @move_initial_x && @y != @move_initial_y && ((@x - @move_initial_x).abs + (@y - @move_initial_y).abs) == 2
+      return true
+    end
   end
 
   def straighten
@@ -1013,15 +1022,22 @@ class Game_Character
   def update_move
     if @move_timer
       @move_timer += @delta_t
-      # Move horizontally
-      if @x != @move_initial_x
-        dist = (@move_initial_x - @x).abs
+      # Move diagonally (a single tile)
+      if self.moving_diagonally?
+        dist = Math.sqrt((@x - @move_initial_x)**2 + (@y - @move_initial_y)**2)
         @real_x = lerp(@move_initial_x, @x, @move_time * dist, @move_timer) * Game_Map::REAL_RES_X
-      end
-      # Move vertically
-      if @y != @move_initial_y
-        dist = (@move_initial_y - @y).abs
         @real_y = lerp(@move_initial_y, @y, @move_time * dist, @move_timer) * Game_Map::REAL_RES_Y
+      else
+        # Move horizontally
+        if @x != @move_initial_x
+          dist = (@move_initial_x - @x).abs
+          @real_x = lerp(@move_initial_x, @x, @move_time * dist, @move_timer) * Game_Map::REAL_RES_X
+        end
+        # Move vertically
+        if @y != @move_initial_y
+          dist = (@move_initial_y - @y).abs
+          @real_y = lerp(@move_initial_y, @y, @move_time * dist, @move_timer) * Game_Map::REAL_RES_Y
+        end
       end
     elsif @jump_timer
       self.jump_speed = 3 if !@jump_time

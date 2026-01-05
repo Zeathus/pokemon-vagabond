@@ -5,14 +5,16 @@ def pbGetHabitatList
   return [
     ["Crosswoods Area", :Crosswoods, :HalcyonForest, :HalcyonClearing],
     ["Breccia Area", :BrecciaUndergrowth, :BrecciaTrail, :BrecciaRanch],
-    ["Evergone Mangrove", :EvergoneMangrove, :EvergoneCrater, :EvergoneHill, :EvergoneStairway],
+    ["Evergone Mangrove", :EvergoneMangrove, :EvergoneCrater, :EvergoneHill, :EvergoneStairway, :EvergoneRuins1F, :EvergoneRuinsB1F],
     ["Lapis Lazuli Area", :LazuliRiver, :LapisDistrict, :LapisLazuliPark],
     ["Mt. Pegma Area", :FeldsparDistrict, :QuartzPassing, :MtPegmaHillside, :PegmaFalls],
     ["Mt. Pegma Interior", :MtPegma1F, :MtPegma2F, :MtPegma3F, :MtPegmaB1F],
     ["Pegma Quarry", :MicaQuarryB1F, :MicaQuarryB2F, :MicaQuarryB3F, :MicaQuarryB4F, :MicaQuarryB5F],
+    ["Everstone River", :UpperEverstone, :LowerEverstone, :OldFactory1F],
     ["Scoria Area", :ScoriaCity, :ScoriaCanyon, :ScoriaValley, :ScoriaDesert, :ScoriaDesertUnder, :ScoriaDesertPass],
     ["East Sea Area", :CentralEastSea, :EastSea],
-    ["West Sea Area", :CentralWestSea, :WestSea]
+    ["West Sea Area", :CentralWestSea, :WestSea],
+    ["Amphi Area", :AmphiTown, :AmphiWilds, :AndesIsle]
   ]
 end
   
@@ -605,14 +607,16 @@ class PokemonHabitatMapScene
     mappos = mapdata&.town_map_position
     mapsize = mapdata&.town_map_size || [1, "1"]
     if mappos && mappos[0] == @region
-      for j in 0...mapsize[1].length
-        if mapsize[1][j] == "1"
-          overlay.fill_rect(
-            (mappos[1] + (j % mapsize[0])) * SQUARE_WIDTH - 4,
-            (mappos[2] + (j / mapsize[0]).floor) * SQUARE_HEIGHT - 4,
-            SQUARE_WIDTH + 8,
-            SQUARE_HEIGHT + 8,
-            Color.new(255, 0, 0))
+      if mappos[1] > 0 && mappos[2] > 0
+        for j in 0...mapsize[1].length
+          if mapsize[1][j] == "1"
+            overlay.fill_rect(
+              (mappos[1] + (j % mapsize[0])) * SQUARE_WIDTH - 4,
+              (mappos[2] + (j / mapsize[0]).floor) * SQUARE_HEIGHT - 4,
+              SQUARE_WIDTH + 8,
+              SQUARE_HEIGHT + 8,
+              Color.new(255, 0, 0))
+          end
         end
       end
     else
@@ -634,14 +638,16 @@ class PokemonHabitatMapScene
       mappos = mapdata&.town_map_position
       mapsize = mapdata&.town_map_size || [1, "1"]
       if mappos && mappos[0] == @region
-        for j in 0...mapsize[1].length
-          if mapsize[1][j] == "1"
-            overlay.fill_rect(
-              (mappos[1] + (j % mapsize[0])) * SQUARE_WIDTH - 4,
-              (mappos[2] + (j / mapsize[0]).floor) * SQUARE_HEIGHT - 4,
-              SQUARE_WIDTH + 8,
-              SQUARE_HEIGHT + 8,
-              Color.new(255, 0, 0))
+        if mappos[1] > 0 && mappos[2] > 0
+          for j in 0...mapsize[1].length
+            if mapsize[1][j] == "1"
+              overlay.fill_rect(
+                (mappos[1] + (j % mapsize[0])) * SQUARE_WIDTH - 4,
+                (mappos[2] + (j / mapsize[0]).floor) * SQUARE_HEIGHT - 4,
+                SQUARE_WIDTH + 8,
+                SQUARE_HEIGHT + 8,
+                Color.new(255, 0, 0))
+            end
           end
         end
       else

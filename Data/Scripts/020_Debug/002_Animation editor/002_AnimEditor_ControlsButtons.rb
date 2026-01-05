@@ -12,8 +12,8 @@ module BattleAnimationEditor
         x += (w / 2) - (width / 2)
       end
       pbDrawShadowText(bitmap, x, y + 6, w, h, t,
-                       disabled ? Color.new(208, 208, 200) : Color.new(96, 96, 96),
-                       Color.new(208, 208, 200))
+                       disabled ? Color.new(208, 208, 200) : Color.new(252, 252, 252),
+                       Color.new(96, 96, 96))
     end
   end
 

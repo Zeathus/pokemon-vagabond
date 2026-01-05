@@ -215,6 +215,10 @@ class Battle::Move
         elsif target.hasActiveItem?(:FOCUSBAND) && @battle.pbRandom(100) < 10
           target.damageState.focusBand = true
           damage -= 1
+        elsif target.amplifyItem? && target.hasActiveItem?(:FOCUSBAND) && @battle.pbRandom(100) < 10
+          # One more 10% chance for Amplify
+          target.damageState.focusBand = true
+          damage -= 1
         elsif Settings::AFFECTION_EFFECTS && @battle.internalBattle &&
               target.pbOwnedByPlayer? && !target.mega?
           chance = [0, 0, 0, 10, 15, 25][target.affection_level]

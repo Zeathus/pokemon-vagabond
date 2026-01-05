@@ -216,6 +216,13 @@ class Sprite_Character < RPG::Sprite
     end
   end
 
+  def resetPartner
+    @post_move = 0
+    @long_jump = nil
+    @long_jump_dist = 0
+    @long_jump_peak = nil
+  end
+
   def updatePartner(owner, sx, sy, run)
     if @text_bubble
       @text_bubble.update
@@ -229,7 +236,7 @@ class Sprite_Character < RPG::Sprite
     if @charactername != fullcharactername
       @charactername = fullcharactername
       @charbitmap.dispose if @charbitmap
-      @charbitmap = AnimatedBitmap.new("Graphics/Characters/"+fullcharactername,
+      @charbitmap = CharacterBitmap.new("Graphics/Characters/"+fullcharactername,
                                   owner.character.character_hue)
       @charbitmapAnimated = true
       @bushbitmap.dispose if @bushbitmap
@@ -279,33 +286,54 @@ class Sprite_Character < RPG::Sprite
       @last_target_y = @target_y
     end
     @post_move = 0 if !@post_move
-    if owner.character.x != @next_target_x || owner.character.y != @next_target_y
-      @last_target_x = @target_x
-      @last_target_y = @target_y
-      @target_x = @next_target_x
-      @target_y = @next_target_y
-      @next_target_x = owner.character.x
-      @next_target_y = owner.character.y
-      @post_move = 0
-      @jumping = (@target_x - @last_target_x).abs > 1 || (@target_y - @last_target_y).abs > 1
-    elsif ((@target_x - owner.character.x).abs > 2 || (@target_y - owner.character.y).abs > 2) &&
-      owner.character.jump_timer && owner.character.move_time < owner.character.jump_timer
-      @last_target_x = @target_x
-      @last_target_y = @target_y
-      @target_x = @next_target_x
-      @target_x -= 1 if @last_target_x < owner.character.x
-      @target_x += 1 if @last_target_x > owner.character.x
-      @target_y = @next_target_y
-      @target_y -= 1 if @last_target_y < owner.character.y
-      @target_y += 1 if @last_target_y > owner.character.y
-      @post_move = owner.character.jump_timer
-      @jumping = true
+    if !@long_jump
+      if owner.character.x != @next_target_x || owner.character.y != @next_target_y
+        @last_target_x = @target_x
+        @last_target_y = @target_y
+        @target_x = @next_target_x
+        @target_y = @next_target_y
+        @next_target_x = owner.character.x
+        @next_target_y = owner.character.y
+        @post_move = 0
+        @jumping = (@target_x - @last_target_x).abs > 1 || (@target_y - @last_target_y).abs > 1
+        @long_jump = nil
+        @long_jump_dist = 0
+        @long_jump_peak = nil
+      elsif ((@target_x - owner.character.x).abs > 2 || (@target_y - owner.character.y).abs > 2) &&
+        owner.character.jump_timer && owner.character.move_time < owner.character.jump_timer
+        @last_target_x = @target_x
+        @last_target_y = @target_y
+        @target_x = @next_target_x
+        @target_y = @next_target_y
+        sum_dist = (@last_target_x - owner.character.x).abs + (@last_target_y - owner.character.y).abs
+        # For short jumps, jump behind the player, for long jumps, jump to the same position
+        if sum_dist <= 2
+          @target_x -= 1 if @last_target_x < owner.character.x
+          @target_x += 1 if @last_target_x > owner.character.x
+          @target_y -= 1 if @last_target_y < owner.character.y
+          @target_y += 1 if @last_target_y > owner.character.y
+          @long_jump = nil
+          @long_jump_dist = 0
+          @long_jump_peak = nil
+        else
+          @long_jump = owner.character.jump_time
+          @long_jump_timer = 0
+          @long_jump_dist = 0
+          @long_jump_peak = owner.character.jump_peak
+        end
+        @post_move = owner.character.jump_timer
+        @jumping = true
+      end
     end
     
-    if owner.character.x == @target_x && owner.character.y == @target_y
+    @dropshadow.angle = self.angle
+    if owner.character.x == @last_target_x && owner.character.y == @last_target_y &&
+       owner.character.x == @target_x && owner.character.y == @target_y
       self.visible = false
       @dropshadow.visible = false
     end
+
+    @dropshadow.visible = false if @long_jump
     
     target_real_x = @target_x * Game_Map::REAL_RES_X
     target_real_y = @target_y * Game_Map::REAL_RES_Y
@@ -317,7 +345,14 @@ class Sprite_Character < RPG::Sprite
     
     if (@last_target_x != @target_x || @last_target_y != @target_y)
       move_time = owner.character.move_time
+      move_time *= Math.sqrt(2) if owner.character.moving_diagonally?
       move_timer = owner.character.move_timer || owner.character.jump_timer || move_time
+
+      if owner.character.bumping?
+        sx = 0
+        move_time = 1
+        move_timer = 1
+      end
 
       dif_x = @real_x - target_real_x
       dif_y = @real_y - target_real_y
@@ -339,9 +374,22 @@ class Sprite_Character < RPG::Sprite
           dist = 1
         else
           dist = [(@last_target_x - owner.character.x).abs - 1, (@last_target_y - owner.character.y).abs - 1].max
+          dist += 1 if @long_jump
           dist = 1 if dist <= 0
-          move_time = owner.character.jump_time
+          @long_jump_dist = dist if @long_jump_dist == 0
+          dist = @long_jump_dist if @long_jump && @long_jump_dist != 0
+          move_time = @long_jump || owner.character.jump_time
           move_timer = owner.character.jump_timer ? (owner.character.jump_timer - @post_move) : (move_time * dist)
+          @long_jump_timer = move_timer if @long_jump && owner.character.jump_timer && move_timer > 0
+          if @long_jump
+            if $game_player.can_run?
+              @long_jump_timer += @p_delta_t * 1.75
+            else
+              @long_jump_timer += @p_delta_t
+            end
+          end
+          move_timer = @long_jump_timer
+          move_timer *= 1.1 if @long_jump
         end
         if @last_target_x != @target_x
           @real_x = lerp(@last_target_x, @target_x, move_time * dist, move_timer) * Game_Map::REAL_RES_X
@@ -351,7 +399,7 @@ class Sprite_Character < RPG::Sprite
         end
         # Player moved multiple blocks, should be jumping
         @jump_fraction = (move_timer) / (move_time * dist)
-        @jump_peak = @post_move == 0 ? (dist * Game_Map::TILE_HEIGHT * 3 / 8) : owner.character.jump_peak
+        @jump_peak = @post_move == 0 ? (dist * Game_Map::TILE_HEIGHT * 3 / 8) : (@long_jump_peak || owner.character.jump_peak)
       end
       @real_x = @target_x * Game_Map::REAL_RES_X if (@real_x - (@target_x * Game_Map::REAL_RES_X)).abs < Game_Map::X_SUBPIXELS / 2
       @real_y = @target_y * Game_Map::REAL_RES_Y if (@real_y - (@target_y * Game_Map::REAL_RES_Y)).abs < Game_Map::Y_SUBPIXELS / 2
@@ -363,18 +411,19 @@ class Sprite_Character < RPG::Sprite
         @real_y =  @target_y * Game_Map::REAL_RES_Y
         @jump_fraction = nil
         @jump_peak = 0
+        @long_jump = nil
       end
 
-      if dif_y.abs > dif_x.abs
+      if dif_y.abs > dif_x.abs + 0.1
         @direction = (dif_y > 0) ? 6 : 0
-      elsif dif_x.abs >= dif_y.abs && dif_x.abs != 0
+      elsif dif_x.abs + 0.1 >= dif_y.abs && dif_x.abs != 0
         @direction = (dif_x > 0) ? 2 : 4
       end
     else
       sx = 0
-      if dif_y.abs > dif_x.abs
+      if dif_y.abs > dif_x.abs + 0.1
         @direction = (dif_y > 0) ? 6 : 0
-      elsif dif_x.abs >= dif_y.abs && dif_x.abs != 0
+      elsif dif_x.abs + 0.1 >= dif_y.abs && dif_x.abs != 0
         @direction = (dif_x > 0) ? 2 : 4
       end
     end
@@ -383,8 +432,13 @@ class Sprite_Character < RPG::Sprite
     self.y = screen_y(owner, @real_y)
     self.src_rect.set(sx, @direction * @ch / 2, @cw, @ch)
 
-    if (@real_y - owner.character.real_y) < 4
+    if @real_y > owner.character.real_y
+      self.z = owner.z + 1
+    elsif @real_y < owner.character.real_y
       self.z = owner.z - 1
+    end
+    if (@real_y - owner.character.real_y) < 4
+      #self.z = owner.z - 1
     end
 
     self.tone.set(
@@ -426,6 +480,7 @@ class Sprite_Character < RPG::Sprite
   end
 
   def snapPartner(behind = true)
+    @partner&.resetPartner
     if behind
       @partner&.snapToLeader(self)
     else
@@ -490,6 +545,31 @@ class Sprite_Character < RPG::Sprite
 
   def bush_depth
     return @bush_depth
+  end
+
+  def pbHideShadow
+    @dropshadow.opacity = 0
+  end
+  
+  def pbShowShadow
+    @dropshadow.opacity = 255
+  end
+  
+  def pbSetShadowOpacity(value)
+    @dropshadow.opacity = value
+  end
+
+  def pbFadeShadowOpacity(start, target, duration)
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time > 0.1
+      @dropshadow.opacity = start + target * (time_now - start_time) / duration
+      Graphics.update
+      Input.update
+      pbUpdateSceneMap
+      time_now = System.uptime
+    end
+    @dropshadow.opacity = target
   end
 
 end

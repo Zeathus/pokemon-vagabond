@@ -84,11 +84,20 @@ end
 def pbQuickTrainer(trainerid, trainername, partyid=0, dialog=nil)
   pbUpdateSceneMap
   if !Input.press?(Input::CTRL)
-    $PokemonGlobal.quickBattleAnimation = true
+    $PokemonGlobal.quickBattleAnimation = 1
     $PokemonGlobal.quickBattleDialog = dialog
     $PokemonGlobal.quickBattleEvent = $game_map.events[@event_id]
   end
   return TrainerBattle.start(trainerid, trainername, partyid)
+end
+
+def pbPrepareQuickTrainer(dialog = nil)
+  pbUpdateSceneMap
+  if !Input.press?(Input::CTRL)
+    $PokemonGlobal.quickBattleAnimation = 1
+    $PokemonGlobal.quickBattleDialog = dialog
+    $PokemonGlobal.quickBattleEvent = $game_map.events[@event_id]
+  end
 end
 
 def pbGenerateTrainers

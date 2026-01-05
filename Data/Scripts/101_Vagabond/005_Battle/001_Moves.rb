@@ -488,6 +488,196 @@ class Battle::Move::AddWiretapToFoeSide < Battle::Move
 end
 
 #===============================================================================
+# Makes all attacks use the user's highest offensive stat, and uses the
+# user's highest defensive stat when taking damage. (Dual Stance)
+#===============================================================================
+class Battle::Move::StartUserDualStance < Battle::Move
+  def canSnatch?; return true; end
+
+  def pbMoveFailed?(user, targets)
+    if user.effects[PBEffects::DualStance] != 0
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectGeneral(user)
+    user.effects[PBEffects::DualStance] = 5
+    @battle.pbDisplay(_INTL("{1}'s physical and special stats became one!", user.pbThis))
+  end
+end
+
+class Battle::Move
+  def pbDecideDualStanceAttack(user, target)
+    max_stage = Battle::Battler::STAT_STAGE_MAXIMUM
+    stageMul = Battle::Battler::STAT_STAGE_MULTIPLIERS
+    stageDiv = Battle::Battler::STAT_STAGE_DIVISORS
+
+    atkStage = user.stages[:ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM
+    atk = (user.attack.to_f * stageMul[atkStage] / stageDiv[atkStage]).floor
+
+    spatkStage = user.stages[:SPECIAL_ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM
+    spatk = (user.spatk.to_f * stageMul[spatkStage] / stageDiv[spatkStage]).floor
+
+    baseDmg = pbBaseDamage(@power, user, target)
+    type = @calcType
+
+    # Calculate all multiplier effects
+    atkMultipliers = {
+      :power_multiplier        => 1.0,
+      :attack_multiplier       => 1.0,
+      :defense_multiplier      => 1.0,
+      :final_damage_multiplier => 1.0
+    }
+    spatkMultipliers = {
+      :power_multiplier        => 1.0,
+      :attack_multiplier       => 1.0,
+      :defense_multiplier      => 1.0,
+      :final_damage_multiplier => 1.0
+    }
+
+    user.effects[PBEffects::DualStanceCategory] = 0
+
+    if user.abilityActive?
+      Battle::AbilityEffects.triggerDamageCalcFromUser(
+        user.ability, user, target, self, atkMultipliers, baseDmg, type
+      )
+    end
+    if !@battle.moldBreaker
+      user.allAllies.each do |b|
+        next if !b.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromAlly(
+          b.ability, user, target, self, atkMultipliers, baseDmg, type
+        )
+      end
+    end
+
+    user.effects[PBEffects::DualStanceCategory] = 1
+
+    if user.abilityActive?
+      Battle::AbilityEffects.triggerDamageCalcFromUser(
+        user.ability, user, target, self, spatkMultipliers, baseDmg, type
+      )
+    end
+    if !@battle.moldBreaker
+      user.allAllies.each do |b|
+        next if !b.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromAlly(
+          b.ability, user, target, self, spatkMultipliers, baseDmg, type
+        )
+      end
+    end
+
+    user.effects[PBEffects::DualStanceCategory] = nil
+
+    atk = (atk.to_f * atkMultipliers[:power_multiplier] * atkMultipliers[:attack_multiplier] * atkMultipliers[:final_damage_multiplier]).floor
+    spatk = (spatk.to_f * spatkMultipliers[:power_multiplier] * spatkMultipliers[:attack_multiplier] * spatkMultipliers[:final_damage_multiplier]).floor
+
+    # echoln _INTL("Dual Stance atk: {1} vs {2}", atk, spatk)
+  
+    return 0 if atk > spatk
+    return 1 if spatk > atk
+    return nil
+  end
+
+  def pbDecideDualStanceDefense(user, target)
+    max_stage = Battle::Battler::STAT_STAGE_MAXIMUM
+    stageMul = Battle::Battler::STAT_STAGE_MULTIPLIERS
+    stageDiv = Battle::Battler::STAT_STAGE_DIVISORS
+
+    defStage = target.stages[:DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM
+    defense = (target.defense.to_f * stageMul[defStage] / stageDiv[defStage]).floor
+
+    spdefStage = target.stages[:SPECIAL_DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM
+    spdef = (target.spdef.to_f * stageMul[spdefStage] / stageDiv[spdefStage]).floor
+
+    baseDmg = pbBaseDamage(@power, user, target)
+    type = @calcType
+
+    # Calculate all multiplier effects
+    defMultipliers = {
+      :power_multiplier        => 1.0,
+      :attack_multiplier       => 1.0,
+      :defense_multiplier      => 1.0,
+      :final_damage_multiplier => 1.0
+    }
+    spdefMultipliers = {
+      :power_multiplier        => 1.0,
+      :attack_multiplier       => 1.0,
+      :defense_multiplier      => 1.0,
+      :final_damage_multiplier => 1.0
+    }
+
+    target.effects[PBEffects::DualStanceCategory] = 0
+
+    if !@battle.moldBreaker
+      if target.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromTarget(
+          target.ability, user, target, self, defMultipliers, baseDmg, type
+        )
+      end
+    end
+    if target.abilityActive?
+      Battle::AbilityEffects.triggerDamageCalcFromTargetNonIgnorable(
+        target.ability, user, target, self, defMultipliers, baseDmg, type
+      )
+    end
+    if !@battle.moldBreaker
+      target.allAllies.each do |b|
+        next if !b.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromTargetAlly(
+          b.ability, user, target, self, defMultipliers, baseDmg, type
+        )
+      end
+    end
+
+    target.effects[PBEffects::DualStanceCategory] = 1
+
+    if !@battle.moldBreaker
+      if target.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromTarget(
+          target.ability, user, target, self, spdefMultipliers, baseDmg, type
+        )
+      end
+    end
+    if target.abilityActive?
+      Battle::AbilityEffects.triggerDamageCalcFromTargetNonIgnorable(
+        target.ability, user, target, self, spdefMultipliers, baseDmg, type
+      )
+    end
+    if !@battle.moldBreaker
+      target.allAllies.each do |b|
+        next if !b.abilityActive?
+        Battle::AbilityEffects.triggerDamageCalcFromTargetAlly(
+          b.ability, user, target, self, spdefMultipliers, baseDmg, type
+        )
+      end
+    end
+
+    target.effects[PBEffects::DualStanceCategory] = nil
+
+    defense = (defense.to_f * defMultipliers[:defense_multiplier]).floor
+    spdef = (spdef.to_f * spdefMultipliers[:defense_multiplier]).floor
+
+    # echoln _INTL("Dual Stance def: {1} vs {2}", defense, spdef)
+    return 0 if defense > spdef
+    return 1 if spdef > defense
+    return nil
+  end
+end
+
+class Battle::Battler
+  def dualStancePhysical?(move)
+    return (move.physicalMove? && @effects[PBEffects::DualStanceCategory] != 1) || @effects[PBEffects::DualStanceCategory] == 0
+  end
+
+  def dualStanceSpecial?(move)
+    return (move.specialMove? && @effects[PBEffects::DualStanceCategory] != 0) || @effects[PBEffects::DualStanceCategory] == 1
+  end
+end
+
+#===============================================================================
 # Test Move to ensure no AI logic crashes the game.
 #===============================================================================
 class Battle::Move::CrashTest < Battle::Move

@@ -798,3 +798,29 @@ class BossEff_Wait < BossEffect
     end
   end
 end 
+
+class BossEff_ReverseAllStatChanges < BossEffect
+  def activate(battle, triggerer, target)
+    didSomething = false
+    battle.eachBattler do |b|
+      if b.hasAlteredStatStages?
+        GameData::Stat.each_battle do |s|
+          if b.stages[s.id] > 0
+            b.statsLoweredThisRound = true
+            b.statsDropped = true
+          elsif b.stages[s.id] < 0
+            b.statsRaisedThisRound = true
+          end
+          b.stages[s.id] *= -1
+        end
+        didSomething = true
+      end
+    end
+    if didSomething
+      battle.pbDisplay(_INTL("All stat changes were reversed!"))
+    else
+      battle.pbDisplay(_INTL("...But there were no stat changes to reverse!"))
+    end
+  end
+
+end

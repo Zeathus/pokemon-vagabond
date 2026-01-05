@@ -3,7 +3,15 @@
 > You can now open the\nQuest Log from the Pause Menu.
 
 [OTHERWORLDLY_RIFT]
-> You see a faint glow from the cracks.<br> Whatever could it be?
+> You see a faint glow from the cracks.\nWhatever could it be?
+
+[OTHERWORLDLY_RIFT,1]
+?> You see a faint glow from the cracks.\nCall Nekane to enter it?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
 
 [POKECENTER_NURSE,0]
 /speaker Nurse

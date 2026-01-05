@@ -2827,6 +2827,8 @@ class PokemonScreen_Scene
             pbDisplay("You can't do this right now.")
           elsif switching
             pbDisplay("You can't do this while switching.")
+          elsif $game_switches[FORCE_AMPHI_PARTY] && PBMaps.amphi.include?($game_map.map_id)
+            pbDisplay("You can't do this while in Amphi Town.")
           else
             #pbMemberMenuStart(@activecmd)
             #cmd = pbMemberMenu(@activecmd)

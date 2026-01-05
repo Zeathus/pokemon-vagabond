@@ -84,7 +84,8 @@ def initPartyPokemon(id)
   when PBParty::Fintan
 
   when PBParty::Nekane
-
+    party.push(createPartyPokemon(
+      id,:REVINJA,50,[:SHADOWBALL,:PSYSHOCK,:DESTINYBOND,:MEMENTO],0,:MODEST,0,[0,2,1,3,3,2]))
   when PBParty::Ziran
 
   when PBParty::Azelf
@@ -98,7 +99,7 @@ def initPartyPokemon(id)
       id,:MESPRIT,35,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
   when PBParty::Player2
     party.push(createPartyPokemon(
-      id,:VICTINI,70,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
+      id,:ABSOL,70,[],0,:BASHFUL,2,[3,2,2,1,3,3]))
   when PBParty::YoungKira
     party.push(createPartyPokemon(
       id,:SANDSHREW,9,[:FALSESWIPE,:DEFENSECURL,:SANDATTACK,:POISONSTING],1,:ADAMANT,0,[2,3,3,2,0,1]))

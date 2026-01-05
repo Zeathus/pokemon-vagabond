@@ -17,7 +17,7 @@ def pbSceneNekaneTransform
   sprites["bg2"].tone = Tone.new(6,-40,-86,200)
   sprites["bg2"].setBitmap("Graphics/Pictures/nekane_memory")
   sprites["bg2"].visible = false
-  sprites["bg2"].src_rect = Rect.new(0,0,512,384)
+  sprites["bg2"].src_rect = Rect.new(0,0,768,576)
 
   sprites["shine"] = IconSprite.new(0,0,viewport)
   sprites["shine"].setBitmap("Graphics/Pictures/evolutionshine")
@@ -25,8 +25,8 @@ def pbSceneNekaneTransform
   sprites["shine"].z = 5
   sprites["shine"].x = Graphics.width/2
   sprites["shine"].y = Graphics.height/2
-  sprites["shine"].ox = Graphics.width
-  sprites["shine"].oy = Graphics.height
+  sprites["shine"].ox = sprites["shine"].bitmap.width / 2
+  sprites["shine"].oy = sprites["shine"].bitmap.height / 2
 
   nekane_x = Graphics.width / 2 - 40
   nekane_y = Graphics.height / 2 - 60 - 12
@@ -96,8 +96,8 @@ def pbSceneNekaneTransform
       zoom = ((i-282.0)*1.0)/40.0
       zoom = 1.0 if zoom > 1.0
       sprites["shine"].angle += 1.4
-      sprites["shine"].zoom_x = zoom
-      sprites["shine"].zoom_y = zoom
+      sprites["shine"].zoom_x = zoom * 1.35
+      sprites["shine"].zoom_y = zoom * 1.35
       sprites["shine"].opacity = 255
       sprites["nekane"].src_rect.y = 240 if i == 560
       sprites["nekane_prev"].src_rect.y = 120 if i == 560
@@ -105,11 +105,11 @@ def pbSceneNekaneTransform
       zoom = 1.0-((i-840.0)*1.0)/40.0
       zoom = 0.0 if zoom < 0.0
       sprites["shine"].angle += 1.4
-      sprites["shine"].zoom_x = zoom
-      sprites["shine"].zoom_y = zoom
+      sprites["shine"].zoom_x = zoom * 1.35
+      sprites["shine"].zoom_y = zoom * 1.35
     end
     sprites["bg2"].visible = true if i==930
-    sprites["bg2"].src_rect.y += 384 if i==966 || i==1002 || i==1038 || i==1074
+    sprites["bg2"].src_rect.y += 576 if i==966 || i==1002 || i==1038 || i==1074
     if i > 1080
       sprites["bg2"].opacity-=3
     end

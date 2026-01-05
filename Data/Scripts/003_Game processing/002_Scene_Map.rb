@@ -69,13 +69,15 @@ class Scene_Map
     Graphics.frame_reset
   end
 
-  def transfer_player(cancel_swimming = true)
+  def transfer_player(cancel_swimming = true, autoplay_bgm = nil)
+    autoplay_bgm = autoplay_bgm.nil? ? $PokemonSystem.play_next_bgm? : autoplay_bgm
+    map_changed = $game_map.map_id != $game_temp.player_new_map_id
     $game_temp.player_transferring = false
     pbCancelVehicles($game_temp.player_new_map_id, cancel_swimming)
-    autofade($game_temp.player_new_map_id)
+    autofade($game_temp.player_new_map_id) if map_changed && autoplay_bgm
     pbBridgeOff
     @spritesetGlobal.playersprite.clearShadows
-    if $game_map.map_id != $game_temp.player_new_map_id
+    if map_changed
       $map_factory.setup($game_temp.player_new_map_id)
     end
     $game_player.moveto($game_temp.player_new_x, $game_temp.player_new_y)
@@ -97,9 +99,10 @@ class Scene_Map
       $game_temp.transition_processing = false
       Graphics.transition
     end
-    $game_map.autoplay
+    $game_map.autoplay if map_changed && autoplay_bgm
     Graphics.frame_reset
     Input.update
+    pbUpdatePartySprites
   end
 
   def call_menu

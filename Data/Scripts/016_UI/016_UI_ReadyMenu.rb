@@ -318,6 +318,9 @@ end
 # Using a registered item
 #===============================================================================
 def pbUseKeyItem
+  if $game_switches[CANNOT_OPEN_MENUS]
+    return
+  end
   moves = []
            #:CUT, :DEFOG, :DIG, :DIVE, :FLASH, :FLY, :HEADBUTT, :ROCKCLIMB,
            #:ROCKSMASH, :SECRETPOWER, :STRENGTH, :SURF, :SWEETSCENT, :TELEPORT,

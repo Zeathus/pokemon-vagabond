@@ -57,3 +57,10 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:LAYOFTHELAND,
     end
   }
 )
+
+MultipleForms.register(:VILLAFIN, {
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    next 0 if endBattle
+    next pkmn.form
+  }
+})

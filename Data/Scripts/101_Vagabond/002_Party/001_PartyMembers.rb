@@ -69,7 +69,7 @@ module PBParty
     when PBParty::Fintan
       return :DAO_Fintan
     when PBParty::Nekane
-      return :NEKANE
+      return :NEKANE2
     when PBParty::Cerise
       return :CERISE
     when PBParty::Ziran
@@ -161,6 +161,9 @@ end
 def hasPartyMember(id)
   id = getID(PBParty,id) if id.is_a?(Symbol)
   pbSet(PARTY,[true]) if !pbGet(PARTY).is_a?(Array)
+  if $game_switches[FORCE_AMPHI_PARTY] && PBMaps.amphi.include?($game_map.map_id)
+    return id == PBParty::Player || id == PBParty::Azelf
+  end
   return pbGet(PARTY)[id]
 end
 
@@ -233,6 +236,13 @@ def setPartyActive(id,pos)
 end
 
 def getPartyActive(pos=nil)
+  if $game_switches[FORCE_AMPHI_PARTY] && PBMaps.amphi.include?($game_map.map_id)
+    if pos
+      return [PBParty::Player, PBParty::Azelf][pos]
+    else
+      return [PBParty::Player, PBParty::Azelf]
+    end
+  end
   if !pbGet(PARTY_ACTIVE).is_a?(Array)
     pbSet(PARTY_ACTIVE,[0,-1])
   end

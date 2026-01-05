@@ -65,6 +65,11 @@ class Battle
       if !Battle::ItemEffects.triggerEVGainModifier(attacker.item, attacker, essenceYield)
         Battle::ItemEffects.triggerEVGainModifier(@initialItems[0][attacker.pokemonIndex], attacker, essenceYield)
       end
+      if attacker.amplifyItem?
+        if !Battle::ItemEffects.triggerEVGainModifier(attacker.item, attacker, essenceYield)
+          Battle::ItemEffects.triggerEVGainModifier(@initialItems[0][attacker.pokemonIndex], attacker, essenceYield)
+        end
+      end
       # Double EV gain because of Pokérus
       if attacker.pokerusStage >= 1   # Infected or cured
         essenceYield.each_key { |stat| essenceYield[stat] *= 2 }

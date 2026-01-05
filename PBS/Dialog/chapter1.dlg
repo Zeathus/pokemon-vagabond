@@ -195,7 +195,7 @@
 
 [CH1_CAUSOL,3]
 /speaker Amethyst pinch
-> Phew... What even was that?\nMy Pokédex gave no results for it.
+> Phew... What even was that?\nMy Pokédex has no data on it.
 
 [CH1_CAUSOL,4]
 /speaker Amethyst pinch
@@ -215,7 +215,7 @@
 > \ts[2]Where am I..?<br>Who are you..?
 /speaker Amethyst
 > \ts[1]We got a report of a missing person in these woods.
-> What's even weirder is that we got a reading of an odd energy anomaly at the same time.
+> What's weirder is that we got a reading of an energy anomaly at the same time.
 > Were you here when it happened?
 /speaker Nekane
 /hidename 1

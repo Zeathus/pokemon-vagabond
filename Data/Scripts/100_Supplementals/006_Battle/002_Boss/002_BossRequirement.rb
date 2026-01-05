@@ -29,6 +29,16 @@ class BossReq_Interval < BossRequirement
   end
 end
 
+class BossReq_TurnCount < BossRequirement
+  def initialize(trigger, turn)
+    super(trigger)
+    @turn = turn
+  end
+  def check(battle, triggerer)
+    return battle.turnCount == @turn
+  end
+end
+
 class BossReq_HP < BossRequirement
   def initialize(trigger, comparator, hp)
     super(trigger)

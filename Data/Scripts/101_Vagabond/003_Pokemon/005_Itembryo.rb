@@ -68,6 +68,7 @@ def pbEvolveItembryo(pkmn, scene = nil)
     :FOCUSBAND => [:THROH, 1],
     :FOCUSSASH => [:SAWK, 0],
     :FLAMEORB => [:MAGCARGO, 1],
+    :FROSTORB => [:GLALIE, 0],
     :TOXICORB => [:QWILFISH, 0, 1],
     :STICKYBARB => [:CACTURNE, 0],
     :IRONBALL => [:AGGRON, 0],
@@ -135,7 +136,8 @@ def pbEvolveItembryo(pkmn, scene = nil)
     :MIRRORHERB => [:SMEARGLE, 0],
     :PUNCHINGGLOVE => [:HITMONCHAN, 1],
     :COVERTCLOAK => [:RIBOMBEE, 1],
-    :LOADEDDICE => [:CLOYSTER, 1]
+    :LOADEDDICE => [:CLOYSTER, 1],
+    :MATTERAMPLIFIER => [:AMALGARATUS, 0]
   }
   item = pkmn.item
   evolution = evolutions[item.id]
@@ -168,4 +170,225 @@ def pbEvolveItembryo(pkmn, scene = nil)
     pkmn.item = nil
   end
   return false
+end
+
+class AmalgaratusSprite
+
+  def initialize(parent, pokemon, back, viewport)
+    @viewport = viewport
+    @parent = parent
+    @pokemon = nil
+    @back = nil
+    @item = nil
+    @itemSprite = nil
+    @layer2Bitmap = nil
+    @layer2 = nil
+    @disposed = false
+    setPokemon(pokemon, back)
+  end
+
+  def setPokemon(pokemon, back)
+    if pokemon != @pokemon || back != @back || pokemon.item != @item
+      @pokemon = pokemon
+      @back = back
+      @item = pokemon.item
+      refresh
+    end
+  end
+
+  def isAmalgaratus
+    return @pokemon.species == :AMALGARATUS
+  end
+
+  def refresh
+    return if @disposed
+    if !isAmalgaratus || !@item
+      @parent.setFrameCallback(nil)
+      @itemSprite&.dispose
+      @layer2&.dispose
+      @layer2Bitmap&.dispose
+      @itemSprite = nil
+      @layer2 = nil
+      @layer2Bitmap = nil
+      return
+    end
+    if @item
+      if !@itemSprite
+        @itemSprite = ItemIconSprite.new(0, 0, @item, @viewport)
+        @itemSprite.ox = 24
+        @itemSprite.oy = 24
+      end
+      @itemSprite.item = @item
+      if !@layer2
+        sp_data = GameData::SpeciesMetrics.get_species_form(:AMALGARATUS, 0, false)
+        folder = @back ? "Back" : "Front"
+        folder += " shiny" if @pokemon.shiny?
+        @layer2Bitmap = DeluxeBitmapWrapper.new(
+          sprintf("Graphics/Pokemon/%s/A/AMALGARATUS_layer2", folder),
+          sp_data,
+          @back
+        )
+        @layer2Bitmap.compile_strip(@pokemon, @back)
+        @layer2 = Sprite.new(@viewport)
+        @layer2.bitmap = @layer2Bitmap.bitmap
+        @layer2Bitmap.speed = 0
+        @layer2Bitmap.deanimate
+        @parent.setFrameCallback(lambda { |frame|
+          @layer2Bitmap.to_frame(frame)
+          @layer2.bitmap = @layer2Bitmap.bitmap
+          @layer2.update
+        })
+      else
+        @layer2Bitmap.setPokemon(@pokemon, @back)
+        @layer2Bitmap.speed = 0
+        @layer2Bitmap.deanimate
+      end
+    end
+    update
+  end
+
+  def update
+    if @pokemon.item != @item
+      @item = @pokemon.item
+      refresh
+      return
+    end
+    if @itemSprite
+      @itemSprite.visible = @parent.visible
+      @itemSprite.opacity = (128 * @parent.opacity / 255).floor
+      @itemSprite.tone = @parent.tone
+      @itemSprite.color = @parent.color
+      @itemSprite.x = @parent.x - @parent.ox + @parent.bitmap.width / 2 + (Math.cos(System.uptime * 3) * 2).round * 2
+      @itemSprite.y = @parent.y - @parent.oy + @parent.bitmap.height / 2 - 2 + (Math.sin(System.uptime * 3) * 2).round * 2
+      @itemSprite.z = @parent.z + 1
+      @itemSprite.zoom_x = @parent.zoom_x * (@back ? 1.5 : 1)
+      @itemSprite.zoom_y = @parent.zoom_y * (@back ? 1.5 : 1)
+      @itemSprite.update
+    end
+    if @layer2
+      @layer2.visible = @parent.visible
+      @layer2.opacity = @parent.opacity
+      @layer2.tone = @parent.tone
+      @layer2.color = @parent.color
+      @layer2.ox = @parent.ox
+      @layer2.oy = @parent.oy
+      @layer2.x = @parent.x
+      @layer2.y = @parent.y
+      @layer2.z = @parent.z + 2
+      @layer2.zoom_x = @parent.zoom_x
+      @layer2.zoom_y = @parent.zoom_y
+      @layer2.mirror = @parent.mirror
+      @layer2.update
+    end
+    return isAmalgaratus
+  end
+
+  def dispose
+    @parent.setFrameCallback(nil)
+    @itemSprite&.dispose
+    @layer2&.dispose
+    @layer2Bitmap&.dispose
+    @itemSprite = nil
+    @layer2 = nil
+    @layer2Bitmap = nil
+    @disposed = true
+  end
+
+  def color=(value)
+    @itemSprite.color = value if @itemSprite
+    @layer2.color = value if @layer2
+  end
+
+  def tone=(value)
+    @itemSprite.tone = value if @itemSprite
+    @layer2.tone = value if @layer2
+  end
+
+  def visible=(value)
+    @itemSprite.visible = value if @itemSprite
+    @layer2.visible = value if @layer2
+  end
+
+  def opacity=(value)
+    @itemSprite.opacity = value if @itemSprite
+    @layer2.opacity = value if @layer2
+  end
+
+end
+
+class PokemonSprite < Sprite
+
+  alias amalgaratus_clearBitmap clearBitmap
+  def clearBitmap
+    amalgaratus_clearBitmap
+    refreshAmalgaratusItem(nil, false)
+  end
+
+  alias amalgaratus_setPokemonBitmap setPokemonBitmap
+  def setPokemonBitmap(pokemon, back = false)
+    amalgaratus_setPokemonBitmap(pokemon, back)
+    refreshAmalgaratusItem(pokemon, back)
+  end
+
+  alias amalgaratus_setPokemonBitmapSpecies setPokemonBitmapSpecies
+  def setPokemonBitmapSpecies(pokemon, species, back = false)
+    amalgaratus_setPokemonBitmapSpecies(pokemon, species, back)
+    refreshAmalgaratusItem(pokemon, back)
+  end
+
+  alias amalgaratus_setSpeciesBitmap setSpeciesBitmap
+  def setSpeciesBitmap(species, gender = 0, form = 0, shiny = false, shadow = false, back = false, egg = false)
+    amalgaratus_setSpeciesBitmap(species, gender, form, shiny, shadow, back, egg)
+    refreshAmalgaratusItem(nil, back)
+  end
+
+  alias amalgaratus_update update
+  def update
+    amalgaratus_update
+    @amalgaratusItem&.update
+  end
+
+  alias amalgaratus_dispose dispose
+  def dispose
+    @amalgaratusItem&.dispose
+    amalgaratus_dispose
+  end
+
+  def refreshAmalgaratusItem(pokemon, back)
+    if pokemon && pokemon.species == :AMALGARATUS
+      if @amalgaratusItem
+        @amalgaratusItem.setPokemon(pokemon, back)
+      else
+        @amalgaratusItem = AmalgaratusSprite.new(self, pokemon, back, viewport)
+      end
+    elsif @amalgaratusItem
+      @amalgaratusItem.dispose
+      @amalgaratusItem = nil
+    end
+  end
+end
+
+class Battle::Scene::BattlerSprite < RPG::Sprite
+
+  def refreshAmalgaratusItem(pokemon, back)
+    if pokemon && pokemon.species == :AMALGARATUS
+      if @amalgaratusItem
+        @amalgaratusItem.setPokemon(pokemon, back)
+      else
+        @amalgaratusItem = AmalgaratusSprite.new(self, pokemon, back, viewport)
+      end
+    elsif @amalgaratusItem
+      @amalgaratusItem.dispose
+      @amalgaratusItem = nil
+    end
+  end
+
+end
+
+class Battle::Battler
+
+  def amplifyItem?
+    return hasActiveAbility?(:AMPLIFY) || hasActiveItem?(:MATTERAMPLIFIER)
+  end
+
 end

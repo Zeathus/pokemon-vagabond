@@ -46,12 +46,14 @@ class Battle::Scene
     end
     # Shift depending on index (no shifting needed for sideSize of 1)
     case sideSize
+    when 1
+      ret[1] += [0, 4][index]
     when 2
-      ret[0] += [-80, 64, 80, -64][index]
-      ret[1] += [ -8,  4,  8,  -4][index]
+      ret[0] += [-80, 64, 80,-64][index]
+      ret[1] += [ -8,  8,  8,  0][index]
     when 3
-      ret[0] += [-80, 80,  0,  0, 80, -80][index]
-      ret[1] += [  0,  0,  8, -8, 16, -16][index]
+      ret[0] += [-80, 80,  0,  0, 80,-80][index]
+      ret[1] += [  0, 12,  8,  4, 16, -4][index]
     end
     return ret
   end
@@ -103,6 +105,7 @@ class Battle::Scene
     @sprites["battle_bg"].update if @sprites["battle_bg"].respond_to?("update")
     Graphics.update
     @sprites["weather"].update
+    @sprites["distortion_bg"]&.update
   end
 
   def pbInputUpdate
@@ -161,7 +164,7 @@ class Battle::Scene
     #       will need to make "messageBox" also visible if the windowtype if
     #       COMMAND_BOX/FIGHT_BOX respectively.
     @outer.pbShowWindow(windowType)
-    @sprites["messageBox"].visible    = false #(windowType == MESSAGE_BOX)
+    @sprites["messageBox"].visible    = (windowType == MESSAGE_BOX)
     @sprites["messageWindow"].visible = (windowType == MESSAGE_BOX)
     @sprites["commandWindow"].visible = false #(windowType == COMMAND_BOX)
     @sprites["fightWindow"].visible   = false #(windowType == FIGHT_BOX)
@@ -275,15 +278,15 @@ class Battle::Scene
     return pbShowCommands(msg, [_INTL("Yes"), _INTL("No")], 1) == 0
   end
 
-  def pbShowCommands(msg, commands, defaultValue)
+  def pbShowCommands(msg, commands, defaultValue, x_offset = 0, y_offset = 0)
     pbWaitMessage
-    pbShowWindow(MESSAGE_BOX)
+    pbShowWindow(MESSAGE_BOX) if msg.length > 0
     dw = @sprites["messageWindow"]
     dw.text = msg
     cw = Window_CommandPokemon.new(commands)
     cw.height   = @viewport.rect.height - dw.height if cw.height > @viewport.rect.height - dw.height
-    cw.x        = @viewport.rect.width - cw.width
-    cw.y        = @viewport.rect.height - cw.height - dw.height
+    cw.x        = @viewport.rect.width - cw.width + x_offset
+    cw.y        = @viewport.rect.height - cw.height - dw.height + y_offset
     cw.z        = dw.z + 1
     cw.index    = 0
     cw.viewport = @viewport
@@ -402,6 +405,7 @@ class Battle::Scene
     # Set visibility of battler's shadow
     shadowSprite.visible = pkmn.species_data.shows_shadow? if shadowSprite && !back
     shadowSprite.visible = true if Supplementals::ALWAYS_SHOW_BATTLER_SHADOW
+    shadowSprite.visible = false if @battle.hideEnemyBase
   end
 
   def pbResetCommandsIndex(idxBattler)
@@ -429,6 +433,7 @@ class Battle::Scene
   def pbStartWeather(weather, power = 5)
     weather = :WindsBattle if weather == :Winds
     weather = :SunBattle if weather == :Sun
+    weather = :Snow if weather == :Hail
     power = (power + 1) * RPG::Weather::MAX_SPRITES / 10
     @sprites["weather"].fade_in(weather, power, 200)
   end

@@ -190,7 +190,7 @@ class Battle::Scene::Animation::DataBoxAppear < Battle::Scene::Animation
     return if !@sprites["dataBox_#{@idxBox}"]
     box = addSprite(@sprites["dataBox_#{@idxBox}"])
     box.setVisible(0, true)
-    dir = (@idxBox.even?) ? 1 : -1
+    dir = (@idxBox.even?) ? -1 : 1
     box.setDelta(0, dir * @viewport.rect.width / 2, 0)
     box.moveDelta(0, 8, -dir * @viewport.rect.width / 2, 0)
   end
@@ -208,9 +208,30 @@ class Battle::Scene::Animation::DataBoxDisappear < Battle::Scene::Animation
   def createProcesses
     return if !@sprites["dataBox_#{@idxBox}"] || !@sprites["dataBox_#{@idxBox}"].visible
     box = addSprite(@sprites["dataBox_#{@idxBox}"])
-    dir = (@idxBox.even?) ? 1 : -1
+    dir = (@idxBox.even?) ? -1 : 1
     box.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
     box.setVisible(8, false)
+  end
+end
+
+#===============================================================================
+# Announce the current chain length
+#===============================================================================
+class Battle::Scene::Animation::ChainAnnounce < Battle::Scene::Animation
+  def initialize(sprites, viewport, chainLength)
+    @chainLength = chainLength
+    super(sprites, viewport)
+  end
+
+  def createProcesses
+    return if !@sprites["chainAnnounce"]
+    chain = addSprite(@sprites["chainAnnounce"])
+    chain.setVisible(0, true)
+    chain.setOpacity(0, 0)
+    chain.setDelta(0, 0, 0)
+    chain.moveOpacity(0, 8, 255)
+    chain.moveOpacity(16, 8, 0)
+    chain.moveDelta(0, 24, 0, -48)
   end
 end
 
@@ -228,8 +249,8 @@ class Battle::Scene::Animation::AbilitySplashAppear < Battle::Scene::Animation
     bar = addSprite(@sprites["abilityBar_#{@side}"])
     bar.setVisible(0, true)
     bar.setSE(0, "Battle ability")
-    dir = (@side == 0) ? 1 : -1
-    bar.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
+    dir = (@side == 0) ? 384 : -256
+    bar.moveDelta(0, 8, dir, 0)
   end
 end
 
@@ -245,8 +266,8 @@ class Battle::Scene::Animation::AbilitySplashDisappear < Battle::Scene::Animatio
   def createProcesses
     return if !@sprites["abilityBar_#{@side}"]
     bar = addSprite(@sprites["abilityBar_#{@side}"])
-    dir = (@side == 0) ? -1 : 1
-    bar.moveDelta(0, 8, dir * @viewport.rect.width / 2, 0)
+    dir = (@side == 0) ? -384 : 256
+    bar.moveDelta(0, 8, dir, 0)
     bar.setVisible(8, false)
   end
 end
@@ -746,7 +767,7 @@ class Battle::Scene::Animation::PokeballThrowCapture < Battle::Scene::Animation
     ballMidX   = 0   # Unused in arc calculation
     ballMidY   = 78
     ballEndX   = ballPos[0]
-    ballEndY   = 112
+    ballEndY   = 200
     ballGroundY = ballPos[1] - 4
     # Set up Poké Ball sprite
     ball = addBallSprite(ballStartX, ballStartY, @poke_ball)

@@ -100,7 +100,7 @@ class MoveSelectionSprite < Sprite
   end
 
   def refresh
-    w=@movesel.width
+    w=@movesel.width/8
     h=@movesel.height/2
     if @side == 0
       if @fifthmove
@@ -109,20 +109,22 @@ class MoveSelectionSprite < Sprite
         self.y+=62 * self.index
         self.y+=18 if self.index==4
       else
-        self.x=96
-        self.y=134
-        self.y+=self.index * 86
+        self.x=102
+        self.y=126
+        self.y+=self.index * 72
       end
     else
-      self.x=530
+      self.x=468
       self.y=126
       self.y+=(self.index - self.scroll) * 72
     end
     self.bitmap=@movesel.bitmap
+    realFrame = @frame
+    realFrame += 4 if @side != 0
     if self.preselected
-      self.src_rect.set(0,h,w,h)
+      self.src_rect.set(realFrame*w,h,w,h)
     else
-      self.src_rect.set(0,0,w,h)
+      self.src_rect.set(realFrame*w,0,w,h)
     end
   end
 
@@ -131,6 +133,11 @@ class MoveSelectionSprite < Sprite
     super
     @movesel.update
     @updating=false
+    newFrame = (System.uptime * 8).floor % 4
+    if newFrame != @frame
+      @frame = newFrame
+      refresh
+    end
     refresh
   end
 end
@@ -298,7 +305,7 @@ class PokemonSummaryScene
       for i in 0...tm_list.length
         if tm_list[i][0] == @machinemove
           @sprites["movesel"].index = i
-          @sprites["movesel"].scroll = [[tm_list.length - 5, i - 1].min, 0].max
+          @sprites["movesel"].scroll = [[tm_list.length - 3, i - 1].min, 0].max
           found = true
           break
         end
@@ -309,7 +316,7 @@ class PokemonSummaryScene
         for i in 0...learn_list.length
           if learn_list[i][0] == @machinemove
             @sprites["movesel"].index = i
-            @sprites["movesel"].scroll = [[learn_list.length - 5, i - 1].min, 0].max
+            @sprites["movesel"].scroll = [[learn_list.length - 3, i - 1].min, 0].max
             found = true
             break
           end
@@ -792,7 +799,7 @@ class PokemonSummaryScene
         @sprites[_INTL("effort_keybinds_{1}", i)].visible = false
       end
       if @sprites[_INTL("moves_keybinds_{1}", i)]
-        @sprites[_INTL("moves_keybinds_{1}", i)].visible = true
+        @sprites[_INTL("moves_keybinds_{1}", i)].visible = false
       end
       if @sprites[_INTL("editmoves_keybinds_{1}", i)]
         @sprites[_INTL("editmoves_keybinds_{1}", i)].visible = false
@@ -803,15 +810,14 @@ class PokemonSummaryScene
     if refresh_all
       overlay.clear
     else
-      overlay.clear_rect(94,134,232,354) if refresh_zones[0]
-      overlay.clear_rect(528,104,240,468) if refresh_zones[1]
+      overlay.clear_rect(94,138,240,300) if refresh_zones[0]
+      overlay.clear_rect(508,104,260,468) if refresh_zones[1]
       if refresh_zones[2]
-        overlay.clear_rect(450,142,78,62)
-        overlay.clear_rect(326,230,202,22)
-        overlay.clear_rect(326,278,202,22)
-        overlay.clear_rect(326,302,202,180)
+        overlay.clear_rect(292,468,476,118)
+        overlay.clear_rect(98,468,194,32)
+        overlay.clear_rect(98,526,194,32)
       end
-      overlay.clear_rect(96,490,432,80) if refresh_zones[3]
+      overlay.clear_rect(388,2,380,92) if refresh_zones[3]
     end
     updatePokeIcons
     @sprites["background"].setBitmap("Graphics/UI/Summary/bg_3")
@@ -826,9 +832,10 @@ class PokemonSummaryScene
     textpos=[]
     smalltextpos=[]
     if refresh_all
-      textpos.push([pokemon.name,460,20,2,base,shadow])
-      textpos.push([_INTL("TYPE"),334,148,0,base,shadow])
-      textpos.push([_INTL("CATEGORY"),334,180,0,base,shadow])
+      textpos.push([pokemon.name,460-216,20,2,base,shadow])
+      smalltextpos.push([_INTL("TYPE"),146,448,2,base,shadow])
+      smalltextpos.push([_INTL("CATEGORY"),244,448,2,base,shadow])
+      smalltextpos.push([_INTL("EFFECT"),302,448,0,base,shadow])
 
       dexnum = 0
       dexnumshift = false
@@ -841,40 +848,42 @@ class PokemonSummaryScene
         break
       end
       if dexnum <= 0
-        smalltextpos.push([sprintf("#??? %s",speciesname),460,54,2,base,shadow])
+        smalltextpos.push([sprintf("#??? %s",speciesname),460-216,54,2,base,shadow])
       else
-        smalltextpos.push([sprintf("#%03d %s",dexnum,speciesname),460,54,2,base,shadow])
+        smalltextpos.push([sprintf("#%03d %s",dexnum,speciesname),460-216,54,2,base,shadow])
       end
-      smalltextpos.push([_INTL("POWER"),374,210,2,base,shadow])
-      smalltextpos.push([_INTL("ACCURACY"),478,210,2,base,shadow])
-      smalltextpos.push([_INTL("EFFECT"),374,258,2,base,shadow])
-      smalltextpos.push([_INTL("PRIORITY"),478,258,2,base,shadow])
+      smalltextpos.push([_INTL("POWER"),146,448+58,2,base,shadow])
+      smalltextpos.push([_INTL("ACCURACY"),244,448+58,2,base,shadow])
+      #smalltextpos.push([_INTL("EFFECT"),374,258,2,base,shadow])
+      #smalltextpos.push([_INTL("PRIORITY"),478,258,2,base,shadow])
     end
     if refresh_zones[3]
       chips = $bag.quantity(:DATACHIP)
       if chips >= 100
-        smalltextpos.push([_INTL("{1}", chips),508,542,2,base2,shadow2])
+        #smalltextpos.push([_INTL("{1}", chips),508,542,2,base2,shadow2])
       else
-        smalltextpos.push([_INTL("{1}x", chips),508,542,2,base2,shadow2])
+        #smalltextpos.push([_INTL("{1}x", chips),508,542,2,base2,shadow2])
       end
+      statX = 442
+      statY = -186
       smalltextpos += [
-        [_INTL("HP"),124,200+294,2,base,shadow],
-        [sprintf("%3d/%3d",pokemon.hp,pokemon.totalhp),218,200+294,2,base2,shadow2],
-        [_INTL("Attack"),146,228+294,2,base,shadow],
-        [sprintf("%d",pokemon.attack),240,228+294,2,base2,shadow2],
-        [_INTL("Defense"),146,256+294,2,base,shadow],
-        [sprintf("%d",pokemon.defense),240,256+294,2,base2,shadow2],
-        [_INTL("Speed"),146+190,200+294,2,base,shadow],
-        [sprintf("%d",pokemon.speed),240+190,200+294,2,base2,shadow2],
-        [_INTL("Sp. Atk"),146+190,228+294,2,base,shadow],
-        [sprintf("%d",pokemon.spatk),240+190,228+294,2,base2,shadow2],
-        [_INTL("Sp. Def"),146+190,256+294,2,base,shadow],
-        [sprintf("%d",pokemon.spdef),240+190,256+294,2,base2,shadow2]
+        [_INTL("HP"),statX-22,200+statY,2,base,shadow],
+        [sprintf("%3d/%3d",pokemon.hp,pokemon.totalhp),statX+72,200+statY,2,base2,shadow2],
+        [_INTL("Attack"),statX,228+statY,2,base,shadow],
+        [sprintf("%d",pokemon.attack),statX+94,228+statY,2,base2,shadow2],
+        [_INTL("Defense"),statX,256+statY,2,base,shadow],
+        [sprintf("%d",pokemon.defense),statX+94,256+statY,2,base2,shadow2],
+        [_INTL("Speed"),statX+190,200+statY,2,base,shadow],
+        [sprintf("%d",pokemon.speed),statX+94+190,200+statY,2,base2,shadow2],
+        [_INTL("Sp. Atk"),statX+190,228+statY,2,base,shadow],
+        [sprintf("%d",pokemon.spatk),statX+94+190,228+statY,2,base2,shadow2],
+        [_INTL("Sp. Def"),statX+190,256+statY,2,base,shadow],
+        [sprintf("%d",pokemon.spdef),statX+94+190,256+statY,2,base2,shadow2]
       ]
       for i in GameData::Nature.get(pokemon.nature).stat_changes
         stat_pos = [:HP, :ATTACK, :DEFENSE, :SPEED, :SPECIAL_ATTACK, :SPECIAL_DEFENSE].index(i[0])
-        x_pos = 98 + (stat_pos < 3 ? 0 : 192)
-        y_pos = 494 + 28 * (stat_pos % 3)
+        x_pos = 394 + (stat_pos < 3 ? 0 : 190)
+        y_pos = 14 + 28 * (stat_pos % 3)
         if i[1] > 0
           smalltextpos.push(["↑", x_pos, y_pos, 0, base, shadow])
         elsif i[1] < 0
@@ -885,8 +894,8 @@ class PokemonSummaryScene
     smallesttextpos=[]
     imagepos=[]
     if refresh_zones[0]
-      xPos=102
-      yPos=140
+      xPos=106
+      yPos=132
       for i in 0...4
         moveobject=pokemon.moves[i]
         if moveobject
@@ -911,7 +920,7 @@ class PokemonSummaryScene
             textpos.push(["--",442,yPos+38,1,Color.new(64,64,64),Color.new(176,176,176)])
           end
         end
-        yPos+=86
+        yPos+=72
       end
     end
     if refresh_zones[1]
@@ -919,7 +928,7 @@ class PokemonSummaryScene
       yPos=132
       page = @sprites["movesel"].page
       scroll = @sprites["movesel"].scroll
-      for i in scroll...(scroll+6)
+      for i in scroll...(scroll+4)
         movearr=@listMoves[page][i]
         if movearr
           moveid=movearr[0]
@@ -967,14 +976,13 @@ class PokemonSummaryScene
               if page == 2 && !pokemon.compatible_with_move?(moveid)
                 smallesttextpos.push(["INCOMPATIBLE",
                   xPos+106,yPos+62,2,reqcolor,reqshadow])
-              else
-                power = movedata.power
-                accuracy = movedata.accuracy
-                smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
-                      xPos+38,yPos+48,2,desccolor,Color.new(0,0,0,0)])
-                smallesttextpos.push([sprintf("%s ACC",accuracy==0 ? "-" : sprintf("%d",accuracy)),
-                      xPos+104,yPos+48,2,desccolor,Color.new(0,0,0,0)])
               end
+              power = movedata.power
+              accuracy = movedata.accuracy
+              smallesttextpos.push([sprintf("%s PWR",power<=1 ? "-" : sprintf("%d", power)),
+                    xPos+38,yPos+48,2,desccolor,Color.new(0,0,0,0)])
+              smallesttextpos.push([sprintf("%s ACC",accuracy==0 ? "-" : sprintf("%d",accuracy)),
+                    xPos+104,yPos+48,2,desccolor,Color.new(0,0,0,0)])
             end
             if move_name.length >= 18
               smallesttextpos.push([move_name,xPos+122,yPos+20,2,
@@ -990,11 +998,11 @@ class PokemonSummaryScene
         end
         yPos+=72
       end
-      imagepos.push(["Graphics/UI/Summary/learnset_title",520,104,0,page*32,248,32])
+      imagepos.push(["Graphics/UI/Summary/learnset_title",516,104,0,page*32,248,32])
       scroll_height = 64
       scroll_y = 138
-      if @listMoves[page].length > 6
-        scroll_y += [((428 - scroll_height) * scroll / (@listMoves[page].length - 6)), 0].max
+      if @listMoves[page].length > 4
+        scroll_y += [((284 - scroll_height) * scroll / (@listMoves[page].length - 4)), 0].max
       end
       imagepos.push(["Graphics/UI/Summary/scrollbar",760,scroll_y,0,0,8,scroll_height])
     end
@@ -1032,39 +1040,42 @@ class PokemonSummaryScene
     drawMoveSelection(pokemon,moveToLearn,refresh_zones)
     pbSetSystemFont(overlay)
     textcolor=[
-      basedamage==movedata.power ? Color.new(64,64,64) : Color.new(0,150,0),
-      accuracy==movedata.accuracy ? Color.new(64,64,64) : Color.new(0,150,0),
-      effectch==movedata.effect_chance ? Color.new(64,64,64) : Color.new(0,150,0),
-      priority==movedata.priority ? Color.new(64,64,64) : Color.new(0,150,0)
+      basedamage==movedata.power ? Color.new(252,252,252) : Color.new(0,150,0),
+      accuracy==movedata.accuracy ? Color.new(252,252,252) : Color.new(0,150,0),
+      effectch==movedata.effect_chance ? Color.new(252,252,252) : Color.new(0,150,0),
+      priority==movedata.priority ? Color.new(252,252,252) : Color.new(0,150,0)
     ]
     textshadow=[
-      basedamage==movedata.power ? Color.new(198,176,176) : Color.new(176,198,176),
-      accuracy==movedata.accuracy ? Color.new(198,176,176) : Color.new(176,198,176),
-      effectch==movedata.effect_chance ? Color.new(198,176,176) : Color.new(176,198,176),
-      priority==movedata.priority ? Color.new(198,176,176) : Color.new(176,198,176)
+      basedamage==movedata.power ? Color.new(104,104,104) : Color.new(176,198,176),
+      accuracy==movedata.accuracy ? Color.new(104,104,104) : Color.new(176,198,176),
+      effectch==movedata.effect_chance ? Color.new(104,104,104) : Color.new(176,198,176),
+      priority==movedata.priority ? Color.new(104,104,104) : Color.new(176,198,176)
     ]
-    text_x = moveToLearn!=0 ? 60 : 374
-    text_y = moveToLearn!=0 ? 148 : 234
-    xdif = moveToLearn!=0 ? 120 : 104
+    text_x = 146
+    text_y = 448
+    xdif = 98
     textpos=[
         [basedamage<=1 ? basedamage==1 ? "???" : "---" : sprintf("%d",basedamage),
-          text_x,text_y,2,textcolor[0],textshadow[0]],
+          text_x,text_y+58+26,2,textcolor[0],textshadow[0]],
         [accuracy==0 ? "---" : sprintf("%d",accuracy)+"%",
-          text_x+xdif,text_y,2,textcolor[1],textshadow[1]],
-        [effectch==0 ? "---" : sprintf("%d",effectch)+"%",
-          text_x,text_y+48,2,textcolor[2],textshadow[2]],
-        [priority==0 ? "---" : sprintf("%s%d",priority>0 ? "+" : "",priority),
-          text_x+xdif,text_y+48,2,textcolor[3],textshadow[3]]
+          text_x+xdif,text_y+58+26,2,textcolor[1],textshadow[1]],
+        #[effectch==0 ? "---" : sprintf("%d",effectch)+"%",
+        #  text_x,text_y+48,2,textcolor[2],textshadow[2]],
+        #[priority==0 ? "---" : sprintf("%s%d",priority>0 ? "+" : "",priority),
+        #  text_x+xdif,text_y+48,2,textcolor[3],textshadow[3]]
     ]
-    pbSetSmallFont(overlay)
-    pbDrawTextPositions(overlay,textpos)
+    smalltextpos = []
     pbSetSystemFont(overlay)
-    text_x = moveToLearn!=0 ? 166 : 456
-    text_y = moveToLearn!=0 ? 56 : 144
-    imagepos=[["Graphics/UI/category",text_x,text_y+32,0,category*28,64,28],
-              ["Graphics/UI/types",text_x,text_y,0,type*28,64,28]]
+    pbDrawTextPositions(overlay,textpos)
+    pbSetSmallFont(overlay)
+    pbDrawTextPositions(overlay,smalltextpos)
+    pbSetSystemFont(overlay)
+    imagepos=[
+      ["Graphics/UI/types",text_x-32,text_y+22,0,type*28,64,28],
+      ["Graphics/UI/category",text_x-32+xdif,text_y+22,0,category*28,64,28]
+    ]
     pbDrawImagePositions(overlay,imagepos)
-    drawSmallTextEx(overlay,332,312,194,8,
+    drawSmallTextEx(overlay,302,478,460,110,
         movedata.description,
         Color.new(248,248,248),Color.new(104,104,104))
   end
@@ -1084,7 +1095,7 @@ class PokemonSummaryScene
         @sprites[_INTL("moves_keybinds_{1}", i)].visible = false
       end
       if @sprites[_INTL("editmoves_keybinds_{1}", i)]
-        @sprites[_INTL("editmoves_keybinds_{1}", i)].visible = true
+        @sprites[_INTL("editmoves_keybinds_{1}", i)].visible = false
       end
     end
   end
@@ -1495,7 +1506,7 @@ class PokemonSummaryScene
                       selmove = i
                       scroll = @sprites["movesel"].scroll
                       if selmove - scroll > 4
-                        scroll = [selmove - 3, @listMoves[2][i].length - 5].min
+                        scroll = [selmove - 3, @listMoves[2][i].length - 3].min
                       elsif selmove - scroll < 0
                         scroll = [selmove - 1, 0].max
                       end
@@ -1601,7 +1612,7 @@ class PokemonSummaryScene
           scroll = @sprites["movesel"].scroll
           if selmove == 0
             scroll = 0
-          elsif selmove - scroll == 5 && selmove < numMoves - 1
+          elsif selmove - scroll == 3 && selmove < numMoves - 1
             scroll += 1
           end
           refresh_zones[1] = true if @sprites["movesel"].scroll != scroll
@@ -1621,7 +1632,7 @@ class PokemonSummaryScene
           if selmove == 0
             scroll = 0
           elsif selmove == numMoves - 1
-            scroll = [numMoves - 6, 0].max
+            scroll = [numMoves - 4, 0].max
           elsif selmove - scroll <= 0 && selmove > 0
             scroll -= 1
           end
@@ -1673,7 +1684,7 @@ class PokemonSummaryScene
         refresh_zones[1] = true
         newmove = true
       end
-      if Input.trigger?(Input::SPECIAL)
+      if Input.trigger?(Input::SPECIAL) && $DEBUG
         if @sprites["movesel"].side == 0
           if @inbattle
             pbMessage("You cannot edit movesets while in battle.")

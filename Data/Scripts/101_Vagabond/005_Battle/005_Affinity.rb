@@ -5,7 +5,7 @@ class Battle::Battler
       $stats.affinity_boosts += 1
     end
     booster = @affinityBooster
-    @battle.scene.pbAffinityBoostAnimation(self,booster)
+    @battle.scene.pbAffinityBoostAnimation(self, booster)
     allies = [self]
     allies.push(booster) if booster && !booster.fainted? && booster != self
 
@@ -64,16 +64,16 @@ class Battle::Scene
 
     ### Beam
     sprites = {}
-    sprites["beam"] = IconSprite.new(0,112,@viewport)
+    sprites["beam"] = IconSprite.new(0, 240, @viewport)
     sprites["beam"].setBitmap("Graphics/UI/Battle/affinityboost_bg")
-    sprites["beam"].src_rect = Rect.new(0,0,512,108)
+    sprites["beam"].src_rect = Rect.new(0, 0, 768, 108)
     sprites["beam"].z = 10001
     sprites["beam"].mirror = opponent
 
     ### Text
-    sprites["text"] = IconSprite.new(176,134,@viewport)
+    sprites["text"] = IconSprite.new(Graphics.width / 2, 262, @viewport)
     sprites["text"].setBitmap("Graphics/UI/Battle/affinityboost_text")
-    sprites["text"].src_rect = Rect.new(0,0,512,108)
+    sprites["text"].x -= sprites["text"].bitmap.width / 2
     sprites["text"].z = 10002
     sprites["text"].opacity = 0
     sprites["text"].x += opponent ? 70 : -70
@@ -95,6 +95,7 @@ class Battle::Scene
       sprites["beam"].update
       sprites["text"].update
       pbGraphicsUpdate
+      pbFrameUpdate
       Input.update
     end
 
@@ -107,29 +108,30 @@ class Battle::Scene
     # Whether the text slides off the screen while fading
     slide = true
 
-    if rand < 60
+    if rand < 70
       sprites["pkmn1"] = PokemonIconSprite.new(attacker.pokemon,@viewport)
       sprites["pkmn1"].z = 10004
       sprites["pkmn1"].x = -64 + 32
-      sprites["pkmn1"].y = 120 + 32
+      sprites["pkmn1"].y = 248 + 32
       sprites["pkmn1"].setOffset(PictureOrigin::CENTER)
       sprites["pkmn1"].mirror = true
 
       sprites["pkmn2"] = partner ? PokemonIconSprite.new(partner.pokemon,@viewport) : Sprite.new(@viewport)
       sprites["pkmn2"].z = 10003
-      sprites["pkmn2"].x = 506 + 32
-      sprites["pkmn2"].y = 120 + 32
+      sprites["pkmn2"].x = 762 + 32
+      sprites["pkmn2"].y = 248 + 32
       sprites["pkmn2"].setOffset(PictureOrigin::CENTER) if partner
     end
 
     if rand < 5
       # 5% chance of crash animation
-      14.times do |i|
-        sprites["pkmn1"].x += 12 - (i > 10 ? (i - 10) : 0)
-        sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
+      21.times do |i|
+        sprites["pkmn1"].x += 14 - (i > 20 ? (i - 20) : 0)
+        sprites["pkmn2"].x -= 14 - (i > 20 ? (i - 20) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
@@ -141,10 +143,11 @@ class Battle::Scene
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
-      44.times do |i|
+      50.times do |i|
         rot = [i * 2, 30].min
         sprites["pkmn1"].x -= 4
         sprites["pkmn2"].x += 4
@@ -155,22 +158,25 @@ class Battle::Scene
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       10.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
-    elsif rand < 15
-      # 10% chance of flip animation
-      14.times do |i|
-        sprites["pkmn1"].x += 12 - (i > 10 ? (i - 10) : 0)
-        sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
+    elsif rand < 20
+      # 15% chance of flip animation
+      21.times do |i|
+        sprites["pkmn1"].x += 14 - (i > 17 ? (i - 17) : 0)
+        sprites["pkmn2"].x -= 14 - (i > 17 ? (i - 17) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
@@ -179,8 +185,8 @@ class Battle::Scene
       rot = 18 if @battle.pbRandom(4)==0
 
       40.times do |i|
-        sprites["pkmn1"].x += 6
-        sprites["pkmn2"].x -= 6
+        sprites["pkmn1"].x += 8
+        sprites["pkmn2"].x -= 8
         sprites["pkmn1"].angle -= rot
         sprites["pkmn2"].angle += rot
         sprites["pkmn1"].y += ((i - 19.0) / 4.0).floor
@@ -188,41 +194,46 @@ class Battle::Scene
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       sprites["pkmn1"].angle = 0
       sprites["pkmn2"].angle = 0
 
-      16.times do |i|
+      20.times do |i|
         sprites["pkmn1"].x += 8 + (i < 4 ? i : 4)
         sprites["pkmn2"].x -= 8 + (i < 4 ? i : 4)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       10.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
-    elsif rand < 35
+    elsif rand < 40
       # 20% chance of joy animation
       slide = false
 
-      20.times do |i|
-        sprites["pkmn1"].x += 12 - (i > 8 ? (i - 8) : 0)
-        sprites["pkmn2"].x -= 12 - (i > 8 ? (i - 8) : 0)
+      30.times do |i|
+        sprites["pkmn1"].x += 12 - (i > 18 ? (i - 18) : 0)
+        sprites["pkmn2"].x -= 12 - (i > 18 ? (i - 18) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       10.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
@@ -236,54 +247,61 @@ class Battle::Scene
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       10.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
-    elsif rand < 60
-      # 25% chance of jump animation
-      14.times do |i|
-        sprites["pkmn1"].x += 12 - (i > 10 ? (i - 10) : 0)
-        sprites["pkmn2"].x -= 12 - (i > 10 ? (i - 10) : 0)
+    elsif rand < 70
+      # 30% chance of jump animation
+      21.times do |i|
+        sprites["pkmn1"].x += 14 - (i > 17 ? (i - 17) : 0)
+        sprites["pkmn2"].x -= 14 - (i > 17 ? (i - 17) : 0)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       40.times do |i|
-        sprites["pkmn1"].x += 6
-        sprites["pkmn2"].x -= 6
+        sprites["pkmn1"].x += 8
+        sprites["pkmn2"].x -= 8
         sprites["pkmn1"].y += ((i - 19.0) / 4.0).floor
         sprites["pkmn2"].y += ((i - 19.0) / 4.0).floor
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
-      16.times do |i|
+      20.times do |i|
         sprites["pkmn1"].x += 8 + (i < 4 ? i : 4)
         sprites["pkmn2"].x -= 8 + (i < 4 ? i : 4)
         sprites["pkmn1"].update
         sprites["pkmn2"].update
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
       10.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
     else
-      # 40% chance of no special animation
+      # 30% chance of no special animation
       32.times do |i|
         pbGraphicsUpdate
+        pbFrameUpdate
         Input.update
       end
 
@@ -306,6 +324,7 @@ class Battle::Scene
       sprites["pkmn1"].update if sprites["pkmn1"]
       sprites["pkmn2"].update if sprites["pkmn2"]
       pbGraphicsUpdate
+      pbFrameUpdate
       Input.update
     end
 

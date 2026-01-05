@@ -49,8 +49,11 @@ class CustomTime
       self.min += 1 if sec >= 60
       self.hour += 1 if min >= 60
       pbUpdateWeather if min >= 60
-      pbNextForecast if hour >= 24
-      self.day += 1 if hour >= 24
+      if hour >= 24
+        pbNextForecast
+        pbUpdateAmphi
+        self.day += 1
+      end
       self.sec = 0 if sec >= 60
       self.min = 0 if min >= 60
       self.hour = 0 if hour >= 24
@@ -87,6 +90,7 @@ class CustomTime
     self.hour = h
     self.min = m
     pbNextForecast
+    pbUpdateAmphi
     pbUpdateWeather
   end
 

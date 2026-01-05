@@ -458,6 +458,7 @@ class Game_Map
       common_event.refresh
     end
     @need_refresh = false
+    pbUpdateMarkers if $game_variables
   end
 
   def update

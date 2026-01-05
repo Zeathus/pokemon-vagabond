@@ -97,13 +97,13 @@ class Battle
     return true
   end
 
-  def pbItemMenu(idxBattler, firstAction)
+  def pbItemMenu(idxBattler, firstAction, quickItem=nil)
     if !@internalBattle
       pbDisplay(_INTL("Items can't be used here."))
       return false
     end
     ret = false
-    @scene.pbItemMenu(idxBattler, firstAction) do |item, useType, idxPkmn, idxMove, itemScene|
+    @scene.pbItemMenu(idxBattler, firstAction, quickItem) do |item, useType, idxPkmn, idxMove, itemScene|
       next false if !item
       battler = pkmn = nil
       case useType
@@ -111,12 +111,12 @@ class Battle
         next false if !ItemHandlers.hasBattleUseOnPokemon(item)
         battler = pbFindBattler(idxPkmn, idxBattler)
         pkmn    = pbParty(idxBattler)[idxPkmn]
-        next false if !pbCanUseItemOnPokemon?(item, pkmn, battler, itemScene)
+        next false if !pbCanUseItemOnPokemon?(item, pkmn, battler, itemScene || @scene)
       when 3   # Use on battler
         next false if !ItemHandlers.hasBattleUseOnBattler(item)
         battler = pbFindBattler(idxPkmn, idxBattler)
         pkmn    = battler.pokemon if battler
-        next false if !pbCanUseItemOnPokemon?(item, pkmn, battler, itemScene)
+        next false if !pbCanUseItemOnPokemon?(item, pkmn, battler, itemScene || @scene)
       when 4   # Poké Balls
         next false if idxPkmn < 0
         battler = @battlers[idxPkmn]
@@ -129,7 +129,7 @@ class Battle
       end
       next false if !pkmn
       next false if !ItemHandlers.triggerCanUseInBattle(item, pkmn, battler, idxMove,
-                                                        firstAction, self, itemScene)
+                                                        firstAction, self, itemScene || @scene)
       next false if !pbRegisterItem(idxBattler, item, idxPkmn, idxMove)
       ret = true
       next true
@@ -250,7 +250,10 @@ class Battle
             next
           end
           break if pbPartyMenu(idxBattler)
-        when 3    # Run
+        when 3
+          # Check
+          pbCheckMenu
+        when 4    # Run
           # NOTE: "Run" is only an available option for the first battler the
           #       player chooses an action for in a round. Attempting to run
           #       from battle prevents you from choosing any other actions in
@@ -259,7 +262,15 @@ class Battle
             commandsEnd = true
             break
           end
-        when 4    # Call
+        when 5
+          # Log
+        when 6
+          # Quick Item
+          if !@scene.outer.get_quick_item.nil? && pbItemMenu(idxBattler, actioned.length == 1, @scene.outer.get_quick_item)
+            commandsEnd = true if pbItemUsesAllActions?(@choices[idxBattler][1])
+            break
+          end
+        when 7    # Call
           break if pbCallMenu(idxBattler)
         when -2   # Debug
           pbDebugMenu

@@ -65,8 +65,8 @@ def pbAddPokemon(pkmn, level = 1, see_form = true)
     pbMessage(_INTL("{1}'s data was added to the Pokédex.", species_name))
     $player.pokedex.register_last_seen(pkmn)
     pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
+      scene = PokemonPokedex_Scene.new
+      screen = PokemonPokedexScreen.new(scene)
       screen.pbDexEntry(pkmn.species)
     end
   end
@@ -108,8 +108,8 @@ def pbAddToParty(pkmn, level = 1, see_form = true)
     pbMessage(_INTL("{1}'s data was added to the Pokédex.", species_name))
     $player.pokedex.register_last_seen(pkmn)
     pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
+      scene = PokemonPokedex_Scene.new
+      screen = PokemonPokedexScreen.new(scene)
       screen.pbDexEntry(pkmn.species)
     end
   end
@@ -149,8 +149,8 @@ def pbAddForeignPokemon(pkmn, level = 1, owner_name = nil, nickname = nil, owner
     pbMessage(_INTL("The Pokémon's data was added to the Pokédex."))
     $player.pokedex.register_last_seen(pkmn)
     pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
+      scene = PokemonPokedex_Scene.new
+      screen = PokemonPokedexScreen.new(scene)
       screen.pbDexEntry(pkmn.species)
     end
   end

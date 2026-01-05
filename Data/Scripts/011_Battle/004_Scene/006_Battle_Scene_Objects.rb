@@ -294,12 +294,14 @@ class Battle::Scene::PokemonDataBox < Sprite
   end
 
   def draw_shiny_icon
+    return
     return if !@battler.shiny?
     shiny_x = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
     pbDrawImagePositions(self.bitmap, [["Graphics/UI/shiny", @spriteBaseX + shiny_x, 36]])
   end
 
   def draw_special_form_icon
+    return
     # Mega Evolution/Primal Reversion icon
     if @battler.mega?
       pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_mega", @spriteBaseX + 8, 34]])
@@ -579,7 +581,7 @@ class Battle::Scene::AbilitySplashBar < Sprite
     pbSetSystemFont(self.bitmap)
     # Position the bar
     self.x       = (side == 0) ? -viewport.rect.width / 2 : viewport.rect.width
-    self.y       = (side == 0) ? 180 : 80
+    self.y       = (side == 0) ? 180 : 180
     self.z       = 120
     self.visible = false
   end

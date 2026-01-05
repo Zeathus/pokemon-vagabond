@@ -106,12 +106,14 @@ module Dialog
     elsif name == "uxie"
       return "telepathy_uxie"
     elsif name == "giratina"
-      return "giratina"
+      return "telepathy_giratina"
     end
     return nil  # false means default
   end
 
   def Dialog.getNameBox(name)
+    return _INTL("Graphics/Messages/name_box")
+
     name = name.downcase if name
     ret = "name_box"
     if name == "<player>" || name == "player" || name == "<player2>" || name == "player2" 

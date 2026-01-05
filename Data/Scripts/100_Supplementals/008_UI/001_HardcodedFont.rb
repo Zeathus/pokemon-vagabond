@@ -56,11 +56,23 @@ class BitmapCharacter
 end
 
 def pbCompileBitmapFonts
+  font_file = "Data/fonts.dat"
+
+  begin
+    if pbRgssExists?(font_file)
+      data = nil
+      pbRgssOpen(font_file, "rb") { |f| data = Marshal.load(f) }
+      return data
+    end
+  rescue
+    echoln "Failed to read compiled fonts file"
+  end
+
   chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
   chars += "1234567890"
   chars += ".…,!?¡¿'‘’\"“”-:;_+×÷=~()[]/\\&%@<>*|#^"
   chars += "ÀÁÂÄÃÅàáâäãåÆæÈÉÊËèéêëÇçÌÍÎÏìíîïŒœÒÓÔÖÕòóôöõØøÑñÙÚÛÜùúûüÝý"
-  chars += "$§♂♀⚲←→↓↑•◎○□△♠♥♦♣★✨♈♌♒♐♩♪♫☽☾"
+  chars += "$§♂♀⚲←→↓↑•◎○□△♠♥♦♣★✨♈♌♒♐♩♪♫☽☾∞"
   fonts = {}
   for font_name in ["system", "small", "smallest", "bold"]
     echoln "Compiling font '#{font_name}'"
@@ -75,10 +87,13 @@ def pbCompileBitmapFonts
     bm.dispose
   end
   fonts["Arial"] = fonts["system"]
+
+  if $DEBUG
+    File.open(font_file, "wb") { |f| Marshal.dump(fonts, f) }
+  end
+
   return fonts
 end
-
-$BitmapFonts = pbCompileBitmapFonts
 
 class Bitmap
   alias sup_draw_text draw_text

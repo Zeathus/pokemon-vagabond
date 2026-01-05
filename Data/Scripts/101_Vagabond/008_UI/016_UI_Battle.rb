@@ -1,3 +1,24 @@
+class Battle
+  def pbCheckMenu
+    return @scene.pbCheckMenu
+  end
+end
+
+class Battle::Scene
+  def pbCheckMenu
+    pbShowWindow(BLANK)
+    @sprites["check_menu"] = CheckMenu.new(@viewport, @battle)
+    loop do
+      pbUpdate
+      @sprites["check_menu"].update
+      break if Input.trigger?(Input::BACK)
+    end
+    sprites["check_menu"].dispose
+    sprites["check_menu"] = nil
+    pbShowWindow(COMMAND_BOX)
+  end
+end
+
 class Battle::Scene::Outer
 
   attr_reader :viewport
@@ -17,15 +38,8 @@ class Battle::Scene::Outer
   def pbInitMenuSprites
     @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
     @viewport.z = @parent.z
-    @sprites["border"] = IconSprite.new(0, 0, @viewport)
-    @sprites["border"].setBitmap("Graphics/UI/Battle/border")
-    @sprites["border"].visible = false
-    #@sprites["border"].z = 999
-    @sprites["outerOverlay"] = IconSprite.new(0,0,@viewport)
-    @sprites["outerOverlay"].setBitmap("Graphics/UI/Battle/outer_overlay")
-    @sprites["outerOverlay"].visible = false
     # Create message box graphic
-    messageBox = pbAddSprite("messageBox",0,576-100,
+    messageBox = pbAddSprite("messageBox",0,576-96,
       "Graphics/UI/Battle/overlay_message",@viewport)
     messageBox.z = 195
     # Create message window (displays the message)
@@ -37,12 +51,26 @@ class Battle::Scene::Outer
     msgWindow.shadowColor    = Color.new(33,29,29)
     msgWindow.letterbyletter = true
     @sprites["messageWindow"] = msgWindow
-    xPos = [148,386,148,386]
-    yPos = [482,482,528,528]
-    for i in 0...4
-      @sprites[_INTL("command_{1}",i)] = OuterCommandSprite.new(xPos[i],yPos[i],@viewport,@sprites["commandWindow"],i)
+    xPos = [390,544,390,544,390,544]
+    yPos = [404,404,456,456,508,508]
+    for i in 0...6
+      @sprites[_INTL("command_{1}",i)] = OuterCommandSprite.new(xPos[i] + 128,yPos[i] + 30,@viewport,@sprites["commandWindow"],i)
       @sprites[_INTL("command_{1}",i)].z = 1
     end
+    @sprites["command_6"] = QuickItemSprite.new(710,376,@viewport,@sprites["commandWindow"],6)
+    @sprites["command_6"].z = 1
+    @sprites["command_pkmn"] = PokemonIconSprite.new(nil, @viewport)
+    @sprites["command_pkmn"].active = true
+    @sprites["command_pkmn"].x = 522
+    @sprites["command_pkmn"].y = 340
+    @sprites["command_pkmn"].z = 2
+    @sprites["command_turn"] = Sprite.new(@viewport)
+    @sprites["command_turn"].bitmap = Bitmap.new(128, 32)
+    @sprites["command_turn"].x = 580
+    @sprites["command_turn"].y = 370
+    @sprites["command_turn"].z = 3
+    pbSetSystemFont(@sprites["command_turn"].bitmap)
+    pbDrawTextPositions(@sprites["command_turn"].bitmap, [[_INTL("'s Turn"),2,2,0,msgWindow.baseColor,msgWindow.shadowColor,true]])
     @sprites["moveInfo"] = OuterMoveInfo.new(@viewport,@sprites["fightWindow"])
     @sprites["moveInfo"].z = 1
     # Create targeting window
@@ -53,21 +81,21 @@ class Battle::Scene::Outer
       @sprites[_INTL("switch_{1}", i)].z = 3
       @sprites[_INTL("switch_{1}", i)].visible = false
     end
-    @sprites["switch_cursor"] = IconSprite.new(0, 0, @viewport)
-    @sprites["switch_cursor"].setBitmap("Graphics/UI/Battle/switch_cursor")
-    @sprites["switch_cursor"].z = 4
-    @sprites["switch_cursor"].visible = false
-    @sprites["lineupPlayer"] = OuterTeamLineup.new(@viewport, @battle.pbParty(0), true, true)
-    @sprites["lineupPlayer"].z = 5
-    @sprites["lineupPlayer"].x = 0
-    @sprites["lineupOpponent"] = OuterTeamLineup.new(@viewport, @battle.pbParty(1), false, @battle.showParty)
-    @sprites["lineupOpponent"].z = 5
-    @sprites["lineupOpponent"].x = Graphics.width / 2 + 8
-    @sprites["vs"] = IconSprite.new(0, 0, @viewport)
-    @sprites["vs"].setBitmap("Graphics/UI/Battle/vs")
-    @sprites["vs"].ox = @sprites["vs"].bitmap.width / 2
-    @sprites["vs"].x = Graphics.width / 2
-    @sprites["vs"].y = 20
+    #@sprites["lineupPlayer"] = OuterTeamLineup.new(@viewport, @battle.pbParty(0), true, true)
+    #@sprites["lineupPlayer"].z = 5
+    #@sprites["lineupPlayer"].x = 0
+    #@sprites["lineupOpponent"] = OuterTeamLineup.new(@viewport, @battle.pbParty(1), false, @battle.showParty)
+    #@sprites["lineupOpponent"].z = 5
+    #@sprites["lineupOpponent"].x = Graphics.width / 2 + 8
+    #@sprites["vs"] = IconSprite.new(0, 0, @viewport)
+    #@sprites["vs"].setBitmap("Graphics/UI/Battle/vs")
+    #@sprites["vs"].ox = @sprites["vs"].bitmap.width / 2
+    #@sprites["vs"].x = Graphics.width / 2
+    #@sprites["vs"].y = 20
+  end
+
+  def active_pokemon=(p)
+    @sprites["command_pkmn"].pokemon = p
   end
 
   def pbAddSprite(id,x,y,filename,viewport)
@@ -80,6 +108,7 @@ class Battle::Scene::Outer
   end
 
   def pbInitInfoSprites
+    return
     boxCount = 0
     for i in 0...6
       boxCount += 1 if @sprites["dataBox_#{i}"]
@@ -94,29 +123,36 @@ class Battle::Scene::Outer
   end
 
   def pbShowWindow(windowType)
-    for i in 0...4
-        @sprites[_INTL("command_{1}",i)].visible = (windowType==COMMAND_BOX)
+    for i in 0...7
+      @sprites[_INTL("command_{1}",i)].visible = (windowType==COMMAND_BOX)
     end
+    @sprites["command_pkmn"].visible = (windowType==COMMAND_BOX)
+    @sprites["command_turn"].visible = (windowType==COMMAND_BOX)
     @sprites["moveInfo"].visible = (windowType==FIGHT_BOX)
   end
 
   def update(cw=nil, mustRefresh=false)
-    for i in 0...4
+    for i in 0...7
       @sprites[_INTL("command_{1}",i)].update
+      @sprites["command_pkmn"].update
+      @sprites["command_turn"].update
     end
-    for i in 0...4
-      @sprites[_INTL("info_{1}",i)].update(mustRefresh) if @sprites[_INTL("info_{1}",i)]
+    for i in 0...6
+      @sprites[_INTL("switch_{1}", i)].update
     end
+    #for i in 0...4
+    #  @sprites[_INTL("info_{1}",i)].update(mustRefresh) if @sprites[_INTL("info_{1}",i)]
+    #end
     @sprites["moveInfo"].update
-    @battle.allBattlers.each do |b|
-      if b.index % 2 == 0
-        @sprites["lineupPlayer"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
-      else
-        @sprites["lineupOpponent"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
-      end
-    end
-    @sprites["lineupPlayer"].update if !([0, 2, 4].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
-    @sprites["lineupOpponent"].update if !([1, 3, 5].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
+    #@battle.allBattlers.each do |b|
+    #  if b.index % 2 == 0
+    #    @sprites["lineupPlayer"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
+    #  else
+    #    @sprites["lineupOpponent"].setShown(b.pokemonIndex) if @sprites["dataBox_#{b.index}"].visible
+    #  end
+    #end
+    #@sprites["lineupPlayer"].update if !([0, 2, 4].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
+    #@sprites["lineupOpponent"].update if !([1, 3, 5].any? { |i| @sprites["dataBox_#{i}"]&.animatingHP })
   end
 
   def dispose
@@ -141,44 +177,41 @@ class Battle::Scene::Outer
       @sprites[_INTL("switch_{1}", i)].party_length = pokemon.length
       @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
       @sprites[_INTL("switch_{1}", i)].pokemon = pokemon[i]
-      @sprites[_INTL("switch_{1}", i)].active = (i == 0)
+      @sprites[_INTL("switch_{1}", i)].party_member = 0
+      getActivePokemon(0).each do |p|
+        if p == pokemon[i]
+          @sprites[_INTL("switch_{1}", i)].party_member = getPartyActive(0)
+          break
+        end
+      end
+      getActivePokemon(1).each do |p|
+        if p == pokemon[i]
+          @sprites[_INTL("switch_{1}", i)].party_member = getPartyActive(1)
+          break
+        end
+      end
+      @sprites[_INTL("switch_{1}", i)].active = 0
     end
     selected_index = 0
     new_index = selected_index
-    if pokemon.length > 3
-      if selected_index >= 3
-        @sprites["switch_cursor"].x = 128 + 170 * ((selected_index - 3) + (3 - (pokemon.length - 3)) * 0.5)
-        @sprites["switch_cursor"].y = 478
-      else
-        @sprites["switch_cursor"].x = 128 + 170 * selected_index
-        @sprites["switch_cursor"].y = 386
-      end
-    else
-      @sprites["switch_cursor"].x = 128 + 170 * (selected_index + (3 - pokemon.length) * 0.5)
-      @sprites["switch_cursor"].y = 478
-    end
-    @sprites["switch_cursor"].visible = true
 
     loop do
       @battle.scene.pbGraphicsUpdate
       @battle.scene.pbInputUpdate
       @battle.scene.pbFrameUpdate
-      for i in 0...3
-        @sprites[_INTL("switch_{1}", i)].update if i == selected_index
-      end
-      if Input.trigger?(Input::LEFT)
+      if Input.trigger?(Input::UP)
         new_index -= 1
         if new_index == -1 || new_index == 2
           new_index = ((new_index < 0) ? [pokemon.length, 3].min : pokemon.length) - 1
         end
       end
-      if Input.trigger?(Input::RIGHT)
+      if Input.trigger?(Input::DOWN)
         new_index += 1
         if new_index == pokemon.length || new_index == 3
           new_index = (new_index > 3) ? 3 : 0
         end
       end
-      if Input.trigger?(Input::UP) || Input.trigger?(Input::DOWN)
+      if Input.trigger?(Input::LEFT) || Input.trigger?(Input::RIGHT)
         if pokemon.length > 3
           new_index = (new_index + 3) % 6
           new_index = pokemon.length - 1 if new_index >= pokemon.length
@@ -187,20 +220,8 @@ class Battle::Scene::Outer
       if new_index != selected_index
         pbPlayCursorSE
         selected_index = new_index
-        if pokemon.length > 3
-          if selected_index >= 3
-            @sprites["switch_cursor"].x = 128 + 170 * ((selected_index - 3) + (3 - (pokemon.length - 3)) * 0.5)
-            @sprites["switch_cursor"].y = 478
-          else
-            @sprites["switch_cursor"].x = 128 + 170 * selected_index
-            @sprites["switch_cursor"].y = 386
-          end
-        else
-          @sprites["switch_cursor"].x = 128 + 170 * (selected_index + (3 - pokemon.length) * 0.5)
-          @sprites["switch_cursor"].y = 478
-        end
-        for i in 0...3
-          @sprites[_INTL("switch_{1}", i)].active = (i == selected_index)
+        for i in 0...6
+          @sprites[_INTL("switch_{1}", i)].active = selected_index
         end
       end
       if Input.trigger?(Input::BACK) && canCancel
@@ -230,18 +251,16 @@ class Battle::Scene::Outer
           commands[cmdBoxes   = commands.length] = _INTL("Send to Boxes") if mode == 1
           commands[cmdSummary = commands.length] = _INTL("Summary")
           commands[commands.length]              = _INTL("Cancel")
-          command = @battle.scene.pbShowCommands("", commands, commands.length)
+          command = @battle.scene.pbShowCommands("", commands, commands.length, pokemon.length > 3 ? -420 : -350, 36)
           if (cmdSwitch >= 0 && command == cmdSwitch) ||   # Switch In
             (cmdBoxes >= 0 && command == cmdBoxes)        # Send to Boxes
-            for i in 0...3
+            for i in 0...6
               @sprites[_INTL("switch_{1}", i)].visible = false
             end
-            @sprites["switch_cursor"].visible = false
             break if yield idxPartyRet, @battle.scene
-            for i in 0...3
+            for i in 0...6
               @sprites[_INTL("switch_{1}", i)].visible = (i < pokemon.length)
             end
-            @sprites["switch_cursor"].visible = true
             @battle.scene.pbShowWindow(BLANK)
           elsif cmdSummary >= 0 && command == cmdSummary   # Summary
             pbSummary(pokemon, selected_index)
@@ -253,7 +272,6 @@ class Battle::Scene::Outer
     for i in 0...6
       @sprites[_INTL("switch_{1}", i)].visible = false
     end
-    @sprites["switch_cursor"].visible = false
 
     @battle.scene.pbShowWindow(COMMAND_BOX)
   end
@@ -266,6 +284,28 @@ class Battle::Scene::Outer
     pbFadeInAndShow(@sprites, oldsprites)
   end
 
+  def set_quick_pocket(pocket)
+    if pocket == -1
+      @sprites["command_6"].visible = false
+      return false
+    else
+      @sprites["command_6"].set_pocket(pocket)
+      if @sprites["command_6"].count == 0
+        @sprites["command_6"].visible = false
+        return false
+      end
+      return true
+    end
+  end
+
+  def change_quick_item(offset)
+    @sprites["command_6"].change_item(offset)
+  end
+
+  def get_quick_item
+    return @sprites["command_6"].get_item
+  end
+
 end
 
 class OuterMoveBox < IconSprite
@@ -273,53 +313,66 @@ class OuterMoveBox < IconSprite
   def initialize(viewport,parent,pos)
     @parent = parent
     @pos = pos
-    x = 132
-    y = 482
-    x += 186 if @pos&1==1
-    y += 46  if @pos>1
+    @selected = false
+    @timer = 0
+    x = 558
+    y = 414
+    #x += 186 if @pos&1==1
+    y += 48 * @pos # if @pos>1
     super(x,y,viewport)
     setBitmap("Graphics/UI/Battle/move_buttons")
-    self.src_rect = Rect.new(0,0,182,42)
+    self.src_rect = Rect.new(0,0,224,80)
+    self.ox = 112
+    self.oy = 40
     @cursor = IconSprite.new(0, 0, viewport)
     @cursor.setBitmap("Graphics/UI/Battle/move_cursor")
     @cursor.x = self.x - 2
-    @cursor.y = self.y - 2
-    @cursor.z = self.z + 1
+    @cursor.y = self.y + 4
+    @cursor.z = self.z - 1
+    @cursor.ox = 112
+    @cursor.oy = 40
     @cursor.visible = false
     @overlay = Sprite.new(viewport)
     @overlay.bitmap = Bitmap.new(self.src_rect.width,self.src_rect.height)
     @overlay.x = self.x
     @overlay.y = self.y
     @overlay.z = self.z + 2
+    @overlay.ox = 112
+    @overlay.oy = 40
     @effectiveness_icon = IconSprite.new(0, 0, viewport)
     @effectiveness_icon.setBitmap("Graphics/UI/Battle/effectiveness_icons")
     @effectiveness_icon.x = self.x - 6
-    @effectiveness_icon.y = self.y - 6
+    @effectiveness_icon.y = self.y - 4
     @effectiveness_icon.z = self.z + 3
     @effectiveness_icon.src_rect = Rect.new(0, 0, 26, 26)
     @effectiveness_icon.opacity = 0
+    @effectiveness_icon.ox = 112
+    @effectiveness_icon.oy = 40
     @boost_icon = IconSprite.new(0, 0, viewport)
     @boost_icon.setBitmap("Graphics/UI/Battle/affinityboost_text_small")
-    @boost_icon.x = self.x + 96
-    @boost_icon.y = self.y - 6
+    @boost_icon.x = self.x + 128
+    @boost_icon.y = self.y - 4
     @boost_icon.z = self.z + 3
     @boost_icon.opacity = 0
+    @boost_icon.ox = 112
+    @boost_icon.oy = 40
     @icons_timer = 0
   end
 
   def refresh(move,selected=false)
+    @selected = selected
     @overlay.bitmap.clear
     if !move
-      self.src_rect.x = -182
-      self.src_rect.y = -42
+      self.src_rect.x = -224
+      self.src_rect.y = -80
       self.visible = false
       return
     end
     self.visible = true
-    @cursor.visible = selected
+    @cursor.visible = @selected
     type_id = GameData::Type.get(move.type).icon_position
-    self.src_rect.x = selected ? 182 : 0
-    self.src_rect.y = type_id * 42
+    self.src_rect.x = @selected ? 224 : 0
+    self.src_rect.y = type_id * 80
     #moveNameBase = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
     base=Color.new(64,64,64)
     shadow=Color.new(176,176,176)
@@ -353,7 +406,7 @@ class OuterMoveBox < IconSprite
         end
       end
     end
-    textPos = [[move.name,106,14,2,base,shadow]]
+    textPos = [[move.name,126,20,2,base,shadow]]
     pbSetSmallFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap,textPos)
     pbSetSystemFont(@overlay.bitmap)
@@ -361,6 +414,13 @@ class OuterMoveBox < IconSprite
 
   def update
     super
+    if self.visible && @selected
+      @timer += 1
+      self.angle = Math.sin(@timer / 8.0) * 2
+    else
+      @timer = 0
+      self.angle = 0
+    end
     if self.visible
       if @effectiveness != 0
         if @icons_timer < 32
@@ -379,7 +439,7 @@ class OuterMoveBox < IconSprite
         elsif @icons_timer >= 48 && @icons_timer < 80
           @boost_icon.opacity -= 8
         end
-        @icons_timer += 1
+        @icons_timer += 1 if @effectiveness == 0
         @icons_timer = 0 if @icons_timer >= 88
       else
         @boost_icon.opacity = 0
@@ -415,7 +475,7 @@ class OuterMoveBox < IconSprite
 
   def z=(value)
     super(value)
-    @cursor.z = self.z + 1
+    @cursor.z = self.z - 1
     @overlay.z = self.z + 2
     @boost_icon.z = self.z + 3
     @effectiveness_icon.z = self.z + 3
@@ -585,7 +645,7 @@ end
 class OuterMoveInfo < IconSprite
 
   def initialize(viewport,parent)
-    super(502,478,viewport)
+    super(674,378,viewport)
     setBitmap("Graphics/UI/Battle/outer_move_info")
     @typeBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
     @categoryBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/category"))
@@ -614,18 +674,18 @@ class OuterMoveInfo < IconSprite
     return if !move
     base = Color.new(248,248,248)
     shadow = Color.new(80,80,88)
-    @overlay.bitmap.blt(64,6,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(move.type).icon_position,64,28))
-    @overlay.bitmap.blt(64,62,@categoryBitmap.bitmap,Rect.new(0,28*move.category,64,28))
+    @overlay.bitmap.blt(10,94,@typeBitmap.bitmap,Rect.new(0,28*GameData::Type.get(move.type).icon_position,64,28))
+    @overlay.bitmap.blt(10,152,@categoryBitmap.bitmap,Rect.new(0,28*move.category,64,28))
     textPos = []
     powerString = (move.power <= 0) ? "-" : move.power.to_s
-    textPos.push([powerString,28,18,2,base,shadow])
+    textPos.push([powerString,6,4,0,base,shadow])
     accString = (move.accuracy <= 0) ? "-" : (move.accuracy.to_s + "%")
-    textPos.push([accString,28,54,2,base,shadow])
-    textPos.push([move.pp.to_s,40,76,2,base,shadow])
+    textPos.push([accString,6,28,0,base,shadow])
+    textPos.push([sprintf("%2d/%2d", move.pp, move.total_pp),6,52,0,base,shadow])
     pbSetSmallestFont(@overlay.bitmap)
     pbDrawTextPositions(@overlay.bitmap,textPos)
     for i in 0...4
-        @sprites[i].refresh(@battler.moves[i],i==@index)
+      @sprites[i].refresh(@battler.moves[i],i==@index)
     end
   end
 
@@ -953,38 +1013,279 @@ end
 class OuterCommandSprite < IconSprite
   
   def initialize(x,y,viewport=nil,parent,pos)
+    @timer = 0
+    @text_sprite = IconSprite.new(x, y, viewport)
+    @text_sprite.setBitmap("Graphics/UI/Battle/options_new")
+    @text_sprite.ox = 128
+    @text_sprite.oy = 22
     super(x,y,viewport)
-    @parent  = parent
+    self.ox = 128
+    self.oy = 22
+    @parent = parent
     @pos = pos
-    setBitmap(_INTL("Graphics/UI/Battle/options"))
+    setBitmap("Graphics/UI/Battle/options_new")
     refresh
   end
 
-  def getRect(i)
-    return (@parent.index==@pos) ? Rect.new(234,i*44,234,44) : Rect.new(0,i*44,234,44)
+  def getRect(i, j = 0)
+    return (@parent.index==@pos) ? Rect.new(256+512*j,i*44,256,44) : Rect.new(512*j,i*44,256,44)
   end
   
   def dispose
+    @text_sprite.dispose
     super
   end
 
   def visible=(value)
+    @text_sprite.visible = value
     super(value)
     refresh if value
   end
+
+  def opacity=(value)
+    @text_sprite.opacity = value
+    super(value)
+  end
+
+  def tone=(value)
+    @text_sprite.tone = value
+    super(value)
+  end
+
+  def color=(value)
+    @text_sprite.color = value
+    super(value)
+  end
+
+  def x=(value)
+    @text_sprite.x = value
+    super(value)
+  end
+
+  def y=(value)
+    @text_sprite.y = value
+    super(value)
+  end
+
+  def z=(value)
+    @text_sprite.z = value + 1
+    super(value)
+  end
   
   def refresh
-    if @parent.mode==1 && @pos==3
-      self.src_rect = getRect(5)
+    if @parent.mode==1 && @pos==4
+      self.src_rect = getRect(6)
+      @text_sprite.src_rect = getRect(6, 1)
     else
       self.src_rect = getRect(@pos)
+      @text_sprite.src_rect = getRect(@pos, 1)
     end
   end
   
   def update
+    @text_sprite.update
+    if @parent.index == @pos
+      @timer += 1
+      self.angle = Math.sin(@timer / 8.0) * 4
+    else
+      @timer = 0
+      self.angle = 0
+    end
     super
     refresh
   end
+end
+
+class QuickItemSprite < IconSprite
+
+  def initialize(x,y,viewport=nil,parent,pos)
+    @selected = false
+    @timer = 0
+    @animation_timer = 0
+    @animation_mult = 0
+    @items = []
+    @item_index = 0
+    @item_sprite = ItemIconSprite.new(x, y, nil, viewport)
+    @item_sprite.ox = 24
+    @item_sprite.oy = 24
+    @right_arrow = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @right_arrow.visible = false
+    @right_arrow.play
+    @left_arrow = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @left_arrow.visible = false
+    @left_arrow.zoom_x = -1
+    @left_arrow.play
+    @quantity = Sprite.new(viewport)
+    @quantity.bitmap = Bitmap.new(64, 32)
+    super(x,y,viewport)
+    self.ox = 32
+    self.oy = 32
+    @parent = parent
+    @pos = pos
+    setBitmap("Graphics/UI/Battle/quick_item_bg")
+    refresh
+  end
+
+  def set_pocket(value)
+    @items = $bag.pockets[value]
+    if @items.length > 0
+      @item_index = 0
+      for i in 0...@items.length
+        if @items[i][0] == $PokemonSystem.last_quick_item
+          @item_index = i
+          break
+        end
+      end
+    end
+    refresh
+  end
+
+  def change_item(offset)
+    pbSEPlay("GUI party switch", 80, 120)
+    if @animation_timer > 0
+      @animation_timer = 0
+      @item_sprite.x = self.x
+      @item_sprite.y = self.y
+      refresh
+    end
+    @item_index = (@item_index + offset) % @items.length
+    $PokemonSystem.last_quick_item = @items[@item_index][0]
+    @animation_timer = 9
+    @animation_mult = offset
+    refresh
+  end
+
+  def get_item
+    return nil if @items.length == 0
+    return @items[@item_index][0]
+  end
+
+  def count
+    return @items.length
+  end
+  
+  def dispose
+    @item_sprite.dispose
+    @right_arrow.dispose
+    @left_arrow.dispose
+    @quantity.dispose
+    super
+  end
+
+  def visible=(value)
+    @item_sprite.visible = value
+    @right_arrow.visible = value && @selected
+    @left_arrow.visible = value && @selected
+    @quantity.visible = value
+    super(value)
+    refresh if value
+  end
+
+  def opacity=(value)
+    @item_sprite.opacity = value
+    @right_arrow.opacity = value
+    @left_arrow.opacity = value
+    @quantity.opacity = value
+    super(value)
+  end
+
+  def tone=(value)
+    @item_sprite.tone = value
+    @right_arrow.tone = value
+    @left_arrow.tone = value
+    @quantity.tone = value
+    super(value)
+  end
+
+  def color=(value)
+    @item_sprite.color = value
+    @right_arrow.color = value
+    @left_arrow.color = value
+    @quantity.color = value
+    super(value)
+  end
+
+  def x=(value)
+    @item_sprite.x = value
+    @right_arrow.x = value + 18
+    @left_arrow.x = value - 18
+    @quantity.x = value - 6
+    super(value)
+  end
+
+  def y=(value)
+    @item_sprite.y = value
+    @right_arrow.y = value - 12
+    @left_arrow.y = value - 12
+    @quantity.y = value + 10
+    super(value)
+  end
+
+  def z=(value)
+    @item_sprite.z = value + 1
+    @right_arrow.z = value + 2
+    @left_arrow.z = value + 2
+    @quantity.z = value + 3
+    super(value)
+  end
+  
+  def refresh
+    self.src_rect = Rect.new((@parent.index == @pos) ? 64 : 0, 0, 64, 64)
+    return if @animation_timer > 4
+    @quantity.bitmap.clear
+    if @items.length > 0
+      @item_sprite.item = @items[@item_index][0]
+      if @selected
+        pbSetSmallFont(@quantity.bitmap)
+        pbDrawTextPositions(@quantity.bitmap, [
+          [_INTL("x{1}", @items[@item_index][1]), 36, 4, 1, Color.new(252,252,252), Color.new(15,15,15), 1]
+        ])
+      else
+        pbSetSmallestFont(@quantity.bitmap)
+        pbDrawTextPositions(@quantity.bitmap, [
+          [_INTL("x{1}", @items[@item_index][1]), 32, 2, 1, Color.new(252,252,252), Color.new(15,15,15), 1]
+        ])
+      end
+    end
+  end
+  
+  def update
+    @item_sprite.update
+    @right_arrow.update
+    @left_arrow.update
+    @quantity.update
+    if @parent.index == @pos
+      @timer += 1
+      self.angle = Math.sin(@timer / 8.0) * 6
+      @right_arrow.visible = true && self.visible
+      @left_arrow.visible = true && self.visible
+    else
+      @timer = 0
+      self.angle = 0
+      @right_arrow.visible = false
+      @left_arrow.visible = false
+    end
+    if @animation_timer > 5
+      @animation_timer -= 1
+      @item_sprite.x -= [8, 6, 4, 2][@animation_timer - 5] * @animation_mult
+      @item_sprite.opacity = [32, 64, 128, 255][@animation_timer - 5]
+    elsif @animation_timer == 5
+      @animation_timer -= 1
+      @item_sprite.opacity = 0
+      @item_sprite.x = self.x + 20 * @animation_mult
+      refresh
+    elsif @animation_timer > 0
+      @animation_timer -= 1
+      @item_sprite.x -= [2, 4, 6, 8][@animation_timer] * @animation_mult
+      @item_sprite.opacity = [255, 128, 64, 32][@animation_timer]
+    end
+    if @selected != (@parent.index == @pos)
+      @selected = (@parent.index == @pos)
+      refresh
+    end
+    super
+  end
+
 end
 
 class OuterSwitchBox < IconSprite
@@ -994,20 +1295,31 @@ class OuterSwitchBox < IconSprite
     @pos = pos
     @party_member = 0
     @party_length = 3
+    @timer = 0
     @pokemon = nil
-    @overlay = Sprite.new(viewport)
-    @overlay.bitmap = Bitmap.new(170, 112)
+    @active = -1
     setBitmap(_INTL("Graphics/UI/Battle/switch"))
+    self.ox = self.bitmap.width / 4
+    self.oy = self.bitmap.height / 18
+    @hp_gauge = Sprite.new(viewport)
+    @hp_gauge.bitmap = Bitmap.new(352, 96)
+    @hp_gauge.ox = self.ox
+    @hp_gauge.oy = self.oy
+    @overlay = Sprite.new(viewport)
+    @overlay.bitmap = Bitmap.new(352, 96)
+    @overlay.ox = self.ox
+    @overlay.oy = self.oy
     @pkmnsprite = PokemonIconSprite.new(@pokemon, viewport)
     @pkmnsprite.setOffset(PictureOrigin::CENTER)
     @pkmnsprite.active = false
-    @statuses=AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
+    @statuses = AnimatedBitmap.new(_INTL("Graphics/UI/Party/statuses"))
     @hpbar = AnimatedBitmap.new("Graphics/UI/Battle/switch_overlay_hp")
     refresh
   end
 
   def dispose
     @overlay.dispose
+    @hp_gauge.dispose
     @pkmnsprite.dispose
     @hpbar.dispose
     @statuses.dispose
@@ -1017,6 +1329,7 @@ class OuterSwitchBox < IconSprite
   def visible=(value)
     super(value)
     @overlay.visible = value
+    @hp_gauge.visible = value
     @pkmnsprite.visible = value
   end
 
@@ -1026,7 +1339,11 @@ class OuterSwitchBox < IconSprite
   end
 
   def active=(value)
-    @pkmnsprite.active = value
+    @active = value
+    @pkmnsprite.active = (@active == @pos)
+    @pkmnsprite.disabled = (@active != @pos)
+    refresh
+    update
   end
 
   def party_length=(value)
@@ -1039,89 +1356,128 @@ class OuterSwitchBox < IconSprite
 
   def z=(value)
     super(value)
-    @overlay.z = value + 3
-    @pkmnsprite.z = value + 4
+    @overlay.z = value + 5
+    @hp_gauge.z = value + 4
+    @pkmnsprite.z = value + 3
   end
 
   def tone=(value)
     super(value)
     @overlay.tone = value
+    @hp_gauge.tone = value
     @pkmnsprite.tone = value
   end
 
   def color=(value)
     super(value)
     @overlay.color = value
+    @hp_gauge.color = value
     @pkmnsprite.color = value
   end
 
   def opacity=(value)
     super(value)
     @overlay.opacity = value
+    @hp_gauge.opacity = value
     @pkmnsprite.opacity = value
   end
   
   def refresh
+    selected = (@active == @pos)
     base   = Color.new(248, 248, 248)
     shadow = Color.new( 15,  15,  15)
-    self.src_rect = Rect.new(0, @party_member * 96, 172, 96)
+    if (@pos < 3) == (@active < 3)
+      self.src_rect = Rect.new(selected ? 352 : 0, @party_member * 96, 352, 96)
+    else
+      self.src_rect = Rect.new(704, @party_member * 96, 96, 96)
+    end
     if @party_length > 3
       if @pos >= 3
-        self.x = 128 + 170 * ((@pos - 3) + (3 - (@party_length - 3)) * 0.5)
-        self.y = 478
+        self.x = ((@pos < 3) == (@active < 3)) ? 616 : 870
+        self.y = 372 + 76 * (@pos - 3)
       else
-        self.x = 128 + 170 * @pos
-        self.y = 386
+        self.x = 542
+        self.y = 372 + 76 * @pos
       end
     else
-      self.x = 128 + 170 * (@pos + (3 - @party_length) * 0.5)
-      self.y = 478
+      self.x = 610
+      self.y = 372 + 76 * @pos
     end
 
     @pkmnsprite.pokemon = @pokemon
-    @pkmnsprite.x = self.x + 44
-    @pkmnsprite.y = self.y + 28
+    @pkmnsprite.x = self.x + 48 - self.ox
+    @pkmnsprite.y = self.y + 48 - self.oy
 
     @overlay.x = self.x
     @overlay.y = self.y
     @overlay.bitmap.clear
+    @hp_gauge.x = self.x
+    @hp_gauge.y = self.y
+    @hp_gauge.bitmap.clear
     if @pokemon
-      pbSetSmallestFont(@overlay.bitmap)
-      textpos = [
-        [_INTL("{1}", @pokemon.egg? ? "-" : @pokemon.level), 24, 52, 2, base, shadow],
-        [@pokemon.name.upcase, 44, 52, 0, base, shadow]
-      ]
-      pbDrawTextPositions(@overlay.bitmap, textpos)
-      imagepos = []
       if !@pokemon.egg?
-        for i in 0...@pokemon.types.length
-          imagepos.push(["Graphics/UI/type_icons.png", 74 + ((@pokemon.types.length == 1) ? 16 : (i * 30)), 8, 56, 28 * GameData::Type.get(@pokemon.types[i]).icon_position, 28, 28])
-        end
-        imagepos.push(["Graphics/UI/type_icons.png", 136, 8, 56, 28 * GameData::Type.get(@pokemon.affinity).icon_position, 28, 28])
+        pbSetSmallestFont(@overlay.bitmap)
+        textpos = [
+          [_INTL("Lv{1}", @pokemon.egg? ? "-" : @pokemon.level), 24, 56, 0, base, shadow, 1]
+        ]
+        pbDrawTextPositions(@overlay.bitmap, textpos)
       end
-      pbDrawImagePositions(@overlay.bitmap, imagepos)
+      if (@pos < 3) == (@active < 3)
+        selected ? pbSetSystemFont(@overlay.bitmap) : pbSetSmallFont(@overlay.bitmap)
+        textpos = [
+          [@pokemon.name, 157, selected ? 28 : 32, 2, base, shadow]
+        ]
+        pbDrawTextPositions(@overlay.bitmap, textpos)
+        if !@pokemon.egg?
+          pbSetSmallestFont(@overlay.bitmap)
+          textpos = [
+            [_INTL("TYPE"), 252, 26, 0, base, shadow],
+            [_INTL("AFF."), 300, 26, 0, base, shadow]
+          ]
+          pbDrawTextPositions(@overlay.bitmap, textpos)
+          
+          imagepos = []
+          for i in 0...@pokemon.types.length
+            imagepos.push(["Graphics/UI/types_small.png", 238 + ((@pokemon.types.length == 1) ? 14 : (i * 28)), 38, 0, 32 * GameData::Type.get(@pokemon.types[i]).icon_position, 32, 32])
+          end
+          imagepos.push(["Graphics/UI/types_small.png", 298, 38, 0, 32 * GameData::Type.get(@pokemon.affinity).icon_position, 32, 32])
+          pbDrawImagePositions(@overlay.bitmap, imagepos)
 
-      hptextpos = [[_ISPRINTF("{1: 3d}/{2: 3d}", @pokemon.hp, @pokemon.totalhp),
-         @hpX,@hpY,2,base,shadow]]
-      hpgauge=@pokemon.totalhp==0 ? 0 : ((@pokemon.hp * 57 / @pokemon.totalhp).floor * 2)
-      hpgauge=1 if hpgauge==0 && @pokemon.hp>0
-      hpzone=0
-      hpzone=1 if @pokemon.hp<=(@pokemon.totalhp/2).floor
-      hpzone=2 if @pokemon.hp<=(@pokemon.totalhp/4).floor
-      hpcolors=[
-         Color.new(14,152,22),Color.new(24,192,32),   # Green
-         Color.new(202,138,0),Color.new(232,168,0),   # Orange
-         Color.new(218,42,36),Color.new(248,72,56)    # Red
-      ]
-      # fill with HP color
-      @overlay.bitmap.fill_rect(46,80,hpgauge,2,hpcolors[hpzone*2])
-      @overlay.bitmap.fill_rect(46,82,hpgauge,4,hpcolors[hpzone*2+1])
-      @overlay.bitmap.fill_rect(46,86,hpgauge,2,hpcolors[hpzone*2])
-      @overlay.bitmap.blt(4, 76, @hpbar.bitmap, Rect.new(0, @party_member * 16, @hpbar.width, 16))
-      if @pokemon.hp == 0 || @pokemon.status != :NONE
-        status = (@pokemon.hp == 0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position)
-        statusrect=Rect.new(0, 32 * status, 32, 32)
-        @overlay.bitmap.blt(12, 68, @statuses.bitmap, statusrect)
+          hptextpos = [[_ISPRINTF("{1: 3d}/{2: 3d}", @pokemon.hp, @pokemon.totalhp),166,60,2,base,shadow]]
+          gauge_size = 118
+          hpgauge=@pokemon.totalhp==0 ? 0 : ((@pokemon.hp * (gauge_size / 2) / @pokemon.totalhp).floor * 2)
+          hpgauge=1 if hpgauge==0 && @pokemon.hp>0
+          hpzone=0
+          hpzone=1 if @pokemon.hp<=(@pokemon.totalhp/2).floor
+          hpzone=2 if @pokemon.hp<=(@pokemon.totalhp/4).floor
+          hpcolors=[
+            Color.new(14,152,22),Color.new(24,192,32),   # Green
+            Color.new(202,138,0),Color.new(232,168,0),   # Orange
+            Color.new(218,42,36),Color.new(248,72,56)    # Red
+          ]
+          # fill with HP color
+          @hp_gauge.bitmap.fill_rect(112,64,hpgauge,2,hpcolors[hpzone*2])
+          @hp_gauge.bitmap.fill_rect(112,66,hpgauge,2,hpcolors[hpzone*2+1])
+          @hp_gauge.bitmap.fill_rect(112,68,hpgauge,2,hpcolors[hpzone*2+1])
+          if selected
+            @hp_gauge.bitmap.fill_rect(112,70,hpgauge,2,hpcolors[hpzone*2+1])
+            @hp_gauge.bitmap.fill_rect(112,72,hpgauge,2,hpcolors[hpzone*2+1])
+            @hp_gauge.bitmap.fill_rect(112,74,hpgauge,2,hpcolors[hpzone*2])
+            pbSetSmallFont(@overlay.bitmap)
+            hptextpos[0][2] += 2
+          else
+            @hp_gauge.bitmap.fill_rect(112,70,hpgauge,2,hpcolors[hpzone*2])
+            pbSetSmallestFont(@overlay.bitmap)
+          end
+          pbDrawTextPositions(@overlay.bitmap, hptextpos)
+          if @pokemon.hp == 0 || @pokemon.status != :NONE
+            status = (@pokemon.hp == 0) ? 5 : (GameData::Status.get(@pokemon.status).icon_position)
+            statusrect=Rect.new(0, 32 * status, 32, 32)
+            @overlay.bitmap.blt(80, 52, @statuses.bitmap, statusrect)
+          end
+        end
+      else
+
       end
     end
   end
@@ -1164,6 +1520,15 @@ class OuterSwitchBox < IconSprite
   
   def update
     super
+    if self.visible && (@active == @pos)
+      @timer += 1
+      self.angle = Math.sin(@timer / 8.0) * 1.5
+      @hp_gauge.angle = Math.sin(@timer / 8.0) * 1.5
+    else
+      @timer = 0
+      self.angle = 0
+      @hp_gauge.angle = 0
+    end
     @overlay.update
     @pkmnsprite.update
   end
@@ -1221,11 +1586,11 @@ class Battle::Scene::PokemonDataBox < Sprite
     onPlayerSide = @battler.index.even?
     # Get the data box graphic and set whether the HP numbers/Exp bar are shown
     if sideSize == 1   # One Pokémon on side, use the regular dara box BG
-      bgFilename = ["Graphics/UI/Battle/databox_normal",
-                    "Graphics/UI/Battle/databox_normal_foe"][@battler.index % 2]
+      bgFilename = ["Graphics/UI/Battle/databox_normal_foe",
+                    "Graphics/UI/Battle/databox_normal"][@battler.index % 2]
     else   # Multiple Pokémon on side, use the thin dara box BG
-      bgFilename = ["Graphics/UI/Battle/databox_thin",
-                    "Graphics/UI/Battle/databox_thin_foe"][@battler.index % 2]
+      bgFilename = ["Graphics/UI/Battle/databox_thin_foe",
+                    "Graphics/UI/Battle/databox_thin"][@battler.index % 2]
     end
     if onPlayerSide
       @showHP = true
@@ -1236,13 +1601,13 @@ class Battle::Scene::PokemonDataBox < Sprite
     # Determine the co-ordinates of the data box and the left edge padding width
     @spriteBaseY = 4
     if onPlayerSide
-      @spriteX = self.viewport.rect.width - 244
+      @spriteX = 0
       @spriteY = self.viewport.rect.height - 112
-      @spriteBaseX = 34
-    else
-      @spriteX = -12
-      @spriteY = 36
       @spriteBaseX = 16
+    else
+      @spriteX = self.viewport.rect.width - 256
+      @spriteY = 36
+      @spriteBaseX = 34
     end
     @smallLevel = (sideSize == 3)
     case sideSize
@@ -1260,23 +1625,23 @@ class Battle::Scene::PokemonDataBox < Sprite
         @smallLevel = true if offset >= 36
       end
     when 2
-      @spriteX += [-12,  12,  0,  0][@battler.index]
-      @spriteY += [-20, -34, 34, 20][@battler.index]
+      @spriteX += [-12, 12,  0,  0][@battler.index]
+      @spriteY += [-20, 20, 34,-34][@battler.index]
     when 3
-      @spriteX += [-12,  12, -6,  6,  0,  0][@battler.index]
-      @spriteY += [-42, -42,  6,  6, 54, 54][@battler.index]
+      @spriteX += [-12, 12, -6,  6,  0,  0][@battler.index]
+      @spriteY += [-42, 54,  6,  6, 54,-42][@battler.index]
     end
   end
   
   def initializeOtherGraphics(viewport)
     # Create other bitmaps
     @numbersBitmap = AnimatedBitmap.new("Graphics/UI/Battle/icon_numbers")
-    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_vb{1}", onPlayerSide ? "" : "_foe"))
-    @hpBarExBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_extra{1}", onPlayerSide ? "" : "_foe"))
+    @hpBarBitmap   = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_vb{1}", onPlayerSide ? "_foe" : ""))
+    @hpBarExBitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Battle/overlay_hp_extra{1}", onPlayerSide ? "_foe" : ""))
     @expBarBitmap  = AnimatedBitmap.new("Graphics/UI/Battle/overlay_exp")
     @numbersWhiteBitmap = AnimatedBitmap.new("Graphics/UI/Battle/icon_numbers_white")
     # Create sprite to draw HP numbers on
-    @hpNumbers = BitmapSprite.new(124, 16, viewport)
+    @hpNumbers = BitmapSprite.new(150, 16, viewport)
   #    pbSetSmallFont(@hpNumbers.bitmap)
     @sprites["hpNumbers"] = @hpNumbers
     # Create sprite wrapper that displays HP bar
@@ -1298,6 +1663,9 @@ class Battle::Scene::PokemonDataBox < Sprite
     @expBar = Sprite.new(viewport)
     @expBar.bitmap = @expBarBitmap.bitmap
     @sprites["expBar"] = @expBar
+    # Create status HUD display
+    @statuses = BattleStatusRow.new(viewport, self)
+    @statuses.battler = @battler
     # Create sprite wrapper that displays everything except the above
     @contents = BitmapWrapper.new(@databoxBitmap.width, @databoxBitmap.height + 256)
     self.bitmap  = @contents
@@ -1314,16 +1682,18 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpBarExBitmap.dispose
     @expBarBitmap.dispose
     @contents.dispose
+    @statuses.dispose
     super
   end
   
   def x=(value)
     super
-    @hpBar.x     = value + @spriteBaseX + (onPlayerSide ? 12 : 38)
+    @hpBar.x     = value + @spriteBaseX + (onPlayerSide ? 38 : -8)
     @hpBarEx.x   = @hpBar.x
     @hpBarEx2.x  = @hpBar.x
     @expBar.x    = value + @spriteBaseX + 6
-    @hpNumbers.x = value + @spriteBaseX + (@showHP ? 40 : 60)
+    @hpNumbers.x = value + @spriteBaseX + (@showHP ? 56 : 44)
+    @statuses.x  = value + (@battler.index % 2 == 0 ? 242 : -238)
   end
   
   def y=(value)
@@ -1333,6 +1703,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpBarEx2.y  = @hpBar.y
     @expBar.y    = value + @spriteBaseY + 74
     @hpNumbers.y = value + @spriteBaseY + 28
+    @statuses.y  = value + (@battler.index % 2 == 0 ? 24 : 26)
   end
   
   def z=(value)
@@ -1342,10 +1713,12 @@ class Battle::Scene::PokemonDataBox < Sprite
     @hpBarEx2.z  = @hpBar.z
     @expBar.z    = value + 1
     @hpNumbers.z = value + 2
+    @statuses.z  = value + 1
   end
   
   def opacity=(value)
     super
+    @statuses.opacity = value if @statuses
     @sprites.each do |i|
       i[1].opacity = value if !i[1].disposed?
     end
@@ -1353,6 +1726,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def visible=(value)
     super
+    @statuses.visible = value if @statuses
     @sprites.each do |i|
       i[1].visible = value if !i[1].disposed?
     end
@@ -1361,6 +1735,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def color=(value)
     super
+    @statuses.color = value if @statuses
     @sprites.each do |i|
       i[1].color = value if !i[1].disposed?
     end
@@ -1369,6 +1744,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   def battler=(b)
     @battler = b
     self.visible = (@battler && !@battler.fainted?)
+    @statuses.battler = @battler
   end
   
   def hp
@@ -1411,9 +1787,9 @@ class Battle::Scene::PokemonDataBox < Sprite
   end
   
   def draw_name
-    name_x = onPlayerSide ? 10 : 202
+    name_x = onPlayerSide ? 220 : -12
     name_y = 0
-    align = onPlayerSide ? 0 : 1
+    align = onPlayerSide ? 1 : 0
     if @smallLevel
       pbSetSmallFont(self.bitmap)
       name_x -= 2
@@ -1430,7 +1806,7 @@ class Battle::Scene::PokemonDataBox < Sprite
   def draw_level
     # Level number
     lvl_text = _INTL("{1}", @battler.level)
-    lvl_x = onPlayerSide ? 174 : 16
+    lvl_x = onPlayerSide ? 16 : 174
     lvl_y = 0
     if @smallLevel
       pbSetSmallFont(self.bitmap)
@@ -1446,12 +1822,12 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_gender
     gender = @battler.displayGender
-    gender_x = onPlayerSide ? 140 : (24 + self.bitmap.text_size(_INTL("{1}", @battler.level)).width)
-    gender_y = 2
+    gender_x = onPlayerSide ? (22 + self.bitmap.text_size(_INTL("{1}", @battler.level)).width) : 140
+    gender_y = 0
     if @smallLevel
       pbSetSmallFont(self.bitmap)
       gender_x -= 2
-      gender_y += 4
+      gender_y += 6
     else
       pbSetSystemFont(self.bitmap)
     end
@@ -1471,15 +1847,16 @@ class Battle::Scene::PokemonDataBox < Sprite
     end
     return if s < 0
     pbDrawImagePositions(self.bitmap, [
-      ["Graphics/UI/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 176 : 2), @spriteBaseY + 20,
+      ["Graphics/UI/Battle/icon_statuses", @spriteBaseX + (onPlayerSide ? 2 : 176), @spriteBaseY + 20,
        0, s * STATUS_ICON_HEIGHT, -1, STATUS_ICON_HEIGHT]])
     pbSetSmallFont(self.bitmap)
     pbDrawTextPositions(self.bitmap, [
-      [_INTL("{1}", @battler.statusCount.abs),@spriteBaseX + (onPlayerSide ? 176 : 2) + 4, @spriteBaseY + 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
+      [_INTL("{1}", @battler.statusCount.abs),@spriteBaseX + (onPlayerSide ? 2 : 176) + 4, @spriteBaseY + 38, 2, NAME_BASE_COLOR, NAME_SHADOW_COLOR, true]])
     pbSetSystemFont(self.bitmap)
   end
   
   def draw_shiny_icon
+    return
     return if !@battler.shiny?
     shiny_x = (@battler.opposes?(0)) ? 206 : -6   # Foe's/player's
     pbDrawImagePositions(self.bitmap, [["Graphics/UI/shiny", @spriteBaseX + shiny_x, @spriteBaseY + 36]])
@@ -1503,12 +1880,12 @@ class Battle::Scene::PokemonDataBox < Sprite
   
   def draw_owned_icon
     return if !@battler.owned? || !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_own", @spriteBaseX + 204, @spriteBaseY + 4]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_own", @spriteBaseX - 34, @spriteBaseY + 4]])
   end
   
   def draw_uncatchable_icon
     return if !@battler.opposes?(0)   # Draw for foe Pokémon only
-    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_uncatchable", @spriteBaseX + 204, @spriteBaseY + 4]])
+    pbDrawImagePositions(self.bitmap, [["Graphics/UI/Battle/icon_uncatchable", @spriteBaseX - 34, @spriteBaseY + 4]])
   end
   
   def refresh
@@ -1524,6 +1901,7 @@ class Battle::Scene::PokemonDataBox < Sprite
     @battler.battle.disablePokeBalls ? draw_uncatchable_icon : draw_owned_icon
     refresh_hp
     refreshExp
+    @statuses.refresh
   end
   
   def refresh_hp
@@ -1531,14 +1909,14 @@ class Battle::Scene::PokemonDataBox < Sprite
     return if !@battler.pokemon
     # Show HP numbers
     if @showHP
-      pbDrawNumber(self.hp, @hpNumbers.bitmap, 54, 2, 1)
-      pbDrawNumber(-1, @hpNumbers.bitmap, 54, 2)   # / char
-      pbDrawNumber(@battler.totalhp, @hpNumbers.bitmap, 70, 2)
+      pbDrawNumber(self.hp, @hpNumbers.bitmap, 62, 2, 1)
+      pbDrawNumber(-1, @hpNumbers.bitmap, 62, 2)   # / char
+      pbDrawNumber(@battler.totalhp, @hpNumbers.bitmap, 78, 2)
     elsif Supplementals::SHOW_OPPOSING_HP_PERCENT
       hpPercent = [(self.hp * 100.0 / @battler.totalhp), 1].max
       hpPercent = 0 if self.hp <= 0
       hpText = sprintf("%d%%", hpPercent.round)
-      pbDrawNumber(hpText, @hpNumbers.bitmap, 54, 2, 2)
+      pbDrawNumber(hpText, @hpNumbers.bitmap, 46, 2, 2)
     end
     # Resize HP bar
     w = 0
@@ -1739,5 +2117,432 @@ class Battle::Scene::PokemonDataBox < Sprite
     # Update coordinates of the data box
     updatePositions(frameCounter)
     pbUpdateSpriteHash(@sprites)
+    @statuses.update
   end
+end
+
+class Battle::Scene::CheckMenuTarget < IconSprite
+
+  def initialize(x, y, viewport, content)
+    super(x, y, viewport)
+    setBitmap("Graphics/UI/Battle/cursor_target")
+    self.src_rect = Rect.new(0, 96 * 7, 96, 96)
+    self.ox = 48
+    self.oy = 48
+    self.z = 999991
+    @selected = false
+    if content.is_a?(Numeric)
+      @target_type = content
+      @battler = nil
+      content = ["Whole Field", "Your Field", "Their Field"][@target_type]
+      self.src_rect.y = 96 * 2 if @target_type == 1
+      self.src_rect.y = 96 * 4 if @target_type == 2
+      @overlay = Sprite.new(viewport)
+      @overlay.bitmap = Bitmap.new(self.src_rect.width, self.src_rect.height)
+      @overlay.x = self.x
+      @overlay.y = self.y
+      @overlay.ox = self.ox
+      @overlay.oy = self.oy
+      @overlay.z = self.z + 1
+      pbSetSystemFont(@overlay.bitmap)
+      if content.include?(" ")
+        pbDrawTextPositions(@overlay.bitmap, [
+          [content.split(" ")[0], 47, 36 - 14, 2, Color.new(252, 252, 252), Color.new(15, 15, 15), true],
+          [content.split(" ")[1], 47, 36 + 16, 2, Color.new(252, 252, 252), Color.new(15, 15, 15), true]
+        ])
+      else
+        pbDrawTextPositions(@overlay.bitmap, [
+          [content, 47, 36, 2, Color.new(252, 252, 252), Color.new(15, 15, 15), true]
+        ])
+      end
+    else
+      @target_type = -1
+      @battler = content
+      self.src_rect.y = 96 * ((@battler.index % 2 == 0) ? 2 : 4)
+      @overlay = PokemonIconSprite.new(@battler.pokemon, viewport)
+      @overlay.x = self.x
+      @overlay.y = self.y
+      @overlay.ox = 32
+      @overlay.oy = 32
+      @overlay.z = self.z + 1
+    end
+  end
+
+  def x=(value)
+    super(value)
+    @overlay.x = self.x if @overlay
+  end
+
+  def y=(value)
+    super(value)
+    @overlay.y = self.y if @overlay
+  end
+
+  def target_type
+    return @target_type
+  end
+
+  def battler
+    return @battler
+  end
+
+  def selected=(value)
+    @selected = value
+    self.src_rect.x = value ? 96 : 0
+  end
+
+  def visible=(value)
+    @overlay.visible = value
+    super(value)
+  end
+
+  def dispose
+    @overlay&.dispose
+    super
+  end
+
+  def update
+    super
+    if @selected
+      self.angle = Math.sin(System.uptime * 4) * 6
+    else
+      self.angle = 0
+    end
+  end
+
+end
+
+class Battle::Scene::CheckMenu < IconSprite
+
+  def initialize(viewport, battle)
+    @battle = battle
+    super(Graphics.width / 2, Graphics.height / 2 + 76, viewport)
+    setBitmap("Graphics/UI/Battle/check")
+    self.ox = self.bitmap.width / 2
+    self.oy = self.bitmap.height / 2
+    self.z = 999990
+    @stages_bitmap = AnimatedBitmap.new("Graphics/UI/Battle/stat_change")
+    @condition_bitmap = AnimatedBitmap.new("Graphics/UI/Battle/condition")
+    @effect_scroll = 0
+    @effect_index = 0
+    @effects = []
+    @min_target_index = 3
+    @max_target_index = 5
+    @target_index = 4
+    @target_boxes = []
+    allies = []
+    enemies = []
+    for i in 0...3
+      if @battle.battlers[i * 2] && !@battle.battlers[i * 2].fainted?
+        allies.push(@battle.battlers[i * 2])
+        @min_target_index = 2 - i
+      end
+      if @battle.battlers[i * 2 + 1] && !@battle.battlers[i * 2 + 1].fainted?
+        enemies.push(@battle.battlers[i * 2 + 1])
+        @max_target_index = 6 + i
+      end
+    end
+    allies.reverse.each_with_index do |battler, i|
+      @target_boxes[2 - i] = Battle::Scene::CheckMenuTarget.new(self.x - 96 * (i + 2), 124, viewport, battler)
+    end
+    enemies.reverse.each_with_index do |battler, i|
+      @target_boxes[6 + i] = Battle::Scene::CheckMenuTarget.new(self.x + 96 * (i + 2), 124, viewport, battler)
+    end
+    @target_boxes[3] = Battle::Scene::CheckMenuTarget.new(self.x - 96, 124, viewport, 1)
+    @target_boxes[4] = Battle::Scene::CheckMenuTarget.new(self.x, 124, viewport, 0)
+    @target_boxes[5] = Battle::Scene::CheckMenuTarget.new(self.x + 96, 124, viewport, 2)
+    @overlay = Sprite.new(viewport)
+    @overlay.bitmap = Bitmap.new(self.bitmap.width, self.bitmap.height)
+    @overlay.x = self.x
+    @overlay.y = self.y
+    @overlay.ox = self.ox
+    @overlay.oy = self.oy
+    @overlay.z = self.z + 2
+    @target_arrow_left = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @target_arrow_left.z = self.z + 3
+    @target_arrow_left.x = Graphics.width / 2 - self.ox - 2
+    @target_arrow_left.y = 112
+    @target_arrow_left.zoom_x = -1
+    @target_arrow_left.play
+    @target_arrow_right = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @target_arrow_right.z = self.z + 3
+    @target_arrow_right.x = Graphics.width / 2 + self.ox + 2
+    @target_arrow_right.y = 112
+    @target_arrow_right.play
+    @effect_arrow = AnimatedSprite.new("Graphics/UI/right_arrow", 8, 40, 28, 2, viewport)
+    @effect_arrow.z = self.z + 3
+    @effect_arrow.x = Graphics.width / 2 - self.ox - 26
+    @effect_arrow.play
+    @info = Window_AdvancedTextPokemon.newWithSize("", 162, 388, 454, 126, viewport, 1)
+    @info.windowskin = nil
+    @info.z = self.z + 2
+    @effect_cursor = IconSprite.new(self.x - self.ox, 0, viewport)
+    @effect_cursor.setBitmap("Graphics/UI/Battle/check_cursor")
+    @effect_cursor.z = self.z + 1
+    refresh
+  end
+
+  def update
+    @target_arrow_left.update
+    @target_arrow_right.update
+    @effect_arrow.update
+    @effect_cursor.opacity = (1 + Math.sin(System.uptime * 4)) * 64 + 128
+    for i in 0...9
+      if @target_boxes[i]
+        @target_boxes[i].update
+      end
+    end
+    new_target_index = @target_index
+    new_effect_index = @effect_index
+    if Input.repeat?(Input::RIGHT) && !Input.press?(Input::LEFT)
+      new_target_index += 1
+      if new_target_index > @max_target_index
+        new_target_index = @min_target_index
+      end
+    end
+    if Input.repeat?(Input::LEFT) && !Input.press?(Input::RIGHT)
+      new_target_index -= 1
+      if new_target_index < @min_target_index
+        new_target_index = @max_target_index
+      end
+    end
+    if Input.repeat?(Input::DOWN) && !Input.press?(Input::UP)
+      new_effect_index += 1
+      if new_effect_index >= @effects.length
+        new_effect_index = 0
+      end
+    end
+    if Input.repeat?(Input::UP) && !Input.press?(Input::DOWN)
+      new_effect_index -= 1
+      if new_effect_index < 0
+        new_effect_index = @effects.length - 1
+      end
+    end
+    if new_target_index != @target_index
+      @target_index = new_target_index
+      @effect_index = 0
+      @effect_scroll = 0
+      refresh
+    elsif new_effect_index != @effect_index
+      @effect_index = new_effect_index
+      if @effect_index >= @effect_scroll + 5
+        @effect_scroll = [[@effect_index - 4, @effects.length - 6].min, 0].max
+      elsif @effect_index <= @effect_scroll
+        @effect_scroll = [@effect_index - 1, 0].max
+      end
+      refresh_effects
+    end
+    super
+  end
+
+  def refresh
+    @target_boxes.each_with_index do |box, i|
+      next if box.nil?
+      box.selected = (i == @target_index)
+    end
+    @effects.clear
+    target_box = @target_boxes[@target_index]
+    if target_box.target_type == -1
+      get_battler_effects(target_box.battler)
+    elsif target_box.target_type == 0
+      get_field_effects
+    else
+      get_side_effects(@battle.sides[target_box.target_type - 1])
+    end
+    refresh_effects
+  end
+
+  def refresh_effects
+    target_center = [[@target_index, @max_target_index - 2].min, @min_target_index + 2].max
+    for i in 0...9
+      if @target_boxes[i]
+        @target_boxes[i].visible = (target_center - i).abs <= 2
+        @target_boxes[i].x = self.x + 96 * (i - target_center)
+      end
+    end
+    @target_arrow_left.visible = @target_index > @min_target_index
+    @target_arrow_right.visible = @target_index < @max_target_index
+    @effect_arrow.y = self.y - self.oy + 28 + 32 * (@effect_index - @effect_scroll)
+    @effect_cursor.y = @effect_arrow.y - 6
+    textpos = []
+    @info.text = ""
+    @overlay.bitmap.clear
+    @effects.each_with_index do |effect_data, i|
+      next if i < @effect_scroll || i >= @effect_scroll + 6
+      offset = i - @effect_scroll
+      effect = effect_data[0]
+      value = effect_data[1]
+      shown_value = (value.is_a?(Numeric) && !effect["has_levels"]) ? "?" : "∞"
+      if effect["show_value"]
+        shown_value = value.to_s
+      end
+      textpos.push([
+        shown_value, 24, 26 + 32 * offset, 2, Color.new(248, 248, 248), Color.new(72, 80, 88)
+      ])
+      shown_name = effect["name"]
+      icons = effect["icons"]
+      if effect["has_levels"]
+        shown_name = shown_name[value - 1]
+        icons = icons[value - 1]
+      end
+      textpos.push([
+        shown_name, 192, 26 + 32 * offset, 2, Color.new(248, 248, 248), Color.new(72, 80, 88)
+      ])
+      icons.each_with_index do |icon_id, j|
+        icon_id = getID(BattleStatus, icon_id) if icon_id.is_a?(Symbol)
+        if icon_id > 0
+          icon_x = (icon_id * 32) % 512
+          icon_y = (icon_id / 16).floor * 32
+          @overlay.bitmap.blt(376 - (icons.length - 1) * 16 + j * 32, 26 + 32 * offset, @condition_bitmap.bitmap, Rect.new(icon_x, icon_y, 32, 32))
+        else
+          # Stat Change
+          icon_x = (-icon_id * 32) % 192
+          icon_y = (-icon_id / 6).floor * 32
+          @overlay.bitmap.blt(376 - (icons.length - 1) * 16 + j * 32, 26 + 32 * offset, @stages_bitmap.bitmap, Rect.new(icon_x, icon_y, 32, 32))
+        end
+      end
+      if i == @effect_index
+        if effect["has_levels"]
+          @info.text = effect["description"][value - 1]
+        else
+          @info.text = effect["description"]
+        end
+      end
+    end
+    pbDrawTextPositions(@overlay.bitmap, textpos)
+  end
+
+  def get_battler_effects(battler)
+    if battler.status != :NONE
+      if battler.statusCount >= 0
+        @effects.push([BattleStatus::STATUS_EFFECTS[battler.status], battler.statusCount])
+      else
+        @effects.push([BattleStatus::STRONG_STATUS_EFFECTS[battler.status], battler.statusCount.abs])
+      end
+    end
+    [:ATTACK, :SPECIAL_ATTACK, :DEFENSE, :SPECIAL_DEFENSE, :SPEED].each_with_index do |stat, i|
+      if battler.stages[stat] != 0
+        stage = battler.stages[stat]
+        change = [
+          "75%", "5/7 (~71.5%)", "2/3", "60%", "50%", "1/3",
+          "",
+          "50%", "100%", "150%", "200%", "250%", "300%"
+        ][stage + 6]
+        @effects.push([{
+          "name"        => stage > 0 ?
+            _INTL("+{1} {2}", stage,  GameData::Stat.get(stat).name) :
+            _INTL("-{1} {2}", -stage, GameData::Stat.get(stat).name),
+          "default"     => false,
+          "icons"       => [
+            stage > 0 ?
+              -(12 * i - 1 + stage) :
+              -(12 * i + 5 - stage)
+          ],
+          "description" => stage > 0 ?
+            _INTL("The Pokémon's {1} stat is raised by {2}.",  GameData::Stat.get(stat).name, change) :
+            _INTL("The Pokémon's {1} stat is lowered by {2}.", GameData::Stat.get(stat).name, change)
+        }, true])
+      end
+    end
+    [:ACCURACY, :EVASION].each_with_index do |stat, i|
+      if battler.stages[stat] != 0
+        stage = battler.stages[stat]
+        change = [
+          "2/3", "62.5%", "3/7 (~57%)", "50%", "40%", "25%",
+          "",
+          "1/3", "2/3", "100%", "7/3 (~233%)", "8/3 (~266%)", "200%"
+        ][stage + 6]
+        @effects.push([{
+          "name"        => stage > 0 ?
+            _INTL("+{1} {2}", stage,  GameData::Stat.get(stat).name) :
+            _INTL("-{1} {2}", -stage, GameData::Stat.get(stat).name),
+          "default"     => false,
+          "icons"       => [
+            stage > 0 ?
+              -(12 * (i + 5) - 1 + stage) :
+              -(12 * (i + 5) + 5 - stage)
+          ],
+          "description" => stage > 0 ?
+            _INTL("The Pokémon's {1} stat is raised by {2}.", GameData::Stat.get(stat).name, change) :
+            _INTL("The Pokémon's {1} stat is lowered by {2}.", GameData::Stat.get(stat).name, change)
+        }, true])
+      end
+    end
+    BattleStatus::BATTLER_EFFECTS.each do |key, value|
+      if !battler.effects[key].nil? && battler.effects[key] != value["default"]
+        @effects.push([value, battler.effects[key]])
+      end
+    end
+    if @effects.length == 0
+      @effects.push([{
+        "name"        => _INTL("No Effects"),
+        "default"     => false,
+        "show_value"  => true,
+        "icons"       => [],
+        "description" => _INTL("The Pokémon has no special effects.")
+      }, ""])
+    end
+  end
+
+  def get_field_effects
+    if @battle.field.weather != :None
+      @effects.push([
+        BattleStatus::WEATHER_EFFECTS[@battle.field.weather],
+        @battle.field.weatherDuration == -1 ? "∞" : @battle.field.weatherDuration
+      ])
+    end
+    if @battle.field.terrain != :None
+      @effects.push([
+        BattleStatus::TERRAIN_EFFECTS[@battle.field.terrain],
+        @battle.field.terrainDuration == -1 ? "∞" : @battle.field.terrainDuration
+      ])
+    end
+    BattleStatus::FIELD_EFFECTS.each do |key, value|
+      if !@battle.field.effects[key].nil? && @battle.field.effects[key] != value["default"]
+        @effects.push([value, @battle.field.effects[key]])
+      end
+    end
+    if @effects.length == 0
+      @effects.push([{
+        "name"        => _INTL("No Effects"),
+        "default"     => false,
+        "show_value"  => true,
+        "icons"       => [],
+        "description" => _INTL("The field has no special effects.")
+      }, ""])
+    end
+  end
+
+  def get_side_effects(side)
+    BattleStatus::SIDE_EFFECTS.each do |key, value|
+      if !side.effects[key].nil? && side.effects[key] != value["default"]
+        @effects.push([value, side.effects[key]])
+      end
+    end
+    if @effects.length == 0
+      @effects.push([{
+        "name"        => _INTL("No Effects"),
+        "default"     => false,
+        "show_value"  => true,
+        "icons"       => [],
+        "description" => _INTL("This side of the field has no special effects.")
+      }, ""])
+    end
+  end
+
+  def dispose
+    @stages_bitmap.dispose
+    @condition_bitmap.dispose
+    @target_boxes.each do |i|
+      i&.dispose
+    end
+    @overlay.dispose
+    @target_arrow_left.dispose
+    @target_arrow_right.dispose
+    @effect_arrow.dispose
+    @info.dispose
+    @effect_cursor.dispose
+    super
+  end
+
 end

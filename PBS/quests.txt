@@ -103,6 +103,18 @@ Done = You helped the woman at Breccia Trail come to terms with the loss of her 
 RequireMaps = 62
 PartyMembers = Amethyst
 
+[RANCHRUNNER]
+Name = Ranch Runner
+Type = Basic
+Exp = 10
+Items = SPRINTINGSHOES
+Description = A youngster at Breccia Ranch challenged you to clear a sprinting course, promising you some fancy shoes if you can do it.
+Location = Breccia Ranch
+FullLocation = at Breccia Ranch
+Step1 = Clear the youngster's sprinting course across the ranch.
+Done = You got some new shoes that allow you to sprint at any time!
+RequireMaps = 204
+
 [BERRYIMPORTANT]
 Name = Berry Important
 Type = Botanist
@@ -337,6 +349,7 @@ Done = You helped Garnet stop the Pawniard stealing from the market!
 # [1010] Gabbro Gym R2
 
 [UNKNOWNDESTINATION]
+Chapter = Chapter 1
 Name = Unknown Destination
 Type = Main
 Exp = 70
@@ -348,6 +361,7 @@ Step4 = Go back to the elevator with Amethyst.
 Done = You found a mysterious girl in Evergone Mangrove with Amethyst and brought her back to the G.P.O. HQ to rest.
 
 [OPERATIONPEGMA]
+Chapter = Chapter 2
 Name = Operation Pegma
 Type = Main
 Exp = 80
@@ -358,6 +372,7 @@ Step3 = You defeated Eliana atop Mt. Pegma and rescued Azelf. Report back to Ame
 Done = "You rescued Azelf atop Mt. Pegma. To keep Azelf safe, they are now traveling with you."
 
 [NEKANEGONEMISSING]
+Chapter = Chapter 3
 Name = Nekane Gone Missing
 Type = Main
 Exp = 90
@@ -369,6 +384,7 @@ Step4 = Use Azelf's willpower readings to provide examples for Nekane.
 Done = You found Nekane in the Smokey Forest east of Lapis Lazuli City. You learned that she knows neither willpower nor emotion.
 
 [GUARDIANOFEMOTION]
+Chapter = Chapter 4
 Name = Guardian of Emotion
 Type = Main
 Exp = 100
@@ -382,9 +398,10 @@ Step6 = "After dealing with the B Gang, Sandslash evolved! Make your way through
 Done = "You failed to stop the D.A.O. from capturing Mesprit due to the storm in the desert. However, Eliana moved you to safety."
 
 [ELIANASFAVOR]
+Chapter = Chapter 5
 Name = Eliana's Favor
 Type = Main
-Exp = 110
+Exp = 100
 Description = "Mesprit was captured by the D.A.O. before you got their help. However, Eliana showed sympathy for Nekane and has granted you another chance."
 Step1 = Wake Nekane up to take her with you.
 Step2 = Head to the D.A.O. HQ east of Scoria Canyon. Scoria Canyon is north of Scoria City.
@@ -395,13 +412,67 @@ Step6 = Have Mesprit project you into Nekane's mind to unlock her capacity for e
 Done = Eliana helped you into the D.A.O. HQ to meet Mesprit and grant Nekane emotions.
 
 [NEWFOUNDEMOTIONS]
+Chapter = Chapter 6
 Name = Newfound Emotions
 Type = Main
-Exp = 120
+Exp = 100
 Description = "Azelf has told you that you can meet someone in Halcyon Forest that can help Nekane understand her emotions."
 Step1 = "Go to Halcyon Forest, north of the Crosswoods, to meet with the mystery person."
 Step2 = "Head inside Halcyon Hollow to meet Duke."
-Done = Temp
+Step3 = "Leave the Halcyon Hollow and return to HQ."
+Done = "With Duke's help, Azelf was able to grant Nekane willpower! Now only knowledge remains."
+
+[THEGREATAMPHI]
+Chapter = Chapter 7
+Name = The Great Amphi
+Type = Main
+Exp = 100
+Description = "Duke said you have to travel atop the moving island known as The Great Amphi to reach Uxie on Andes Isle."
+Step1 = "Explore the sea to find The Great Amphi. It can be seen on the map."
+Step2 = "Search The Great Amphi for a way to travel to Andes Isle."
+Step3 = "Ask the four elders in Amphi Town about how to get to Andes Isle."
+Step4 = "Get through the Amphi Woods to prove yourself to The Great Amphi."
+Step5 = "Clear the trials of the four elders in Amphi Town."
+Step6 = "Return to Akasha in the center of Amphi Town."
+Step7 = "Defeat Akasha in battle."
+Step8 = "Get through the Amphi Woods to prove yourself to The Great Amphi."
+Step9 = "Investigate the creature on The Great Amphi that does not belong."
+Step10 = "Regroup with the others to leave Amphi Town."
+Step11 = "Leave The Great Amphi and find Uxie on Andes Isle."
+Done = "Uxie successfully restored Nekane's memories. Now she wants you to return to where you first found her..."
+
+[ANSWERS]
+Chapter = Chapter 8
+Name = Answers
+Type = Main
+Exp = 100
+Description = "Memories recovered, Nekane wants you to visit the Evergone Ruins to find answers."
+Step1 = "Go to the Evergone Ruins."
+Step2 = "Get through the Evergone Ruins that Nekane revealed."
+Step3 = "Find the others in the Distortion World."
+Step4 = "Make your way through the Distortion World to find Giratina."
+Step5 = "Defeat Giratina in battle in the Distortion World."
+Done = "Giratina told you that the D.A.O. are trying to restore the ruler of order, which would break the balance of the worlds."
+
+[QUESTIONS]
+Chapter = Chapter 9
+Name = Questions
+Type = Main
+Exp = 100
+Description = "Duke might know why Giratina said you were a disturbance in the world."
+Step1 = "Find Duke in the Halcyon Forest."
+Done = "..."
+
+[THEFIREELEMENTAL]
+Name = The Fire Elemental
+Type = Basic
+Exp = 20
+Description = "Michael, the Fire Elder of Amphi Town has another trial for you."
+Location = Amphi Town
+FullLocation = in Amphi Town
+Step1 = "Clear the trial of fire."
+Done = "You cleared the trial of fire and was gifted a Fire-Imbued Oil to invoke the fire elemental."
+RequireQuests = THEGREATAMPHI
 
 [TEST]
 Name = Test

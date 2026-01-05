@@ -57,6 +57,9 @@ class Spriteset_Map
     @map.autotile_names.each { |filename| $scene.map_renderer.add_autotile(filename) }
     $scene.map_renderer.add_extra_autotiles(@map.tileset_id)
     @panorama = AnimatedPlane.new(@@viewport0)
+    if DISTORTION_MAP_IDS.include?(@map.map_id)
+      @backdrop = DistortionWorldBackdrop.new(@@viewport0, @map.map_id)
+    end
     @fog = AnimatedPlane.new(@@viewport1)
     @fog.z = 3000
     @character_sprites = []
@@ -76,12 +79,17 @@ class Spriteset_Map
       $scene.map_renderer.remove_extra_autotiles(@map.tileset_id)
     end
     @panorama.dispose
+    @backdrop&.dispose
     @fog.dispose
     @character_sprites.each { |sprite| sprite.dispose }
     @panorama = nil
     @fog = nil
     @character_sprites.clear
     @water_sprite&.dispose
+  end
+
+  def backdrop
+    return @backdrop
   end
 
   def getAnimations
@@ -123,6 +131,7 @@ class Spriteset_Map
     @fog.blend_type = @map.fog_blend_type
     @fog.tone       = @map.fog_tone
     @panorama.update
+    @backdrop&.update
     @fog.update
     @character_sprites.each do |sprite|
       sprite.update

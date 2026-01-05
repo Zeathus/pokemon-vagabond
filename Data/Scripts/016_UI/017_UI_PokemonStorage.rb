@@ -470,23 +470,32 @@ class PokemonBoxPartySprite < Sprite
   def initialize(party, viewport = nil)
     super(viewport)
     @party = party
-    @boxbitmap = AnimatedBitmap.new("Graphics/UI/Storage/overlay_party")
+    @boxbitmap = AnimatedBitmap.new(
+      hasPartyMember(:Nekane) ?
+      "Graphics/UI/Storage/overlay_party2" :
+      "Graphics/UI/Storage/overlay_party"
+    )
     @pokemonsprites = []
-    MAX_PARTY_BOX_SIZE.times do |i|
+    real_max_box_size.times do |i|
       @pokemonsprites[i] = nil
       if i < Settings::MAX_PARTY_SIZE
         pokemon = @party[i]
         if pokemon
           @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport)
         end
-      else
+      elsif i < MAX_PARTY_BOX_SIZE
         pokemon = $player.inactive_party[i - Settings::MAX_PARTY_SIZE]
+        if pokemon
+          @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport)
+        end
+      else
+        pokemon = getPartyPokemon(:Nekane)[i - MAX_PARTY_BOX_SIZE]
         if pokemon
           @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport)
         end
       end
     end
-    @contents = Bitmap.new(172, 352)
+    @contents = Bitmap.new(@boxbitmap.width, 352)
     self.bitmap = @contents
     self.x = 182
     self.y = 384 - 352
@@ -494,8 +503,12 @@ class PokemonBoxPartySprite < Sprite
     refresh
   end
 
+  def real_max_box_size
+    return MAX_PARTY_BOX_SIZE + (hasPartyMember(:Nekane) ? 3 : 0)
+  end
+
   def dispose
-    MAX_PARTY_BOX_SIZE.times do |i|
+    real_max_box_size.times do |i|
       @pokemonsprites[i]&.dispose
     end
     @boxbitmap.dispose
@@ -515,7 +528,7 @@ class PokemonBoxPartySprite < Sprite
 
   def color=(value)
     super
-    MAX_PARTY_BOX_SIZE.times do |i|
+    real_max_box_size.times do |i|
       if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
         @pokemonsprites[i].color = pbSrcOver(@pokemonsprites[i].color, value)
       end
@@ -524,7 +537,7 @@ class PokemonBoxPartySprite < Sprite
 
   def visible=(value)
     super
-    MAX_PARTY_BOX_SIZE.times do |i|
+    real_max_box_size.times do |i|
       if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
         @pokemonsprites[i].visible = value
       end
@@ -559,35 +572,54 @@ class PokemonBoxPartySprite < Sprite
   end
 
   def compact
-    p1 = @pokemonsprites[0...Settings::MAX_PARTY_SIZE].compact
-    p2 = @pokemonsprites[Settings::MAX_PARTY_SIZE...MAX_PARTY_BOX_SIZE]
-    p2 = [] if p2.nil?
-    p2 = p2.compact
-    @pokemonsprites = p1
-    while @pokemonsprites.length < 3
-      @pokemonsprites.push(nil)
+    if hasPartyMember(:Nekane)
+      p1 = @pokemonsprites[0...Settings::MAX_PARTY_SIZE].compact
+      p2 = @pokemonsprites[Settings::MAX_PARTY_SIZE...MAX_PARTY_BOX_SIZE]
+      p2 = [] if p2.nil?
+      p2 = p2.compact
+      p3 = @pokemonsprites[MAX_PARTY_BOX_SIZE...real_max_box_size]
+      p3 = [] if p3.nil?
+      p3 = p3.compact
+      @pokemonsprites = p1
+      while @pokemonsprites.length < 3
+        @pokemonsprites.push(nil)
+      end
+      @pokemonsprites += p2
+      while @pokemonsprites.length < 6
+        @pokemonsprites.push(nil)
+      end
+      @pokemonsprites += p3
+    else
+      p1 = @pokemonsprites[0...Settings::MAX_PARTY_SIZE].compact
+      p2 = @pokemonsprites[Settings::MAX_PARTY_SIZE...MAX_PARTY_BOX_SIZE]
+      p2 = [] if p2.nil?
+      p2 = p2.compact
+      @pokemonsprites = p1
+      while @pokemonsprites.length < 3
+        @pokemonsprites.push(nil)
+      end
+      @pokemonsprites += p2
     end
-    @pokemonsprites += p2
   end
 
   def refresh
-    @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 172, 352))
+    @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, @boxbitmap.width, 352))
     pbDrawTextPositions(
       self.bitmap,
       [[_INTL("Back"), 86, 248, :center, Color.new(248, 248, 248), Color.new(80, 80, 80), :outline]]
     )
     xvalues = []   # [18, 90, 18, 90, 18, 90]
     yvalues = []   # [2, 18, 66, 82, 130, 146]
-    MAX_PARTY_BOX_SIZE.times do |i|
-      xvalues.push(18 + 72 * (i > 2 ? 1 : 0))
-      yvalues.push(2 + 16 * (i > 2 ? 1 : 0) + 64 * (i % 3))
+    real_max_box_size.times do |i|
+      xvalues.push(18 + 72 * (i > 2 ? 1 : 0) + 104 * (i > 5 ? 1 : 0))
+      yvalues.push(2 + 16 * (i > 2 ? 1 : 0) - 8 * (i > 5 ? 1 : 0) + 64 * (i % 3))
     end
-    MAX_PARTY_BOX_SIZE.times do |j|
+    real_max_box_size.times do |j|
       @pokemonsprites[j] = nil if @pokemonsprites[j] && @pokemonsprites[j].disposed?
     end
     self.compact
     @pokemonsprites.each { |sprite| sprite&.refresh }
-    MAX_PARTY_BOX_SIZE.times do |j|
+    real_max_box_size.times do |j|
       sprite = @pokemonsprites[j]
       next if sprite.nil? || sprite.disposed?
       sprite.viewport = self.viewport
@@ -599,7 +631,7 @@ class PokemonBoxPartySprite < Sprite
 
   def update
     super
-    MAX_PARTY_BOX_SIZE.times do |i|
+    real_max_box_size.times do |i|
       @pokemonsprites[i].update if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
     end
   end
@@ -666,6 +698,7 @@ class PokemonStorageScene
     @sprites["pokemon"].setOffset(PictureOrigin::CENTER)
     @sprites["pokemon"].x = 90
     @sprites["pokemon"].y = 134
+    @sprites["pokemon"].z = 2
     @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
     if command != 2   # Drop down tab only on Deposit
       @sprites["boxparty"].x = 182
@@ -849,14 +882,16 @@ class PokemonStorageScene
     return if selection < 0
     xvalues = []   # [200, 272, 200, 272, 200, 272, 236]
     yvalues = []   # [2, 18, 66, 82, 130, 146, 220]
-    MAX_PARTY_BOX_SIZE.times do |i|
-      xvalues.push(200 + 72 * (i > 2 ? 1 : 0))
-      yvalues.push(2 + 16 * (i > 2 ? 1 : 0) + 64 * (i % 3))
+    real_max_box_size.times do |i|
+      xvalues.push(200 + 72 * (i > 2 ? 1 : 0) + 104 * (i > 5 ? 1 : 0))
+      yvalues.push(2 + 16 * (i > 2 ? 1 : 0) - 8 * (i > 5 ? 1 : 0) + 64 * (i % 3))
     end
     if selection < 3
       @sprites["helptext"].text = "These are the Pokémon in your active party. They are used in battle together with your partner's Pokémon."
     elsif selection < MAX_PARTY_BOX_SIZE
-      @sprites["helptext"].text = "These are the Pokémon in your inactive party. They cannot be used in battle, but they can be delivered for quests and such."
+      @sprites["helptext"].text = "These are the Pokémon in your inactive party. They cannot be used in battle, but they can be delivered for quests and gain exp."
+    elsif selection < real_max_box_size
+      @sprites["helptext"].text = "These are the Pokémon in Nekane's party.\nOnly Reverse Pokémon can be put here."
     else
       @sprites["helptext"].text = "Exit the current party menu."
     end
@@ -874,25 +909,27 @@ class PokemonStorageScene
     case key
     when Input::LEFT
       selection -= 3
-      selection = MAX_PARTY_BOX_SIZE if selection < 0
+      selection = real_max_box_size - 3 + (selection % 3) if selection < 0
     when Input::RIGHT
       selection += 3
-      selection = 0 if selection > MAX_PARTY_BOX_SIZE
+      selection = selection % 3 if selection >= real_max_box_size
     when Input::UP
-      if selection == MAX_PARTY_BOX_SIZE
-        selection = MAX_PARTY_BOX_SIZE - 1
+      if selection == real_max_box_size
+        selection = Settings::MAX_PARTY_SIZE - 1
       else
         selection -= 1
-        selection = MAX_PARTY_BOX_SIZE if selection == Settings::MAX_PARTY_SIZE - 1
-        selection = MAX_PARTY_BOX_SIZE if selection < 0
+        selection = real_max_box_size if selection == Settings::MAX_PARTY_SIZE - 1
+        selection = real_max_box_size if selection == MAX_PARTY_BOX_SIZE - 1
+        selection = real_max_box_size if selection < 0
       end
     when Input::DOWN
-      if selection == MAX_PARTY_BOX_SIZE
+      if selection == real_max_box_size
         selection = 0
       else
         selection += 1
-        selection = MAX_PARTY_BOX_SIZE if selection == Settings::MAX_PARTY_SIZE
-        selection = MAX_PARTY_BOX_SIZE if selection > MAX_PARTY_BOX_SIZE
+        selection = real_max_box_size if selection == Settings::MAX_PARTY_SIZE
+        selection = real_max_box_size if selection == MAX_PARTY_BOX_SIZE
+        selection = real_max_box_size if selection > real_max_box_size
       end
     end
     return selection
@@ -1041,10 +1078,14 @@ class PokemonStorageScene
           @selection = selection
           return selection
         elsif selection >= Settings::MAX_PARTY_SIZE && selection < MAX_PARTY_BOX_SIZE
-          # Add to off-party
+          # Add to inactive party
           @selection = selection
           return selection
-        elsif selection == MAX_PARTY_BOX_SIZE   # Close Box
+        elsif selection >= MAX_PARTY_BOX_SIZE && selection < real_max_box_size
+          # Add to Nekane's party
+          @selection = selection
+          return selection
+        elsif selection == real_max_box_size   # Close Box
           @selection = selection
           return (depositing) ? -3 : -1
         end
@@ -1311,9 +1352,14 @@ class PokemonStorageScene
         @selection = screen.pbStartScreen(@storage.party, selected[1])
         pbPartySetArrow(@sprites["arrow"], @selection)
         pbUpdateOverlay(@selection, @storage.party)
-      else
+      elsif selected[1] < MAX_PARTY_BOX_SIZE
         @selection = screen.pbStartScreen($player.inactive_party, selected[1] - Settings::MAX_PARTY_SIZE)
         @selection += Settings::MAX_PARTY_SIZE
+        pbPartySetArrow(@sprites["arrow"], @selection)
+        pbUpdateOverlay(@selection, @storage.party)
+      else
+        @selection = screen.pbStartScreen(getPartyPokemon(:Nekane), selected[1] - MAX_PARTY_BOX_SIZE)
+        @selection += MAX_PARTY_BOX_SIZE
         pbPartySetArrow(@sprites["arrow"], @selection)
         pbUpdateOverlay(@selection, @storage.party)
       end
@@ -1485,14 +1531,25 @@ class PokemonStorageScene
     buttonshadow = Color.new(80, 80, 80)
     pbDrawTextPositions(
       overlay,
-      [[_INTL("Party: {1}/{2}", (@storage.party.length rescue 0), ($player.inactive_party.length rescue 0)), 270, 334, :center, buttonbase, buttonshadow, 1],
+      [hasPartyMember(:Nekane) ? 
+        [_INTL("Party: {1}/{2}/{3}", (@storage.party.length rescue 0), ($player.inactive_party.length rescue 0), (getPartyPokemon(:Nekane).length rescue 0)), 270, 334, :center, buttonbase, buttonshadow, 1] :
+        [_INTL("Party: {1}/{2}", (@storage.party.length rescue 0), ($player.inactive_party.length rescue 0)), 270, 334, :center, buttonbase, buttonshadow, 1],
        [_INTL("Exit"), 446, 334, 2, buttonbase, buttonshadow, 1]]
     )
     pokemon = nil
     if @screen.pbHeldPokemon
       pokemon = @screen.pbHeldPokemon
     elsif selection >= 0
-      pokemon = (party) ? (selection < Settings::MAX_PARTY_SIZE ? party[selection] : $player.inactive_party[selection-3]) : @storage[@storage.currentBox,selection]
+      pokemon = nil
+      if !party
+        pokemon = @storage[@storage.currentBox,selection]
+      elsif selection < Settings::MAX_PARTY_SIZE
+        pokemon = party[selection]
+      elsif selection < MAX_PARTY_BOX_SIZE
+        pokemon = $player.inactive_party[selection - 3]
+      elsif selection < real_max_box_size
+        pokemon =  getPartyPokemon(:Nekane)[selection - 6]
+      end
     end
     if !pokemon
       @sprites["pokemon"].visible = false
@@ -1527,6 +1584,9 @@ class PokemonStorageScene
         textstrings.push([_INTL("No item"), 86, 348, :center, nonbase, nonshadow])
       end
       imagepos.push(["Graphics/UI/shiny", 156, 198]) if pokemon.shiny?
+      if pokemon.species_data.reverse_of && $player && $player.pokedex.unlocked?(1)
+        imagepos.push(["Graphics/UI/reverse", 10, 198])
+      end
       typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
       pokemon.types.each_with_index do |type, i|
         type_number = GameData::Type.get(type).icon_position
@@ -1539,6 +1599,10 @@ class PokemonStorageScene
     end
     pbDrawTextPositions(overlay, textstrings)
     @sprites["pokemon"].setPokemonBitmap(pokemon)
+  end
+
+  def real_max_box_size
+    return MAX_PARTY_BOX_SIZE + (hasPartyMember(:Nekane) ? 3 : 0)
   end
 
   def update
@@ -1686,6 +1750,7 @@ class PokemonStorageScreen
     when 2   # Deposit
       @scene.pbStartBox(self, command)
       loop do
+        echoln "Test 2"
         selected = @scene.pbSelectParty(@storage.party)
         if selected == -3   # Close box
           if pbConfirm(_INTL("Exit from the Box?"))
@@ -1699,7 +1764,11 @@ class PokemonStorageScreen
         else
           pokemon = @storage[-1, selected]
           if selected >= Settings::MAX_PARTY_SIZE
-            pokemon = $player.inactive_party[selected - 3]
+            if selected <= MAX_PARTY_BOX_SIZE
+              pokemon = $player.inactive_party[selected - 3]
+            else
+              getPartyPokemon(:Nekane)[selected - 6]
+            end
           end
           next if !pokemon
           command = pbShowCommands(_INTL("{1} is selected.", pokemon.name),
@@ -1797,7 +1866,10 @@ class PokemonStorageScreen
     if box != -1
       raise _INTL("Can't deposit from box...")
     end
-    if pbAbleCount <= 1 && !(box==-1 && index >= Settings::MAX_PARTY_SIZE) && pbAble?(@storage[box, index]) && !heldpoke
+    if box == -1 && index >= MAX_PARTY_BOX_SIZE && getPartyPokemon(:Nekane).length <= 1 && !heldpoke
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("That's her last Pokémon!"))
+    elsif pbAbleCount <= 1 && !(box==-1 && index >= Settings::MAX_PARTY_SIZE) && pbAble?(@storage[box, index]) && !heldpoke
       pbPlayBuzzerSE
       pbDisplay(_INTL("That's your last Pokémon!"))
     elsif heldpoke&.mail
@@ -1842,7 +1914,11 @@ class PokemonStorageScreen
   def pbHold(selected)
     box = selected[0]
     index = selected[1]
-    if box == -1 && !(box==-1 && index >= Settings::MAX_PARTY_SIZE) && pbAble?(@storage[box, index]) && pbAbleCount <= 1
+    if box == -1 && index >= MAX_PARTY_BOX_SIZE && getPartyPokemon(:Nekane).length <= 1
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("That's her last Pokémon!"))
+      return
+    elsif box == -1 && !(box==-1 && index >= Settings::MAX_PARTY_SIZE) && pbAble?(@storage[box, index]) && pbAbleCount <= 1
       pbPlayBuzzerSE
       pbDisplay(_INTL("That's your last Pokémon!"))
       return
@@ -1858,6 +1934,10 @@ class PokemonStorageScreen
     index = selected[1]
     if @storage[box, index]
       raise _INTL("Position {1},{2} is not empty...", box, index)
+    elsif box == -1 && index >= MAX_PARTY_BOX_SIZE && @heldpkmn.species_data.reverse_of.nil?
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("This is Reverse Pokémon only!"))
+      return false
     elsif box != -1
       if index >= @storage.maxPokemon(box)
         pbDisplay("Can't place that there.")
@@ -1880,6 +1960,9 @@ class PokemonStorageScreen
     if box == -1
       @storage.party.compact!
       $player.inactive_party.compact!
+      if hasPartyMember(:Nekane)
+        getPartyPokemon(:Nekane).compact!
+      end
     end
     @scene.pbRefresh
     @heldpkmn = nil
@@ -1894,6 +1977,10 @@ class PokemonStorageScreen
     if @heldpkmn.cannot_store && box != -1
       pbPlayBuzzerSE
       pbDisplay(_INTL("{1} refuses to go into storage!", @heldpkmn.name))
+      return false
+    elsif box == -1 && index >= MAX_PARTY_BOX_SIZE && @heldpkmn.species_data.reverse_of.nil?
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("She can only use Reverse Pokémon!"))
       return false
     elsif box == -1 && pbAble?(@storage[box, index]) && pbAbleCount <= 1 && !pbAble?(@heldpkmn)
       pbPlayBuzzerSE
@@ -1932,7 +2019,11 @@ class PokemonStorageScreen
       pbDisplay(_INTL("{1} refuses to leave you!", pokemon.name))
       return false
     end
-    if box == -1 && pbAbleCount <= 1 && pbAble?(pokemon) && !heldpoke
+    if box == -1 && index >= MAX_PARTY_BOX_SIZE && getPartyPokemon(:Nekane).length <= 1
+      pbPlayBuzzerSE
+      pbDisplay(_INTL("That's her last Pokémon!"))
+      return
+    elsif box == -1 && !(box == -1 && index >= Settings::MAX_PARTY_SIZE) && pbAbleCount <= 1 && pbAble?(pokemon) && !heldpoke
       pbPlayBuzzerSE
       pbDisplay(_INTL("That's your last Pokémon!"))
       return

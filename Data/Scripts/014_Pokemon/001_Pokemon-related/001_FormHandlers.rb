@@ -564,6 +564,12 @@ MultipleForms.register(:MIMIKYU, {
   }
 })
 
+MultipleForms.register(:REVINJA, {
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    next 0 if pkmn.fainted? || endBattle
+  }
+})
+
 MultipleForms.register(:NECROZMA, {
   "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
     # Fused forms are 1 and 2, Ultra form is 3 or 4 depending on which fusion
@@ -795,3 +801,11 @@ MultipleForms.register(:KOFFING, {
 })
 
 MultipleForms.copy(:KOFFING, :MIMEJR)
+
+MultipleForms.register(:PALAFIN, {
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    next 0 if endBattle
+    next 1 if pkmn.able? && pkmn.hasAbility?(:ZEROTOHERO) && usedInBattle && !endBattle   # Switched out while unfainted
+    next pkmn.form
+  }
+})

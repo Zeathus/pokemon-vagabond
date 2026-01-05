@@ -20,6 +20,11 @@ module PBMaps
   EastSea           = 163
   CentralWestSea    = 206
   WestSea           = 207
+  AmphiWilds        = 220
+  AmphiHead         = 259
+  AndesIsle         = 25
+  UpperEverstone    = 173
+  LowerEverstone    = 244
   
   # Areas
   Crosswoods        = 7
@@ -27,8 +32,6 @@ module PBMaps
   HalcyonForest     = 61
   DeepBreccia       = 68
   BrecciaOutlook    = 120
-  WestAndesIsle     = 25
-  EastAndesIsle     = 26
   EvergoneMangrove  = 208
   EvergoneHill      = 209
   EvergoneStairway  = 210
@@ -54,6 +57,9 @@ module PBMaps
   MicaQuarryB6F     = 97
   MicaQuarryB7F     = 98
   MicaQuarryB8F     = 99
+  OldFactory1F      = 272
+  EvergoneRuins1F   = 237
+  EvergoneRuinsB1F  = 238
   
   # Cities
   ShaleTown         = 3
@@ -95,6 +101,33 @@ module PBMaps
     ]
     return true if light_maps.include?(map)
     return false
+  end
+
+  def PBMaps.amphi
+    return [
+      221, # Amphi Town
+      236, # Water Sanctum
+      260, # Earth Sanctum
+      261, # Air Sanctum
+      262, # Fire Sanctum
+      263, # Amphi House
+      264, # Amphi Inn
+      265, # Water Sanctum Trial
+      266, # Earth Sanctum Trial
+      267, # Air Sanctum Trial
+      268, # Fire Sanctum Trial
+      222, # Amphi Woods
+      223, # Amphi Woods Layout 1
+      224, # Amphi Woods Layout 2
+      225, # Amphi Woods Layout 3
+      226, # Amphi Woods Layout 4
+      227, # Amphi Woods Layout 5
+      259, # Amphi Head
+      269, # Amphi Clearing
+      274, # Fire Sanctum Trial #2
+      278, # Amphi Ruins
+      279, # Amphi Ruins Chamber
+    ]
   end
   
 end

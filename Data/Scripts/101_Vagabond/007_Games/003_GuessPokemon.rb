@@ -6,11 +6,65 @@ end
 
 class Game_Guess_Pokemon
 
+  PRIZES = [
+        100,
+        200,
+        300,
+        400,
+        500,
+       1000,
+       2000,
+       3000,
+       4000,
+       8000,
+      10000,
+      12000,
+      14000,
+      16000,
+      20000,
+      24000,
+      28000,
+      32000,
+      36000,
+      48000,
+      52000,
+      56000,
+      60000,
+      64000,
+      70000,
+      75000,
+      80000,
+      85000,
+      90000,
+     100000,
+     110000,
+     120000,
+     130000,
+     140000,
+     175000,
+     200000,
+     225000,
+     250000,
+     275000,
+     300000,
+     330000,
+     360000,
+     390000,
+     420000,
+     500000,
+     550000,
+     600000,
+     650000,
+     750000,
+    1000000
+  ]
+
   def initialize
     @bitmaps = []
     @sprites = {}
-    @lives = 5
+    @lives = 3
     @lives_lost_this_round = 0
+    @streak = 0
     @round = 1
     @prizes = []
     for i in -2...3
@@ -20,21 +74,10 @@ class Game_Guess_Pokemon
   end
 
   def round_prize(round)
-    return nil if round < 0
+    return nil if round < 0 || round > 50
     return 0 if round == 0
-    return 200 if round == 1
-    return 250000 if round == 50
-    return 1000000 if round == 100
-    return nil if round > 100
-    prize = (round > 50) ? 500000 : 200
-    for r in ((round > 50) ? 51 : 2)..round
-      prize = prize + r * 200
-      prize += 300 * r if r % 5 == 0
-      prize += 400 * r if r % 10 == 0
-      prize += 500 * r if r % 20 == 0
-      prize += 1000 * r if r % 50 == 0
-    end
-    return prize / 2
+    return 1000000 if round >= 50
+    return PRIZES[round - 1]
   end
 
   def get_species_bitmap(species,back=false)
@@ -43,8 +86,8 @@ class Game_Guess_Pokemon
     bitmap=pbResolveBitmap(battlername)
     if bitmap
       bitmap = RPG::Cache.load_bitmap("", battlername)
-      new_bitmap = Bitmap.new(bitmap.width, bitmap.height)
-      new_bitmap.blt(0, 0, bitmap, Rect.new(0, 0, bitmap.width, bitmap.height))
+      new_bitmap = Bitmap.new(bitmap.height, bitmap.height)
+      new_bitmap.blt(0, 0, bitmap, Rect.new(0, 0, bitmap.height, bitmap.height))
       bitmap.dispose
       return new_bitmap
     else
@@ -276,11 +319,22 @@ class Game_Guess_Pokemon
     shadow4 = Color.new(100, 190, 120)
     textpos = [
       ["ROUND",Graphics.width/2 + 191,68,2,base,shadow1,true],
-      ["LIVES",Graphics.width/2 + 191,164,2,base,shadow2,true],
+      ["LIVES",Graphics.width/2 + 191,166,2,base,shadow2,true],
       [@round.to_s,Graphics.width/2 + 191,98,2,base,shadow1,true],
-      [@lives.to_s,Graphics.width/2 + 191,194,2,base,shadow2,true],
       ["PRIZE",Graphics.width/2 - 193,68,2,base,shadow3,true]
     ]
+    imagepos = []
+    for i in 0...5
+      state = 0
+      if @lives == i && @streak % 3 != 0
+        state = 3 - (@streak % 3)
+      elsif @lives <= i
+        state = 3
+      end
+      imagepos.push([
+        "Graphics/UI/WhosThatPokemon/lives", Graphics.width / 2 + 141 + 20 * i, 196, 22 * state, 0, 22, 20
+      ])
+    end
     prizepos = []
     i = 0
     for p in @prizes
@@ -294,6 +348,7 @@ class Game_Guess_Pokemon
     pbDrawTextPositions(bitmap, textpos)
     pbSetSmallFont(bitmap)
     pbDrawTextPositions(bitmap, prizepos)
+    pbDrawImagePositions(bitmap, imagepos)
   end
 
   def update
@@ -348,31 +403,28 @@ class Game_Guess_Pokemon
       @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true))
     end
 
-    if round == 100
+    # All the other rounds
+    if round == 50
       @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, true, false))
       @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true, false))
       self.random_rotation
-    elsif round >= 90
-      @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, false, false))
-      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, false, false))
-    elsif round >= 70
-      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true, false))
-    elsif round >= 50
-      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true))
-      self.random_rotation
     elsif round >= 45
-      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true))
+      @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, true, false))
+      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true, false))
     elsif round >= 40
-      @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, true))
+      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap, true))
       self.random_rotation
     elsif round >= 35
       @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, true))
+      self.random_rotation
     elsif round >= 30
+      @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap, true))
+    elsif round >= 25
       @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap))
       self.random_rotation
-    elsif round >= 25
-      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap))
     elsif round >= 20
+      @bitmaps.push(self.jumble_3x3(self.current_pokemon_bitmap))
+    elsif round >= 15
       @bitmaps.push(self.jumble_2x2(self.current_pokemon_bitmap))
     elsif round >= 10
       self.random_rotation
@@ -389,7 +441,8 @@ class Game_Guess_Pokemon
 
   def guess_pokemon(species)
     while true
-      if @round > 20 && @lives > 1
+      # Go All In is no longer used, so ignore this part
+      if false # @round > 20 && @lives > 1
         if @all_in == 0
           loop do
             pbMessage("Are you ready to guess?\\ch[1,0,Yes,Go All In]")
@@ -409,7 +462,7 @@ class Game_Guess_Pokemon
             end
           end
         end
-        guess = pbEnterText("Who's that Pokémon?", 1, 12).downcase
+        guess = enter_guess(species)
         species_data = GameData::Species.get(species)
         for s in species_keys = GameData::Species::DATA.keys
           sd = GameData::Species.get(s)
@@ -423,11 +476,11 @@ class Game_Guess_Pokemon
         end
         pbMessage("I do not believe there is a Pokemon with that name. Please try another.")
       else
-        pbMessage("Are you ready to guess?\\ch[1,0,Yes]")
-        guess = pbEnterText("Who's that Pokémon?", 1, 12).downcase
+        guess = enter_guess(species)
         species_data = GameData::Species.get(species)
         for s in species_keys = GameData::Species::DATA.keys
           sd = GameData::Species.get(s)
+          next unless sd.form == 0 && sd.reverse_of.nil?
           if guess == sd.name.downcase || guess == s.to_s.downcase
             if guess == species_data.name.downcase || guess == species.to_s.downcase
               return true
@@ -440,6 +493,34 @@ class Game_Guess_Pokemon
       end
     end
     return false
+  end
+
+  def enter_guess(species)
+    while true
+      guess = pbEnterTextSimple("Who's that Pokémon?", 1, 12, 128, 256).downcase
+      species_data = GameData::Species.get(species)
+      distances = []
+      for s in species_keys = GameData::Species::DATA.keys
+        sd = GameData::Species.get(s)
+        next unless sd.form == 0 && sd.reverse_of.nil?
+        if guess == sd.name.downcase || guess == s.to_s.downcase
+          return guess
+        else
+          distances.push([sd.name, levenshtein_distance(guess, sd.name.downcase)])
+        end
+      end
+      distances.sort_by! { |d| d[1] }
+      msg = _INTL("By \"{1}\", did you mean...", guess)
+      msg += "\\ch[1,4"
+      msg += "," + distances[0][0]
+      msg += "," + distances[1][0]
+      msg += "," + distances[2][0]
+      msg += ",Neither of these]"
+      pbMessage(msg)
+      if pbGet(1) < 3
+        return distances[pbGet(1)][0].downcase
+      end
+    end
   end
 
   def update
@@ -479,10 +560,14 @@ class Game_Guess_Pokemon
     @sprites["pokemon"] = Sprite.new(@viewport)
     @sprites["pokemon"].x = Graphics.width / 2
     @sprites["pokemon"].y = Graphics.height / 4 - 18
+    @sprites["pokemon"].zoom_x = 2
+    @sprites["pokemon"].zoom_y = 2
     @sprites["pokemon2"] = Sprite.new(@viewport)
     @sprites["pokemon2"].x = Graphics.width / 2
     @sprites["pokemon2"].y = Graphics.height / 4 - 18
     @sprites["pokemon2"].opacity = 0
+    @sprites["pokemon2"].zoom_x = 2
+    @sprites["pokemon2"].zoom_y = 2
 
     @sprites["hud"] = Sprite.new(@viewport)
     @sprites["hud"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
@@ -490,7 +575,7 @@ class Game_Guess_Pokemon
     pbMessage("Welcome to...")
     pbMessage("WHO'S! THAT! POKEMON!")
     pbMessage("The first five rounds we will show different ways the image can be distorted. Then we go to the real thing!")
-    while @round <= 100
+    while @round <= 50
       @lives_lost_this_round = 0
       @all_in = 0
       if @round > 20 && @lives == 1
@@ -522,25 +607,21 @@ class Game_Guess_Pokemon
         pbMessage("The following Pokemon are without any distortions.")
       elsif @round == 10
         pbMessage("The following Pokemon will be rotated or flipped randomly.")
-      elsif @round == 20
+      elsif @round == 15
         pbMessage("The following Pokemon will be jumbled into 4 squares.")
-      elsif @round == 25
+      elsif @round == 20
         pbMessage("The following Pokemon will be jumbled into 9 squares.")
-      elsif @round == 30
+      elsif @round == 25
         pbMessage("The following Pokemon will be jumbled into 4 squares, then rotated or flipped.")
-      elsif @round == 35
+      elsif @round == 30
         pbMessage("The following Pokemon will be jumbled into 4 squares, but each square can be flipped individually.")
-      elsif @round == 40
+      elsif @round == 35
         pbMessage("The following Pokemon will be jumbled into 4 invididually flipped squares, then rotated or flipped.")
-      elsif @round == 45
-        pbMessage("The following Pokemon will be jumbled into 9 individually flipped squares.")
-      elsif @round == 50
+      elsif @round == 40
         pbMessage("The following Pokemon will be jumbled into 9 individually flipped squares, then rotated or flipped.")
-      elsif @round == 70
-        pbMessage("The following Pokemon will be jumbled into 9 individually flipped squares, but with no square colors.")
-      elsif @round == 90
+      elsif @round == 45
         pbMessage("The following Pokemon will be jumbled into 4 squares, then the new image is jumbled into 9 squares.")
-      elsif @round == 100
+      elsif @round == 50
         pbMessage("It's the final round! I have never seen anyone get this far, and neither did I think anyone would!")
         pbMessage("This final Pokemon is jumbled into 4 flipped squares, then 9 flipped squares, and finally rotated or flipped.")
       else
@@ -548,9 +629,10 @@ class Game_Guess_Pokemon
       end
 
       while !guess_pokemon(species)
-        pbMessage("Wrong...")
+        pbMessage("Wrong...\nYou'll have to try again.")
         @lives_lost_this_round += 1
         @lives -= 1
+        @streak = 0
         if @all_in > 0 && @lives > 0
           pbMessage("You went all in, and this is where you confidence got you...")
           @lives = 0
@@ -583,6 +665,13 @@ class Game_Guess_Pokemon
           end
         end
       end
+      @streak += 1
+      gained_life = false
+      if @lives < 5 && @streak % 3 == 0
+        @lives += 1
+        gained_life = true
+      end
+      self.refresh_hud
       pbMessage("CORRECT!")
       if @all_in > 0
         if @lives == 1
@@ -600,6 +689,10 @@ class Game_Guess_Pokemon
         self.wait(20)
       end
       pbMessage(_INTL("It's {1}!", GameData::Species.get(species).name))
+      if gained_life
+        self.refresh_hud
+        pbMessage(_INTL("You got it right three times in a row.\nYou've gained an extra life!"))
+      end
       for i in 0...64
         @sprites["pokemon"].opacity = 256 - i * 4
         self.update
@@ -607,18 +700,11 @@ class Game_Guess_Pokemon
       @bitmaps[0].dispose
       @bitmaps = []
       @round += 1
-      if @round == 21
-        pbMessage("Congratulations on passing round 20!\\wt[10]\\n...But the fun has just begun!")
-        pbMessage("You may now put all your lives on the line and Go All In on your guesses.")
-        pbMessage("If you guess correctly after going all in,\\nyou gain a life!")
-        pbMessage("But if you guess incorrectly...\nYou lose all the lives you have!")
-        pbMessage("Mind that you can only Go All In when you have multiple lives remaining.")
-      end
     end
 
-    if @round > 100
+    if @round > 50
       pbMessage("I can't believe it...")
-      pbMessage("Someone beat all 100 levels of Who's That Pokémon!")
+      pbMessage("Someone cleared all 50 levels of Who's That Pokémon!")
       pbMessage("Congratulations on this momentous achievement.\nYou will walk away with a whole $1,000,000!")
       $player.money += 1000000
       self.dispose

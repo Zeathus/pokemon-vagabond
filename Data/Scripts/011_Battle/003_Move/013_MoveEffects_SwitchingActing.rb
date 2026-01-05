@@ -265,7 +265,11 @@ class Battle::Move::BindTarget < Battle::Move
     return if target.effects[PBEffects::Trapping] > 0
     # Set trapping effect duration and info
     if user.hasActiveItem?(:GRIPCLAW)
-      target.effects[PBEffects::Trapping] = (Settings::MECHANICS_GENERATION >= 5) ? 8 : 6
+      if user.amplifyItem?
+        target.effects[PBEffects::Trapping] = (Settings::MECHANICS_GENERATION >= 5) ? 10 : 8
+      else
+        target.effects[PBEffects::Trapping] = (Settings::MECHANICS_GENERATION >= 5) ? 8 : 6
+      end
     else
       target.effects[PBEffects::Trapping] = 5 + @battle.pbRandom(2)
     end

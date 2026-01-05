@@ -163,7 +163,7 @@ class Battle
           # NOTE: The player is only offered the chance to switch their own
           #       Pokémon when an opponent replaces a fainted Pokémon in single
           #       battles. In double battles, etc. there is no such offer.
-          if @internalBattle && @switchStyle && trainerBattle? && pbSideSize(0) == 1 &&
+          if @internalBattle && @switchStyle && !@playerUseAI && trainerBattle? && pbSideSize(0) == 1 &&
              opposes?(idxBattler) && !@battlers[0].fainted? && !switched.include?(0) &&
              pbCanChooseNonActive?(0) && @battlers[0].effects[PBEffects::Outrage] == 0
             idxPartyForName = idxPartyNew
@@ -348,6 +348,14 @@ class Battle
         next
       end
       b.pbCheckForm
+      b.eachOpposing do |opp|
+        if !opp.fainted? && opp.species == :VILLAFIN && opp.form == 0 && opp.hasActiveAbility?(:ADVERSARY) && opp.turnCount > 0
+          # Turn into Villain form
+          pbShowAbilitySplash(opp, true)
+          pbHideAbilitySplash(opp)
+          opp.pbChangeForm(1, _INTL("{1} activated!", opp.abilityName))
+        end
+      end
       # Primal Revert upon entering battle
       pbPrimalReversion(b.index)
       # Ending primordial weather, checking Trace

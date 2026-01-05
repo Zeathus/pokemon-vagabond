@@ -103,6 +103,15 @@ class PokemonRegionMap_Scene
     @mode    = fly_map ? 1 : 0
     map_metadata = $game_map.metadata
     playerpos = (map_metadata) ? map_metadata.town_map_position : nil
+    if PBMaps.amphi.include?($game_map.map_id) || $game_map.map_id == 220
+      if $game_switches[TORTERRA_WEST]
+        playerpos = [0, 10, 13]
+      elsif $game_switches[TORTERRA_EAST]
+        playerpos = [0, 16, 14]
+      elsif $game_switches[TORTERRA_SOUTH]
+        playerpos = [0, 5, 17]
+      end
+    end
     if !playerpos
       mapindex = 0
       @map     = GameData::TownMap.get(0)
@@ -118,7 +127,7 @@ class PokemonRegionMap_Scene
       @map     = GameData::TownMap.get(playerpos[0])
       @map_x   = playerpos[1]
       @map_y   = playerpos[2]
-      mapsize  = map_metadata.town_map_size
+      mapsize  = map_metadata ? map_metadata.town_map_size : [1, "1"]
       if mapsize && mapsize[0] && mapsize[0] > 0
         sqwidth  = mapsize[0]
         sqheight = (mapsize[1].length.to_f / mapsize[0]).ceil

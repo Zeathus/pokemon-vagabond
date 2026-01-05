@@ -1,0 +1,554 @@
+[CH8_RUINS,0]
+/event set Amethyst 9
+/speaker Nekane thought
+> ...I can sense my [R]master[/].
+/reset
+/event Amethyst emote ?
+/speaker Amethyst confused
+> "Master"?
+/speaker Kira
+> That sounds kinda old-school.
+/speaker Nekane
+> I will open the path forward.
+
+[CH8_RUINS,1]
+/speaker Nekane
+> Follow me!
+
+[CH8_RUINS,2]
+/event set Amethyst 9
+/event Amethyst emote sigh
+/speaker Amethyst confused
+> I guess she's not elaborating on the "master" thing.
+/expression awkward
+> Let's just follow her for now.
+
+[CH8_RUINS_NEKANE]
+/speaker Nekane
+> We need to get through here.
+> The ruins should have some way to open this passage.
+
+[CH8_LOCKED_DOOR,0]
+> The door is locked.
+
+[CH8_LOCKED_DOOR,1]
+> You inserted the\se[Battle catch click] Evergone Ruins Key.\wtnp[20]
+
+[CH8_NEKANE_BATTLE,0]
+/speaker Nekane
+> We're almost there! But...
+> Before we continue, my master wishes to test your strength.
+?> Are you ready?
+    /choice I'm ready
+        > Then let's get started.
+        /return true
+    /cancelchoice I need a moment
+        > Please don't take too long.
+        /return false
+?/>
+
+[CH8_NEKANE_BATTLE,1]
+/speaker Nekane thought
+> Pokémon from the other side...\nHelp me with this test.\wtnp[40]
+
+[CH8_NEKANE_BATTLE,2]
+/event set Amethyst 11
+/event Amethyst emote sigh
+/speaker Amethyst awkward
+> Nekane... What is that ominous portal?
+/speaker Nekane
+> It goes to the world opposite of ours.\nIt's where my master lives.
+> Follow me!
+
+[CH8_NEKANE_BATTLE,3]
+/speaker Amethyst confused
+> She... disappeared.
+/speaker Kira lookaway
+> Are we really going to trust this?
+/expression annoyed
+> Azelf, is this safe?
+/speaker Azelf
+> Uxie, is this safe?
+/speaker Uxie
+> Yes, it is safe.
+/speaker Azelf
+> Uxie says it is safe!
+/speaker Kira
+> Well, if Uxie says it's safe, then I suppose it is.
+/speaker Amethyst
+> We don't really have any other options anyway. So let's go!
+
+[CH8_NEKANE_BATTLE,4]
+/speaker Uxie
+> That leaves us.
+/speaker Azelf
+> See you on the other side, <PLAYER>.
+
+[CH8_INTERMISSION1,0]
+/speaker <PLAYER2>
+/portrait none
+/hidename 1
+!> DUKE!
+
+[CH8_INTERMISSION1,1]
+/speaker <PLAYER2>
+> I know you're here Duke.\nShow yourself!
+
+[CH8_INTERMISSION1,2]
+/speaker Duke heh
+> \ts[2]...Is that any way to greet your own brother after so long?
+/speaker <PLAYER2>
+/if pbGetChoiceValue("ch5 why eliana helped") == "She has ulterior motives"
+    > \ts[1]I don't have time for your schemes, Duke.
+/else
+    > \ts[1]I don't have time for your attitude, Duke.
+/end
+> I know you're up to something.\nWhat are you planning?
+/speaker Duke heh
+> You wound me...
+/expression point
+> What have I ever done to deserve such suspicion?
+/speaker <PLAYER2>
+> You know exactly why.
+> <shake>Why</shake> do I have a doppelgänger running around?
+/speaker Duke heh
+> Let's not point fingers here.\nPerhaps it's [R]your[/] fault, not mine?
+/speaker <PLAYER2>
+> I find that hard to believe, given that you are... you.
+> If that's how you're going to be...\nI will simply have to get answers by force.
+
+[CH8_INTERMISSION1,3]
+/speaker <PLAYER2>
+> You know I'm stronger than you, Duke!
+
+[CH8_INTERMISSION1,4]
+/speaker Duke
+> You have often bested me in battle...\nBut don't underestimate me!
+
+[CH8_INTERMISSION1,5]
+/speaker Duke pinch
+> My last Pokémon... It's all down to this.
+
+[CH8_INTERMISSION1,6]
+/speaker <PLAYER2>
+> Finally dropped your confident facade?
+> The [R]legendary dragon[/] will make quick work of your poor Dragonite!
+
+[CH8_INTERMISSION1,7]
+/speaker Duke pinch
+> You don't have to do this...
+/speaker <PLAYER2>
+> ...You leave me no other choice.
+
+[CH8_CYRUS,0]
+/speaker Amethyst smile
+> <PLAYER>!
+
+[CH8_CYRUS,1]
+/speaker Amethyst
+> I'm relieved to see you're okay.\nWe were getting worried.
+/expression awkward
+> Well, I was getting worried, while Kira was being Kira.
+/expression neutral
+> There's someone you should meet.\nHe found us when we got here.
+> Follow me.
+
+[CH8_CYRUS,2]
+/speaker Cyrus
+/hidename 1
+> I see you found your companion.\nPlease have a seat.
+
+[CH8_CYRUS,3]
+/speaker Kira
+> I told you they'd be fine.
+/speaker Amethyst annoyed
+> Well, you also said that worst case, they'd be falling perpetually.
+/speaker Kira
+> The flip of a coin, really.
+/speaker Amethyst
+> Anyway, this is [R]Cyrus[/]. Kira and I were walking in circles when we stumbled upon him and he guided us here.
+/speaker Cyrus
+> Pleased to meet you, <PLAYER>.
+/speaker Amethyst
+> We filled him in on our situation.
+/expression awkward
+> I didn't expect to find a human living here of all places!
+/speaker Kira
+> I bet this guy has quite some history.
+/speaker Cyrus
+> Me living here is a result of my own hubris. Nothing more, nothing less.
+> I wished for a world void of spirit, and the Mankey's paw curled.
+> But my past is of little relevance to you.
+> If you were brought here alongside Uxie and Azelf, [R]Giratina[/] must want to see you, and soon.
+/speaker Amethyst
+> Nekane must be where Giratina is.\nI'm sure of it.
+/speaker Kira
+> Before we go...\nYou said you'd fill us in on what this place's deal is when <PLAYER> arrived.
+/speaker Cyrus
+> Of course, few are more suited for the task.
+/eval $quests[:ANSWERS].dummy = [false, false, false]
+?> What would you like to know first?
+  /choice Where are we?
+    /eval $quests[:ANSWERS].dummy[0] = true
+    /dialog CH8_CYRUS_TOPIC 0
+  /choice Who is Giratina?
+    /eval $quests[:ANSWERS].dummy[1] = true
+    /dialog CH8_CYRUS_TOPIC 1
+  /choice The odd Pokémon
+    /eval $quests[:ANSWERS].dummy[2] = true
+    /dialog CH8_CYRUS_TOPIC 2
+?/>
+/speaker Cyrus
+?> Was there anything else you need to know?
+  /ifchoice !$quests[:ANSWERS].dummy[0] Where are we?
+    /eval $quests[:ANSWERS].dummy[0] = true
+    /dialog CH8_CYRUS_TOPIC 0
+  /ifchoice !$quests[:ANSWERS].dummy[1] Who is Giratina?
+    /eval $quests[:ANSWERS].dummy[1] = true
+    /dialog CH8_CYRUS_TOPIC 1
+  /ifchoice !$quests[:ANSWERS].dummy[2] The odd Pokémon
+    /eval $quests[:ANSWERS].dummy[2] = true
+    /dialog CH8_CYRUS_TOPIC 2
+?/>
+/speaker Cyrus
+?> Any final questions?
+  /ifchoice !$quests[:ANSWERS].dummy[0] Where are we?
+    /eval $quests[:ANSWERS].dummy[0] = true
+    /dialog CH8_CYRUS_TOPIC 0
+  /ifchoice !$quests[:ANSWERS].dummy[1] Who is Giratina?
+    /eval $quests[:ANSWERS].dummy[1] = true
+    /dialog CH8_CYRUS_TOPIC 1
+  /ifchoice !$quests[:ANSWERS].dummy[2] The odd Pokémon
+    /eval $quests[:ANSWERS].dummy[2] = true
+    /dialog CH8_CYRUS_TOPIC 2
+?/>
+/speaker Amethyst
+> Thank you for answering our questions, Cyrus. Now we must head off to meet Giratina.
+> Would you guide us there?
+/speaker Cyrus
+> I would if I was able, but Giratina... doesn't hold me in very high regard.
+> Instead I can give you directions. I believe you can find the way from there.
+> Follow me.
+
+[CH8_CYRUS_TOPIC,0]
+/speaker Cyrus
+> You are currently in the [R]Distortion World[/]. It exists opposite of your own world.
+> The two worlds coexist, pushing against each other.
+> Very few humans have ever stepped foot here.
+
+[CH8_CYRUS_TOPIC,1]
+/speaker Cyrus
+> The Legendary Pokémon Giratina is the ruler of this realm.
+> You may have heard about Giratina as a vicious Pokémon in mythology.
+> After my time here, I no longer believe that to be true.
+> I believe Giratina simply carries out the duty it was given.
+
+[CH8_CYRUS_TOPIC,2]
+/event set Amethyst 7
+/speaker Amethyst
+> Yeah! There was that Absol, that Ampharos, and also the Dragonair!
+/speaker Cyrus
+> Did you meet these Pokémon in your own world?
+/speaker Kira
+> We did. We took care of them, but we don't know if more remain.
+/speaker Cyrus
+> If [R]Reverse Pokémon[/] have gone to your world... I see why Giratina may have called upon you.
+/reset
+/event Amethyst emote ?
+/speaker Amethyst confused
+> "Reverse Pokémon"?
+/speaker Cyrus
+> That is what I dubbed them, as they appear to exhibit one or more behaviors opposite to their counterparts.
+> You all have Pokédexes, correct?
+/speaker Kira
+> Yeah, how so?
+/speaker Cyrus
+> If you hand them to me for a moment,\nI will enable them to register these Reverse Pokémon.
+> You will encounter more such Pokémon, so cataloguing them will prove useful.\nI have also named them over time.
+/reset
+> You all hand Cyrus your Pokédexes.
+/speaker Cyrus
+> ...
+> That should do the trick.
+/speaker Amethyst
+> I'm sure this will be really useful!
+
+[CH8_CYRUS,4]
+/speaker Cyrus
+> If you head in this direction, you will eventually reach Giratina.
+
+[CH8_CYRUS,5]
+/speaker Cyrus
+> I have procured a few healing supplies during my time here. If your Pokémon need healing, you need only ask.
+/speaker Amethyst
+> Are you sure you don't want to come with us? We might be able to get you back to your own world.
+/speaker Cyrus
+> I have long since abandoned the idea of returning. I am certain Giratina would not allow me to leave.
+> This world and its solitude is my atonement.
+/speaker Kira
+> I don't know what messed up stuff you did in the past, but you seem serious about this.
+/speaker Amethyst wink
+> We'll come visit sometime once we've dealt with the matters at hand!
+/speaker Cyrus
+> That would be nice. Until then.
+
+[CH8_GIRATINA_CRY]
+/cry GIRATINA 100 90
+
+[CH8_GIRATINA_CRY,1]
+/speaker Kira
+> We're getting close.
+/speaker Amethyst awkward
+> I thought I was ready, but now I'm getting kinda nervous.
+
+[CH8_GIRATINA,0]
+/speaker Nekane
+> There you are!
+
+[CH8_GIRATINA,1]
+/speaker Nekane
+> These are the friends I told you about, including <PLAYER>, the one who can talk to all the Lake Guardians.
+
+[CH8_GIRATINA,2]
+/speaker Giratina
+> ...Welcome, humans.
+/speaker Amethyst ahem
+> \ts[2]Ahem... Greetings o great Giratina of the Distortion World.
+/speaker Giratina
+> \ts[1]... ... ...
+/speaker Kira
+> Mr[.] lord of the otherworld here doesn't strike me as one for formalities.
+> ...'Sup?
+/speaker Giratina
+> You would be correct... Such formalities hold no meaning in this world.
+> Nekane, as you call her, have told me about you three.
+> It appears there were difficulties in her bringing you here.
+/speaker Amethyst awkward
+> Yes. We needed the help of the Lake Guardians to restore her memories.
+/expression confused
+> What... is Nekane anyway?
+/speaker Giratina
+> She was created from myself, to travel to your world while I cannot. That was her sole purpose.
+> Neither human nor Pokémon... but she appears much more... [R]human[/]... than the hollow vessel she was made as.
+> The work of Mesprit and Azelf, I expect.
+/speaker Kira
+> Does that cause issues?
+/speaker Giratina
+> Quite the opposite. Helping her blend in with your world will be useful for what is ahead.
+/speaker Amethyst confused
+> When... what's ahead?
+/speaker Giratina
+> To stop the D[.]A[.]O[.] in their tracks.\nThey must not succeed in their mission.
+/speaker Kira
+> You're in luck, as we're already on the case.
+> Though I'd like some details on what they're scheming if you're in the know.
+/speaker Giratina
+> That is why you are here...\nGiven that you are reliable.
+> Defeat me in a test of strength, and I will indulge you about [R]everything[/].
+/speaker Amethyst awkward
+> Right... Just need to fight against the ruler of a whole dimension. No biggie.
+/speaker Kira lookaway
+> Something tells me this is just the start of our problems.
+/speaker Giratina
+> I will be benevolent however.
+> If you need to prepare or strengthen your resolves, you may return to your own world through a portal behind you.
+/speaker Uxie
+> We will wait here alongside Giratina.
+/speaker Azelf
+> I am certain you will succeed!
+/speaker Giratina
+> Speak with me when you are ready.
+
+[CH8_GIRATINA_BATTLE,0]
+/speaker Giratina
+?> Are you prepared?
+  /choice I am!
+    /return true
+  /cancelchoice On second thought
+    > You must harden your resolve.
+    /return false
+?/>
+
+[CH8_GIRATINA_BATTLE,1]
+/cry GIRATINA 100 100
+/speaker Giratina
+> Show me your resolve!\wtnp[30]
+
+[CH8_GIRATINA_NEKANE]
+/speaker Nekane
+> Show Giratina what you've got!
+
+[CH8_GIRATINA_AZELF]
+/speaker Giratina
+> Azelf, is it true that you forgot about the existence of this world's Pokémon?
+/speaker Azelf
+> Yes...\nIt slipped my mind after so many years.
+/speaker Uxie
+> Azelf is quite forgetful.\nIt has been just 10[,]000 years or so since they last saw them.
+/speaker Azelf
+> I feel I am being held to unreasonable standards...
+
+[CH8_GIRATINA_UXIE]
+/speaker Uxie
+> A battle against Giratina... The odds appear to be stacked against you.
+
+[CH8_EVERYTHING,0]
+/speaker Giratina
+> You fought well.
+> As promised, I will tell you all I know.
+
+[CH8_EVERYTHING,1]
+/hidewindow 1
+/textpos center
+> \ts[3]\nIt all begins with one Pokémon...\wtnp[40]
+
+[CH8_EVERYTHING,2]
+/hidewindow 1
+/textpos center
+> \ts[3][R]\nArceus.[/]\wtnp[60]
+
+[CH8_EVERYTHING,3]
+/hidewindow 1
+/textpos center
+> \ts[3]According to human mythology,\nthe creator of this universe.\wtnp[60]
+
+[CH8_EVERYTHING,4]
+/hidewindow 1
+/textpos center
+> \ts[3]\nThe same mythology tells of [R]three special Pokémon[/] created by Arceus.\wtnp[60]
+
+[CH8_EVERYTHING,5]
+/hidewindow 1
+/textpos center
+> \ts[3]\nMost well-known are the opposing forces of the rulers of time and space.\wtnp[80]
+> \ts[3]\nHowever, these two alone could not maintain the world...\wtnp[60]
+
+[CH8_EVERYTHING,6]
+/hidewindow 1
+/textpos center
+> \ts[3]\nThat is why I, Giratina, was created.\nThe ruler of [R]chaos[/].\wtnp[60]
+> \ts[3]\nNaturally, chaos by itself cannot exist without opposition.\wtnp[60]
+> \ts[3]\nThis is where a fourth special Pokémon appears, largely lost to history.\wtnp[60]
+
+[CH8_EVERYTHING,7]
+/hidewindow 1
+/textpos center
+> \ts[3]\nThe ruler of [R]order[/].\nMy antithesis.\wtnp[60]
+> \ts[3]\nFor years, this fourth Pokémon has not existed in its original form.\wtnp[60]
+
+[CH8_EVERYTHING,8]
+/hidewindow 1
+/textpos center
+> \ts[3]\nMany years ago, the ruler of order was split into three pieces.\wtnp[60]
+
+[CH8_EVERYTHING,9]
+/hidewindow 1
+/textpos center
+> \ts[3]\nHumans know these pieces as [R]Reshiram[/], [R]Zekrom[/], and the husk, [R]Kyurem[/].\wtnp[60]
+> \ts[3]\nRecently, Kyurem has decided to trust a human to help restore its original form.\wtnp[60]
+> \ts[3]\nThough whether it is Kyurem's trust or manipulation is hard to say...\wtnp[60]
+
+[CH8_EVERYTHING,10]
+/hidewindow 1
+/textpos center
+> \ts[3]\n<outln>While this world is ruled by chaos, your world is ruled by order.</outln>\wtnp[60]
+> \ts[3]\n<outln>By restoring the ruler of order, the D[.]A[.]O[.] are hoping to restore the status quo.</outln>\wtnp[60]
+> \ts[3]\n<outln>However... The worlds have already been at balance for a long time.</outln>\wtnp[60]
+> \ts[3]\n<outln>The fracturing of the ruler of order was, perhaps, a step towards that.</outln>\wtnp[60]
+
+[CH8_EVERYTHING,11]
+/hidewindow 1
+/textpos center
+> \ts[3]\n<outln>Were the ruler of order to return, the balance would start to shift.</outln>\wtnp[60]
+> \ts[3]\n<outln>With order overpowering chaos, the human world would push against this world.</outln>\wtnp[60]
+> \ts[3]\n<outln>If one of the worlds is put under too much pressure... It bursts.</outln>\wtnp[60]
+
+[CH8_EVERYTHING,12]
+/hidewindow 1
+/textpos center
+> \ts[3]\n<outln>One world begins to leak into the other.</outln>\wtnp[60]
+> \ts[3]\n<outln>...And what happens when opposing energies collide?</outln>\wtnp[60]
+
+[CH8_EVERYTHING,13]
+/hidewindow 1
+/textpos center
+> \ts[3]\n<outln>It turns to nothing but an empty void...</outln>\wtnp[60]
+> \ts[3]\n<outln>The world as we know it\nwould come to an end.</outln>\wtnp[60]
+> \ts[3]\n<outln>Only Arceus remains,\nto begin anew.</outln>\wtnp[60]
+
+[CH8_EVERYTHING,14]
+/speaker Kira lookaway
+> Damn.
+/expression neutral
+> I'd better earn a pay raise from this ordeal.
+/speaker Amethyst awkward
+> I'm sure the higher ups will find that reasonable.
+/speaker Kira
+> Says the higher up.
+/expression lookaway
+> While I'm down to stop the D[.]A[.]O[.]..\nWhy did you call us specifically?
+/speaker Giratina
+> My original intention was for Nekane to bring the leader of the D[.]A[.]O[.] here.
+> I believe Kyurem chose them as they can hear all three Lake Guardians.
+/speaker Amethyst confused
+> Why is that important?
+/speaker Giratina
+> Together, the Lake Guardians can create [R]the red chain[/]. A binding device capable of restoring the ruler of order.
+> I hoped I could convey the risks of doing so to their leader and stop the problem at its source.
+> However, a certain disturbance made the hubris of that idea obvious.
+> That disturbance is <PLAYER>.
+/speaker Kira
+> <PLAYER>'s disturbing, alright.
+/speaker Amethyst annoyed
+> Kira!
+/expression ahem
+> What makes <PLAYER> a disturbance as you say?
+/speaker Giratina
+> Their existence itself is unaccounted for.\nI could only interpret their existence as a sign that my original plan would fail.
+> But I know aught about the details of why this <PLAYER> still exists.
+> All I know is that I first sensed the disturbance deep in the place you call Halcyon Forest in the human world.
+/speaker Amethyst surprised
+> That's where Duke lives!
+/speaker Kira annoyed
+> I knew that guy must've been keeping secrets.
+/speaker Giratina
+> It sounds like you know where to go next. This Duke must hold the answers I do not.
+
+[CH8_EVERYTHING,15]
+/speaker Nekane
+> May I go with them?
+/speaker Giratina
+> That is what I intended to ask you myself.
+
+[CH8_EVERYTHING,16]
+/speaker Giratina
+> During your travels, there is a chance you have come across [R]odd cracks[/] in the land.
+
+[CH8_EVERYTHING,17]
+/speaker Giratina
+/portrait none
+> These cracks lead to this world, and are caused by imbalances between the worlds.
+> Nekane holds some of my powers, so she can help remedy the issue.
+
+[CH8_EVERYTHING,18]
+/speaker Giratina
+> Take her along with you. She can let you traverse these rifts and neutralize them.
+/speaker Nekane
+> I will do my best to help you like you helped me!
+/speaker Giratina
+> Now you must go.\nAzelf and Uxie should go with you.
+> If you ever need me to recount what I have told you, return to me here.
+
+[CH8_NEKANE_JOIN]
+> Nekane is now a member of your party!\n...But she's unique to other members.
+> At a PC, you can freely change the Pokémon Nekane has in her party, as long as those Pokémon are Reverse Pokémon.
+> She is unable to control Pokémon from the human world, and can only use Reverse Pokémon.
+
+[CH8_GIRATINA_RECOUNT]
+/speaker Giratina
+?> Do you want a recounting of the history of the ruler of order?
+  /choice Yes
+    /return true
+  /cancelchoice Some other time
+    /return false
+?/>

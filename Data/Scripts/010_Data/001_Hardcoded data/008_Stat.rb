@@ -106,14 +106,14 @@ GameData::Stat.register({
 
 GameData::Stat.register({
   :id         => :ACCURACY,
-  :name       => _INTL("accuracy"),
+  :name       => _INTL("Accuracy"),
   :name_brief => _INTL("Acc"),
   :type       => :battle
 })
 
 GameData::Stat.register({
   :id         => :EVASION,
-  :name       => _INTL("evasiveness"),
+  :name       => _INTL("Evasiveness"),
   :name_brief => _INTL("Eva"),
   :type       => :battle
 })

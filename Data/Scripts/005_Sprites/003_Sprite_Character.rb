@@ -71,6 +71,9 @@ class Sprite_Character < RPG::Sprite
       @reflection = Sprite_Reflection.new(self, viewport)
     end
     @surfbase = Sprite_SurfBase.new(self, viewport) if character == $game_player
+    if !@isPartner && character && character != $game_player && @character.name[/angle\((\d+)\)/i]
+      self.angle = $~[1].to_i
+    end
     self.zoom_x = TilemapRenderer::ZOOM_X
     self.zoom_y = TilemapRenderer::ZOOM_Y
     update if !@isPartner
@@ -122,10 +125,10 @@ class Sprite_Character < RPG::Sprite
       self.ox = @cw / 2
       self.oy = @ch
     elsif @character_name != ""
-      @charbitmap = AnimatedBitmap.new(
+      @charbitmap = CharacterBitmap.new(
         "Graphics/Characters/" + @character_name, @character_hue
       )
-      RPG::Cache.retain("Graphics/Characters/", @character_name, @character_hue) if @character == $game_player
+      # RPG::Cache.retain("Graphics/Characters/", @character_name, @character_hue) if @character == $game_player
       @charbitmapAnimated = true
       @spriteoffset = @character_name[/offset/i]
       @cw = @charbitmap.width / self.sprite_grid_size[0]

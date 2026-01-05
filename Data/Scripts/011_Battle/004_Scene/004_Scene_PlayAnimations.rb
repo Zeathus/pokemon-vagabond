@@ -25,6 +25,36 @@ class Battle::Scene
       pbShowPartyLineup(0, true)
       pbShowPartyLineup(1, true)
       return
+    else
+      if @battle.battlers[1].species == $game_variables[CHAIN_SPECIES] &&
+         $game_map.map_id == $game_variables[CHAIN_MAP]
+        chain_length = $game_variables[CHAIN_LENGTH] + 1
+        if chain_length >= 3
+          chainSprite = Sprite.new(@viewport)
+          chainSprite.bitmap = Bitmap.new(256, 32)
+          chainSprite.x = Battle::Scene.pbBattlerPosition(1)[0] - 128
+          chainSprite.y = Battle::Scene.pbBattlerPosition(1)[1] - 128
+          chainSprite.ox = 128
+          chainSprite.oy = 16
+          chainSprite.z = 999
+          pbSetBoldFont(chainSprite.bitmap)
+          text_color = Color.new(
+            [250 - chain_length * 2, 150].max,
+            [250 - chain_length * 6,   0].max,
+            [250 - chain_length * 12,  0].max
+          )
+          pbDrawTextPositions(chainSprite.bitmap, [
+            [_INTL("CHAIN {1}", $game_variables[CHAIN_LENGTH] + 1), 128, 4, :center, text_color, Color.new(0, 0, 0), true]
+          ])
+          @sprites["chainAnnounce"] = chainSprite
+          chainAnim = Animation::ChainAnnounce.new(@sprites, @viewport, $game_variables[CHAIN_LENGTH] + 1)
+          @animations.push(chainAnim)
+        end
+      else
+        $game_variables[CHAIN_SPECIES] = @battle.battlers[1].species
+        $game_variables[CHAIN_LENGTH] = 0
+        $game_variables[CHAIN_MAP] = $game_map.map_id
+      end
     end
     # Wild battle: play wild Pokémon's intro animations (including cry), show
     # data box(es), return the wild Pokémon's sprite(s) to normal colour, show
@@ -54,6 +84,11 @@ class Battle::Scene
           pbCommonAnimation("Shiny", @battle.battlers[idxBattler])
         end
       end
+    end
+
+    if @sprites["chainAnnounce"]
+      @sprites["chainAnnounce"].dispose
+      @sprites.delete("chainAnnounce")
     end
   end
 

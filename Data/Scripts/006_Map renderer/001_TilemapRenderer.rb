@@ -265,10 +265,11 @@ class TilemapRenderer
   #
   #=============================================================================
   def initialize(viewport)
+    @render_factor          = $game_map.map_id == 149 ? 2 : 1
     @tilesets               = TilesetBitmaps.new
     @autotiles              = AutotileBitmaps.new
-    @tiles_horizontal_count = (Graphics.width.to_f / DISPLAY_TILE_WIDTH).ceil + 1
-    @tiles_vertical_count   = (Graphics.height.to_f / DISPLAY_TILE_HEIGHT).ceil + 1
+    @tiles_horizontal_count = (Graphics.width.to_f * @render_factor / DISPLAY_TILE_WIDTH).ceil + 1
+    @tiles_vertical_count   = (Graphics.height.to_f * @render_factor / DISPLAY_TILE_HEIGHT).ceil + 1
     @tone                   = Tone.new(0, 0, 0, 0)
     @old_tone               = Tone.new(0, 0, 0, 0)
     @color                  = Color.new(0, 0, 0, 0)

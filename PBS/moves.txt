@@ -9401,6 +9401,18 @@ FunctionCode = None
 Flags = CanProtect,CanMirrorMove
 Description = Spin-to-win.
 #-------------------------------
+[COMEUPPANCE]
+Name = Comeuppance
+Type = DARK
+Category = Physical
+Power = 1
+Accuracy = 100
+TotalPP = 10
+Target = None
+FunctionCode = CounterDamagePlusHalf
+Flags = CanProtect,CanMirrorMove,Contact
+Description = The user retaliates with much greater power against the target that last inflicted damage on it.
+#-------------------------------
 [BUTTERFLYEFFECT]
 Name = Butterfly Effect
 Type = BUG
@@ -9469,3 +9481,72 @@ Target = NearOther
 FunctionCode = AlwaysCriticalHit
 Flags = Contact,CanProtect,CanMirrorMove
 Description = The user pretends to reveal their weak point to the target, making the target lower their guard and target the user. If the target damages the user this turn, the damage taken is halved and the user counterattacks.
+#-------------------------------
+[NOSEDIVE]
+Name = Nosedive
+Type = FLYING
+Category = Physical
+Power = 85
+Accuracy = 100
+TotalPP = 20
+Target = Other
+FunctionCode = None
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user plunges at the target from the air. This leaves the user grounded until the end of the turn.
+#-------------------------------
+[HEADLONGRUSH]
+Name = Headlong Rush
+Type = GROUND
+Category = Physical
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = LowerUserDefSpDef1
+Flags = Contact,CanProtect,CanMirrorMove
+Description = The user smashes into the target in a full-body tackle. This also lowers the user’s Defense and Sp. Def stats.
+#-------------------------------
+[PSYCHICNOISE]
+Name = Psychic Noise
+Type = PSYCHIC
+Category = Special
+Power = 75
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = DisableTargetHealingMoves
+Description = The user attacks the target with unpleasant sound waves. For two turns, the target is prevented from recovering HP through moves, Abilities, or held items.
+#-------------------------------
+[AQUACUTTER]
+Name = Aqua Cutter
+Type = WATER
+Category = Physical
+Power = 70
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = None
+Flags = Contact,CanProtect,CanMirrorMove,HighCriticalHitRate
+Description = The user expels pressurized water to cut at the target like a blade. This move has a heightened chance of landing a critical hit.
+#-------------------------------
+[ELECTROSHOT]
+Name = Electro Shot
+Type = ELECTRIC
+Category = Special
+Power = 130
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = TwoTurnAttackChargeRaiseUserSpAtk1
+Flags = CanProtect,CanMirrorMove
+Description = The user gathers electricity on the first turn, boosting its Sp. Atk stat, then fires a high-voltage shot on the next turn. The shot will be fired immediately in rain.
+#-------------------------------
+[DUALSTANCE]
+Name = Dual Stance
+Type = PSYCHIC
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = StartUserDualStance
+Description = The user's stats fuse for 5 turns. All its attacks use its highest Attack stat, and all damage is reduced by its highest Defense stat.

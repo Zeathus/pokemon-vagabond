@@ -165,7 +165,7 @@ class Battle::Battler
         next if !b.hasActiveItem?(:ROOMSERVICE)
         next if !b.pbCanLowerStatStage?(:SPEED)
         @battle.pbCommonAnimation("UseItem", b)
-        b.pbLowerStatStage(:SPEED, 1, nil)
+        b.pbLowerStatStage(:SPEED, b.amplifyItem? ? 2 : 1, nil)
         b.pbConsumeItem
       end
     end

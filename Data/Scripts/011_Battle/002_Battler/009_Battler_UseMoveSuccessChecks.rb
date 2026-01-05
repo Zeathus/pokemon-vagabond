@@ -473,7 +473,7 @@ class Battle::Battler
     end
     # Dark-type immunity to moves made faster by Prankster
     if Settings::MECHANICS_GENERATION >= 7 && user.effects[PBEffects::Prankster] &&
-       target.pbHasType?(:DARK) && target.opposes?(user)
+       target.pbHasType?(:DARK) && move.statusMove? && target.opposes?(user)
       PBDebug.log("[Target immune] #{target.pbThis} is Dark-type and immune to Prankster-boosted moves")
       @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
       return false

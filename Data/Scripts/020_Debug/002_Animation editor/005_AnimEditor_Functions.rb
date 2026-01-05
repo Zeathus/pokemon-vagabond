@@ -282,8 +282,8 @@ module BattleAnimationEditor
     previewsprite.z = previewwin.z + 1
     sliderwin2.z = previewwin.z + 2
     set0 = sliderwin2.addSlider(_INTL("Pattern:"), -2, 1000, cel[AnimFrame::PATTERN])
-    set1 = sliderwin2.addSlider(_INTL("X:"), -256, 512 + 64, cel[AnimFrame::X])
-    set2 = sliderwin2.addSlider(_INTL("Y:"), -256, 384 + 64, cel[AnimFrame::Y])
+    set1 = sliderwin2.addSlider(_INTL("X:"), -512, 512 + 64, cel[AnimFrame::X])
+    set2 = sliderwin2.addSlider(_INTL("Y:"), -512, 384 + 64, cel[AnimFrame::Y])
     set3 = sliderwin2.addSlider(_INTL("Zoom X:"), 5, 1000, cel[AnimFrame::ZOOMX])
     set4 = sliderwin2.addSlider(_INTL("Zoom Y:"), 5, 1000, cel[AnimFrame::ZOOMY])
     set5 = sliderwin2.addSlider(_INTL("Angle:"), 0, 359, cel[AnimFrame::ANGLE])
@@ -954,7 +954,7 @@ module BattleAnimationEditor
     # Canvas
     canvas = AnimationCanvas.new(animation[animation.selected] || animation[0], viewport)
     # Right hand menu
-    sidewin = ControlWindow.new(512 + 128, 0, 160, 384 + 128)
+    sidewin = ControlWindow.new(512 * 1.5 + 128, 0, 160, 384 + 128)
     sidewin.addButton(_INTL("SE and BG..."))
     sidewin.addButton(_INTL("Cel Focus..."))
     sidewin.addSpace
@@ -972,16 +972,16 @@ module BattleAnimationEditor
     sidewin.addButton(_INTL("Help"))
     sidewin.viewport = canvas.viewport
     # Bottom left menu
-    sliderwin = ControlWindow.new(0, 384 + 128, 240, 160)
+    sliderwin = ControlWindow.new(0, 384 * 1.5 + 128, 240, 160)
     sliderwin.addControl(FrameCountSlider.new(canvas))
     sliderwin.addControl(FrameCountButton.new(canvas))
     sliderwin.addButton(_INTL("Set Animation Sheet"))
     sliderwin.addButton(_INTL("List of Animations"))
     sliderwin.viewport = canvas.viewport
     # Animation sheet window
-    animwin = CanvasAnimationWindow.new(canvas, 240, 384 + 128, 512, 96, canvas.viewport)
+    animwin = CanvasAnimationWindow.new(canvas, 240, 384 * 1.5 + 128, 512, 96, canvas.viewport)
     # Name window
-    bottomwindow = AnimationNameWindow.new(canvas, 240, 384 + 128 + 96, 512, 64, canvas.viewport)
+    bottomwindow = AnimationNameWindow.new(canvas, 240, 384 * 1.5 + 128 + 96, 512, 64, canvas.viewport)
     loop do
       Graphics.update
       Input.update

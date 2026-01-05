@@ -71,5 +71,35 @@ class Game_Map
     end
     return false
   end
+    
+  def sideways?(x, y)
+    [2, 1, 0].each do |i|
+      tile_id = data[x, y, i]
+      terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      return false if terrain.bridge && $PokemonGlobal.bridge > 0
+      return true if terrain.sideways_left || terrain.sideways_right
+    end
+    return false
+  end
+    
+  def sidewaysRight?(x, y)
+    [2, 1, 0].each do |i|
+      tile_id = data[x, y, i]
+      terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      return false if terrain.bridge && $PokemonGlobal.bridge > 0
+      return true if terrain.sideways_right
+    end
+    return false
+  end
+    
+  def sidewaysLeft?(x, y)
+    [2, 1, 0].each do |i|
+      tile_id = data[x, y, i]
+      terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      return false if terrain.bridge && $PokemonGlobal.bridge > 0
+      return true if terrain.sideways_left
+    end
+    return false
+  end
 
 end

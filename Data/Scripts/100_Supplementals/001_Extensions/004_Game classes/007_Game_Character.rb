@@ -50,5 +50,15 @@ class Game_Character
     end
     return nil
   end
+
+  def randomize_custom_move_route
+    if @move_route
+      @move_route_index = rand(@move_route.list.size)
+    end
+  end
+
+  def at?(check_x, check_y)
+    return @x == check_x && @y == check_y
+  end
   
 end

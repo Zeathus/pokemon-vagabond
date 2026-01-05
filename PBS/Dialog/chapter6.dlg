@@ -167,7 +167,7 @@
 /windowpos center
 > Choose how Duke responds to help Nekane understand her emotions.
 > Your choices will affect Nekane's comfort and stress.
-> If she gets comfortable enough, you win! ...But if she gets too stressed, you lose and have to try again.
+> If she gets comfortable enough, you win!\n...But if she gets too stressed, you lose and have to try again.
 
 [CH6_THERAPY,2]
 /speaker Duke glasses
@@ -194,7 +194,7 @@
     > Is that... normal?
     /speaker Duke glasses
     > What you feel must be [R]uncertainty[/].\nIt is a perfectly normal feeling.
-    > In fact, <PLAYER> has a similar memory situation, so you likely share that feeling.
+    > In fact, <PLAYER> has a similar memory situation. You likely share that feeling.
     /speaker Nekane
     > <PLAYER>... has the same feeling?
     /reset
@@ -228,7 +228,7 @@
 /speaker Nekane neutral
 > ...I do not know if I want to or not.
 /speaker Duke glasses
-> (I get the feeling the best decision is to move on for now. Only Uxie could assist fully on this matter.)
+> (My intuition says the best decision is to move on for now. Only Uxie could assist fully on this matter[.])
 > Can you recall any similarly strong feelings you have had?
 /speaker Nekane thought
 > ...
@@ -289,7 +289,7 @@
     > (No, saying that is not the way to go.\nI can make better use of this opening.)
   /choice Emotions are quite perplexing are they not?
     /speaker Nekane
-    > They really are... But I think that also makes them interesting in a way?
+    > They really are...\nBut that also makes them... intriguing?
     /break
   /choice Maybe you can fully understand them someday.
     /speaker Nekane
@@ -303,7 +303,7 @@
 
 [CH6_THERAPY,7]
 /speaker Duke glasses
-> (That's the cue.)
+> (That's the cue[.])
 /speaker Duke glasses_huzzah
 > (Azelf, NOW!)
 /speaker Azelf
@@ -369,7 +369,7 @@
 > That is odd...
 /expression neutral
 /loop
-> All I did was write a little, but I no longer feel those emotions as strongly as before.
+> All I did was write a little, and now those emotions are weaker than before.
 ?> I think the feeling became something else?
   /choice Why not try putting it into words?
     /expression thought
@@ -454,13 +454,13 @@
 > Luckily, it was not necessary this time. Her curiosity and the emotions you granted her was a good enough catalyst.
 /speaker Duke
 > Her understanding of emotions is still surface-level.
-> The book she is writing in is a journal. She will write about her experiences to better understand them.
+> The book she is writing in is a journal.\nShe will write about her experiences to better understand them.
 /speaker Amethyst smile
 > Kind of like a diary!
 /expression neutral
 > I used to write a diary when I was younger, and it really helped me work through some things.
 /speaker Kira
-> The one you keep in your top desk drawer and write in when you think I'm not looking?
+> The one you keep in your desk drawer and write in when you think I'm not looking?
 /speaker Amethyst awkward
 > I've no idea what you're on about!
 /expression ahem
@@ -473,28 +473,44 @@
 > All that's left now is to find Uxie, preferably before the D[.]A[.]O[.] do.
 > Do you have any idea where to look?
 /speaker Duke heh
-> Uxie and I are acquainted, so of course I do.
-/expression neutral
+> Of course. Uxie and I are acquainted.
+
+[CH6_AFTER,3]
+/speaker Duke neutral
 > Are you familiar with the island shrouded in fog to the south?
+
+[CH6_AFTER,4]
 /speaker Amethyst surprised
-> Is Uxie really on Gabbro Island!?
+> Is Uxie really on Andes Isle!?
 /expression neutral
 > But there are no records of anyone successfully getting there...
-> Whenever anyone enters the fog, they always eventually return to where they started.
+> Whenever anyone enters the fog, they always end up back where they started.
 /speaker Duke point
 > That's because they don't know the correct way.
 /expression neutral
-> To reach Gabbro Island, one must travel atop [R]The Great Amphi[/].
+> To reach Andes Isle, one must travel atop [R]The Great Amphi[/].
 /speaker Kira annoyed
 > The Great Amphi?
 /speaker Duke
 > Yes. It is the name of an island that moves at will.
-> Every few years, the island visits our region.
+
+[CH6_AFTER,5]
+/speaker Duke
+> One day it might be here.
+
+[CH6_AFTER,6]
+/speaker Duke
+> Then the next day is might be there.
+
+[CH6_AFTER,7]
+/speaker Duke
+> Every few decades, The Great Amphi visits our region.
 /speaker Kira annoyed
 > No shot an island can move.\nI'll believe it when I see it.
 /speaker Amethyst
-> It sounds like The Great Amphi is our ONLY shot...
-> ...But sounds like it could be years until we can.
+> We don't really have any other options...
+/expression worried
+> ...But sounds like it could be years until it's even possible.
 /speaker Duke point
 > Not necessarily.
 /expression neutral
@@ -502,19 +518,112 @@
 /speaker Amethyst surprised
 > Tomorrow!?
 /speaker Duke
-> Indeed. If you head out to sea at daybreak, there will be a new island to find.
+> Indeed.
+> If you head out to sea at daybreak, there will be a new island to find.
 > ...But if you don't act quickly, the D[.]A[.]O[.] might get there first.
 /speaker Kira lookaway
-> So you're saying they might already know this...
+> So you're saying they already know this...
 /expression annoyed
-> I guess we have no choice but to take a look.
+> That leaves us with no choice but to have a look.
 /speaker Amethyst worried
 > Yeah, we have to act fast.
 /expression neutral
 > We might never have learned how to get there without your help Duke. Thank you!
 > If you'd like, you're more than welcome to join us there.
 /speaker Duke
-> While a reunion with Uxie is tempting, I must unfortunately decline.
+> While an audience with Uxie is tempting,\nI must unfortunately decline.
 > Time is ticking, and I still have matters I must attend to...
 /speaker Amethyst
 > I understand.\nThen we'll be on our way!
+
+[CH6_DUKE_IDLE,0]
+/speaker Duke
+> I leave Nekane in your capable hands now.\nUxie should have no problems with her last steps.
+
+[CH6_DUKE_IDLE,1]
+/speaker Duke
+?> Got anything else on your mind?
+  /choice Why can't you join us?
+    /expression heh
+    > Curious, are we?
+    /expression neutral
+    > I'm studying... a lot.
+    > I seek answers, for the sake of two very close friends of mine.
+    /expression point
+    > We're never going to give our friends up or let them down now, are we?
+  /choice What's the big hourglass about?
+    /expression heh
+    > Why, to keep track of the time of course.
+    /expression neutral
+    > It tracks how much time I have left to finish my studies.
+    /expression point
+    > Keeps me on my toes.
+  /choice How are you so cool and awesome?
+    /expression heh
+    > Who put that dialogue option there?
+    /expression point
+    > What can I say? I'm a natural.
+  /choice Can you teach me magic tricks?
+    /expression point
+    > Taken an interest in the arcane arts?
+    /expression heh
+    > Unfortunately, a magician never reveals their secrets.
+  /cancelchoice Nah.
+    /expression hussah
+    > Until we meet again!
+?/>
+
+[CH6_LEAVE]
+?> Leave and return to HQ?
+  /choice Leave
+    /return true
+  /cancelchoice Snoop around some more
+    /return false
+?/>
+
+[CH6_MEETING_2,0]
+/speaker Amethyst smile
+> Okay! I'd say that was pretty fruitful.
+/expression neutral
+> Let's quickly reiterate what we have learned.
+> Uxie is on Andes Isle.\nTo get there, we have to ride the moving island known as The Great Amphi.
+> The Great Amphi comes to the region tomorrow, and we can find it at sea.
+/expression wink
+?> With that, I'd say we've got a good plan!
+  /savechoice ch6 seek out
+  /choice Tomorrow we seek out The Great Amphi!
+  /choice Tomorrow we seek out Uxie!
+?/>
+
+[CH6_INTERMISSION,0]
+/windowpos center
+/hidewindow 1
+/speaker <PLAYER2>
+/hidename 2
+> ...and with that, I know precisely when and where The Great Amphi will arrive tomorrow.
+
+[CH6_INTERMISSION,1]
+/speaker <PLAYER2>
+> Time to gather the others.
+
+[CH6_INTERMISSION,2]
+/speaker <PLAYER2>
+> The preperations are done. We can finally proceed with the mission to retrieve Uxie.
+/speaker Eliana smile
+> Great! I'll go pack my bags!
+/speaker Fintan
+> I shall gather my subordinates.
+/speaker <PLAYER2>
+> That will not be needed for this mission.
+> It would be best if we keep this excursion subtle to not draw much attention.
+> The G[.]P[.]O[.] could be trailing us.
+/speaker Fintan
+> Understood.
+/speaker Eliana
+> Sounds good to me.
+/speaker <PLAYER2>
+/if pbGetChoiceValue("ch6 seek out") == "Tomorrow we seek out Uxie!"
+  > Tomorrow we seek out Uxie!
+/else
+  > Tomorrow we seek out The Great Amphi!
+/end

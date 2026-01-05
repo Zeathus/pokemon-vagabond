@@ -223,7 +223,7 @@ class Battle::Move::CrashDamageIfFailsUnusableInGravity < Battle::Move
     return if !user.takesIndirectDamage?
     @battle.pbDisplay(_INTL("{1} kept going and crashed!", user.pbThis))
     @battle.scene.pbDamageAnimation(user)
-    hplost = user.hasActiveItem?(:STURDYHELMET) ? (user.totalhp / 4) : (user.totalhp / 2)
+    hplost = user.totalhp / (user.hasActiveItem?(:STURDYHELMET) ? (user.amplifyItem? ? 8 : 4) : 2)
     user.pbReduceHP(hplost, false)
     user.pbItemHPHealCheck
     user.pbFaint if user.fainted?

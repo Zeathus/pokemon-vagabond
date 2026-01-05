@@ -32,13 +32,13 @@ class PokemonEvolutionScene
     addBackgroundOrColoredPlane(@sprites, "background", "evolution_bg",
                                 Color.new(248, 248, 248), @bgviewport)
     rsprite1 = PokemonSprite.new(@viewport)
-    rsprite1.setOffset(PictureOrigin::CENTER)
     rsprite1.setPokemonBitmap(@pokemon, false)
+    rsprite1.setOffset(PictureOrigin::CENTER)
     rsprite1.x = Graphics.width / 2
     rsprite1.y = (Graphics.height - 64) / 2
     rsprite2 = PokemonSprite.new(@viewport)
-    rsprite2.setOffset(PictureOrigin::CENTER)
     rsprite2.setPokemonBitmapSpecies(@pokemon, @newspecies, false)
+    rsprite2.setOffset(PictureOrigin::CENTER)
     rsprite2.x       = rsprite1.x
     rsprite2.y       = rsprite1.y
     rsprite2.visible = false
@@ -59,7 +59,7 @@ class PokemonEvolutionScene
     sprite2.setColor(0, Color.new(255, 255, 255, 255))
     # Make sprite turn white
     sprite.moveColor(0, 25, Color.new(255, 255, 255, 255))
-    total_duration = 9 * 20   # 9 seconds
+    total_duration = 11.5 * 20   # 11.5 seconds
     duration = 25 + 15
     zoom_duration = 12
     loop do
@@ -74,7 +74,7 @@ class PokemonEvolutionScene
       sprite2.moveZoom(duration, zoom_duration, 0)
       duration += zoom_duration
       # Shorten the duration of zoom changes for the next cycle
-      zoom_duration = [(zoom_duration / 1.2).round, 2].max
+      zoom_duration = [(zoom_duration / 1.1).round, 2].max
     end
     @picture1 = sprite
     @picture2 = sprite2
@@ -95,7 +95,21 @@ class PokemonEvolutionScene
       break if System.uptime - timer_start >= 1
     end
     pbMEPlay("Evolution start")
+    timer_start = System.uptime
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdate
+      break if System.uptime - timer_start >= 0.1
+    end
     pbBGMPlay("Evolution")
+    timer_start = System.uptime
+    loop do
+      Graphics.update
+      Input.update
+      pbUpdate
+      break if System.uptime - timer_start >= 0.2
+    end
     canceled = false
     timer_start = System.uptime
     loop do
@@ -209,7 +223,7 @@ class PokemonEvolutionScene
     newspeciesname = GameData::Species.get(@newspecies).name
     pbMessageDisplay(@sprites["msgwindow"],
                      "\\se[]" + _INTL("Congratulations! Your {1} evolved into {2}!",
-                                      @pokemon.name, newspeciesname) + "\\wt[80]") { pbUpdate }
+                                      @pokemon.name, newspeciesname) + "\\wt[60]") { pbUpdate }
     @sprites["msgwindow"].text = ""
     # Check for consumed item and check if Pokémon should be duplicated
     pbEvolutionMethodAfterEvolution
@@ -236,8 +250,8 @@ class PokemonEvolutionScene
                        _INTL("{1}'s data was added to the Pokédex.", newspeciesname)) { pbUpdate }
       $player.pokedex.register_last_seen(@pokemon)
       pbFadeOutIn do
-        scene = PokemonPokedexInfo_Scene.new
-        screen = PokemonPokedexInfoScreen.new(scene)
+        scene = PokemonPokedex_Scene.new
+        screen = PokemonPokedexScreen.new(scene)
         screen.pbDexEntry(@pokemon.species)
         @sprites["msgwindow"].text = "" if moves_to_learn.length > 0
         pbEndScreen(false) if moves_to_learn.length == 0
@@ -257,6 +271,8 @@ class PokemonEvolutionScene
     if animating      # Pokémon shouldn't animate during the evolution animation
       @sprites["background"].update
       @sprites["msgwindow"].update
+      @sprites["rsprite1"].update
+      @sprites["rsprite2"].update
     else
       pbUpdateSpriteHash(@sprites)
     end

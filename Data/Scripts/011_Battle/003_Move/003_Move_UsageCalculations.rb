@@ -82,7 +82,9 @@ class Battle::Move
     # Multiply all effectivenesses together
     trinity_orbs = 0
     trinity_orbs += 1 if user.hasActiveItem?(:TRINITYORB)
+    trinity_orbs += 1 if user.amplifyItem? && user.hasActiveItem?(:TRINITYORB)
     trinity_orbs += 1 if target.hasActiveItem?(:TRINITYORB)
+    trinity_orbs += 1 if target.amplifyItem? && target.hasActiveItem?(:TRINITYORB)
     if trinity_orbs > 0
       if ret > 1
         ret *= (1.5**trinity_orbs)
@@ -162,11 +164,17 @@ class Battle::Move
       Battle::ItemEffects.triggerAccuracyCalcFromUser(
         user.item, modifiers, user, target, self, @calcType
       )
+      Battle::ItemEffects.triggerAccuracyCalcFromUser(
+        user.item, modifiers, user, target, self, @calcType
+      ) if user.amplifyItem?
     end
     if target.itemActive?
       Battle::ItemEffects.triggerAccuracyCalcFromTarget(
         target.item, modifiers, user, target, self, @calcType
       )
+      Battle::ItemEffects.triggerAccuracyCalcFromTarget(
+        target.item, modifiers, user, target, self, @calcType
+      ) if target.amplifyItem?
     end
     # Other effects, inc. ones that set accuracy_multiplier or evasion_stage to
     # specific values
@@ -176,6 +184,7 @@ class Battle::Move
     if user.effects[PBEffects::MicleBerry]
       user.effects[PBEffects::MicleBerry] = false
       modifiers[:accuracy_multiplier] *= 1.2
+      modifiers[:accuracy_multiplier] *= 1.2 if user.amplifyItem?
     end
     modifiers[:evasion_stage] = 0 if target.effects[PBEffects::Foresight] && modifiers[:evasion_stage] > 0
     modifiers[:evasion_stage] = 0 if target.effects[PBEffects::MiracleEye] && modifiers[:evasion_stage] > 0
@@ -204,9 +213,11 @@ class Battle::Move
     # Item effects that alter critical hit rate
     if c >= 0 && user.itemActive?
       c = Battle::ItemEffects.triggerCriticalCalcFromUser(user.item, user, target, c)
+      c = Battle::ItemEffects.triggerCriticalCalcFromUser(user.item, user, target, c) if user.amplifyItem?
     end
     if c >= 0 && target.itemActive?
       c = Battle::ItemEffects.triggerCriticalCalcFromTarget(target.item, user, target, c)
+      c = Battle::ItemEffects.triggerCriticalCalcFromTarget(target.item, user, target, c) if target.amplifyItem?
     end
     return false if c < 0
     # Move-specific "always/never a critical hit" effects
@@ -244,11 +255,19 @@ class Battle::Move
   def pbModifyDamage(damageMult, user, target);         return damageMult; end
 
   def pbGetAttackStats(user, target)
+    target.effects[PBEffects::DualStanceCategory] = nil
+    if user.effects[PBEffects::DualStance] != 0
+      user.effects[PBEffects::DualStanceCategory] = pbDecideDualStanceAttack(user, target)
+    end
     return user.spatk, user.stages[:SPECIAL_ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM if specialMove?
     return user.attack, user.stages[:ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM
   end
 
   def pbGetDefenseStats(user, target)
+    target.effects[PBEffects::DualStanceCategory] = nil
+    if target.effects[PBEffects::DualStance] != 0
+      target.effects[PBEffects::DualStanceCategory] = pbDecideDualStanceDefense(user, target)
+    end
     return target.spdef, target.stages[:SPECIAL_DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM if specialMove?
     return target.defense, target.stages[:DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM
   end
@@ -347,11 +366,17 @@ class Battle::Move
       Battle::ItemEffects.triggerDamageCalcFromUser(
         user.item, user, target, self, multipliers, baseDmg, type
       )
+      Battle::ItemEffects.triggerDamageCalcFromUser(
+        user.item, user, target, self, multipliers, baseDmg, type
+      ) if user.amplifyItem?
     end
     if target.itemActive?
       Battle::ItemEffects.triggerDamageCalcFromTarget(
         target.item, user, target, self, multipliers, baseDmg, type
       )
+      Battle::ItemEffects.triggerDamageCalcFromTarget(
+        target.item, user, target, self, multipliers, baseDmg, type
+      ) if target.amplifyItem?
     end
     # Parental Bond's second attack
     if user.effects[PBEffects::ParentalBond] == 1
@@ -543,6 +568,9 @@ class Battle::Move
     if user.hasActiveAbility?(:STENCH, true) ||
        user.hasActiveItem?([:KINGSROCK, :RAZORFANG], true)
       ret = 10
+    end
+    if user.amplifyItem? && user.hasActiveItem?([:KINGSROCK, :RAZORFANG], true)
+      ret += 10
     end
     ret *= 2 if user.hasActiveAbility?(:SERENEGRACE) ||
                 user.pbOwnSide.effects[PBEffects::Rainbow] > 0

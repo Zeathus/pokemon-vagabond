@@ -83,6 +83,7 @@ end
 class PokemonIconSprite < Sprite
   attr_accessor :selected
   attr_accessor :active
+  attr_accessor :disabled
   attr_reader   :pokemon
 
   # Time in seconds for one animation cycle of this Pokémon icon. It is doubled
@@ -94,6 +95,7 @@ class PokemonIconSprite < Sprite
     super(viewport)
     @selected      = false
     @active        = false
+    @disabled      = false
     @frames_count  = 0
     @current_frame = 0
     self.pokemon   = pokemon
@@ -172,7 +174,7 @@ class PokemonIconSprite < Sprite
   end
 
   def update_frame
-    if @pokemon.fainted?
+    if @pokemon.fainted? || @disabled
       @current_frame = 0
       return
     end

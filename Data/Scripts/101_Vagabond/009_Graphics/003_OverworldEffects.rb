@@ -133,6 +133,42 @@ def pbPulseBitmapIn(bitmap, seconds, interval=0.2, invert = false)
   viewport.dispose
 end
 
+class MapSlideTransition
+
+  def initialize
+    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+    @viewport.z = 99999
+    @bitmap = Graphics.snap_to_bitmap
+    @sprite1 = Sprite.new(@viewport)
+    @sprite1.bitmap = @bitmap
+    @sprite1.src_rect = Rect.new(0, 0, @bitmap.width, @bitmap.height / 2)
+    @sprite2 = Sprite.new(@viewport)
+    @sprite2.bitmap = @bitmap
+    @sprite2.src_rect = Rect.new(0, @bitmap.height / 2, @bitmap.width, @bitmap.height / 2)
+    @sprite2.y = Graphics.height / 2
+  end
+
+  def run
+    60.times do |i|
+      @sprite1.x += 4 + i * 2
+      @sprite2.x -= 4 + i * 2
+      Graphics.update
+      Input.update
+      @viewport.update
+      @sprite1.update
+      @sprite2.update
+      pbUpdateSceneMap
+    end
+    @sprite1.dispose
+    @sprite2.dispose
+  end
+
+end
+
+def pbSlideTransition
+  return MapSlideTransition.new
+end
+
 EventHandlers.add(:on_leave_tile, :footsteps,
   proc { |event, old_map, x, y|
     if event == $game_player && old_map == $game_map.map_id && [132,135].include?($game_map.map_id)

@@ -192,7 +192,7 @@ Cave,5
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
-[078] # Crosswoods Ruins
+[078] # Scoria Desert Ruins
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
@@ -200,7 +200,15 @@ Cave,5
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
-[254] # Crosswoods Ruins
+[254] # West Sea Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[276] # East Sea Ruins
+Cave,5
+    100,UNOWN,7,9
+#-------------------------------
+[278] # Amphi Ruins
 Cave,5
     100,UNOWN,7,9
 #-------------------------------
@@ -557,3 +565,151 @@ Cave,5
     30,NACLI,20,25
     20,SCRAGGY,20,25
     20,ONIX,20,25
+#-------------------------------
+[223] # Amphi Woods
+Land,21
+    100,GOLETT,20,30
+#-------------------------------
+[224] # Amphi Woods
+Land,21
+    100,GOLETT,20,30
+#-------------------------------
+[225] # Amphi Woods
+Land,21
+    100,GOLETT,20,30
+#-------------------------------
+[226] # Amphi Woods
+Land,21
+    100,GOLETT,20,30
+#-------------------------------
+[227] # Amphi Woods
+Land,21
+    100,GOLETT,20,30
+#-------------------------------
+[259] # Amphi Head
+Land,21
+    24,GOLETT,20,30
+    24,SALANDIT,20,30
+    24,BRIONNE,20,30
+    24,CUTIEFLY,20,30
+    1,GOLURK,25,35
+    1,SALAZZLE,25,35
+    1,PRIMARINA,25,35
+    1,RIBOMBEE,25,35
+#-------------------------------
+[220] # Amphi Wilds
+Land,21
+    25,MEDITITE,29,32
+    25,CUBONE,29,32
+    20,RIOLU,29,32
+    10,SCYTHER,29,32
+    10,GIRAFARIG,29,32
+    10,ORICORIO,29,32,3
+Land2,21
+    25,MIENFOO,29,32
+    25,JOLTIK,29,32
+    15,TURTWIG,29,32
+    15,JIGGLYPUFF,29,32
+    10,IGGLYBUFF,29,32
+    10,ORICORIO,29,32,2
+Water,2
+    70,SLOWPOKE,29,32
+    20,SLOWBRO,32,35
+    10,POPPLIO,25,30
+FishingRod
+    35,OMANYTE,25,35
+    35,KABUTO,25,35
+    15,DRATINI,30,35
+    10,MAGIKARP,35,40
+    5,DRAGONAIR,35,40
+#-------------------------------
+[221] # Amphi Town
+FishingRod
+    35,OMANYTE,25,35
+    35,KABUTO,25,35
+    20,DRATINI,30,35
+    5,KABUTOPS,35,40
+    5,OMASTAR,35,40
+#-------------------------------
+[025] # Amphi Wilds
+Water,2
+    30,SLOWPOKE,29,32
+    30,WAILMER,29,32
+    20,WINGULL,29,32
+    15,PELIPPER,29,32
+    5,SLOWKING,25,30
+FishingRod
+    40,MAGIKARP,25,35
+    40,WAILMER,25,35
+    20,WAILORD,30,40
+#-------------------------------
+[228] # Lake Shiki
+Land,21
+    25,BUNEARY,30,34
+    25,WATTREL,30,34
+    15,THROH,30,34
+    15,SAWK,30,34
+    15,ABRA,30,34
+    5,ORANGURU,30,34
+FishingRod
+    95,FEEBAS,30,45
+    5,MILOTIC,50
+#-------------------------------
+[237] # Evergone Ruins
+Cave,5
+    25,ELGYEM,30,35
+    25,BRONZOR,30,35
+    15,CLEFFA,30,35
+    15,MISDREAVUS,30,35
+    15,GOLETT,30,35
+    5,WYNAUT,30,35
+#-------------------------------
+[238] # Evergone Ruins
+Cave,5
+    25,ELGYEM,30,35
+    25,BRONZOR,30,35
+    15,CLEFFA,30,35
+    15,MISDREAVUS,30,35
+    15,GOLETT,30,35
+    5,DRAMPA,30,35
+#-------------------------------
+[149] # Uncanny Valley
+Land,21
+    40,LUNFLORA,32,41
+    25,CAUSOL,32,41
+    25,MISTAROS,32,41
+    10,REVINJA,32,41
+#-------------------------------
+[158] # Distortion World - Ruins
+Land,21
+    100,CAUSOL,36,45
+#-------------------------------
+[159] # Distortion World - Ranch
+Land,21
+    100,ITEMBRYO,5,15
+#-------------------------------
+[243] # Distortion World - Lazuli Lake
+Land,21
+    100,MISTAROS,36,45
+#-------------------------------
+[280] # Distortion World - East Sea
+Land,21
+    100,VILLAFIN,36,45
+#-------------------------------
+[244] # Upper Everstone River
+Land,21
+    25,TYNAMO,11,17
+    25,ELEKID,11,17
+    15,MAGNEMITE,11,17
+    15,MAREEP,11,17
+    15,ODDISH,11,17
+    5,KLEFKI,11,17
+#-------------------------------
+[272] # Old Factory
+Cave,5
+    30,MAGNEMITE,12,18
+    30,TYNAMO,12,18
+    20,ELEKID,12,18
+    10,KLEFKI,12,18
+    5,BELDUM,12,18
+    5,PORYGON,12,18

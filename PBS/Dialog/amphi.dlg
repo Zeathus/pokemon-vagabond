@@ -1,13 +1,155 @@
 [PENTAGRAM_START]
-?> Do you want to light an incense to start an invocation?
-    /choice Earth Incense
+?> Do you want to light an oil to start an invocation?
+    /ifchoice $bag.quantity(:EARTHIMBUEDOIL)>0 Earth Oil
       /return 0
-    /choice Water Incense
+    /ifchoice $bag.quantity(:WATERIMBUEDOIL)>0 Water Oil
       /return 1
-    /choice Air Incense
+    /ifchoice $bag.quantity(:AIRIMBUEDOIL)>0 Air Oil
       /return 2
-    /choice Fire Incense
+    /ifchoice $bag.quantity(:FIREIMBUEDOIL)>0 Fire Oil
       /return 3
     /cancelchoice Never mind
       /return -1
+?/>
+
+[PENTAGRAM_HELP]
+> To draw the pentagram, step onto the elemental symbols to the north, east, south and west.
+> For the point at the top, indicating spirit, interact with the oil burning in the center instead.
+
+[AMPHI_INN_SIGN]
+/textpos middle
+> <br>Amphi Town Inn
+
+[AMPHI_INN_LOCKED]
+> The door is locked.
+
+[AMPHI_INN_LEARA]
+> It's an elegant painting of a woman that has worn with age. There's a label below it.
+/textpos middle
+> Elder Leara<br>The founder of Amphi.
+
+[AMPHI_INNKEEP]
+/speaker Innkeep
+> Welcome, apostle.
+> Amphi Town has so few visitors that this inn tends to just gather dust.
+> But when Elder Akasha told that apostles were coming, I made sure to have it as good as new for your arrival.
+
+[AMPHI_INNKEEP,1]
+/speaker Innkeep
+?> Do you wish to rest your Pokémon?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[AMPHI_INNKEEP,2]
+/speaker Innkeep
+> May the elements be with you.
+
+[AMPHI_INN_BOOKSHELF,0]
+> There are dusty books in an old language you can't read.
+
+[AMPHI_HEAD]
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAAI!
+
+[AMPHI_HEAD_AMETHYST]
+/speaker Amethyst
+> So this is the face of The Great Amphi.\nHe's... pretty imposing.
+
+[AMPHI_HEAD_KIRA]
+/speaker Kira
+> This is quite the big guy. Must be real old.
+
+[AMPHI_HEAD_AZELF]
+/speaker Azelf
+> Thank you again, Great Amphi.\nYour help has been invaluable.
+
+[AMPHI_HEAD_NEKANE]
+/speaker Nekane
+> I would not have recovered my memories without your help. Thank you Great Amphi.
+
+[AMPHI_HEAD_DUKE]
+/speaker Duke
+> To think I would be presented with a sight as rare as The Great Amphi!
+
+[AMPHI_HEAD_ELIANA]
+/speaker Eliana
+> This thing is huge!
+> ...Sorry, I didn't mean to call you a thing, Great Amphi!
+
+[AMPHI_HEAD_FINTAN]
+/speaker Fintan
+> I have to wonder how a Torterra could ever grow this physically big...
+
+[AMPHI_HEAD_CERISE]
+/speaker Cerise
+> The Great Amphi looks like a worthwhile adversary!
+> ...But unfortunately, its nature is far too passive.
+
+[AMPHI_AKASHA,0]
+/speaker Akasha
+> Ah, welcome to my home, apostle.
+> It may not be as grand as the sanctums of the other elders, but this is how I prefer it.
+
+[AMPHI_AKASHA,1]
+/speaker Akasha
+> What am I doing, you ask?
+> I am reading more of our town's literature.
+> I have yet to read it all, and as an elder, I believe it is one of my duties to do so.
+
+[FIRE_ELEMENTAL,0]
+/speaker Michael
+> Welcome back, apostle.
+> As the elementals have approved of you, I can offer you another trial that makes you even closer to the fire elemental.
+
+[FIRE_ELEMENTAL,1]
+/speaker Michael
+?> Would you like to try the trial of fire?
+  /choice I'm fired up!
+    > Very well. Best of luck.
+    /return true
+  /cancelchoice Some other time
+    > Let me know when you are ready.
+    /return false
+?/>
+
+[FIRE_ELEMENTAL,2]
+?> Leave the trial of fire?
+  /choice Leave
+    /return true
+  /cancelchoice Stay
+    /return false
+?/>
+
+[FIRE_ELEMENTAL,3]
+/speaker Michael
+> Well done passing through the fire.
+> Now, you must defeat me in battle.
+
+[FIRE_ELEMENTAL,4]
+/speaker Michael
+> What an exceptional performance. The fire elementals will be pleased.
+
+[FIRE_ELEMENTAL,5]
+/speaker Michael
+> With this trial complete, I believe the fire elemental will allow you to invoke it.
+> For that purpose, you will need this.
+
+[FIRE_ELEMENTAL,6]
+/speaker Michael
+> To invoke the fire elemental, light this oil in the center of the pentagram in the town square.
+> Once that is lit, the ritual begins and you have to draw the pentagram in a specific manner.
+> For the fire elemental, you have to draw the pentagram [R]starting from the top point of spirit, moving towards fire.[/]
+> Let me know if you need to be reminded of the procedure.
+
+[FIRE_ELEMENTAL,7]
+/speaker Michael
+?> Would you like me to repeat the steps for invoking the fire elemental?
+  /choice Yes please
+    /return true
+  /cancelchoice I remember
+    /return false
 ?/>

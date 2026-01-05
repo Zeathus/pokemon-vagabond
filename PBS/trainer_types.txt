@@ -24,6 +24,12 @@ Gender = Female
 BaseMoney = 60
 SkillLevel = 255
 #------------------
+[ANTAGONIST]
+Name = D.A.O. Leader
+Gender = Male
+BaseMoney = 60
+SkillLevel = 255
+#------------------
 [WILDPOKEMON]
 Name = The Wild
 Gender = Mixed
@@ -387,6 +393,14 @@ Gender = Male
 BaseMoney = 200
 SkillLevel = 255
 #------------------
+[FORETELLER2]
+Name = Foreteller
+Gender = Male
+BaseMoney = 0
+SkillLevel = 255
+Flags = UsePokemonInOrder
+BattleBGM = Battle! VS Doppelganger (Lost in Time)
+#------------------
 [KIRA_Kid]
 Name = Trainer
 Gender = Male
@@ -396,6 +410,13 @@ BattleBGM = Battle! VS Kira (Sick)
 #------------------
 [NEKANE]
 Name = Mystery Girl
+Gender = Female
+BaseMoney = 50
+SkillLevel = 100
+BattleBGM = Battle! VS Nekane (My Turn)
+#------------------
+[NEKANE2]
+Name = Daughter of Chaos
 Gender = Female
 BaseMoney = 50
 SkillLevel = 100
@@ -470,24 +491,28 @@ Name = Elder of Earth
 Gender = Female
 BaseMoney = 64
 SkillLevel = 64
+Flags = ReserveLastPokemon
 #------------------
 [FIREELDER]
 Name = Elder of Fire
 Gender = Male
 BaseMoney = 64
 SkillLevel = 64
+Flags = ReserveLastPokemon
 #------------------
 [AIRELDER]
 Name = Elder of Air
 Gender = Male
 BaseMoney = 64
 SkillLevel = 64
+Flags = ReserveLastPokemon
 #------------------
 [WATERELDER]
 Name = Elder of Water
 Gender = Female
 BaseMoney = 64
 SkillLevel = 64
+Flags = ReserveLastPokemon
 #------------------
 [SIMTRAINER_M]
 Name = Sim Trainer
@@ -551,6 +576,8 @@ Name = Elder of Aether
 Gender = Female
 BaseMoney = 100
 SkillLevel = 100
+Flags = ReserveLastPokemon
+BattleBGM = Battle! VS Aether Elder
 #------------------
 [CYRUS]
 Name = Otherworld Inhabitant

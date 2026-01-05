@@ -281,7 +281,17 @@ def pbGetCompletion(area, subarea = "")
     c.item(73, 21) # Hyper Potion
   when "Everstone River"
     if subarea == "Upper"
-
+      c.check_dex(244)
+      c.check_dex(272)
+      c.item(244, 16) # Dragon Scale
+      c.item(272, 3)  # Factory Key
+      c.item(272, 11) # Magnet
+      c.item(272, 12) # Carbos
+      c.item(272, 13) # 2x Cell Battery
+      c.item(272, 14) # Thunder Stone
+      c.item(272, 15) # Up-Grade
+      c.item(273, 3)  # TM55 Volt Switch
+      c.item(273, 6)  # Matter Amplifier
     elsif subarea == "Lower"
       c.check_dex(173)
       c.item(173, 1) # TM45 Brine
@@ -292,7 +302,9 @@ def pbGetCompletion(area, subarea = "")
     end
   when "Evergone Crater"
     c.check_dex(70)
-    c.item(70, 6) # Data Chip
+    c.item(70, 6)  # Data Chip
+    c.item(70, 11) # Data Chip
+    c.item(70, 12) # Pearl String
   when "Evergone Mangrove"
     c.check_dex(208)
     c.check_dex(209)
@@ -308,6 +320,16 @@ def pbGetCompletion(area, subarea = "")
     c.boss("Deino")
   when "Evergone Ruins"
     c.item(211, 11) # Smoke Ball
+    if $PokemonGlobal.visitedMaps[237] # Inside the ruins
+      c.item(238, 4) # Evergone Ruins Key
+      c.item(238, 39) # Nugget
+      c.item(238, 26) # Evergone Ruins Key
+      c.item(238, 38) # TM33 Shadow Ball
+      c.item(238, 40) # Hematite Jewel
+      c.item(238, 41) # Phenacite Jewel
+      c.check_dex(237)
+      c.check_dex(238)
+    end
   when "Scoria Canyon"
     c.check_dex(216)
     c.item(216, 76) # TM56 Wild Charge
@@ -363,11 +385,13 @@ def pbGetCompletion(area, subarea = "")
     c.boss("Overqwil")
     c.boss("Clawitzer")
     c.boss("Palafin")
+    c.secret_item(:TM83) # Venom Boost
   when "Central East Sea"
     c.check_dex(154)
     c.item(154, 30) # Resist Wing
     c.item(154, 31) # 3x Ultra Ball
     c.item(154, 32) # Soft Sand
+    c.item(275, 8) # Poison Barb (Ruins)
     c.boss("Primarina")
     c.secret_self_switch(154, 25) # Primarina Puzzle
   when "Smokey Forest"
@@ -377,6 +401,18 @@ def pbGetCompletion(area, subarea = "")
     c.item(146, 2) # Spell Tag (Ruins)
     c.item(146, 8) # Brick Piece
     c.secret_item(:TM87) # Spirit Boost
+  when "The Great Amphi"
+    c.check_dex(220) # Amphi Wilds
+    c.check_dex(221) # Amphi Town
+    c.check_dex(259) # Amphi Head
+    c.item(220, 38) # Big Root
+    c.item(220, 39) # TM51 Giga Drain
+    c.item(220, 40) # Balm Mushroom
+    c.item(220, 41) # Balm Mushroom (Hidden)
+    c.item(220, 42) # Balm Mushroom (Hidden)
+    c.item(220, 43) # 3x Full Restore
+    c.item(278, 2) # Twisted Spoon (Ruins)
+    c.secret_item(:TM93) # Mental Boost
   end
   return c
 end

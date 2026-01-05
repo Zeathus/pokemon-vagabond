@@ -3041,7 +3041,7 @@ Price = 350
 FieldUse = OnPokemon
 BattleUse = OnPokemon
 Flags = Fling_30
-Description = Old Chateau's hidden specialty. It heals all the status problems of a single Pokémon.
+Description = A rare specialty from the Sinnoh region. It heals all the status problems of a single Pokémon.
 #-------------------------------
 [CASTELIACONE]
 Name = Casteliacone
@@ -7117,7 +7117,7 @@ Name = Matter Amplifier
 NamePlural = Matter Amplifiers
 Pocket = 4
 Price = 1000
-SellPrice = 500
+SellPrice = 0
 Flags = Fling_30
 Description = An item to be held by a Pokémon. It strengthens the essence of the holder's held item, doubling its effect.
 #-------------------------------
@@ -7155,15 +7155,44 @@ Price = 0
 FieldUse = Direct
 Flags = KeyItem
 Description = High-quality shoes for running. When used, you will keep running at high speed until you hit a wall or press an action button.
-
-
-
-
-
-
-
-
-
-
-
-
+#-------------------------------
+[BOOKOFELEMENTS]
+Name = Book of Elements
+NamePlural = Books of Elements
+Pocket = 9
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A book that recites the teachings of Amphi Town that Akasha told you. Use this item to listen to her teachings again.
+#-------------------------------
+[EVERGONEKEY1]
+Name = Evergone Ruins Key
+NamePlural = Evergone Ruins Keys
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A key that opens one locked door in the Evergone Ruins.
+#-------------------------------
+[EVERGONEKEY2]
+Name = Evergone Ruins Key
+NamePlural = Evergone Ruins Keys
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A key that opens one locked door in the Evergone Ruins.
+#-------------------------------
+[FACTORYKEY]
+Name = Factory Key
+NamePlural = Factory Keys
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = A key that opens a locked door in the old factory.
+#-------------------------------
+[FIREIMBUEDOIL]
+Name = Fire-Imbued Oil
+NamePlural = Fire-Imbued Oil
+Pocket = 9
+Price = 0
+Flags = KeyItem
+Description = An oil that can be burned at the altar in Amphi Town to invoke an elemental.

@@ -163,8 +163,8 @@ class Window_AdvancedTextPokemon < SpriteWindow_Base
     end
   end
 
-  def self.newWithSize(text, x, y, width, height, viewport = nil)
-    ret = self.new(text)
+  def self.newWithSize(text, x, y, width, height, viewport = nil, font = 0)
+    ret = self.new(text, font)
     ret.x        = x
     ret.y        = y
     ret.width    = width

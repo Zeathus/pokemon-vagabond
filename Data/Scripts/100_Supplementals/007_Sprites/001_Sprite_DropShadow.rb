@@ -9,6 +9,7 @@ class DropShadowSprite
     @disposed = false
     @viewport = viewport
     @partner  = partner
+    @baseOpacity = 255
   end
 
   def dispose
@@ -29,6 +30,10 @@ class DropShadowSprite
 
   def angle=(value)
     @sprite.angle = value if @sprite
+  end
+
+  def opacity=(value)
+    @baseOpacity = value if @sprite
   end
 
   def update(tilemap=nil)
@@ -69,7 +74,9 @@ class DropShadowSprite
               @sprite.y += @event.y_shadow_offset
             end
             @sprite.z = @rsprite.z - 1 # below the character
-            @sprite.opacity=(@rsprite.opacity*100.0)/255.0
+            @sprite.opacity = @baseOpacity * (@rsprite.opacity * 100) / 255 / 255
+            #@sprite.x += $game_player.x_offset / 2
+            @sprite.y += $game_player.y_offset
           end
         end
       else

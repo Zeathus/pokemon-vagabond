@@ -129,6 +129,10 @@ class Battle::Scene
     bg = pbAddSprite("battle_bg2", -@viewport.rect.width, 0, battleBG, @viewport)
     bg.z      = 0
     bg.mirror = true
+    if @battle.backdrop == "distortion" || @battle.backdrop == "giratina"
+      @sprites["distortion_bg"] = DistortionWorldBackdrop.new(@viewport, nil, true)
+      @sprites["distortion_bg"].z = -1
+    end
     2.times do |side|
       baseX, baseY = Battle::Scene.pbBattlerPosition(side)
       baseY += 90 if side == 0
@@ -140,6 +144,7 @@ class Battle::Scene
         base.oy = (side == 0) ? base.bitmap.height : base.bitmap.height / 2
       end
     end
+    @sprites["base_1"].visible = false if @battle.hideEnemyBase
     #cmdBarBG = pbAddSprite("cmdBar_bg", 0, @viewport.rect.height - 96, messageBG, @viewport)
     #cmdBarBG.z = 180
   end

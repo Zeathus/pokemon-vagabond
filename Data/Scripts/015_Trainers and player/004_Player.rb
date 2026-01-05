@@ -120,4 +120,8 @@ class Player < Trainer
   def owned?(species)
     return @pokedex.owned?(species)
   end
+
+  def has_pokedex
+    return true
+  end
 end

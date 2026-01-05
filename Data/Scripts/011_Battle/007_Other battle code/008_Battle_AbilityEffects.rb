@@ -1252,7 +1252,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:DRAGONSMAW,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:FLAREBOOST,
   proc { |ability, user, target, move, mults, power, type|
-    mults[:power_multiplier] *= 1.5 if user.burned? && move.specialMove?
+    mults[:power_multiplier] *= 1.5 if user.burned? && user.dualStanceSpecial?(move)
   }
 )
 
@@ -1274,13 +1274,13 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:FLOWERGIFT,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:GORILLATACTICS,
   proc { |ability, user, target, move, mults, power, type|
-    mults[:attack_multiplier] *= 1.5 if move.physicalMove?
+    mults[:attack_multiplier] *= 1.5 if user.dualStancePhysical?(move)
   }
 )
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:GUTS,
   proc { |ability, user, target, move, mults, power, type|
-    if user.pbHasAnyStatus? && move.physicalMove?
+    if user.pbHasAnyStatus? && user.dualStancePhysical?(move)
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1288,7 +1288,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:GUTS,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:HUGEPOWER,
   proc { |ability, user, target, move, mults, power, type|
-    mults[:attack_multiplier] *= 2 if move.physicalMove?
+    mults[:attack_multiplier] *= 2 if user.dualStancePhysical?(move)
   }
 )
 
@@ -1296,7 +1296,7 @@ Battle::AbilityEffects::DamageCalcFromUser.copy(:HUGEPOWER, :PUREPOWER)
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:HUSTLE,
   proc { |ability, user, target, move, mults, power, type|
-    mults[:attack_multiplier] *= 1.5 if move.physicalMove?
+    mults[:attack_multiplier] *= 1.5 if user.dualStancePhysical?(move)
   }
 )
 
@@ -1392,7 +1392,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:SNIPER,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:SOLARPOWER,
   proc { |ability, user, target, move, mults, power, type|
-    if move.specialMove? && [:Sun, :HarshSun].include?(user.effectiveWeather)
+    if user.dualStanceSpecial?(move) && [:Sun, :HarshSun].include?(user.effectiveWeather)
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1461,7 +1461,7 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:TOUGHCLAWS,
 
 Battle::AbilityEffects::DamageCalcFromUser.add(:TOXICBOOST,
   proc { |ability, user, target, move, mults, power, type|
-    if user.poisoned? && move.physicalMove?
+    if user.poisoned? && user.dualStancePhysical?(move)
       mults[:power_multiplier] *= 1.5
     end
   }
@@ -1485,14 +1485,14 @@ Battle::AbilityEffects::DamageCalcFromUser.add(:WATERBUBBLE,
 
 Battle::AbilityEffects::DamageCalcFromAlly.add(:BATTERY,
   proc { |ability, user, target, move, mults, power, type|
-    next if !move.specialMove?
+    next if !user.dualStanceSpecial?(move)
     mults[:final_damage_multiplier] *= 1.3
   }
 )
 
 Battle::AbilityEffects::DamageCalcFromAlly.add(:FLOWERGIFT,
   proc { |ability, user, target, move, mults, power, type|
-    if move.physicalMove? && [:Sun, :HarshSun].include?(user.effectiveWeather)
+    if user.dualStancePhysical?(move) && [:Sun, :HarshSun].include?(user.effectiveWeather)
       mults[:attack_multiplier] *= 1.5
     end
   }
@@ -1532,7 +1532,7 @@ Battle::AbilityEffects::DamageCalcFromTarget.copy(:FILTER, :SOLIDROCK)
 
 Battle::AbilityEffects::DamageCalcFromTarget.add(:FLOWERGIFT,
   proc { |ability, user, target, move, mults, power, type|
-    if move.specialMove? && [:Sun, :HarshSun].include?(target.effectiveWeather)
+    if target.dualStanceSpecial?(move) && [:Sun, :HarshSun].include?(target.effectiveWeather)
       mults[:defense_multiplier] *= 1.5
     end
   }
@@ -1566,7 +1566,7 @@ Battle::AbilityEffects::DamageCalcFromTarget.add(:HEATPROOF,
 
 Battle::AbilityEffects::DamageCalcFromTarget.add(:ICESCALES,
   proc { |ability, user, target, move, mults, power, type|
-    mults[:final_damage_multiplier] /= 2 if move.specialMove?
+    mults[:final_damage_multiplier] /= 2 if target.dualStanceSpecial?(move)
   }
 )
 
@@ -1626,7 +1626,7 @@ Battle::AbilityEffects::DamageCalcFromTargetNonIgnorable.add(:SHADOWSHIELD,
 
 Battle::AbilityEffects::DamageCalcFromTargetAlly.add(:FLOWERGIFT,
   proc { |ability, user, target, move, mults, power, type|
-    if move.specialMove? && [:Sun, :HarshSun].include?(target.effectiveWeather)
+    if target.dualStanceSpecial?(move) && [:Sun, :HarshSun].include?(target.effectiveWeather)
       mults[:defense_multiplier] *= 1.5
     end
   }

@@ -452,22 +452,27 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     [5, 7, 6, 3],   # 3 = Safari Zone
     [0, 8, 1, 3]    # 4 = Bug-Catching Contest
   ]
-  CMD_BUTTON_WIDTH_SMALL = 170
+  CMD_BUTTON_WIDTH_SMALL = 96
   TEXT_BASE_COLOR   = Color.new(240, 248, 224)
   TEXT_SHADOW_COLOR = Color.new(64, 64, 64)
+  BUTTON_HEIGHT = 96
 
   def initialize(viewport, z, sideSizes)
     super(viewport)
+    @attacker_button = -1
     @sideSizes = sideSizes
+    @arrowTimer = 0
     maxIndex = (@sideSizes[0] > @sideSizes[1]) ? (@sideSizes[0] - 1) * 2 : (@sideSizes[1] * 2) - 1
     @smallButtons = (@sideSizes.max > 2)
-    self.x = (Graphics.width - 512) / 2
-    self.y = viewport.rect.height - 96
+    self.x = Graphics.width - 384
+    self.y = viewport.rect.height - 224
     @texts = []
     # NOTE: @mode is for which buttons are shown as selected.
     #       0=select 1 button (@index), 1=select all buttons with text
     # Create bitmaps
     @buttonBitmap = AnimatedBitmap.new("Graphics/UI/Battle/cursor_target")
+    @pokemon_icons = []
+    @angleTimers = []
     @effectiveness_icons = []
     @boost_icons = []
     @icons_timer = 0
@@ -476,6 +481,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     # Create target buttons
     @buttons = Array.new(maxIndex + 1) do |i|
       numButtons = @sideSizes[i % 2]
+      @angleTimers[i] = 0
       next if numButtons <= i / 2
       # NOTE: Battler indices go from left to right from the perspective of
       #       that side's trainer, so inc is different for each side for the
@@ -483,17 +489,22 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       inc = (i.even?) ? i / 2 : numButtons - 1 - (i / 2)
       button = Sprite.new(viewport)
       button.bitmap = @buttonBitmap.bitmap
-      button.src_rect.width  = (@smallButtons) ? CMD_BUTTON_WIDTH_SMALL : @buttonBitmap.width / 2
+      button.src_rect.width  = @buttonBitmap.width / 2
       button.src_rect.height = BUTTON_HEIGHT
       if @smallButtons
-        button.x    = self.x + 170 - [0, 82, 166][numButtons - 1]
+        button.x    = self.x + 170 - [0, 52, 104][numButtons - 1]
       else
-        button.x    = self.x + 138 - [0, 116][numButtons - 1]
+        button.x    = self.x + 170 - [0, 52][numButtons - 1]
       end
-      button.x += (button.src_rect.width - 4) * inc
+      button.x += (button.src_rect.width + 8) * inc
       button.y = self.y + 2
-      button.y += (BUTTON_HEIGHT) * ((i + 1) % 2)
+      button.y += (BUTTON_HEIGHT + 12) * ((i + 1) % 2)
+      button.ox = 48
+      button.oy = 48
       addSprite("button_#{i}", button)
+      @pokemon_icons[i] = PokemonIconSprite.new(nil, viewport)
+      @pokemon_icons[i].x = button.x + 16
+      @pokemon_icons[i].y = button.y + 16
       @effectiveness_icons[i] = IconSprite.new(0, 0, viewport)
       @effectiveness_icons[i].setBitmap("Graphics/UI/Battle/effectiveness_icons")
       @effectiveness_icons[i].x = button.x + 12
@@ -505,7 +516,18 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       @boost_icons[i].x = button.x + button.src_rect.width - 96
       @boost_icons[i].y = button.y - 6
       @boost_icons[i].opacity = 0
+      button.x += button.ox
+      button.y += button.oy
       next button
+    end
+    @target_arrows = Array.new(6) do |i|
+      arrow = IconSprite.new(0, 0, viewport)
+      arrow.setBitmap("Graphics/UI/Battle/target_line")
+      arrow.src_rect = Rect.new(0, 0, arrow.bitmap.width, arrow.bitmap.height / 8)
+      arrow.ox = -34
+      arrow.oy = 16
+      arrow.visible = false
+      next arrow
     end
     # Create overlay (shows target names)
     @overlay = BitmapSprite.new(viewport.rect.width, viewport.rect.height - self.y, viewport)
@@ -519,9 +541,33 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
 
   def update
     super
+    @buttons.each_with_index do |button, i|
+      next if !button
+      sel = false
+      buttonType = 0
+      if @texts[i]
+        sel ||= (@mode == 0 && i == @index)
+        sel ||= (@mode == 1)
+        buttonType = (i.even?) ? 1 : 2
+      end
+      if sel
+        @angleTimers[i] += 1
+        button.angle = Math.sin(@angleTimers[i] / 8.0) * 6
+      else
+        @angleTimers[i] = 0
+        button.angle = 0
+      end
+    end
+    @arrowTimer = (@arrowTimer + 1) % 2
+    if @arrowTimer == 0
+      @target_arrows.each_with_index do |arrow, i|
+        arrow.src_rect.y = (arrow.src_rect.y + 32) % 256
+      end
+    end
     for i in 0...@effectiveness_icons.length
       icon = @effectiveness_icons[i]
       next if !icon
+      icon.update
       if self.visible && @effectivenesses[i] && @effectivenesses[i] != 0
         case @effectivenesses[i]
         when 1
@@ -544,6 +590,7 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     for i in 0...@boost_icons.length
       icon = @boost_icons[i]
       next if !icon
+      icon.update
       if self.visible && @can_affinity_boost[i]
         if @icons_timer < 32
           icon.opacity += 8
@@ -560,11 +607,20 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
     else
       @icons_timer = 0
     end
+    @pokemon_icons.each do |icon|
+      icon&.update
+    end
   end
 
   def dispose
     super
     @buttonBitmap&.dispose
+    @pokemon_icons.each do |icon|
+      icon&.dispose
+    end
+    @target_arrows.each do |arrow|
+      arrow&.dispose
+    end
     @effectiveness_icons.each do |icon|
       icon&.dispose
     end
@@ -575,6 +631,14 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
 
   def visible=(value)
     super
+    @pokemon_icons.each do |icon|
+      next if !icon
+      icon.visible = value
+    end
+    @target_arrows.each do |arrow|
+      next if !arrow
+      arrow.visible = value
+    end
     @effectiveness_icons.each do |icon|
       next if !icon
       icon.visible = value
@@ -589,8 +653,12 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
   end
 
   def z=(value)
-    super
+    super(value)
     @overlay.z += 5 if @overlay
+    @pokemon_icons.each do |icon|
+      next if !icon
+      icon.z = self.z + 10
+    end
     @effectiveness_icons.each do |icon|
       next if !icon
       icon.z = self.z + 10
@@ -604,6 +672,35 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
   def setDetails(texts, mode)
     @texts = texts
     @mode  = mode
+    refresh
+  end
+
+  def setPokemon(attacker, battlers, mode)
+    @buttons.each_with_index do |button, i|
+      next if @pokemon_icons[i].nil?
+      if !button || battlers[i].nil?
+        @pokemon_icons[i].pokemon = nil
+      else
+        @pokemon_icons[i].pokemon = battlers[i][0].pokemon
+        sel = false
+        if @texts[i]
+          sel ||= (@mode == 0 && i == @index)
+          sel ||= (@mode == 1)
+        end
+        @pokemon_icons[i].disabled = !sel
+        if battlers[i][0] == attacker
+          @attacker_button = i
+          @pokemon_icons[i].tone = Tone.new(0, 0, 0, 0)
+          @pokemon_icons[i].disabled = false
+        else
+          if battlers[i][1]
+            @pokemon_icons[i].tone = Tone.new(0, 0, 0, 0)
+          else
+            @pokemon_icons[i].tone = Tone.new(-64, -64, -64, 192)
+          end
+        end
+      end
+    end
     refresh
   end
 
@@ -675,22 +772,41 @@ class Battle::Scene::TargetMenu < Battle::Scene::MenuBase
       buttonType = (2 * buttonType) + ((@smallButtons) ? 1 : 0)
       button.src_rect.x = (sel) ? @buttonBitmap.width / 2 : 0
       button.src_rect.y = buttonType * BUTTON_HEIGHT
+      if i == @attacker_button
+        button.src_rect.y = 576
+        @target_arrows.each_with_index do |arrow, j|
+          arrow.x = button.x
+          arrow.y = button.y
+          arrow.z = button.z + 1
+          targetButton = @buttons[j]
+          if targetButton && @texts[j] && ((@mode == 0 && j == @index) || (@mode == 1))
+            arrow.visible = true
+            arrow.angle = Math.atan2(targetButton.x - arrow.x, targetButton.y - arrow.y) * 180 / Math::PI - 90
+            distance = Math.sqrt((targetButton.x - arrow.x)**2 + (targetButton.y - arrow.y)**2)
+            arrow.src_rect.x = arrow.bitmap.width - distance + 64
+          else
+            arrow.visible = false
+          end
+        end
+      end
       button.z          = self.z + ((sel) ? 3 : 2)
-      @effectiveness_icons[i].x = button.x + 12
-      @effectiveness_icons[i].y = button.y - 6
-      @boost_icons[i].x = button.x + button.src_rect.width - 96
-      @boost_icons[i].y = button.y - 6
+      @angleTimers[i] = 0
+      @pokemon_icons[i].disabled = !sel
+      @effectiveness_icons[i].x = button.x - 50
+      @effectiveness_icons[i].y = button.y - 54
+      @boost_icons[i].x = button.x - 34
+      @boost_icons[i].y = button.y - 54
     end
     # Draw target names onto overlay
     @overlay.bitmap.clear
-    textpos = []
-    @buttons.each_with_index do |button, i|
-      next if !button || nil_or_empty?(@texts[i])
-      x = button.x - self.x + (button.src_rect.width / 2)
-      y = button.y - self.y + 14
-      textpos.push([@texts[i], x, y, :center, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR])
-    end
-    pbDrawTextPositions(@overlay.bitmap, textpos)
+    #textpos = []
+    #@buttons.each_with_index do |button, i|
+    #  next if !button || nil_or_empty?(@texts[i])
+    #  x = button.x - self.x + (button.src_rect.width / 2)
+    #  y = button.y - self.y + 14
+    #  textpos.push([@texts[i], x, y, :center, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR])
+    #end
+    #pbDrawTextPositions(@overlay.bitmap, textpos)
   end
 
   def refresh

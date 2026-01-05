@@ -130,6 +130,8 @@ module PBEffects
   GigatonHammerTime   = 125
   ShellTrapSpecial    = 126
   Tsunami             = 127
+  DualStance          = 128
+  DualStanceCategory  = 129
 
   #=============================================================================
   # These effects apply to a battler position

@@ -149,6 +149,7 @@ class OverworldPokemon
     if @species == :UNOWN
       pbModifier.name = _INTL("Unown {1}", GameData::Species.get_species_form(@species, @form).form_name)
     end
+    $PokemonGlobal.quickBattleAnimation = 2
     WildBattle.start(@species, @lvl)
   end
 

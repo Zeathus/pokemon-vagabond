@@ -773,6 +773,7 @@ class Battle::Move::StartWeakenPhysicalDamageAgainstUserSide < Battle::Move
   def pbEffectGeneral(user)
     user.pbOwnSide.effects[PBEffects::Reflect] = 5
     user.pbOwnSide.effects[PBEffects::Reflect] = 8 if user.hasActiveItem?(:LIGHTCLAY)
+    user.pbOwnSide.effects[PBEffects::Reflect] = 11 if user.amplifyItem? && user.hasActiveItem?(:LIGHTCLAY)
     @battle.pbDisplay(_INTL("{1} raised {2}'s Defense!", @name, user.pbTeam(true)))
   end
 end
@@ -794,6 +795,7 @@ class Battle::Move::StartWeakenSpecialDamageAgainstUserSide < Battle::Move
   def pbEffectGeneral(user)
     user.pbOwnSide.effects[PBEffects::LightScreen] = 5
     user.pbOwnSide.effects[PBEffects::LightScreen] = 8 if user.hasActiveItem?(:LIGHTCLAY)
+    user.pbOwnSide.effects[PBEffects::LightScreen] = 11 if user.amplifyItem? && user.hasActiveItem?(:LIGHTCLAY)
     @battle.pbDisplay(_INTL("{1} raised {2}'s Special Defense!", @name, user.pbTeam(true)))
   end
 end
@@ -820,6 +822,7 @@ class Battle::Move::StartWeakenDamageAgainstUserSideIfHail < Battle::Move
   def pbEffectGeneral(user)
     user.pbOwnSide.effects[PBEffects::AuroraVeil] = 5
     user.pbOwnSide.effects[PBEffects::AuroraVeil] = 8 if user.hasActiveItem?(:LIGHTCLAY)
+    user.pbOwnSide.effects[PBEffects::AuroraVeil] = 11 if user.amplifyItem? && user.hasActiveItem?(:LIGHTCLAY)
     @battle.pbDisplay(_INTL("{1} made {2} stronger against physical and special moves!",
                             @name, user.pbTeam(true)))
   end
@@ -1203,6 +1206,19 @@ end
 #===============================================================================
 class Battle::Move::UseUserDefenseInsteadOfUserAttack < Battle::Move
   def pbGetAttackStats(user, target)
+    user.effects[PBEffects::DualStanceCategory] = nil
+    if user.effects[PBEffects::DualStance] != 0
+      stageMul = Battle::Battler::STAT_STAGE_MULTIPLIERS
+      stageDiv = Battle::Battler::STAT_STAGE_DIVISORS
+      defStage = user.stages[:DEFENSE]
+      defense = (user.defense.to_f * stageMul[defStage] / stageDiv[defStage]).floor
+      spdefStage = user.stages[:SPECIAL_DEFENSE]
+      spdef = (user.spdef.to_f * stageMul[spdefStage] / stageDiv[spdefStage]).floor
+      if spdef > defense
+        target.effects[PBEffects::DualStanceCategory] = 1
+        return user.spdef, user.stages[:SPECIAL_DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM
+      end
+    end
     return user.defense, user.stages[:DEFENSE] + Battle::Battler::STAT_STAGE_MAXIMUM
   end
 end
@@ -1213,6 +1229,7 @@ end
 #===============================================================================
 class Battle::Move::UseTargetAttackInsteadOfUserAttack < Battle::Move
   def pbGetAttackStats(user, target)
+    target.effects[PBEffects::DualStanceCategory] = nil
     return target.spatk, target.stages[:SPECIAL_ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM if specialMove?
     return target.attack, target.stages[:ATTACK] + Battle::Battler::STAT_STAGE_MAXIMUM
   end

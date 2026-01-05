@@ -74,6 +74,7 @@ class Game_Temp
     when "noplayerlevelupdate"    then rules["noPlayerLevelUpdate"] = true
     when "keepbgm"                then rules["keepBGM"]             = true
     when "endproc"                then rules["endProc"]             = var
+    when "noenemybase"            then rules["noEnemyBase"]         = true
     else
       raise _INTL("Battle rule \"{1}\" does not exist.", rule)
     end
@@ -325,6 +326,9 @@ module BattleCreationHelperMethods
       base = battleRules["base"]
     end
     battle.backdropBase = base if base
+    if battleRules["noEnemyBase"]
+      battle.hideEnemyBase = true
+    end
     # Time of day
     if $game_map.metadata&.battle_environment == :Cave
       battle.time = 2   # This makes Dusk Balls work properly in caves
@@ -762,9 +766,9 @@ end
 #===============================================================================
 EventHandlers.add(:on_end_battle, :evolve_and_black_out,
   proc { |decision, canLose|
-    # Check for evolutions
+    # Check for evolutions (This is done on exp screen)
     pbEvolutionCheck if Settings::CHECK_EVOLUTION_AFTER_ALL_BATTLES ||
-                        (decision != 2 && decision != 5)   # not a loss or a draw
+                       (decision != 2 && decision != 5)   # not a loss or a draw
     $game_temp.party_levels_before_battle = nil
     $game_temp.party_critical_hits_dealt = nil
     $game_temp.party_direct_damage_taken = nil
@@ -791,11 +795,11 @@ def pbEvolutionCheck
     next if pkmn.fainted? && !Settings::CHECK_EVOLUTION_FOR_FAINTED_POKEMON
     # Find an evolution
     new_species = nil
-    if new_species.nil? && $game_temp.party_levels_before_battle &&
-       $game_temp.party_levels_before_battle[i] &&
-       $game_temp.party_levels_before_battle[i] < pkmn.level
-      new_species = pkmn.check_evolution_on_level_up
-    end
+    #if new_species.nil? && $game_temp.party_levels_before_battle &&
+    #   $game_temp.party_levels_before_battle[i] &&
+    #   $game_temp.party_levels_before_battle[i] < pkmn.level
+    #  new_species = pkmn.check_evolution_on_level_up
+    #end
     new_species = pkmn.check_evolution_after_battle(i) if new_species.nil?
     next if new_species.nil?
     # Evolve Pokémon if possible

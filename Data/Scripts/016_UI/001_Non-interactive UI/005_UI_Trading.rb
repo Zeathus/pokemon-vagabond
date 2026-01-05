@@ -202,8 +202,8 @@ class PokemonTrade_Scene
                        _INTL("{1}'s data was added to the Pokédex.", speciesname2)) { pbUpdate }
       $player.pokedex.register_last_seen(@pokemon2)
       pbFadeOutIn do
-        scene = PokemonPokedexInfo_Scene.new
-        screen = PokemonPokedexInfoScreen.new(scene)
+        scene = PokemonPokedex_Scene.new
+        screen = PokemonPokedexScreen.new(scene)
         screen.pbDexEntry(@pokemon2.species)
         pbEndScreen(false)
       end

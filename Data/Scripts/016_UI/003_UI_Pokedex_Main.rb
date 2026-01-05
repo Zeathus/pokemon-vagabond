@@ -2,12 +2,15 @@
 #
 #===============================================================================
 class Window_Pokedex < Window_DrawableCommand
+  attr_accessor :doDrawCursor
+
   def initialize(x, y, width, height, viewport)
     @commands = []
     super(x, y, width, height, viewport)
     @selarrow     = AnimatedBitmap.new("Graphics/UI/Pokedex/cursor_list")
     @pokeballOwn  = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_own")
     @pokeballSeen = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_seen")
+    @doDrawCursor   = true
     self.baseColor   = Color.new(88, 88, 80)
     self.shadowColor = Color.new(168, 184, 184)
     self.windowskin  = nil
@@ -66,13 +69,18 @@ class Window_Pokedex < Window_DrawableCommand
       next if i < self.top_item || i > self.top_item + self.page_item_max
       drawItem(i, @item_max, itemRect(i))
     end
-    drawCursor(self.index, itemRect(self.index))
+    drawCursor(self.index, itemRect(self.index)) if @doDrawCursor
   end
 
   def update
     super
     @uparrow.visible   = false
     @downarrow.visible = false
+  end
+
+  def opacity=(value)
+    super(value)
+    self.contents_opacity = value
   end
 end
 
@@ -259,9 +267,27 @@ class PokemonPokedex_Scene
 
   def pbUpdate
     pbUpdateSpriteHash(@sprites)
+    if @sprites["gridbg"]
+      @gridbg_x -= Graphics.delta * 24
+      @gridbg_y += Graphics.delta * 12
+      @gridbg_x += @sprites["gridbg"].bitmap.width / 2 if @gridbg_x < -@sprites["gridbg"].bitmap.width / 2
+      @gridbg_y -= @sprites["gridbg"].bitmap.height / 2 if @gridbg_y > 0
+      @sprites["gridbg"].x = @gridbg_x.floor
+      @sprites["gridbg"].y = @gridbg_y.floor
+    end
+    if @page == 2
+      intensity_time = System.uptime % 1.0   # 1 second per glow
+      if intensity_time >= 0.5
+        intensity = lerp(64, 256 + 64, 0.5, intensity_time - 0.5)
+      else
+        intensity = lerp(256 + 64, 64, 0.5, intensity_time)
+      end
+      @sprites["areahighlight"].opacity = intensity
+    end
   end
 
-  def pbStartScene
+  def pbStartScene(&block)
+    @page = 0
     @sliderbitmap       = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_slider")
     @typebitmap         = AnimatedBitmap.new(_INTL("Graphics/UI/Pokedex/icon_types"))
     @typebitmap2        = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
@@ -269,41 +295,109 @@ class PokemonPokedex_Scene
     @hwbitmap           = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_hw")
     @selbitmap          = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_searchsel")
     @searchsliderbitmap = AnimatedBitmap.new(_INTL("Graphics/UI/Pokedex/icon_searchslider"))
+    @pokeballOwn        = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_own")
+    @pokeballSeen       = AnimatedBitmap.new("Graphics/UI/Pokedex/icon_seen")
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
     @viewport.z = 99999
-    addBackgroundPlane(@sprites, "background", "Pokedex/bg_list", @viewport)
-    # Suggestion for changing the background depending on region. You can
-    # comment out the line above and uncomment the following lines:
-#    if pbGetPokedexRegion == -1   # Using national Pokédex
-#      addBackgroundPlane(@sprites, "background", "Pokedex/bg_national", @viewport)
-#    elsif pbGetPokedexRegion == 0   # Using first regional Pokédex
-#      addBackgroundPlane(@sprites, "background", "Pokedex/bg_regional", @viewport)
-#    end
-    addBackgroundPlane(@sprites, "searchbg", "Pokedex/bg_search", @viewport)
-    @sprites["searchbg"].visible = false
-    @sprites["pokedex"] = Window_Pokedex.new(416, 26, 296, 524, @viewport)
+    if !@dexEntry
+      addBackgroundPlane(@sprites, "background", "Pokedex/bg_stats", @viewport)
+      addBackgroundPlane(@sprites, "searchbg", "Pokedex/bg_search", @viewport)
+      @sprites["searchbg"].visible = false
+      @sprites["gridbg"] = IconSprite.new(0, 0, @viewport)
+      @sprites["gridbg"].setBitmap("Graphics/UI/Pokedex/bg_grid")
+      @sprites["gridbg"].opacity = 64
+      @gridbg_x = 0
+      @gridbg_y = 0
+      begin
+        @region = pbGetPokedexRegion
+        @mapdata = GameData::TownMap.get(@region)
+      rescue
+        @region = 0
+        @mapdata = GameData::TownMap.get(@region)
+      end
+      @sprites["areamap"] = IconSprite.new(0, 0, @viewport)
+      @sprites["areamap"].setBitmap("Graphics/UI/Town Map/#{@mapdata.filename}")
+      @sprites["areamap"].x = 0
+      @sprites["areamap"].y = 170
+      Settings::REGION_MAP_EXTRAS.each do |hidden|
+        next if hidden[0] != @region || hidden[1] <= 0 || !$game_switches[hidden[1]]
+        pbDrawImagePositions(
+          @sprites["areamap"].bitmap,
+          [["Graphics/UI/Town Map/#{hidden[4]}",
+            hidden[2] * PokemonRegionMap_Scene::SQUARE_WIDTH,
+            hidden[3] * PokemonRegionMap_Scene::SQUARE_HEIGHT]]
+        )
+      end
+      @sprites["areahighlight"] = BitmapSprite.new(512 + 256, 384 + 64, @viewport)
+      @sprites["areamap"].z = 9
+      @sprites["areahighlight"].z = 10
+      @sprites["areamap"].visible = false
+      @sprites["areahighlight"].visible = false
+    else
+      @sprites["background"] = IconSprite.new(0, Graphics.height / 2, @viewport)
+      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_stats")
+      @sprites["background"].oy = Graphics.height / 2
+    end
+    @sprites["pokedex"] = Window_Pokedex.new(446, 26, 296, 460, @viewport)
+    @sprites["pokedex"].doDrawCursor = false if @dexEntry
+    @sprites["pokedex"].z = 11
     @sprites["icon"] = PokemonSprite.new(@viewport)
     @sprites["icon"].setOffset(PictureOrigin::CENTER)
     @sprites["icon"].x = 240
     @sprites["icon"].y = 292
+    @sprites["iconback"] = PokemonSprite.new(@viewport)
+    @sprites["iconback"].setOffset(PictureOrigin::CENTER)
+    @sprites["iconback"].visible = false
+    @sprites["iconback"].zoom_x = 2.0 / 3
+    @sprites["iconback"].zoom_y = 2.0 / 3
+    @sprites["iconparty"] = PokemonSpeciesIconSprite.new(nil, @viewport)
+    @sprites["iconparty"].setOffset(PictureOrigin::CENTER)
+    @sprites["iconparty"].x = 40
+    @sprites["iconparty"].y = 124
+    @sprites["iconparty"].z = 10
+    @sprites["iconparty"].visible = false
+    @sprites["listfg"] = IconSprite.new(0, 0, @viewport)
+    @sprites["listfg"].setBitmap("Graphics/UI/Pokedex/fg_list")
+    @sprites["listfg"].z = 10
+    @sprites["mainfg"] = IconSprite.new(0, 0, @viewport)
+    @sprites["mainfg"].setBitmap("Graphics/UI/Pokedex/fg_stats")
+    @sprites["barsfg"] = IconSprite.new(Graphics.width / 2, Graphics.height / 2, @viewport)
+    @sprites["barsfg"].setBitmap(@dexEntry ? "Graphics/UI/Pokedex/fg_bars_new" : "Graphics/UI/Pokedex/fg_stats_bars")
+    @sprites["barsfg"].ox = Graphics.width / 2
+    @sprites["barsfg"].oy = Graphics.height / 2
     @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
+    @sprites["overlay"].z = 99
     pbSetSystemFont(@sprites["overlay"].bitmap)
     @sprites["searchcursor"] = PokedexSearchSelectionSprite.new(@viewport)
     @sprites["searchcursor"].visible = false
-    @sprites["control_exit"] = KeybindSprite.new(Input::BACK, "Exit", 100, Graphics.height - 34, @viewport)
-    @sprites["control_open"] = KeybindSprite.new([Input::USE], "Open Dex Entry", 184, Graphics.height - 34, @viewport)
-    @sprites["control_search"] = KeybindSprite.new([Input::ACTION], "Search", 358, Graphics.height - 34, @viewport)
-    @sprites["control_choose"] = KeybindSprite.new([Input::UP, Input::DOWN], "Change Pokemon", 464, Graphics.height - 34, @viewport)
+    if !@dexEntry
+      @sprites["control_exit"] = KeybindSprite.new(Input::BACK, "Exit", 96, Graphics.height - 32, @viewport)
+      @sprites["control_search"] = KeybindSprite.new([Input::ACTION], "Search", 180, Graphics.height - 32, @viewport)
+      @sprites["control_page"] = KeybindSprite.new([Input::LEFT, Input::RIGHT], "Change Page", 290, Graphics.height - 32, @viewport)
+      @sprites["control_choose"] = KeybindSprite.new([Input::UP, Input::DOWN], "Change Pokemon", 468, Graphics.height - 32, @viewport)
+    end
     @searchResults = false
     @searchParams  = [$PokemonGlobal.pokedexMode, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-    pbRefreshDexList($PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
+    pbRefreshDexList(@dexEntry || $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
     pbDeactivateWindows(@sprites)
-    pbFadeInAndShow(@sprites)
+    if @dexEntry
+      pbStartDexEntry(&block)
+    else
+      pbFadeInAndShow(@sprites) {
+        pbUpdate
+      }
+    end
   end
 
-  def pbEndScene
-    pbFadeOutAndHide(@sprites)
+  def pbEndScene(&block)
+    if @dexEntry
+      pbEndDexEntry(&block)
+    else
+      pbFadeOutAndHide(@sprites) {
+        pbUpdate
+      }
+    end
     pbDisposeSpriteHash(@sprites)
     @sliderbitmap.dispose
     @typebitmap.dispose
@@ -311,7 +405,238 @@ class PokemonPokedex_Scene
     @hwbitmap.dispose
     @selbitmap.dispose
     @searchsliderbitmap.dispose
+    @pokeballSeen&.dispose
+    @pokeballOwn&.dispose
     @viewport.dispose
+  end
+
+  def pbStartDexEntry
+    dex_rect = @sprites["pokedex"].itemRect(@dexEntry)
+
+    # Ready the animated owned icon
+    @sprites["ownedicon"] = Sprite.new(@viewport)
+    @sprites["ownedicon"].bitmap = Bitmap.new(@pokeballOwn.bitmap.width, @pokeballOwn.bitmap.height)
+    pbCopyBitmap(@sprites["ownedicon"].bitmap, @pokeballOwn.bitmap, 0, 0)
+    @sprites["ownedicon"].x = @sprites["pokedex"].x + dex_rect.x + 40
+    @sprites["ownedicon"].y = @sprites["pokedex"].y + dex_rect.y + 40
+    @sprites["ownedicon"].ox = @sprites["ownedicon"].bitmap.width / 2
+    @sprites["ownedicon"].oy = @sprites["ownedicon"].bitmap.height / 2
+    @sprites["ownedicon"].z = 999
+    @sprites["ownedicon"].opacity = 0
+    @sprites["ownedicon"].zoom_x = 5
+    @sprites["ownedicon"].zoom_y = 5
+    @sprites["ownedicon"].angle = -45
+
+    pbSetSystemFont(@sprites["overlay"].bitmap)
+    pbDrawTextPositions(@sprites["overlay"].bitmap, [[
+      _INTL("New Pokemon Registered!"), 232, 48, 2, Color.new(252, 252, 252), Color.new(0, 0, 0), true
+    ]])
+    @sprites["overlay"].z = 9999
+
+    # Set start position of UI elements
+    @sprites["barsfg"].zoom_y = 1.5
+    @sprites["background"].zoom_y = 1.5
+    @sprites["background"].opacity = 0
+    pokedex_x = @sprites["pokedex"].x
+    @sprites["pokedex"].x += Graphics.width / 2
+    @sprites["listfg"].x += Graphics.width / 2
+    @sprites["overlay"].x += Graphics.width / 2 + Graphics.width * 2 / 3
+    @sprites["overlay"].src_rect = Rect.new(Graphics.width * 2 / 3, 0, Graphics.width / 3, Graphics.height)
+    @sprites["overlay2"] = Sprite.new(@viewport)
+    @sprites["overlay2"].bitmap = @sprites["overlay"].bitmap
+    @sprites["overlay2"].src_rect = Rect.new(0, 0, Graphics.width * 2 / 3, Graphics.height)
+    @sprites["overlay2"].opacity = 0
+    @sprites["overlay2"].z = 9999
+    @sprites["mainfg"].opacity = 0
+    @sprites["icon"].opacity = 0
+    #@sprites["pokedex"].contents.clear_rect(dex_rect.x, dex_rect.y + 6, dex_rect.width, dex_rect.height)
+    pbCopyBitmap(@sprites["pokedex"].contents, @pokeballSeen.bitmap, dex_rect.x + 10, dex_rect.y + 10)
+
+    # Slide UI onto the screen
+    time = 0.5
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time < time
+      progress = ((time_now - start_time) / time)**0.5
+      @sprites["barsfg"].zoom_y = 1.5 - 0.5 * progress
+      @sprites["background"].zoom_y = 1.5 - 0.5 * progress
+      @sprites["pokedex"].x = pokedex_x + (Graphics.width / 2) * (1 - progress)
+      @sprites["listfg"].x = (Graphics.width / 2) * (1 - progress)
+      @sprites["overlay"].x = Graphics.width * 2 / 3 + (Graphics.width / 2) * (1 - progress)
+      @sprites["background"].opacity = 128 * progress
+      pbUpdate
+      if block_given?
+        yield
+      else
+        Graphics.update
+        Input.update
+      end
+      time_now = System.uptime
+    end
+    @sprites["barsfg"].zoom_y = 1.0
+    @sprites["background"].zoom_y = 1.0
+    @sprites["pokedex"].x = pokedex_x
+    @sprites["listfg"].x = 0
+    @sprites["overlay"].x = Graphics.width * 2 / 3
+    @sprites["background"].opacity = 128
+
+    # Wait a moment
+    time = 0.25
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time < time
+      pbUpdate
+      if block_given?
+        yield
+      else
+        Graphics.update
+        Input.update
+      end
+      time_now = System.uptime
+    end
+
+    # Animate pokeball icon
+    time = 0.5
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time < time
+      progress = ((time_now - start_time) / time)**2
+      @sprites["ownedicon"].zoom_x = 5.0 - 4.0 * progress
+      @sprites["ownedicon"].zoom_y = 5.0 - 4.0 * progress
+      @sprites["ownedicon"].opacity = 255 * progress
+      @sprites["ownedicon"].angle = -45 + 45 * progress
+      pbUpdate
+      if block_given?
+        yield
+      else
+        Graphics.update
+        Input.update
+      end
+      time_now = System.uptime
+    end
+    pbSEPlay("Battle catch click")
+    pbSEPlay("Voltorb Flip gain coins")
+    @sprites["ownedicon"].zoom_x = 1
+    @sprites["ownedicon"].zoom_y = 1
+    @sprites["ownedicon"].opacity = 255
+    @sprites["ownedicon"].tone = Tone.new(255, 255, 255)
+    @sprites["ownedicon"].angle = 0
+
+    @sprites["overlay2"].opacity = 0
+    @sprites["overlay2"].tone = Tone.new(255, 255, 255)
+    @sprites["icon"].opacity = 0
+    @sprites["icon"].tone = Tone.new(255, 255, 255)
+    @sprites["mainfg"].opacity = 0
+    @sprites["mainfg"].tone = Tone.new(255, 255, 255)
+
+    memDexEntry = @dexEntry
+    @dexEntry = nil
+    pbRefresh
+    pbDrawTextPositions(@sprites["overlay"].bitmap, [[
+      _INTL("New Pokemon Registered!"), 232, 48, 2, Color.new(252, 252, 252), Color.new(0, 0, 0), true
+    ]])
+    @sprites["overlay"].z = 999999
+    @sprites["barsfg"].setBitmap("Graphics/UI/Pokedex/fg_bars_new")
+    @dexEntry = memDexEntry
+
+    stars = []
+    star_duration = 12   # In 20ths of a second
+    y_offsets = [[0, 74, 52], [0, 62, 28], [0, 74, 48]]
+    3.times do |i|   # Left, middle, right
+      # Set up particle
+      star = IconSprite.new(@sprites["ownedicon"].x, @sprites["ownedicon"].y, @viewport)
+      star.setBitmap("Graphics/Battle animations/ballBurst_star")
+      star.ox = star.bitmap.width / 2
+      star.oy = star.bitmap.height / 2
+      star.zoom_x = 0.25
+      star.zoom_y = 0.25
+      star.angle = [0, 345, 15][i]
+      star.opacity = 128
+      star.z = 9999
+      stars[i] = star
+    end
+
+    # Show pokemon info
+    time = 0.5
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time < time
+      progress = (time_now - start_time) / time
+      opacity = [255, 255 * progress * 2].min
+      tone = [0, 255 - 255 * progress].max
+      tone = Tone.new(tone, tone, tone)
+      @sprites["overlay2"].opacity = opacity
+      @sprites["overlay2"].tone = tone
+      @sprites["icon"].opacity = opacity
+      @sprites["icon"].tone = tone
+      @sprites["mainfg"].opacity = opacity
+      @sprites["mainfg"].tone = tone
+      @sprites["ownedicon"].tone = tone
+      3.times do |i|
+        star = stars[i]
+        star.opacity = 128 + [127 * progress * 2, 127].min - 255 * progress
+        star.zoom_x = (0.25 + 0.25 * progress) * [0.7, 0.9, 0.8][i]
+        star.zoom_y = star.zoom_x
+        star.angle = [0, 345, 15][i] + [60, -30, -75][i] * progress
+        star.x = @sprites["ownedicon"].x + [-40, 4, 48][i] * Math.sin(progress * Math::PI / 2)
+        star.y = @sprites["ownedicon"].y - Math.sin(progress * Math::PI) * [24, 32, 26][i]
+      end
+      pbUpdate
+      if block_given?
+        yield
+      else
+        Graphics.update
+        Input.update
+      end
+      time_now = System.uptime
+    end
+    @sprites["overlay2"].opacity = 255
+    @sprites["overlay2"].tone = Tone.new(0, 0, 0)
+    @sprites["icon"].opacity = 255
+    @sprites["icon"].tone = Tone.new(0, 0, 0)
+    @sprites["mainfg"].opacity = 255
+    @sprites["mainfg"].tone = Tone.new(0, 0, 0)
+    @sprites["ownedicon"].tone = Tone.new(0, 0, 0)
+    3.times do |i|
+      stars[i].dispose
+    end
+
+    pbUpdate
+    if block_given?
+      yield
+    else
+      Graphics.update
+      Input.update
+    end
+  end
+
+  def pbEndDexEntry
+    time = 0.25
+    start_time = System.uptime
+    time_now = start_time
+    while time_now - start_time < time
+      progress = ((time_now - start_time) / time)**2
+      opacity = 255 - 255 * progress
+      @sprites["overlay"].opacity = opacity
+      @sprites["overlay2"].opacity = opacity
+      @sprites["icon"].opacity = opacity
+      @sprites["iconback"].opacity = opacity
+      @sprites["iconparty"].opacity = opacity
+      @sprites["mainfg"].opacity = opacity
+      @sprites["background"].opacity = opacity / 2
+      @sprites["ownedicon"].opacity = opacity
+      @sprites["listfg"].opacity = opacity
+      @sprites["barsfg"].opacity = opacity
+      @sprites["pokedex"].opacity = opacity
+      pbUpdate
+      if block_given?
+        yield
+      else
+        Graphics.update
+        Input.update
+      end
+      time_now = System.uptime
+    end
   end
 
   # Gets the region used for displaying Pokédex entries. Species will be listed
@@ -320,6 +645,7 @@ class PokemonPokedex_Scene
   # return value of pbGetCurrentRegion, and thus will change according to the
   # current map's MapPosition metadata setting.
   def pbGetPokedexRegion
+    return @forceRegion if @forceRegion
     if Settings::USE_CURRENT_REGION_DEX
       region = pbGetCurrentRegion
       region = -1 if region >= $player.pokedex.dexes_count - 1
@@ -411,10 +737,12 @@ class PokemonPokedex_Scene
     @sprites["pokedex"].commands = @dexlist
     @sprites["pokedex"].index    = index
     @sprites["pokedex"].refresh
-    if @searchResults
-      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_listsearch")
-    else
-      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_list")
+    if !@dexEntry
+      if @searchResults
+        @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_listsearch")
+      else
+        @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_stats")
+      end
     end
     pbRefresh
   end
@@ -424,6 +752,8 @@ class PokemonPokedex_Scene
     overlay.clear
     base   = Color.new(88, 88, 80)
     shadow = Color.new(168, 184, 184)
+    base2   = Color.new(252, 252, 252)
+    shadow2 = Color.new(104, 104, 104)
     iconspecies = @sprites["pokedex"].species
     iconspecies = nil if !$player.seen?(iconspecies)
     # Write various bits of text
@@ -437,42 +767,196 @@ class PokemonPokedex_Scene
     textpos = [
       [dexname, Graphics.width / 2, 10, :center, Color.new(248, 248, 248), Color.black]
     ]
-    if iconspecies
-      species_data = GameData::Species.get(iconspecies)
-      textpos.push([species_data.name, 240, 58, 2, base, shadow])
-      type1 = GameData::Type.get(species_data.types[0]).icon_position
-      type2 = species_data.types.length == 1 ? nil : GameData::Type.get(species_data.types[1]).icon_position
-      affinity = GameData::Type.get(species_data.extra_types[0]).icon_position
-      if type2.nil?
-        overlay.blt(114 + 34, 112, @typebitmap2.bitmap, Rect.new(0, 28 * type1, 64, 28))
-      else
-        overlay.blt(114, 112, @typebitmap2.bitmap, Rect.new(0, 28*type1, 64, 28))
-        overlay.blt(114 + 68, 112, @typebitmap2.bitmap, Rect.new(0, 28 * type2, 64, 28))
-      end
-      overlay.blt(302, 112, @typebitmap2.bitmap, Rect.new(0, 28 * affinity, 64, 28))
-    end
+    smalltextpos = []
     if @searchResults
       textpos.push([_INTL("Search results"), 236, 466, 2, base, shadow])
       textpos.push([@dexlist.length.to_s, 236, 496, 2, base, shadow])
     else
-      textpos.push([_INTL("Seen:"), 162, 466, 0, base, shadow])
-      textpos.push([$player.pokedex.seen_count(pbGetPokedexRegion).to_s, 302, 466, 1, base, shadow])
-      textpos.push([_INTL("Owned:"), 162, 496, 0, base, shadow])
-      textpos.push([$player.pokedex.owned_count(pbGetPokedexRegion).to_s, 302, 496, 1, base, shadow])
+      owned_count = $player.pokedex.owned_count(pbGetPokedexRegion)
+      owned_count -= 1 if @dexEntry
+      textpos.push([_INTL("Seen:"), 514, 474, 0, base, shadow])
+      textpos.push([$player.pokedex.seen_count(pbGetPokedexRegion).to_s, 680, 474, 1, base, shadow])
+      textpos.push([_INTL("Owned:"), 514, 504, 0, base, shadow])
+      textpos.push([owned_count.to_s, 680, 504, 1, base, shadow])
     end
-    # Draw all text
-    pbDrawTextPositions(overlay, textpos)
+
     # Set Pokémon sprite
     setIconBitmap(iconspecies)
+
+    owned = iconspecies && $player.owned?(iconspecies)
+
+    if @page == 0
+      @sprites["areamap"]&.visible = false
+      @sprites["areahighlight"]&.visible = false
+      @sprites["mainfg"].setBitmap("Graphics/UI/Pokedex/fg_stats")
+      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_stats")
+      @sprites["barsfg"].setBitmap("Graphics/UI/Pokedex/fg_stats_bars") if !@dexEntry
+      if iconspecies
+        @sprites["icon"].x = 326
+        @sprites["icon"].y = 316
+        @sprites["icon"].visible = true
+        @sprites["iconback"].visible = false
+        @sprites["iconparty"].visible = false
+
+        # Draw name, category and types
+        species_data = GameData::Species.get(iconspecies)
+        textpos.push([sprintf("#%03d", pbGetRegionalNumber(pbGetPokedexRegion, iconspecies)), 196, 92, 0, base2, shadow2])
+        textpos.push([species_data.name, 258, 92, 0, base2, shadow2])
+        textpos.push([_INTL("{1} Pokémon", owned ? species_data.category : "???"), 196, 124, :left, base, shadow])
+        type1 = GameData::Type.get(species_data.types[0]).icon_position
+        type2 = species_data.types.length == 1 ? nil : GameData::Type.get(species_data.types[1]).icon_position
+        affinity = GameData::Type.get(species_data.extra_types[0]).icon_position
+        if type2.nil?
+          overlay.blt(62, 104, @typebitmap2.bitmap, Rect.new(0, 28 * type1, 64, 28))
+        else
+          overlay.blt(28, 104, @typebitmap2.bitmap, Rect.new(0, 28*type1, 64, 28))
+          overlay.blt(96, 104, @typebitmap2.bitmap, Rect.new(0, 28 * type2, 64, 28))
+        end
+        overlay.blt(62, 166, @typebitmap2.bitmap, Rect.new(0, 28 * affinity, 64, 28))
+
+        # Draw base stats
+        basestats = species_data.base_stats
+        posY = 246
+        smalltextpos += [
+          [_INTL("HP"),62,posY,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:HP]) : "???",150,posY,2,base,shadow],
+          [_INTL("Attack"),62,posY+28*1,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:ATTACK]) : "???",150,posY+28*1,2,base,shadow],
+          [_INTL("Defense"),62,posY+28*2,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:DEFENSE]) : "???",150,posY+28*2,2,base,shadow],
+          [_INTL("Sp. Atk"),62,posY+28*3,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:SPECIAL_ATTACK]) : "???",150,posY+28*3,2,base,shadow],
+          [_INTL("Sp. Def"),62,posY+28*4,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:SPECIAL_DEFENSE]) : "???",150,posY+28*4,2,base,shadow],
+          [_INTL("Speed"),62,posY+28*5,2,base2,shadow2],
+          [owned ? sprintf("%d",basestats[:SPEED]) : "???",150,posY+28*5,2,base,shadow]
+        ]
+
+        # Draw abilities
+        abilities = species_data.abilities
+        hidden_abilities = species_data.hidden_abilities
+        posY = 460
+        for i in 0...2
+          ability_name = abilities[i].nil? ? "---" : GameData::Ability.get(abilities[i]).name
+          ability_name = "???" if !owned
+          smalltextpos.push([_INTL("{2}", i+1, ability_name), 40, posY, 0, base, shadow])
+          posY += 24
+        end
+        for i in 0...1
+          ability_name = hidden_abilities[i].nil? ? "---" : GameData::Ability.get(hidden_abilities[i]).name
+          ability_name = "???" if !owned
+          smalltextpos.push([_INTL("{1}", ability_name), 40, posY, 0, base, shadow])
+          posY += 24
+        end
+
+        # Draw metrics
+        height = species_data.height
+        weight = species_data.weight
+        if System.user_language[3..4] == "US"   # If the user is in the United States
+          inches = (height / 0.254).round
+          pounds = (weight / 0.45359).round
+          textpos.push([owned ? _ISPRINTF("{1:4.1f} lbs.", pounds / 10.0) : "???.? lbs.", 269, 506, 2, base, shadow])
+          textpos.push([owned ? _ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12) : "?'??\"", 401, 506, 2, base, shadow])
+        else
+          textpos.push([owned ? _ISPRINTF("{1:.1f} kg", weight / 10.0) : "???.? kg", 269, 506, 2, base, shadow])
+          textpos.push([owned ? _ISPRINTF("{1:.1f} m", height / 10.0) : "??.? m", 401, 506, 2, base, shadow])
+        end
+      end
+    elsif @page == 1
+      @sprites["areamap"]&.visible = false
+      @sprites["areahighlight"]&.visible = false
+      @sprites["mainfg"].setBitmap("Graphics/UI/Pokedex/fg_info")
+      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_info")
+      @sprites["barsfg"].setBitmap("Graphics/UI/Pokedex/fg_info_bars") if !@dexEntry
+      if iconspecies
+        @sprites["icon"].visible = true
+        @sprites["icon"].x = 344
+        @sprites["icon"].y = 260
+        @sprites["iconback"].visible = true
+        @sprites["iconback"].x = 344 - 222
+        @sprites["iconback"].y = 260
+        @sprites["iconparty"].visible = true
+
+        # Draw name and category
+        species_data = GameData::Species.get(iconspecies)
+        textpos.push([sprintf("#%03d", pbGetRegionalNumber(pbGetPokedexRegion, iconspecies)), 196, 92, 0, base2, shadow2])
+        textpos.push([species_data.name, 258, 92, 0, base2, shadow2])
+        textpos.push([_INTL("{1} Pokémon", owned ? species_data.category : "???"), 196, 124, :left, base, shadow])
+
+        # Draw the Pokédex entry text
+        drawTextEx(overlay, 32, 380, 400, 5,   # overlay, x, y, width, num lines
+                    species_data.pokedex_entry, base, shadow) if owned
+      end
+    elsif @page == 2
+      @sprites["areamap"]&.visible = true
+      @sprites["areahighlight"]&.visible = true
+      @sprites["mainfg"].setBitmap("Graphics/UI/Pokedex/fg_area")
+      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_area")
+      @sprites["barsfg"].setBitmap("Graphics/UI/Pokedex/fg_area_bars") if !@dexEntry
+      @sprites["areahighlight"].bitmap.clear
+      if iconspecies
+        @sprites["icon"].visible = false
+        @sprites["iconback"].visible = false
+        @sprites["iconparty"].visible = true
+
+        # Draw name and category
+        species_data = GameData::Species.get(iconspecies)
+        textpos.push([sprintf("#%03d", pbGetRegionalNumber(pbGetPokedexRegion, iconspecies)), 196, 92, 0, base2, shadow2])
+        textpos.push([species_data.name, 258, 92, 0, base2, shadow2])
+        textpos.push([_INTL("{1} Pokémon", owned ? species_data.category : "???"), 196, 124, :left, base, shadow])
+
+        # Get all points to be shown as places where @species can be encountered
+        points = pbGetEncounterPoints(iconspecies)
+        # Draw coloured squares on each point of the Town Map with a nest
+        pointcolor   = Color.new(0, 248, 248)
+        pointcolorhl = Color.new(192, 248, 248)
+        town_map_width = 1 + PokemonRegionMap_Scene::RIGHT - PokemonRegionMap_Scene::LEFT
+        sqwidth = PokemonRegionMap_Scene::SQUARE_WIDTH
+        sqheight = PokemonRegionMap_Scene::SQUARE_HEIGHT
+        points.length.times do |j|
+          next if !points[j]
+          x = (j % town_map_width) * sqwidth
+          y = (j / town_map_width) * sqheight
+          y += 170
+          @sprites["areahighlight"].bitmap.fill_rect(x, y, sqwidth, sqheight, pointcolor)
+          if j - town_map_width < 0 || !points[j - town_map_width]
+            @sprites["areahighlight"].bitmap.fill_rect(x, y - 2, sqwidth, 2, pointcolorhl)
+          end
+          if j + town_map_width >= points.length || !points[j + town_map_width]
+            @sprites["areahighlight"].bitmap.fill_rect(x, y + sqheight, sqwidth, 2, pointcolorhl)
+          end
+          if j % town_map_width == 0 || !points[j - 1]
+            @sprites["areahighlight"].bitmap.fill_rect(x - 2, y, 2, sqheight, pointcolorhl)
+          end
+          if (j + 1) % town_map_width == 0 || !points[j + 1]
+            @sprites["areahighlight"].bitmap.fill_rect(x + sqwidth, y, 2, sqheight, pointcolorhl)
+          end
+        end
+        # Set the text
+        if points.length == 0
+          pbDrawImagePositions(
+            overlay,
+            [[sprintf("Graphics/UI/Pokedex/overlay_areanone"), 90, 306]]
+          )
+          textpos.push([_INTL("Area unknown"), Graphics.width / 2 - 128 - 18, 316, 2, base, shadow])
+        end
+      end
+    end
+    @sprites["iconparty"].visible = false if !iconspecies
+    # Draw all text
+    pbSetSystemFont(overlay)
+    pbDrawTextPositions(overlay, textpos)
+    pbSetSmallFont(overlay)
+    pbDrawTextPositions(overlay, smalltextpos)
     # Draw slider arrows
     itemlist = @sprites["pokedex"]
     showslider = false
     if itemlist.top_row > 0
-      overlay.blt(692, 48, @sliderbitmap.bitmap, Rect.new(0, 0, 40, 30))
+      overlay.blt(722, 50, @sliderbitmap.bitmap, Rect.new(0, 0, 40, 30))
       showslider = true
     end
     if itemlist.top_item + itemlist.page_item_max < itemlist.itemCount
-      overlay.blt(692, 498, @sliderbitmap.bitmap, Rect.new(0, 30, 40, 30))
+      overlay.blt(722, 500, @sliderbitmap.bitmap, Rect.new(0, 30, 40, 30))
       showslider = true
     end
     # Draw slider box
@@ -481,17 +965,69 @@ class PokemonPokedex_Scene
       boxheight = (sliderheight * itemlist.page_row_max / itemlist.row_max).floor
       boxheight += [(sliderheight - boxheight) / 2, sliderheight / 6].min
       boxheight = [boxheight.floor, 40].max
-      y = 78
+      y = 80
       y += ((sliderheight - boxheight) * itemlist.top_row / (itemlist.row_max - itemlist.page_row_max)).floor
-      overlay.blt(692, y, @sliderbitmap.bitmap, Rect.new(40, 0, 40, 8))
+      overlay.blt(722, y, @sliderbitmap.bitmap, Rect.new(40, 0, 40, 8))
       i = 0
       while i * 16 < boxheight - 8 - 16
         height = [boxheight - 8 - 16 - (i * 16), 16].min
-        overlay.blt(692, y + 8 + (i * 16), @sliderbitmap.bitmap, Rect.new(40, 8, 40, height))
+        overlay.blt(722, y + 8 + (i * 16), @sliderbitmap.bitmap, Rect.new(40, 8, 40, height))
         i += 1
       end
-      overlay.blt(692, y + boxheight - 16, @sliderbitmap.bitmap, Rect.new(40, 24, 40, 16))
+      overlay.blt(722, y + boxheight - 16, @sliderbitmap.bitmap, Rect.new(40, 24, 40, 16))
     end
+  end
+
+  def pbFindEncounter(enc_types, species)
+    return false if !enc_types
+    enc_types.each_value do |slots|
+      next if !slots
+      slots.each { |slot| return true if GameData::Species.get(slot[1]).species == species }
+    end
+    return false
+  end
+
+  # Returns a 1D array of values corresponding to points on the Town Map. Each
+  # value is true or false.
+  def pbGetEncounterPoints(species)
+    # Determine all visible points on the Town Map (i.e. only ones with a
+    # defined point in town_map.txt, and which either have no Self Switch
+    # controlling their visibility or whose Self Switch is ON)
+    visible_points = []
+    @mapdata.point.each do |loc|
+      next if loc[7] && !$game_switches[loc[7]]   # Point is not visible
+      visible_points.push([loc[0], loc[1]])
+    end
+    # Find all points with a visible area for @species
+    town_map_width = 1 + PokemonRegionMap_Scene::RIGHT - PokemonRegionMap_Scene::LEFT
+    ret = []
+    GameData::Encounter.each_of_version($PokemonGlobal.encounter_version) do |enc_data|
+      next if !pbFindEncounter(enc_data.types, species)   # Species isn't in encounter table
+      # Get the map belonging to the encounter table
+      map_metadata = GameData::MapMetadata.try_get(enc_data.map)
+      next if !map_metadata || map_metadata.has_flag?("HideEncountersInPokedex")
+      mappos = map_metadata.town_map_position
+      next if !mappos || mappos[0] != @region   # Map isn't in the region being shown
+      # Get the size and shape of the map in the Town Map
+      map_size = map_metadata.town_map_size
+      map_width = 1
+      map_height = 1
+      map_shape = "1"
+      if map_size && map_size[0] && map_size[0] > 0   # Map occupies multiple points
+        map_width = map_size[0]
+        map_shape = map_size[1]
+        map_height = (map_shape.length.to_f / map_width).ceil
+      end
+      # Mark each visible point covered by the map as containing the area
+      map_width.times do |i|
+        map_height.times do |j|
+          next if map_shape[i + (j * map_width), 1].to_i == 0   # Point isn't part of map
+          next if !visible_points.include?([mappos[1] + i, mappos[2] + j])   # Point isn't visible
+          ret[mappos[1] + i + ((mappos[2] + j) * town_map_width)] = true
+        end
+      end
+    end
+    return ret
   end
 
   def pbRefreshDexSearch(params, _index)
@@ -784,6 +1320,7 @@ class PokemonPokedex_Scene
   def setIconBitmap(species)
     gender, form, _shiny = $player.pokedex.last_form_seen(species)
     @sprites["icon"].setSpeciesBitmap(species, gender, form, false)
+    @sprites["iconback"].setSpeciesBitmap(species, gender, form, true)
   end
 
   def pbSearchDexList(params)
@@ -883,32 +1420,78 @@ class PokemonPokedex_Scene
     pbFadeInAndShow(@sprites, oldsprites)
   end
 
-  def pbDexEntry(index)
-    oldsprites = pbFadeOutAndHide(@sprites)
-    region = -1
-    if !Settings::USE_CURRENT_REGION_DEX
-      dexnames = Settings.pokedex_names
-      if dexnames[pbGetSavePositionIndex].is_a?(Array)
-        region = dexnames[pbGetSavePositionIndex][1]
+  def pbDexEntry(index, &block)
+    if index.is_a?(Symbol)
+      species = index
+      @region = 0
+      @dexEntry = pbGetRegionalNumber(@region, species)
+      if @dexEntry == 0
+        @region += 1
+        @dexEntry = pbGetRegionalNumber(@region, species)
       end
-    end
-    scene = PokemonPokedexInfo_Scene.new
-    screen = PokemonPokedexInfoScreen.new(scene)
-    ret = screen.pbStartScreen(@dexlist, index, region)
-    if @searchResults
-      dexlist = pbSearchDexList(@searchParams)
-      @dexlist = dexlist
-      @sprites["pokedex"].commands = @dexlist
-      ret = @dexlist.length - 1 if ret >= @dexlist.length
-      ret = 0 if ret < 0
+      @forceRegion = @region
+      return if @dexEntry == 0
+      @dexEntry -= 1
+      pbStartScene(&block)
+      loop do
+        if block_given?
+          yield
+        else
+          Graphics.update
+          Input.update
+        end
+        pbUpdate
+        if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK)
+          pbPlayDecisionSE
+          break
+        end
+      end
+      @page = 1
+      pbRefresh
+      pbDrawTextPositions(@sprites["overlay"].bitmap, [[
+        _INTL("New Pokemon Registered!"), 232, 48, 2, Color.new(252, 252, 252), Color.new(0, 0, 0), true
+      ]])
+      loop do
+        if block_given?
+          yield
+        else
+          Graphics.update
+          Input.update
+        end
+        pbUpdate
+        if Input.trigger?(Input::USE) || Input.trigger?(Input::BACK)
+          pbPlayDecisionSE
+          break
+        end
+      end
+      pbEndScene(&block)
     else
-      pbRefreshDexList($PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
-      $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex] = ret
+      oldsprites = pbFadeOutAndHide(@sprites)
+      region = -1
+      if !Settings::USE_CURRENT_REGION_DEX
+        dexnames = Settings.pokedex_names
+        if dexnames[pbGetSavePositionIndex].is_a?(Array)
+          region = dexnames[pbGetSavePositionIndex][1]
+        end
+      end
+      scene = PokemonPokedexInfo_Scene.new
+      screen = PokemonPokedexInfoScreen.new(scene)
+      ret = screen.pbStartScreen(@dexlist, index, region)
+      if @searchResults
+        dexlist = pbSearchDexList(@searchParams)
+        @dexlist = dexlist
+        @sprites["pokedex"].commands = @dexlist
+        ret = @dexlist.length - 1 if ret >= @dexlist.length
+        ret = 0 if ret < 0
+      else
+        pbRefreshDexList($PokemonGlobal.pokedexIndex[pbGetSavePositionIndex])
+        $PokemonGlobal.pokedexIndex[pbGetSavePositionIndex] = ret
+      end
+      @sprites["pokedex"].index = ret
+      @sprites["pokedex"].refresh
+      pbRefresh
+      pbFadeInAndShow(@sprites, oldsprites)
     end
-    @sprites["pokedex"].index = ret
-    @sprites["pokedex"].refresh
-    pbRefresh
-    pbFadeInAndShow(@sprites, oldsprites)
   end
 
   def pbDexSearchCommands(mode, selitems, mainindex)
@@ -1262,7 +1845,7 @@ class PokemonPokedex_Scene
     if @searchResults
       @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_listsearch")
     else
-      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_list")
+      @sprites["background"].setBitmap("Graphics/UI/Pokedex/bg_stats")
     end
     pbRefresh
     pbFadeInAndShow(@sprites, oldsprites)
@@ -1293,10 +1876,22 @@ class PokemonPokedex_Scene
           else
             break
           end
-        elsif Input.trigger?(Input::USE)
-          if $player.seen?(@sprites["pokedex"].species)
-            pbSEPlay("GUI pokedex open")
-            pbDexEntry(@sprites["pokedex"].index)
+        #elsif Input.trigger?(Input::USE)
+        #  if $player.seen?(@sprites["pokedex"].species)
+        #    pbSEPlay("GUI pokedex open")
+        #    pbDexEntry(@sprites["pokedex"].index)
+        #  end
+        elsif Input.trigger?(Input::LEFT)
+          if @page > 0
+            pbPlayCursorSE
+            @page -= 1
+            pbRefresh
+          end
+        elsif Input.trigger?(Input::RIGHT)
+          if @page < 2
+            pbPlayCursorSE
+            @page += 1
+            pbRefresh
           end
         end
       end
@@ -1310,6 +1905,10 @@ end
 class PokemonPokedexScreen
   def initialize(scene)
     @scene = scene
+  end
+
+  def pbDexEntry(species, &block)
+    @scene.pbDexEntry(species, &block)
   end
 
   def pbStartScreen

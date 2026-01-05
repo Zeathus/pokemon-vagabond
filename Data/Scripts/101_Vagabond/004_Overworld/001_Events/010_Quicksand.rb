@@ -8,6 +8,7 @@ def pbQuicksand(eventid)
   last_time = start_time
   started_tone_change = false
   y_offset = 0.0
+  $game_player.sprite.partner.visibility = false
   while System.uptime - start_time < 1.0
     time_now = System.uptime
     delta = time_now - last_time

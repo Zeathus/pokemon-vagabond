@@ -14,6 +14,7 @@ def pbBossGeneral
   setBattleRule("smartwildbattle")
   setBattleRule("outcomevar", 1)
   pbPokemonBossBGM
+  pbModifier.optimize
 end
 
 def pbBossRuinGeneral(rematch = false)
@@ -26,31 +27,35 @@ end
 
 def pbBossGiratina1
   pbBossGeneral
-  $PokemonGlobal.nextBattleBGM="Battle! VS Giratina"
-  $PokemonGlobal.nextBattleBack="Giratina"
+  setBattleRule("disablepokeballs")
+  setBattleRule("cannotrun")
+  setBattleRule("noenemybase")
+  $PokemonGlobal.nextBattleBGM="BDSP - Battle Theme"
+  $PokemonGlobal.nextBattleBack="giratina"
   pbModifier.optimize
-  pbModifier.hpmult=10.0
-  pbModifier.form=1
-  pbModifier.moves=[
+  pbModifier.hpmult = 6.66
+  pbModifier.form = 2
+  pbModifier.moves = [
     :SHADOWFORCE,
-    :AURASPHERE,
-    :EARTHPOWER,
-    :SHADOWSNEAK]
-  pbBoss.add(
-    [:Start],
-    [:Message,"Survive for 10 turns until Giratina calms down!"])
-  for i in 1..8
-    pbBoss.add(
-      [:Timed,i],
-      [:Message,_INTL("{1} turns remaining.",10-i)])
+    :SLASH,
+    :DRAGONCLAW,
+    :SHADOWSNEAK
+  ]
+  if $PokemonSystem.difficulty >= 2
+    pbModifier.moves = [
+      :SHADOWFORCE,
+      :EARTHPOWER,
+      :AURASPHERE,
+      :BREAKINGSWIPE
+    ]
   end
-  pbBoss.add(
-    [:Timed,9],
-    [:Message,"1 turn remaining."])
-  pbBoss.add(
-    [:Timed,10],
-    [:Message,"Giratina calmed down!"],
-    [:WinBattle])
+  pbBoss.add_sturdy(333)
+  t = BossTrigger.new(:Any)
+  t.requires(BossReq_HP.new(t, :<, 334))
+  t.effect(BossEff_Message.new(t, "Giratina is reversing the field!"))
+  t.effect(BossEff_ReverseAllStatChanges.new(t))
+  t.max_activations = 1
+  pbBoss.add(t)
 end
 
 # --- Dunsparce ---
@@ -361,6 +366,26 @@ def pbBossRuinElectric(rematch = false)
   pbBoss.add(t)
 end
 
+# --- Slowking Galar ---
+def pbBossRuinPoison(rematch = false)
+  pbBossRuinGeneral(rematch)
+  pbModifier.hpmult = 4.0 + $PokemonSystem.difficulty * 2
+  pbModifier.moves = [
+    :HEX,
+    :VENOSHOCK,
+    :PSYCHICNOISE,
+    :WHIRLPOOL
+  ]
+  pbModifier.item = :BLACKSLUDGE if $PokemonSystem.difficulty >= 1
+  pbModifier.ability = :OWNTEMPO
+
+  # Poisons any unpoisoned pokemon at the end of each turn (toxic on hard-mode)
+  t = BossTrigger.new(:EndOfTurn)
+  t.effect(BossEff_Message.new(t, "TRIGGERER is releasing toxic mist!"))
+  t.effect(BossEff_Status.new(t, :POISON, $PokemonSystem.difficulty >= 2 ? -9 : 9).set_target([0, 2]))
+  pbBoss.add(t)
+end
+
 # --- Mistaros ---
 def pbBossSmokeyForest
   pbBossGeneral
@@ -379,6 +404,36 @@ def pbBossSmokeyForest
 
   t = BossTrigger.new(:Start)
   t.effect(BossEff_Dialog.new(t, "CH3_MISTAROS", 0))
+  pbBoss.add(t)
+end
+
+# --- Medicham ---
+def pbBossRuinPsychic(rematch = false)
+  pbBossRuinGeneral(rematch)
+  pbModifier.hpmult = 4.0 + $PokemonSystem.difficulty
+  pbModifier.moves = [
+    :FORCEPALM,
+    :POISONJAB,
+    :BRICKBREAK,
+    :PSYCHIC
+  ]
+  pbModifier.item = :EXPERTBELT if $PokemonSystem.difficulty >= 1
+  pbModifier.moves[0] = :POWERUPPUNCH if $PokemonSystem.difficulty >= 2
+  if $PokemonSystem.difficulty >= 1
+    pbModifier.ability = :PUREPOWER
+  else
+    pbModifier.ability = :SPIRITUALBOND
+  end
+
+  # Start: Sets Dual Stance on start, and whenever the effect expires
+
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_UseMove.new(t, :DUALSTANCE, [1]))
+  pbBoss.add(t)
+
+  t = BossTrigger.new(:EndOfTurn)
+  t.requires(BossReq_Eval.new(t, "triggerer.effects[PBEffects::DualStance] == 0"))
+  t.effect(BossEff_UseMove.new(t, :DUALSTANCE, [1]))
   pbBoss.add(t)
 end
 
@@ -954,6 +1009,32 @@ def pbMiniBossAbsol
   ]
 end
 
+def pbMiniBossDrampa
+  pbBossGeneral
+  pbModifier.hpmult = 5.0
+  pbModifier.nature = :CALM
+  pbModifier.ability = :CLOUDNINE
+  pbModifier.moves = [
+    :DRAGONPULSE,
+    :EXTRASENSORY,
+    :BODYSLAM,
+    :GLARE
+  ]
+end
+
+def pbMiniBossGolurk
+  pbBossGeneral
+  pbModifier.hpmult = 6.0
+  pbModifier.nature = :IMPISH
+  pbModifier.ability = :IRONFIST
+  pbModifier.moves = [
+    :SHADOWPUNCH,
+    :MEGAPUNCH,
+    :HIGHHORSEPOWER,
+    :DRAINPUNCH
+  ]
+end
+
 def pbBossCausol
   pbBossGeneral
   $PokemonGlobal.nextBattleBGM="Battle! Reverse (Stardust)"
@@ -1078,6 +1159,32 @@ def pbTestBoss
   pbBoss.add(t)
 
   pbWildBattle(:MAGIKARP, 10)
+end
+
+def pbTestBoss2
+  t = BossTrigger.new(:Start)
+  t.effect(BossEff_SetStat.new(t,
+    [:ATTACK, :DEFENSE, :SPECIAL_ATTACK, :SPECIAL_DEFENSE, :SPEED, :ACCURACY, :EVASION],
+    [-5, -6, -5, -6, -6, -6, -6]))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::LeechSeed] = 0"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Curse] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Foresight] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Torment] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Embargo] = 5"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Trapping] = 4"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::TrappingMove] = :INFESTATION"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::TrappingUser] = 0"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::HealBlock] = 4"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Taunt] = 4"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Disable] = 4"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::DisableMove] = :MIMIC"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::Encore] = 4"))
+  t.effect(BossEff_Eval.new(t, "triggerer.effects[PBEffects::EncoreMove] = :MIMIC"))
+  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::StealthRock] = true"))
+  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::Spikes] = 3"))
+  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::ToxicSpikes] = 2"))
+  t.effect(BossEff_Eval.new(t, "triggerer.pbOwnSide.effects[PBEffects::StickyWeb] = true"))
+  pbBoss.add(t)
 end
 
 def pbStoryBossElianaAzelf

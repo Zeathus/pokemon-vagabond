@@ -198,7 +198,7 @@ GameData::TerrainTag.register({
   :shows_reflections      => true
 })
 
-GameData::TerrainTag.register({
-  :id                     => :NoEffect,
-  :id_number              => 17
-})
+#GameData::TerrainTag.register({
+#  :id                     => :NoEffect,
+#  :id_number              => 17
+#})

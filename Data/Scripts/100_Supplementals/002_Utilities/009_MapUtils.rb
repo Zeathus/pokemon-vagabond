@@ -37,11 +37,13 @@ end
 
 # Returns the hypotenus distance from event to player
 def pbDistanceFromPlayer(eventid)
-  event = nil
-  for e in $game_map.events.values
-    if e.id == eventid
-      event = e
-      break
+  event = eventid.is_a?(Game_Event) ? eventid : nil
+  if event.nil?
+    for e in $game_map.events.values
+      if e.id == eventid
+        event = e
+        break
+      end
     end
   end
   return 0 if !event
@@ -139,4 +141,24 @@ def pbMapCentered?
   current_tile_x = ($game_map.display_x + screen_offset_x) / Game_Map::REAL_RES_X
   current_tile_y = ($game_map.display_y + screen_offset_y) / Game_Map::REAL_RES_Y
   return (current_tile_x == $game_player.x && current_tile_y == $game_player.y)
+end
+
+def pbMemorizeEvents
+  positions = []
+  $game_map.events.keys.sort.each do |i|
+    event = $game_map.events[i]
+    positions[i] = [event.x, event.y]
+  end
+  $game_variables[Supplementals::MEMORIZED_EVENTS] = positions
+end
+
+def pbRestoreEvents
+  positions = $game_variables[Supplementals::MEMORIZED_EVENTS]
+  $game_map.events.keys.sort.each do |i|
+    if positions[i]
+      event = $game_map.events[i]
+      event.moveto(positions[i][0], positions[i][1])
+    end
+  end
+  $game_variables[Supplementals::MEMORIZED_EVENTS] = 0
 end

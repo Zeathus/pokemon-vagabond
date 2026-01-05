@@ -4,7 +4,9 @@ class Sprite_Reflection
 
   def update
     sup_update
-    @sprite.visible = false if @sprite && $game_switches[Supplementals::HIDE_REFLECTIONS]
+    if @sprite && @sprite.visible && ($game_switches[Supplementals::HIDE_REFLECTIONS] || DISTORTION_MAP_IDS.include?($game_map.map_id))
+      @sprite.visible = false
+    end
   end
 
 end

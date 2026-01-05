@@ -11,6 +11,7 @@ module PBEmote
   Frown = 7
   Idea  = 8
   Confused = 9
+  Smirk = 10
 
   def PBEmote.getAnimID(emote)
       emote = getID(PBEmote, emote) if emote.is_a?(Symbol)
@@ -24,7 +25,8 @@ module PBEmote
           19,
           20,
           21,
-          4
+          4,
+          35
       ][emote]
   end
 
@@ -40,7 +42,8 @@ module PBEmote
           ["smile"],
           ["frown"],
           ["idea", "lightbulb"],
-          ["confused", "?"]
+          ["confused", "?"],
+          ["smirk"]
       ]
       for i in 0...names.length
           if names[i].include?(emote)

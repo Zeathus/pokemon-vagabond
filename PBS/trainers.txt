@@ -1,23 +1,4 @@
 ﻿# See the documentation on the wiki to learn how to edit this file.
-#-------------------------------
-[AETHERELDER,Schierke] # Amphi Town Elder
-Pokemon = MISDREAVUS,26
-    Gender = F
-    Moves = PHANTOMFORCE,POWERGEM,PSYWAVE,SPITE
-    AbilityIndex = 0
-    IV = 31,31,31,31,31,31
-Pokemon = KIRLIA,26
-    Gender = F
-    Moves = MAGICALLEAF,DRAININGKISS,CALMMIND,PSYCHIC
-    AbilityIndex = 0
-    IV = 31,31,31,31,31,31
-Pokemon = ZYGARDE,28
-    Form = 3
-    Item = CHESTOBERRY
-    Moves = DIG,DRAGONBREATH,GLARE,REST
-    AbilityIndex = 0
-    IV = 31,31,31,31,31,31
-    Happiness = 255
 #--------------
 [AETHER_M,Klaus] # GPO HQ (Little Pokemon, Big City)
 Pokemon = VULPIX,15
@@ -36,13 +17,94 @@ Pokemon = PYUKUMUKU,13
     AbilityIndex = 0
 #--------------
 [AIRELDER,Raphael] # Amphi Town Elder
-Pokemon = RIBOMBEE,25
+LoseText = The trial is done.
+Pokemon = CUTIEFLY,40
     Gender = M
-    Moves = STRUGGLEBUG,SILVERWIND,DRAININGKISS
-Pokemon = FLOETTE,24
+    Moves = DRAININGKISS,STRUGGLEBUG,COVET,STUNSPORE
+Pokemon = RIBOMBEE,41
+    Gender = M
+    Moves = DRAININGKISS,STRUGGLEBUG,POLLENPUFF,STUNSPORE
+Pokemon = RIBOMBEE,42
+    Form = 1
+    Moves = AIRSLASH,THUNDERBOLT,ACROBATICS,AGILITY
+#--------------
+[EARTHELDER,Auriel] # Amphi Town Elder
+LoseText = The trial is done.
+Pokemon = GOLETT,40
+    Gender = M
+    Moves = STOMPINGTANTRUM,NIGHTSHADE,IRONDEFENSE,CURSE
+Pokemon = GOLURK,41
+    Gender = M
+    Moves = HIGHHORSEPOWER,MEGAPUNCH,SHADOWPUNCH,CURSE
+Pokemon = GOLURK,42
+    Form = 1
+    Moves = HIGHHORSEPOWER,ROCKTOMB,BULLDOZE,RECOVER
+#--------------
+[FIREELDER,Michael] # Amphi Town Elder
+LoseText = The trial is done.
+Pokemon = SALANDIT,40
     Gender = F
-    Moves = FAIRYWIND,LUCKYCHANT,RAZORLEAF,WISH
+    Moves = POISONFANG,INCINERATE,VENOSHOCK,DISABLE
+Pokemon = SALAZZLE,41
+    Gender = F
+    Moves = VENOSHOCK,INCINERATE,FIRELASH,NASTYPLOT
+Pokemon = SALAZZLE,42
+    Form = 1
+    Moves = FIRELASH,DRAGONCLAW,FLAMEBURST,BULKUP
+#--------------
+[FIREELDER,Michael,1] # Amphi Town Elder
+LoseText = The trial is done.
+Pokemon = SALAZZLE,44
+    Gender = F
+    Moves = FLAMETHROWER,VENOSHOCK,POISONFANG,DRAGONPULSE
+    Nature = TIMID
+Pokemon = SALAZZLE,44
+    Form = 1
+    Moves = WATERPULSE,FIRELASH,REFLECT,DIG
+    Nature = CAREFUL
+Pokemon = SALAZZLE,44
+    Form = 1
+    Moves = FIRELASH,EARTHPOWER,DIG,FLAMEWHEEL
+    Nature = ADAMANT
+Pokemon = SALAZZLE,45
+    Form = 1
+    Moves = FLAMEBURST,AIRSLASH,LIQUIDATION,WATERPULSE
+    Nature = JOLLY
+Pokemon = SALAZZLE,45
+    Form = 1
+    Moves = WATERPULSE,FIRELASH,DIG,AIRSLASH
+    Nature = SERIOUS
+#--------------
+[WATERELDER,Gabriel] # Amphi Town Elder
+LoseText = The trial is done.
+Pokemon = BRIONNE,40
+    Gender = F
+    Moves = MISTYTERRAIN,ICYWIND,SING,BUBBLEBEAM
+Pokemon = PRIMARINA,41
+    Gender = F
+    Moves = SPARKLINGARIA,HYPERVOICE,ENCORE,SING
+Pokemon = PRIMARINA,42
+    Form = 1
+    Moves = SURF,ICICLESPEAR,AQUATAIL,CALMMIND
+#-------------------------------
+[AETHERELDER,Akasha] # Amphi Town Elder
+LoseText = You are strong.
+Pokemon = SPIRITOMB,42
+    Gender = F
+    Moves = SUCKERPUNCH,EXTRASENSORY,SHADOWSNEAK,HEX
     AbilityIndex = 0
+    IV = 31,31,31,31,31,31
+Pokemon = FARIGIRAF,42
+    Gender = F
+    Moves = TWINBEAM,DOUBLEHIT,CRUNCH,PSYBEAM
+    AbilityIndex = 0
+    IV = 31,31,31,31,31,31
+Pokemon = ZYGARDE,43
+    Form = 1
+    Moves = LANDSWRATH,BREAKINGSWIPE,GLARE,BITE
+    AbilityIndex = 0
+    IV = 31,31,31,31,31,31
+    Happiness = 255
 #--------------
 [AMETHYST,???]
 Pokemon = MISDREAVUS,18
@@ -698,35 +760,61 @@ Pokemon = ALAKAZAM,40
     Item = FOCUSSASH
     Ability = MAGICGUARD
     Moves = PSYCHIC,RECOVER,FUTURESIGHT,SHADOWBALL
-    IV = 31,31,31,31,31,31
+    IV = 20,20,20,20,20,20
 Pokemon = TALONFLAME,40
     Gender = M
     Ability = GALEWINGS
     Moves = ACROBATICS,FLAMECHARGE,FLAIL,QUICKATTACK
-    IV = 31,31,31,31,31,31
+    IV = 20,20,20,20,20,20
 Pokemon = DECIDUEYE,40
     Form = 1
     Gender = M
     Item = RAZORCLAW
     Ability = SCRAPPY
     Moves = TRIPLEARROWS,UTURN,SUCKERPUNCH,LEAFBLADE
-    IV = 31,31,31,31,31,31
+    IV = 20,20,20,20,20,20
 #--------------
-[EARTHELDER,Uriel] # Amphi Town Elder
-Pokemon = GOLETT,25
-    Moves = SHADOWPUNCH,IRONDEFENSE,STOMPINGTANTRUM,MEGAPUNCH
-    AbilityIndex = 0
-Pokemon = GRAVELER,24
+[DAO_Fintan,Fintan,1] # Ch7 Amphi Double Battle
+LoseText = Failure... but how?
+Pokemon = TALONFLAME,42
+    Gender = M
+    Ability = GALEWINGS
+    Moves = ACROBATICS,FLAMECHARGE,FLAIL,QUICKATTACK
+    IV = 20,20,20,20,20,20
+Pokemon = DECIDUEYE,42
+    Form = 1
+    Gender = M
+    Item = RAZORCLAW
+    Ability = SCRAPPY
+    Moves = TRIPLEARROWS,UTURN,SUCKERPUNCH,LEAFBLADE
+    IV = 20,20,20,20,20,20
+Pokemon = ALAKAZAM,42
+    Gender = M
+    Item = FOCUSSASH
+    Ability = MAGICGUARD
+    Moves = PSYCHIC,RECOVER,FUTURESIGHT,SHADOWBALL
+    IV = 20,20,20,20,20,20
+#--------------
+[DAO_Eliana,Eliana,1] # Ch7 Amphi Double Battle
+LoseText = Your strength is impressive.
+Pokemon = TINKATON,42
     Gender = F
-    Moves = ROCKTHROW,SMACKDOWN,BULLDOZE
-#--------------
-[FIREELDER,Michael] # Amphi Town Elder
-Pokemon = SALANDIT,25
-    Moves = SMOG,DOUBLESLAP,FLAMEBURST,DRAGONRAGE
+    Item = ASSAULTVEST
+    Moves = GIGATONHAMMER,ICEHAMMER,PLAYROUGH,FAKEOUT
+    AbilityIndex = 2
+    IV = 20,20,20,20,20,20
+Pokemon = SABLEYE,42
+    Gender = F
+    Item = ROSELIBERRY
+    Moves = SHADOWSNEAK,FAKEOUT,KNOCKOFF,WILLOWISP
+    AbilityIndex = 2
+    IV = 20,20,20,20,20,20
+Pokemon = LUXRAY,42
+    Gender = F
+    Item = SITRUSBERRY
+    Moves = MORALEBOOST,SPARK,CRUNCH,VOLTSWITCH
     AbilityIndex = 0
-Pokemon = CHARMELEON,24
-    Moves = EMBER,SMOKESCREEN,DRAGONRAGE,SCARYFACE
-    AbilityIndex = 0
+    IV = 20,20,20,20,20,20
 #--------------
 [FISHERMAN,Ivan]
 Pokemon = MAGIKARP,10
@@ -1227,22 +1315,23 @@ Pokemon = DURANT,41
     AbilityIndex = 0
 #--------------
 [NEKANE,Nekane] # Evergone Ruins
-Pokemon = SHIINOTIC,32
+LoseText = I knew you would pass!
+Pokemon = CAUSOL,45
     Gender = F
-    Moves = GIGADRAIN,SPORE,MOONLIGHT,DAZZLINGGLEAM
+    Ability = DEIFIED
+    Moves = ALLURINGVOICE,BITTERMALICE,TAUNT,SUCKERPUNCH
     IV = 31,31,31,31,31,31
-Pokemon = MEOWSTIC,32
+Pokemon = MISTAROS,45
+    Gender = M
+    Ability = WONDERSKIN
+    Moves = DRAGONCLAW,WILDCHARGE,BITE,THUNDERWAVE
+    IV = 31,31,31,31,31,31
+Pokemon = DRAGOTERRE,45
     Gender = F
-    Moves = PSYSHOCK,FAKEOUT,SHADOWBALL,CHARGEBEAM
+    Moves = SHADOWBALL,NATUREPOWER,DRAGONPULSE,EARTHPOWER
     IV = 31,31,31,31,31,31
-Pokemon = ABSOL,32
-    Gender = M
-    Moves = SLASH,SWORDSDANCE,NIGHTSLASH,PSYCHOCUT
-    IV = 31,31,31,31,31,31
-Pokemon = DUSKNOIR,33
-    Gender = M
-    Moves = WILLOWISP,SHADOWPUNCH,ICEPUNCH,DISABLE
-    AbilityIndex = 0
+Pokemon = REVINJA,45
+    Moves = SHADOWBALL,PSYSHOCK,DESTINYBOND,MEMENTO
     IV = 31,31,31,31,31,31
 #--------------
 [NURSE,Jessica] # Quartz Falls (Doctor)
@@ -1998,16 +2087,6 @@ Pokemon = MURKROW,22
     AbilityIndex = 0
     IV = 15,15,15,15,15,15
 #--------------
-[WATERELDER,Gabriel] # Amphi Town Elder
-Pokemon = BRIONNE,25
-    Gender = F
-    Moves = AQUAJET,ENCORE,BUBBLEBEAM,DISARMINGVOICE
-    AbilityIndex = 0
-Pokemon = SEEL,24
-    Gender = F
-    Moves = ENCORE,ICESHARD,REST,AQUAJET
-    AbilityIndex = 0
-#--------------
 [YOUNGSTER,Ben] # Crosswoods
 LoseText = Awww, I lost.
 Pokemon = ZIGZAGOON,5
@@ -2444,3 +2523,19 @@ LoseText = What a pain...
 Pokemon = PAWNIARD,57
 Pokemon = PAWNIARD,57
 Pokemon = BISHARP,57
+#--------------
+[FORETELLER2,Duke] # Vs. Doppelganger
+LoseText = I knew I wouldn't stand a chance...
+Pokemon = BRONZONG,53
+    Moves = PSYCHIC
+    Nature = HASTY
+    IV = 31,31,31,31,31,31
+Pokemon = LUCARIO,56
+    Item = CHOICESCARF
+    Moves = CLOSECOMBAT
+    Nature = MODEST
+    IV = 31,31,31,31,31,31
+Pokemon = DRAGONITE,55
+    Moves = OUTRAGE
+    Nature = BRAVE
+    IV = 31,31,31,31,31,31

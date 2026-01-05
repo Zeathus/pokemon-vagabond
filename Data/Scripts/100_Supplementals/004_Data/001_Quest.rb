@@ -16,7 +16,7 @@ class QuestList
   def do_unlocks
     unlocked = 0
     self.each { |quest|
-      if quest.unlock? && quest.status == -1
+      if quest.status == -1 && quest.unlock?
         echoln quest.name
         quest.status = 0
         unlocked += 1
@@ -29,6 +29,7 @@ class QuestList
         pbToast(TopWindowToast.new(_INTL("{1} new quests available!", unlocked)))
       end
     end
+    pbUpdateMarkers if unlocked > 0
   end
 
   def do_auto_finishes
@@ -79,6 +80,7 @@ module GameData
     attr_reader(:name)          # The name of the quest
     attr_reader(:type)          # Decices what quest marker to show
     attr_reader(:description)   # The description of the quest
+    attr_reader(:chapter)       # The chapter number, if it has one
     attr_reader(:steps)         # Array of steps required to complete the quest
     attr_reader(:done)          # Text to display when a quest is complete
     attr_reader(:location)      # The location of the quest
@@ -110,6 +112,7 @@ module GameData
         "Name"          => [0, "s"],
         "Type"          => [0, "s"],
         "Description"   => [0, "s"],
+        "Chapter"       => [0, "s"],
         "Location"      => [0, "s"],
         "FullLocation"  => [0, "s"],
         "Done"          => [0, "s"],
@@ -140,6 +143,7 @@ module GameData
       @name           = hash[:name]           || "Unnamed"
       @type           = hash[:type]           || PBQuestType::Basic
       @description    = hash[:description]    || ""
+      @chapter        = hash[:chapter]        || nil
       @steps          = hash[:steps]
       @done           = hash[:done]           || "The quest was completed."
       @location       = hash[:location]       || ""
@@ -248,7 +252,8 @@ class QuestState
     if @status < 1
       if !silent
         if self.type == PBQuestType::Main
-          pbTitleDisplay("Main Quest", self.display_name(self.status))
+          title = self.chapter ? self.chapter : "Main Quest"
+          pbTitleDisplay(title, self.display_name(self.status))
         else
           pbToast(TopWindowToast.new(_INTL("Quest Discovered!\n{1}", GameData::Quest.get(@quest_id).name))) if !silent
         end
@@ -276,7 +281,8 @@ class QuestState
 
   def finish(silent=false)
     if @status < 2
-      pbTitleDisplay(self.display_name(self.status), "Quest Completed!") if !silent
+      subtitle = self.chapter ? "Chapter End" : "Quest Completed!"
+      pbTitleDisplay(self.display_name(self.status), subtitle) if !silent
       if self.money > 0
         pbMessage(_INTL("{1} received ${2}!", $player.name, self.money))
         $player.money += money
@@ -344,6 +350,10 @@ class QuestState
 
   def description
     return GameData::Quest.get(@quest_id).description
+  end
+
+  def chapter
+    return GameData::Quest.get(@quest_id).chapter
   end
 
   def display_description

@@ -76,8 +76,10 @@ def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   # Play battle music
   bgm = pbGetWildBattleBGM([]) if !bgm
   if bgm != -1
-    if $PokemonGlobal.quickBattleAnimation
+    if $PokemonGlobal.quickBattleAnimation == 1
       pbQuickBattleAnimation(viewport, bgm, foe, $PokemonGlobal.quickBattleDialog)
+    elsif $PokemonGlobal.quickBattleAnimation == 2
+      pbQuickWildBattleAnimation(viewport, bgm, foe)
     else
       pbBGMPlay(bgm)
     end

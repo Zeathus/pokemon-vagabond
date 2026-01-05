@@ -13,16 +13,19 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,10,12
 MapSize = 1,1
+Environment = Grass
 #-------------------------------
 [004]   # \PN's House
 Name = \PN's House
 MapPosition = 0,10,12
 MapSize = 1,1
+Environment = Interior
 #-------------------------------
 [005]   # Shale House
 Name = Shale House
 MapPosition = 0,10,12
 MapSize = 1,1
+Environment = Interior
 #-------------------------------
 [006]   # Shale Path
 Name = Shale Path
@@ -31,6 +34,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,9,12
 MapSize = 1,1
+Environment = Grass
 #-------------------------------
 [007]   # Crosswoods
 Name = Crosswoods
@@ -41,6 +45,7 @@ MapPosition = 0,12,5
 SnapEdges = true
 BattleBack = woodland
 MapSize = 2,1111
+Environment = Forest
 #-------------------------------
 [008]   # Breccia City
 Name = Breccia City
@@ -59,6 +64,7 @@ Bicycle = true
 MapPosition = 0,12,8
 SnapEdges = true
 MapSize = 2,1111
+Environment = Grass
 #-------------------------------
 [010]   # Lapis PokéCenter
 Name = Lapis PokéCenter
@@ -75,6 +81,7 @@ MapPosition = 0,7,6
 SnapEdges = true
 BattleBack = woodland
 MapSize = 2,1111
+Environment = Forest
 #-------------------------------
 [012]   # Mica District
 Name = Mica District
@@ -85,6 +92,7 @@ MapPosition = 0,20,7
 SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 1,1
+Environment = Rock
 #-------------------------------
 [014]   # Mt. Pegma Hillside
 Name = Mt. Pegma Hillside
@@ -95,6 +103,7 @@ MapPosition = 0,20,8
 SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 1,11
+Environment = Rock
 #-------------------------------
 [015]   # Mica PokéCenter
 Name = Mica PokéCenter
@@ -110,6 +119,7 @@ MapSize = 1,1
 Name = Breccia House
 MapPosition = 0,7,6
 MapSize = 2,1111
+Environment = Interior
 #-------------------------------
 [020]   # Mt. Pegma 1F
 Name = Mt. Pegma 1F
@@ -117,6 +127,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,5
 MapSize = 2,1111
+Environment = Cave
 #-------------------------------
 [021]   # Feldspar District
 Name = Feldspar District
@@ -126,6 +137,7 @@ Bicycle = true
 MapPosition = 0,17,5
 SnapEdges = true
 MapSize = 2,1111
+Environment = Grass
 #-------------------------------
 [022]   # Lapis Lazuli Park
 Name = Lapis Lazuli Park
@@ -135,6 +147,15 @@ Bicycle = true
 MapPosition = 0,14,10
 SnapEdges = true
 MapSize = 1,1
+Environment = Grass
+#-------------------------------
+[025]   # Andes Isle
+Name = Andes Isle
+Outdoor = true
+ShowArea = true
+MapPosition = 0,5,18
+SnapEdges = true
+Environment = Sand
 #-------------------------------
 [027]   # Lapis District
 Name = Lapis District
@@ -147,18 +168,22 @@ MapSize = 2,111111
 [030]   # Feldspar Gym 1F
 Name = Feldspar Gym 1F
 MapPosition = 0,18,6
+Environment = Interior
 #-------------------------------
 [034]   # G.P.O. Building
 Name = G.P.O. Building
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [035]   # G.P.O. HQ
 Name = G.P.O. HQ
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [036]   # Living Quarters
 Name = Living Quarters
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [037]   # Lazuli PokéCenter
 Name = Lazuli PokéCenter
@@ -167,15 +192,18 @@ MapPosition = 0,12,10
 [038]   # Healthcare Facility
 Name = Healthcare Facility
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [040]   # Amethyst's Office
 Name = Amethyst's Office
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [042]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [044]   # Mt. Pegma 1F
 Name = Mt. Pegma 1F
@@ -183,6 +211,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,20,5
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [045]   # Mt. Pegma 2F
 Name = Mt. Pegma 2F
@@ -190,6 +219,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,20,5
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [046]   # Lake Kirrock
 Name = Lake Kirrock
@@ -197,6 +227,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,5
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [047]   # Mt. Pegma 3F
 Name = Mt. Pegma 3F
@@ -204,12 +235,14 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,5
 MapSize = 2,11
+Environment = Cave
 #-------------------------------
 [048]   # Mt. Pegma Peak
 Name = Mt. Pegma Peak
 Outdoor = true
 MapPosition = 0,19,5
 SnapEdges = true
+Environment = Rock
 #-------------------------------
 [049]   # Kirrock Cavern
 Name = Kirrock Cavern
@@ -217,40 +250,49 @@ Bicycle = true
 MapPosition = 0,19,5
 SnapEdges = true
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [050]   # Lapis House
 Name = Lapis House
 MapPosition = 0,12,12
 MapSize = 2,1111
+Environment = Interior
 #-------------------------------
 [051]   # Lazuli Dept. Store 1F
 Name = Lazuli Dept. Store 1F
 MapPosition = 0,13,11
+Environment = Interior
 #-------------------------------
 [052]   # Lazuli Dept. Store 2F
 Name = Lazuli Dept. Store 2F
 MapPosition = 0,13,11
+Environment = Interior
 #-------------------------------
 [053]   # Lazuli Dept. Store 3F
 Name = Lazuli Dept. Store 3F
 MapPosition = 0,13,11
+Environment = Interior
 #-------------------------------
 [054]   # Lazuli Dept. Store 4F
 Name = Lazuli Dept. Store 4F
 MapPosition = 0,13,11
+Environment = Interior
 #-------------------------------
 [055]   # Lazuli Dept. Store 5F
 Name = Lazuli Dept. Store 5F
 MapPosition = 0,13,11
+Environment = Interior
 #-------------------------------
 [056]   # Pokécare Facility
 Name = Pokécare Facility
 MapPosition = 0,13,13
 BattleBack = gpo
+Environment = Interior
 #-------------------------------
 [057]   # G.P.O. Administrative
 Name = G.P.O. Administrative
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [058]   # Halcyon Clearing
 Name = Halcyon Clearing
@@ -258,17 +300,21 @@ Outdoor = true
 MapPosition = 0,12,2
 SnapEdges = true
 MapSize = 2,11
+Environment = Forest
 #-------------------------------
 [060]   # Slowbros Restaurant
 Name = Slowbros Restaurant
 MapPosition = 0,13,10
+Environment = Interior
 #-------------------------------
 [061]   # Halcyon Forest
 Name = Halcyon Forest
 Outdoor = true
+ShowArea = true
 MapPosition = 0,12,3
 SnapEdges = true
 MapSize = 2,1111
+Environment = Forest
 #-------------------------------
 [062]   # Breccia Trail
 Name = Breccia Trail
@@ -278,25 +324,30 @@ MapPosition = 0,9,6
 SnapEdges = true
 BattleBack = field
 MapSize = 3,111111
+Environment = Grass
 #-------------------------------
 [063]   # Halcyon Hollow
 Name = Halcyon Hollow
-MapPosition = 0,14,2
+MapPosition = 0,13,2
+Environment = Interior
 #-------------------------------
 [065]   # Lapis Lazuli Gym
 Name = Lapis Lazuli Gym
 MapPosition = 0,12,11
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [066]   # Maintenance Room 1
 Name = Maintenance Room 1
 MapPosition = 0,12,11
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [067]   # Maintenance Room 2
 Name = Maintenance Room 2
 MapPosition = 0,13,12
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [070]   # Evergone Crater
 Name = Evergone Crater
@@ -306,10 +357,12 @@ Bicycle = true
 MapPosition = 0,7,5
 SnapEdges = true
 MapSize = 1,1
+Environment = Rock
 #-------------------------------
 [071]   # Breccia City Gym
 Name = Breccia City Gym
 MapPosition = 0,7,6
+Environment = Interior
 #-------------------------------
 [072]   # Quartz Passing
 Name = Quartz Passing
@@ -319,6 +372,7 @@ MapPosition = 0,14,5
 SnapEdges = true
 BattleBack = mountain_grass
 MapSize = 3,111111
+Environment = Rock
 #-------------------------------
 [073]   # Mt. Pegma Falls
 Name = Mt. Pegma Falls
@@ -328,48 +382,58 @@ Bicycle = true
 MapPosition = 0,20,10
 SnapEdges = true
 MapSize = 2,1111
+Environment = Rock
 #-------------------------------
 [074]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [075]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [076]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [077]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [078]   # Scoria Desert Ruins
 Name = Scoria Desert Ruins
 MapPosition = 0,22,15
+Environment = Ruins
 #-------------------------------
 [079]   # Slowbros Kitchen
 Name = Slowbros Kitchen
 MapPosition = 0,13,10
+Environment = Interior
 #-------------------------------
 [080]   # Scoria Desert Ruins
 Name = Scoria Desert Ruins
 MapPosition = 0,22,15
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [085]   # Scoria Desert Ruins Chamber
 Name = Scoria Desert Ruins Chamber
 MapPosition = 0,22,15
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [086]   # Faunus' House
 Name = Faunus' House
 MapPosition = 0,8,6
+Environment = Interior
 #-------------------------------
 [087]   # Pegma Quarry
 Name = Pegma Quarry
@@ -378,6 +442,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,17,8
 MapSize = 3,111
+Environment = Rock
 #-------------------------------
 [088]   # Cable Car Station
 Name = Cable Car Station
@@ -393,6 +458,7 @@ MapSize = 1,1
 Name = Pegma Quarry HQ
 MapPosition = 0,19,8
 MapSize = 1,1
+Environment = Interior
 #-------------------------------
 [092]   # Pegma Quarry B1F
 Name = Pegma Quarry B1F
@@ -400,6 +466,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,17,8
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [093]   # Pegma Quarry B2F
 Name = Pegma Quarry B2F
@@ -407,6 +474,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,17,8
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [094]   # Pegma Quarry B3F
 Name = Pegma Quarry B3F
@@ -414,6 +482,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [095]   # Pegma Quarry B4F
 Name = Pegma Quarry B4F
@@ -421,6 +490,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [096]   # Pegma Quarry B5F
 Name = Pegma Quarry B5F
@@ -428,6 +498,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [097]   # Pegma Quarry B6F
 Name = Pegma Quarry B6F
@@ -435,6 +506,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [098]   # Pegma Quarry B7F
 Name = Pegma Quarry B7F
@@ -442,6 +514,7 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [099]   # Pegma Quarry B8F
 Name = Pegma Quarry B8F
@@ -449,31 +522,38 @@ ShowArea = true
 Bicycle = true
 MapPosition = 0,19,7
 MapSize = 1,1
+Environment = Cave
 #-------------------------------
 [100]   # Science Lab
 Name = Science Lab
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [101]   # Allon's Smith
 Name = Allon's Smith
 MapPosition = 0,18,6
+Environment = Interior
 #-------------------------------
 [102]   # Mica House
 Name = Mica House
 MapPosition = 0,20,7
+Environment = Interior
 #-------------------------------
 [103]   # Feldspar Gym 2F
 Name = Feldspar Gym 2F
 MapPosition = 0,18,6
+Environment = Interior
 #-------------------------------
 [104]   # Feldspar Gym 3F
 Name = Feldspar Gym 3F
 MapPosition = 0,18,6
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [105]   # Feldspar Gym 4F
 Name = Feldspar Gym 4F
 MapPosition = 0,18,6
+Environment = Interior
 #-------------------------------
 [106]   # Scoria Valley
 Name = Scoria Valley
@@ -482,32 +562,39 @@ ShowArea = true
 MapPosition = 0,20,16
 SnapEdges = true
 MapSize = 2,111111
+Environment = Rock
 #-------------------------------
 [107]   # Nekane's Mind
 Name = Nekane's Mind
 SnapEdges = true
 BattleBack = memory
+Environment = Mind
 #-------------------------------
 [108]   # Feldspar House
 Name = Feldspar House
 MapPosition = 0,17,5
 MapSize = 2,1111
+Environment = Interior
 #-------------------------------
 [109]   # Lazuli River
 Name = Lazuli River
 Outdoor = true
+Environment = Grass
 #-------------------------------
 [110]   # Mt. Pegma B1F
 Name = Mt. Pegma B1F
 MapPosition = 0,19,6
+Environment = Volcano
 #-------------------------------
 [111]   # Mt. Pegma B1F
 Name = Mt. Pegma B1F
 MapPosition = 0,19,6
+Environment = Volcano
 #-------------------------------
 [112]   # Game Guild
 Name = Game Guild
 MapPosition = 0,12,11
+Environment = Interior
 #-------------------------------
 [113]   # Lazuli District
 Name = Lazuli District
@@ -519,55 +606,68 @@ MapSize = 2,1111
 [115]   # Crosswoods Ruins
 Name = Crosswoods Ruins
 MapPosition = 0,12,5
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [116]   # Crosswoods Ruins
 Name = Crosswoods Cave Ruins
 MapPosition = 0,12,5
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [118]   # Quartz Cave Ruins
 Name = Quartz Cave Ruins
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [119]   # Quartz Cave Ruins
 Name = Quartz Cave Ruins
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [120]   # Breccia Outlook
 Name = Breccia Outlook
 MapPosition = 0,8,6
+Environment = Forest
 #-------------------------------
 [121]   # Crosswoods Ruins Chamber
 Name = Crosswoods Cave Chamber
 MapPosition = 0,12,5
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [122]   # Quartz Cave Chamber
 Name = Quartz Cave Chamber
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [124]   # Canjon Cave Ruins
 Name = Canjon Cave Ruins
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [125]   # Canjon Cave Chamber
 Name = Canjon Cave Chamber
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [126]   # Smokey Forest Trail
 Name = Smokey Forest Trail
 Outdoor = true
 MapPosition = 0,14,10
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [128]   # Smokey Forest
 Name = Smokey Forest
 MapPosition = 0,15,10
 DarkMap = true
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [129]   # D.A.O. HQ 1F
 Name = D.A.O. HQ 1F
+Environment = Interior
 #-------------------------------
 [130]   # Smokey Forest
 Name = Smokey Forest
@@ -575,6 +675,7 @@ Outdoor = true
 MapPosition = 0,15,10
 DarkMap = true
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [132]   # Scoria Desert
 Name = Scoria Desert
@@ -582,91 +683,110 @@ Outdoor = true
 MapPosition = 0,22,14
 SnapEdges = true
 MapSize = 5,1111111111
+Environment = Sand
 #-------------------------------
 [133]   # Smokey Forest Shrine
 Name = Smokey Forest Shrine
 Outdoor = true
 MapPosition = 0,15,10
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [134]   # Mt. Pegma Ruins
 Name = Mt. Pegma Ruins
 MapPosition = 0,19,6
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [135]   # Underground Desert
 Name = Underground Desert
 MapPosition = 0,22,14
 SnapEdges = true
 MapSize = 4,11111111
+Environment = Cave
 #-------------------------------
 [136]   # Smokey Forest Shrine
 Name = Smokey Forest Shrine
 Outdoor = true
 DarkMap = true
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [137]   # Smokey Forest Clearing
 Name = Smokey Forest Clearing
 Outdoor = true
 MapPosition = 0,15,10
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [139]   # Deep Smokey Forest
 Name = Deep Smokey Forest
 MapPosition = 0,15,10
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [140]   # Pegma Hillside Ruins
 Name = Pegma Hillside Ruins
 MapPosition = 0,20,9
+Environment = Ruins
 #-------------------------------
 [141]   # Maintenance Room 3
 Name = Maintenance Room 3
 MapPosition = 0,12,13
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [143]   # Mt. Pegma Ruins Chamber
 Name = Mt. Pegma Ruins Chamber
 MapPosition = 0,19,6
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [144]   # Ivan's House
 Name = Ivan's House
 MapPosition = 0,13,9
+Environment = Interior
 #-------------------------------
 [145]   # Pegma Hillside Ruins
 Name = Amphi Cave Ruins
 MapPosition = 0,20,9
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [146]   # Smokey Forest Ruins
 Name = Smokey Cave Ruins
 MapPosition = 0,15,10
 BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [147]   # Smokey Forest Ruins Chamber
 Name = Smokey Cave Chamber
 MapPosition = 0,15,10
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [148]   # Lazuli House
 Name = Lazuli House
 MapPosition = 0,12,10
 MapSize = 2,11
+Environment = Interior
 #-------------------------------
 [149]   # Uncanny Valley
 Name = Uncanny Valley
+ShowArea = true
 BattleBack = distortion
-WildBattleBGM = Battle! Distortion World (Stardust).ogg
+WildBattleBGM = Battle! Reverse (Stardust)
+Environment = DistortionWorld
 #-------------------------------
 [152]   # D.A.O. Living Quarters
 Name = D.A.O. Living Quarters
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [153]   # Evergone Cave
 Name = Evergone Cave
 MapPosition = 0,7,3
+Environment = Cave
 #-------------------------------
 [154]   # Central East Sea
 Name = Central East Sea
@@ -674,16 +794,45 @@ Outdoor = true
 MapPosition = 0,12,15
 SnapEdges = true
 MapSize = 2,111111
+Environment = Rock
+#-------------------------------
+[155]   # Giratina's Domain
+Name = Deep Distortion World
+BattleBack = distortion
+Environment = DistortionWorld
 #-------------------------------
 [156]   # Giratina's Domain
+Name = Deep Distortion World
+ShowArea = true
+BattleBack = distortion
+Environment = DistortionWorld
+#-------------------------------
+[157]   # Giratina's Domain
 Name = Giratina's Domain
 BattleBack = distortion
+Environment = DistortionWorld
+#-------------------------------
+[158]   # Distortion World - Ruins
+Name = Distortion World
+BattleBack = distortion
+Environment = DistortionWorld
+#-------------------------------
+[159]   # Distortion World - Ranch
+Name = Distortion World
+BattleBack = distortion
+Environment = DistortionWorld
+#-------------------------------
+[280]   # Distortion World - East Sea
+Name = Distortion World
+BattleBack = distortion
+Environment = DistortionWorld
 #-------------------------------
 [162]   # Breccia City Gym
 Name = Breccia City Gym
 MapPosition = 0,7,5
 SnapEdges = true
 MapSize = 1,1
+Environment = Interior
 #-------------------------------
 [163]   # East Sea
 Name = East Sea
@@ -692,43 +841,58 @@ ShowArea = true
 MapPosition = 0,15,16
 SnapEdges = true
 MapSize = 5,1111111111
+Environment = Rock
 #-------------------------------
 [165]   # Scoria Gym 2F
 Name = Scoria Gym 2F
 MapPosition = 0,20,14
 SnapEdges = true
 MapSize = 1,1
+Environment = Interior
 #-------------------------------
 [166]   # Breccia Ruins
 Name = Breccia Ruins
 MapPosition = 0,7,7
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [168]   # Breccia Ruins
 Name = Breccia Ruins
 MapPosition = 0,7,7
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [169]   # Breccia Ruins Chamber
 Name = Breccia Ruins Chamber
 MapPosition = 0,7,7
+BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [170]   # Lazuli River Ruins
 Name = Lazuli River Ruins
 MapPosition = 0,11,8
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [171]   # Lazuli River Ruins
 Name = Lazuli River Ruins
 MapPosition = 0,11,8
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [172]   # Lazuli River Ruins Chamber
 Name = Lazuli River Ruins Chamber
 MapPosition = 0,11,8
+BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [173]   # Lazuli River
-Name = Everstone River
+Name = Lower Everstone River
 Outdoor = true
 MapPosition = 0,11,8
 SnapEdges = true
 MapSize = 1,1
+Environment = Grass
 #-------------------------------
 [174]   # Memory Start 2
 Name = Memory Start 2
@@ -736,14 +900,17 @@ Name = Memory Start 2
 [175]   # Development Facility
 Name = Development Facility
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [176]   # Interrogation Room
 Name = Interrogation Room
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [181]   # Admin Living Quarters
 Name = Admin Living Quarters
 MapPosition = 0,13,13
+Environment = Interior
 #-------------------------------
 [182]   # Feldspar PokéCenter
 Name = Feldspar PokéCenter
@@ -752,6 +919,7 @@ MapPosition = 0,17,5
 [183]   # Breccia Cabin
 Name = Breccia Cabin
 MapPosition = 0,9,6
+Environment = Interior
 #-------------------------------
 [184]   # Breccia Thicket
 Name = Breccia Thicket
@@ -759,6 +927,7 @@ Outdoor = true
 MapPosition = 0,10,5
 SnapEdges = true
 MapSize = 1,1
+Environment = Forest
 #-------------------------------
 [187]   # Sanctuary
 Name = Sanctuary
@@ -770,6 +939,7 @@ ShowArea = true
 [196]   # Scoria Gym 1F
 Name = Scoria Gym 1F
 MapPosition = 0,20,14
+Environment = Interior
 #-------------------------------
 [198]   # Scoria City
 Name = Scoria City
@@ -779,6 +949,7 @@ Bicycle = true
 MapPosition = 0,20,14
 SnapEdges = true
 MapSize = 2,1111
+Environment = Rock
 #-------------------------------
 [199]   # Scoria PokéCenter
 Name = Scoria PokéCenter
@@ -787,19 +958,23 @@ MapPosition = 0,21,14
 [200]   # Pegma Stadium
 Name = Pegma Stadium
 MapPosition = 0,17,5
+Environment = Interior
 #-------------------------------
 [201]   # Pegma Stadium
 Name = Pegma Stadium
 MapPosition = 0,17,5
+Environment = Interior
 #-------------------------------
 [202]   # Scoria House
 Name = Scoria House
 MapPosition = 0,20,14
 MapSize = 2,1111
+Environment = Interior
 #-------------------------------
 [203]   # Scoria Gym B1F
 Name = Scoria Gym B1F
 MapPosition = 0,20,15
+Environment = Interior
 #-------------------------------
 [204]   # Breccia Ranch
 Name = Breccia Ranch
@@ -808,12 +983,14 @@ ShowArea = true
 MapPosition = 0,7,8
 SnapEdges = true
 MapSize = 2,111111
+Environment = Grass
 #-------------------------------
 [205]   # Daycare
 Name = Daycare
 Outdoor = true
 MapPosition = 0,8,8
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [206]   # Central West Sea
 Name = Central West Sea
@@ -822,6 +999,7 @@ ShowArea = true
 MapPosition = 0,9,15
 SnapEdges = true
 MapSize = 3,111111
+Environment = Grass
 #-------------------------------
 [207]   # West Sea
 Name = West Sea
@@ -830,6 +1008,7 @@ ShowArea = true
 MapPosition = 0,7,11
 SnapEdges = true
 MapSize = 2,1111111111
+Environment = Sand
 #-------------------------------
 [208]   # Evergone Mangrove
 Name = Evergone Mangrove
@@ -840,6 +1019,7 @@ MapPosition = 0,7,4
 SnapEdges = true
 BattleBack = woodland
 MapSize = 2,11
+Environment = Forest
 #-------------------------------
 [209]   # Evergone Hill
 Name = Evergone Hill
@@ -850,6 +1030,7 @@ MapPosition = 0,8,2
 SnapEdges = true
 BattleBack = woodland
 MapSize = 2,1111
+Environment = Forest
 #-------------------------------
 [210]   # Evergone Stairway
 Name = Evergone Stairway
@@ -860,6 +1041,7 @@ MapPosition = 0,7,3
 SnapEdges = true
 BattleBack = woodland
 MapSize = 1,1
+Environment = Forest
 #-------------------------------
 [211]   # Evergone Ruins
 Name = Evergone Ruins
@@ -870,10 +1052,12 @@ MapPosition = 0,7,2
 SnapEdges = true
 BattleBack = woodland
 MapSize = 1,1
+Environment = Forest
 #-------------------------------
 [212]   # Pegma Stadium Battle
 Name = Schist Stadium Battle
 BattleBack = indoor_arena
+Environment = Interior
 #-------------------------------
 [213]   # Lake Canjon
 Name = Lake Canjon
@@ -882,10 +1066,12 @@ ShowArea = true
 MapPosition = 0,25,16
 SnapEdges = true
 MapSize = 2,1111
+Environment = Sand
 #-------------------------------
 [214]   # Canjon Cavern
 Name = Canjon Cavern
 MapPosition = 0,26,16
+Environment = Cave
 #-------------------------------
 [215]   # Waiting Area
 Name = Waiting Area
@@ -899,6 +1085,7 @@ Bicycle = true
 MapPosition = 0,20,12
 SnapEdges = true
 MapSize = 2,1111
+Environment = Rock
 #-------------------------------
 [218]   # Secret Market
 Name = Secret Market
@@ -922,79 +1109,138 @@ VFX = 2
 MapPosition = 0,0,0
 SnapEdges = true
 MapSize = 1,1
+Environment = Forest
 #-------------------------------
 [221]   # Amphi Town
 Name = Amphi Town
 Outdoor = true
 ShowArea = true
 Bicycle = true
-MapPosition = 0,24,3
+MapPosition = 0,0,0
 SnapEdges = true
+Environment = Grass
 #-------------------------------
 [222]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
+ShowArea = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [223]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [224]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [225]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [226]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [227]   # Amphi Woods
 Name = Amphi Woods
 Outdoor = true
 MapPosition = 0,23,3
+SnapEdges = true
+Environment = Forest
 #-------------------------------
 [228]   # Lake Shiki
 Name = Lake Shiki
 Outdoor = true
 ShowArea = true
-MapPosition = 0,22,3
+MapPosition = 0,5,18
+SnapEdges = true
+Environment = Grass
+#-------------------------------
+[229]   # Shiki Cavern
+Name = Shiki Cavern
+MapPosition = 0,5,18
+Environment = Cave
 #-------------------------------
 [230]   # Pegma Hillside Ruins Chamber
 Name = Amphi Cave Chamber
 MapPosition = 0,20,9
 BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [231]   # Training Facility
 Name = Training Facility
 MapPosition = 0,13,13
 BattleBack = gpo
+Environment = Interior
 #-------------------------------
 [232]   # Training Facility
 Name = Training Facility
 BattleBack = gpo
+Environment = Interior
 #-------------------------------
 [233]   # Ranger Outpost Scene
 Name = Ranger Outpost Scene
 Outdoor = true
 #-------------------------------
+[237]   # Evergone Ruins 1F
+Name = Evergone Ruins 1F
+MapPosition = 0,7,1
+Environment = Ruins
+#-------------------------------
+[238]   # Evergone Ruins B1F
+Name = Evergone Ruins B1F
+MapPosition = 0,7,1
+Environment = Ruins
+#-------------------------------
+[239]   # Evergone Ruins 2F
+Name = Evergone Ruins 2F
+MapPosition = 0,7,1
+#-------------------------------
 [240]   # Distortion Abode
 Name = Distortion Abode
+ShowArea = true
 BattleBack = distortion
 WildBattleBGM = Battle! Distortion World (Stardust).ogg
+Environment = Cave
+#-------------------------------
+[242]   # Distortion World
+Name = Distortion World
+Environment = DistortionWorld
+#-------------------------------
+[243]   # Distortion World - Lazuli River
+Name = Distortion World
+BattleBack = distortion
+Environment = DistortionWorld
+#-------------------------------
+[244]   # Upper Everstone River
+Name = Upper Everstone River
+Outdoor = true
+ShowArea = true
+MapPosition = 0,9,4
+SnapEdges = true
+MapSize = 1,11
 #-------------------------------
 [245]   # Scoria Desert Passage
 Name = Scoria Desert Passage
 ShowArea = true
 MapPosition = 0,21,14
 MapSize = 2,11
+Environment = Cave
 #-------------------------------
 [246]   # Dodge the Bombs
 Name = Scoria Desert Passage
@@ -1006,27 +1252,36 @@ Outdoor = true
 ShowArea = true
 MapPosition = 0,22,12
 SnapEdges = true
+Environment = Forest
 #-------------------------------
 [251]   # D.A.O. HQ B1F
 Name = D.A.O. HQ B1F
 MapPosition = 0,22,11
 SnapEdges = true
+Environment = Interior
 #-------------------------------
 [252]   # D.A.O. HQ B2F
 Name = D.A.O. HQ B2F
 MapPosition = 0,22,11
+Environment = Interior
 #-------------------------------
 [253]   # West Sea Ruins
 Name = West Sea Ruins
 MapPosition = 0,8,14
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [254]   # West Sea Ruins
 Name = West Sea Ruins
 MapPosition = 0,8,14
+BattleBack = ruins
+Environment = Ruins
 #-------------------------------
 [255]   # West Sea Ruins Chamber
 Name = West Sea Ruins Chamber
 MapPosition = 0,8,14
+BattleBack = ruins_boss
+Environment = Ruins
 #-------------------------------
 [257]   # Gabbro Swamp
 Name = Gabbro Swamp
@@ -1034,3 +1289,58 @@ Outdoor = true
 ShowArea = true
 VFX = 3
 SnapEdges = true
+Environment = Swamp
+#-------------------------------
+[259]   # Amphi Head
+Name = Amphi Head
+Outdoor = true
+SnapEdges = true
+Environment = Forest
+#-------------------------------
+[260]   # Earth Sanctum
+Name = Earth Sanctum
+SnapEdges = true
+Environment = Interior
+#-------------------------------
+[269]   # Amphi Clearing
+Name = Amphi Clearing
+Outdoor = true
+SnapEdges = true
+Environment = Forest
+#-------------------------------
+[272]   # Old Factory
+Name = Old Factory
+Outdoor = true
+MapPosition = 0,9,5
+Environment = Interior
+#-------------------------------
+[273]   # Old Factory B1F
+Name = Old Factory B1F
+MapPosition = 0,9,4
+#-------------------------------
+[274]   # Trial of Fire
+Name = Trial of Fire
+SnapEdges = true
+#-------------------------------
+[275]   # East Sea Ruins
+Name = East Sea Ruins
+MapPosition = 0,17,15
+BattleBack = ruins
+#-------------------------------
+[276]   # East Sea Ruins
+Name = East Sea Ruins
+MapPosition = 0,17,15
+BattleBack = ruins
+#-------------------------------
+[277]   # East Sea Ruins Chamber
+Name = East Sea Ruins Chamber
+MapPosition = 0,17,15
+BattleBack = ruins_boss
+#-------------------------------
+[278]   # Amphi Ruins
+Name = Amphi Ruins
+BattleBack = ruins
+#-------------------------------
+[279]   # Amphi Ruins Chamber
+Name = Amphi Ruins Chamber
+BattleBack = ruins_boss

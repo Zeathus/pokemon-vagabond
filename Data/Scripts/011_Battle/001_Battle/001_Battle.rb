@@ -96,6 +96,7 @@ class Battle
   attr_accessor :showParty        # Whether to show the entire opponent's party from the start
   attr_accessor :keepBGM          # If the BGM kept playing from before battle, and should do so after
   attr_accessor :predictingDamage
+  attr_accessor :hideEnemyBase
 
   def pbRandom(x); return rand(x); end
 
@@ -727,8 +728,10 @@ class Battle
     @field.weather = newWeather
     duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
-      duration = Battle::ItemEffects.triggerWeatherExtender(user.item, @field.weather,
-                                                            duration, user, self)
+      duration = Battle::ItemEffects.triggerWeatherExtender(
+        user.item, @field.weather, duration, user, self)
+      duration = Battle::ItemEffects.triggerWeatherExtender(
+        user.item, @field.weather, duration, user, self) if user.amplifyItem?
     end
     @field.weatherDuration = duration
     weather_data = GameData::BattleWeather.try_get(@field.weather)
@@ -810,8 +813,10 @@ class Battle
     @field.terrain = newTerrain
     duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
-      duration = Battle::ItemEffects.triggerTerrainExtender(user.item, newTerrain,
-                                                            duration, user, self)
+      duration = Battle::ItemEffects.triggerTerrainExtender(
+        user.item, newTerrain, duration, user, self)
+      duration = Battle::ItemEffects.triggerTerrainExtender(
+        user.item, newTerrain, duration, user, self) if user.amplifyItem?
     end
     @field.terrainDuration = duration
     terrain_data = GameData::BattleTerrain.try_get(@field.terrain)

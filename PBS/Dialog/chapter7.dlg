@@ -1,0 +1,1018 @@
+[AMPHI_WILDS,0]
+/event set Eliana 54
+/event set Fintan 55
+/event Eliana emote sad
+/speaker Eliana sad
+> Hey, <PLAYER> look-alike...
+/expression wonder
+?> ...It's been a while since we last met.
+  /choice Right. When we fought at Mt. Pegma.
+    /expression awkward
+    > Exactly! You had me so confused.
+  /choice It feels as if it was just a few days ago.
+    /expression awkward
+    > Haha, yeah... Time really does fly by.
+  /choice We don't have to fight.
+    /expression sad
+    > ...
+    /speaker Fintan
+    > How bold of you to assume we would simply let you pass, look-alike.
+  /choice ...
+    /expression sad
+    > ...
+?/>
+/speaker Fintan
+> When Eliana said you resembled <PLAYER>, I imagined you simply had the same eye color or a similar nose.
+> The resemblance is striking.\nAnyone would be likely to mistake you for same person.
+> Much to your dismay, we will not permit an imposter like you to find Uxie before us.
+/speaker Eliana smile
+> Yeah, I bet they have probably caught Uxie already!
+/reset
+/event Eliana emote ...
+/speaker Kira annoyed
+> ...Who're "they"?
+/speaker Fintan
+> "They"\wt[4] are none of your business.
+> ...And clearly they have NOT caught Uxie, as The Great Amphi is still in the middle of the sea.
+/speaker Eliana awkward
+> ...Oh, right.
+/expression smile
+> One can hope though?
+/reset
+/event Fintan emote sigh
+/speaker Fintan
+> Let's just fight them.
+
+[AMPHI_WILDS,1]
+/speaker Fintan
+> Back again? Very persistent.
+
+[AMPHI_WILDS,2]
+/speaker Fintan
+> Your strength is also on par with <PLAYER>.\nI can only hope our incompetence is forgiven.
+/speaker Eliana
+> We'll have to retreat for now, Fintan.
+/speaker Fintan
+> Indeed...
+
+[AMPHI_WILDS,3]
+/speaker Amethyst annoyed
+> We've got to follow them!
+
+[AMPHI_TOWN_INTRO,0]
+/event set Amethyst 3
+/event Amethyst emote ?
+/speaker Amethyst confused
+> Now where did they go...
+
+[AMPHI_TOWN_INTRO,1]
+/event set Adept 1
+/speaker Adept
+> Welcome travelers, to Amphi Town.
+> We have been awaiting the [R]the other apostle[/], and here you are.
+/speaker Amethyst confused
+> ...An apostle? Who?
+/speaker Adept
+> The cloaked one of course.
+/speaker Kira annoyed
+> This island hasn't been here for decades, and I don't believe <PLAYER> is elderly.
+/speaker Adept
+> So <PLAYER> is their name. How peculiar.
+> I never said that the apostle had been here prior.
+/speaker Kira annoyed
+> How can <PLAYER> be an "apostle" then?
+/speaker Adept
+> Only elder Akasha knows why the apostles are who they are. She speaks nothing but the truth.
+/speaker Amethyst
+> May we speak with the elder then?
+/speaker Adept
+> We do not traditionally allow outsiders into our town.
+> Apostles, however, are an exception.
+> Only <PLAYER> may speak with the elder.
+/event Adept turn left
+> As for the rest of you, there is an inn by the outskirts where outsiders may stay if needed.
+> We have two other visitors staying there right now as well.
+/event Adept turn down
+/speaker Kira
+> So that's where Fintan and Eliana are.\nWe've got a bone to pick with them.
+/speaker Adept
+> You have no such bones to pick while in our sanctuary.
+> Any and all meaningless conflict is forbidden here.
+/speaker Kira lookaway
+> ...Understood.
+/speaker Amethyst
+> Sounds like we'll have to leave the investigation to <PLAYER>.
+/expression awkward
+> Getting some rest doesn't sound half bad either.
+
+[AMPHI_TOWN_INTRO,2]
+/speaker Amethyst
+> <PLAYER>, try to figure out how we can get The Great Amphi to move to Andes Isle.
+
+[AMPHI_TOWN_INTRO,3]
+/speaker Kira
+> You'd better not mess things up while we're gone.
+/speaker Amethyst
+> Azelf, are you coming too?
+
+[AMPHI_TOWN_INTRO,4]
+/speaker Adept
+> I forgot to mention one detail.
+> Our rules against outsiders do not extend to Pokémon, only humans.
+> The blue one is free to join <PLAYER>.
+/speaker Azelf
+> Very well. I will gladly assist.
+
+[AMPHI_TOWN_INTRO,5]
+/event set Amethyst 3
+/speaker Adept
+> What about you, miss...
+> ...Are you a human, a Pokémon, neither, or something in between?
+/reset
+/event Amethyst emote ?
+/speaker Amethyst confused
+> What do you mean? She's clearly a human.
+/speaker Adept
+> I see. Pardon me, I could not tell.
+> Please enjoy your stay.
+/speaker Amethyst
+> Thank you for having us.
+
+[AMPHI_TOWN_INTRO,6]
+/speaker Adept
+> If you wish to rest your Pokémon, you may do so at the inn.
+> Before I take my leave, I recommend you visit [R]the four elders[/].
+> You can recognize their residence by [R]the banners displayed outside[/].
+
+[AMPHI_TOWN_INTRO,7]
+/speaker Azelf
+> Maybe those elders know how we can make The Great Amphi move to Andes Isle.
+> Let us make haste.
+
+[AMPHI_TOWN_INTRO,8]
+> While within Amphi Town, your party is restricted to <PLAYER> and Azelf.
+> If you leave Amphi Town, your party will be restored until you return.
+
+[AMPHI_ELDER_WATER,0]
+/speaker Gabriel
+/hidename 1
+> Welcome to our secluded town, apostle.
+/hidename 0
+> I am the Elder of Water, known as Gabriel. I have dedicated my life to the element of water.
+?> What brings you here today?
+  /choice Make The Great Amphi move
+    /dialog AMPHI_HINT_BRANCH
+?/>
+
+[AMPHI_ELDER_WATER,1]
+/speaker Gabriel
+> I hope you find what you seek.
+
+[AMPHI_ELDER_EARTH,0]
+/speaker Auriel
+/hidename 1
+> Do not think it is simple to grasp the elements, apostle.
+/hidename 0
+> I am Auriel, the Elder of Earth. The earth is your foothold, try not to upset it.
+?> Did you have an inquiry?
+  /choice Make The Great Amphi move
+    /dialog AMPHI_HINT_BRANCH
+?/>
+
+[AMPHI_ELDER_EARTH,1]
+/speaker Auriel
+> Keep your eyes on the path ahead.
+
+[AMPHI_ELDER_AIR,0]
+/speaker Raphael
+/hidename 1
+> Have you come to learn about the four elements, apostle?
+/hidename 0
+> My name is Raphael, the Elder of Air. Our town has a pleasant sea breeze, no?
+?> What do you wish to know?
+  /choice Make The Great Amphi move
+    /dialog AMPHI_HINT_BRANCH
+?/>
+
+[AMPHI_ELDER_AIR,1]
+/speaker Raphael
+> May your stay here be enriching.
+
+[AMPHI_ELDER_FIRE,0]
+/speaker Michael
+/hidename 1
+> This is Amphi Town, home of the elements.
+/hidename 0
+> Before you is Michael, the Elder of Fire. There's a fiery strength in your eyes, fitting for an apostle.
+?> What are you seeking?
+  /choice Make The Great Amphi move
+    /dialog AMPHI_HINT_BRANCH
+?/>
+
+[AMPHI_ELDER_FIRE,1]
+/speaker Michael
+> May you achieve great things.
+
+[AMPHI_HINT_BRANCH]
+/if pbGet(AMPHI_ELDER_HINTS)==0
+  /dialog AMPHI_HINT 0
+/elsif pbGet(AMPHI_ELDER_HINTS)==1
+  /dialog AMPHI_HINT 1
+/elsif pbGet(AMPHI_ELDER_HINTS)==2
+  /dialog AMPHI_HINT 2
+/elsif pbGet(AMPHI_ELDER_HINTS)==3
+  /dialog AMPHI_HINT 3
+/end
+
+[AMPHI_HINT,0]
+> The Great Amphi comes and goes as he pleases. It is unlikely that he will head there on a whim.
+> I believe another elder knows more about directing The Great Amphi.
+
+[AMPHI_HINT,1]
+> It is possible to make The Great Amphi go where you wish if you go to his head and speak to him.
+> That is all I know. Perhaps another elder has more information.
+
+[AMPHI_HINT,2]
+> The Great Amphi is selective in who he is willing to speak to.
+> If there is an elder you have not spoken to, they might know The Great Amphi's selection criteria.
+
+[AMPHI_HINT,3]
+> To prove yourself to The Great Amphi, you must get through the Amphi Woods to the west of town.
+> May the elements guide you.
+
+[AMPHI_HINT,4]
+/speaker Azelf
+> Then the Amphi Woods is our next destination.
+
+[AMPHI_INN_KIRA,0]
+/speaker Kira nohat_neutral
+> While this place sucks for not letting me have a "talk" with the other room, the beds are pretty darn good.
+
+[AMPHI_INN_KIRA,1]
+/speaker Kira nohat_neutral
+> Go do your thing.\nI'm pretty content right where I am.
+
+[AMPHI_INN_KIRA,2]
+/speaker Kira nohat_annoyed
+> Did you not hear me the first time?\nGo investigate.
+
+[AMPHI_INN_KIRA,3]
+/speaker Kira nohat_annoyed
+> ...You're testing my patience more than usual.
+
+[AMPHI_INN_KIRA_HAT]
+> You get the feeling someone who need not be named would do unspeakable things to you if you touched this.
+
+[AMPHI_INN_AMETHYST,0]
+/speaker Amethyst confused
+> I wonder what the deal with the "apostle" thing was.
+/expression neutral
+> Whatever it means, it leaves the investigation to you.
+/expression wink
+> You've got this, apostle!
+
+[AMPHI_INN_NEKANE,0]
+/speaker Nekane
+> I wonder... Will Uxie restoring my memories help me understand emotions better?
+> Probably not if I never had emotions to begin with...
+
+[CH7_DOPPELGANGER,0]
+/speaker <PLAYER2>
+> ...
+> What Eliana said appears to be true.\nThere was indeed a doppelgänger about.
+
+[CH7_DOPPELGANGER,1]
+/event set Player2 13
+/speaker <PLAYER2>
+> Identity theft is a crime, you know?
+/reset
+/event Player2 emote ...
+/speaker <PLAYER2>
+?> I'm certain Duke had a part in this...
+  /choice Who are you?
+    > I'm <PLAYER>, the real one.\nBut you likely knew that already.
+  /choice Why do you look like me?
+    > If anything, you're the one that looks like me, not the other way around.
+  /choice It's another me!
+    > If anything, you're the "another me", while I'm the real one.
+?/>
+> If you truly are just like me, I fail to see why you would oppose me.
+> ...But if you are truly set on opposing me, let's nip it in the bud right here and now.
+
+[CH7_AKASHA,0]
+/speaker Akasha
+/se RecordScratch 100 100
+/eval $game_screen.start_tone_change(Tone.new(-255,-255,-255),0)
+/hidename 1
+> May I remind you that [R]conflict is forbidden[/] here?
+
+[CH7_AKASHA,1]
+/speaker Akasha
+/hidename 1
+> Such interpersonal conflicts are strictly prohibited in this sanctuary.
+> For the [R]apostle of order[/] and [R]apostle of chaos[/] to fight would be awfully counterproductive.
+/speaker <PLAYER2>
+?> The apostles of order and chaos?
+  /savechoice apostle of order or chaos
+  /choice I must be the apostle of order
+  /choice I must be the apostle of chaos
+  /choice Which of the two am I?
+?/>
+/speaker Akasha
+/hidename 1
+> Which is which is insignificant.\nThe important fact is that you are both present.
+/speaker <PLAYER2>
+> Clearly [R]fate[/] must have chosen [R]me[/] as the apostle of order.
+/speaker Akasha 
+/hidename 1
+> Fate? There is no such thing.
+> No person is destined to play a role.\nIt is the path you have walked thus far that made you an apostle.
+> An apostle's identity is never predetermined.
+> But forgive my digression, I failed to introduce myself.
+/hidename 0
+> I am Elder Akasha, and it is a pleasure to meet the two of you.
+> I presume you are looking for a way to reach Uxie at Andes Isle.
+/speaker <PLAYER2>
+> You would be correct.\nAny directions are welcome.
+/speaker Akasha
+/if pbGet(AMPHI_ELDER_HINTS)==0
+  > The Great Amphi comes and goes as he pleases, but you might be able to coerce him to go where you wish.
+  > Though first you must prove yourself by passing through the Amphi Woods.
+/elsif pbGet(AMPHI_ELDER_HINTS)==1
+  > If you speak with The Great Amphi, you might be able to coerce him to go where you wish.
+  > Though first you must prove yourself by passing through the Amphi Woods.
+/elsif pbGet(AMPHI_ELDER_HINTS)==2
+  > To coerce The Great Amphi to go where you wish, you must first prove yourself by passing through the Amphi Woods.
+/elsif pbGet(AMPHI_ELDER_HINTS)==3
+  > To coerce The Great Amphi to go where you wish, you must first prove yourself by passing through the Amphi Woods.
+/end
+> To pass through the Amphi Woods and get to The Great Amphi's head, you must be [R]guided by the elements[/].
+> However, the elements will only guide you if you earn their approval.
+> For you to earn their approval, I have asked the four elemental elders to prepare trials for you.
+> Please complete these trials and return to me.
+/speaker <PLAYER2>
+> Sounds fairly straightforward. I'm on it.
+
+[CH7_AKASHA_IDLE,0]
+/speaker Akasha
+> Please complete the four trials and return to me.
+
+[CH7_AKASHA_IDLE,1]
+/speaker Akasha
+> Please complete the remaining three trials and return to me.
+
+[CH7_AKASHA_IDLE,2]
+/speaker Akasha
+> Please complete the remaining two trials and return to me.
+
+[CH7_AKASHA_IDLE,3]
+/speaker Akasha
+> Please complete your last trial and return to me.
+
+[CH7_TRIAL_WATER,0]
+/speaker Gabriel
+> Well done with the first half of my trial.
+> For the second half, you must defeat me in battle.
+
+[CH7_TRIAL_WATER,1]
+/speaker Gabriel
+?> Are you ready to battle?\n(Single battle with only your own Party)
+  /choice Bring it on!
+    /return true
+  /cancelchoice I need to prepare
+    /return false
+?/>
+
+[CH7_TRIAL_WATER,2]
+/speaker Gabriel
+> Primarina, the undine, serves as the water elemental.
+> If you earned its approval, it will guide you on your quest.
+
+[CH7_TRIAL_WATER,3]
+/speaker Gabriel
+> Please finish all four trials and return to Akasha.
+
+[CH7_TRIAL_EARTH,0]
+/speaker Auriel
+> You did well making your way here.
+> To finish my trial, you must also defeat me in battle.
+
+[CH7_TRIAL_EARTH,1]
+/speaker Auriel
+?> Are you ready to battle?\n(Single battle with only your own Party)
+  /choice Bring it on!
+    /return true
+  /cancelchoice I need to prepare
+    /return false
+?/>
+
+[CH7_TRIAL_EARTH,2]
+/speaker Auriel
+> Golurk, the golem, serves as the earth elemental.
+> If you earned its respect, it will guide you on your quest.
+
+[CH7_TRIAL_EARTH,3]
+/speaker Auriel
+> Please finish all four trials and return to Akasha.
+
+[CH7_TRIAL_AIR,0]
+/speaker Raphael
+> Your movement is swift, but the trial is not done yet.
+> First, you must defeat me in battle.
+
+[CH7_TRIAL_AIR,1]
+/speaker Raphael
+?> Are you ready to battle?\n(Single battle with only your own Party)
+  /choice Bring it on!
+    /return true
+  /cancelchoice I need to prepare
+    /return false
+?/>
+
+[CH7_TRIAL_AIR,2]
+/speaker Raphael
+> Ribombee, the sylph, serves as the air elemental.
+> If you earned its favor, it will guide you on your quest.
+
+[CH7_TRIAL_AIR,3]
+/speaker Raphael
+> Please finish all four trials and return to Akasha.
+
+[CH7_TRIAL_FIRE,0]
+/speaker Michael
+> You made it, but you are not done yet.
+> Defeat me in battle, and your trial is done.
+
+[CH7_TRIAL_FIRE,1]
+/speaker Michael
+?> Are you ready to battle?\n(Single battle with only your own Party)
+  /choice Bring it on!
+    /return true
+  /cancelchoice I need to prepare
+    /return false
+?/>
+
+[CH7_TRIAL_FIRE,2]
+/speaker Michael
+> Salazzle, the salamander, serves as the fire elemental.
+> If you earned its credit, it will guide you on your quest.
+
+[CH7_TRIAL_FIRE,3]
+/speaker Michael
+> Please finish all four trials and return to Akasha.
+
+[CH7_POST_TRIALS,0]
+/speaker Akasha
+> You have finished all four trials?\nWell done.
+> The other apostle has also finished.\nLet us all gather.
+
+[CH7_POST_TRIALS,1]
+/speaker Akasha
+> The elders have confirmed that you have both completed their trials.
+> However... Despite you both [R]completing[/] the trials, only one of you [R]passed[/].
+/speaker <PLAYER2>
+> I see. The trials were to select one of us.
+> As I returned first, I must be the one who passed.
+/speaker Akasha
+> Apologies, but you are incorrect.
+> You could both have passed, but you are the one who failed.
+/speaker <PLAYER2>
+> What do you mean I failed?\nHow is that possible?
+/speaker Akasha
+> That is for you to uncover.
+> I am positive that the future will enlighten you, and then you may return.
+> However, for now I must ask you and your companions to leave The Great Amphi.
+/speaker <PLAYER2>
+> I can't believe this...
+
+[CH7_POST_TRIALS,2]
+/speaker <PLAYER2>
+> I'm not done with you, imposter.\nWe'll meet again.
+
+[CH7_POST_TRIALS,3]
+/event set Akasha 17
+/event Akasha emote sigh
+/speaker Akasha
+> I hope they will understand someday...
+> But with that settled, allow me to reintroduce myself.
+> I am Elder Akasha, the elder of the fifth element, [R]aether[/], also known as quintessence.
+> To complete your trial, you must prove your mettle against me in battle.
+> Let me know when you are ready.
+
+[CH7_INN_INTERLUDE,0]
+/event set Nekane 13
+/event set Kira 11
+/speaker Amethyst
+> \ts[1]Nekane, did you know that you speak kinda... robotically?
+/reset
+/event Nekane emote ?
+/speaker Nekane
+> \ts[1]Robotically? I do not understand what you mean?
+/reset
+/event Kira emote smirk
+/speaker Kira nohat_neutral
+> \ts[1]She's saying you sound like a weirdo.
+
+[CH7_INN_INTERLUDE,1]
+/event set Amethyst 12
+/event set Nekane 13
+/event Amethyst emote angry
+/speaker Amethyst unsatisfied
+> \ts[1]Kira! Don't tease her!
+/expression confused
+> \ts[1]...She could be self conscious about it.
+/speaker Kira nohat_neutral
+> \ts[1]She wasn't able to be self conscious until just a few days ago.
+> \ts[1]Insecurities don't develop THAT quickly.
+/reset
+/event Amethyst emote annoy
+/speaker Amethyst unsatisfied
+> \ts[1]Hmph...
+/speaker Kira nohat_neutral
+> \ts[1]You're about to teach her how to talk casually anyway, right?
+> \ts[1]Go on then.\nI'm sure she'll get the hang of it.
+/reset
+/event Nekane emote ?
+/speaker Nekane
+> \ts[1]I am confused. What is this about?
+
+[CH7_INN_INTERLUDE,2]
+/event set Nekane 13
+/event Amethyst emote idea
+/speaker Amethyst
+> \ts[1]That's exactly it. [R]"I am"[/], [R]"What is"[/].\nMost people don't say it like that when talking casually.
+/expression wink
+> \ts[1]Try mashing them together into "I'm" or "What's" instead!
+/reset
+/event Nekane emote ...
+/speaker Nekane
+> \ts[2]"I'm confused. What's this about?"\n\ts[1]...Did I do it right?
+/speaker Amethyst smile
+> \ts[1]Exactly like that! You're a natural!
+/reset
+/event Nekane emote smile
+/speaker Amethyst
+> \ts[1]Those are called contractions. I've got many more where those came from!
+
+[CH7_INN_INTERLUDE,3]
+/event set Amethyst 12
+/event set Nekane 13
+/event Amethyst emote ...
+/event Nekane emote ...
+
+[CH7_AKASHA_BATTLE,0]
+/speaker Akasha
+?> Are you prepared to battle?\n(Single battle with only your own Party)
+  /choice I'm ready
+    > Then let us begin.
+    /return true
+  /cancelchoice Not yet
+    /return false
+?/>
+
+[CH7_BALANCE,0]
+/speaker Akasha
+> Your skills are commendable. You are indeed worthy of the elements' respect.
+> As you have passed the final test, allow me to tell you more about the elements, so that they may guide you.
+
+[CH7_BALANCE,1]
+/hidewindow 1
+/textpos center
+> \ts[3]The four elements, fire, water, earth and air, exist in equilibrium.\wtnp[30]
+> \ts[3]As with most things, balance is key.\nOne force cannot exist without an equal opposite force.\wtnp[30]
+> \ts[3]This could be the forces of the elements, of life and death, or...\n[R]of order and chaos[/].\wtnp[30]
+
+[CH7_BALANCE,2]
+/hidewindow 1
+/textpos center
+> \ts[3]Earth opposes air, as they separate the heavens and the earth.\wtnp[30]
+
+[CH7_BALANCE,3]
+/hidewindow 1
+/textpos center
+> \ts[3]Water opposes fire, as they separate the cold and moist from the hot and dry.\wtnp[30]
+
+[CH7_BALANCE,4]
+/hidewindow 1
+/textpos center
+> \ts[3]The four elements all relate to each other in some way, which necessitates the existence of all four.\wtnp[40]
+
+[CH7_BALANCE,5]
+/hidewindow 1
+/textpos center
+> \ts[3]This is where we are presented with a [R]great risk[/].\wtnp[30]
+
+[CH7_BALANCE,6]
+/hidewindow 1
+/textpos center
+> \ts[3]Were this balance to be broken...\nthe world would be overtaken by whatever element overpowered its opposing force.\wtnp[40]
+
+[CH7_BALANCE,7]
+/hidewindow 1
+/textpos center
+> \ts[3]If earth overpowers air, terrible earthquakes would tear the world apart.\wtnp[30]
+
+[CH7_BALANCE,8]
+/hidewindow 1
+/textpos center
+> \ts[3]While if air overtakes earth, raging hurricanes would cover the land.\wtnp[30]
+
+[CH7_BALANCE,9]
+/hidewindow 1
+/textpos center
+> \ts[3]If water drowns out fire, floods would destroy the places we call home.\wtnp[30]
+
+[CH7_BALANCE,10]
+/hidewindow 1
+/textpos center
+> \ts[3]While if fire consumes water, massive wildfires would cause nature to wither.\wtnp[30]
+> \ts[3]This is why we must protect the balance of the world, for the sake of both Pokémon and mankind.\wtnp[30]
+
+[CH7_BALANCE,11]
+/speaker Akasha
+> With this knowledge in mind, I believe [R]the elementals[/] will respect you and guide you through the Amphi Woods.
+> You see, in the teachings of Amphi Town, each element has a family of Pokémon as its elementals.
+> These are the Pokémon the four elders used in battle against you if you recall.
+> Each of these elementals gathered in Amphi Town while The Great Amphi traveled across the world.
+
+[CH7_BALANCE,12]
+/speaker Akasha
+> The earth elementals are the [R]golems from the north[/], Golett and Golurk.
+
+[CH7_BALANCE,13]
+/speaker Akasha
+> The air elementals are the [R]sylphs from the east[/], Cutiefly and Ribombee.
+
+[CH7_BALANCE,14]
+/speaker Akasha
+> The fire elementals are the [R]salamanders from the south[/], Salandit and Salazzle.
+
+[CH7_BALANCE,15]
+/speaker Akasha
+> The water elementals are the [R]undines from the west[/], Popplio, Brionne and Primarina.
+
+[CH7_BALANCE,16]
+/speaker Akasha
+> If you return to the Amphi Woods, I am sure the elementals will show you the way.
+> You may also have this book if you wish to review the teachings of Amphi Town.
+
+[CH7_BALANCE,17]
+/speaker Akasha
+> Do come back and speak to me if you need to be reminded of anything else.
+
+[CH7_BALANCE,18]
+/speaker Akasha
+> Welcome back, apostle.
+?> Do you wish for me to repeat the information on the elementals?
+  /choice Yes
+    /return true
+  /cancelchoice I got it
+    /return false
+?/>
+
+[CH7_BALANCE,19]
+/speaker Akasha
+> Do come back and speak to me if you need to be reminded of anything.
+
+[CH7_AMPHI,0]
+/speaker Azelf
+> So this is The Great Amphi...
+
+[CH7_AMPHI,1]
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAAAAIII!!!
+/speaker Azelf
+> Great Amphi, we seek to visit Uxie at the Andes Isle. Are you willing to aid us?
+/se AMPHI 100 90
+/speaker The_Great_Amphi
+!> DAAAAAAII..!
+/speaker Azelf
+> So you will aid us, but only if we do you a favor first. What sort of favor?
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAI!
+/speaker Azelf
+> I see. There is a creature on your back that does not belong here.
+/se AMPHI 100 90
+/speaker The_Great_Amphi
+!> DAI.
+
+[CH7_AMPHI,2]
+/se AMPHI 100 90
+/speaker The_Great_Amphi
+!> DAI!
+/speaker Azelf
+> Through there you say? Got it.
+
+[CH7_AMPHI,3]
+/speaker Azelf
+> We must help The Great Amphi with this if we are to go to Andes Isle.
+
+[CH7_AMPHI,4]
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAI..!
+/speaker Azelf
+> Do not worry Great Amphi, we are on the case.
+
+[CH7_AMPHI,5]
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAI..!
+/speaker Azelf
+> Thank you for the aid Great Amphi.
+
+[CH7_DRAGOTERRE,0]
+/cry DRAGOTERRE 100 100
+/speaker Dragonair?
+> Teeerre..?
+/speaker Azelf
+> This Dragonair does not appear hostile...\nActually, it seems rather docile.
+> That is very unlike the Ampharos we encountered before.
+/cry DRAGOTERRE 100 90
+/speaker Dragonair?
+> Teerrr...
+/speaker Azelf
+> Let us bring it back to The Great Amphi to decide what to do.
+
+[CH7_DRAGOTERRE,1]
+/speaker Azelf
+> Great Amphi, we have retrieved the Pokémon you spoke of. It appears to be some kind of Dragonair.
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAAAI..!
+/speaker Azelf
+> You say this is not a Dragonair?\nThe resemblance is unmistakable.
+> ...But now that you mention it, its aura is quite the opposite of what one would expect of a Dragonair.
+/se AMPHI 100 80
+/speaker The_Great_Amphi
+!> DAAAI..?
+/speaker Azelf
+> Yes, I have existed for eons, but my memory is still fallible. I am just as puzzled by this creature as you are.
+> Luckily, Uxie's memory is flawless.\nWe will make sure to ask about it.
+> Thank you for taking us there.
+/se AMPHI 100 100
+/speaker The_Great_Amphi
+!> DAI!
+
+[CH7_DRAGOTERRE,2]
+/cry DRAGOTERRE 100 100
+/speaker Dragonair?
+> Teeerr..!
+/speaker Azelf
+> We still have to take this Dragonair-like Pokémon off The Great Amphi.
+> Luckily, it appears to have taken a liking to you. I am sure it will let you catch it.
+/cry DRAGOTERRE 100 110
+/speaker Dragonair?
+> Ter!
+
+[CH7_DRAGOTERRE,3]
+/speaker Azelf
+> Let us return to meet with the others.
+
+[CH7_AMPHI_MOVE,0]
+/speaker Amethyst surprised
+> I think The Great Amphi is moving!\wtnp[40]
+
+[CH7_AMPHI_MOVE,1]
+/speaker Akasha
+> You appear to have been successful in your endeavors. Well done, apostle.
+
+[CH7_AMPHI_MOVE,2]
+/speaker Akasha
+/event set Akasha 17
+> We should be at Andes Isle shortly. Please gather your companions and I will meet you by the gate.
+/reset
+/event Akasha emote smile
+
+[CH7_AMPHI_MOVE,3]
+/speaker Akasha
+> Please gather your companions and I will meet you by the gate.
+
+[CH7_AMPHI_LEAVE,0]
+/speaker Azelf
+> We have to go and get the others before we leave for Andes Isle.
+
+[CH7_AMPHI_LEAVE,1]
+/speaker Amethyst
+> Look who's back!
+/expression wink
+> Given that good shake earlier, it sounds like you got everything handled.
+/speaker Kira nohat_neutral
+> Took your sweet time.\nAre you going to say they "put you through a series of trials" or something?
+> Giant rocks... Sliding on ice...\nDodging flames...\nBeing sent flying through the air even...
+/speaker Azelf
+> Actually, all those examples are accurate. How did you know?
+/speaker Kira nohat_neutral
+> Hah! The legendary Pokémon has a sense of humor!
+/speaker Azelf
+> We also found another odd-looking Pokémon.
+> This time it was a Dragonair, and <PLAYER> caught it.
+/speaker Kira nohat_neutral
+> Amethyst, Azelf says they found yet another odd Pokémon, a Dragonair.
+/speaker Amethyst confused
+> That's a third one now...\nLet's hope Uxie knows what they are.
+/speaker Nekane 
+> Have we moved to Andes Isle?\nCan we go meet Uxie now?
+/speaker Amethyst
+> I believe so! Let's get going!
+
+[CH7_AMPHI_LEAVE,2]
+/speaker Akasha
+> I wish you well on your travels from here, apostle.
+/speaker Amethyst
+> So THIS must be Elder Akasha!
+/speaker Akasha
+> That I am.\nIt is a pleasure to meet all of you.
+> I bring good news as well.
+> Because The Great Amphi has accepted you, apostle, your companions will be allowed into the town from now on.
+/speaker Amethyst
+> I've honestly been itching to explore the town! We'll be sure to make a proper visit sometime.
+/speaker Nekane
+> How do we know The Great Amphi willn't move by then?
+
+[CH7_AMPHI_LEAVE,3]
+/speaker Amethyst awkward
+> ...She's still getting the hang of the whole "contraction" thing.
+
+[CH7_AMPHI_LEAVE,4]
+/speaker Amethyst
+> I forgot to mention it earlier Nekane, but "will not" actually becomes "won't".
+/speaker Nekane
+> ...I see. Contractions are complicated.
+
+[CH7_AMPHI_LEAVE,5]
+/speaker Akasha
+> I can assure you that The Great Amphi intends to stay in this region for a while. You may come whenever you please.
+/speaker Kira
+> Future vacation plans aside, we've gotta run in case the D[.]A[.]O[.] are stowaways.
+/speaker Akasha
+> If you are refering to the other visitors from before, I can confirm they left The Great Amphi before we started moving.
+/speaker Amethyst
+> That's a relief!\nOne less thing to worry about.
+> Regardless, we must get going now.\nThank you for having us!
+/speaker Akasha
+> I look forward to next time you visit us.
+
+[CH7_UXIE,0]
+/speaker Uxie
+> \ts[2]Human visitors... How unusual.
+
+[CH7_UXIE,1]
+/speaker Amethyst
+/portrait none
+> That's Uxie over there!
+
+[CH7_UXIE,2]
+/event set Nekane 3
+/event set Amethyst 4
+/speaker Amethyst
+> Phew... It was quite the task to get here. Though <PLAYER> bore the brunt of it.
+/speaker Uxie
+> \ts[2]Greetings, humans. I am pleased to make your acquaintance.
+/reset
+/event Amethyst emote ...
+/speaker Uxie
+> \ts[2]I rarely interact with humans given my obscure habitat. With Azelf amongst you, I anticipate something dire.
+/reset
+/event Amethyst emote sigh
+/speaker Amethyst confused
+> \ts[1]I think I forgot... something crucial...
+/expression awkward
+> I can't pick up on what Uxie says.\nWe forgot to bring someone who resonates with knowledge!
+/speaker Azelf
+> At least I can hear everything and repeat it to you.
+/speaker Kira lookaway
+> Don't tell me I have to play a game of telephone with Uxie, Azelf, and the rest of you.
+/reset
+/event Nekane emote ...
+/speaker Nekane
+> ...I can understand Uxie.
+/event Amethyst turn down
+/speaker Amethyst surprised
+> You can!?
+/expression confused
+> That's a surprise given your lack of memories and common knowledge.
+/speaker Uxie
+> \ts[2]Resonating with knowledge does not stem from knowing many things. The catalyst is her natural curiosity.
+/event Amethyst turn up
+> \ts[2]The one in the cloak also appears to resonate. They have been reacting to my telepathy.
+/speaker Nekane
+> \ts[1]...Is what Uxie says right, <PLAYER>?\nCan you hear what they're saying?
+/speaker Amethyst confused
+> Wait a minute... <PLAYER> can hear MULTIPLE Lake Guardians???
+> That shouldn't be possible, right Uxie?
+/reset
+/event Amethyst emote ...
+/speaker Amethyst awkward
+> Actually, I already know I can't hear the answer to my own question...
+/speaker Kira lookaway
+> Amethyst... To be blunt...\nWe're kinda useless here.
+/expression annoyed
+> Our only option is to leave this to the three of 'em, and get a recap later.
+/speaker Amethyst confused
+> You're right... We'll just listen to what we CAN hear and try to keep up.
+
+[CH7_UXIE,3]
+/speaker Azelf
+> \ts[1]It has been a long time, Uxie.\nWe have not met for centuries.
+/speaker Uxie
+> \ts[2]Only a few centuries?\nIn my solitude, it has felt like millennia.
+> \ts[2]The flow of time aside...\nWho have you brought with you, Azelf?
+/speaker Azelf
+> \ts[1]They are friends who protect the region, <PLAYER>, Amethyst and Kira.\nThe girl here, Nekane, needs your help.
+/speaker Uxie
+> \ts[2]Is that so? What ails her?
+/speaker Nekane
+> \ts[1]I... don't remember anything from before <PLAYER> and Amethyst found me...
+/speaker Uxie
+> \ts[2]So you request knowledge about your origins?
+/speaker Azelf
+> \ts[1]Nekane is a peculiar case. Before mine and Mesprit's intervention, she had neither emotion nor willpower to speak of.
+/speaker Uxie
+> \ts[2]I can sense that Nekane has much knowledge of which most humans do not.
+> \ts[2]If my intuition is correct, it is no mere coincidence that she lacked these human traits.
+> \ts[2]Nekane, are you certain you wish for this knowledge? You may no longer be able to live similarly to an ordinary human.
+/speaker Nekane thought
+> \ts[1]...
+/expression neutral
+> \ts[1]Yes. I'm sure. I want to know.
+/speaker Azelf
+> \ts[1]Do we need to do anything to help?
+/speaker Uxie
+> \ts[2]Nothing except for standing back and covering your retinas if you are sensitive to blinding light.
+
+[CH7_UXIE,4]
+/event set Amethyst 4
+/event set Nekane 3
+/event Amethyst emote ?
+/speaker Amethyst confused
+> Wait! What are we doing now exactly?\nI could barely follow a thing...
+/event Nekane turn down
+/speaker Nekane
+> Uxie will recover my lost memories from before you found me.
+> I don't know what the memories might be, but I want to know.
+/speaker Amethyst
+> You will be our Nekane either way.\nThank you for your help Uxie.
+
+[CH7_UXIE,5]
+/speaker Nekane thought
+> \ts[1]I... am ready.\wtnp[40]
+
+[CH7_UXIE,6]
+/event set Amethyst 4
+/speaker Amethyst surprised
+> ...\wtnp[60]
+/expression confused
+> Why did nobody warn me about that strong light...
+/reset
+/event Amethyst emote ...
+/speaker Amethyst
+> That aside, how do you feel Nekane?
+/speaker Nekane
+> I feel... well.
+/expression thought
+> The ruins... Lake Guardians...\n<PLAYER>...
+/expression neutral
+> I remember now! I was looking for <PLAYER> because they can talk to all three Lake Guardians!
+> We have to return to where you first found me! I think it was called the Evergone Ruins?
+
+[CH7_UXIE,7]
+/speaker Amethyst confused
+> Nekane! We still have some things to discuss with Uxie first!
+
+[CH7_UXIE,8]
+/speaker Nekane
+> Right... But we have to go as soon as possible!
+/speaker Amethyst awkward
+> We will. You've got me very curious now.
+
+[CH7_UXIE,9]
+/speaker Amethyst
+> We have two more questions, Uxie, if you don't mind.
+/expression awkward
+> First is that <PLAYER> has a similar memory situation to Nekane, amnesia and all that.
+/expression confused
+> Second is that we've been encountering some weird Pokémon.
+/expression neutral
+> There was an Absol at the Evergone Ruins, an Ampharos near Lapis Lazuli City and then a Dragonair on The Great Amphi.
+/speaker Uxie
+> \ts[2]I believe I know what sort of Pokémon you speak of. Azelf must have forgotten all about them.
+/speaker Azelf
+> \ts[1]Hey! I am not the "being of knowledge"!
+/speaker Uxie
+> \ts[2]However, I firmly believe that it is best to learn from experience.
+> If you follow Nekane back to the ruins, I believe you will find answers to both the odd Pokémon and <PLAYER>'s memories.
+/speaker Nekane
+> \ts[1]Yes, what Uxie said!\nThe ruins have the answers.
+/speaker Kira
+> Then that's where we'll go.
+> Uxie, you should come with us.\nWe forgot to mention it earlier, but a group called the D[.]A[.]O[.] are after you.
+/speaker Azelf
+> They tried to capture me first, but <PLAYER> and Kira rescued me. Though Mesprit was not so lucky...
+/speaker Uxie
+> \ts[2]That is most troubling.\nI will gladly accept your protection.
+
+[CH7_UXIE,10]
+> Uxie is now a part of Azelf's party!

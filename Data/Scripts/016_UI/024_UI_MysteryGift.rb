@@ -389,8 +389,8 @@ def pbReceiveMysteryGift(id)
         pbMessage(_INTL("{1}'s data was added to the Pokédex.", gift[2].name))
         $player.pokedex.register_last_seen(gift[2])
         pbFadeOutIn do
-          scene = PokemonPokedexInfo_Scene.new
-          screen = PokemonPokedexInfoScreen.new(scene)
+          scene = PokemonPokedex_Scene.new
+          screen = PokemonPokedexScreen.new(scene)
           screen.pbDexEntry(gift[2].species)
         end
       end

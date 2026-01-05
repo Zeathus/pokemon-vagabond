@@ -57,8 +57,8 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
         exp = (j < inactive_start) ? active_exp : inactive_exp
 
         if thispoke.item == :LUCKYEGG
-          lucky_egg_bonus += (exp * 0.5).ceil
-          exp = lucky_egg_bonus
+          lucky_egg_bonus = (exp * 0.2).ceil
+          exp += lucky_egg_bonus
           total_lucky_egg_bonus += lucky_egg_bonus
         end
 
@@ -102,8 +102,8 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
         exp = inactive_exp
 
         if thispoke.item == :LUCKYEGG
-          lucky_egg_bonus += (exp * 0.5).ceil
-          exp = lucky_egg_bonus
+          lucky_egg_bonus = (exp * 0.2).ceil
+          exp += lucky_egg_bonus
           total_lucky_egg_bonus += lucky_egg_bonus
         end
 
@@ -444,12 +444,22 @@ def pbEXPScreen(expgain,sharedexp,fulltoall=false)
                 Graphics.update
                 Input.update
               end
-              pbFadeOutInWithMusic(99999){
-                evo=PokemonEvolutionScene.new
-                evo.pbStartScreen(thispoke,newspecies)
-                evo.pbEvolution
-                evo.pbEndScreen
-              }
+              # Only fade out music if outside of battle
+              if fulltoall
+                pbFadeOutInWithMusic(99999) {
+                  evo=PokemonEvolutionScene.new
+                  evo.pbStartScreen(thispoke,newspecies)
+                  evo.pbEvolution
+                  evo.pbEndScreen
+                }
+              else
+                pbFadeOutIn(99999) {
+                  evo=PokemonEvolutionScene.new
+                  evo.pbStartScreen(thispoke,newspecies)
+                  evo.pbEvolution
+                  evo.pbEndScreen
+                }
+              end
               # Update icon
               if newspecies == thispoke.species
                 filename = GameData::Species.icon_filename_from_pokemon(thispoke)

@@ -415,6 +415,9 @@ class Battle::Battler
       amt *= 2
       ripening = true
     end
+    if amplifyItem?
+      amt *= 2
+    end
     @battle.pbCommonAnimation("EatBerry", self) if !forced
     @battle.pbHideAbilitySplash(self) if ripening
     amt = pbRecoverHP(amt)
@@ -442,6 +445,9 @@ class Battle::Battler
       @battle.pbShowAbilitySplash(self, forced)
       increment *= 2
       ripening = true
+    end
+    if amplifyItem?
+      increment *= 2
     end
     @battle.pbCommonAnimation("EatBerry", self) if !forced
     @battle.pbHideAbilitySplash(self) if ripening

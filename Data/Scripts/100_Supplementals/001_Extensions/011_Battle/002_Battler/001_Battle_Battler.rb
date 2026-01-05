@@ -6,7 +6,7 @@ class Battle::Battler
   alias sup_takesShadowSkyDamage? takesShadowSkyDamage?
 
   def itemActive?(ignoreFainted = false)
-    return false if @battle.predictingDamage && !@knownItem
+    return false if @battle.predictingDamage && !@knownItem && @index % 2 == 0
     return sup_itemActive?(ignoreFainted)
   end
 

@@ -229,5 +229,6 @@ EventHandlers.add(:on_new_spriteset_map, :add_light_effects,
         spriteset.addUserSprite(LightEffect_Basic.new(map.events[i], viewport, map))
       end
     end
+    # spriteset.addUserSprite(Particle_Engine.new(viewport, map))
   }
 )

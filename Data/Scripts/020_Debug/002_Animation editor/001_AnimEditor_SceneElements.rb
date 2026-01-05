@@ -456,13 +456,13 @@ module BattleAnimationEditor
         @sprites["pokemon_1"] = Sprite.new(@viewport)
         @sprites["pokemon_1"].bitmap = @target
         @sprites["pokemon_1"].z = 16
+        userpos = Battle::Scene.pbBattlerPosition(0, 1)
+        targetpos = Battle::Scene.pbBattlerPosition(1, 1)
         pbSpriteSetAnimFrame(@sprites["pokemon_0"],
-                             pbCreateCel(Battle::Scene::FOCUSUSER_X,
-                                         Battle::Scene::FOCUSUSER_Y, -1, 2),
+                             pbCreateCel(userpos[0], userpos[1] - 64, -1, 2),
                              @sprites["pokemon_0"], @sprites["pokemon_1"])
         pbSpriteSetAnimFrame(@sprites["pokemon_1"],
-                             pbCreateCel(Battle::Scene::FOCUSTARGET_X,
-                                         Battle::Scene::FOCUSTARGET_Y, -2, 1),
+                             pbCreateCel(targetpos[0], targetpos[1] - 64, -2, 1),
                              @sprites["pokemon_0"], @sprites["pokemon_1"])
         usersprite = @sprites["pokemon_#{oppmove ? 1 : 0}"]
         targetsprite = @sprites["pokemon_#{oppmove ? 0 : 1}"]

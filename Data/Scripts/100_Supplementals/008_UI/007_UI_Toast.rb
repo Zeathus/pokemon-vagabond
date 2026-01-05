@@ -196,25 +196,29 @@ def pbToast(toast)
   $game_temp.queue_toast(toast)
 end
 
-def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
+def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2, background = true)
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
   viewport.z = 99999
   sprites = {}
-  sprites["shadowl"] = Sprite.new(viewport)
-  sprites["shadowl"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_left")
-  sprites["shadowl"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
-  sprites["shadowl"].x=-Graphics.width
-  sprites["shadowr"] = Sprite.new(viewport)
-  sprites["shadowr"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_right")
-  sprites["shadowr"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
-  sprites["shadowr"].x=Graphics.width
+  if background
+    sprites["shadowl"] = Sprite.new(viewport)
+    sprites["shadowl"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_left")
+    sprites["shadowl"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
+    sprites["shadowl"].x=-Graphics.width
+    sprites["shadowr"] = Sprite.new(viewport)
+    sprites["shadowr"].bitmap=RPG::Cache.load_bitmap("","Graphics/UI/Toasts/ui_shadow_right")
+    sprites["shadowr"].y=Graphics.height/2-sprites["shadowl"].bitmap.height/2
+    sprites["shadowr"].x=Graphics.width
+  end
   sprites["display"] = Sprite.new(viewport)
   sprites["display"].z = 1
   sprites["display"].bitmap = BitmapWrapper.new(Graphics.width,Graphics.height)
   pbSetSystemFont(sprites["display"].bitmap)
   20.times do
-    sprites["shadowl"].x += Graphics.width / 20
-    sprites["shadowr"].x -= Graphics.width / 20
+    if background
+      sprites["shadowl"].x += Graphics.width / 20
+      sprites["shadowr"].x -= Graphics.width / 20
+    end
     Graphics.update
     Input.update
     pbUpdateSpriteHash(sprites)
@@ -267,8 +271,10 @@ def pbTitleDisplay(title, subtitle = nil, time = 80, speed = 2)
   end
   32.times do
     sprites["display"].opacity -= 16
-    sprites["shadowl"].opacity -= 8
-    sprites["shadowr"].opacity -= 8
+    if background
+      sprites["shadowl"].opacity -= 8
+      sprites["shadowr"].opacity -= 8
+    end
     Graphics.update
     Input.update
     pbUpdateSpriteHash(sprites)

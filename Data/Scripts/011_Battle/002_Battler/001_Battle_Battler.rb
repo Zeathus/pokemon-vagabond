@@ -264,6 +264,7 @@ class Battle::Battler
     # Item effects that alter calculated Speed
     if itemActive?
       speedMult = Battle::ItemEffects.triggerSpeedCalc(self.item, self, speedMult)
+      speedMult = Battle::ItemEffects.triggerSpeedCalc(self.item, self, speedMult) if amplifyItem?
     end
     # Other effects
     speedMult *= 1.3 if airborne? && @battle.pbWeather == :Winds
@@ -291,6 +292,7 @@ class Battle::Battler
     end
     if itemActive?
       ret = Battle::ItemEffects.triggerWeightCalc(self.item, self, ret)
+      ret = Battle::ItemEffects.triggerWeightCalc(self.item, self, ret) if amplifyItem?
     end
     return [ret, 1].max
   end
@@ -385,6 +387,8 @@ class Battle::Battler
       :SHIELDSDOWN,
       :STANCECHANGE,
       :ZENMODE,
+      :ZEROTOHERO,
+      :ADVERSARY,
       # Abilities intended to be inherent properties of a certain species
       :ASONECHILLINGNEIGH,
       :ASONEGRIMNEIGH,
@@ -413,6 +417,8 @@ class Battle::Battler
       :SHIELDSDOWN,
       :STANCECHANGE,
       :ZENMODE,
+      :ZEROTOHERO,
+      :ADVERSARY,
       :EVERLASTING,
       # Appearance-changing abilities
       :ILLUSION,
@@ -792,6 +798,7 @@ class Battle::Battler
   def pbActiveHP
     ret = @hp
     ret = (ret / 2.0).floor if hasActiveItem?(:ZENCHARM)
+    ret = (ret / 2.0).floor if amplifyItem? && hasActiveItem?(:ZENCHARM)
     return ret
   end
 end

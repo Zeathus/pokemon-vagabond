@@ -47,6 +47,7 @@ class Battle::Battler
       @battle.pbDisplay(msg)
       if canHeal?
         amt = (amt * 1.3).floor if hasActiveItem?(:BIGROOT)
+        amt = (amt * 1.3).floor if amplifyItem? && hasActiveItem?(:BIGROOT)
         pbRecoverHP(amt)
       end
     end

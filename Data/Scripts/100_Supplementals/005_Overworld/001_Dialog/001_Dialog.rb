@@ -6,6 +6,8 @@ DIALOG_FILES = [
   "chapter4",
   "chapter5",
   "chapter6",
+  "chapter7",
+  "chapter8",
   "crosswoods",
   "breccia",
   "lazuli",
@@ -36,7 +38,8 @@ DIALOG_FILES = [
   "dao",
   "stadium",
   "stadium_trainers",
-  "sea"
+  "sea",
+  "distortion"
 ]
 
 def pbDialog(name, index = 0, msgwindows = nil)

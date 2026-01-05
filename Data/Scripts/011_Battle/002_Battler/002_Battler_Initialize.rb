@@ -289,6 +289,8 @@ class Battle::Battler
     @effects[PBEffects::GigatonHammer]       = nil
     @effects[PBEffects::GigatonHammerTime]   = 0
     @effects[PBEffects::Tsunami]             = false
+    @effects[PBEffects::DualStance]          = 0
+    @effects[PBEffects::DualStanceCategory]  = nil
   end
 
   #=============================================================================

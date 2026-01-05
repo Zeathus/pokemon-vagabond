@@ -281,7 +281,7 @@ Battle::ItemEffects::HPHeal.add(:BERRYJUICE,
     itemName = GameData::Item.get(item).name
     PBDebug.log("[Item triggered] Forced consuming of #{itemName}") if forced
     battle.pbCommonAnimation("UseItem", battler) if !forced
-    battler.pbRecoverHP(20)
+    battler.pbRecoverHP(battler.amplifyItem? ? 40 : 20)
     if forced
       battle.pbDisplay(_INTL("{1}'s HP was restored.", battler.pbThis))
     else
@@ -316,9 +316,10 @@ Battle::ItemEffects::HPHeal.add(:IAPAPABERRY,
 Battle::ItemEffects::HPHeal.add(:LANSATBERRY,
   proc { |item, battler, battle, forced|
     next false if !forced && !battler.canConsumePinchBerry?
-    next false if battler.effects[PBEffects::FocusEnergy] >= 2
+    new_value = battler.amplifyItem? ? 4 : 2
+    next false if battler.effects[PBEffects::FocusEnergy] >= new_value
     battle.pbCommonAnimation("EatBerry", battler) if !forced
-    battler.effects[PBEffects::FocusEnergy] = 2
+    battler.effects[PBEffects::FocusEnergy] = new_value
     itemName = GameData::Item.get(item).name
     if forced
       battle.pbDisplay(_INTL("{1} got pumped from the {2}!", battler.pbThis, itemName))
@@ -372,6 +373,9 @@ Battle::ItemEffects::HPHeal.add(:ORANBERRY,
       amt *= 2
       ripening = true
     end
+    if battler.amplifyItem?
+      amt *= 2
+    end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
     battler.pbRecoverHP(amt)
@@ -408,6 +412,9 @@ Battle::ItemEffects::HPHeal.add(:SITRUSBERRY,
       battle.pbShowAbilitySplash(battler, forced)
       amt *= 2
       ripening = true
+    end
+    if battler.amplifyItem?
+      amt *= 2
     end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
@@ -635,12 +642,14 @@ Battle::ItemEffects::StatusCure.add(:RAWSTBERRY,
 
 Battle::ItemEffects::PriorityBracketChange.add(:CUSTAPBERRY,
   proc { |item, battler, battle|
+    next 2 if battler.amplifyItem? battler.canConsumePinchBerry?
     next 1 if battler.canConsumePinchBerry?
   }
 )
 
 Battle::ItemEffects::PriorityBracketChange.add(:LAGGINGTAIL,
   proc { |item, battler, battle|
+    next -2 if battler.amplifyItem?
     next -1
   }
 )
@@ -650,6 +659,7 @@ Battle::ItemEffects::PriorityBracketChange.copy(:LAGGINGTAIL, :FULLINCENSE)
 Battle::ItemEffects::PriorityBracketChange.add(:QUICKCLAW,
   proc { |item, battler, battle|
     next 1 if battle.pbRandom(100) < 20
+    next 1 if battler.amplifyItem? && battle.pbRandom(100) < 20
   }
 )
 
@@ -682,7 +692,7 @@ Battle::ItemEffects::OnMissingTarget.add(:BLUNDERPOLICY,
     next if ["OHKO", "OHKOIce", "OHKOHitsUndergroundTarget"].include?(move.function_code)
     next if !user.pbCanRaiseStatStage?(:SPEED, user)
     battle.pbCommonAnimation("UseItem", user)
-    user.pbRaiseStatStageByCause(:SPEED, 2, user, user.itemName)
+    user.pbRaiseStatStageByCause(:SPEED, user.amplifyItem? ? 4 : 2, user, user.itemName)
     battle.pbDisplay(_INTL("The {1} was used up...", user.itemName))
     user.pbHeldItemTriggered(item)
   }
@@ -1052,7 +1062,7 @@ Battle::ItemEffects::DamageCalcFromUser.add(:STEELGEM,
 
 Battle::ItemEffects::DamageCalcFromUser.add(:THICKCLUB,
   proc { |item, user, target, move, mults, power, type|
-    if (user.isSpecies?(:CUBONE) || user.isSpecies?(:MAROWAK)) && move.physicalMove?
+    if (user.isSpecies?(:CUBONE) || user.isSpecies?(:MAROWAK)) && user.dualStancePhysical?(move)
       mults[:attack_multiplier] *= 2
     end
   }
@@ -1087,7 +1097,7 @@ Battle::ItemEffects::DamageCalcFromUser.add(:WISEGLASSES,
 
 Battle::ItemEffects::DamageCalcFromTarget.add(:ASSAULTVEST,
   proc { |item, user, target, move, mults, power, type|
-    mults[:defense_multiplier] *= 1.5 if move.specialMove?
+    mults[:defense_multiplier] *= 1.5 if target.dualStanceSpecial?(move)
   }
 )
 
@@ -1278,7 +1288,7 @@ Battle::ItemEffects::OnBeingHit.add(:ABSORBBULB,
     next if move.calcType != :WATER
     next if !target.pbCanRaiseStatStage?(:SPECIAL_ATTACK, target)
     battle.pbCommonAnimation("UseItem", target)
-    target.pbRaiseStatStageByCause(:SPECIAL_ATTACK, 1, target, target.itemName)
+    target.pbRaiseStatStageByCause(:SPECIAL_ATTACK, target.amplifyItem? ? 2 : 1, target, target.itemName)
     target.pbHeldItemTriggered(item)
   }
 )
@@ -1296,7 +1306,7 @@ Battle::ItemEffects::OnBeingHit.add(:CELLBATTERY,
     next if move.calcType != :ELECTRIC
     next if !target.pbCanRaiseStatStage?(:ATTACK, target)
     battle.pbCommonAnimation("UseItem", target)
-    target.pbRaiseStatStageByCause(:ATTACK, 1, target, target.itemName)
+    target.pbRaiseStatStageByCause(:ATTACK, target.amplifyItem? ? 2 : 1, target, target.itemName)
     target.pbHeldItemTriggered(item)
   }
 )
@@ -1323,6 +1333,9 @@ Battle::ItemEffects::OnBeingHit.add(:JABOCABERRY,
       battle.pbShowAbilitySplash(target)
       amt *= 2
       ripening = true
+    end
+    if target.amplifyItem?
+      amt *= 2
     end
     battle.pbCommonAnimation("EatBerry", target)
     battle.pbHideAbilitySplash(target) if ripening
@@ -1353,7 +1366,7 @@ Battle::ItemEffects::OnBeingHit.add(:LUMINOUSMOSS,
     next if move.calcType != :WATER
     next if !target.pbCanRaiseStatStage?(:SPECIAL_DEFENSE, target)
     battle.pbCommonAnimation("UseItem", target)
-    target.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, 1, target, target.itemName)
+    target.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, target.amplifyItem? ? 2 : 1, target, target.itemName)
     target.pbHeldItemTriggered(item)
   }
 )
@@ -1377,7 +1390,8 @@ Battle::ItemEffects::OnBeingHit.add(:ROCKYHELMET,
     next if !move.pbContactMove?(user) || !user.affectedByContactEffect?
     next if !user.takesIndirectDamage?
     battle.scene.pbDamageAnimation(user)
-    user.pbReduceHP(user.totalhp / 6, false)
+    amt = target.amplifyItem? ? (user.totalhp / 3) : (user.totalhp / 6)
+    user.pbReduceHP(amt, false)
     battle.pbDisplay(_INTL("{1} was hurt by the {2}!", user.pbThis, target.itemName))
   }
 )
@@ -1394,6 +1408,9 @@ Battle::ItemEffects::OnBeingHit.add(:ROWAPBERRY,
       amt *= 2
       ripening = true
     end
+    if target.amplifyItem?
+      amt *= 2
+    end
     battle.pbCommonAnimation("EatBerry", target)
     battle.pbHideAbilitySplash(target) if ripening
     battle.scene.pbDamageAnimation(user)
@@ -1409,7 +1426,7 @@ Battle::ItemEffects::OnBeingHit.add(:SNOWBALL,
     next if move.calcType != :ICE
     next if !target.pbCanRaiseStatStage?(:ATTACK, target)
     battle.pbCommonAnimation("UseItem", target)
-    target.pbRaiseStatStageByCause(:ATTACK, 1, target, target.itemName)
+    target.pbRaiseStatStageByCause(:ATTACK, target.amplifyItem? ? 2 : 1, target, target.itemName)
     target.pbHeldItemTriggered(item)
   }
 )
@@ -1440,11 +1457,11 @@ Battle::ItemEffects::OnBeingHit.add(:WEAKNESSPOLICY,
     battle.pbCommonAnimation("UseItem", target)
     showAnim = true
     if target.pbCanRaiseStatStage?(:ATTACK, target)
-      target.pbRaiseStatStageByCause(:ATTACK, 2, target, target.itemName, showAnim)
+      target.pbRaiseStatStageByCause(:ATTACK, target.amplifyItem? ? 4 : 2, target, target.itemName, showAnim)
       showAnim = false
     end
     if target.pbCanRaiseStatStage?(:SPECIAL_ATTACK, target)
-      target.pbRaiseStatStageByCause(:SPECIAL_ATTACK, 2, target, target.itemName, showAnim)
+      target.pbRaiseStatStageByCause(:SPECIAL_ATTACK, target.amplifyItem? ? 4 : 2, target, target.itemName, showAnim)
     end
     battle.pbDisplay(_INTL("The {1} was used up...", target.itemName))
     target.pbHeldItemTriggered(item)
@@ -1470,6 +1487,9 @@ Battle::ItemEffects::OnBeingHitPositiveBerry.add(:ENIGMABERRY,
       amt *= 2
       ripening = true
     end
+    if battler.amplifyItem?
+      amt *= 2
+    end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
     battler.pbRecoverHP(amt)
@@ -1494,6 +1514,9 @@ Battle::ItemEffects::OnBeingHitPositiveBerry.add(:KEEBERRY,
       amt *= 2
       ripening = true
     end
+    if battler.amplifyItem?
+      amt *= 2
+    end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
     next battler.pbRaiseStatStageByCause(:DEFENSE, amt, battler, itemName) if !forced
@@ -1513,6 +1536,9 @@ Battle::ItemEffects::OnBeingHitPositiveBerry.add(:MARANGABERRY,
       battle.pbShowAbilitySplash(battler, forced)
       amt *= 2
       ripening = true
+    end
+    if battler.amplifyItem?
+      amt *= 2
     end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
@@ -1591,7 +1617,8 @@ Battle::ItemEffects::AfterMoveUseFromUser.add(:LIFEORB,
     end
     next if !hitBattler
     PBDebug.log("[Item triggered] #{user.pbThis}'s #{user.itemName} (recoil)")
-    user.pbReduceHP(user.totalhp / 10)
+    amt = user.amplifyItem? ? (user.totalhp / 5) : (user.totalhp / 10)
+    user.pbReduceHP(amt)
     battle.pbDisplay(_INTL("{1} lost some of its HP!", user.pbThis))
     user.pbItemHPHealCheck
     user.pbFaint if user.fainted?
@@ -1607,7 +1634,8 @@ Battle::ItemEffects::AfterMoveUseFromUser.add(:SHELLBELL,
     totalDamage = 0
     targets.each { |b| totalDamage += b.damageState.totalHPLost }
     next if totalDamage <= 0
-    user.pbRecoverHP(totalDamage / 8)
+    amt = user.amplifyItem? ? (totalDamage / 4) : (totalDamage / 8)
+    user.pbRecoverHP(amt)
     battle.pbDisplay(_INTL("{1} restored a little HP using its {2}!",
        user.pbThis, user.itemName))
   }
@@ -1620,7 +1648,7 @@ Battle::ItemEffects::AfterMoveUseFromUser.add(:THROATSPRAY,
     next if !move.soundMove? || numHits == 0
     next if !user.pbCanRaiseStatStage?(:SPECIAL_ATTACK, user)
     battle.pbCommonAnimation("UseItem", user)
-    user.pbRaiseStatStage(:SPECIAL_ATTACK, 1, user)
+    user.pbRaiseStatStage(:SPECIAL_ATTACK, user.amplifyItem? ? 2 : 1, user)
     user.pbConsumeItem
   }
 )
@@ -1647,6 +1675,9 @@ Battle::ItemEffects::OnEndOfUsingMove.add(:LEPPABERRY,
       battle.pbShowAbilitySplash(battler, forced)
       amt *= 2
       ripening = true
+    end
+    if battler.amplifyItem?
+      amt *= 2
     end
     battle.pbCommonAnimation("EatBerry", battler) if !forced
     battle.pbHideAbilitySplash(battler) if ripening
@@ -1797,7 +1828,7 @@ Battle::ItemEffects::TerrainStatBoost.add(:ELECTRICSEED,
     next false if !battler.pbCanRaiseStatStage?(:DEFENSE, battler)
     itemName = GameData::Item.get(item).name
     battle.pbCommonAnimation("UseItem", battler)
-    next battler.pbRaiseStatStageByCause(:DEFENSE, 1, battler, itemName)
+    next battler.pbRaiseStatStageByCause(:DEFENSE, battler.amplifyItem? ? 2 : 1, battler, itemName)
   }
 )
 
@@ -1807,7 +1838,7 @@ Battle::ItemEffects::TerrainStatBoost.add(:GRASSYSEED,
     next false if !battler.pbCanRaiseStatStage?(:DEFENSE, battler)
     itemName = GameData::Item.get(item).name
     battle.pbCommonAnimation("UseItem", battler)
-    next battler.pbRaiseStatStageByCause(:DEFENSE, 1, battler, itemName)
+    next battler.pbRaiseStatStageByCause(:DEFENSE, battler.amplifyItem? ? 2 : 1, battler, itemName)
   }
 )
 
@@ -1817,7 +1848,7 @@ Battle::ItemEffects::TerrainStatBoost.add(:MISTYSEED,
     next false if !battler.pbCanRaiseStatStage?(:SPECIAL_DEFENSE, battler)
     itemName = GameData::Item.get(item).name
     battle.pbCommonAnimation("UseItem", battler)
-    next battler.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, 1, battler, itemName)
+    next battler.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, battler.amplifyItem? ? 2 : 1, battler, itemName)
   }
 )
 
@@ -1827,7 +1858,7 @@ Battle::ItemEffects::TerrainStatBoost.add(:PSYCHICSEED,
     next false if !battler.pbCanRaiseStatStage?(:SPECIAL_DEFENSE, battler)
     itemName = GameData::Item.get(item).name
     battle.pbCommonAnimation("UseItem", battler)
-    next battler.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, 1, battler, itemName)
+    next battler.pbRaiseStatStageByCause(:SPECIAL_DEFENSE, battler.amplifyItem? ? 2 : 1, battler, itemName)
   }
 )
 
@@ -1840,12 +1871,14 @@ Battle::ItemEffects::EndOfRoundHealing.add(:BLACKSLUDGE,
     if battler.pbHasType?(:POISON)
       next if !battler.canHeal?
       battle.pbCommonAnimation("UseItem", battler)
-      battler.pbRecoverHP(battler.totalhp / 16)
+      amt = battler.amplifyItem? ? (battler.totalhp / 8) : (battler.totalhp / 16)
+      battler.pbRecoverHP(amt)
       battle.pbDisplay(_INTL("{1} restored a little HP using its {2}!",
          battler.pbThis, battler.itemName))
     elsif battler.takesIndirectDamage?
       battle.pbCommonAnimation("UseItem", battler)
-      battler.pbTakeEffectDamage(battler.totalhp / 8) do |hp_lost|
+      amt = battler.amplifyItem? ? (battler.totalhp / 4) : (battler.totalhp / 8)
+      battler.pbTakeEffectDamage(amt) do |hp_lost|
         battle.pbDisplay(_INTL("{1} is hurt by its {2}!", battler.pbThis, battler.itemName))
       end
     end
@@ -1856,7 +1889,8 @@ Battle::ItemEffects::EndOfRoundHealing.add(:LEFTOVERS,
   proc { |item, battler, battle|
     next if !battler.canHeal?
     battle.pbCommonAnimation("UseItem", battler)
-    battler.pbRecoverHP(battler.totalhp / 16)
+    amt = battler.amplifyItem? ? (battler.totalhp / 8) : (battler.totalhp / 16)
+    battler.pbRecoverHP(amt)
     battle.pbDisplay(_INTL("{1} restored a little HP using its {2}!",
        battler.pbThis, battler.itemName))
   }
@@ -1884,7 +1918,8 @@ Battle::ItemEffects::EndOfRoundEffect.add(:STICKYBARB,
   proc { |item, battler, battle|
     next if !battler.takesIndirectDamage?
     battle.scene.pbDamageAnimation(battler)
-    battler.pbTakeEffectDamage(battler.totalhp / 8, false) do |hp_lost|
+    amt = battler.amplifyItem? ? (battler.totalhp / 4) : (battler.totalhp / 8)
+    battler.pbTakeEffectDamage(amt, false) do |hp_lost|
       battle.pbDisplay(_INTL("{1} is hurt by its {2}!", battler.pbThis, battler.itemName))
     end
   }
@@ -1930,7 +1965,7 @@ Battle::ItemEffects::OnSwitchIn.add(:ROOMSERVICE,
     next if battle.field.effects[PBEffects::TrickRoom] == 0
     next if !battler.pbCanLowerStatStage?(:SPEED)
     battle.pbCommonAnimation("UseItem", battler)
-    battler.pbLowerStatStage(:SPEED, 1, nil)
+    battler.pbLowerStatStage(:SPEED, battler.amplifyItem? ? 2 : 1, nil)
     battler.pbConsumeItem
   }
 )
@@ -1944,7 +1979,7 @@ Battle::ItemEffects::OnIntimidated.add(:ADRENALINEORB,
     next false if !battler.pbCanRaiseStatStage?(:SPEED, battler)
     itemName = GameData::Item.get(item).name
     battle.pbCommonAnimation("UseItem", battler)
-    next battler.pbRaiseStatStageByCause(:SPEED, 1, battler, itemName)
+    next battler.pbRaiseStatStageByCause(:SPEED, battler.amplifyItem? ? 2 : 1, battler, itemName)
   }
 )
 

@@ -1,0 +1,48 @@
+[CYRUS_HEAL,0]
+/speaker Cyrus
+?> We meet again. Do you need your Pokémon healed?
+    /choice Yes
+        /return true
+    /cancelchoice No
+        /return false
+?/>
+
+[CYRUS_HEAL,1]
+/speaker Cyrus
+> Until next time.
+
+[CYRUS_START_OVER]
+/speaker Cyrus
+> The Reverse Pokémon are dangerous.\nYou have to be careful out there.
+
+[CYRUS_BASKET,0]
+> It's a basket woven from the plants of this world.
+> It looks to contain healing supplies.
+
+[CYRUS_BASKET,1]
+> It's a basket woven from the plants of this world.
+> It contains plants that are likely for food.
+
+[CYRUS_BASKET,2]
+> It's a basket woven from the plants of this world.
+> It contains various resources and materials for survival.
+
+[CYRUS_BED]
+> The mattress and blanket have been put together in a haphazard fashion.
+> It doesn't look very comfortable, but it's a big upgrade from the rocks beneath.
+
+[DISTORTION_RETURN]
+?> Return to your own world?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>
+
+[DISTORTION_ENTER]
+?> Enter the Distortion World?
+  /choice Yes
+    /return true
+  /cancelchoice No
+    /return false
+?/>

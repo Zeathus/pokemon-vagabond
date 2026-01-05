@@ -181,6 +181,8 @@ class Battle
         pbDisplayPaused(_INTL("Oh! A wild {1}, {2} and {3} appeared!", foeParty[0].name,
                               foeParty[1].name, foeParty[2].name))
       end
+    elsif @playerUseAI
+      pbDisplayPaused(_INTL("{1} is prepared to fight!", @opponent[0].full_name))
     else   # Trainer battle
       case @opponent.length
       when 1
@@ -482,6 +484,28 @@ class Battle
         @party1[i].calc_stats
       end
     end
+    # Update chain data
+    if !trainerBattle?
+      if [1, 4].include?(oldDecision) # Won or Caught
+        if $game_variables[CHAIN_SPECIES] == @battlers[1].species &&
+           $game_variables[CHAIN_MAP] == $game_map.map_id
+          $game_variables[CHAIN_LENGTH] += 1
+        else
+          $game_variables[CHAIN_SPECIES] = @battlers[1].species
+          $game_variables[CHAIN_LENGTH] = 1
+          $game_variables[CHAIN_MAP] = $game_map.map_id
+        end
+        # Breccia Trail - Vespiquen Boss
+        if $game_map.map_id == 62
+          $game_self_switches[[62, 34, "A"]] = true
+          $game_map.need_refresh = true
+        end
+      else
+        $game_variables[CHAIN_SPECIES] = 0
+        $game_variables[CHAIN_LENGTH] = 0
+        $game_variables[CHAIN_MAP] = 0
+      end
+    end
     case oldDecision
     ##### WIN #####
     when 1
@@ -490,15 +514,19 @@ class Battle
       PBDebug.log("")
       if trainerBattle?
         @scene.pbTrainerBattleSuccess
-        case @opponent.length
-        when 1
-          pbDisplayPaused(_INTL("You defeated {1}!", @opponent[0].full_name))
-        when 2
-          pbDisplayPaused(_INTL("You defeated {1} and {2}!", @opponent[0].full_name,
-                                @opponent[1].full_name))
-        when 3
-          pbDisplayPaused(_INTL("You defeated {1}, {2} and {3}!", @opponent[0].full_name,
-                                @opponent[1].full_name, @opponent[2].full_name))
+        if @playerUseAI
+          pbDisplayPaused(_INTL("{1} was defeated!", @opponent[0].full_name))
+        else
+          case @opponent.length
+          when 1
+            pbDisplayPaused(_INTL("You defeated {1}!", @opponent[0].full_name))
+          when 2
+            pbDisplayPaused(_INTL("You defeated {1} and {2}!", @opponent[0].full_name,
+                                  @opponent[1].full_name))
+          when 3
+            pbDisplayPaused(_INTL("You defeated {1}, {2} and {3}!", @opponent[0].full_name,
+                                  @opponent[1].full_name, @opponent[2].full_name))
+          end
         end
         @opponent.each_with_index do |trainer, i|
           @scene.pbShowOpponent(i)
@@ -507,20 +535,6 @@ class Battle
           pbDisplayPaused(msg.gsub(/\\[Pp][Nn]/, pbPlayer.name))
         end
         PBDebug.log("")
-      end
-      # Update chain data
-      if !trainerBattle?
-        if $game_variables[CHAIN_SPECIES] == @battlers[1].species
-          $game_variables[CHAIN_LENGTH] += 1
-        else
-          $game_variables[CHAIN_SPECIES] = @battlers[1].species
-          $game_variables[CHAIN_LENGTH] = 1
-        end
-        # Breccia Trail - Vespiquen Boss
-        if $game_map.map_id == 62
-          $game_self_switches[[62, 34, "A"]] = true
-          $game_map.need_refresh = true
-        end
       end
       # Gain money from winning a trainer battle, and from Pay Day
       pbGainMoney if @decision != 4

@@ -38,6 +38,7 @@ def mainFunctionDebug
     Game.initialize
     Game.set_up_system
     Supplementals::Cache.prepare
+    $BitmapFonts = pbCompileBitmapFonts
     Graphics.update
     Graphics.freeze
     $scene = pbCallTitle

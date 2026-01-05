@@ -244,7 +244,7 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
         @secretPower = 2    # (Same as Grassy Terrain)
       when :MovingWater, :StillWater, :Underwater
         @secretPower = 5    # Water Pulse, lower Attack by 1
-      when :Puddle
+      when :Puddle, :Swamp
         @secretPower = 6    # Mud Shot, lower Speed by 1
       when :Cave
         @secretPower = 7    # Rock Throw, flinch
@@ -260,10 +260,14 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
         @secretPower = 12   # Gust, lower Speed by 1
       when :Space
         @secretPower = 13   # Swift, flinch
-      when :UltraSpace
+      when :UltraSpace, :Mind
         @secretPower = 14   # Psywave, lower Defense by 1
       when :DistortionWorld
         @secretPower = 15   # Night Shade, increase Speed by 1
+      when :Ruins
+        @secretPower = 16   # Ancient Power, flinch
+      when :Interior
+        @secretPower = 0    # Body Slam, paralysis
       end
     end
   end
@@ -311,7 +315,7 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
       if target.pbCanLowerStatStage?(:ACCURACY, user, self)
         target.pbLowerStatStage(:ACCURACY, 1, user)
       end
-    when 7, 11, 13
+    when 7, 11, 13, 16
       target.pbFlinch(user)
     when 15
       if target.pbCanRaiseStatStage?(:SPEED, user, self)
@@ -337,6 +341,8 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
     when 12 then id = :GUST if GameData::Move.exists?(:GUST)
     when 13 then id = :SWIFT if GameData::Move.exists?(:SWIFT)
     when 14 then id = :PSYWAVE if GameData::Move.exists?(:PSYWAVE)
+    when 15 then id = :NIGHTSHADE if GameData::Move.exists?(:NIGHTSHADE)
+    when 16 then id = :ANCIENTPOWER if GameData::Move.exists?(:ANCIENTPOWER)
     end
     super
   end
@@ -899,7 +905,9 @@ class Battle::Move::UseMoveDependingOnEnvironment < Battle::Move
         try_move = :MUDBOMB
       when :Cave
         try_move = (Settings::MECHANICS_GENERATION >= 6) ? :POWERGEM : :ROCKSLIDE
-      when :Rock, :Sand
+      when :Rock
+        try_move = :ROCKSLIDE
+      when :Sand
         try_move = (Settings::MECHANICS_GENERATION >= 6) ? :EARTHPOWER : :EARTHQUAKE
       when :Snow
         try_move = :BLIZZARD
@@ -915,10 +923,16 @@ class Battle::Move::UseMoveDependingOnEnvironment < Battle::Move
         try_move = :AIRSLASH
       when :Space
         try_move = :DRACOMETEOR
-      when :UltraSpace
-        try_move = :PSYSHOCK
+      when :UltraSpace, :Mind
+        try_move = :PSYCHIC
       when :DistortionWorld
         try_move = :SHADOWBALL
+      when :Ruins
+        try_move = :ANCIENTPOWER
+      when :Interior
+        try_move = :TRIATTACK
+      when :Swamp
+        try_move = :SLUDGEWAVE
       end
       @npMove = try_move if GameData::Move.exists?(try_move)
     end

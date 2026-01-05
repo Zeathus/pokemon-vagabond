@@ -248,5 +248,6 @@ module Supplementals
   GUIDE_LIST            = 114
   NEW_GUIDE             = 115
   LAST_GUIDE            = 116
+  MEMORIZED_EVENTS      = 155
 
 end

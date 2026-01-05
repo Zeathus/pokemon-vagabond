@@ -215,8 +215,9 @@ class Battle
               best_kills = []
               fixed_move = nil
 
-              if (user.hasActiveItem?(:CHOICEBAND) || user.hasActiveItem?(:CHOICESPECS) ||
-                  user.hasActiveItem?(:CHOICESCARF)) && user.effects[PBEffects::ChoiceBand]
+              if user.effects[PBEffects::ChoiceBand] &&
+                  (user.hasActiveItem?([:CHOICEBAND, :CHOICESPECS, :CHOICESCARF]) ||
+                  user.hasActiveAbility?(:GORILLATACTICS))
                 fixed_move = user.effects[PBEffects::ChoiceBand]
               elsif user.effects[PBEffects::Encore] > 0
                 fixed_move = user.effects[PBEffects::EncoreMove]
@@ -640,7 +641,7 @@ class Battle
         should_switch = (useless_switch || hurtful_switch >= 50 ||
                         ability_switch || healing_switch > 0 || effect_switch >= 0)
 
-        if should_switch
+        if should_switch && !@playerUseAI
 
           party = pbParty(i)
           dmg_scores = [0, 0, 0, 0, 0, 0] # The damage the new Pokemon can deal
@@ -689,13 +690,12 @@ class Battle
               pkmnbattler.eachOpposing do |o|
                 # Determine how much damage the opponent can deal to the new Pokemon
                 # Check for limitted choice of move
-                fixed_move = 0
-                if (battler.hasActiveItem?(:CHOICEBAND) || battler.hasActiveItem?(:CHOICESPECS) ||
-                    battler.hasActiveItem?(:CHOICESCARF)) && battler.effects[PBEffects::ChoiceBand]
-                  # Choiced
+                fixed_move = nil
+                if o.effects[PBEffects::ChoiceBand] &&
+                    (o.hasActiveItem?([:CHOICEBAND, :CHOICESPECS, :CHOICESCARF]) ||
+                    o.hasActiveAbility?(:GORILLATACTICS))
                   fixed_move = battler.effects[PBEffects::ChoiceBand]
                 elsif battler.effects[PBEffects::Encore] > 0
-                  # Encore
                   fixed_move = battler.effects[PBEffects::EncoreMove]
                 end
 

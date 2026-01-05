@@ -5,6 +5,8 @@ class PokemonSystem
   attr_accessor :bag_mode
   attr_accessor :showexpgain
   attr_accessor :control_style
+  attr_accessor :last_quick_item
+  attr_accessor :skip_next_bgm
 
   alias sup_initialize initialize
 
@@ -17,6 +19,8 @@ class PokemonSystem
     @showexpgain     = 0
     @force_sync      = 1
     @control_style   = 0
+    @last_quick_item = nil
+    @skip_next_bgm   = false
   end
 
   def level_sync?
@@ -53,6 +57,28 @@ class PokemonSystem
 
   def control_style=(value)
     @control_style = value
+  end
+
+  def last_quick_item
+    return @last_quick_item || nil
+  end
+
+  def last_quick_item=(value)
+    @last_quick_item = value
+  end
+
+  def skip_next_bgm
+    return @skip_next_bgm
+  end
+
+  def skip_next_bgm=(value)
+    @skip_next_bgm = value
+  end
+
+  def play_next_bgm?
+    ret = !@skip_next_bgm
+    @skip_next_bgm = false
+    return ret
   end
 end
 
