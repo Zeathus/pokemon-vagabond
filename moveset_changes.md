@@ -1734,14 +1734,14 @@
 - LOST: Baton Pass, Beat Up, Dig, Endure, Fake Tears, Focus Blast, Focus Punch, Foul Play, Fury Swipes, Ice Spinner, Icicle Spear, Lash Out, Low Kick, Low Sweep, Rain Dance, Reversal, Scary Face, Screech, Sleep Talk, Sunny Day, Swift, Take Down, Tera Blast, Triple Axel, Upper Hand, Water Pulse, X-Scissor
 
 ## Zorua
-- KEPT: Agility, Calm Mind, Copycat, Counter, Dark Pulse, Detect, Extrasensory, Facade, Fake Tears, Foul Play, Fury Swipes, Helping Hand, Hex, Hone Claws, Hyper Voice, Imprison, Knock Off, Leer, Memento, Nasty Plot, Protect, Psych Up, Rest, Scratch, Shadow Ball, Shadow Claw, Sludge Bomb, Snarl, Substitute, Sucker Punch, Swords Dance, Taunt, Thief, Torment, U-turn
-- NEW:  Aerial Ace, Bounce, Echoed Voice, False Swipe, Generic Boost, Gloom Boost, Night Dace, Round
-- LOST: Burning Jealousy, Confuse Ray, Dig, Encore, Endure, Fling, Grass Knot, Lash Out, Night Daze, Night Shade, Pain Split, Rain Dance, Roar, Scary Face, Skitter Smack, Sleep Talk, Spite, Sunny Day, Swift, Take Down, Tera Blast, Trick
+- KEPT: Agility, Calm Mind, Copycat, Counter, Dark Pulse, Detect, Extrasensory, Facade, Fake Tears, Foul Play, Fury Swipes, Helping Hand, Hex, Hone Claws, Hyper Voice, Imprison, Knock Off, Leer, Memento, Nasty Plot, Night Daze, Protect, Psych Up, Rest, Scratch, Shadow Ball, Shadow Claw, Sludge Bomb, Snarl, Substitute, Sucker Punch, Swords Dance, Taunt, Thief, Torment, U-turn
+- NEW:  Aerial Ace, Bounce, Echoed Voice, False Swipe, Generic Boost, Gloom Boost, Round
+- LOST: Burning Jealousy, Confuse Ray, Dig, Encore, Endure, Fling, Grass Knot, Lash Out, Night Shade, Pain Split, Rain Dance, Roar, Scary Face, Skitter Smack, Sleep Talk, Spite, Sunny Day, Swift, Take Down, Tera Blast, Trick
 
 ## Zoroark
-- KEPT: Aerial Ace, Agility, Brick Break, Calm Mind, Dark Pulse, Facade, Fake Tears, Flamethrower, Focus Blast, Foul Play, Fury Swipes, Giga Impact, Helping Hand, Hex, Hone Claws, Hyper Beam, Hyper Voice, Imprison, Knock Off, Leer, Nasty Plot, Night Slash, Protect, Psych Up, Psychic, Rest, Scratch, Shadow Ball, Shadow Claw, Sludge Bomb, Snarl, Substitute, Swords Dance, Taunt, Thief, Throat Chop, Torment, U-turn
-- NEW:  Bounce, Copycat, Counter, Detect, Echoed Voice, Extrasensory, False Swipe, Generic Boost, Gloom Boost, Memento, Night Dace, Round, Sucker Punch
-- LOST: Body Slam, Burning Jealousy, Confuse Ray, Crunch, Dig, Encore, Endure, Fling, Grass Knot, Lash Out, Low Kick, Low Sweep, Night Daze, Night Shade, Pain Split, Rain Dance, Roar, Scary Face, Skitter Smack, Sleep Talk, Spite, Sunny Day, Swift, Take Down, Tera Blast, Toxic, Trick
+- KEPT: Aerial Ace, Agility, Brick Break, Calm Mind, Dark Pulse, Facade, Fake Tears, Flamethrower, Focus Blast, Foul Play, Fury Swipes, Giga Impact, Helping Hand, Hex, Hone Claws, Hyper Beam, Hyper Voice, Imprison, Knock Off, Leer, Nasty Plot, Night Daze, Night Slash, Protect, Psych Up, Psychic, Rest, Scratch, Shadow Ball, Shadow Claw, Sludge Bomb, Snarl, Substitute, Swords Dance, Taunt, Thief, Throat Chop, Torment, U-turn
+- NEW:  Bounce, Copycat, Counter, Detect, Echoed Voice, Extrasensory, False Swipe, Generic Boost, Gloom Boost, Memento, Round, Sucker Punch
+- LOST: Body Slam, Burning Jealousy, Confuse Ray, Crunch, Dig, Encore, Endure, Fling, Grass Knot, Lash Out, Low Kick, Low Sweep, Night Shade, Pain Split, Rain Dance, Roar, Scary Face, Skitter Smack, Sleep Talk, Spite, Sunny Day, Swift, Take Down, Tera Blast, Toxic, Trick
 
 ## Zorua-Hisui
 - KEPT: Agility, Bitter Malice, Calm Mind, Curse, Dark Pulse, Facade, Foul Play, Hex, Hone Claws, Knock Off, Leer, Nasty Plot, Phantom Force, Protect, Psych Up, Rest, Scratch, Shadow Ball, Shadow Claw, Shadow Sneak, Sludge Bomb, Snarl, Snowscape, Spite, Substitute, Taunt, Thief, Torment, U-turn
