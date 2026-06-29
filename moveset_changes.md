@@ -1815,17 +1815,17 @@
 
 ## Pawniard
 - KEPT: Aerial Ace, Air Slash, Assurance, Brick Break, Dark Pulse, False Swipe, Flash Cannon, Fury Cutter, Headbutt, Iron Defense, Iron Head, Leer, Mean Look, Metal Claw, Metal Sound, Night Slash, Poison Jab, Protect, Quick Guard, Rest, Retaliate, Sandstorm, Scary Face, Scratch, Shadow Claw, Slash, Snarl, Stealth Rock, Steel Beam, Stone Edge, Substitute, Sucker Punch, Swords Dance, Taunt, Thief, Torment
-- NEW:  Embargo, Feint Attack, Generic Boost, Gloom Boost, Hone Claws, Knock Off, Laser Fous, Metal Boost, Metal Burst, Power-Up Punch, Smart Strike, Throat Chop
+- NEW:  Embargo, Feint Attack, Generic Boost, Gloom Boost, Hone Claws, Knock Off, Laser Focus, Metal Boost, Metal Burst, Power-Up Punch, Smart Strike, Throat Chop
 - LOST: Dig, Endure, Facade, Fling, Foul Play, Grass Knot, Guillotine, Lash Out, Low Kick, Low Sweep, Rain Dance, Rock Tomb, Sleep Talk, Spite, Take Down, Tera Blast, Thunder Wave, X-Scissor
 
 ## Bisharp
 - KEPT: Aerial Ace, Air Slash, Assurance, Brick Break, Dark Pulse, False Swipe, Flash Cannon, Fury Cutter, Giga Impact, Hyper Beam, Iron Defense, Iron Head, Leer, Metal Burst, Metal Claw, Metal Sound, Night Slash, Poison Jab, Protect, Rest, Retaliate, Sandstorm, Scary Face, Scratch, Shadow Claw, Slash, Snarl, Stealth Rock, Steel Beam, Stone Edge, Substitute, Swords Dance, Taunt, Thief, Throat Chop, Torment
-- NEW:  Double-Edge, Embargo, Feint Attack, Generic Boost, Gloom Boost, Headbutt, Hone Claws, Knock Off, Laser Fous, Mean Look, Metal Boost, Power-Up Punch, Quick Guard, Smart Strike, Strength, Sucker Punch
+- NEW:  Double-Edge, Embargo, Feint Attack, Generic Boost, Gloom Boost, Headbutt, Hone Claws, Knock Off, Laser Focus, Mean Look, Metal Boost, Power-Up Punch, Quick Guard, Smart Strike, Strength, Sucker Punch
 - LOST: Dig, Endure, Facade, Fling, Focus Blast, Foul Play, Grass Knot, Guillotine, Lash Out, Low Kick, Low Sweep, Rain Dance, Reversal, Rock Tomb, Sleep Talk, Spite, Take Down, Tera Blast, Thunder Wave, X-Scissor
 
 ## Kingambit
 - KEPT: Aerial Ace, Air Slash, Assurance, Brick Break, Dark Pulse, False Swipe, Flash Cannon, Focus Blast, Fury Cutter, Giga Impact, Hyper Beam, Iron Defense, Iron Head, Kowtow Cleave, Leer, Metal Burst, Metal Claw, Metal Sound, Night Slash, Poison Jab, Protect, Rain Dance, Rest, Retaliate, Sandstorm, Scary Face, Scratch, Shadow Claw, Slash, Snarl, Stealth Rock, Steel Beam, Stone Edge, Substitute, Swords Dance, Taunt, Thief, Throat Chop, Thunder Wave, Torment, Zen Headbutt
-- NEW:  Double-Edge, Embargo, Feint Attack, Generic Boost, Gloom Boost, Headbutt, Hone Claws, Knock Off, Laser Fous, Mean Look, Metal Boost, Power-Up Punch, Quick Guard, Smart Strike, Strength, Sucker Punch, Winds
+- NEW:  Double-Edge, Embargo, Feint Attack, Generic Boost, Gloom Boost, Headbutt, Hone Claws, Knock Off, Laser Focus, Mean Look, Metal Boost, Power-Up Punch, Quick Guard, Smart Strike, Strength, Sucker Punch, Winds
 - LOST: Dig, Endure, Facade, Fling, Foul Play, Grass Knot, Guillotine, Lash Out, Low Kick, Low Sweep, Reversal, Rock Tomb, Sleep Talk, Spite, Take Down, Tera Blast, X-Scissor
 
 ## Tynamo
