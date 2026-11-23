@@ -6,9 +6,10 @@ class Battle::AI
   # if the only moves known are bad ones (the latter forces a switch if
   # possible). Also aliased by the Battle Palace and Battle Arena.
   def pbChooseToSwitchOut(terrible_moves = false)
-    return false if !@battle.canSwitch   # Battle rule
+    return false if @battle.rules[:cannot_switch]
     return false if @user.wild?
     return false if !@battle.pbCanSwitchOut?(@user.index)
+    return false if !@trainer.has_skill_flag?("ConsiderSwitching")
     # Don't switch if all foes are unable to do anything, e.g. resting after
     # Hyper Beam, will Truant (i.e. free turn)
     if @trainer.high_skill?
@@ -21,10 +22,7 @@ class Battle::AI
       return false if !foe_can_act
     end
     # Various calculations to decide whether to switch
-    if terrible_moves
-      PBDebug.log_ai("#{@user.name} is being forced to switch out")
-    else
-      return false if !@trainer.has_skill_flag?("ConsiderSwitching")
+    if !terrible_moves
       reserves = get_non_active_party_pokemon(@user.index)
       return false if reserves.empty?
       should_switch = Battle::AI::Handlers.should_switch?(@user, reserves, self, @battle)
@@ -192,13 +190,14 @@ Battle::AI::Handlers::ShouldSwitch.add(:perish_song,
 Battle::AI::Handlers::ShouldSwitch.add(:significant_eor_damage,
   proc { |battler, reserves, ai, battle|
     eor_damage = battler.rough_end_of_round_damage
+    next false if eor_damage <= 0
     # Switch if battler will take significant EOR damage
     if eor_damage >= battler.hp / 2 || eor_damage >= battler.totalhp / 4
       PBDebug.log_ai("#{battler.name} wants to switch because it will take a lot of EOR damage")
       next true
     end
     # Switch to remove certain effects that cause the battler EOR damage
-    if ai.trainer.high_skill? && eor_damage > 0
+    if ai.trainer.high_skill?
       if battler.effects[PBEffects::LeechSeed] >= 0 && ai.pbAIRandom(100) < 50
         PBDebug.log_ai("#{battler.name} wants to switch to get rid of its Leech Seed")
         next true
@@ -239,13 +238,14 @@ Battle::AI::Handlers::ShouldSwitch.add(:cure_status_problem_by_switching_out,
     next false if entry_hazard_damage >= battler.hp
     # Check specific abilities
     single_status_cure = {
-      :IMMUNITY    => :POISON,
-      :INSOMNIA    => :SLEEP,
-      :LIMBER      => :PARALYSIS,
-      :MAGMAARMOR  => :FROZEN,
-      :VITALSPIRIT => :SLEEP,
-      :WATERBUBBLE => :BURN,
-      :WATERVEIL   => :BURN
+      :IMMUNITY        => :POISON,
+      :INSOMNIA        => :SLEEP,
+      :LIMBER          => :PARALYSIS,
+      :MAGMAARMOR      => :FROZEN,
+      :THERMALEXCHANGE => :BURN,
+      :VITALSPIRIT     => :SLEEP,
+      :WATERBUBBLE     => :BURN,
+      :WATERVEIL       => :BURN
     }[battler.ability_id]
     if battler.ability == :NATURALCURE || (single_status_cure && single_status_cure == battler.status)
       # Cures status problem
@@ -329,7 +329,7 @@ Battle::AI::Handlers::ShouldSwitch.add(:yawning,
     next false if battler.has_active_item?([:CHESTOBERRY, :LUMBERRY]) && battler.battler.canConsumeBerry?
     # Ally can't cure sleep
     ally_can_heal = false
-    ai.each_ally(battler.index) do |b, i|
+    ai.each_ally(battler.index, true) do |b, i|
       ally_can_heal = b.has_active_ability?(:HEALER)
       break if ally_can_heal
     end
@@ -448,7 +448,7 @@ Battle::AI::Handlers::ShouldSwitch.add(:battler_is_useless,
 Battle::AI::Handlers::ShouldSwitch.add(:foe_absorbs_all_moves_with_its_ability,
   proc { |battler, reserves, ai, battle|
     next false if battler.battler.turnCount < 2   # Don't switch out too quickly
-    next false if battler.battler.hasMoldBreaker?
+    next false if battler.has_mold_breaker?
     # Check if battler can damage any of its foes
     can_damage_foe = false
     ai.each_foe_battler(battler.side) do |b, i|
@@ -589,6 +589,19 @@ Battle::AI::Handlers::ShouldSwitch.add(:high_damage_from_foe,
     end
     if big_threat
       PBDebug.log_ai("#{battler.name} wants to switch because a foe has a powerful super-effective move")
+      next true
+    end
+    next false
+  }
+)
+
+#===============================================================================
+# Pokémon is about to faint because of Perish Song.
+#===============================================================================
+Battle::AI::Handlers::ShouldSwitch.add(:zero_to_hero,
+  proc { |battler, reserves, ai, battle|
+    if battler.ability_id == :ZEROTOHERO && battler.battler.form == 0
+      PBDebug.log_ai("#{battler.name} wants to switch because it can change form with Zero to Hero")
       next true
     end
     next false

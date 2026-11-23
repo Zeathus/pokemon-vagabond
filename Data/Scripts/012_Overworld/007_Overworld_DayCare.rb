@@ -316,7 +316,7 @@ class DayCare
     end
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
 
   attr_reader   :slots
   attr_accessor :egg_generated
@@ -420,12 +420,14 @@ class DayCare
 
   def self.get_details(index, name_var, cost_var)
     day_care = $PokemonGlobal.day_care
+    index = day_care.slots.index { |slot| slot.filled? } || 0 if index < 0
     $game_variables[name_var] = day_care[index].pokemon_name if name_var > 0
     $game_variables[cost_var] = day_care[index].cost if cost_var > 0
   end
 
   def self.get_level_gain(index, name_var, level_var)
     day_care = $PokemonGlobal.day_care
+    index = day_care.slots.index { |slot| slot.filled? } || 0 if index < 0
     $game_variables[name_var] = day_care[index].pokemon_name if name_var > 0
     $game_variables[level_var] = day_care[index].level_gain if level_var > 0
   end
@@ -439,14 +441,16 @@ class DayCare
     day_care = $PokemonGlobal.day_care
     pkmn = $player.party[party_index]
     raise _INTL("No Pokémon at index {1} in party.", party_index) if pkmn.nil?
+    deposited = false
     day_care.slots.each do |slot|
       next if slot.filled?
       slot.deposit(pkmn)
       $player.party.delete_at(party_index)
       day_care.reset_egg_counters
-      return
+      deposited = true
+      break
     end
-    raise _INTL("No room to deposit a Pokémon.")
+    raise _INTL("No room to deposit a Pokémon.") if !deposited
   end
 
   def self.withdraw(index)
@@ -469,7 +473,7 @@ class DayCare
     when 0
       raise _INTL("No Pokémon found in Day Care to choose from.")
     when 1
-      day_care.slots.each_with_index { |slot, i| $game_variables[choice_var] = i if slot.filled? }
+      $game_variables[choice_var] = (day_care.slots.index { |slot| slot.filled? } || 0)
     else
       commands = []
       indices = []

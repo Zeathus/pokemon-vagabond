@@ -30,8 +30,8 @@ class Event
     @callbacks.clear
   end
 
-  # Triggers the event and calls all its event handlers.  Normally called only
-  # by the code where the event occurred.
+  # Triggers the event and calls all its event handlers. Normally called only by
+  # the code where the event occurred.
   # The first argument is the sender of the event, the second argument contains
   # the event's parameters. If three or more arguments are given, this method
   # supports the following callbacks:
@@ -104,6 +104,10 @@ class HandlerHash
     return nil
   end
 
+  def keys
+    return @hash.keys.clone
+  end
+
   def add(id, handler = nil, &handlerBlock)
     if ![Proc, Hash].include?(handler.class) && !block_given?
       raise ArgumentError, "#{self.class.name} for #{id.inspect} has no valid handler (#{handler.inspect} was given)"
@@ -127,10 +131,6 @@ class HandlerHash
 
   def each
     @hash.each_pair { |key, value| yield key, value }
-  end
-
-  def keys
-    return @hash.keys.clone
   end
 
   # NOTE: The call does not pass id as a parameter to the proc/block.
@@ -158,6 +158,10 @@ class HandlerHashSymbol
       return add_if[1] if add_if[0].call(sym)
     end
     return nil
+  end
+
+  def keys
+    return @hash.keys
   end
 
   def add(sym, handler = nil, &handlerBlock)
@@ -223,6 +227,10 @@ class HandlerHashEnum
       end
     end
     return ret
+  end
+
+  def keys
+    return @hash.keys
   end
 
   def fromSymbol(sym)

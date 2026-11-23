@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 module GameData
   class Type
     attr_reader :id
@@ -14,7 +17,6 @@ module GameData
     DATA = {}
     DATA_FILENAME = "types.dat"
     PBS_BASE_FILENAME = "types"
-
     SCHEMA = {
       "SectionName"   => [:id,            "m"],
       "Name"          => [:real_name,     "s"],
@@ -26,9 +28,12 @@ module GameData
       "Immunities"    => [:immunities,    "*m"],
       "Flags"         => [:flags,         "*s"]
     }
+    ICON_SIZE = [64, 28]
 
     extend ClassMethodsSymbols
     include InstanceMethods
+
+    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id              = hash[:id]
@@ -69,16 +74,17 @@ module GameData
 end
 
 #===============================================================================
-
+#
+#===============================================================================
 module Effectiveness
   INEFFECTIVE                   = 0
   NOT_VERY_EFFECTIVE            = 1
   NORMAL_EFFECTIVE              = 2
   SUPER_EFFECTIVE               = 4
-  INEFFECTIVE_MULTIPLIER        = INEFFECTIVE.to_f / NORMAL_EFFECTIVE
-  NOT_VERY_EFFECTIVE_MULTIPLIER = NOT_VERY_EFFECTIVE.to_f / NORMAL_EFFECTIVE
+  INEFFECTIVE_MULTIPLIER        = INEFFECTIVE.to_f / NORMAL_EFFECTIVE          # 0.0
+  NOT_VERY_EFFECTIVE_MULTIPLIER = NOT_VERY_EFFECTIVE.to_f / NORMAL_EFFECTIVE   # 0.5
   NORMAL_EFFECTIVE_MULTIPLIER   = 1.0
-  SUPER_EFFECTIVE_MULTIPLIER    = SUPER_EFFECTIVE.to_f / NORMAL_EFFECTIVE
+  SUPER_EFFECTIVE_MULTIPLIER    = SUPER_EFFECTIVE.to_f / NORMAL_EFFECTIVE      # 2.0
 
   module_function
 
@@ -86,6 +92,11 @@ module Effectiveness
     return value == INEFFECTIVE_MULTIPLIER
   end
 
+  def mostly_ineffective?(value)
+    return value > INEFFECTIVE_MULTIPLIER && value < NOT_VERY_EFFECTIVE_MULTIPLIER
+  end
+
+  # This includes mostly ineffective (0.25x) and lower non-zero multipliers.
   def not_very_effective?(value)
     return value > INEFFECTIVE_MULTIPLIER && value < NORMAL_EFFECTIVE_MULTIPLIER
   end
@@ -98,8 +109,13 @@ module Effectiveness
     return value == NORMAL_EFFECTIVE_MULTIPLIER
   end
 
+  # This includes extremely ineffective (4.0x) and higher multipliers.
   def super_effective?(value)
     return value > NORMAL_EFFECTIVE_MULTIPLIER
+  end
+
+  def extremely_effective?(value)
+    return value > SUPER_EFFECTIVE_MULTIPLIER
   end
 
   def ineffective_type?(attack_type, *defend_types)

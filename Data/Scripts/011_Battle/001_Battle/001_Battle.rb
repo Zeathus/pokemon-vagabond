@@ -1,4 +1,5 @@
-# Results of battle:
+#===============================================================================
+# Results of battle (see module Outcome):
 #    0 - Undecided or aborted
 #    1 - Player won
 #    2 - Player lost
@@ -26,19 +27,43 @@
 #             def pbEORShiftDistantBattlers
 #             def pbCanShift?
 #             def pbEndOfRoundPhase
-#           class Battle::Scene::TargetMenu
+#           class Battle::Visuals::TargetMenu
 #             def initialize
-#           class Battle::Scene::PokemonDataBox
+#           class Battle::Visuals::PokemonDataBox
 #             def initializeDataBoxGraphic
-#           class Battle::Scene
+#           class Battle::Visuals
 #             def self.pbBattlerPosition
 #             def self.pbTrainerPosition
 #           class Game_Temp
 #             def add_battle_rule
 #       (There is no guarantee that this list is complete.)
-
+#===============================================================================
 class Battle
-  attr_reader   :scene            # Scene object for this battle
+  module Outcome
+    STARTOVER = -1
+    UNDECIDED = 0
+    WIN       = 1
+    LOSE      = 2   # Also used when player forfeits a trainer battle
+    FLEE      = 3   # Player or wild Pokémon ran away, count as a win
+    CATCH     = 4   # Counts as a win
+    DRAW      = 5
+
+    def self.decided?(decision)
+      return decision != UNDECIDED
+    end
+
+    def self.should_black_out?(decision)
+      return [LOSE, DRAW].include?(decision)
+    end
+
+    def self.success?(decision)
+      return !self.should_black_out?(decision)
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  attr_reader   :visuals          # Visuals object for this battle
   attr_reader   :peer
   attr_reader   :field            # Effects common to the whole of a battle
   attr_reader   :sides            # Effects common to each side of a battle
@@ -50,7 +75,7 @@ class Battle
   attr_accessor :time             # Time of day (0=day, 1=eve, 2=night)
   attr_accessor :environment      # Battle surroundings (for mechanics purposes)
   attr_reader   :turnCount
-  attr_accessor :decision         # Decision: 0=undecided; 1=win; 2=loss; 3=escaped; 4=caught
+  attr_accessor :decision         # Outcome of battle
   attr_reader   :player           # Player trainer (or array of trainers)
   attr_reader   :opponent         # Opponent trainer (or array of trainers)
   attr_accessor :items            # Items held by opponents
@@ -59,15 +84,7 @@ class Battle
   attr_accessor :party2starts     # Array of start indexes for each opponent-side trainer's party
   attr_accessor :internalBattle   # Internal battle flag
   attr_accessor :debug            # Debug flag
-  attr_accessor :canRun           # True if player can run from battle
-  attr_accessor :canLose          # True if player won't black out if they lose
-  attr_accessor :canSwitch        # True if player is allowed to switch Pokémon
-  attr_accessor :switchStyle      # Switch/Set "battle style" option
-  attr_accessor :showAnims        # "Battle Effects" option
   attr_accessor :controlPlayer    # Whether player's Pokémon are AI controlled
-  attr_accessor :expGain          # Whether Pokémon can gain Exp/EVs
-  attr_accessor :moneyGain        # Whether the player can gain/lose money
-  attr_accessor :disablePokeBalls # Whether Poké Balls cannot be thrown at all
   attr_accessor :sendToBoxes      # Send to Boxes (0=ask, 1=don't ask, 2=must add to party)
   attr_accessor :rules
   attr_accessor :choices          # Choices made by each Pokémon this round
@@ -75,9 +92,12 @@ class Battle
   attr_reader   :initialItems
   attr_reader   :recycleItems
   attr_reader   :belch
-  attr_reader   :battleBond
+  attr_reader   :abilitiesUsedPerSwitchIn   # Records use of abilities that can only be used once per switch in
+  attr_reader   :abilitiesUsedOnce          # Records use of abilities that can only be used once per battle
   attr_reader   :corrosiveGas
   attr_reader   :usedInBattle     # Whether each Pokémon was used in battle (for Burmy)
+  attr_reader   :hitsTakenCounts  # For Rage Fist
+  attr_reader   :sideFaintCounts  # For Last Respects
   attr_reader   :successStates    # Success states
   attr_accessor :lastMoveUsed     # Last move used
   attr_accessor :lastMoveUser     # Last move user
@@ -89,6 +109,7 @@ class Battle
   attr_reader   :endOfRound       # True during the end of round
   attr_accessor :moldBreaker      # True if Mold Breaker applies
   attr_reader   :struggle         # The Struggle move
+  attr_reader   :battleAI
   attr_accessor :smartWildBattle  # If a wild Pokémon should use trainer AI
   attr_accessor :levelSync        # If the player's level should be scaled down
   attr_accessor :playerUseAI      # Whether the player should be AI controlled
@@ -98,16 +119,15 @@ class Battle
 
   def pbRandom(x); return rand(x); end
 
-  #=============================================================================
-  # Creating the battle class
-  #=============================================================================
-  def initialize(scene, p1, p2, player, opponent)
+  #-----------------------------------------------------------------------------
+
+  def initialize(visuals, p1, p2, player, opponent)
     if p1.length == 0
       raise ArgumentError.new(_INTL("Party 1 has no Pokémon."))
     elsif p2.length == 0
       raise ArgumentError.new(_INTL("Party 2 has no Pokémon."))
     end
-    @scene             = scene
+    @visuals           = visuals
     @peer              = Peer.new
     @field             = ActiveField.new    # Whole field (gravity/rooms)
     @sides             = [ActiveSide.new,   # Player's side
@@ -120,7 +140,7 @@ class Battle
     @time              = 0
     @environment       = :None   # e.g. Tall grass, cave, still water
     @turnCount         = 0
-    @decision          = 0
+    @decision          = Outcome::UNDECIDED
     @caughtPokemon     = []
     player   = [player] if !player.nil? && !player.is_a?(Array)
     opponent = [opponent] if !opponent.nil? && !opponent.is_a?(Array)
@@ -136,33 +156,28 @@ class Battle
     @party2starts      = [0]
     @internalBattle    = true
     @debug             = false
-    @canRun            = true
-    @canLose           = false
-    @canSwitch         = true
-    @switchStyle       = true
-    @showAnims         = true
     @controlPlayer     = false
-    @expGain           = true
-    @moneyGain         = true
-    @disablePokeBalls  = false
     @sendToBoxes       = 1
     @rules             = {}
     @priority          = []
     @priorityTrickRoom = false
     @choices           = []
     @megaEvolution     = [
-      [-1] * (@player ? @player.length : 1),
-      [-1] * (@opponent ? @opponent.length : 1)
+      [-1] * ((@player) ? @player.length : 1),
+      [-1] * ((@opponent) ? @opponent.length : 1)
     ]
     @initialItems      = [
-      Array.new(@party1.length) { |i| (@party1[i]) ? @party1[i].item_id : nil },
-      Array.new(@party2.length) { |i| (@party2[i]) ? @party2[i].item_id : nil }
+      Array.new(@party1.length) { |i| [@party1[i]&.item_id, 0, i, false] },
+      Array.new(@party2.length) { |i| [@party2[i]&.item_id, 1, i, false] }
     ]
     @recycleItems      = [Array.new(@party1.length, nil),   Array.new(@party2.length, nil)]
     @belch             = [Array.new(@party1.length, false), Array.new(@party2.length, false)]
-    @battleBond        = [Array.new(@party1.length, false), Array.new(@party2.length, false)]
+    @abilitiesUsedPerSwitchIn = [Array.new(@party1.length) { |i| [] }, Array.new(@party2.length) { |i| [] }]
+    @abilitiesUsedOnce        = [Array.new(@party1.length) { |i| [] }, Array.new(@party2.length) { |i| [] }]
     @corrosiveGas      = [Array.new(@party1.length, false), Array.new(@party2.length, false)]
     @usedInBattle      = [Array.new(@party1.length, false), Array.new(@party2.length, false)]
+    @hitsTakenCounts   = [Array.new(@party1.length, 0),     Array.new(@party2.length, 0)]
+    @sideFaintCounts   = [0, 0]
     @successStates     = []
     @lastMoveUsed      = nil
     @lastMoveUser      = -1
@@ -185,9 +200,14 @@ class Battle
     @battleAI          = AI.new(self)
   end
 
-  #=============================================================================
-  # Information about the type and size of the battle
-  #=============================================================================
+  def decided?
+    return Outcome.decided?(@decision)
+  end
+
+  #-----------------------------------------------------------------------------
+  # Information about the type and size of the battle.
+  #-----------------------------------------------------------------------------
+
   def wildBattle?;    return @opponent.nil?;  end
   def trainerBattle?; return !@opponent.nil?; end
 
@@ -221,9 +241,10 @@ class Battle
     return (pbSideSize(0) > pbSideSize(1)) ? (pbSideSize(0) - 1) * 2 : (pbSideSize(1) * 2) - 1
   end
 
-  #=============================================================================
-  # Trainers and owner-related methods
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Trainers and owner-related methods.
+  #-----------------------------------------------------------------------------
+
   def pbPlayer; return @player[0]; end
 
   # Given a battler index, returns the index within @player/@opponent of the
@@ -310,9 +331,10 @@ class Battle
     return ret
   end
 
-  #=============================================================================
-  # Get party information (counts all teams on the same side)
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Get party information (counts all teams on the same side).
+  #-----------------------------------------------------------------------------
+
   def pbParty(idxBattler)
     return (opposes?(idxBattler)) ? @party2 : @party1
   end
@@ -348,7 +370,7 @@ class Battle
 
   def pbAbleNonActiveCount(idxBattler = 0)
     party = pbParty(idxBattler)
-    inBattleIndices = allSameSideBattlers(idxBattler).map { |b| b.pokemonIndex }
+    inBattleIndices = allSameSideBattlers(idxBattler, true).map { |b| b.pokemonIndex }
     count = 0
     party.each_with_index do |pkmn, idxParty|
       next if !pkmn || !pkmn.able?
@@ -363,7 +385,7 @@ class Battle
   end
 
   def pbTeamAbleNonActiveCount(idxBattler = 0)
-    inBattleIndices = allSameSideBattlers(idxBattler).map { |b| b.pokemonIndex }
+    inBattleIndices = allSameSideBattlers(idxBattler, true).map { |b| b.pokemonIndex }
     count = 0
     eachInTeamFromBattlerIndex(idxBattler) do |pkmn, i|
       next if !pkmn || !pkmn.able?
@@ -393,10 +415,11 @@ class Battle
     return ret
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
   # Get team information (a team is only the Pokémon owned by a particular
-  # trainer)
-  #=============================================================================
+  # trainer).
+  #-----------------------------------------------------------------------------
+
   def pbTeamIndexRangeFromBattlerIndex(idxBattler)
     partyStarts = pbPartyStarts(idxBattler)
     idxTrainer = pbGetOwnerIndexFromBattlerIndex(idxBattler)
@@ -450,55 +473,58 @@ class Battle
     return ret
   end
 
-  #=============================================================================
-  # Iterate through battlers
-  #=============================================================================
-  # Unused
-  def eachBattler
-    @battlers.each { |b| yield b if b && !b.fainted? }
-  end
+  #-----------------------------------------------------------------------------
+  # Iterate through battlers.
+  #-----------------------------------------------------------------------------
 
-  def allBattlers
-    return @battlers.select { |b| b && !b.fainted? }
+  def allBattlers(with_commanders = false)
+    return @battlers.select { |b| b && !b.fainted? && (with_commanders || b.effects[PBEffects::Commanding] < 0) }
   end
 
   # Unused
-  def eachSameSideBattler(idxBattler = 0)
-    idxBattler = idxBattler.index if idxBattler.respond_to?("index")
-    @battlers.each { |b| yield b if b && !b.fainted? && !b.opposes?(idxBattler) }
+  def eachBattler(with_commanders = false)
+    allBattlers(with_commanders).each { |b| yield b }
   end
 
-  def allSameSideBattlers(idxBattler = 0)
+  def allSameSideBattlers(idxBattler = 0, with_commanders = false)
     idxBattler = idxBattler.index if idxBattler.respond_to?("index")
-    return @battlers.select { |b| b && !b.fainted? && !b.opposes?(idxBattler) }
+    return @battlers.select { |b| b && !b.fainted? && !b.opposes?(idxBattler) &&
+                                  (with_commanders || b.effects[PBEffects::Commanding] < 0) }
   end
 
   # Unused
-  def eachOtherSideBattler(idxBattler = 0)
+  def eachSameSideBattler(idxBattler = 0, with_commanders = false)
+    allSameSideBattlers(idxBattler, with_commanders).each { |b| yield b }
+  end
+
+  def allOtherSideBattlers(idxBattler = 0, with_commanders = false)
     idxBattler = idxBattler.index if idxBattler.respond_to?("index")
-    @battlers.each { |b| yield b if b && !b.fainted? && b.opposes?(idxBattler) }
+    return @battlers.select { |b| b && !b.fainted? && b.opposes?(idxBattler) &&
+                                  (with_commanders || b.effects[PBEffects::Commanding] < 0) }
   end
 
-  def allOtherSideBattlers(idxBattler = 0)
-    idxBattler = idxBattler.index if idxBattler.respond_to?("index")
-    return @battlers.select { |b| b && !b.fainted? && b.opposes?(idxBattler) }
+  # Unused
+  def eachOtherSideBattler(idxBattler = 0, with_commanders = false)
+    allOtherSideBattlers(idxBattler).each { |b| yield b }
   end
 
-  def pbSideBattlerCount(idxBattler = 0)
-    return allSameSideBattlers(idxBattler).length
+  def pbSideBattlerCount(idxBattler = 0, with_commanders = false)
+    return allSameSideBattlers(idxBattler, with_commanders).length
   end
 
-  def pbOpposingBattlerCount(idxBattler = 0)
-    return allOtherSideBattlers(idxBattler).length
+  def pbOpposingBattlerCount(idxBattler = 0, with_commanders = false)
+    return allOtherSideBattlers(idxBattler, with_commanders).length
   end
 
   # This method only counts the player's Pokémon, not a partner trainer's.
   def pbPlayerBattlerCount
-    return allSameSideBattlers.select { |b| b.pbOwnedByPlayer? }.length
+    return allSameSideBattlers(0, true).select { |b| b.pbOwnedByPlayer? }.length
   end
 
-  def pbCheckGlobalAbility(abil)
-    allBattlers.each { |b| return b if b.hasActiveAbility?(abil) }
+  def pbCheckGlobalAbility(abil, check_mold_breaker = false)
+    allBattlers.each do |b|
+      return b if b.hasActiveAbility?(abil) && (!check_mold_breaker || !b.beingMoldBroken?)
+    end
     return nil
   end
 
@@ -508,6 +534,13 @@ class Battle
       return b if b.hasActiveAbility?(abil)
     end
     return nil
+  end
+
+  # Returns an array containing the IDs of all active abilities.
+  def pbAllActiveAbilities
+    ret = []
+    allBattlers.each { |b| ret.push(b.ability_id) if b.abilityActive? }
+    return ret
   end
 
   # Given a battler index, and using battle side sizes, returns an array of
@@ -554,9 +587,10 @@ class Battle
     return [idxBattler]
   end
 
-  #=============================================================================
-  # Comparing the positions of two battlers
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Comparing the positions of two battlers.
+  #-----------------------------------------------------------------------------
+
   def opposes?(idxBattler1, idxBattler2 = 0)
     idxBattler1 = idxBattler1.index if idxBattler1.respond_to?("index")
     idxBattler2 = idxBattler2.index if idxBattler2.respond_to?("index")
@@ -589,9 +623,10 @@ class Battle
     return true
   end
 
-  #=============================================================================
-  # Altering a party or rearranging battlers
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Altering a party or rearranging battlers.
+  #-----------------------------------------------------------------------------
+
   def pbRemoveFromParty(idxBattler, idxParty)
     party = pbParty(idxBattler)
     # Erase the Pokémon from the party
@@ -620,7 +655,7 @@ class Battle
     @battlers[idxA],       @battlers[idxB]       = @battlers[idxB],       @battlers[idxA]
     @battlers[idxA].index, @battlers[idxB].index = @battlers[idxB].index, @battlers[idxA].index
     @choices[idxA],        @choices[idxB]        = @choices[idxB],        @choices[idxA]
-    @scene.pbSwapBattlerSprites(idxA, idxB)
+    @visuals.pbSwapBattlerSprites(idxA, idxB)
     # Swap the target of any battlers' effects that point at either of the
     # swapped battlers, to ensure they still point at the correct target
     # NOTE: LeechSeed is not swapped, because drained HP goes to whichever
@@ -630,6 +665,8 @@ class Battle
     #       can't change sides.
     effectsToSwap = [PBEffects::Attract,
                      PBEffects::BideTarget,
+                     PBEffects::CommandedBy,
+                     PBEffects::Commanding,
                      PBEffects::CounterTarget,
                      PBEffects::JawLock,
                      PBEffects::LockOnPos,
@@ -637,8 +674,9 @@ class Battle
                      PBEffects::MirrorCoatTarget,
                      PBEffects::Octolock,
                      PBEffects::SkyDrop,
+                     PBEffects::SyrupBombUser,
                      PBEffects::TrappingUser]
-    allBattlers.each do |b|
+    allBattlers(true).each do |b|
       effectsToSwap.each do |i|
         next if b.effects[i] != idxA && b.effects[i] != idxB
         b.effects[i] = (b.effects[i] == idxA) ? idxB : idxA
@@ -647,17 +685,17 @@ class Battle
     return true
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
   #
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
   # Returns the battler representing the Pokémon at index idxParty in its party,
   # on the same side as a battler with battler index of idxBattlerOther.
   def pbFindBattler(idxParty, idxBattlerOther = 0)
-    allSameSideBattlers(idxBattlerOther).each { |b| return b if b.pokemonIndex == idxParty }
+    allSameSideBattlers(idxBattlerOther, true).each { |b| return b if b.pokemonIndex == idxParty }
     return nil
   end
 
-  # Only used for Wish, as the Wishing Pokémon will no longer be in battle.
   def pbThisEx(idxBattler, idxParty)
     party = pbParty(idxBattler)
     if opposes?(idxBattler)
@@ -666,6 +704,17 @@ class Battle
     end
     return _INTL("The ally {1}", party[idxParty].name) if !pbOwnedByPlayer?(idxBattler)
     return party[idxParty].name
+  end
+
+  # Only used for Wish, as the Wishing Pokémon will no longer be in battle.
+  def pbOfThisEx(idxBattler, idxParty)
+    party = pbParty(idxBattler)
+    if opposes?(idxBattler)
+      return _INTL("The opposing {1}'s", party[idxParty].name) if trainerBattle?
+      return _INTL("The wild {1}'s", party[idxParty].name)
+    end
+    return _INTL("The ally {1}'s", party[idxParty].name) if !pbOwnedByPlayer?(idxBattler)
+    return _INTL("{1}'s", party[idxParty].name)
   end
 
   def pbSetSeen(battler)
@@ -696,14 +745,69 @@ class Battle
     end
   end
 
+  def initialItem(side, idxParty)
+    @initialItems.each do |this_side|
+      this_side.each do |this_pkmn|
+        return this_pkmn[0] if this_pkmn[1] == side && this_pkmn[2] == idxParty
+      end
+    end
+    return nil
+  end
+
+  def swapHeldItems(battler1, battler2)
+    item1 = battler1.item_id
+    item2 = battler2.item_id
+    battler1.item = item2
+    battler1.effects[PBEffects::ChoiceBand] = nil if !battler1.hasActiveAbility?(:GORILLATACTICS)
+    battler1.effects[PBEffects::Unburden]   = (item1 && !battler1.item) if battler1.hasActiveAbility?(:UNBURDEN)
+    battler2.item = item1
+    battler2.effects[PBEffects::ChoiceBand] = nil if !battler2.hasActiveAbility?(:GORILLATACTICS)
+    battler2.effects[PBEffects::Unburden]   = (item2 && !battler2.item) if battler2.hasActiveAbility?(:UNBURDEN)
+    s1 = battler1.idxOwnSide
+    p1 = battler1.pokemonIndex
+    s2 = battler2.idxOwnSide
+    p2 = battler2.pokemonIndex
+    @initialItems[s1][p1], @initialItems[s2][p2] = @initialItems[s2][p2], @initialItems[s1][p1]
+  end
+
+  def knockOffItem(side, idxParty)
+    @initialItems[side][idxParty][3] = true
+  end
+
+  def recycleItem(side, idxParty)
+    return @recycleItems[side][idxParty]
+  end
+
+  def setRecycleItem(side, idxParty, new_item)
+    @recycleItems[side][idxParty] = new_item
+  end
+
+  def clearStagesChangeRecords
+    allBattlers(true).each { |b| b.clearStagesChangeRecord }
+  end
+
+  # For Opportunist/Mirror Herb to copy stat raises.
+  def checkStatChangeResponses
+    allBattlers(true).each do |b|
+      if b.abilityActive?
+        Battle::AbilityEffects.triggerCopyStatChanges(b.ability, b, self)
+      end
+      if b.itemActive?
+        Battle::ItemEffects.triggerCopyStatChanges(b.item, b, self)
+      end
+    end
+    clearStagesChangeRecords
+  end
+
   def nextPickupUse
     @nextPickupUse += 1
     return @nextPickupUse
   end
 
-  #=============================================================================
-  # Weather
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Weather.
+  #-----------------------------------------------------------------------------
+
   def defaultWeather=(value)
     @field.defaultWeather  = value
     @field.weather         = value
@@ -716,10 +820,23 @@ class Battle
     return @field.weather
   end
 
+  def pbCanStartWeather?(new_weather, ignore_primal = false)
+    return false if @field.weather == new_weather
+    primal_weathers = [:HarshSun, :HeavyRain, :StrongWinds]
+    if !ignore_primal && primal_weathers.include?(@field.weather)
+      return new_weather == :None || primal_weathers.include?(new_weather)
+    end
+    return false if Settings::DEFAULT_WEATHER_AND_TERRAIN_CANNOT_BE_REPLACED &&
+                    ![:None, new_weather].include?(@field.defaultWeather) &&
+                    !primal_weathers.include?(new_weather)
+    return true
+  end
+
   # Used for causing weather by a move or by an ability.
-  def pbStartWeather(user, newWeather, fixedDuration = false, showAnim = true, duration = 5)
-    return if @field.weather == newWeather
-    @field.weather = newWeather
+  def pbStartWeather(user, new_weather, fixedDuration = false, showAnim = true, message = nil, duration = 5)
+    return if !pbCanStartWeather?(new_weather)
+    old_weather = @field.weather
+    @field.weather = new_weather
     duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
       duration = Battle::ItemEffects.triggerWeatherExtender(user.item, @field.weather,
@@ -729,164 +846,239 @@ class Battle
     weather_data = GameData::BattleWeather.try_get(@field.weather)
     pbCommonAnimation(weather_data.animation) if showAnim && weather_data
     pbHideAbilitySplash(user) if user
-    case @field.weather
-    when :Sun         then pbDisplay(_INTL("The sunlight turned harsh!"))
-    when :Rain        then pbDisplay(_INTL("It started to rain!"))
-    when :Sandstorm   then pbDisplay(_INTL("A sandstorm brewed!"))
-    when :Hail        then pbDisplay(_INTL("It started to hail!"))
-    when :HarshSun    then pbDisplay(_INTL("The sunlight turned extremely harsh!"))
-    when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
-    when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
-    when :ShadowSky   then pbDisplay(_INTL("A shadow sky appeared!"))
+    if message
+      pbDisplay(message)
+    else
+      case @field.weather
+      when :Sun         then pbDisplay(_INTL("The sunlight turned harsh!"))
+      when :Rain        then pbDisplay(_INTL("It started to rain!"))
+      when :Sandstorm   then pbDisplay(_INTL("A sandstorm brewed!"))
+      when :Hail        then pbDisplay(_INTL("It started to hail!"))
+      when :Snowstorm   then pbDisplay(_INTL("It started to snow!"))
+      when :HarshSun    then pbDisplay(_INTL("The sunlight turned extremely harsh!"))
+      when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
+      when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
+      when :ShadowSky   then pbDisplay(_INTL("A shadow sky appeared!"))
+      end
     end
     # Check for end of primordial weather, and weather-triggered form changes
-    allBattlers.each { |b| b.pbCheckFormOnWeatherChange }
+    allBattlers(true).each { |b| b.pbCheckFormOnWeatherChange }
+    allBattlers(true).each { |b| b.pbAbilityOnWeatherChange(old_weather) }
+    allBattlers(true).each { |b| b.pbItemOnWeatherChange(old_weather) }
     pbEndPrimordialWeather
     pbBoss.checkTriggers(self, :Weather)
   end
 
+  # This doesn't reinstate the default weather. It just handles what happens
+  # when a weather ends.
+  def pbEndWeather
+    old_weather = @field.weather
+    case @field.weather
+    when :Sun         then pbDisplay(_INTL("The sunlight faded."))
+    when :Rain        then pbDisplay(_INTL("The rain stopped."))
+    when :Sandstorm   then pbDisplay(_INTL("The sandstorm subsided."))
+    when :Hail        then pbDisplay(_INTL("The hail stopped."))
+    when :Snowstorm   then pbDisplay(_INTL("The snow stopped."))
+    when :HarshSun    then pbDisplay(_INTL("The harsh sunlight faded."))
+    when :HeavyRain   then pbDisplay(_INTL("The heavy rain has lifted."))
+    when :StrongWinds then pbDisplay(_INTL("The mysterious air current has dissipated."))
+    when :ShadowSky   then pbDisplay(_INTL("The shadow sky faded."))
+    end
+    @field.weather = :None
+    # Check for form changes/abilities/items caused by the weather changing
+    allBattlers(true).each { |b| b.pbCheckFormOnWeatherChange }
+    allBattlers(true).each { |b| b.pbAbilityOnWeatherChange(old_weather) }
+    allBattlers(true).each { |b| b.pbItemOnWeatherChange(old_weather) }
+  end
+
   def pbEndPrimordialWeather
     return if @field.weather == @field.defaultWeather
-    oldWeather = @field.weather
+    old_weather = @field.weather
     # End Primordial Sea, Desolate Land, Delta Stream
     case @field.weather
     when :HarshSun
       if !pbCheckGlobalAbility(:DESOLATELAND)
         @field.weather = :None
-        pbDisplay("The harsh sunlight faded!")
+        pbDisplay(_INTL("The harsh sunlight faded!"))
       end
     when :HeavyRain
       if !pbCheckGlobalAbility(:PRIMORDIALSEA)
         @field.weather = :None
-        pbDisplay("The heavy rain has lifted!")
+        pbDisplay(_INTL("The heavy rain has lifted!"))
       end
     when :StrongWinds
       if !pbCheckGlobalAbility(:DELTASTREAM)
         @field.weather = :None
-        pbDisplay("The mysterious air current has dissipated!")
+        pbDisplay(_INTL("The mysterious air current has dissipated!"))
       end
     end
-    if @field.weather != oldWeather
+    if @field.weather != old_weather
       # Check for form changes caused by the weather changing
-      allBattlers.each { |b| b.pbCheckFormOnWeatherChange }
+      allBattlers(true).each { |b| b.pbCheckFormOnWeatherChange }
+      allBattlers(true).each { |b| b.pbAbilityOnWeatherChange(old_weather) }
+      allBattlers(true).each { |b| b.pbItemOnWeatherChange(old_weather) }
       # Start up the default weather
       pbStartWeather(nil, @field.defaultWeather) if @field.defaultWeather != :None
     end
   end
 
-  def pbStartWeatherAbility(new_weather, battler, ignore_primal = false)
-    return if !ignore_primal && [:HarshSun, :HeavyRain, :StrongWinds].include?(@field.weather)
-    return if @field.weather == new_weather
+  def pbStartWeatherAbility(new_weather, battler, ignore_primal = false, message = nil)
+    return if !pbCanStartWeather?(new_weather, ignore_primal)
     pbShowAbilitySplash(battler)
-    if !Scene::USE_ABILITY_SPLASH
-      pbDisplay(_INTL("{1}'s {2} activated!", battler.pbThis, battler.abilityName))
+    if !Visuals::USE_ABILITY_SPLASH
+      pbDisplay(_INTL("{1} {2} activated!", battler.pbOfThis, battler.abilityName))
     end
     fixed_duration = false
     fixed_duration = true if Settings::FIXED_DURATION_WEATHER_FROM_ABILITY &&
                              ![:HarshSun, :HeavyRain, :StrongWinds].include?(new_weather)
-    pbStartWeather(battler, new_weather, fixed_duration)
+    pbStartWeather(battler, new_weather, fixed_duration, true, message)
     # NOTE: The ability splash is hidden again in def pbStartWeather.
   end
 
-  #=============================================================================
-  # Terrain
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Terrain.
+  #-----------------------------------------------------------------------------
+
   def defaultTerrain=(value)
     @field.defaultTerrain  = value
     @field.terrain         = value
     @field.terrainDuration = -1
   end
 
-  def pbStartTerrain(user, newTerrain, fixedDuration = true, duration = 5)
-    return if @field.terrain == newTerrain
-    @field.terrain = newTerrain
+  def pbCanStartTerrain?(new_terrain)
+    return false if @field.terrain == new_terrain
+    return false if Settings::DEFAULT_WEATHER_AND_TERRAIN_CANNOT_BE_REPLACED &&
+                    ![:None, new_terrain].include?(@field.defaultTerrain)
+    return true
+  end
+
+  def pbStartTerrain(user, new_terrain, fixedDuration = true, message = nil, duration = 5)
+    return if !pbCanStartTerrain?(new_terrain)
+    old_terrain = @field.terrain
+    @field.terrain = new_terrain
     duration = (fixedDuration) ? duration : -1
     if duration > 0 && user && user.itemActive?
-      duration = Battle::ItemEffects.triggerTerrainExtender(user.item, newTerrain,
+      duration = Battle::ItemEffects.triggerTerrainExtender(user.item, new_terrain,
                                                             duration, user, self)
     end
     @field.terrainDuration = duration
     terrain_data = GameData::BattleTerrain.try_get(@field.terrain)
     pbCommonAnimation(terrain_data.animation) if terrain_data
     pbHideAbilitySplash(user) if user
-    case @field.terrain
-    when :Electric
-      pbDisplay(_INTL("An electric current runs across the battlefield!"))
-    when :Grassy
-      pbDisplay(_INTL("Grass grew to cover the battlefield!"))
-    when :Misty
-      pbDisplay(_INTL("Mist swirled about the battlefield!"))
-    when :Psychic
-      pbDisplay(_INTL("The battlefield got weird!"))
+    if message
+      pbDisplay(message)
+    else
+      case @field.terrain
+      when :Electric then pbDisplay(_INTL("An electric current runs across the battlefield!"))
+      when :Grassy   then pbDisplay(_INTL("Grass grew to cover the battlefield!"))
+      when :Misty    then pbDisplay(_INTL("Mist swirled about the battlefield!"))
+      when :Psychic  then pbDisplay(_INTL("The battlefield got weird!"))
+      end
     end
     # Check for abilities/items that trigger upon the terrain changing
-    allBattlers.each { |b| b.pbAbilityOnTerrainChange }
-    allBattlers.each { |b| b.pbItemTerrainStatBoostCheck }
-    pbBoss.checkTriggers(self, :Terrain)
+    allBattlers(true).each { |b| b.pbCheckFormOnTerrainChange }
+    allBattlers(true).each { |b| b.pbAbilityOnTerrainChange(old_terrain) }
+    allBattlers(true).each { |b| b.pbItemOnTerrainChange(old_terrain) }
   end
 
-  #=============================================================================
-  # Messages and animations
-  #=============================================================================
+  # This doesn't reinstate the default terrain. Itj ust handles what happens
+  # when a terrain ends.
+  def pbEndTerrain
+    old_terrain = @field.terrain
+    case @field.terrain
+    when :Electric then pbDisplay(_INTL("The electricity disappeared from the battlefield."))
+    when :Grassy   then pbDisplay(_INTL("The grass disappeared from the battlefield."))
+    when :Misty    then pbDisplay(_INTL("The mist disappeared from the battlefield."))
+    when :Psychic  then pbDisplay(_INTL("The weirdness disappeared from the battlefield."))
+    end
+    @field.terrain = :None
+    # Check for form changes/abilities/items caused by the terrain changing
+    allBattlers(true).each { |b| b.pbCheckFormOnTerrainChange }
+    allBattlers(true).each { |b| b.pbAbilityOnTerrainChange(old_terrain) }
+    allBattlers(true).each { |b| b.pbItemOnTerrainChange(old_terrain) }
+  end
+
+  def pbStartTerrainAbility(new_terrain, battler, message = nil)
+    return if !pbCanStartTerrain?(new_terrain)
+    pbShowAbilitySplash(battler)
+    if !Visuals::USE_ABILITY_SPLASH
+      pbDisplay(_INTL("{1} {2} activated!", battler.pbOfThis, battler.abilityName))
+    end
+    fixed_duration = true
+    pbStartTerrain(battler, new_terrain, fixed_duration, message)
+    # NOTE: The ability splash is hidden again in def pbStartTerrain.
+  end
+
+  #-----------------------------------------------------------------------------
+  # Messages and animations.
+  #-----------------------------------------------------------------------------
+
   def pbDisplay(msg, &block)
     return if @predictingDamage
-    @scene.pbDisplayMessage(msg, &block)
+    @visuals.pbDisplayMessage(msg, &block)
   end
 
   def pbDisplayBrief(msg)
     return if @predictingDamage
-    @scene.pbDisplayMessage(msg, true)
+    @visuals.pbDisplayMessage(msg, true)
   end
 
   def pbDisplayPaused(msg, &block)
     return if @predictingDamage
-    @scene.pbDisplayPausedMessage(msg, &block)
+    @visuals.pbDisplayPausedMessage(msg, &block)
   end
 
   def pbDisplayConfirm(msg)
     return if @predictingDamage
-    return @scene.pbDisplayConfirmMessage(msg)
+    return @visuals.pbDisplayConfirmMessage(msg)
   end
 
   # defaultValue of -1 means "can't cancel". If it's 0 or greater, returns that
   # value when pressing the "Back" button.
   def pbShowCommands(msg, commands, defaultValue = -1)
     return if @predictingDamage
-    return @scene.pbShowCommands(msg, commands, defaultValue)
+    return @visuals.pbShowCommands(msg, commands, defaultValue)
   end
 
-  def pbAnimation(move, user, targets, hitNum = 0)
+  def pbAnimation(move_id, user, targets, hitNum = 0, no_substitute_after = false, &block)
     return if @predictingDamage
-    @scene.pbAnimation(move, user, targets, hitNum) if @showAnims
+    if @rules[:no_battle_animations]
+      # For the sake of two turn attacks making Pokémon invisible while semi-
+      # invulnerable even if no battle animations are played
+      yield :before if block_given?
+      yield :after if block_given?
+    else
+      @visuals.pbAnimation(move_id, user, targets, hitNum, no_substitute_after, &block)
+    end
   end
 
   def pbCommonAnimation(name, user = nil, targets = nil)
     return if @predictingDamage
-    @scene.pbCommonAnimation(name, user, targets) if @showAnims
+    @visuals.pbCommonAnimation(name, user, targets) if !@rules[:no_battle_animations]
   end
 
   def pbShowAbilitySplash(battler, delay = false, logTrigger = true)
     return if @predictingDamage
-    PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}") if logTrigger
-    return if !Scene::USE_ABILITY_SPLASH
-    @scene.pbShowAbilitySplash(battler)
+    PBDebug.log("[Ability triggered] #{battler.pbOfThis} #{battler.abilityName}") if logTrigger
+    return if !Visuals::USE_ABILITY_SPLASH
+    @visuals.pbShowAbilitySplash(battler)
     if delay
       timer_start = System.uptime
       until System.uptime - timer_start >= 1   # 1 second
-        @scene.pbUpdate
+        @visuals.pbUpdate
       end
     end
   end
 
   def pbHideAbilitySplash(battler)
     return if @predictingDamage
-    return if !Scene::USE_ABILITY_SPLASH
-    @scene.pbHideAbilitySplash(battler)
+    return if !Visuals::USE_ABILITY_SPLASH
+    @visuals.pbHideAbilitySplash(battler)
   end
 
   def pbReplaceAbilitySplash(battler)
     return if @predictingDamage
-    return if !Scene::USE_ABILITY_SPLASH
-    @scene.pbReplaceAbilitySplash(battler)
+    return if !Visuals::USE_ABILITY_SPLASH
+    @visuals.pbReplaceAbilitySplash(battler)
   end
 end

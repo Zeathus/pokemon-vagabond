@@ -26,8 +26,6 @@ Fire Stones
 Fire Stones
 Thunder Stones
 Thunder Stones
-Thunderstones
-Thunderstones
 Water Stones
 Water Stones
 Leaf Stones
@@ -56,32 +54,36 @@ Galarica Cuffs
 Galarica Cuffs
 Galarica Wreaths
 Galarica Wreaths
+Black Augurites
+Black Augurites
+Peat Blocks
+Peat Blocks
+Syrupy Apples
+Syrupy Apples
+Unremarkable Teacups
+Unremarkable Teacups
+Masterpiece Teacups
+Masterpiece Teacups
+Metal Alloys
+Metal Alloys
+Malicious Armors
+Malicious Armors
+Auspicious Armors
+Auspicious Armors
 Red Apricorns
 Red Apricorns
 Yellow Apricorns
 Yellow Apricorns
-Ylw Apricorns
-Ylw Apricorns
 Blue Apricorns
 Blue Apricorns
-Blu Apricorns
-Blu Apricorns
 Green Apricorns
 Green Apricorns
-Grn Apricorns
-Grn Apricorns
 Pink Apricorns
 Pink Apricorns
-Pnk Apricorns
-Pnk Apricorns
 White Apricorns
 White Apricorns
-Wht Apricorns
-Wht Apricorns
 Black Apricorns
 Black Apricorns
-Blk Apricorns
-Blk Apricorns
 Helix Fossils
 Helix Fossils
 Dome Fossils
@@ -114,18 +116,12 @@ Fossilized Dinos
 Fossilized Dinos
 Pretty Feathers
 Pretty Feathers
-Pretty Wings
-Pretty Wings
 Tiny Mushrooms
 Tiny Mushrooms
-TinyMushrooms
-TinyMushrooms
 Big Mushrooms
 Big Mushrooms
 Balm Mushrooms
 Balm Mushrooms
-BalmMushrooms
-BalmMushrooms
 Pearls
 Pearls
 Big Pearls
@@ -146,8 +142,6 @@ Heart Scales
 Heart Scales
 Slowpoke Tails
 Slowpoke Tails
-SlowpokeTails
-SlowpokeTails
 Rare Bones
 Rare Bones
 Relic Coppers
@@ -164,6 +158,10 @@ Relic Statues
 Relic Statues
 Relic Crowns
 Relic Crowns
+Tiny Bamboo Shoots
+Tiny Bamboo Shoots
+Big Bamboo Shoots
+Big Bamboo Shoots
 Growth Mulch
 Growth Mulch
 Damp Mulch
@@ -186,510 +184,30 @@ Pink Nectars
 Pink Nectars
 Purple Nectars
 Purple Nectars
-Air Balloons
-Air Balloons
-Bright Powders
-Bright Powders
-BrightPowders
-BrightPowders
-Eviolites
-Eviolites
-Float Stones
-Float Stones
-Destiny Knots
-Destiny Knots
-Rocky Helmets
-Rocky Helmets
-Assault Vests
-Assault Vests
-Safety Goggles
-Safety Goggles
-Protective Pads
-Protective Pads
-Heavy-Duty Boots
-Heavy-Duty Boots
-Utility Umbrellas
-Utility Umbrellas
-Eject Buttons
-Eject Buttons
-Eject Packs
-Eject Packs
-Red Cards
-Red Cards
-Shed Shells
-Shed Shells
-Smoke Balls
-Smoke Balls
-Lucky Eggs
-Lucky Eggs
-Exp. Shares
-Exp. Shares
-Amulet Coins
-Amulet Coins
-Soothe Bells
-Soothe Bells
-Cleanse Tags
-Cleanse Tags
-Choice Bands
-Choice Bands
-Choice Specs
-Choice Specs
-Choice Scarves
-Choice Scarves
-Heat Rocks
-Heat Rocks
-Damp Rocks
-Damp Rocks
-Smooth Rocks
-Smooth Rocks
-Icy Rocks
-Icy Rocks
-Terrain Extenders
-Terrain Extenders
-Light Clays
-Light Clays
-Grip Claws
-Grip Claws
-Binding Bands
-Binding Bands
-Big Roots
-Big Roots
-Black Sludges
-Black Sludges
-Leftovers
-Leftovers
-Shell Bells
-Shell Bells
-Mental Herbs
-Mental Herbs
-White Herbs
-White Herbs
-Power Herbs
-Power Herbs
-Absorb Bulbs
-Absorb Bulbs
-Cell Batteries
-Cell Batteries
-Luminous Moss
-Luminous Moss
-Snowballs
-Snowballs
-Weakness Policies
-Weakness Policies
-Blunder Policies
-Blunder Policies
-Throat Sprays
-Throat Sprays
-Adrenaline Orbs
-Adrenaline Orbs
-Room Services
-Room Services
-Electric Seeds
-Electric Seeds
-Grassy Seeds
-Grassy Seeds
-Misty Seeds
-Misty Seeds
-Psychic Seeds
-Psychic Seeds
-Life Orbs
-Life Orbs
-Expert Belts
-Expert Belts
-Metronomes
-Metronomes
-Muscle Bands
-Muscle Bands
-Wise Glasses
-Wise Glasses
-Razor Claws
-Razor Claws
-Scope Lenses
-Scope Lenses
-Wide Lenses
-Wide Lenses
-Zoom Lenses
-Zoom Lenses
-King's Rocks
-King's Rocks
-Razor Fangs
-Razor Fangs
-Lagging Tails
-Lagging Tails
-Quick Claws
-Quick Claws
-Focus Bands
-Focus Bands
-Focus Sashes
-Focus Sashes
-Flame Orbs
-Flame Orbs
-Toxic Orbs
-Toxic Orbs
-Sticky Barbs
-Sticky Barbs
-Iron Balls
-Iron Balls
-Ring Targets
-Ring Targets
-Macho Braces
-Macho Braces
-Power Weights
-Power Weights
-Power Bracers
-Power Bracers
-Power Belts
-Power Belts
-Power Lenses
-Power Lenses
-Power Bands
-Power Bands
-Power Anklets
-Power Anklets
-Lax Incenses
-Lax Incenses
-Full Incenses
-Full Incenses
-Luck Incenses
-Luck Incenses
-Pure Incenses
-Pure Incenses
-Sea Incenses
-Sea Incenses
-Wave Incenses
-Wave Incenses
-Rose Incenses
-Rose Incenses
-Odd Incenses
-Odd Incenses
-Rock Incenses
-Rock Incenses
-Charcoals
-Charcoals
-Mystic Waters
-Mystic Waters
-Magnets
-Magnets
-Miracle Seeds
-Miracle Seeds
-Never-Melt Ices
-Never-Melt Ices
-NeverMeltIces
-NeverMeltIces
-Black Belts
-Black Belts
-Poison Barbs
-Poison Barbs
-Soft Sand
-Soft Sand
-Sharp Beaks
-Sharp Beaks
-Twisted Spoons
-Twisted Spoons
-TwistedSpoons
-TwistedSpoons
-Silver Powders
-Silver Powders
-SilverPowders
-SilverPowders
-Hard Stones
-Hard Stones
-Spell Tags
-Spell Tags
-Dragon Fangs
-Dragon Fangs
-Black Glasses
-Black Glasses
-BlackGlasses
-BlackGlasses
-Metal Coats
-Metal Coats
-Silk Scarves
-Silk Scarves
-Flame Plates
-Flame Plates
-Splash Plates
-Splash Plates
-Zap Plates
-Zap Plates
-Meadow Plates
-Meadow Plates
-Icicle Plates
-Icicle Plates
-Fist Plates
-Fist Plates
-Toxic Plates
-Toxic Plates
-Earth Plates
-Earth Plates
-Sky Plates
-Sky Plates
-Mind Plates
-Mind Plates
-Insect Plates
-Insect Plates
-Stone Plates
-Stone Plates
-Spooky Plates
-Spooky Plates
-Draco Plates
-Draco Plates
-Dread Plates
-Dread Plates
-Iron Plates
-Iron Plates
-Pixie Plates
-Pixie Plates
-Fire Gems
-Fire Gems
-Water Gems
-Water Gems
-Electric Gems
-Electric Gems
-Grass Gems
-Grass Gems
-Ice Gems
-Ice Gems
-Fighting Gems
-Fighting Gems
-Poison Gems
-Poison Gems
-Ground Gems
-Ground Gems
-Flying Gems
-Flying Gems
-Psychic Gems
-Psychic Gems
-Bug Gems
-Bug Gems
-Rock Gems
-Rock Gems
-Ghost Gems
-Ghost Gems
-Dragon Gems
-Dragon Gems
-Dark Gems
-Dark Gems
-Steel Gems
-Steel Gems
-Fairy Gems
-Fairy Gems
-Normal Gems
-Normal Gems
-Light Balls
-Light Balls
-Lucky Punches
-Lucky Punches
-Metal Powders
-Metal Powders
-Quick Powders
-Quick Powders
-Thick Clubs
-Thick Clubs
-Leeks
-Leeks
-Sticks
-Sticks
-Soul Dews
-Soul Dews
-Deep Sea Teeth
-Deep Sea Teeth
-DeepSeaTeeth
-DeepSeaTeeth
-Deep Sea Scales
-Deep Sea Scales
-DeepSeaScales
-DeepSeaScales
-Adamant Orbs
-Adamant Orbs
-Lustrous Orbs
-Lustrous Orbs
-Griseous Orbs
-Griseous Orbs
-Rusted Swords
-Rusted Swords
-Rusted Shields
-Rusted Shields
-Douse Drives
-Douse Drives
-Shock Drives
-Shock Drives
-Burn Drives
-Burn Drives
-Chill Drives
-Chill Drives
-Fire Memories
-Fire Memories
-Water Memories
-Water Memories
-Electric Memories
-Electric Memories
-Grass Memories
-Grass Memories
-Ice Memories
-Ice Memories
-Fighting Memories
-Fighting Memories
-Poison Memories
-Poison Memories
-Ground Memories
-Ground Memories
-Flying Memories
-Flying Memories
-Psychic Memories
-Psychic Memories
-Bug Memories
-Bug Memories
-Rock Memories
-Rock Memories
-Ghost Memories
-Ghost Memories
-Dragon Memories
-Dragon Memories
-Dark Memories
-Dark Memories
-Steel Memories
-Steel Memories
-Fairy Memories
-Fairy Memories
-Everstones
-Everstones
-Dragon Scales
-Dragon Scales
-Upgrades
-Upgrades
-Up-Grades
-Up-Grades
-Dubious Discs
-Dubious Discs
-Protectors
-Protectors
-Electirizers
-Electirizers
-Magmarizers
-Magmarizers
-Reaper Cloths
-Reaper Cloths
-Prism Scales
-Prism Scales
-Oval Stones
-Oval Stones
-Whipped Dreams
-Whipped Dreams
-Sachets
-Sachets
-Strawberry Sweets
-Strawberry Sweets
-Love Sweets
-Love Sweets
-Berry Sweets
-Berry Sweets
-Clover Sweets
-Clover Sweets
-Flower Sweets
-Flower Sweets
-Star Sweets
-Star Sweets
-Ribbon Sweets
-Ribbon Sweets
-Venusaurites
-Venusaurites
-Charizardite Xs
-Charizardite Xs
-Charizardite Ys
-Charizardite Ys
-Blastoisinites
-Blastoisinites
-Beedrillites
-Beedrillites
-Pidgeotites
-Pidgeotites
-Alakazites
-Alakazites
-Slowbronites
-Slowbronites
-Gengarites
-Gengarites
-Kangaskhanites
-Kangaskhanites
-Pinsirites
-Pinsirites
-Gyaradosites
-Gyaradosites
-Aerodactylites
-Aerodactylites
-Mewtwonite Xs
-Mewtwonite Xs
-Mewtwonite Ys
-Mewtwonite Ys
-Ampharosites
-Ampharosites
-Steelixites
-Steelixites
-Scizorites
-Scizorites
-Heracronites
-Heracronites
-Houndoominites
-Houndoominites
-Tyranitarites
-Tyranitarites
-Sceptilites
-Sceptilites
-Blazikenites
-Blazikenites
-Swampertites
-Swampertites
-Gardevoirites
-Gardevoirites
-Sablenites
-Sablenites
-Mawilites
-Mawilites
-Aggronites
-Aggronites
-Medichamites
-Medichamites
-Manectites
-Manectites
-Sharpedonites
-Sharpedonites
-Cameruptites
-Cameruptites
-Altarianites
-Altarianites
-Banettites
-Banettites
-Absolites
-Absolites
-Glalitites
-Glalitites
-Salamencites
-Salamencites
-Metagrossites
-Metagrossites
-Latiasites
-Latiasites
-Latiosites
-Latiosites
-Lopunnites
-Lopunnites
-Garchompites
-Garchompites
-Lucarionites
-Lucarionites
-Abomasites
-Abomasites
-Galladites
-Galladites
-Audinites
-Audinites
-Diancites
-Diancites
-Red Orbs
-Red Orbs
-Blue Orbs
-Blue Orbs
+Grass Mail
+Grass Mail
+Flame Mail
+Flame Mail
+Bubble Mail
+Bubble Mail
+Bloom Mail
+Bloom Mail
+Tunnel Mail
+Tunnel Mail
+Steel Mail
+Steel Mail
+Heart Mail
+Heart Mail
+Snow Mail
+Snow Mail
+Space Mail
+Space Mail
+Air Mail
+Air Mail
+Mosaic Mail
+Mosaic Mail
+Brick Mail
+Brick Mail
 Potions
 Potions
 Super Potions
@@ -710,8 +228,6 @@ Burn Heals
 Burn Heals
 Paralyze Heals
 Paralyze Heals
-Parlyz Heals
-Parlyz Heals
 Ice Heals
 Ice Heals
 Full Heals
@@ -720,8 +236,6 @@ Pewter Crunchies
 Pewter Crunchies
 Rage Candy Bars
 Rage Candy Bars
-RageCandyBars
-RageCandyBars
 Lava Cookies
 Lava Cookies
 Old Gateaux
@@ -752,8 +266,6 @@ Moomoo Milks
 Moomoo Milks
 Energy Powders
 Energy Powders
-EnergyPowders
-EnergyPowders
 Energy Roots
 Energy Roots
 Heal Powders
@@ -788,28 +300,30 @@ Carbos
 Carbos
 Health Feathers
 Health Feathers
-Health Wings
-Health Wings
 Muscle Feathers
 Muscle Feathers
-Muscle Wings
-Muscle Wings
 Resist Feathers
 Resist Feathers
-Resist Wings
-Resist Wings
 Genius Feathers
 Genius Feathers
-Genius Wings
-Genius Wings
 Clever Feathers
 Clever Feathers
-Clever Wings
-Clever Wings
 Swift Feathers
 Swift Feathers
-Swift Wings
-Swift Wings
+Health Mochis
+Health Mochis
+Muscle Mochis
+Muscle Mochis
+Resist Mochis
+Resist Mochis
+Genius Mochis
+Genius Mochis
+Clever Mochis
+Clever Mochis
+Swift Mochis
+Swift Mochis
+Fresh-Start Mochis
+Fresh-Start Mochis
 Lonely Mints
 Lonely Mints
 Adamant Mints
@@ -920,218 +434,6 @@ Dream Balls
 Dream Balls
 Beast Balls
 Beast Balls
-TM01s
-TM01s
-TM02s
-TM02s
-TM03s
-TM03s
-TM04s
-TM04s
-TM05s
-TM05s
-TM06s
-TM06s
-TM07s
-TM07s
-TM08s
-TM08s
-TM09s
-TM09s
-TM10s
-TM10s
-TM11s
-TM11s
-TM12s
-TM12s
-TM13s
-TM13s
-TM14s
-TM14s
-TM15s
-TM15s
-TM16s
-TM16s
-TM17s
-TM17s
-TM18s
-TM18s
-TM19s
-TM19s
-TM20s
-TM20s
-TM21s
-TM21s
-TM22s
-TM22s
-TM23s
-TM23s
-TM24s
-TM24s
-TM25s
-TM25s
-TM26s
-TM26s
-TM27s
-TM27s
-TM28s
-TM28s
-TM29s
-TM29s
-TM30s
-TM30s
-TM31s
-TM31s
-TM32s
-TM32s
-TM33s
-TM33s
-TM34s
-TM34s
-TM35s
-TM35s
-TM36s
-TM36s
-TM37s
-TM37s
-TM38s
-TM38s
-TM39s
-TM39s
-TM40s
-TM40s
-TM41s
-TM41s
-TM42s
-TM42s
-TM43s
-TM43s
-TM44s
-TM44s
-TM45s
-TM45s
-TM46s
-TM46s
-TM47s
-TM47s
-TM48s
-TM48s
-TM49s
-TM49s
-TM50s
-TM50s
-TM51s
-TM51s
-TM52s
-TM52s
-TM53s
-TM53s
-TM54s
-TM54s
-TM55s
-TM55s
-TM56s
-TM56s
-TM57s
-TM57s
-TM58s
-TM58s
-TM59s
-TM59s
-TM60s
-TM60s
-TM61s
-TM61s
-TM62s
-TM62s
-TM63s
-TM63s
-TM64s
-TM64s
-TM65s
-TM65s
-TM66s
-TM66s
-TM67s
-TM67s
-TM68s
-TM68s
-TM69s
-TM69s
-TM70s
-TM70s
-TM71s
-TM71s
-TM72s
-TM72s
-TM73s
-TM73s
-TM74s
-TM74s
-TM75s
-TM75s
-TM76s
-TM76s
-TM77s
-TM77s
-TM78s
-TM78s
-TM79s
-TM79s
-TM80s
-TM80s
-TM81s
-TM81s
-TM82s
-TM82s
-TM83s
-TM83s
-TM84s
-TM84s
-TM85s
-TM85s
-TM86s
-TM86s
-TM87s
-TM87s
-TM88s
-TM88s
-TM89s
-TM89s
-TM90s
-TM90s
-TM91s
-TM91s
-TM92s
-TM92s
-TM93s
-TM93s
-TM94s
-TM94s
-TM95s
-TM95s
-TM96s
-TM96s
-TM97s
-TM97s
-TM98s
-TM98s
-TM99s
-TM99s
-TM100s
-TM100s
-HM01s
-HM01s
-HM02s
-HM02s
-HM03s
-HM03s
-HM04s
-HM04s
-HM05s
-HM05s
-HM06s
-HM06s
 Cheri Berries
 Cheri Berries
 Chesto Berries
@@ -1266,30 +568,612 @@ Kee Berries
 Kee Berries
 Maranga Berries
 Maranga Berries
-Grass Mail
-Grass Mail
-Flame Mail
-Flame Mail
-Bubble Mail
-Bubble Mail
-Bloom Mail
-Bloom Mail
-Tunnel Mail
-Tunnel Mail
-Steel Mail
-Steel Mail
-Heart Mail
-Heart Mail
-Snow Mail
-Snow Mail
-Space Mail
-Space Mail
-Air Mail
-Air Mail
-Mosaic Mail
-Mosaic Mail
-Brick Mail
-Brick Mail
+Air Balloons
+Air Balloons
+Bright Powders
+Bright Powders
+Eviolites
+Eviolites
+Float Stones
+Float Stones
+Destiny Knots
+Destiny Knots
+Rocky Helmets
+Rocky Helmets
+Assault Vests
+Assault Vests
+Safety Goggles
+Safety Goggles
+Protective Pads
+Protective Pads
+Heavy-Duty Boots
+Heavy-Duty Boots
+Utility Umbrellas
+Utility Umbrellas
+Ability Shields
+Ability Shields
+Clear Amulets
+Clear Amulets
+Covert Cloaks
+Covert Cloaks
+Eject Buttons
+Eject Buttons
+Eject Packs
+Eject Packs
+Red Cards
+Red Cards
+Shed Shells
+Shed Shells
+Smoke Balls
+Smoke Balls
+Lucky Eggs
+Lucky Eggs
+Exp. Shares
+Exp. Shares
+Amulet Coins
+Amulet Coins
+Soothe Bells
+Soothe Bells
+Cleanse Tags
+Cleanse Tags
+Choice Bands
+Choice Bands
+Choice Specs
+Choice Specs
+Choice Scarves
+Choice Scarves
+Heat Rocks
+Heat Rocks
+Damp Rocks
+Damp Rocks
+Smooth Rocks
+Smooth Rocks
+Icy Rocks
+Icy Rocks
+Terrain Extenders
+Terrain Extenders
+Light Clays
+Light Clays
+Grip Claws
+Grip Claws
+Loaded Dice
+Loaded Dice
+Binding Bands
+Binding Bands
+Big Roots
+Big Roots
+Black Sludges
+Black Sludges
+Leftovers
+Leftovers
+Shell Bells
+Shell Bells
+Mental Herbs
+Mental Herbs
+White Herbs
+White Herbs
+Power Herbs
+Power Herbs
+Mirror Herbs
+Mirror Herbs
+Absorb Bulbs
+Absorb Bulbs
+Cell Batteries
+Cell Batteries
+Luminous Moss
+Luminous Moss
+Snowballs
+Snowballs
+Weakness Policies
+Weakness Policies
+Blunder Policies
+Blunder Policies
+Throat Sprays
+Throat Sprays
+Adrenaline Orbs
+Adrenaline Orbs
+Booster Energies
+Booster Energies
+Room Services
+Room Services
+Electric Seeds
+Electric Seeds
+Grassy Seeds
+Grassy Seeds
+Misty Seeds
+Misty Seeds
+Psychic Seeds
+Psychic Seeds
+Life Orbs
+Life Orbs
+Expert Belts
+Expert Belts
+Metronomes
+Metronomes
+Punching Gloves
+Punching Gloves
+Muscle Bands
+Muscle Bands
+Wise Glasses
+Wise Glasses
+Razor Claws
+Razor Claws
+Scope Lenses
+Scope Lenses
+Wide Lenses
+Wide Lenses
+Zoom Lenses
+Zoom Lenses
+King's Rocks
+King's Rocks
+Razor Fangs
+Razor Fangs
+Lagging Tails
+Lagging Tails
+Quick Claws
+Quick Claws
+Focus Bands
+Focus Bands
+Focus Sashes
+Focus Sashes
+Flame Orbs
+Flame Orbs
+Toxic Orbs
+Toxic Orbs
+Sticky Barbs
+Sticky Barbs
+Iron Balls
+Iron Balls
+Ring Targets
+Ring Targets
+Macho Braces
+Macho Braces
+Power Weights
+Power Weights
+Power Bracers
+Power Bracers
+Power Belts
+Power Belts
+Power Lenses
+Power Lenses
+Power Bands
+Power Bands
+Power Anklets
+Power Anklets
+Lax Incenses
+Lax Incenses
+Full Incenses
+Full Incenses
+Luck Incenses
+Luck Incenses
+Pure Incenses
+Pure Incenses
+Sea Incenses
+Sea Incenses
+Wave Incenses
+Wave Incenses
+Rose Incenses
+Rose Incenses
+Odd Incenses
+Odd Incenses
+Rock Incenses
+Rock Incenses
+Charcoals
+Charcoals
+Mystic Waters
+Mystic Waters
+Magnets
+Magnets
+Miracle Seeds
+Miracle Seeds
+Never-Melt Ices
+Never-Melt Ices
+Black Belts
+Black Belts
+Poison Barbs
+Poison Barbs
+Soft Sand
+Soft Sand
+Sharp Beaks
+Sharp Beaks
+Twisted Spoons
+Twisted Spoons
+Silver Powders
+Silver Powders
+Hard Stones
+Hard Stones
+Spell Tags
+Spell Tags
+Dragon Fangs
+Dragon Fangs
+Black Glasses
+Black Glasses
+Metal Coats
+Metal Coats
+Fairy Feathers
+Fairy Feathers
+Silk Scarves
+Silk Scarves
+Flame Plates
+Flame Plates
+Splash Plates
+Splash Plates
+Zap Plates
+Zap Plates
+Meadow Plates
+Meadow Plates
+Icicle Plates
+Icicle Plates
+Fist Plates
+Fist Plates
+Toxic Plates
+Toxic Plates
+Earth Plates
+Earth Plates
+Sky Plates
+Sky Plates
+Mind Plates
+Mind Plates
+Insect Plates
+Insect Plates
+Stone Plates
+Stone Plates
+Spooky Plates
+Spooky Plates
+Draco Plates
+Draco Plates
+Dread Plates
+Dread Plates
+Iron Plates
+Iron Plates
+Pixie Plates
+Pixie Plates
+Fire Gems
+Fire Gems
+Water Gems
+Water Gems
+Electric Gems
+Electric Gems
+Grass Gems
+Grass Gems
+Ice Gems
+Ice Gems
+Fighting Gems
+Fighting Gems
+Poison Gems
+Poison Gems
+Ground Gems
+Ground Gems
+Flying Gems
+Flying Gems
+Psychic Gems
+Psychic Gems
+Bug Gems
+Bug Gems
+Rock Gems
+Rock Gems
+Ghost Gems
+Ghost Gems
+Dragon Gems
+Dragon Gems
+Dark Gems
+Dark Gems
+Steel Gems
+Steel Gems
+Fairy Gems
+Fairy Gems
+Normal Gems
+Normal Gems
+Light Balls
+Light Balls
+Lucky Punches
+Lucky Punches
+Metal Powders
+Metal Powders
+Quick Powders
+Quick Powders
+Thick Clubs
+Thick Clubs
+Leeks
+Leeks
+Soul Dews
+Soul Dews
+Deep Sea Teeth
+Deep Sea Teeth
+Deep Sea Scales
+Deep Sea Scales
+Adamant Orbs
+Adamant Orbs
+Lustrous Orbs
+Lustrous Orbs
+Griseous Orbs
+Griseous Orbs
+Adamant Crystals
+Adamant Crystals
+Lustrous Globes
+Lustrous Globes
+Griseous Cores
+Griseous Cores
+Rusted Swords
+Rusted Swords
+Rusted Shields
+Rusted Shields
+Wellspring Masks
+Wellspring Masks
+Hearthflame Masks
+Hearthflame Masks
+Cornerstone Masks
+Cornerstone Masks
+Douse Drives
+Douse Drives
+Shock Drives
+Shock Drives
+Burn Drives
+Burn Drives
+Chill Drives
+Chill Drives
+Fire Memories
+Fire Memories
+Water Memories
+Water Memories
+Electric Memories
+Electric Memories
+Grass Memories
+Grass Memories
+Ice Memories
+Ice Memories
+Fighting Memories
+Fighting Memories
+Poison Memories
+Poison Memories
+Ground Memories
+Ground Memories
+Flying Memories
+Flying Memories
+Psychic Memories
+Psychic Memories
+Bug Memories
+Bug Memories
+Rock Memories
+Rock Memories
+Ghost Memories
+Ghost Memories
+Dragon Memories
+Dragon Memories
+Dark Memories
+Dark Memories
+Steel Memories
+Steel Memories
+Fairy Memories
+Fairy Memories
+Everstones
+Everstones
+Dragon Scales
+Dragon Scales
+Upgrades
+Upgrades
+Dubious Discs
+Dubious Discs
+Protectors
+Protectors
+Electirizers
+Electirizers
+Magmarizers
+Magmarizers
+Reaper Cloths
+Reaper Cloths
+Prism Scales
+Prism Scales
+Oval Stones
+Oval Stones
+Whipped Dreams
+Whipped Dreams
+Sachets
+Sachets
+Strawberry Sweets
+Strawberry Sweets
+Love Sweets
+Love Sweets
+Berry Sweets
+Berry Sweets
+Clover Sweets
+Clover Sweets
+Flower Sweets
+Flower Sweets
+Star Sweets
+Star Sweets
+Ribbon Sweets
+Ribbon Sweets
+Leader's Crests
+Leader's Crests
+Venusaurites
+Venusaurites
+Charizardite Xs
+Charizardite Xs
+Charizardite Ys
+Charizardite Ys
+Blastoisinites
+Blastoisinites
+Beedrillites
+Beedrillites
+Pidgeotites
+Pidgeotites
+Raichunite Xs
+Raichunite Xs
+Raichunite Ys
+Raichunite Ys
+Clefablites
+Clefablites
+Alakazites
+Alakazites
+Victreebelites
+Victreebelites
+Slowbronites
+Slowbronites
+Gengarites
+Gengarites
+Kangaskhanites
+Kangaskhanites
+Starminites
+Starminites
+Pinsirites
+Pinsirites
+Gyaradosites
+Gyaradosites
+Aerodactylites
+Aerodactylites
+Dragoninites
+Dragoninites
+Mewtwonite Xs
+Mewtwonite Xs
+Mewtwonite Ys
+Mewtwonite Ys
+Meganiumites
+Meganiumites
+Feraligites
+Feraligites
+Ampharosites
+Ampharosites
+Steelixites
+Steelixites
+Scizorites
+Scizorites
+Heracronites
+Heracronites
+Skarmorites
+Skarmorites
+Houndoominites
+Houndoominites
+Tyranitarites
+Tyranitarites
+Sceptilites
+Sceptilites
+Blazikenites
+Blazikenites
+Swampertites
+Swampertites
+Gardevoirites
+Gardevoirites
+Sablenites
+Sablenites
+Mawilites
+Mawilites
+Aggronites
+Aggronites
+Medichamites
+Medichamites
+Manectites
+Manectites
+Sharpedonites
+Sharpedonites
+Cameruptites
+Cameruptites
+Altarianites
+Altarianites
+Banettites
+Banettites
+Chimechites
+Chimechites
+Absolites
+Absolites
+Absolite Zs
+Absolite Zs
+Glalitites
+Glalitites
+Salamencites
+Salamencites
+Metagrossites
+Metagrossites
+Latiasites
+Latiasites
+Latiosites
+Latiosites
+Staraptites
+Staraptites
+Lopunnites
+Lopunnites
+Garchompites
+Garchompites
+Garchompite Zs
+Garchompite Zs
+Lucarionites
+Lucarionites
+Lucarionite Zs
+Lucarionite Zs
+Abomasites
+Abomasites
+Galladites
+Galladites
+Froslassites
+Froslassites
+Heatranites
+Heatranites
+Darkranites
+Darkranites
+Emboarites
+Emboarites
+Excadrites
+Excadrites
+Audinites
+Audinites
+Scolipites
+Scolipites
+Scraftinites
+Scraftinites
+Eelektrossites
+Eelektrossites
+Chandelurites
+Chandelurites
+Golurkites
+Golurkites
+Chesnaughtites
+Chesnaughtites
+Delphoxites
+Delphoxites
+Greninjites
+Greninjites
+Pyroarites
+Pyroarites
+Floettites
+Floettites
+Meowsticites
+Meowsticites
+Malamarites
+Malamarites
+Barbaracites
+Barbaracites
+Dragalgites
+Dragalgites
+Hawluchanites
+Hawluchanites
+Zygardites
+Zygardites
+Diancites
+Diancites
+Crabominites
+Crabominites
+Golisopites
+Golisopites
+Drampanites
+Drampanites
+Magearnites
+Magearnites
+Zeraorites
+Zeraorites
+Falinksites
+Falinksites
+Scovillainites
+Scovillainites
+Glimmoranites
+Glimmoranites
+Tatsugirinites
+Tatsugirinites
+Baxcalibrites
+Baxcalibrites
+Red Orbs
+Red Orbs
+Blue Orbs
+Blue Orbs
 X Attacks
 X Attacks
 X Attack 2s
@@ -1300,36 +1184,20 @@ X Attack 6s
 X Attack 6s
 X Defenses
 X Defenses
-X Defends
-X Defends
 X Defense 2s
 X Defense 2s
-X Defend 2s
-X Defend 2s
 X Defense 3s
 X Defense 3s
-X Defend 3s
-X Defend 3s
 X Defense 6s
 X Defense 6s
-X Defend 6s
-X Defend 6s
 X Sp. Atks
 X Sp. Atks
-X Specials
-X Specials
 X Sp. Atk 2s
 X Sp. Atk 2s
-X Special 2s
-X Special 2s
 X Sp. Atk 3s
 X Sp. Atk 3s
-X Special 3s
-X Special 3s
 X Sp. Atk 6s
 X Sp. Atk 6s
-X Special 6s
-X Special 6s
 X Sp. Defs
 X Sp. Defs
 X Sp. Def 2s
@@ -1384,10 +1252,478 @@ Fluffy Tails
 Fluffy Tails
 Poké Toys
 Poké Toys
+TM001s
+TM001s
+TM002s
+TM002s
+TM003s
+TM003s
+TM004s
+TM004s
+TM005s
+TM005s
+TM006s
+TM006s
+TM007s
+TM007s
+TM008s
+TM008s
+TM009s
+TM009s
+TM010s
+TM010s
+TM011s
+TM011s
+TM012s
+TM012s
+TM013s
+TM013s
+TM014s
+TM014s
+TM015s
+TM015s
+TM016s
+TM016s
+TM017s
+TM017s
+TM018s
+TM018s
+TM019s
+TM019s
+TM020s
+TM020s
+TM021s
+TM021s
+TM022s
+TM022s
+TM023s
+TM023s
+TM024s
+TM024s
+TM025s
+TM025s
+TM026s
+TM026s
+TM027s
+TM027s
+TM028s
+TM028s
+TM029s
+TM029s
+TM030s
+TM030s
+TM031s
+TM031s
+TM032s
+TM032s
+TM033s
+TM033s
+TM034s
+TM034s
+TM035s
+TM035s
+TM036s
+TM036s
+TM037s
+TM037s
+TM038s
+TM038s
+TM039s
+TM039s
+TM040s
+TM040s
+TM041s
+TM041s
+TM042s
+TM042s
+TM043s
+TM043s
+TM044s
+TM044s
+TM045s
+TM045s
+TM046s
+TM046s
+TM047s
+TM047s
+TM048s
+TM048s
+TM049s
+TM049s
+TM050s
+TM050s
+TM051s
+TM051s
+TM052s
+TM052s
+TM053s
+TM053s
+TM054s
+TM054s
+TM055s
+TM055s
+TM056s
+TM056s
+TM057s
+TM057s
+TM058s
+TM058s
+TM059s
+TM059s
+TM060s
+TM060s
+TM061s
+TM061s
+TM062s
+TM062s
+TM063s
+TM063s
+TM064s
+TM064s
+TM065s
+TM065s
+TM066s
+TM066s
+TM067s
+TM067s
+TM068s
+TM068s
+TM069s
+TM069s
+TM070s
+TM070s
+TM071s
+TM071s
+TM072s
+TM072s
+TM073s
+TM073s
+TM074s
+TM074s
+TM075s
+TM075s
+TM076s
+TM076s
+TM077s
+TM077s
+TM078s
+TM078s
+TM079s
+TM079s
+TM080s
+TM080s
+TM081s
+TM081s
+TM082s
+TM082s
+TM083s
+TM083s
+TM084s
+TM084s
+TM085s
+TM085s
+TM086s
+TM086s
+TM087s
+TM087s
+TM088s
+TM088s
+TM089s
+TM089s
+TM090s
+TM090s
+TM091s
+TM091s
+TM092s
+TM092s
+TM093s
+TM093s
+TM094s
+TM094s
+TM095s
+TM095s
+TM096s
+TM096s
+TM097s
+TM097s
+TM098s
+TM098s
+TM099s
+TM099s
+TM100s
+TM100s
+TM101s
+TM101s
+TM102s
+TM102s
+TM103s
+TM103s
+TM104s
+TM104s
+TM105s
+TM105s
+TM106s
+TM106s
+TM107s
+TM107s
+TM108s
+TM108s
+TM109s
+TM109s
+TM110s
+TM110s
+TM111s
+TM111s
+TM112s
+TM112s
+TM113s
+TM113s
+TM114s
+TM114s
+TM115s
+TM115s
+TM116s
+TM116s
+TM117s
+TM117s
+TM118s
+TM118s
+TM119s
+TM119s
+TM120s
+TM120s
+TM121s
+TM121s
+TM122s
+TM122s
+TM123s
+TM123s
+TM124s
+TM124s
+TM125s
+TM125s
+TM126s
+TM126s
+TM127s
+TM127s
+TM128s
+TM128s
+TM129s
+TM129s
+TM130s
+TM130s
+TM131s
+TM131s
+TM132s
+TM132s
+TM133s
+TM133s
+TM134s
+TM134s
+TM135s
+TM135s
+TM136s
+TM136s
+TM137s
+TM137s
+TM138s
+TM138s
+TM139s
+TM139s
+TM140s
+TM140s
+TM141s
+TM141s
+TM142s
+TM142s
+TM143s
+TM143s
+TM144s
+TM144s
+TM145s
+TM145s
+TM146s
+TM146s
+TM147s
+TM147s
+TM148s
+TM148s
+TM149s
+TM149s
+TM150s
+TM150s
+TM151s
+TM151s
+TM152s
+TM152s
+TM153s
+TM153s
+TM154s
+TM154s
+TM155s
+TM155s
+TM156s
+TM156s
+TM157s
+TM157s
+TM158s
+TM158s
+TM159s
+TM159s
+TM160s
+TM160s
+TM161s
+TM161s
+TM162s
+TM162s
+TM163s
+TM163s
+TM164s
+TM164s
+TM165s
+TM165s
+TM166s
+TM166s
+TM167s
+TM167s
+TM168s
+TM168s
+TM169s
+TM169s
+TM170s
+TM170s
+TM171s
+TM171s
+TM172s
+TM172s
+TM173s
+TM173s
+TM174s
+TM174s
+TM175s
+TM175s
+TM176s
+TM176s
+TM177s
+TM177s
+TM178s
+TM178s
+TM179s
+TM179s
+TM180s
+TM180s
+TM181s
+TM181s
+TM182s
+TM182s
+TM183s
+TM183s
+TM184s
+TM184s
+TM185s
+TM185s
+TM186s
+TM186s
+TM187s
+TM187s
+TM188s
+TM188s
+TM189s
+TM189s
+TM190s
+TM190s
+TM191s
+TM191s
+TM192s
+TM192s
+TM193s
+TM193s
+TM194s
+TM194s
+TM195s
+TM195s
+TM196s
+TM196s
+TM197s
+TM197s
+TM198s
+TM198s
+TM199s
+TM199s
+TM200s
+TM200s
+TM201s
+TM201s
+TM202s
+TM202s
+TM203s
+TM203s
+TM204s
+TM204s
+TM205s
+TM205s
+TM206s
+TM206s
+TM207s
+TM207s
+TM208s
+TM208s
+TM209s
+TM209s
+TM210s
+TM210s
+TM211s
+TM211s
+TM212s
+TM212s
+TM213s
+TM213s
+TM214s
+TM214s
+TM215s
+TM215s
+TM216s
+TM216s
+TM217s
+TM217s
+TM218s
+TM218s
+TM219s
+TM219s
+TM220s
+TM220s
+TM221s
+TM221s
+TM222s
+TM222s
+TM223s
+TM223s
+TM224s
+TM224s
+TM225s
+TM225s
+TM226s
+TM226s
+TM227s
+TM227s
+TM228s
+TM228s
+TM229s
+TM229s
+HM01s
+HM01s
+HM02s
+HM02s
+HM03s
+HM03s
+HM04s
+HM04s
+HM05s
+HM05s
+HM06s
+HM06s
 Bicycles
 Bicycles
-Bikes
-Bikes
 Old Rods
 Old Rods
 Good Rods
@@ -1398,8 +1734,6 @@ Itemfinders
 Itemfinders
 Dowsing Machines
 Dowsing Machines
-Dowsing MCHNs
-Dowsing MCHNs
 Poké Radars
 Poké Radars
 Town Maps
@@ -1418,8 +1752,6 @@ Devon Scopes
 Devon Scopes
 Squirt Bottles
 Squirt Bottles
-SquirtBottles
-SquirtBottles
 Sprayducks
 Sprayducks
 Wailmer Pails
@@ -1444,6 +1776,12 @@ N-Lunarizers
 N-Lunarizers
 Reins of Unity
 Reins of Unity
+Meteorites
+Meteorites
+Scrolls of Darkness
+Scrolls of Darkness
+Scrolls of Waters
+Scrolls of Waters
 Oval Charms
 Oval Charms
 Shiny Charms
@@ -1456,8 +1794,6 @@ Mega Rings
 Mega Rings
 Pokémon Box Links
 Pokémon Box Links
-Pokémon Boxes
-Pokémon Boxes
 Aurora Tickets
 Aurora Tickets
 Old Sea Maps

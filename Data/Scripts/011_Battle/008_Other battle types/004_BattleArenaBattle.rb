@@ -1,5 +1,5 @@
 #===============================================================================
-# Success state
+# Success state.
 #===============================================================================
 class Battle::SuccessState
   attr_accessor :typeMod
@@ -50,16 +50,16 @@ class BattleArenaBattle < Battle
     @battleAI.battleArena = true
   end
 
-  def pbCanSwitchIn?(idxBattler, _idxParty, partyScene = nil)
-    partyScene&.pbDisplay(_INTL("{1} can't be switched out!", @battlers[idxBattler].pbThis))
+  def pbCanSwitchIn?(idxBattler, _idxParty, party_screen = nil)
+    party_screen&.show_message(_INTL("{1} can't be switched out!", @battlers[idxBattler].pbThis))
     return false
   end
 
   def pbEORSwitch(favorDraws = false)
-    return if favorDraws && @decision == 5
-    return if !favorDraws && @decision > 0
+    return if favorDraws && @decision == Battle::Outcome::DRAW
+    return if !favorDraws && decided?
     pbJudge
-    return if @decision > 0
+    return if decided?
     2.times do |side|
       next if !@battlers[side].fainted?
       next if @partyindexes[side] + 1 >= self.pbParty(side).length
@@ -110,12 +110,12 @@ class BattleArenaBattle < Battle
 
   def pbCommandPhase
     if @battlersChanged
-      @scene.pbBattleArenaBattlers(@battlers[0], @battlers[1])
+      @visuals.pbBattleArenaBattlers(@battlers[0], @battlers[1])
       @battlersChanged = false
       @count = 0
     end
     super
-    return if @decision != 0
+    return if decided?
     # Update mind rating (asserting that a move was chosen)
     2.times do |side|
       if @choices[side][2] && @choices[side][0] == :UseMove
@@ -126,7 +126,7 @@ class BattleArenaBattle < Battle
 
   def pbEndOfRoundPhase
     super
-    return if @decision != 0
+    return if decided?
     # Update skill rating
     2.times do |side|
       @skill[side] += self.successStates[side].skill
@@ -136,8 +136,8 @@ class BattleArenaBattle < Battle
     @count += 1
     return if @count < 3
     # Half all multi-turn moves
-    @battlers[0].pbCancelMoves(true)
-    @battlers[1].pbCancelMoves(true)
+    @battlers[0].pbCancelMoves(true, true)
+    @battlers[1].pbCancelMoves(true, true)
     # Calculate scores in each category
     ratings1 = [0, 0, 0]
     ratings2 = [0, 0, 0]
@@ -169,7 +169,7 @@ class BattleArenaBattle < Battle
       ratings2[2] = 2
     end
     # Show scores
-    @scene.pbBattleArenaJudgment(@battlers[0], @battlers[1], ratings1.clone, ratings2.clone)
+    @visuals.pbBattleArenaJudgment(@battlers[0], @battlers[1], ratings1.clone, ratings2.clone)
     # Calculate total scores
     points = [0, 0]
     ratings1.each { |val| points[0] += val }
@@ -219,8 +219,9 @@ end
 #===============================================================================
 #
 #===============================================================================
-class Battle::Scene
+class Battle::Visuals
   def pbBattleArenaUpdate
+    Graphics.update
     pbGraphicsUpdate
   end
 
@@ -274,13 +275,15 @@ class Battle::Scene
         pbBattleArenaUpdate
         dimmingvp.update
       end
-      dimmingvp.z = 99999
+      dimmingvp.z = 99_999
       infowindow = SpriteWindow_Base.new(80, 0, 320, 224)
       infowindow.contents = Bitmap.new(infowindow.width - infowindow.borderX,
                                        infowindow.height - infowindow.borderY)
-      infowindow.z        = 99999
+      infowindow.z        = 99_999
       infowindow.visible  = false
       11.times do |i|
+        Graphics.update
+        Input.update
         pbGraphicsUpdate
         pbInputUpdate
         msgwindow.update
@@ -290,6 +293,8 @@ class Battle::Scene
       updateJudgment(infowindow, 0, battler1, battler2, ratings1, ratings2)
       infowindow.visible = true
       11.times do |i|
+        Graphics.update
+        Input.update
         pbGraphicsUpdate
         pbInputUpdate
         msgwindow.update
@@ -350,6 +355,8 @@ class Battle::Scene
       infowindow.visible = false
       msgwindow.visible  = false
       11.times do |i|
+        Graphics.update
+        Input.update
         pbGraphicsUpdate
         pbInputUpdate
         msgwindow.update

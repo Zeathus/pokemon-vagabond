@@ -22,22 +22,24 @@ end
 #===============================================================================
 class Battle::Move::Confusion < Battle::Move
   def initialize(battle, move)
-    @battle        = battle
-    @realMove      = move
-    @id            = :CONFUSEDAMAGE
-    @name          = ""
-    @function_code = "None"
-    @power         = 40
-    @type          = nil
-    @category      = 0
-    @accuracy      = 100
-    @pp            = -1
-    @target        = :User
-    @priority      = 0
-    @flags         = []
-    @addlEffect    = 0
-    @powerBoost    = false
-    @snatched      = false
+    @battle           = battle
+    @realMove         = move
+    @id               = :CONFUSEDAMAGE
+    @name             = ""
+    @function_code    = "None"
+    @power            = 40
+    @type             = nil
+    @category         = 0
+    @accuracy         = 100
+    @pp               = -1
+    @target           = :User
+    @priority         = 0
+    @flags            = []
+    @addlEffect       = 0
+    @powerBoost       = false
+    @snatched         = false
+    @magicCoatIndex   = -1
+    @magicBounceIndex = -1
   end
 
   def physicalMove?(thisType = nil);   return true;  end
@@ -50,22 +52,24 @@ end
 #===============================================================================
 class Battle::Move::Struggle < Battle::Move
   def initialize(battle, move)
-    @battle        = battle
-    @realMove      = nil                     # Not associated with a move
-    @id            = :STRUGGLE
-    @name          = _INTL("Struggle")
-    @function_code = "Struggle"
-    @power         = 50
-    @type          = nil
-    @category      = 0
-    @accuracy      = 0
-    @pp            = -1
-    @target        = :RandomNearFoe
-    @priority      = 0
-    @flags         = ["Contact", "CanProtect"]
-    @addlEffect    = 0
-    @powerBoost    = false
-    @snatched      = false
+    @battle           = battle
+    @realMove         = nil                     # Not associated with a move
+    @id               = :STRUGGLE
+    @name             = _INTL("Struggle")
+    @function_code    = "Struggle"
+    @power            = 50
+    @type             = nil
+    @category         = 0
+    @accuracy         = 0
+    @pp               = -1
+    @target           = :RandomNearFoe
+    @priority         = 0
+    @flags            = ["Contact", "CanProtect"]
+    @addlEffect       = 0
+    @powerBoost       = false
+    @snatched         = false
+    @magicCoatIndex   = -1
+    @magicBounceIndex = -1
   end
 
   def physicalMove?(thisType = nil); return true;  end
@@ -85,7 +89,8 @@ end
 class Battle::Move::StatUpMove < Battle::Move
   attr_reader :statUp
 
-  def canSnatch?; return true; end
+  def canSnatch?;                   return true; end
+  def additionalEffectAffectsUser?; return true; end
 
   def pbMoveFailed?(user, targets)
     return false if damagingMove?
@@ -110,7 +115,8 @@ end
 class Battle::Move::MultiStatUpMove < Battle::Move
   attr_reader :statUp
 
-  def canSnatch?; return true; end
+  def canSnatch?;                   return true; end
+  def additionalEffectAffectsUser?; return true; end
 
   def pbMoveFailed?(user, targets)
     return false if damagingMove?
@@ -121,7 +127,7 @@ class Battle::Move::MultiStatUpMove < Battle::Move
       break
     end
     if failed
-      @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!", user.pbThis))
+      @battle.pbDisplay(_INTL("{1} stats won't go any higher!", user.pbOfThis))
       return true
     end
     return false
@@ -155,12 +161,18 @@ end
 class Battle::Move::StatDownMove < Battle::Move
   attr_reader :statDown
 
+  def pbOnStartUse(user, targets)
+    @stats_lowered = false
+  end
+
   def pbEffectWhenDealingDamage(user, target)
-    return if @battle.pbAllFainted?(target.idxOwnSide)
+    return if @stats_lowered
+    return if @battle.pbAllFainted?(target.idxOwnSide)   # End of battle
     showAnim = true
     (@statDown.length / 2).times do |i|
       next if !user.pbCanLowerStatStage?(@statDown[i * 2], user, self)
       if user.pbLowerStatStage(@statDown[i * 2], @statDown[(i * 2) + 1], user, showAnim)
+        @stats_lowered = true
         showAnim = false
       end
     end
@@ -186,6 +198,7 @@ class Battle::Move::TargetStatDownMove < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     return if !target.pbCanLowerStatStage?(@statDown[0], user, self)
     target.pbLowerStatStage(@statDown[0], @statDown[1], user)
@@ -212,20 +225,20 @@ class Battle::Move::TargetMultiStatDownMove < Battle::Move
       # NOTE: It's a bit of a faff to make sure the appropriate failure message
       #       is shown here, I know.
       canLower = false
-      if target.hasActiveAbility?(:CONTRARY) && !@battle.moldBreaker
+      if target.hasActiveAbility?(:CONTRARY) && !target.beingMoldBroken?
         (@statDown.length / 2).times do |i|
           next if target.statStageAtMax?(@statDown[i * 2])
           canLower = true
           break
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!", user.pbThis)) if !canLower && show_message
+        @battle.pbDisplay(_INTL("{1} stats won't go any higher!", user.pbOfThis)) if !canLower && show_message
       else
         (@statDown.length / 2).times do |i|
           next if target.statStageAtMin?(@statDown[i * 2])
           canLower = true
           break
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any lower!", user.pbThis)) if !canLower && show_message
+        @battle.pbDisplay(_INTL("{1} stats won't go any lower!", user.pbOfThis)) if !canLower && show_message
       end
       if canLower
         target.pbCanLowerStatStage?(@statDown[0], user, self, show_message)
@@ -246,8 +259,8 @@ class Battle::Move::TargetMultiStatDownMove < Battle::Move
       end
       if failed
         @battle.pbShowAbilitySplash(target)
-        if !Battle::Scene::USE_ABILITY_SPLASH
-          @battle.pbDisplay(_INTL("{1}'s {2} activated!", target.pbThis, target.abilityName))
+        if !Battle::Visuals::USE_ABILITY_SPLASH
+          @battle.pbDisplay(_INTL("{1} {2} activated!", target.pbOfThis, target.abilityName))
         end
         user.pbCanLowerStatStage?(@statDown[0], target, self, true, false, true)   # Show fail message
         @battle.pbHideAbilitySplash(target)
@@ -277,7 +290,9 @@ class Battle::Move::TargetMultiStatDownMove < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
-    pbLowerTargetMultipleStats(user, target) if !target.damageState.substitute
+    return if !target.affectedByAdditionalEffects?
+    return if target.damageState.substitute
+    pbLowerTargetMultipleStats(user, target)
   end
 end
 
@@ -300,7 +315,9 @@ end
 class Battle::Move::TwoTurnMove < Battle::Move
   attr_reader :chargingTurn
 
-  def chargingTurnMove?; return true; end
+  def chargingTurnMove?; return true;  end
+  def hidesUser?;        return false; end
+  def hidesTarget?;      return false; end   # For Sky Drop
 
   # user.effects[PBEffects::TwoTurnAttack] is set to the move's ID if this
   # method returns true, or nil if false.
@@ -333,7 +350,7 @@ class Battle::Move::TwoTurnMove < Battle::Move
     targets.each { |b| pbChargingTurnEffect(user, b) }
     if @powerHerb
       # Moves that would make the user semi-invulnerable will hide the user
-      # after the charging animation, so the "UseItem" animation shouldn't show
+      # after the charging animation, so the "HeldItem" animation shouldn't show
       # for it
       if !["TwoTurnAttackInvulnerableInSky",
            "TwoTurnAttackInvulnerableUnderground",
@@ -341,7 +358,7 @@ class Battle::Move::TwoTurnMove < Battle::Move
            "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
            "TwoTurnAttackInvulnerableRemoveProtections",
            "TwoTurnAttackInvulnerableInSkyTargetCannotAct"].include?(@function_code)
-        @battle.pbCommonAnimation("UseItem", user)
+        @battle.pbCommonAnimation("HeldItem", user)
       end
       @battle.pbDisplay(_INTL("{1} became fully charged due to its Power Herb!", user.pbThis))
       user.pbConsumeItem
@@ -384,7 +401,24 @@ class Battle::Move::TwoTurnMove < Battle::Move
 
   def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)
     hitNum = 1 if @chargingTurn && !@damagingTurn   # Charging anim
-    super
+    @battle.pbAnimation(id, user, targets, hitNum) do |timing|
+      case timing
+      when :before
+        if hitNum == 0   # Damaging animation
+          @battle.visuals.pbForceBattlerInvisibility(user.index, false) if hidesUser?
+          if hidesTarget?
+            targets.each { |b| @battle.visuals.pbForceBattlerInvisibility(b.index, false) }
+          end
+        end
+      when :after
+        if hitNum == 1   # Charging animation
+          @battle.visuals.pbForceBattlerInvisibility(user.index, true) if hidesUser?
+          if hidesTarget?
+            targets.each { |b| @battle.visuals.pbForceBattlerInvisibility(b.index, true) }
+          end
+        end
+      end
+    end
   end
 end
 
@@ -424,6 +458,9 @@ class Battle::Move::RecoilMove < Battle::Move
     return if user.hasActiveAbility?(:ROCKHEAD)
     amt = pbRecoilDamage(user, target)
     amt = 1 if amt < 1
+    if user.pokemon.isSpecies?(:BASCULIN) && [2, 3].include?(user.pokemon.form)
+      user.pokemon.evolution_counter += amt
+    end
     user.pbReduceHP(amt, false)
     @battle.pbDisplay(_INTL("{1} is damaged by recoil!", user.pbThis))
     user.pbItemHPHealCheck
@@ -513,7 +550,8 @@ class Battle::Move::WeatherMove < Battle::Move
     when :StrongWinds
       @battle.pbDisplay(_INTL("The mysterious air current blows on regardless!"))
       return true
-    when @weatherType
+    end
+    if !@battle.pbCanStartWeather?(@weatherType)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -522,6 +560,30 @@ class Battle::Move::WeatherMove < Battle::Move
 
   def pbEffectGeneral(user)
     @battle.pbStartWeather(user, @weatherType, true, false)
+  end
+end
+
+#===============================================================================
+# Terrain-inducing move.
+#===============================================================================
+class Battle::Move::TerrainMove < Battle::Move
+  attr_reader :terrainType
+
+  def initialize(battle, move)
+    super
+    @terrainType = :None
+  end
+
+  def pbMoveFailed?(user, targets)
+    if !@battle.pbCanStartTerrain?(@terrainType)
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectGeneral(user)
+    @battle.pbStartTerrain(user, @terrainType)
   end
 end
 
@@ -576,9 +638,9 @@ class Battle::Move::PledgeMove < Battle::Move
     return super
   end
 
-  def pbBaseDamage(baseDmg, user, target)
-    baseDmg *= 2 if @pledgeCombo
-    return baseDmg
+  def pbBasePower(base_power, user, target)
+    base_power *= 2 if @pledgeCombo
+    return base_power
   end
 
   def pbEffectGeneral(user)
@@ -605,7 +667,7 @@ class Battle::Move::PledgeMove < Battle::Move
     when :Rainbow   # Fire + Water
       if user.pbOwnSide.effects[PBEffects::Rainbow] == 0
         user.pbOwnSide.effects[PBEffects::Rainbow] = 4
-        msg = _INTL("A rainbow appeared in the sky on {1}'s side!", user.pbTeam(true))
+        msg = _INTL("A rainbow appeared in the sky on {1} side!", user.pbOfTeam(true))
         animName = (user.opposes?) ? "RainbowOpp" : "Rainbow"
       end
     when :Swamp   # Water + Grass

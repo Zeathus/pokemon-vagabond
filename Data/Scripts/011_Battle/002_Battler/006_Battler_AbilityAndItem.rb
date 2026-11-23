@@ -1,7 +1,31 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle::Battler
-  #=============================================================================
-  # Ability trigger checks
-  #=============================================================================
+  # These abilities can only be used once while the battler remains in battle.
+  # Switching out and back in allows the ability to be used again.
+  def markAbilityUsedThisSwitchIn
+    @battle.abilitiesUsedPerSwitchIn[idxOwnSide][@pokemonIndex].push(@ability_id)
+  end
+
+  def abilityUsedThisSwitchIn?
+    return @battle.abilitiesUsedPerSwitchIn[idxOwnSide][@pokemonIndex].include?(@ability_id)
+  end
+
+  # These abilities can only be used once per battle, regardless of if the
+  # battler switches out/faints.
+  def markAbilityUsedOnce
+    @battle.abilitiesUsedOnce[idxOwnSide][@pokemonIndex].push(@ability_id)
+  end
+
+  def abilityUsedOnce?
+    return @battle.abilitiesUsedOnce[idxOwnSide][@pokemonIndex].include?(@ability_id)
+  end
+
+  #-----------------------------------------------------------------------------
+  # Ability trigger checks.
+  #-----------------------------------------------------------------------------
+
   def pbAbilitiesOnSwitchOut
     if abilityActive?
       Battle::AbilityEffects.triggerOnSwitchOut(self.ability, self, false)
@@ -48,9 +72,14 @@ class Battle::Battler
     return Battle::AbilityEffects.triggerOnHPDroppedBelowHalf(self.ability, self, move_user, @battle)
   end
 
-  def pbAbilityOnTerrainChange(ability_changed = false)
+  def pbAbilityOnWeatherChange(old_weather, ability_changed = false)
     return if !abilityActive?
-    Battle::AbilityEffects.triggerOnTerrainChange(self.ability, self, @battle, ability_changed)
+    Battle::AbilityEffects.triggerOnWeatherChange(self.ability, self, @battle, old_weather, ability_changed)
+  end
+
+  def pbAbilityOnTerrainChange(old_terrain, ability_changed = false)
+    return if !abilityActive?
+    Battle::AbilityEffects.triggerOnTerrainChange(self.ability, self, @battle, old_terrain, ability_changed)
   end
 
   # Used for Rattled's Gen 8 effect. Called when Intimidate is triggered.
@@ -63,11 +92,13 @@ class Battle::Battler
     return if @battle.pbCheckGlobalAbility(:NEUTRALIZINGGAS)
     @battle.pbDisplay(_INTL("The effects of the neutralizing gas wore off!"))
     @battle.pbEndPrimordialWeather
+    @battle.checkStatChangeResponses
     @battle.pbPriority(true).each do |b|
       next if b.fainted?
       next if !b.unstoppableAbility? && !b.abilityActive?
       Battle::AbilityEffects.triggerOnSwitchIn(b.ability, b, @battle)
     end
+    @battle.checkStatChangeResponses
   end
 
   # Called when a Pokémon (self) enters battle, at the end of each move used,
@@ -76,31 +107,62 @@ class Battle::Battler
     # Check for end of primordial weather
     @battle.pbEndPrimordialWeather
     # Trace
-    if hasActiveAbility?(:TRACE)
-      # NOTE: In Gen 5 only, Trace only triggers upon the Trace bearer switching
-      #       in and not at any later times, even if a traceable ability turns
-      #       up later. Essentials ignores this, and allows Trace to trigger
-      #       whenever it can even in Gen 5 battle mechanics.
-      choices = @battle.allOtherSideBattlers(@index).select do |b|
-        next !b.ungainableAbility? &&
-             ![:POWEROFALCHEMY, :RECEIVER, :TRACE].include?(b.ability_id)
+    if abilityActive?
+      Battle::AbilityEffects.triggerTrace(self.ability, self, @battle, onSwitchIn)
+    end
+    # Commander
+    if isSpecies?(:TATSUGIRI) && self.ability == :COMMANDER &&
+       @effects[PBEffects::Commanding] < 0 && @effects[PBEffects::SkyDrop] < 0
+      ally = nil
+      allAllies.each do |b|
+        next if !b.isSpecies?(:DONDOZO) || b.effects[PBEffects::Transform]
+        next if @battle.pbGetOwnerIndexFromBattlerIndex(@index) != @battle.pbGetOwnerIndexFromBattlerIndex(b.index)
+        next if b.effects[PBEffects::CommandedBy] >= 0
+        next if b.effects[PBEffects::SkyDrop] >= 0
+        ally = b
+        break
       end
-      if choices.length > 0
-        choice = choices[@battle.pbRandom(choices.length)]
+      if ally
+        @battle.visuals.pbForceBattlerInvisibility(@index, false)   # In case semi-invulnerable
         @battle.pbShowAbilitySplash(self)
-        self.ability = choice.ability
-        @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), choice.abilityName))
-        @battle.pbHideAbilitySplash(self)
-        if !onSwitchIn && (unstoppableAbility? || abilityActive?)
-          Battle::AbilityEffects.triggerOnSwitchIn(self.ability, self, @battle)
+        @battle.pbCommonAnimation("Commander", self, ally)
+        @battle.visuals.pbForceBattlerInvisibility(@index, true)
+        @battle.pbDisplay(_INTL("{1} was swallowed by {2} and became {2} commander!", pbThis, ally.pbOfThis(true)))
+        @effects[PBEffects::Commanding] = ally.index
+        ally.effects[PBEffects::CommandedBy] = @index
+        # Reset various values
+        @battle.pbClearChoice(@index)
+        @effects[PBEffects::Bide] = 0
+        @effects[PBEffects::HyperBeam] = 0
+        @effects[PBEffects::Outrage] = 0
+        @effects[PBEffects::Rollout] = 0
+        @effects[PBEffects::TwoTurnAttack] = nil
+        @effects[PBEffects::Uproar] = 0
+        @currentMove = nil
+        pbBeginTurn(nil)   # To clear all temporary effects
+        @effects[PBEffects::Encore]     = 0
+        @effects[PBEffects::EncoreMove] = nil
+        @effects[PBEffects::BeakBlast] = false
+        @effects[PBEffects::GemConsumed] = nil
+        @effects[PBEffects::ShellTrap] = false
+        # Raise ally's stats
+        stat_ups = [:ATTACK, 2, :DEFENSE, 2, :SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2]
+        show_anim = true
+        (stat_ups.length / 2).times do |i|
+          next if !ally.pbCanRaiseStatStage?(stat_ups[i * 2], self)
+          if ally.pbRaiseStatStage(stat_ups[i * 2], stat_ups[(i * 2) + 1], self, show_anim)
+            show_anim = false
+          end
         end
+        @battle.pbHideAbilitySplash(self)
       end
     end
   end
 
-  #=============================================================================
-  # Ability curing
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ability curing.
+  #-----------------------------------------------------------------------------
+
   # Cures status conditions, confusion and infatuation.
   def pbAbilityStatusCureCheck
     if abilityActive?
@@ -108,9 +170,10 @@ class Battle::Battler
     end
   end
 
-  #=============================================================================
-  # Ability effects
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ability effects.
+  #-----------------------------------------------------------------------------
+
   # For abilities that grant immunity to moves of a particular type, and raises
   # one of the ability's bearer's stats instead.
   def pbMoveImmunityStatRaisingAbility(user, move, moveType, immuneType, stat, increment, show_message)
@@ -124,15 +187,15 @@ class Battle::Battler
     if show_message
       @battle.pbShowAbilitySplash(self)
       if pbCanRaiseStatStage?(stat, self)
-        if Battle::Scene::USE_ABILITY_SPLASH
+        if Battle::Visuals::USE_ABILITY_SPLASH
           pbRaiseStatStage(stat, increment, self)
         else
           pbRaiseStatStageByCause(stat, increment, self, abilityName)
         end
-      elsif Battle::Scene::USE_ABILITY_SPLASH
+      elsif Battle::Visuals::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("It doesn't affect {1}...", pbThis(true)))
       else
-        @battle.pbDisplay(_INTL("{1}'s {2} made {3} ineffective!", pbThis, abilityName, move.name))
+        @battle.pbDisplay(_INTL("{1} {2} made {3} ineffective!", pbOfThis, abilityName, move.name))
       end
       @battle.pbHideAbilitySplash(self)
     end
@@ -152,24 +215,25 @@ class Battle::Battler
     if show_message
       @battle.pbShowAbilitySplash(self)
       if canHeal? && pbRecoverHP(@totalhp / 4) > 0
-        if Battle::Scene::USE_ABILITY_SPLASH
+        if Battle::Visuals::USE_ABILITY_SPLASH
           @battle.pbDisplay(_INTL("{1}'s HP was restored.", pbThis))
         else
-          @battle.pbDisplay(_INTL("{1}'s {2} restored its HP.", pbThis, abilityName))
+          @battle.pbDisplay(_INTL("{1} {2} restored its HP.", pbOfThis, abilityName))
         end
-      elsif Battle::Scene::USE_ABILITY_SPLASH
+      elsif Battle::Visuals::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("It doesn't affect {1}...", pbThis(true)))
       else
-        @battle.pbDisplay(_INTL("{1}'s {2} made {3} ineffective!", pbThis, abilityName, move.name))
+        @battle.pbDisplay(_INTL("{1} {2} made {3} ineffective!", pbOfThis, abilityName, move.name))
       end
       @battle.pbHideAbilitySplash(self)
     end
     return true
   end
 
-  #=============================================================================
-  # Ability change
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ability change.
+  #-----------------------------------------------------------------------------
+
   def pbOnLosingAbility(oldAbil, suppressed = false)
     if oldAbil == :NEUTRALIZINGGAS && (suppressed || !@effects[PBEffects::GastroAcid])
       pbAbilitiesOnNeutralizingGasEnding
@@ -179,10 +243,15 @@ class Battle::Battler
     elsif oldAbil == :ILLUSION && @effects[PBEffects::Illusion]
       @effects[PBEffects::Illusion] = nil
       if !@effects[PBEffects::Transform]
-        @battle.scene.pbChangePokemon(self, @pokemon)
-        @battle.pbDisplay(_INTL("{1}'s {2} wore off!", pbThis, GameData::Ability.get(oldAbil).name))
+        @battle.visuals.pbChangePokemon(self, @pokemon)
+        @battle.pbDisplay(_INTL("{1} {2} wore off!", pbOfThis, GameData::Ability.get(oldAbil).name))
         @battle.pbSetSeen(self)
       end
+    end
+    @battle.abilitiesUsedPerSwitchIn[idxOwnSide][@pokemonIndex].delete(oldAbil)
+    if self.ability != :CUDCHEW
+      @effects[PBEffects::CudChewBerry]   = nil
+      @effects[PBEffects::CudChewCounter] = 0
     end
     @effects[PBEffects::GastroAcid] = false if unstoppableAbility?
     @effects[PBEffects::SlowStart]  = 0 if self.ability != :SLOWSTART
@@ -191,8 +260,10 @@ class Battle::Battler
     @battle.pbEndPrimordialWeather
     # Revert form if Flower Gift/Forecast was lost
     pbCheckFormOnWeatherChange(true)
-    # Abilities that trigger when the terrain changes
-    pbAbilityOnTerrainChange(true)
+    pbCheckFormOnTerrainChange(true)
+    # Abilities that trigger when the weather/terrain changes
+    pbAbilityOnWeatherChange(@battle.field.weather, true)
+    pbAbilityOnTerrainChange(@battle.field.terrain, true)
   end
 
   def pbTriggerAbilityOnGainingIt
@@ -208,9 +279,10 @@ class Battle::Battler
     @battle.pbEndPrimordialWeather
   end
 
-  #=============================================================================
-  # Held item consuming/removing
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Held item consuming/removing.
+  #-----------------------------------------------------------------------------
+
   def canConsumeBerry?
     return false if @battle.pbCheckOpposingAbility([:UNNERVE, :ASONECHILLINGNEIGH, :ASONEGRIMNEIGH], @index)
     return true
@@ -223,12 +295,9 @@ class Battle::Battler
     return false
   end
 
-  # permanent is whether the item is lost even after battle. Is false for Knock
-  # Off.
-  def pbRemoveItem(permanent = true)
+  def pbRemoveItem
     @effects[PBEffects::ChoiceBand] = nil if !hasActiveAbility?(:GORILLATACTICS)
     @effects[PBEffects::Unburden]   = true if self.item && hasActiveAbility?(:UNBURDEN)
-    setInitialItem(nil) if permanent && self.item == self.initialItem
     self.item = nil
   end
 
@@ -239,7 +308,13 @@ class Battle::Battler
       @effects[PBEffects::PickupItem] = @item_id
       @effects[PBEffects::PickupUse]  = @battle.nextPickupUse
     end
-    setBelched if belch && self.item.is_berry?
+    if self.item.is_berry?
+      setBelched if belch
+      if hasActiveAbility?(:CUDCHEW)
+        @effects[PBEffects::CudChewBerry]   = @item_id
+        @effects[PBEffects::CudChewCounter] = 2
+      end
+    end
     pbRemoveItem
     pbSymbiosis if symbiosis
   end
@@ -253,12 +328,12 @@ class Battle::Battler
       next if !b.item || b.unlosableItem?(b.item)
       next if unlosableItem?(b.item)
       @battle.pbShowAbilitySplash(b)
-      if Battle::Scene::USE_ABILITY_SPLASH
+      if Battle::Visuals::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("{1} shared its {2} with {3}!",
                                 b.pbThis, b.itemName, pbThis(true)))
       else
-        @battle.pbDisplay(_INTL("{1}'s {2} let it share its {3} with {4}!",
-                                b.pbThis, b.abilityName, b.itemName, pbThis(true)))
+        @battle.pbDisplay(_INTL("{1} {2} let it share its {3} with {4}!",
+                                b.pbOfThis, b.abilityName, b.itemName, pbThis(true)))
       end
       self.item = b.item
       b.item = nil
@@ -276,10 +351,10 @@ class Battle::Battler
     if hasActiveAbility?(:CHEEKPOUCH) && GameData::Item.get(item_to_use).is_berry? && canHeal?
       @battle.pbShowAbilitySplash(self)
       pbRecoverHP(@totalhp / 3)
-      if Battle::Scene::USE_ABILITY_SPLASH
+      if Battle::Visuals::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("{1}'s HP was restored.", pbThis))
       else
-        @battle.pbDisplay(_INTL("{1}'s {2} restored its HP.", pbThis, abilityName))
+        @battle.pbDisplay(_INTL("{1} {2} restored its HP.", pbOfThis, abilityName))
       end
       @battle.pbHideAbilitySplash(self)
     end
@@ -287,9 +362,10 @@ class Battle::Battler
     pbSymbiosis if !own_item && !fling   # Bug Bite/Pluck users trigger Symbiosis
   end
 
-  #=============================================================================
-  # Held item trigger checks
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Held item trigger checks.
+  #-----------------------------------------------------------------------------
+
   # NOTE: A Pokémon using Bug Bite/Pluck, and a Pokémon having an item thrown at
   #       it via Fling, will gain the effect of the item even if the Pokémon is
   #       affected by item-negating effects.
@@ -303,16 +379,17 @@ class Battle::Battler
     pbItemStatusCureCheck(item_to_use, fling)
     pbItemEndOfMoveCheck(item_to_use, fling)
     # For Enigma Berry, Kee Berry and Maranga Berry, which have their effects
-    # when forcibly consumed by Pluck/Fling.
+    # when forcibly consumed by Pluck/Fling
     if item_to_use
       itm = item_to_use || self.item
-      if Battle::ItemEffects.triggerOnBeingHitPositiveBerry(itm, self, @battle, true)
+      if Battle::ItemEffects.triggerForcedRestoreBerry(itm, self, @battle, true)
         pbHeldItemTriggered(itm, false, fling)
       end
     end
   end
 
-  # item_to_use is an item ID for Bug Bite/Pluck and Fling, and nil otherwise.
+  # item_to_use is an item ID for Bug Bite/Pluck and Fling and for switching in,
+  # and nil otherwise.
   # fling is for Fling only.
   def pbItemHPHealCheck(item_to_use = nil, fling = false)
     return if !item_to_use && !itemActive?
@@ -320,13 +397,15 @@ class Battle::Battler
     if Battle::ItemEffects.triggerHPHeal(itm, self, @battle, !item_to_use.nil?)
       pbHeldItemTriggered(itm, item_to_use.nil?, fling)
     elsif !item_to_use
-      pbItemTerrainStatBoostCheck
+      pbItemOnWeatherChange(@battle.field.weather)
+      pbItemOnTerrainChange(@battle.field.terrain)
     end
   end
 
   # Cures status conditions, confusion, infatuation and the other effects cured
   # by Mental Herb.
-  # item_to_use is an item ID for Bug Bite/Pluck and Fling, and nil otherwise.
+  # item_to_use is an item ID for Bug Bite/Pluck and Fling and for switching in,
+  # and nil otherwise.
   # fling is for Fling only.
   def pbItemStatusCureCheck(item_to_use = nil, fling = false)
     return if fainted?
@@ -344,15 +423,14 @@ class Battle::Battler
     return if fainted?
     return if !item_to_use && !itemActive?
     itm = item_to_use || self.item
-    if Battle::ItemEffects.triggerOnEndOfUsingMove(itm, self, @battle, !item_to_use.nil?)
-      pbHeldItemTriggered(itm, item_to_use.nil?, fling)
-    elsif Battle::ItemEffects.triggerOnEndOfUsingMoveStatRestore(itm, self, @battle, !item_to_use.nil?)
+    if Battle::ItemEffects.triggerOnEndOfUsingMove(itm, self, @battle, !item_to_use.nil?) ||
+       Battle::ItemEffects.triggerOnEndOfUsingMoveStatRestore(itm, self, @battle, !item_to_use.nil?)   # White Herb
       pbHeldItemTriggered(itm, item_to_use.nil?, fling)
     end
   end
 
-  # Used for White Herb (restore lowered stats). Only called by Moody and Sticky
-  # Web, as all other stat reduction happens because of/during move usage and
+  # Used for White Herb (restore lowered stats). Only called upon switch in and
+  # in EOR, as all other stat reduction happens because of/during move usage and
   # this handler is also called at the end of each move's usage.
   # item_to_use is an item ID for Bug Bite/Pluck and Fling, and nil otherwise.
   # fling is for Fling only.
@@ -365,10 +443,17 @@ class Battle::Battler
     end
   end
 
-  # Called when the battle terrain changes and when a Pokémon loses HP.
-  def pbItemTerrainStatBoostCheck
+  def pbItemOnWeatherChange(old_weather)
     return if !itemActive?
-    if Battle::ItemEffects.triggerTerrainStatBoost(self.item, self, @battle)
+    if Battle::ItemEffects.triggerOnWeatherChange(self.item, self, @battle, old_weather)
+      pbHeldItemTriggered(self.item)
+    end
+  end
+
+  # Called when the battle terrain changes and when a Pokémon loses HP.
+  def pbItemOnTerrainChange(old_terrain)
+    return if !itemActive?
+    if Battle::ItemEffects.triggerOnTerrainChange(self.item, self, @battle, old_terrain)
       pbHeldItemTriggered(self.item)
     end
   end
@@ -390,14 +475,17 @@ class Battle::Battler
   end
 
   def pbItemsOnUnnerveEnding
+    @battle.checkStatChangeResponses
     @battle.pbPriority(true).each do |b|
       b.pbHeldItemTriggerCheck if b.item&.is_berry?
     end
+    @battle.checkStatChangeResponses
   end
 
-  #=============================================================================
-  # Item effects
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Item effects.
+  #-----------------------------------------------------------------------------
+
   def pbConfusionBerry(item_to_use, forced, confuse_stat, confuse_msg)
     return false if !forced && !canHeal?
     return false if !forced && !canConsumePinchBerry?(Settings::MECHANICS_GENERATION >= 7)
@@ -417,7 +505,7 @@ class Battle::Battler
     end
     @battle.pbCommonAnimation("EatBerry", self) if !forced
     @battle.pbHideAbilitySplash(self) if ripening
-    amt = pbRecoverHP(amt)
+    amt = pbRecoverHP(amt, false)
     if amt > 0
       if forced
         PBDebug.log("[Item triggered] Forced consuming of #{used_item_name}")
@@ -451,6 +539,7 @@ class Battle::Battler
   end
 
   def pbMoveTypeWeakeningBerry(berry_type, move_type, mults)
+    return false if !canConsumeBerry?
     return if move_type != berry_type
     return if !Effectiveness.super_effective?(@damageState.typeMod) && move_type != :NORMAL
     mults[:final_damage_multiplier] /= 2

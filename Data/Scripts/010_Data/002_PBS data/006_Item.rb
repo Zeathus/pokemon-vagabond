@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 module GameData
   class Item
     attr_reader :id
@@ -21,14 +24,13 @@ module GameData
     DATA = {}
     DATA_FILENAME = "items.dat"
     PBS_BASE_FILENAME = "items"
-
     SCHEMA = {
       "SectionName"       => [:id,                       "m"],
       "Name"              => [:real_name,                "s"],
       "NamePlural"        => [:real_name_plural,         "s"],
       "PortionName"       => [:real_portion_name,        "s"],
       "PortionNamePlural" => [:real_portion_name_plural, "s"],
-      "Pocket"            => [:pocket,                   "v"],
+      "Pocket"            => [:pocket,                   "y", :BagPocket],
       "Price"             => [:price,                    "u"],
       "SellPrice"         => [:sell_price,               "u"],
       "BPPrice"           => [:bp_price,                 "u"],
@@ -59,7 +61,7 @@ module GameData
         ["PortionNamePlural", ItemNameProperty,                        _INTL("Name of 2 or more portions of this item as displayed by the game.")],
         ["Pocket",            PocketProperty,                          _INTL("Pocket in the Bag where this item is stored.")],
         ["Price",             LimitProperty.new(Settings::MAX_MONEY),  _INTL("Purchase price of this item.")],
-        ["SellPrice",         LimitProperty2.new(Settings::MAX_MONEY), _INTL("Sell price of this item. If blank, is half the purchase price.")],
+        ["SellPrice",         LimitProperty2.new(Settings::MAX_MONEY), _INTL("Sell price of this item. If blank, is usually half the purchase price.")],
         ["BPPrice",           LimitProperty.new(Settings::MAX_BATTLE_POINTS), _INTL("Purchase price of this item in Battle Points (BP).")],
         ["FieldUse",          EnumProperty.new(field_use_array),       _INTL("How this item can be used outside of battle.")],
         ["BattleUse",         EnumProperty.new(battle_use_array),      _INTL("How this item can be used within a battle.")],
@@ -113,8 +115,10 @@ module GameData
       return nil if !item_data
       # Check for files
       ret = sprintf("Graphics/UI/Mail/mail_%s", item_data.id)
-      return pbResolveBitmap(ret) ? ret : nil
+      return (pbResolveBitmap(ret)) ? ret : nil
     end
+
+    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                       = hash[:id]
@@ -122,9 +126,9 @@ module GameData
       @real_name_plural         = hash[:real_name_plural] || "Unnamed"
       @real_portion_name        = hash[:real_portion_name]
       @real_portion_name_plural = hash[:real_portion_name_plural]
-      @pocket                   = hash[:pocket]           || 1
+      @pocket                   = hash[:pocket]           || :None
       @price                    = hash[:price]            || 0
-      @sell_price               = hash[:sell_price]       || (@price / 2)
+      @sell_price               = hash[:sell_price]       || (@price / Settings::ITEM_SELL_PRICE_DIVISOR)
       @bp_price                 = hash[:bp_price]         || 1
       @field_use                = hash[:field_use]        || 0
       @battle_use               = hash[:battle_use]       || 0
@@ -133,13 +137,22 @@ module GameData
       @consumable               = !is_important? if @consumable.nil?
       @show_quantity            = hash[:show_quantity]
       @move                     = hash[:move]
-      @real_description         = hash[:real_description] || "???"
+      @real_description         = hash[:real_description]
       @pbs_file_suffix          = hash[:pbs_file_suffix]  || ""
     end
 
     # @return [String] the translated name of this item
     def name
       return pbGetMessageFromHash(MessageTypes::ITEM_NAMES, @real_name)
+    end
+
+    def display_name
+      ret = name
+      if is_machine?
+        machine = @move
+        ret = sprintf("%s %s", ret, GameData::Move.get(@move).name)
+      end
+      return ret
     end
 
     # @return [String] the translated plural version of the name of this item
@@ -161,7 +174,16 @@ module GameData
 
     # @return [String] the translated description of this item
     def description
-      return pbGetMessageFromHash(MessageTypes::ITEM_DESCRIPTIONS, @real_description)
+      ret = pbGetMessageFromHash(MessageTypes::ITEM_DESCRIPTIONS, @real_description)
+      if ret.nil? && is_machine?
+        move_data = GameData::Move.get(@move)
+        return move_data.description
+      end
+      return ret || "???"
+    end
+
+    def bag_pocket
+      return GameData::BagPocket.get(@pocket).bag_pocket
     end
 
     def has_flag?(flag)
@@ -204,6 +226,7 @@ module GameData
     def unlosable?(species, ability)
       return false if species == :ARCEUS && ability != :MULTITYPE
       return false if species == :SILVALLY && ability != :RKSSYSTEM
+      return true if @id == :BOOSTERENERGY && GameData::Species.get(species).has_flag?("Paradox")
       combos = {
         :ARCEUS    => [:FISTPLATE,   :FIGHTINIUMZ,
                        :SKYPLATE,    :FLYINIUMZ,
@@ -239,13 +262,17 @@ module GameData
                        :DRAGONMEMORY,
                        :DARKMEMORY,
                        :FAIRYMEMORY],
-        :GIRATINA  => [:GRISEOUSORB],
+        :DIALGA    => [:ADAMANTCRYSTAL],
+        :PALKIA    => [:LUSTROUSGLOBE],
+        :GIRATINA  => [:GRISEOUSORB, :GRISEOUSCORE],
         :GENESECT  => [:BURNDRIVE, :CHILLDRIVE, :DOUSEDRIVE, :SHOCKDRIVE],
         :KYOGRE    => [:BLUEORB],
         :GROUDON   => [:REDORB],
         :ZACIAN    => [:RUSTEDSWORD],
-        :ZAMAZENTA => [:RUSTEDSHIELD]
+        :ZAMAZENTA => [:RUSTEDSHIELD],
+        :OGERPON   => [:WELLSPRINGMASK, :HEARTHFLAMEMASK, :CORNERSTONEMASK]
       }
+      combos[:GIRATINA].delete(:GRISEOUSORB) if Settings::MECHANICS_GENERATION >= 9
       return combos[species]&.include?(@id)
     end
 
@@ -255,7 +282,7 @@ module GameData
       ret = __orig__get_property_for_PBS(key)
       case key
       when "SellPrice"
-        ret = nil if ret == @price / 2
+        ret = nil if ret == @price / Settings::ITEM_SELL_PRICE_DIVISOR
       when "BPPrice"
         ret = nil if ret == 1
       when "FieldUse", "BattleUse"

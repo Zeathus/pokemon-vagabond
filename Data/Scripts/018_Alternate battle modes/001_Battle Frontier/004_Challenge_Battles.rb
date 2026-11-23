@@ -2,8 +2,8 @@
 #
 #===============================================================================
 class BattleType
-  def pbCreateBattle(scene, trainer1, trainer2)
-    return Battle.new(scene, trainer1.party, trainer2.party, trainer1, trainer2)
+  def pbCreateBattle(visuals, trainer1, trainer2)
+    return Battle.new(visuals, trainer1.party, trainer2.party, trainer1, trainer2)
   end
 end
 
@@ -11,8 +11,8 @@ end
 #
 #===============================================================================
 class BattleTower < BattleType
-  def pbCreateBattle(scene, trainer1, trainer2)
-    return RecordedBattle.new(scene, trainer1.party, trainer2.party, trainer1, trainer2)
+  def pbCreateBattle(visuals, trainer1, trainer2)
+    return RecordedBattle.new(visuals, trainer1.party, trainer2.party, trainer1, trainer2)
   end
 end
 
@@ -20,8 +20,8 @@ end
 #
 #===============================================================================
 class BattlePalace < BattleType
-  def pbCreateBattle(scene, trainer1, trainer2)
-    return RecordedBattle::BattlePalaceBattle.new(scene, trainer1.party, trainer2.party, trainer1, trainer2)
+  def pbCreateBattle(visuals, trainer1, trainer2)
+    return RecordedBattle::BattlePalaceBattle.new(visuals, trainer1.party, trainer2.party, trainer1, trainer2)
   end
 end
 
@@ -29,8 +29,8 @@ end
 #
 #===============================================================================
 class BattleArena < BattleType
-  def pbCreateBattle(scene, trainer1, trainer2)
-    return RecordedBattle::BattleArenaBattle.new(scene, trainer1.party, trainer2.party, trainer1, trainer2)
+  def pbCreateBattle(visuals, trainer1, trainer2)
+    return RecordedBattle::BattleArenaBattle.new(visuals, trainer1.party, trainer2.party, trainer1, trainer2)
   end
 end
 
@@ -53,17 +53,17 @@ def pbOrganizedBattleEx(opponent, challengedata)
   oldlevels = challengedata.adjustLevels($player.party, opponent.party)
   olditems  = $player.party.transform { |p| p.item_id }
   olditems2 = opponent.party.transform { |p| p.item_id }
-  # Create the battle scene (the visual side of it)
-  scene = BattleCreationHelperMethods.create_battle_scene
+  # Create the battle visuals
+  visuals = BattleCreationHelperMethods.create_battle_visuals
   # Create the battle class (the mechanics side of it)
-  battle = challengedata.createBattle(scene, $player, opponent)
+  battle = challengedata.createBattle(visuals, $player, opponent)
   battle.internalBattle = false
   # Set various other properties in the battle class
   BattleCreationHelperMethods.prepare_battle(battle)
   # Perform the battle itself
-  decision = 0
+  outcome = Battle::Outcome::UNDECIDED
   pbBattleAnimation(pbGetTrainerBattleBGM(opponent)) do
-    pbSceneStandby { decision = battle.pbStartBattle }
+    pbSceneStandby { outcome = battle.pbStartBattle }
   end
   Input.update
   # Restore both parties to their original levels
@@ -83,17 +83,17 @@ def pbOrganizedBattleEx(opponent, challengedata)
   end
   # Save the record of the battle
   $game_temp.last_battle_record = nil
-  if [1, 2, 5].include?(decision)   # if win, loss or draw
+  if [Battle::Outcome::WIN, Battle::Outcome::LOSE, Battle::Outcome::DRAW].include?(outcome)
     $game_temp.last_battle_record = battle.pbDumpRecord
   end
-  case decision
-  when 1   # Won
+  case outcome
+  when Battle::Outcome::WIN   # Won
     $stats.trainer_battles_won += 1
-  when 2, 3, 5   # Lost, fled, draw
+  when Battle::Outcome::LOSE, Battle::Outcome::FLEE, Battle::Outcome::DRAW
     $stats.trainer_battles_lost += 1
   end
   # Return true if the player won the battle, and false if any other result
-  return (decision == 1)
+  return (outcome == Battle::Outcome::WIN)
 end
 
 #===============================================================================
@@ -110,16 +110,16 @@ end
 
 def pbPlayBattle(battledata)
   return if !battledata
-  scene = BattleCreationHelperMethods.create_battle_scene
-  scene.abortable = true
+  visuals = BattleCreationHelperMethods.create_battle_visuals
+  visuals.abortable = true
   lastbattle = Marshal.restore(battledata)
   case lastbattle[0]
   when BattleChallenge::BATTLE_TOWER_ID
-    battleplayer = RecordedBattle::PlaybackBattle.new(scene, lastbattle)
+    battleplayer = RecordedBattle::PlaybackBattle.new(visuals, lastbattle)
   when BattleChallenge::BATTLE_PALACE_ID
-    battleplayer = RecordedBattle::BattlePalacePlaybackBattle.new(scene, lastbattle)
+    battleplayer = RecordedBattle::BattlePalacePlaybackBattle.new(visuals, lastbattle)
   when BattleChallenge::BATTLE_ARENA_ID
-    battleplayer = RecordedBattle::BattleArenaPlaybackBattle.new(scene, lastbattle)
+    battleplayer = RecordedBattle::BattleArenaPlaybackBattle.new(visuals, lastbattle)
   end
   bgm = RecordedBattle::PlaybackHelper.pbGetBattleBGM(lastbattle)
   pbBattleAnimation(bgm) do

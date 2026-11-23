@@ -34,7 +34,7 @@ class SpriteWindow < Window
     @_windowskin
   end
 
-  # Flags used to preserve compatibility with RGSS/RGSS2's version of Window
+  # Flags used to preserve compatibility with RGSS/RGSS2's version of Window.
   module CompatBits
     CORRECT_Z          = 1
     EXPAND_BACK        = 2
@@ -397,19 +397,19 @@ class SpriteWindow < Window
   def bottomEdge; self.borderY - self.topEdge; end
 
   def startX
-    return !@trim || skinformat == 0  ? 16 : @trim[0]
+    return (!@trim || skinformat == 0)  ? 16 : @trim[0]
   end
 
   def startY
-    return !@trim || skinformat == 0  ? 16 : @trim[1]
+    return (!@trim || skinformat == 0)  ? 16 : @trim[1]
   end
 
   def endX
-    return !@trim || skinformat == 0  ? 16 : @trim[2]
+    return (!@trim || skinformat == 0)  ? 16 : @trim[2]
   end
 
   def endY
-    return !@trim || skinformat == 0  ? 16 : @trim[3]
+    return (!@trim || skinformat == 0)  ? 16 : @trim[3]
   end
 
   def startX=(value)
@@ -858,6 +858,7 @@ class SpriteWindow_Base < SpriteWindow
     @customskin = nil
     resolvedName = pbResolveBitmap(skin)
     return if nil_or_empty?(resolvedName)
+    @windowskin_name = skin
     @customskin = AnimatedBitmap.new(resolvedName)
     RPG::Cache.retain(resolvedName)
     __setWindowskin(@customskin.bitmap)

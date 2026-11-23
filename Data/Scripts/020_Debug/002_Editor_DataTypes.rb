@@ -1,5 +1,5 @@
 #===============================================================================
-# Data type properties
+# Data type properties.
 #===============================================================================
 module UndefinedProperty
   def self.set(_settingname, oldsetting)
@@ -132,7 +132,7 @@ end
 #===============================================================================
 module BooleanProperty
   def self.set(settingname, _oldsetting)
-    return pbConfirmMessage(_INTL("Enable the setting {1}?", settingname)) ? true : false
+    return (pbConfirmMessage(_INTL("Enable the setting {1}?", settingname))) ? true : false
   end
 
   def self.format(value)
@@ -544,12 +544,10 @@ end
 #
 #===============================================================================
 class MovePropertyForSpecies
-  def initialize(pokemondata)
-    @pokemondata = pokemondata
-  end
+  attr_writer :species
 
   def set(_settingname, oldsetting)
-    ret = pbChooseMoveListForSpecies(@pokemondata[0], oldsetting || nil)
+    ret = pbChooseMoveListForSpecies(@species, oldsetting || nil)
     return ret || oldsetting
   end
 
@@ -693,10 +691,6 @@ end
 #
 #===============================================================================
 class BallProperty
-  def initialize(pokemondata)
-    @pokemondata = pokemondata
-  end
-
   def set(_settingname, oldsetting)
     return pbChooseBallList(oldsetting)
   end
@@ -745,7 +739,7 @@ end
 
 def chooseMapPoint(map, rgnmap = false)
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = 99999
+  viewport.z = 99_999
   title = Window_UnformattedTextPokemon.newWithSize(
     _INTL("Click a point on the map."), 0, Graphics.height - 64, Graphics.width, 64, viewport
   )
@@ -923,18 +917,21 @@ end
 #===============================================================================
 module PocketProperty
   def self.set(_settingname, oldsetting)
-    commands = Supplementals.bag_pocket_names.clone
-    cmd = pbMessage(_INTL("Choose a pocket for this item."), commands, -1)
-    return (cmd >= 0) ? cmd + 1 : oldsetting
+    pockets = GameData::BagPocket.all_pockets
+    commands = []
+    pockets.each { |pckt| commands.push(GameData::BagPocket.get(pckt).name) }
+    initial_val = pockets.index(GameData::BagPocket.get(oldsetting || 1).id)
+    cmd = pbMessage(_INTL("Choose a pocket for this item."), commands, -1, nil, initial_val)
+    return (cmd >= 0) ? pockets[cmd] : oldsetting
   end
 
   def self.defaultValue
-    return 1
+    return GameData::BagPocket.all_pockets.first
   end
 
   def self.format(value)
-    return _INTL("No Pocket") if value == 0
-    return (value) ? Supplementals.bag_pocket_names[value - 1] : value.inspect
+    return _INTL("No Pocket") if [0, :None].include?(value)
+    return (value) ? GameData::BagPocket.get(value).name : value.inspect
   end
 end
 
@@ -1067,7 +1064,7 @@ class GameDataPoolProperty
     loop do
       if need_refresh
         if @auto_sort
-          values.sort! { |a, b| (a[0].nil?) ? -1 : b[0].nil? ? 1 : a[1] <=> b[1] }
+          values.sort! { |a, b| (a[0].nil?) ? -1 : (b[0].nil?) ? 1 : a[1] <=> b[1] }
         end
         commands = values.map { |entry| entry[1] }
         need_refresh = false
@@ -1619,11 +1616,11 @@ module EncounterSlotProperty
 end
 
 #===============================================================================
-# Core property editor script
+# Core property editor script.
 #===============================================================================
 def pbPropertyList(title, data, properties, saveprompt = false)
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = 99999
+  viewport.z = 99_999
   list = pbListWindow([], Graphics.width / 2)
   list.viewport = viewport
   list.z        = 2

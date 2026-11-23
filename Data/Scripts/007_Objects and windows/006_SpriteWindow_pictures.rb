@@ -31,7 +31,7 @@ class IconWindow < SpriteWindow_Base
     self.contents = nil if !self.disposed?
   end
 
-  # Sets the icon's filename.  Alias for setBitmap.
+  # Sets the icon's filename. Alias for setBitmap.
   def name=(value)
     setBitmap(value)
   end
@@ -46,7 +46,7 @@ class IconWindow < SpriteWindow_Base
     else
       @_iconbitmap = AnimatedBitmap.new(file, hue)
       # for compatibility
-      self.contents = @_iconbitmap ? @_iconbitmap.bitmap : nil
+      self.contents = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
     end
   end
 end

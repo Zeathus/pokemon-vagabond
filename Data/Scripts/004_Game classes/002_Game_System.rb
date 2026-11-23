@@ -22,21 +22,51 @@ class Game_System
   attr_accessor :bgm_position
 
   def initialize
-    @map_interpreter    = Interpreter.new(0, true)
-    @battle_interpreter = Interpreter.new(0, false)
-    @timer_start        = nil
-    @timer_duration     = 0
-    @save_disabled      = false
-    @menu_disabled      = false
-    @encounter_disabled = false
-    @message_position   = 2
-    @message_frame      = 0
-    @save_count         = 0
-    @magic_number       = 0
-    @autoscroll_x_speed = 0
-    @autoscroll_y_speed = 0
-    @bgm_position       = 0
-    @bgs_position       = 0
+    @map_interpreter        = Interpreter.new(0, true)
+    @battle_interpreter     = Interpreter.new(0, false)
+    @timer_start            = nil
+    @timer_duration         = 0
+    @save_disabled          = false
+    @menu_disabled          = false
+    @encounter_disabled     = false
+    @message_position       = 2
+    @message_frame          = 0
+    @save_count             = 0
+    @magic_number           = 0
+    @adventure_magic_number = rand(2**32)
+    @autoscroll_x_speed     = 0
+    @autoscroll_y_speed     = 0
+    @bgm_position           = 0
+    @bgs_position           = 0
+  end
+
+  def adventure_magic_number
+    @adventure_magic_number ||= rand(2**32)
+    return @adventure_magic_number
+  end
+
+  def battle_bgm
+    return (@battle_bgm) ? @battle_bgm : $data_system.battle_bgm
+  end
+
+  attr_writer :battle_bgm
+
+  def battle_end_me
+    return (@battle_end_me) ? @battle_end_me : $data_system.battle_end_me
+  end
+
+  attr_writer :battle_end_me
+
+  def windowskin_name
+    return $data_system.windowskin_name if @windowskin_name.nil?
+    return @windowskin_name
+  end
+
+  attr_writer :windowskin_name
+
+  def timer
+    return 0 if !@timer_start || !$stats
+    return @timer_duration - $stats.play_time + @timer_start
   end
 
   #-----------------------------------------------------------------------------
@@ -49,13 +79,16 @@ class Game_System
   end
 
   def bgm_play_internal2(name, volume, pitch, position, track = nil) # :nodoc:
+    bgm_name = FileTest::AUDIO_EXTENSIONS.map { |ext| name + ext }.find { |path| File.exist?(path) }
+    return if !bgm_name
     vol = volume
+    vol *= $PokemonSystem.main_volume / 100.0
     vol *= $PokemonSystem.bgmvolume / 100.0
     vol = vol.to_i
     begin
-      Audio.bgm_play(name, vol, pitch, position, track)
+      Audio.bgm_play(bgm_name, vol, pitch, position, track)
     rescue ArgumentError
-      Audio.bgm_play(name, vol, pitch, 0, track)
+      Audio.bgm_play(bgm_name, vol, pitch, 0, track)
     end
   end
 
@@ -95,11 +128,10 @@ class Game_System
   end
 
   def bgm_resume(bgm) # :nodoc:
-    if @bgm_paused
-      self.bgm_play_internal(bgm, @bgm_position)
-      @bgm_position = 0
-      @bgm_paused   = false
-    end
+    return if !@bgm_paused
+    self.bgm_play_internal(bgm, @bgm_position)
+    @bgm_position = 0
+    @bgm_paused   = false
   end
 
   def bgm_stop(track = nil) # :nodoc:
@@ -153,12 +185,15 @@ class Game_System
   def me_play(me)
     me = RPG::AudioFile.new(me) if me.is_a?(String)
     if me && me.name != ""
-      if FileTest.audio_exist?("Audio/ME/" + me.name)
-        vol = me.volume
-        vol *= $PokemonSystem.bgmvolume / 100.0
-        vol = vol.to_i
-        Audio.me_play("Audio/ME/" + me.name, vol, me.pitch)
-      end
+      me_name = "Audio/ME/" + me.name
+      return if !FileTest.audio_exist?(me_name)
+      me_name = FileTest::AUDIO_EXTENSIONS.map { |ext| me_name + ext }.find { |path| File.exist?(path) }
+      return if !me_name
+      vol = me.volume
+      vol *= $PokemonSystem.main_volume / 100.0
+      vol *= $PokemonSystem.bgmvolume / 100.0
+      vol = vol.to_i
+      Audio.me_play(me_name, vol, me.pitch)
     else
       Audio.me_stop
     end
@@ -170,12 +205,15 @@ class Game_System
   def bgs_play(bgs)
     @playing_bgs = (bgs.nil?) ? nil : bgs.clone
     if bgs && bgs.name != ""
-      if FileTest.audio_exist?("Audio/BGS/" + bgs.name)
-        vol = bgs.volume
-        vol *= $PokemonSystem.sevolume / 100.0
-        vol = vol.to_i
-        Audio.bgs_play("Audio/BGS/" + bgs.name, vol, bgs.pitch)
-      end
+      bgs_name = "Audio/BGS/" + bgs.name
+      return if !FileTest.audio_exist?(bgs_name)
+      bgs_name = FileTest::AUDIO_EXTENSIONS.map { |ext| bgs_name + ext }.find { |path| File.exist?(path) }
+      return if !bgs_name
+      vol = bgs.volume
+      vol *= $PokemonSystem.main_volume / 100.0
+      vol *= $PokemonSystem.sevolume / 100.0
+      vol = vol.to_i
+      Audio.bgs_play(bgs_name, vol, bgs.pitch)
     else
       @bgs_position = 0
       @playing_bgs  = nil
@@ -198,10 +236,9 @@ class Game_System
   end
 
   def bgs_resume(bgs) # :nodoc:
-    if @bgs_paused
-      self.bgs_play(bgs)
-      @bgs_paused = false
-    end
+    return if !@bgs_paused
+    self.bgs_play(bgs)
+    @bgs_paused = false
   end
 
   def bgs_stop
@@ -236,12 +273,28 @@ class Game_System
 
   def se_play(se)
     se = RPG::AudioFile.new(se) if se.is_a?(String)
-    if se && se.name != "" && FileTest.audio_exist?("Audio/SE/" + se.name)
-      vol = se.volume
-      vol *= $PokemonSystem.sevolume / 100.0
-      vol = vol.to_i
-      Audio.se_play("Audio/SE/" + se.name, vol, se.pitch)
-    end
+    se_name = "Audio/SE/" + se.name
+    return if !se || se.name == "" || !FileTest.audio_exist?(se_name)
+    se_name = FileTest::AUDIO_EXTENSIONS.map { |ext| se_name + ext }.find { |path| File.exist?(path) }
+    return if !se_name
+    vol = se.volume
+    vol *= $PokemonSystem.main_volume / 100.0
+    vol *= $PokemonSystem.sevolume / 100.0
+    vol = vol.to_i
+    Audio.se_play(se_name, vol, se.pitch)
+  end
+
+  def pokemon_cry_play(se)
+    se = RPG::AudioFile.new(se) if se.is_a?(String)
+    se_name = "Audio/SE/" + se.name
+    return if !se || se.name == "" || !FileTest.audio_exist?(se_name)
+    se_name = FileTest::AUDIO_EXTENSIONS.map { |ext| se_name + ext }.find { |path| File.exist?(path) }
+    return if !se_name
+    vol = se.volume
+    vol *= $PokemonSystem.main_volume / 100.0
+    vol *= $PokemonSystem.pokemon_cry_volume / 100.0
+    vol = vol.to_i
+    Audio.se_play(se_name, vol, se.pitch)
   end
 
   def se_stop
@@ -250,34 +303,8 @@ class Game_System
 
   #-----------------------------------------------------------------------------
 
-  def battle_bgm
-    return (@battle_bgm) ? @battle_bgm : $data_system.battle_bgm
-  end
-
-  attr_writer :battle_bgm
-
-  def battle_end_me
-    return (@battle_end_me) ? @battle_end_me : $data_system.battle_end_me
-  end
-
-  attr_writer :battle_end_me
-
-  #-----------------------------------------------------------------------------
-
-  def windowskin_name
-    return $data_system.windowskin_name if @windowskin_name.nil?
-    return @windowskin_name
-  end
-
-  attr_writer :windowskin_name
-
-  def timer
-    return 0 if !@timer_start || !$stats
-    return @timer_duration - $stats.play_time + @timer_start
-  end
-
   def update
-    if Input.trigger?(Input::SPECIAL) && pbCurrentEventCommentInput(1, "Cut Scene")
+    if Input.trigger?(Input::ACTION) && pbCurrentEventCommentInput(1, "Cut Scene")
       event = @map_interpreter.get_self
       @map_interpreter.pbSetSelfSwitch(event.id, "A", true)
       @map_interpreter.command_end

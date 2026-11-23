@@ -89,6 +89,7 @@ class PokemonEncounters
   # Returns whether the player's current location allows wild encounters to
   # trigger upon taking a step.
   def encounter_possible_here?
+    return false if $PokemonGlobal.forced_movement?
     return true if $PokemonGlobal.surfing
     terrain_tag = $game_map.terrain_tag($game_player.x, $game_player.y)
     return false if terrain_tag.ice
@@ -130,10 +131,7 @@ class PokemonEncounters
     first_pkmn = $player.first_pokemon
     if first_pkmn
       case first_pkmn.item_id
-      when :CLEANSETAG
-        encounter_chance *= 2.0 / 3
-        min_steps_needed *= 4 / 3.0
-      when :PUREINCENSE
+      when :CLEANSETAG, :PUREINCENSE
         encounter_chance *= 2.0 / 3
         min_steps_needed *= 4 / 3.0
       else   # Ignore ability effects if an item effect applies
@@ -156,9 +154,6 @@ class PokemonEncounters
             encounter_chance /= 2
             min_steps_needed *= 2
           end
-        when :SWARM
-          encounter_chance *= 1.5
-          min_steps_needed /= 2
         when :ILLUMINATE, :ARENATRAP, :NOGUARD
           encounter_chance *= 2
           min_steps_needed /= 2
@@ -200,7 +195,9 @@ class PokemonEncounters
     if first_pkmn
       case first_pkmn.ability_id
       when :INTIMIDATE, :KEENEYE
-        return false if enc_data[1] <= first_pkmn.level - 5 && rand(100) < 50
+        if Settings::MECHANICS_GENERATION < 8
+          return false if enc_data[1] <= first_pkmn.level - 5 && rand(100) < 50
+        end
       end
     end
     return true
@@ -386,7 +383,9 @@ def pbGenerateWildPokemon(species, level, isRoamer = false)
   items = genwildpoke.wildHoldItems
   first_pkmn = $player.first_pokemon
   chances = [50, 5, 1]
-  if first_pkmn
+  if Settings::MECHANICS_GENERATION >= 9
+    chances[0] = 30
+  elsif first_pkmn
     case first_pkmn.ability_id
     when :COMPOUNDEYES
       chances = [60, 20, 5]

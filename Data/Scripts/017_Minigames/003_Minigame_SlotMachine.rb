@@ -1,6 +1,6 @@
 #===============================================================================
-# "Slot Machine" mini-game
-# By Maruno
+# "Slot Machine" mini-game.
+# By Maruno.
 #-------------------------------------------------------------------------------
 # Run with:      pbSlotMachine(1)
 # - The number is either 0 (easy), 1 (default) or 2 (hard).
@@ -14,7 +14,7 @@ class SlotMachineReel < BitmapSprite
 
   def initialize(x, y, reel_num, difficulty = 1)
     @viewport = Viewport.new(x, y, 64, 144)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     super(64, 144, @viewport)
     @reel_num = reel_num
     @difficulty = difficulty
@@ -110,7 +110,7 @@ class SlotMachineScore < BitmapSprite
 
   def initialize(x, y, score = 0)
     @viewport = Viewport.new(x, y, 70, 22)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     super(70, 22, @viewport)
     @numbers = AnimatedBitmap.new("Graphics/UI/Slot Machine/numbers")
     self.score = score
@@ -240,7 +240,7 @@ class SlotMachineScene
         if this_tick != last_paid_tick
           @sprites["payout"].score -= 1
           @sprites["credit"].score += 1
-          this_tick = last_paid_tick
+          last_paid_tick = this_tick
         end
         if Input.trigger?(Input::USE) || @sprites["credit"].score == Settings::MAX_COINS
           @sprites["credit"].score += @sprites["payout"].score
@@ -275,7 +275,7 @@ class SlotMachineScene
   def pbStartScene(difficulty)
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     addBackgroundPlane(@sprites, "bg", "Slot Machine/bg", @viewport)
     @sprites["reel1"] = SlotMachineReel.new(64, 112, 1, difficulty)
     @sprites["reel2"] = SlotMachineReel.new(144, 112, 2, difficulty)

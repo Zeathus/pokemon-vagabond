@@ -1,7 +1,11 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle::Battler
-  #=============================================================================
-  # Creating a battler
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Creating a battler.
+  #-----------------------------------------------------------------------------
+
   def initialize(btl, idxBattler)
     @battle      = btl
     @index       = idxBattler
@@ -15,21 +19,22 @@ class Battle::Battler
   end
 
   def pbInitBlank
-    @name           = ""
-    @species        = 0
-    @form           = 0
-    @level          = 0
-    @hp = @totalhp  = 0
-    @types          = []
-    @ability_id     = nil
-    @item_id        = nil
+    @name               = ""
+    @species            = 0
+    @form               = 0
+    @level              = 0
+    @hp = @totalhp      = 0
+    @types              = []
+    @ability_id         = nil
+    @item_id            = nil
     @attack = @defense = @spatk = @spdef = @speed = 0
-    @status         = :NONE
-    @statusCount    = 0
-    @pokemon        = nil
-    @pokemonIndex   = -1
-    @participants   = []
-    @moves          = []
+    @stagesChangeRecord = [{}, {}]   # Raises, drops
+    @status             = :NONE
+    @statusCount        = 0
+    @pokemon            = nil
+    @pokemonIndex       = -1
+    @participants       = []
+    @moves              = []
   end
 
   # Used by Future Sight only, when Future Sight's user is no longer in battle.
@@ -39,7 +44,7 @@ class Battle::Battler
     @species      = pkmn.species
     @form         = pkmn.form
     @level        = pkmn.level
-    @hp           = pkmn.hp
+    @hp           = (pkmn.hp > 0) ? pkmn.hp : 1
     @totalhp      = pkmn.totalhp
     @types        = pkmn.types
     # ability and item intentionally not copied across here
@@ -106,11 +111,11 @@ class Battle::Battler
     else
       # These effects are passed on if Baton Pass is used
       GameData::Stat.each_battle { |stat| @stages[stat.id] = 0 }
+      setCriticalHitRate(0)
       @effects[PBEffects::AquaRing]          = false
       @effects[PBEffects::Confusion]         = 0
       @effects[PBEffects::Curse]             = false
       @effects[PBEffects::Embargo]           = 0
-      @effects[PBEffects::FocusEnergy]       = 0
       @effects[PBEffects::GastroAcid]        = false
       @effects[PBEffects::HealBlock]         = 0
       @effects[PBEffects::Ingrain]           = false
@@ -122,7 +127,7 @@ class Battle::Battler
       @effects[PBEffects::PerishSong]        = 0
       @effects[PBEffects::PerishSongUser]    = -1
       @effects[PBEffects::PowerTrick]        = false
-      @effects[PBEffects::Substitute]        = 0
+      @effects[PBEffects::Substitute]        = 0 if !@effects[PBEffects::ShedTail]
       @effects[PBEffects::Telekinesis]       = 0
     end
     @fainted                 = (@hp == 0)
@@ -132,13 +137,13 @@ class Battle::Battler
     @lastHPLostFromFoe       = 0
     @droppedBelowHalfHP      = false
     @statsDropped            = false
+    clearStagesChangeRecord
     @tookMoveDamageThisRound = false
     @tookDamageThisRound     = false
     @tookPhysicalHit         = false
     @tookSpecialHit          = false
     @statsRaisedThisRound    = false
     @statsLoweredThisRound   = false
-    @canRestoreIceFace       = false
     @lastMoveUsed            = nil
     @lastMoveUsedType        = nil
     @lastRegularMoveUsed     = nil
@@ -149,11 +154,15 @@ class Battle::Battler
     @movesUsed               = []
     @turnCount               = 0
     @causeOfFaint            = nil if !@fainted
+    @battle.abilitiesUsedPerSwitchIn[idxOwnSide][@pokemonIndex].clear
+    @effects[PBEffects::AllySwitchRate]      = 1
     @effects[PBEffects::Attract]             = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer attracted to self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer attracted to self
       b.effects[PBEffects::Attract] = -1 if b.effects[PBEffects::Attract] == @index
     end
     @effects[PBEffects::BanefulBunker]       = false
+    @effects[PBEffects::BoosterEnergy]       = false
+    @effects[PBEffects::BurningBulwark]      = false
     @effects[PBEffects::BeakBlast]           = false
     @effects[PBEffects::Bide]                = 0
     @effects[PBEffects::BideDamage]          = 0
@@ -161,8 +170,16 @@ class Battle::Battler
     @effects[PBEffects::BurnUp]              = false
     @effects[PBEffects::Charge]              = 0
     @effects[PBEffects::ChoiceBand]          = nil
+    @effects[PBEffects::CommandedBy]         = -1
+    @effects[PBEffects::Commanding]          = -1
+    @battle.allBattlers(true).each do |b|
+      b.effects[PBEffects::CommandedBy] = -1 if b.effects[PBEffects::CommandedBy] == @index
+      b.effects[PBEffects::Commanding] = -1 if b.effects[PBEffects::Commanding] == @index
+    end
     @effects[PBEffects::Counter]             = -1
     @effects[PBEffects::CounterTarget]       = -1
+    @effects[PBEffects::CudChewBerry]        = nil
+    @effects[PBEffects::CudChewCounter]      = 0
     @effects[PBEffects::Dancer]              = false
     @effects[PBEffects::DefenseCurl]         = false
     @effects[PBEffects::DestinyBond]         = false
@@ -170,6 +187,7 @@ class Battle::Battler
     @effects[PBEffects::DestinyBondTarget]   = -1
     @effects[PBEffects::Disable]             = 0
     @effects[PBEffects::DisableMove]         = nil
+    @effects[PBEffects::DoubleShock]         = false
     @effects[PBEffects::Electrify]           = false
     @effects[PBEffects::Encore]              = 0
     @effects[PBEffects::EncoreMove]          = nil
@@ -183,8 +201,9 @@ class Battle::Battler
     @effects[PBEffects::Foresight]           = false
     @effects[PBEffects::FuryCutter]          = 0
     @effects[PBEffects::GemConsumed]         = nil
+    @effects[PBEffects::GigatonHammer]       = false
     @effects[PBEffects::Grudge]              = false
-    @effects[PBEffects::HelpingHand]         = false
+    @effects[PBEffects::HelpingHand]         = 0
     @effects[PBEffects::HyperBeam]           = 0
     @effects[PBEffects::Illusion]            = nil
     if hasActiveAbility?(:ILLUSION)
@@ -197,11 +216,11 @@ class Battle::Battler
     @effects[PBEffects::Instruct]            = false
     @effects[PBEffects::Instructed]          = false
     @effects[PBEffects::JawLock]             = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer blocked by self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer blocked by self
       b.effects[PBEffects::JawLock] = -1 if b.effects[PBEffects::JawLock] == @index
     end
     @effects[PBEffects::KingsShield]         = false
-    @battle.allBattlers.each do |b|   # Other battlers lose their lock-on against self
+    @battle.allBattlers(true).each do |b|   # Other battlers lose their lock-on against self
       next if b.effects[PBEffects::LockOn] == 0
       next if b.effects[PBEffects::LockOnPos] != @index
       b.effects[PBEffects::LockOn]    = 0
@@ -210,7 +229,7 @@ class Battle::Battler
     @effects[PBEffects::MagicBounce]         = false
     @effects[PBEffects::MagicCoat]           = false
     @effects[PBEffects::MeanLook]            = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer blocked by self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer blocked by self
       b.effects[PBEffects::MeanLook] = -1 if b.effects[PBEffects::MeanLook] == @index
     end
     @effects[PBEffects::MeFirst]             = false
@@ -226,7 +245,7 @@ class Battle::Battler
     @effects[PBEffects::NoRetreat]           = false
     @effects[PBEffects::Obstruct]            = false
     @effects[PBEffects::Octolock]            = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer locked by self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer locked by self
       b.effects[PBEffects::Octolock] = -1 if b.effects[PBEffects::Octolock] == @index
     end
     @effects[PBEffects::Outrage]             = 0
@@ -240,13 +259,16 @@ class Battle::Battler
     @effects[PBEffects::PriorityItem]        = false
     @effects[PBEffects::Protect]             = false
     @effects[PBEffects::ProtectRate]         = 1
+    @effects[PBEffects::ProtosynthesisStat]  = nil
     @effects[PBEffects::Quash]               = 0
     @effects[PBEffects::Rage]                = false
     @effects[PBEffects::RagePowder]          = false
     @effects[PBEffects::Rollout]             = 0
     @effects[PBEffects::Roost]               = false
+    @effects[PBEffects::SaltCure]            = false
+    @effects[PBEffects::SilkTrap]            = false
     @effects[PBEffects::SkyDrop]             = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer Sky Dropped by self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer Sky Dropped by self
       b.effects[PBEffects::SkyDrop] = -1 if b.effects[PBEffects::SkyDrop] == @index
     end
     @effects[PBEffects::SlowStart]           = 0
@@ -257,6 +279,14 @@ class Battle::Battler
     @effects[PBEffects::Stockpile]           = 0
     @effects[PBEffects::StockpileDef]        = 0
     @effects[PBEffects::StockpileSpDef]      = 0
+    @effects[PBEffects::SupremeOverlord]     = 0
+    @effects[PBEffects::SyrupBomb]           = 0
+    @effects[PBEffects::SyrupBombUser]       = -1
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer syruped by self
+      next if b.effects[PBEffects::SyrupBombUser] != @index
+      b.effects[PBEffects::SyrupBomb]     = 0
+      b.effects[PBEffects::SyrupBombUser] = -1
+    end
     @effects[PBEffects::TarShot]             = false
     @effects[PBEffects::Taunt]               = 0
     @effects[PBEffects::ThroatChop]          = 0
@@ -267,7 +297,7 @@ class Battle::Battler
     @effects[PBEffects::Trapping]            = 0
     @effects[PBEffects::TrappingMove]        = nil
     @effects[PBEffects::TrappingUser]        = -1
-    @battle.allBattlers.each do |b|   # Other battlers no longer trapped by self
+    @battle.allBattlers(true).each do |b|   # Other battlers no longer trapped by self
       next if b.effects[PBEffects::TrappingUser] != @index
       b.effects[PBEffects::Trapping]     = 0
       b.effects[PBEffects::TrappingUser] = -1
@@ -276,6 +306,7 @@ class Battle::Battler
     @effects[PBEffects::TwoTurnAttack]       = nil
     @effects[PBEffects::Unburden]            = false
     @effects[PBEffects::Uproar]              = 0
+    @effects[PBEffects::Vulnerable]          = false
     @effects[PBEffects::WaterSport]          = false
     @effects[PBEffects::WeightChange]        = 0
     @effects[PBEffects::Yawn]                = 0
@@ -285,9 +316,10 @@ class Battle::Battler
     @effects[PBEffects::GigatonHammerTime]   = 0
   end
 
-  #=============================================================================
-  # Refreshing a battler's properties
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Refreshing a battler's properties.
+  #-----------------------------------------------------------------------------
+
   def pbUpdate(fullChange = false)
     return if !@pokemon
     @pokemon.calc_stats
@@ -324,7 +356,7 @@ class Battle::Battler
   # Update which Pokémon will gain Exp if this battler is defeated.
   def pbUpdateParticipants
     return if fainted? || !@battle.opposes?(@index)
-    allOpposing.each do |b|
+    allOpposing(true).each do |b|
       @participants.push(b.pokemonIndex) if !@participants.include?(b.pokemonIndex)
     end
   end

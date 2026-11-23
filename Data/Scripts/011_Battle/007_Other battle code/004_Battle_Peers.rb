@@ -24,7 +24,7 @@ class Battle::Peer
   end
 
   def pbGetStorageCreatorName
-    return pbGetStorageCreator if $player.seen_storage_creator
+    return UI::PC.storage_creator_name if $player.seen_storage_creator
     return nil
   end
 

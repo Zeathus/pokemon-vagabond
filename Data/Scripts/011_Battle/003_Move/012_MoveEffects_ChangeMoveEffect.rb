@@ -70,7 +70,7 @@ class Battle::Move::RandomlyDamageOrHealTarget < Battle::Move
     return super
   end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     return @presentDmg
   end
 
@@ -150,7 +150,7 @@ class Battle::Move::CurseTargetOrLowerUserSpd1RaiseUserAtkDef1 < Battle::Move
 
   def pbTarget(user)
     if user.pbHasType?(:GHOST)
-      ghost_target = (Settings::MECHANICS_GENERATION >= 8) ? :RandomNearFoe : :NearFoe
+      ghost_target = (Settings::MECHANICS_GENERATION == 8) ? :RandomNearFoe : :NearFoe
       return GameData::Target.get(ghost_target)
     end
     return super
@@ -280,7 +280,7 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
     return if @battle.pbRandom(100) >= chance
     case @secretPower
     when 2
-      target.pbSleep if target.pbCanSleep?(user, false, self)
+      target.pbSleep(user) if target.pbCanSleep?(user, false, self)
     when 10
       target.pbBurn(user) if target.pbCanBurn?(user, false, self)
     when 0, 1
@@ -289,7 +289,7 @@ class Battle::Move::EffectDependsOnEnvironment < Battle::Move
       if Supplementals::FROSTBITE_REPLACE_FREEZE
         target.pbFrostbite(user) if target.pbCanFrostbite?(user, false, self)
       else
-        target.pbFreeze if target.pbCanFreeze?(user, false, self)
+        target.pbFreeze(user) if target.pbCanFreeze?(user, false, self)
       end
     when 5
       if target.pbCanLowerStatStage?(:ATTACK, user, self)
@@ -355,11 +355,11 @@ class Battle::Move::HitsAllFoesAndPowersUpInPsychicTerrain < Battle::Move
     return super
   end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     if @battle.field.terrain == :Psychic && user.affectedByTerrain?
-      baseDmg = baseDmg * 3 / 2
+      base_power = base_power * 3 / 2
     end
-    return baseDmg
+    return base_power
   end
 end
 
@@ -394,9 +394,9 @@ class Battle::Move::DoublePowerAfterFusionFlare < Battle::Move
     super
   end
 
-  def pbBaseDamageMultiplier(damageMult, user, target)
-    damageMult *= 2 if @doublePower
-    return damageMult
+  def pbBasePowerMultiplier(power_mult, user, target)
+    power_mult *= 2 if @doublePower
+    return power_mult
   end
 
   def pbEffectGeneral(user)
@@ -419,9 +419,9 @@ class Battle::Move::DoublePowerAfterFusionBolt < Battle::Move
     super
   end
 
-  def pbBaseDamageMultiplier(damageMult, user, target)
-    damageMult *= 2 if @doublePower
-    return damageMult
+  def pbBasePowerMultiplier(power_mult, user, target)
+    power_mult *= 2 if @doublePower
+    return power_mult
   end
 
   def pbEffectGeneral(user)
@@ -442,7 +442,7 @@ class Battle::Move::PowerUpAllyMove < Battle::Move
   def ignoresSubstitute?(user); return true; end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    if target.fainted? || target.effects[PBEffects::HelpingHand]
+    if target.fainted?
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -451,7 +451,7 @@ class Battle::Move::PowerUpAllyMove < Battle::Move
   end
 
   def pbEffectAgainstTarget(user, target)
-    target.effects[PBEffects::HelpingHand] = true
+    target.effects[PBEffects::HelpingHand] += 1
     @battle.pbDisplay(_INTL("{1} is ready to help {2}!", user.pbThis, target.pbThis(true)))
   end
 end
@@ -515,9 +515,12 @@ end
 class Battle::Move::CounterDamagePlusHalf < Battle::Move::FixedDamageMove
   def pbAddTarget(targets, user)
     return if user.lastFoeAttacker.length == 0
-    lastAttacker = user.lastFoeAttacker.last
-    return if lastAttacker < 0 || !user.opposes?(lastAttacker)
-    user.pbAddTarget(targets, user, @battle.battlers[lastAttacker], self, false)
+    user.lastFoeAttacker.reverse_each do |party_index|
+      battler = @battle.pbFindBattler(party_index, user.index + 1)
+      next if !battler || battler.effects[PBEffects::Commanding] >= 0
+      user.pbAddTarget(targets, user, battler, self, false)
+      break
+    end
   end
 
   def pbMoveFailed?(user, targets)
@@ -582,7 +585,7 @@ class Battle::Move::PowerDependsOnUserStockpile < Battle::Move
     return false
   end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     return 100 * user.effects[PBEffects::Stockpile]
   end
 
@@ -734,6 +737,8 @@ class Battle::Move::UseLastMoveUsed < Battle::Move
       "ProtectUserFromDamagingMovesObstruct",              # Obstruct           # Not listed on Bulbapedia
       "ProtectUserFromTargetingMovesSpikyShield",          # Spiky Shield
       "ProtectUserBanefulBunker",                          # Baneful Bunker
+      "ProtectUserFromDamagingMovesSilkTrap",              # Silk Trap
+      "ProtectUserFromDamagingMovesBurningBulwark",        # Burning Bulwark
       # Moves that call other moves
       "UseLastMoveUsedByTarget",                           # Mirror Move
       "UseLastMoveUsed",                                   # Copycat (this move)
@@ -970,6 +975,8 @@ class Battle::Move::UseRandomMove < Battle::Move
       "ProtectUserFromDamagingMovesObstruct",              # Obstruct
       "ProtectUserFromTargetingMovesSpikyShield",          # Spiky Shield
       "ProtectUserBanefulBunker",                          # Baneful Bunker
+      "ProtectUserFromDamagingMovesSilkTrap",              # Silk Trap
+      "ProtectUserFromDamagingMovesBurningBulwark",        # Burning Bulwark
       # Moves that call other moves
       "UseLastMoveUsedByTarget",                           # Mirror Move
       "UseLastMoveUsed",                                   # Copycat
@@ -1062,6 +1069,8 @@ class Battle::Move::UseRandomMoveFromUserParty < Battle::Move
       "ProtectUserFromDamagingMovesObstruct",              # Obstruct           # Not listed on Bulbapedia
       "ProtectUserFromTargetingMovesSpikyShield",          # Spiky Shield
       "ProtectUserBanefulBunker",                          # Baneful Bunker
+      "ProtectUserFromDamagingMovesSilkTrap",              # Silk Trap
+      "ProtectUserFromDamagingMovesBurningBulwark",        # Burning Bulwark
       # Moves that call other moves
       "UseLastMoveUsedByTarget",                           # Mirror Move
       "UseLastMoveUsed",                                   # Copycat
@@ -1305,9 +1314,17 @@ class Battle::Move::ReplaceMoveWithTargetLastMoveUsed < Battle::Move
     super
     @moveBlacklist = [
       "ReplaceMoveWithTargetLastMoveUsed",   # Sketch (this move)
-      # Struggle
+      "RevivePokemonToHalfHP",               # Revival Blessing
       "Struggle"                             # Struggle
     ]
+    @signatureMoveBlacklist = []
+    if Settings::MECHANICS_GENERATION >= 9
+      @signatureMoveBlacklist = [
+        :DARKVOID,
+        :HYPERSPACEFURY,
+        :TERASTARSTORM
+      ]
+    end
   end
 
   def pbMoveFailed?(user, targets)
@@ -1324,6 +1341,7 @@ class Battle::Move::ReplaceMoveWithTargetLastMoveUsed < Battle::Move
     if !lastMoveData ||
        user.pbHasMove?(target.lastRegularMoveUsed) ||
        @moveBlacklist.include?(lastMoveData.function_code) ||
+       @signatureMoveBlacklist.include?(lastMoveData.id) ||
        lastMoveData.type == :SHADOW
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true

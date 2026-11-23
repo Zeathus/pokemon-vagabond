@@ -9,7 +9,7 @@ class PokemonJukebox_Scene
   def pbStartScene(commands)
     @commands = commands
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     @sprites["background"].setBitmap(_INTL("Graphics/UI/jukebox_bg"))
@@ -43,7 +43,7 @@ class PokemonJukebox_Scene
   end
 
   def pbSetCommands(newcommands, newindex)
-    @sprites["commands"].commands = (!newcommands) ? @commands : newcommands
+    @sprites["commands"].commands = (newcommands) ? newcommands : @commands
     @sprites["commands"].index    = newindex
   end
 
@@ -58,6 +58,10 @@ end
 #
 #===============================================================================
 class PokemonJukeboxScreen
+  HIGHER_ENCOUNTER_RATE_BGM = "Radio - March"
+  LOWER_ENCOUNTER_RATE_BGM  = "Radio - Lullaby"
+  NORMAL_ENCOUNTER_RATE_BGM = "Radio - Oak"
+
   def initialize(scene)
     @scene = scene
   end
@@ -78,26 +82,23 @@ class PokemonJukeboxScreen
     @scene.pbStartScene(commands)
     loop do
       cmd = @scene.pbScene
-      if cmd < 0
-        pbPlayCloseMenuSE
-        break
-      elsif cmdMarch >= 0 && cmd == cmdMarch
+      if cmdMarch >= 0 && cmd == cmdMarch
         pbPlayDecisionSE
-        pbBGMPlay("Radio - March", 100, 100)
+        pbBGMPlay(HIGHER_ENCOUNTER_RATE_BGM, 100, 100)
         if $PokemonMap
           $PokemonMap.lower_encounter_rate = false
           $PokemonMap.higher_encounter_rate = true
         end
       elsif cmdLullaby >= 0 && cmd == cmdLullaby
         pbPlayDecisionSE
-        pbBGMPlay("Radio - Lullaby", 100, 100)
+        pbBGMPlay(LOWER_ENCOUNTER_RATE_BGM, 100, 100)
         if $PokemonMap
           $PokemonMap.lower_encounter_rate = true
           $PokemonMap.higher_encounter_rate = false
         end
       elsif cmdOak >= 0 && cmd == cmdOak
         pbPlayDecisionSE
-        pbBGMPlay("Radio - Oak", 100, 100)
+        pbBGMPlay(NORMAL_ENCOUNTER_RATE_BGM, 100, 100)
         if $PokemonMap
           $PokemonMap.lower_encounter_rate = false
           $PokemonMap.higher_encounter_rate = false

@@ -53,9 +53,7 @@ class Battle::AI::AITrainer
   end
 
   def set_up_skill_flags
-    if @trainer
-      @trainer.flags.each { |flag| @skill_flags.push(flag) }
-    end
+    @trainer&.flags&.each { |flag| @skill_flags.push(flag) }
     if @skill > 0
       @skill_flags.push("PredictMoveFailure")
       @skill_flags.push("ScoreMoves")
@@ -65,7 +63,7 @@ class Battle::AI::AITrainer
       @skill_flags.push("ConsiderSwitching")
       @skill_flags.push("HPAware")
     end
-    if !medium_skill?
+    if !medium_skill?   # Low skill
       @skill_flags.push("UsePokemonInOrder")
     elsif best_skill?
       @skill_flags.push("ReserveLastPokemon")
@@ -81,6 +79,8 @@ class Battle::AI::AITrainer
     end
     @skill_flags.compact!
   end
+
+  #-----------------------------------------------------------------------------
 
   def has_skill_flag?(flag)
     return @skill_flags.include?(flag)

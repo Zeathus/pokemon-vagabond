@@ -63,8 +63,8 @@ class Battle::Move::HitTwoTimesTargetThenTargetAlly < Battle::Move
 end
 
 #===============================================================================
-# Hits 3 times. Power is multiplied by the hit number. (Triple Kick)
-# An accuracy check is performed for each hit.
+# Hits 3 times. Power is multiplied by the hit number. An accuracy check is
+# performed for each hit. (Triple Axel, Triple Kick)
 #===============================================================================
 class Battle::Move::HitThreeTimesPowersUpWithEachHit < Battle::Move
   def multiHitMove?;            return true; end
@@ -76,11 +76,11 @@ class Battle::Move::HitThreeTimesPowersUpWithEachHit < Battle::Move
 
   def pbOnStartUse(user, targets)
     @calcBaseDmg = 0
-    @accCheckPerHit = !user.hasActiveAbility?(:SKILLLINK)
+    @accCheckPerHit = !user.hasActiveAbility?(:SKILLLINK) && !user.hasActiveItem?(:LOADEDDICE)
   end
 
-  def pbBaseDamage(baseDmg, user, target)
-    @calcBaseDmg += baseDmg
+  def pbBasePower(base_power, user, target)
+    @calcBaseDmg += base_power
     return @calcBaseDmg
   end
 end
@@ -96,12 +96,34 @@ class Battle::Move::HitThreeTimesAlwaysCriticalHit < Battle::Move
 end
 
 #===============================================================================
+# Hits 10 times in a row. An accuracy check is performed for each hit.
+# (Population Bomb)
+#===============================================================================
+class Battle::Move::HitTenTimes < Battle::Move
+  def multiHitMove?; return true; end
+
+  def pbNumHits(user, targets)
+    return 4 + @battle.pbRandom(7) if user.hasActiveItem?(:LOADEDDICE)
+    return 10
+  end
+
+  def successCheckPerHit?
+    return @accCheckPerHit
+  end
+
+  def pbOnStartUse(user, targets)
+    @accCheckPerHit = !user.hasActiveAbility?(:SKILLLINK) && !user.hasActiveItem?(:LOADEDDICE)
+  end
+end
+
+#===============================================================================
 # Hits 2-5 times.
 #===============================================================================
 class Battle::Move::HitTwoToFiveTimes < Battle::Move
   def multiHitMove?; return true; end
 
   def pbNumHits(user, targets)
+    return 4 + @battle.pbRandom(2) if user.hasActiveItem?(:LOADEDDICE)
     hitChances = [
       2, 2, 2, 2, 2, 2, 2,
       3, 3, 3, 3, 3, 3, 3,
@@ -110,7 +132,8 @@ class Battle::Move::HitTwoToFiveTimes < Battle::Move
     ]
     r = @battle.pbRandom(hitChances.length)
     r = hitChances.length - 1 if user.hasActiveAbility?(:SKILLLINK)
-    return hitChances[r]
+    ret = hitChances[r]
+    return ret
   end
 end
 
@@ -124,7 +147,7 @@ class Battle::Move::HitTwoToFiveTimesOrThreeForAshGreninja < Battle::Move::HitTw
     return super
   end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     return 20 if user.isSpecies?(:GRENINJA) && user.form == 2
     return super
   end
@@ -172,7 +195,7 @@ class Battle::Move::HitOncePerUserTeamMember < Battle::Move
     return @beatUpList.length
   end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     i = @beatUpList.shift   # First element in array, and removes it from array
     atk = @battle.pbParty(user.index)[i].baseStats[:ATTACK]
     return 5 + (atk / 10)
@@ -206,7 +229,7 @@ class Battle::Move::TwoTurnAttackOneTurnInSun < Battle::Move::TwoTurnMove
   def pbIsChargingTurn?(user)
     ret = super
     if !user.effects[PBEffects::TwoTurnAttack] &&
-       [:Sun, :HarshSun].include?(user.effectiveWeather)
+       ([:Sun, :HarshSun].include?(user.effectiveWeather) || user.hasActiveAbility?(:MEGASOL))
       @powerHerb = false
       @chargingTurn = true
       @damagingTurn = true
@@ -219,9 +242,9 @@ class Battle::Move::TwoTurnAttackOneTurnInSun < Battle::Move::TwoTurnMove
     @battle.pbDisplay(_INTL("{1} took in sunlight!", user.pbThis))
   end
 
-  def pbBaseDamageMultiplier(damageMult, user, target)
-    damageMult /= 2 if ![:None, :Sun, :HarshSun].include?(user.effectiveWeather)
-    return damageMult
+  def pbBasePowerMultiplier(power_mult, user, target)
+    power_mult /= 2 if ![:None, :Sun, :HarshSun].include?(user.effectiveWeather) && !user.hasActiveAbility?(:MEGASOL)
+    return power_mult
   end
 end
 
@@ -235,6 +258,7 @@ class Battle::Move::TwoTurnAttackParalyzeTarget < Battle::Move::TwoTurnMove
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
   end
@@ -250,6 +274,7 @@ class Battle::Move::TwoTurnAttackBurnTarget < Battle::Move::TwoTurnMove
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbBurn(user) if target.pbCanBurn?(user, false, self)
   end
@@ -267,6 +292,7 @@ class Battle::Move::TwoTurnAttackFlinchTarget < Battle::Move::TwoTurnMove
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbFlinch(user)
   end
@@ -293,7 +319,7 @@ class Battle::Move::TwoTurnAttackRaiseUserSpAtkSpDefSpd2 < Battle::Move::TwoTurn
       break
     end
     if failed
-      @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!", user.pbThis))
+      @battle.pbDisplay(_INTL("{1} stats won't go any higher!", user.pbOfThis))
       return true
     end
     return false
@@ -316,8 +342,8 @@ class Battle::Move::TwoTurnAttackRaiseUserSpAtkSpDefSpd2 < Battle::Move::TwoTurn
 end
 
 #===============================================================================
-# Two turn attack. Ups user's Defense by 1 stage first turn, attacks second turn.
-# (Skull Bash)
+# Two turn attack. On the first turn, increases the user's Defense by 1 stage.
+# On the second turn, does damage. (Skull Bash)
 #===============================================================================
 class Battle::Move::TwoTurnAttackChargeRaiseUserDefense1 < Battle::Move::TwoTurnMove
   attr_reader :statUp
@@ -362,10 +388,35 @@ class Battle::Move::TwoTurnAttackChargeRaiseUserSpAtk1 < Battle::Move::TwoTurnMo
 end
 
 #===============================================================================
+# Two turn attack. On the first turn, increases the user's Special Attack by 1
+# stage. On the second turn, does damage. In rain, takes 1 turn instead.
+# (Electro Shot)
+#===============================================================================
+class Battle::Move::TwoTurnAttackOneTurnInRainChargeRaiseUserSpAtk1 < Battle::Move::TwoTurnAttackChargeRaiseUserSpAtk1
+  def pbIsChargingTurn?(user)
+    ret = super
+    if !user.effects[PBEffects::TwoTurnAttack] &&
+       [:Rain, :HeavyRain].include?(user.effectiveWeather) && !user.hasActiveAbility?(:MEGASOL)
+      @powerHerb = false
+      @chargingTurn = true
+      @damagingTurn = true
+      return false
+    end
+    return ret
+  end
+
+  def pbChargingTurnMessage(user, targets)
+    @battle.pbDisplay(_INTL("{1} absorbed electricity!", user.pbThis))
+  end
+end
+
+#===============================================================================
 # Two turn attack. Skips first turn, attacks second turn. (Dig)
 # (Handled in Battler's pbSuccessCheckPerHit): Is semi-invulnerable during use.
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableUnderground < Battle::Move::TwoTurnMove
+  def hidesUser?; return true; end
+
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} burrowed its way under the ground!", user.pbThis))
   end
@@ -376,6 +427,8 @@ end
 # (Handled in Battler's pbSuccessCheckPerHit): Is semi-invulnerable during use.
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableUnderwater < Battle::Move::TwoTurnMove
+  def hidesUser?; return true; end
+
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} hid underwater!", user.pbThis))
   end
@@ -387,6 +440,7 @@ end
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableInSky < Battle::Move::TwoTurnMove
   def unusableInGravity?; return true; end
+  def hidesUser?;         return true; end
 
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} flew up high!", user.pbThis))
@@ -400,12 +454,14 @@ end
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableInSkyParalyzeTarget < Battle::Move::TwoTurnMove
   def unusableInGravity?; return true; end
+  def hidesUser?;         return true; end
 
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} sprang up!", user.pbThis))
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
   end
@@ -419,13 +475,15 @@ end
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableInSkyTargetCannotAct < Battle::Move::TwoTurnMove
   def unusableInGravity?; return true; end
+  def hidesUser?;         return true; end
+  def hidesTarget?;       return true; end
 
   def pbIsChargingTurn?(user)
     # NOTE: Sky Drop doesn't benefit from Power Herb, probably because it works
     #       differently (i.e. immobilises the target during use too).
     @powerHerb = false
-    @chargingTurn = (user.effects[PBEffects::TwoTurnAttack].nil?)
-    @damagingTurn = (!user.effects[PBEffects::TwoTurnAttack].nil?)
+    @chargingTurn = user.effects[PBEffects::TwoTurnAttack].nil?
+    @damagingTurn = !user.effects[PBEffects::TwoTurnAttack].nil?
     return !@damagingTurn
   end
 
@@ -459,6 +517,14 @@ class Battle::Move::TwoTurnAttackInvulnerableInSkyTargetCannotAct < Battle::Move
     return super
   end
 
+  def pbInitialEffect(user, targets, hitNum)
+    failed = true
+    targets.each do |target|
+      failed = false if !target.damageState.unaffected
+    end
+    super if !failed
+  end
+
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} took {2} into the sky!", user.pbThis, targets[0].pbThis(true)))
   end
@@ -481,15 +547,19 @@ end
 # use. Ends target's protections upon hit. (Shadow Force, Phantom Force)
 #===============================================================================
 class Battle::Move::TwoTurnAttackInvulnerableRemoveProtections < Battle::Move::TwoTurnMove
+  def hidesUser?; return true; end
+
   def pbChargingTurnMessage(user, targets)
     @battle.pbDisplay(_INTL("{1} vanished instantly!", user.pbThis))
   end
 
   def pbAttackingTurnEffect(user, target)
     target.effects[PBEffects::BanefulBunker]          = false
+    target.effects[PBEffects::BurningBulwark]         = false
     target.effects[PBEffects::KingsShield]            = false
     target.effects[PBEffects::Obstruct]               = false
     target.effects[PBEffects::Protect]                = false
+    target.effects[PBEffects::SilkTrap]               = false
     target.effects[PBEffects::SpikyShield]            = false
     target.pbOwnSide.effects[PBEffects::CraftyShield] = false
     target.pbOwnSide.effects[PBEffects::MatBlock]     = false
@@ -513,7 +583,7 @@ class Battle::Move::MultiTurnAttackPreventSleeping < Battle::Move
     @battle.pbDisplay(_INTL("{1} caused an uproar!", user.pbThis))
     @battle.pbPriority(true).each do |b|
       next if b.fainted? || b.status != :SLEEP
-      next if b.hasActiveAbility?(:SOUNDPROOF)
+      next if b.hasActiveAbility?(:SOUNDPROOF) && !(Settings::MECHANICS_GENERATION >= 8 && b.index == user.index)
       b.pbCureStatus
     end
   end
@@ -545,12 +615,12 @@ end
 class Battle::Move::MultiTurnAttackPowersUpEachTurn < Battle::Move
   def pbNumHits(user, targets); return 1; end
 
-  def pbBaseDamage(baseDmg, user, target)
+  def pbBasePower(base_power, user, target)
     shift = (5 - user.effects[PBEffects::Rollout])   # 0-4, where 0 is most powerful
     shift = 0 if user.effects[PBEffects::Rollout] == 0   # For first turn
     shift += 1 if user.effects[PBEffects::DefenseCurl]
-    baseDmg *= 2**shift
-    return baseDmg
+    base_power *= 2**shift
+    return base_power
   end
 
   def pbEffectAfterAllHits(user, target)

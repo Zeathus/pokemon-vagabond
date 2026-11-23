@@ -1,422 +1,240 @@
 #===============================================================================
-# Pokémon party buttons and menu
+#
 #===============================================================================
-class PokemonPartyConfirmCancelSprite < Sprite
-  attr_reader :selected
+class UI::PartyVisualsPanel < UI::SpriteContainer
+  attr_reader :index, :switch_index
+  attr_reader :pokemon, :text
 
-  def initialize(text, x, y, narrowbox = false, viewport = nil)
+  GRAPHICS_FOLDER = "Party/"
+  TEXT_COLOR_THEMES = {   # Themes not in DEFAULT_TEXT_COLOR_THEMES
+    :male   => [Color.new(0, 112, 248), Color.new(120, 184, 232)],
+    :female => [Color.new(232, 32, 16), Color.new(248, 168, 184)]
+  }
+
+  def initialize(pokemon, index, viewport)
+    @pokemon      = pokemon
+    @index        = index
+    @x            = (@index % 2) * Graphics.width / 2
+    @y            = (16 * (@index % 2)) + (96 * (@index / 2))
+    @selected     = false
+    @switch_index = -1   # -1 = not switching, 0+ = index of first panel for switching
+    @text         = nil
     super(viewport)
-    @refreshBitmap = true
-    @bgsprite = ChangelingSprite.new(0, 0, viewport)
-    if narrowbox
-      @bgsprite.addBitmap("desel", "Graphics/UI/Party/icon_cancel_narrow")
-      @bgsprite.addBitmap("sel", "Graphics/UI/Party/icon_cancel_narrow_sel")
-    else
-      @bgsprite.addBitmap("desel", "Graphics/UI/Party/icon_cancel")
-      @bgsprite.addBitmap("sel", "Graphics/UI/Party/icon_cancel_sel")
-    end
-    @bgsprite.changeBitmap("desel")
-    @overlaysprite = BitmapSprite.new(@bgsprite.bitmap.width, @bgsprite.bitmap.height, viewport)
-    @overlaysprite.z = self.z + 1
-    pbSetSystemFont(@overlaysprite.bitmap)
-    textpos = [[text, 56, (narrowbox) ? 8 : 14, :center, Color.new(248, 248, 248), Color.new(40, 40, 40)]]
-    pbDrawTextPositions(@overlaysprite.bitmap, textpos)
-    self.x = x
-    self.y = y
   end
 
-  def dispose
-    @bgsprite.dispose
-    @overlaysprite.bitmap.dispose
-    @overlaysprite.dispose
-    super
+  def initialize_bitmaps
+    @bitmaps[:numbers] = AnimatedBitmap.new(graphics_folder + "numbers")
   end
 
-  def viewport=(value)
-    super
-    refresh
+  def initialize_sprites
+    initialize_panel_bg
+    initialize_overlay
+    initialize_other_sprites
   end
 
-  def x=(value)
-    super
-    refresh
+  def initialize_panel_bg
+    @sprites[:panel_bg] = ChangelingSprite.new(0, 0, @viewport)
+    @sprites[:panel_bg].add_bitmap(:blank,       graphics_folder + "panel_blank")
+    @sprites[:panel_bg].add_bitmap(:able,        graphics_folder + "panel_rect")
+    @sprites[:panel_bg].add_bitmap(:able_sel,    graphics_folder + "panel_rect_sel")
+    @sprites[:panel_bg].add_bitmap(:fainted,     graphics_folder + "panel_rect_faint")
+    @sprites[:panel_bg].add_bitmap(:fainted_sel, graphics_folder + "panel_rect_faint_sel")
+    @sprites[:panel_bg].add_bitmap(:switch,      graphics_folder + "panel_rect_switch")
+    @sprites[:panel_bg].add_bitmap(:switch_sel,  graphics_folder + "panel_rect_switch_sel")
+    @sprites[:panel_bg].add_bitmap(:switch_sel2, graphics_folder + "panel_rect_switch_sel2")
+    record_values(:panel_bg)
   end
 
-  def y=(value)
-    super
-    refresh
+  def initialize_overlay
+    add_overlay(:overlay, 256, 98)
+    record_values(:overlay)
   end
 
-  def color=(value)
-    super
-    refresh
+  def initialize_other_sprites
+    # HP bar sprite
+    @sprites[:hp_bar] = ChangelingSprite.new(104, 50, @viewport)
+    @sprites[:hp_bar].z = 1
+    @sprites[:hp_bar].add_bitmap(:able, graphics_folder + _INTL("hp_bar"))
+    @sprites[:hp_bar].add_bitmap(:fainted, graphics_folder + _INTL("hp_bar_faint"))
+    @sprites[:hp_bar].add_bitmap(:switch, graphics_folder + _INTL("hp_bar_switch"))
+    record_values(:hp_bar)
+    # Ball sprite
+    @sprites[:ball] = ChangelingSprite.new(10, 0, @viewport)
+    @sprites[:ball].z = 1
+    @sprites[:ball].add_bitmap(:desel, graphics_folder + "icon_ball")
+    @sprites[:ball].add_bitmap(:sel, graphics_folder + "icon_ball_sel")
+    record_values(:ball)
+    # Pokémon icon
+    @sprites[:pokemon] = PokemonIconSprite.new(@pokemon, @viewport)
+    @sprites[:pokemon].x = 60
+    @sprites[:pokemon].y = 40
+    @sprites[:pokemon].z = 2
+    @sprites[:pokemon].setOffset(PictureOrigin::CENTER)
+    @sprites[:pokemon].active = @active
+    record_values(:pokemon)
+    # Held item icon
+    @sprites[:held_item] = HeldItemIconSprite.new(70, 48, @pokemon, @viewport)
+    @sprites[:held_item].z = 3
+    record_values(:held_item)
   end
 
-  def selected=(value)
-    if @selected != value
-      @selected = value
-      refresh
-    end
-  end
-
-  def refresh
-    if @bgsprite && !@bgsprite.disposed?
-      @bgsprite.changeBitmap((@selected) ? "sel" : "desel")
-      @bgsprite.x     = self.x
-      @bgsprite.y     = self.y
-      @bgsprite.color = self.color
-    end
-    if @overlaysprite && !@overlaysprite.disposed?
-      @overlaysprite.x     = self.x
-      @overlaysprite.y     = self.y
-      @overlaysprite.color = self.color
-    end
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class PokemonPartyCancelSprite < PokemonPartyConfirmCancelSprite
-  def initialize(viewport = nil)
-    super(_INTL("CANCEL"), 398, 328, false, viewport)
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class PokemonPartyConfirmSprite < PokemonPartyConfirmCancelSprite
-  def initialize(viewport = nil)
-    super(_INTL("CONFIRM"), 398, 308, true, viewport)
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class PokemonPartyCancelSprite2 < PokemonPartyConfirmCancelSprite
-  def initialize(viewport = nil)
-    super(_INTL("CANCEL"), 398, 346, true, viewport)
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class Window_CommandPokemonColor < Window_CommandPokemon
-  def initialize(commands, width = nil)
-    @colorKey = []
-    commands.length.times do |i|
-      if commands[i].is_a?(Array)
-        @colorKey[i] = commands[i][1]
-        commands[i] = commands[i][0]
-      end
-    end
-    super(commands, width)
-  end
-
-  def drawItem(index, _count, rect)
-    pbSetSystemFont(self.contents) if @starting
-    rect = drawCursor(index, rect)
-    base   = self.baseColor
-    shadow = self.shadowColor
-    if @colorKey[index] && @colorKey[index] == 1
-      base   = Color.new(0, 80, 160)
-      shadow = Color.new(128, 192, 240)
-    end
-    pbDrawShadowText(self.contents, rect.x, rect.y + (self.contents.text_offset_y || 0),
-                     rect.width, rect.height, @commands[index], base, shadow)
-  end
-end
-
-#===============================================================================
-# Blank party panel
-#===============================================================================
-class PokemonPartyBlankPanel < Sprite
-  attr_accessor :text
-
-  def initialize(_pokemon, index, viewport = nil)
-    super(viewport)
-    self.x = (index % 2) * Graphics.width / 2
-    self.y = (16 * (index % 2)) + (96 * (index / 2))
-    @panelbgsprite = AnimatedBitmap.new("Graphics/UI/Party/panel_blank")
-    self.bitmap = @panelbgsprite.bitmap
-    @text = nil
-  end
-
-  def dispose
-    @panelbgsprite.dispose
-    super
-  end
-
-  def selected; return false; end
-  def selected=(value); end
-  def preselected; return false; end
-  def preselected=(value); end
-  def switching; return false; end
-  def switching=(value); end
-  def refresh; end
-end
-
-#===============================================================================
-# Pokémon party panel
-#===============================================================================
-class PokemonPartyPanel < Sprite
-  attr_reader :pokemon
-  attr_reader :active
-  attr_reader :selected
-  attr_reader :preselected
-  attr_reader :switching
-  attr_reader :text
-
-  TEXT_BASE_COLOR    = Color.new(248, 248, 248)
-  TEXT_SHADOW_COLOR  = Color.new(40, 40, 40)
-  HP_BAR_WIDTH       = 96
-  STATUS_ICON_WIDTH  = 44
-  STATUS_ICON_HEIGHT = 16
-
-  def initialize(pokemon, index, viewport = nil)
-    super(viewport)
-    @pokemon = pokemon
-    @active = (index == 0)   # true = rounded panel, false = rectangular panel
-    @refreshing = true
-    self.x = (index % 2) * Graphics.width / 2
-    self.y = (16 * (index % 2)) + (96 * (index / 2))
-    @panelbgsprite = ChangelingSprite.new(0, 0, viewport)
-    @panelbgsprite.z = self.z
-    if @active   # Rounded panel
-      @panelbgsprite.addBitmap("able", "Graphics/UI/Party/panel_round")
-      @panelbgsprite.addBitmap("ablesel", "Graphics/UI/Party/panel_round_sel")
-      @panelbgsprite.addBitmap("fainted", "Graphics/UI/Party/panel_round_faint")
-      @panelbgsprite.addBitmap("faintedsel", "Graphics/UI/Party/panel_round_faint_sel")
-      @panelbgsprite.addBitmap("swap", "Graphics/UI/Party/panel_round_swap")
-      @panelbgsprite.addBitmap("swapsel", "Graphics/UI/Party/panel_round_swap_sel")
-      @panelbgsprite.addBitmap("swapsel2", "Graphics/UI/Party/panel_round_swap_sel2")
-    else   # Rectangular panel
-      @panelbgsprite.addBitmap("able", "Graphics/UI/Party/panel_rect")
-      @panelbgsprite.addBitmap("ablesel", "Graphics/UI/Party/panel_rect_sel")
-      @panelbgsprite.addBitmap("fainted", "Graphics/UI/Party/panel_rect_faint")
-      @panelbgsprite.addBitmap("faintedsel", "Graphics/UI/Party/panel_rect_faint_sel")
-      @panelbgsprite.addBitmap("swap", "Graphics/UI/Party/panel_rect_swap")
-      @panelbgsprite.addBitmap("swapsel", "Graphics/UI/Party/panel_rect_swap_sel")
-      @panelbgsprite.addBitmap("swapsel2", "Graphics/UI/Party/panel_rect_swap_sel2")
-    end
-    @hpbgsprite = ChangelingSprite.new(0, 0, viewport)
-    @hpbgsprite.z = self.z + 1
-    @hpbgsprite.addBitmap("able", _INTL("Graphics/UI/Party/overlay_hp_back"))
-    @hpbgsprite.addBitmap("fainted", _INTL("Graphics/UI/Party/overlay_hp_back_faint"))
-    @hpbgsprite.addBitmap("swap", _INTL("Graphics/UI/Party/overlay_hp_back_swap"))
-    @ballsprite = ChangelingSprite.new(0, 0, viewport)
-    @ballsprite.z = self.z + 1
-    @ballsprite.addBitmap("desel", "Graphics/UI/Party/icon_ball")
-    @ballsprite.addBitmap("sel", "Graphics/UI/Party/icon_ball_sel")
-    @pkmnsprite = PokemonIconSprite.new(pokemon, viewport)
-    @pkmnsprite.setOffset(PictureOrigin::CENTER)
-    @pkmnsprite.active = @active
-    @pkmnsprite.z      = self.z + 2
-    @helditemsprite = HeldItemIconSprite.new(0, 0, @pokemon, viewport)
-    @helditemsprite.z = self.z + 3
-    @overlaysprite = BitmapSprite.new(Graphics.width, Graphics.height, viewport)
-    @overlaysprite.z = self.z + 4
-    pbSetSystemFont(@overlaysprite.bitmap)
-    @hpbar    = AnimatedBitmap.new("Graphics/UI/Party/overlay_hp")
-    @statuses = AnimatedBitmap.new(_INTL("Graphics/UI/statuses"))
-    @selected      = false
-    @preselected   = false
-    @switching     = false
-    @text          = nil
-    @refreshBitmap = true
-    @refreshing    = false
-    refresh
-  end
-
-  def dispose
-    @panelbgsprite.dispose
-    @hpbgsprite.dispose
-    @ballsprite.dispose
-    @pkmnsprite.dispose
-    @helditemsprite.dispose
-    @overlaysprite.bitmap.dispose
-    @overlaysprite.dispose
-    @hpbar.dispose
-    @statuses.dispose
-    super
-  end
-
-  def x=(value)
-    super
-    refresh
-  end
-
-  def y=(value)
-    super
-    refresh
-  end
-
-  def color=(value)
-    super
-    refresh
-  end
+  #-----------------------------------------------------------------------------
 
   def text=(value)
     return if @text == value
     @text = value
-    @refreshBitmap = true
     refresh
   end
 
   def pokemon=(value)
     @pokemon = value
-    @pkmnsprite.pokemon = value if @pkmnsprite && !@pkmnsprite.disposed?
-    @helditemsprite.pokemon = value if @helditemsprite && !@helditemsprite.disposed?
-    @refreshBitmap = true
+    @sprites[:pokemon].pokemon = @pokemon if @sprites[:pokemon] && !@sprites[:pokemon].disposed?
+    @sprites[:held_item].pokemon = @pokemon if @sprites[:held_item] && !@sprites[:held_item].disposed?
     refresh
+  end
+
+  def blank?
+    return @pokemon.nil?
   end
 
   def selected=(value)
     return if @selected == value
     @selected = value
+    @sprites[:pokemon].selected = @selected
     refresh
   end
 
-  def preselected=(value)
-    return if @preselected == value
-    @preselected = value
+  def set_switch_index(value)
+    @switch_index = value
     refresh
   end
 
-  def switching=(value)
-    return if @switching == value
-    @switching = value
-    refresh
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    refresh_panel_bg
+    refresh_hp_bar_graphic
+    refresh_ball_graphic
+    refresh_pokemon_icon
+    refresh_held_item_icon
   end
 
-  def hp; return @pokemon.hp; end
-
-  def refresh_panel_graphic
-    return if !@panelbgsprite || @panelbgsprite.disposed?
-    if self.selected
-      if self.preselected
-        @panelbgsprite.changeBitmap("swapsel2")
-      elsif @switching
-        @panelbgsprite.changeBitmap("swapsel")
+  def refresh_panel_bg
+    return if !@sprites[:panel_bg] || @sprites[:panel_bg].disposed?
+    if @pokemon.nil?
+      @sprites[:panel_bg].change_bitmap(:blank)
+    elsif @selected
+      if @switch_index == @index
+        @sprites[:panel_bg].change_bitmap(:switch_sel2)
+      elsif @switch_index >= 0
+        @sprites[:panel_bg].change_bitmap(:switch_sel)
       elsif @pokemon.fainted?
-        @panelbgsprite.changeBitmap("faintedsel")
+        @sprites[:panel_bg].change_bitmap(:fainted_sel)
       else
-        @panelbgsprite.changeBitmap("ablesel")
+        @sprites[:panel_bg].change_bitmap(:able_sel)
       end
     else
-      if self.preselected
-        @panelbgsprite.changeBitmap("swap")
+      if @switch_index == @index
+        @sprites[:panel_bg].change_bitmap(:switch)
       elsif @pokemon.fainted?
-        @panelbgsprite.changeBitmap("fainted")
+        @sprites[:panel_bg].change_bitmap(:fainted)
       else
-        @panelbgsprite.changeBitmap("able")
+        @sprites[:panel_bg].change_bitmap(:able)
       end
     end
-    @panelbgsprite.x     = self.x
-    @panelbgsprite.y     = self.y
-    @panelbgsprite.color = self.color
   end
 
   def refresh_hp_bar_graphic
-    return if !@hpbgsprite || @hpbgsprite.disposed?
-    @hpbgsprite.visible = (!@pokemon.egg? && !(@text && @text.length > 0))
-    return if !@hpbgsprite.visible
-    if self.preselected || (self.selected && @switching)
-      @hpbgsprite.changeBitmap("swap")
+    return if !@sprites[:hp_bar] || @sprites[:hp_bar].disposed?
+    @sprites[:hp_bar].visible = (@pokemon && !@pokemon.egg? && !(@text && @text.length > 0))
+    return if !@sprites[:hp_bar].visible
+    if @switch_index == @index || (@switch_index >= 0 && @selected)
+      @sprites[:hp_bar].change_bitmap(:switch)
     elsif @pokemon.fainted?
-      @hpbgsprite.changeBitmap("fainted")
+      @sprites[:hp_bar].change_bitmap(:fainted)
     else
-      @hpbgsprite.changeBitmap("able")
+      @sprites[:hp_bar].change_bitmap(:able)
     end
-    @hpbgsprite.x     = self.x + 96
-    @hpbgsprite.y     = self.y + 50
-    @hpbgsprite.color = self.color
   end
 
   def refresh_ball_graphic
-    return if !@ballsprite || @ballsprite.disposed?
-    @ballsprite.changeBitmap((self.selected) ? "sel" : "desel")
-    @ballsprite.x     = self.x + 10
-    @ballsprite.y     = self.y
-    @ballsprite.color = self.color
+    return if !@sprites[:ball] || @sprites[:ball].disposed?
+    @sprites[:ball].visible = !@pokemon.nil?
+    @sprites[:ball].change_bitmap((@selected) ? :sel : :desel)
   end
 
   def refresh_pokemon_icon
-    return if !@pkmnsprite || @pkmnsprite.disposed?
-    @pkmnsprite.x        = self.x + 60
-    @pkmnsprite.y        = self.y + 40
-    @pkmnsprite.color    = self.color
-    @pkmnsprite.selected = self.selected
+    return if !@sprites[:pokemon] || @sprites[:pokemon].disposed?
+    @sprites[:pokemon].visible = !@pokemon.nil?
+    @sprites[:pokemon].selected = @selected
   end
 
   def refresh_held_item_icon
-    return if !@helditemsprite || @helditemsprite.disposed? || !@helditemsprite.visible
-    @helditemsprite.x     = self.x + 62
-    @helditemsprite.y     = self.y + 48
-    @helditemsprite.color = self.color
+    return if !@sprites[:held_item] || @sprites[:held_item].disposed?
+    @sprites[:held_item].visible = !@pokemon.nil?
   end
 
-  def refresh_overlay_information
-    return if !@refreshBitmap
-    @overlaysprite.bitmap&.clear
+  def refresh_overlay
+    super
+    return if @pokemon.nil?
     draw_name
     draw_level
     draw_gender
-    draw_hp
-    draw_status
+    draw_hp_bar
+    draw_hp_numbers
+    draw_status_icon
     draw_shiny_icon
     draw_annotation
   end
 
+  #-----------------------------------------------------------------------------
+
   def draw_name
-    pbDrawTextPositions(@overlaysprite.bitmap,
-                        [[@pokemon.name, 96, 22, :left, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR]])
+    pokemon_name = @pokemon.name
+    pokemon_name = crop_text(pokemon_name, 144)
+    name_width = @sprites[:overlay].bitmap.text_size(pokemon_name).width
+    draw_text(pokemon_name, 94 - [name_width - 130, 0].max, 22, theme: :white)
   end
 
   def draw_level
     return if @pokemon.egg?
-    # "Lv" graphic
-    pbDrawImagePositions(@overlaysprite.bitmap,
-                         [[_INTL("Graphics/UI/Party/overlay_lv"), 20, 70, 0, 0, 22, 14]])
-    # Level number
-    pbSetSmallFont(@overlaysprite.bitmap)
-    pbDrawTextPositions(@overlaysprite.bitmap,
-                        [[@pokemon.level.to_s, 42, 68, :left, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR]])
-    pbSetSystemFont(@overlaysprite.bitmap)
+    draw_image(graphics_folder + _INTL("level"), 16, 70)
+    draw_number_from_image(@bitmaps[:numbers], @pokemon.level, 38, 70)
   end
 
   def draw_gender
-    return if @pokemon.egg? || @pokemon.genderless?
-    gender_text  = (@pokemon.male?) ? _INTL("♂") : _INTL("♀")
-    base_color   = (@pokemon.male?) ? Color.new(0, 112, 248) : Color.new(232, 32, 16)
-    shadow_color = (@pokemon.male?) ? Color.new(120, 184, 232) : Color.new(248, 168, 184)
-    pbDrawTextPositions(@overlaysprite.bitmap,
-                        [[gender_text, 224, 22, :left, base_color, shadow_color]])
-  end
-
-  def draw_hp
-    return if @pokemon.egg? || (@text && @text.length > 0)
-    # HP numbers
-    hp_text = sprintf("% 3d /% 3d", @pokemon.hp, @pokemon.totalhp)
-    pbDrawTextPositions(@overlaysprite.bitmap,
-                        [[hp_text, 224, 66, :right, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR]])
-    # HP bar
-    if @pokemon.able?
-      w = @pokemon.hp * HP_BAR_WIDTH / @pokemon.totalhp.to_f
-      w = 1 if w < 1
-      w = ((w / 2).round) * 2   # Round to the nearest 2 pixels
-      hpzone = 0
-      hpzone = 1 if @pokemon.hp <= (@pokemon.totalhp / 2).floor
-      hpzone = 2 if @pokemon.hp <= (@pokemon.totalhp / 4).floor
-      hprect = Rect.new(0, hpzone * 8, w, 8)
-      @overlaysprite.bitmap.blt(128, 52, @hpbar.bitmap, hprect)
+    return if @pokemon.egg?
+    if @pokemon.male?
+      draw_text(_INTL("♂"), 230, 22, theme: :male)
+    elsif @pokemon.female?
+      draw_text(_INTL("♀"), 230, 22, theme: :female)
     end
   end
 
-  def draw_status
+  def draw_hp_bar
+    return if @pokemon.egg? || @pokemon.fainted? || (@text && @text.length > 0)
+    bar_x = 136
+    bar_y = 52
+    bar_total_width = 96
+    bar_height = 8
+    bar_width = [@pokemon.hp * bar_total_width / @pokemon.totalhp.to_f, 1.0].max
+    bar_width = (bar_width / 2).round * 2   # Make the bar's length a multiple of 2 pixels
+    bar_width -= 2 if bar_width == bar_total_width && @pokemon.hp < @pokemon.totalhp
+    hp_zone = 0                                                  # Green
+    hp_zone = 1 if @pokemon.hp <= (@pokemon.totalhp / 2).floor   # Yellow
+    hp_zone = 2 if @pokemon.hp <= (@pokemon.totalhp / 4).floor   # Red
+    draw_image(graphics_folder + "hp_bar_fill", bar_x, bar_y,
+               0, hp_zone * bar_height, bar_width, bar_height)
+  end
+
+  def draw_hp_numbers
+    return if @pokemon.egg? || (@text && @text.length > 0)
+    draw_number_from_image(@bitmaps[:numbers], @pokemon.hp, 178, 70, align: :right)
+    draw_number_from_image(@bitmaps[:numbers], "/" + @pokemon.totalhp.to_s, 178, 70, align: :left)
+  end
+
+  def draw_status_icon
     return if @pokemon.egg? || (@text && @text.length > 0)
     status = -1
     if @pokemon.fainted?
@@ -426,1135 +244,1280 @@ class PokemonPartyPanel < Sprite
     elsif @pokemon.pokerusStage == 1
       status = GameData::Status.count
     end
-    return if status < 0
-    statusrect = Rect.new(0, STATUS_ICON_HEIGHT * status, STATUS_ICON_WIDTH, STATUS_ICON_HEIGHT)
-    @overlaysprite.bitmap.blt(78, 68, @statuses.bitmap, statusrect)
+    if status >= 0
+      draw_image(UI_FOLDER + _INTL("statuses"), 86, 68,
+                 0, status * GameData::Status::ICON_SIZE[1], *GameData::Status::ICON_SIZE)
+    end
   end
 
   def draw_shiny_icon
-    return if @pokemon.egg? || !@pokemon.shiny?
-    pbDrawImagePositions(@overlaysprite.bitmap,
-                         [["Graphics/UI/shiny", 80, 48, 0, 0, 16, 16]])
+    return if @pokemon.egg? || (@text && @text.length > 0)
+    draw_image(UI_FOLDER + "shiny", 88, 48) if @pokemon.shiny?
   end
 
   def draw_annotation
-    return if !@text || @text.length == 0
-    pbDrawTextPositions(@overlaysprite.bitmap,
-                        [[@text, 96, 62, :left, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR]])
-  end
-
-  def refresh
-    return if disposed?
-    return if @refreshing
-    @refreshing = true
-    refresh_panel_graphic
-    refresh_hp_bar_graphic
-    refresh_ball_graphic
-    refresh_pokemon_icon
-    refresh_held_item_icon
-    if @overlaysprite && !@overlaysprite.disposed?
-      @overlaysprite.x     = self.x
-      @overlaysprite.y     = self.y
-      @overlaysprite.color = self.color
-    end
-    refresh_overlay_information
-    @refreshBitmap = false
-    @refreshing = false
-  end
-
-  def update
-    super
-    @panelbgsprite.update if @panelbgsprite && !@panelbgsprite.disposed?
-    @hpbgsprite.update if @hpbgsprite && !@hpbgsprite.disposed?
-    @ballsprite.update if @ballsprite && !@ballsprite.disposed?
-    @pkmnsprite.update if @pkmnsprite && !@pkmnsprite.disposed?
-    @helditemsprite.update if @helditemsprite && !@helditemsprite.disposed?
+    draw_text(@text, 94, 62, theme: :white) if @text && @text.length > 0
   end
 end
 
 #===============================================================================
-# Pokémon party visuals
+#
 #===============================================================================
-class PokemonParty_Scene
-  def pbStartScene(party, starthelptext, annotations = nil, multiselect = false, can_access_storage = false)
-    @sprites = {}
-    @party = party
-    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
-    @multiselect = multiselect
-    @can_access_storage = can_access_storage
-    addBackgroundPlane(@sprites, "partybg", "Party/bg", @viewport)
-    @sprites["messagebox"] = Window_AdvancedTextPokemon.new("")
-    @sprites["messagebox"].z              = 50
-    @sprites["messagebox"].viewport       = @viewport
-    @sprites["messagebox"].visible        = false
-    @sprites["messagebox"].letterbyletter = true
-    pbBottomLeftLines(@sprites["messagebox"], 2)
-    @sprites["storagetext"] = Window_UnformattedTextPokemon.new(
-      @can_access_storage ? _INTL("[Special]: To Boxes") : ""
-    )
-    @sprites["storagetext"].x           = 32
-    @sprites["storagetext"].y           = Graphics.height - @sprites["messagebox"].height - 16
-    @sprites["storagetext"].z           = 10
-    @sprites["storagetext"].viewport    = @viewport
-    @sprites["storagetext"].baseColor   = Color.new(248, 248, 248)
-    @sprites["storagetext"].shadowColor = Color.black
-    @sprites["storagetext"].windowskin  = nil
-    @sprites["helpwindow"] = Window_UnformattedTextPokemon.new(starthelptext)
-    @sprites["helpwindow"].viewport = @viewport
-    @sprites["helpwindow"].visible  = true
-    pbBottomLeftLines(@sprites["helpwindow"], 1)
-    pbSetHelpText(starthelptext)
-    # Add party Pokémon sprites
-    Settings::MAX_PARTY_SIZE.times do |i|
-      if @party[i]
-        @sprites["pokemon#{i}"] = PokemonPartyPanel.new(@party[i], i, @viewport)
-      else
-        @sprites["pokemon#{i}"] = PokemonPartyBlankPanel.new(@party[i], i, @viewport)
-      end
-      @sprites["pokemon#{i}"].text = annotations[i] if annotations
-    end
-    if @multiselect
-      @sprites["pokemon#{Settings::MAX_PARTY_SIZE}"] = PokemonPartyConfirmSprite.new(@viewport)
-      @sprites["pokemon#{Settings::MAX_PARTY_SIZE + 1}"] = PokemonPartyCancelSprite2.new(@viewport)
+class UI::PartyVisualsButton < UI::SpriteContainer
+  GRAPHICS_FOLDER = "Party/"
+
+  def initialize(text, x, y, narrow, viewport)
+    @text = text
+    @x = x
+    @y = y
+    @narrow = narrow
+    @selected = false
+    super(viewport)
+    refresh
+  end
+
+  def initialize_sprites
+    @sprites[:button] = ChangelingSprite.new(0, 0, @viewport)
+    if @narrow
+      @sprites[:button].add_bitmap(:desel, graphics_folder + "cancel_button_narrow")
+      @sprites[:button].add_bitmap(:sel, graphics_folder + "cancel_button_narrow_sel")
     else
-      @sprites["pokemon#{Settings::MAX_PARTY_SIZE}"] = PokemonPartyCancelSprite.new(@viewport)
+      @sprites[:button].add_bitmap(:desel, graphics_folder + "cancel_button")
+      @sprites[:button].add_bitmap(:sel, graphics_folder + "cancel_button_sel")
     end
-    # Select first Pokémon
-    @activecmd = 0
-    @sprites["pokemon0"].selected = true
-    pbFadeInAndShow(@sprites) { update }
+    @sprites[:button].change_bitmap(:desel)
+    record_values(:button)
+    initialize_overlay
   end
 
-  def pbEndScene
-    pbFadeOutAndHide(@sprites) { update }
-    pbDisposeSpriteHash(@sprites)
-    @viewport.dispose
+  def initialize_overlay
+    add_overlay(:overlay, 112, 48)
+    @sprites[:overlay].z = 1
+    record_values(:overlay)
   end
 
-  def pbDisplay(text)
-    @sprites["messagebox"].text    = text
-    @sprites["messagebox"].visible = true
-    @sprites["helpwindow"].visible = false
-    pbPlayDecisionSE
-    loop do
-      Graphics.update
-      Input.update
-      self.update
-      if @sprites["messagebox"].busy?
-        if Input.trigger?(Input::USE)
-          pbPlayDecisionSE if @sprites["messagebox"].pausing?
-          @sprites["messagebox"].resume
-        end
-      elsif Input.trigger?(Input::BACK) || Input.trigger?(Input::USE)
-        break
-      end
+  #-----------------------------------------------------------------------------
+
+  def selected=(value)
+    return if @selected == value
+    @selected = value
+    refresh
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    @sprites[:button].change_bitmap((@selected) ? :sel : :desel)
+  end
+
+  def refresh_overlay
+    super
+    draw_text(@text, @sprites[:overlay].width / 2, (@narrow) ? 8 : 14, align: :center, theme: :white)
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class UI::PartyVisuals < UI::BaseVisuals
+  attr_reader   :index
+  attr_accessor :cannot_cancel
+
+  GRAPHICS_FOLDER = "Party/"   # Subfolder in Graphics/UI
+  TEXT_COLOR_THEMES = {   # Themes not in DEFAULT_TEXT_COLOR_THEMES
+    :input_helper => [Color.new(248, 248, 248), Color.black]
+  }
+
+  def initialize(party, mode = :normal)
+    @party = party
+    @mode  = mode
+    @index = (@party.length == 0) ? Settings::MAX_PARTY_SIZE : 0
+    @multi_select = (@mode == :choose_entry_order)
+    @cannot_cancel = false   # Used in battle when forced to switch in a Pokémon
+    super()
+    set_index(@index)
+  end
+
+  def initialize_message_box
+    super
+    @sprites[:help_window] = Window_AdvancedTextPokemon.new("")
+    @sprites[:help_window].viewport = @viewport
+    @sprites[:help_window].z        = 1500
+    @sprites[:help_window].setSkin(MessageConfig.pbGetSpeechFrame)
+    pbBottomLeftLines(@sprites[:help_window], 1, 396)
+  end
+
+  def initialize_sprites
+    initialize_panels
+    initialize_cancel_button
+  end
+
+  def initialize_panels
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon#{i}"] = UI::PartyVisualsPanel.new(@party[i], i, @viewport)
     end
-    @sprites["messagebox"].visible = false
-    @sprites["helpwindow"].visible = true
   end
 
-  def pbDisplayConfirm(text)
-    ret = -1
-    @sprites["messagebox"].text    = text
-    @sprites["messagebox"].visible = true
-    @sprites["helpwindow"].visible = false
-    using(cmdwindow = Window_CommandPokemon.new([_INTL("Yes"), _INTL("No")])) do
-      cmdwindow.visible = false
-      pbBottomRight(cmdwindow)
-      cmdwindow.y -= @sprites["messagebox"].height
-      cmdwindow.z = @viewport.z + 1
-      loop do
-        Graphics.update
-        Input.update
-        cmdwindow.visible = true if !@sprites["messagebox"].busy?
-        cmdwindow.update
-        self.update
-        if !@sprites["messagebox"].busy?
-          if Input.trigger?(Input::BACK)
-            ret = false
-            break
-          elsif Input.trigger?(Input::USE) && @sprites["messagebox"].resume
-            ret = (cmdwindow.index == 0)
-            break
-          end
-        end
-      end
+  def initialize_cancel_button
+    party_max = Settings::MAX_PARTY_SIZE
+    if @multi_select
+      @sprites["pokemon#{party_max}"] = UI::PartyVisualsButton.new(_INTL("CONFIRM"), 396, 308, true, @viewport)
+      @sprites["pokemon#{party_max + 1}"] = UI::PartyVisualsButton.new(_INTL("CANCEL"), 396, 346, true, @viewport)
+    else
+      @sprites["pokemon#{party_max}"] = UI::PartyVisualsButton.new(_INTL("CANCEL"), 396, 328, false, @viewport)
     end
-    @sprites["messagebox"].visible = false
-    @sprites["helpwindow"].visible = true
-    return ret
   end
 
-  def pbShowCommands(helptext, commands, index = 0)
-    ret = -1
-    helpwindow = @sprites["helpwindow"]
-    helpwindow.visible = true
-    using(cmdwindow = Window_CommandPokemonColor.new(commands)) do
-      cmdwindow.z     = @viewport.z + 1
-      cmdwindow.index = index
-      pbBottomRight(cmdwindow)
-      helpwindow.resizeHeightToFit(helptext, Graphics.width - cmdwindow.width)
-      helpwindow.text = helptext
-      pbBottomLeft(helpwindow)
-      loop do
-        Graphics.update
-        Input.update
-        cmdwindow.update
-        self.update
-        if Input.trigger?(Input::BACK)
-          pbPlayCancelSE
-          ret = -1
-          break
-        elsif Input.trigger?(Input::USE)
-          pbPlayDecisionSE
-          ret = cmdwindow.index
-          break
-        end
-      end
-    end
-    return ret
+  #-----------------------------------------------------------------------------
+
+  def can_access_screen_menu?
+    return false if @mode != :normal
+    return !switching? && (can_access_storage? || @party.length > 1)
   end
 
-  def pbChooseNumber(helptext, maximum, initnum = 1)
-    return UIHelper.pbChooseNumber(@sprites["helpwindow"], helptext, maximum, initnum) { update }
+  def can_access_storage?
+    return false if @mode != :normal
+    return ($player.has_box_link || $bag.has?(:POKEMONBOXLINK)) &&
+           !$game_switches[Settings::DISABLE_BOX_LINK_SWITCH] &&
+           !$game_map.metadata&.has_flag?("DisableBoxLink")
   end
 
-  def pbSetHelpText(helptext)
-    helpwindow = @sprites["helpwindow"]
-    pbBottomLeftLines(helpwindow, 1)
-    helpwindow.text = helptext
-    helpwindow.width = 398
-    helpwindow.visible = true
+  def set_help_text(text)
+    @sprites[:help_window].text = text
+    pbBottomLeftLines(@sprites[:help_window], 1, 396)
+    @sprites[:help_window].resizeHeightToFit(text, @sprites[:help_window].width)
+    pbBottomLeft(@sprites[:help_window])
+    @sprites[:help_window].visible = true
   end
 
-  def pbHasAnnotations?
+  def panels_have_annotations?
     return !@sprites["pokemon0"].text.nil?
   end
 
-  def pbAnnotate(annot)
+  def set_annotations(annot)
     Settings::MAX_PARTY_SIZE.times do |i|
       @sprites["pokemon#{i}"].text = (annot) ? annot[i] : nil
     end
   end
 
-  def pbSelect(item)
-    @activecmd = item
-    numsprites = Settings::MAX_PARTY_SIZE + ((@multiselect) ? 2 : 1)
-    numsprites.times do |i|
-      @sprites["pokemon#{i}"].selected = (i == @activecmd)
+  def set_able_annotation_proc(use_proc, valid_values, use_annotations)
+    @use_proc = use_proc
+    @valid_values = valid_values
+    @use_annotations = use_annotations
+    refresh_able_annotations
+  end
+
+  # Used for extra restrictions on Pokémon when choosing one to trade.
+  def set_able_annotation_proc2(use_proc, valid_values, use_annotations)
+    @use_proc2 = use_proc
+    @valid_values2 = valid_values
+    @use_annotations2 = use_annotations
+    refresh_able_annotations
+  end
+
+  def set_index(new_index)
+    @index = new_index
+    num_sprites = Settings::MAX_PARTY_SIZE + ((@multi_select) ? 2 : 1)
+    num_sprites.times do |i|
+      @sprites["pokemon#{i}"].selected = (i == @index)
     end
   end
 
-  def pbPreSelect(item)
-    @activecmd = item
+  #-----------------------------------------------------------------------------
+
+  def switch_index
+    return @sprites["pokemon0"].switch_index
   end
 
-  def pbSwitchBegin(oldid, newid)
+  def switching?
+    return switch_index >= 0
+  end
+
+  def start_switching(index)
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon#{i}"].set_switch_index(index)
+    end
+  end
+
+  def end_switching
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon#{i}"].set_switch_index(-1)
+    end
+  end
+
+  def animate_switch_panels_out(index1, index2)
     pbSEPlay("GUI party switch")
-    oldsprite = @sprites["pokemon#{oldid}"]
-    newsprite = @sprites["pokemon#{newid}"]
-    old_start_x = oldsprite.x
-    new_start_x = newsprite.x
-    old_mult = oldid.even? ? -1 : 1
-    new_mult = newid.even? ? -1 : 1
+    # Setup values
+    sprite1 = @sprites["pokemon#{index1}"]
+    sprite2 = @sprites["pokemon#{index2}"]
+    sprite1_start_x = sprite1.x
+    sprite2_start_x = sprite2.x
+    sprite1_dir = (index1.even?) ? -1 : 1
+    sprite2_dir = (index2.even?) ? -1 : 1
+    # Animate the panels moving off-screen
+    duration = 0.4
     timer_start = System.uptime
     loop do
-      oldsprite.x = lerp(old_start_x, old_start_x + (old_mult * Graphics.width / 2), 0.4, timer_start, System.uptime)
-      newsprite.x = lerp(new_start_x, new_start_x + (new_mult * Graphics.width / 2), 0.4, timer_start, System.uptime)
+      sprite1.x = sprite1_start_x + lerp(0, sprite1_dir * Graphics.width / 2, duration, timer_start, System.uptime)
+      sprite2.x = sprite2_start_x + lerp(0, sprite2_dir * Graphics.width / 2, duration, timer_start, System.uptime)
       Graphics.update
       Input.update
-      self.update
-      break if oldsprite.x == old_start_x + (old_mult * Graphics.width / 2)
+      update_visuals
+      break if sprite1.x == sprite1_start_x + (sprite1_dir * Graphics.width / 2)
     end
   end
 
-  def pbSwitchEnd(oldid, newid)
+  def animate_switch_panels_in(index1, index2)
     pbSEPlay("GUI party switch")
-    oldsprite = @sprites["pokemon#{oldid}"]
-    newsprite = @sprites["pokemon#{newid}"]
-    oldsprite.pokemon = @party[oldid]
-    newsprite.pokemon = @party[newid]
-    old_start_x = oldsprite.x
-    new_start_x = newsprite.x
-    old_mult = oldid.even? ? -1 : 1
-    new_mult = newid.even? ? -1 : 1
+    # Setup values
+    sprite1 = @sprites["pokemon#{index1}"]
+    sprite2 = @sprites["pokemon#{index2}"]
+    sprite1.pokemon = @party[index1]
+    sprite2.pokemon = @party[index2]
+    sprite1_start_x = sprite1.x
+    sprite2_start_x = sprite2.x
+    sprite1_dir = (index1.even?) ? 1 : -1
+    sprite2_dir = (index2.even?) ? 1 : -1
+    # Animate the panels moving back into position
+    duration = 0.4
     timer_start = System.uptime
     loop do
-      oldsprite.x = lerp(old_start_x, old_start_x - (old_mult * Graphics.width / 2), 0.4, timer_start, System.uptime)
-      newsprite.x = lerp(new_start_x, new_start_x - (new_mult * Graphics.width / 2), 0.4, timer_start, System.uptime)
+      sprite1.x = sprite1_start_x + lerp(0, sprite1_dir * Graphics.width / 2, duration, timer_start, System.uptime)
+      sprite2.x = sprite2_start_x + lerp(0, sprite2_dir * Graphics.width / 2, duration, timer_start, System.uptime)
       Graphics.update
       Input.update
-      self.update
-      break if oldsprite.x == old_start_x - (old_mult * Graphics.width / 2)
-    end
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @sprites["pokemon#{i}"].preselected = false
-      @sprites["pokemon#{i}"].switching   = false
-    end
-    pbRefresh
-  end
-
-  def pbClearSwitching
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @sprites["pokemon#{i}"].preselected = false
-      @sprites["pokemon#{i}"].switching   = false
+      update_visuals
+      break if sprite1.x == sprite1_start_x + (sprite1_dir * Graphics.width / 2)
     end
   end
 
-  def pbSummary(pkmnid, inbattle = false)
-    oldsprites = pbFadeOutAndHide(@sprites)
-    scene = PokemonSummary_Scene.new
-    screen = PokemonSummaryScreen.new(scene, inbattle)
-    screen.pbStartScreen(@party, pkmnid)
-    yield if block_given?
-    pbRefresh
-    pbFadeInAndShow(@sprites, oldsprites)
+  #-----------------------------------------------------------------------------
+
+  def show_message(text)
+    @sprites[:help_window].visible = false
+    super
+    @sprites[:help_window].visible = true
   end
 
-  def pbChooseItem(bag)
-    ret = nil
-    pbFadeOutIn do
-      scene = PokemonBag_Scene.new
-      screen = PokemonBagScreen.new(scene, bag)
-      ret = screen.pbChooseItemScreen(proc { |item| GameData::Item.get(item).can_hold? })
-      yield if block_given?
-    end
+  def show_confirm_message(text)
+    @sprites[:help_window].visible = false
+    ret = super
+    @sprites[:help_window].visible = true
     return ret
   end
 
-  def pbUseItem(bag, pokemon)
-    ret = nil
-    pbFadeOutIn do
-      scene = PokemonBag_Scene.new
-      screen = PokemonBagScreen.new(scene, bag)
-      ret = screen.pbChooseItemScreen(proc { |item|
-        itm = GameData::Item.get(item)
-        next false if !pbCanUseOnPokemon?(itm)
-        next false if pokemon.hyper_mode && !GameData::Item.get(item)&.is_scent?
-        if itm.is_machine?
-          move = itm.move
-          next false if pokemon.hasMove?(move) || !pokemon.compatible_with_move?(move)
-        end
-        next true
-      })
-      yield if block_given?
-    end
+  def show_menu(text, options, index = 0, align: :horizontal, cmd_side: :right)
+    @sprites[:help_window].visible = false
+#    cmd_side = (@index.even?) ? :right : :left
+    ret = super(text, options, index, align: align, cmd_side: cmd_side)
+    @sprites[:help_window].visible = true
     return ret
   end
 
-  def pbChoosePokemon(switching = false, initialsel = -1, canswitch = 0)
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @sprites["pokemon#{i}"].preselected = (switching && i == @activecmd)
-      @sprites["pokemon#{i}"].switching   = switching
-    end
-    @activecmd = initialsel if initialsel >= 0
-    pbRefresh
-    loop do
-      Graphics.update
-      Input.update
-      self.update
-      oldsel = @activecmd
-      key = -1
-      key = Input::DOWN if Input.repeat?(Input::DOWN)
-      key = Input::RIGHT if Input.repeat?(Input::RIGHT)
-      key = Input::LEFT if Input.repeat?(Input::LEFT)
-      key = Input::UP if Input.repeat?(Input::UP)
-      if key >= 0
-        @activecmd = pbChangeSelection(key, @activecmd)
-      end
-      if @activecmd != oldsel   # Changing selection
-        pbPlayCursorSE
-        numsprites = Settings::MAX_PARTY_SIZE + ((@multiselect) ? 2 : 1)
-        numsprites.times do |i|
-          @sprites["pokemon#{i}"].selected = (i == @activecmd)
-        end
-      end
-      cancelsprite = Settings::MAX_PARTY_SIZE + ((@multiselect) ? 1 : 0)
-      if Input.trigger?(Input::SPECIAL) && @can_access_storage && canswitch != 2
-        pbPlayDecisionSE
-        pbFadeOutIn do
-          scene = PokemonStorageScene.new
-          screen = PokemonStorageScreen.new(scene, $PokemonStorage)
-          screen.pbStartScreen(0)
-          pbHardRefresh
-        end
-      elsif Input.trigger?(Input::ACTION) && canswitch == 1 && @activecmd != cancelsprite
-        pbPlayDecisionSE
-        return [1, @activecmd]
-      elsif Input.trigger?(Input::ACTION) && canswitch == 2
-        return -1
-      elsif Input.trigger?(Input::BACK)
-        pbPlayCloseMenuSE if !switching
-        return -1
-      elsif Input.trigger?(Input::USE)
-        if @activecmd == cancelsprite
-          (switching) ? pbPlayDecisionSE : pbPlayCloseMenuSE
-          return -1
-        else
-          pbPlayDecisionSE
-          return @activecmd
-        end
-      end
+  def show_choice(options, index = 0)
+    @sprites[:help_window].visible = false
+    ret = super
+    @sprites[:help_window].visible = true
+    return ret
+  end
+
+  def choose_number(help_text, maximum, init_num = 1)
+    @sprites[:help_window].visible = false
+    ret = super
+    @sprites[:help_window].visible = true
+    return ret
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    ensure_valid_index
+    draw_input_helpers
+    refresh_panels
+  end
+
+  def ensure_valid_index
+    old_index = @index
+    @index = @party.length - 1 if @index < Settings::MAX_PARTY_SIZE && @index >= @party.length
+    set_index(@index) if @index != old_index
+  end
+
+  def refresh_panels
+    Settings::MAX_PARTY_SIZE.times { |i| refresh_panel(i) }
+  end
+
+  def refresh_panel(panel_index)
+    sprite = @sprites["pokemon#{panel_index}"]
+    return if !sprite
+    if sprite.is_a?(UI::PartyVisualsPanel)
+      sprite.pokemon = sprite.pokemon
+    else
+      sprite.refresh
     end
   end
 
-  def pbChangeSelection(key, currentsel)
-    numsprites = Settings::MAX_PARTY_SIZE + ((@multiselect) ? 2 : 1)
-    case key
-    when Input::LEFT
-      loop do
-        currentsel -= 1
-        break unless currentsel > 0 && currentsel < Settings::MAX_PARTY_SIZE && !@party[currentsel]
+  def refresh_party
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon#{i}"].pokemon = @party[i]
+    end
+  end
+
+  def refresh_able_annotations
+    Settings::MAX_PARTY_SIZE.times do |i|
+      next if @sprites["pokemon#{i}"].blank?
+      if !@use_proc && !@use_proc2
+        @sprites["pokemon#{i}"].text = nil
+        next
       end
-      if currentsel >= @party.length && currentsel < Settings::MAX_PARTY_SIZE
-        currentsel = @party.length - 1
+      usability = @use_proc&.call(@party[i])
+      if @use_proc2
+        usability2 = @use_proc2.call(@party[i])
+        usability = usability2 if usability.nil? || !@valid_values2.include?(usability2)
       end
-      currentsel = numsprites - 1 if currentsel < 0
-    when Input::RIGHT
-      loop do
-        currentsel += 1
-        break unless currentsel < Settings::MAX_PARTY_SIZE && !@party[currentsel]
-      end
-      if currentsel == numsprites
-        currentsel = (@party.length == 0) ? Settings::MAX_PARTY_SIZE : 0
-      end
-    when Input::UP
-      if currentsel >= Settings::MAX_PARTY_SIZE
-        currentsel -= 1
-        while currentsel > 0 && currentsel < Settings::MAX_PARTY_SIZE && !@party[currentsel]
-          currentsel -= 1
-        end
-        currentsel = numsprites - 1 if currentsel < Settings::MAX_PARTY_SIZE && currentsel >= @party.length
+      annot = _INTL("Cannot Choose")
+      annot = @use_annotations[usability] if @use_annotations && @use_annotations[usability]
+      annot = @use_annotations2[usability] if @use_annotations2 && @use_annotations2[usability]
+      @sprites["pokemon#{i}"].text = annot
+    end
+  end
+
+  def draw_input_helpers
+    return if !can_access_screen_menu?
+    draw_input_icon(48, Graphics.height - 96, Input::ACTION, _INTL("Menu"), theme: :input_helper)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def update_input
+    # Check for movement to a new Pokémon/button
+    old_index = @index
+    update_cursor_movement
+    if @index != old_index
+      pbPlayCursorSE
+      set_index(@index)
+    end
+    # Check for interaction
+    if Input.trigger?(Input::USE)
+      return update_interaction(Input::USE)
+    elsif Input.trigger?(Input::BACK)
+      return update_interaction(Input::BACK)
+    elsif Input.trigger?(Input::ACTION)
+      return update_interaction(Input::ACTION)
+    end
+    return nil
+  end
+
+  def update_cursor_movement
+    num_sprites = Settings::MAX_PARTY_SIZE + ((@multi_select) ? 2 : 1)
+    if Input.repeat?(Input::UP)
+      if @index >= Settings::MAX_PARTY_SIZE
+        @index -= 1
+        @index = @party.length - 1 if @index < Settings::MAX_PARTY_SIZE && !@party[@index]
+        @index = num_sprites - 1 if @index < Settings::MAX_PARTY_SIZE && !@party[@index]   # In case party is empty
       else
         loop do
-          currentsel -= 2
-          break unless currentsel > 0 && !@party[currentsel]
+          @index -= 2
+          break if @index < 0 || @party[@index]
         end
+        @index = num_sprites - 1 if @index < 0   # Wrap around to the cancel button
       end
-      if currentsel >= @party.length && currentsel < Settings::MAX_PARTY_SIZE
-        currentsel = @party.length - 1
-      end
-      currentsel = numsprites - 1 if currentsel < 0
-    when Input::DOWN
-      if currentsel >= Settings::MAX_PARTY_SIZE - 1
-        currentsel += 1
+    elsif Input.repeat?(Input::DOWN)
+      if @index >= Settings::MAX_PARTY_SIZE - 1
+        @index += 1
+        @index = 0 if @index >= num_sprites   # Wrap around to the first Pokémon
       else
-        currentsel += 2
-        currentsel = Settings::MAX_PARTY_SIZE if currentsel < Settings::MAX_PARTY_SIZE && !@party[currentsel]
+        @index += 2
       end
-      if currentsel >= @party.length && currentsel < Settings::MAX_PARTY_SIZE
-        currentsel = Settings::MAX_PARTY_SIZE
-      elsif currentsel >= numsprites
-        currentsel = (@party.length == 0) ? Settings::MAX_PARTY_SIZE : 0
+      @index = Settings::MAX_PARTY_SIZE if @index < Settings::MAX_PARTY_SIZE && !@party[@index]
+    elsif Input.repeat?(Input::LEFT)
+      loop do
+        @index -= 1
+        break if @index < 0 || @index >= Settings::MAX_PARTY_SIZE || @party[@index]
       end
+      @index = num_sprites - 1 if @index < 0   # Wrap around to the cancel button
+    elsif Input.repeat?(Input::RIGHT)
+      loop do
+        @index += 1
+        break if @index >= Settings::MAX_PARTY_SIZE || @party[@index]
+      end
+      @index = 0 if @index >= num_sprites   # Wrap around to the first Pokémon
+      @index = Settings::MAX_PARTY_SIZE if @index < Settings::MAX_PARTY_SIZE && !@party[@index]
     end
-    return currentsel
   end
 
-  def pbHardRefresh
-    oldtext = []
-    lastselected = -1
-    Settings::MAX_PARTY_SIZE.times do |i|
-      oldtext.push(@sprites["pokemon#{i}"].text)
-      lastselected = i if @sprites["pokemon#{i}"].selected
-      @sprites["pokemon#{i}"].dispose
+  def update_interaction(input)
+    case input
+    when Input::USE
+      return :switch_pokemon_end if switching?
+      if @index == Settings::MAX_PARTY_SIZE
+        pbPlayCloseMenuSE
+        return :quit
+      elsif @sub_mode == :switch_pokemon
+        return :switch_pokemon_start
+      elsif @sub_mode == :switch_items
+        return :item_move if @party[@index].hasItem?
+        return nil
+      end
+      pbPlayDecisionSE
+      return :interact_menu
+    when Input::ACTION
+      if can_access_screen_menu?
+        pbPlayDecisionSE
+        return :screen_menu
+      end
+    when Input::BACK
+      return :switch_pokemon_cancel if switching?
+      return :clear_sub_mode if (@sub_mode || :none) != :none
+      pbPlayCloseMenuSE
+      return :quit
     end
-    lastselected = @party.length - 1 if lastselected >= @party.length
-    lastselected = Settings::MAX_PARTY_SIZE if lastselected < 0
-    Settings::MAX_PARTY_SIZE.times do |i|
-      if @party[i]
-        @sprites["pokemon#{i}"] = PokemonPartyPanel.new(@party[i], i, @viewport)
+    return nil
+  end
+
+  def navigate
+    refresh
+    super
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def update_input_choose_pokemon
+    # Check for movement to a new Pokémon/button
+    old_index = @index
+    update_cursor_movement
+    if @index != old_index
+      pbPlayCursorSE
+      set_index(@index)
+    end
+    # Check for interaction
+    if Input.trigger?(Input::USE)
+      return update_interaction_choose_pokemon(Input::USE)
+    elsif Input.trigger?(Input::BACK)
+      return update_interaction_choose_pokemon(Input::BACK)
+    end
+    return nil
+  end
+
+  def update_interaction_choose_pokemon(input)
+    case input
+    when Input::USE
+      if @index == Settings::MAX_PARTY_SIZE
+        return :confirm if @multi_select   # Confirm
+        (switching? || @cannot_cancel) ? pbPlayCancelSE : pbPlayCloseMenuSE
+        return :quit   # Cancel
+      elsif @index == Settings::MAX_PARTY_SIZE + 1   # Cancel (if Confirm is also a button)
+        (switching? || @cannot_cancel) ? pbPlayCancelSE : pbPlayCloseMenuSE
+        return :quit
       else
-        @sprites["pokemon#{i}"] = PokemonPartyBlankPanel.new(@party[i], i, @viewport)
+        pbPlayDecisionSE
+        return :chosen   # A Pokémon
       end
-      @sprites["pokemon#{i}"].text = oldtext[i]
+    when Input::BACK
+      (switching? || @cannot_cancel) ? pbPlayCancelSE : pbPlayCloseMenuSE
+      return :quit
     end
-    pbSelect(lastselected)
+    return nil
   end
 
-  def pbRefresh
-    Settings::MAX_PARTY_SIZE.times do |i|
-      sprite = @sprites["pokemon#{i}"]
-      if sprite
-        if sprite.is_a?(PokemonPartyPanel)
-          sprite.pokemon = sprite.pokemon
-        else
-          sprite.refresh
-        end
-      end
+  def navigate_choose_pokemon
+    ret = nil
+    loop do
+      Graphics.update
+      Input.update
+      update_visuals
+      ret = update_input_choose_pokemon
+      break if ret
     end
-  end
-
-  def pbRefreshSingle(i)
-    sprite = @sprites["pokemon#{i}"]
-    if sprite
-      if sprite.is_a?(PokemonPartyPanel)
-        sprite.pokemon = sprite.pokemon
-      else
-        sprite.refresh
-      end
-    end
-  end
-
-  def update
-    pbUpdateSpriteHash(@sprites)
+    return ret
   end
 end
 
 #===============================================================================
-# Pokémon party mechanics
+#
 #===============================================================================
-class PokemonPartyScreen
-  attr_reader :scene
+class UI::Party < UI::BaseScreen
   attr_reader :party
 
-  def initialize(scene, party)
-    @scene = scene
-    @party = party
+  ACTIONS = HandlerHash.new
+
+  # mode is one of:
+  #   :normal                  Can choose Fly/Dig/Teleport to use.
+  #   :choose_pokemon          Result is index of chosen Pokémon; def pbMoveTutorChoose
+  #                            wants this to yield when chosen.
+  #   :battle_choose_pokemon   For battle.
+  #   :battle_choose_to_box    For battle. Like :choose_pokemon but with a different help text.
+  #   :battle_choose_to_revive For battle (Revival Blessing). Like :choose_pokemon but with a different help text.
+  #   :battle_use_item         For battle.
+  #   :use_item                Like :choose_pokemon but with a different help text.
+  #   :teach_pokemon           Like :choose_pokemon but with a different help text.
+  #   :choose_entry_order      Battle Frontier thing.
+  def initialize(party, mode: :normal)
+    @party = (party.is_a?(Array)) ? party : [party]
+    @mode  = mode
+    super()
+    reset_help_text
   end
 
-  def pbStartScene(helptext, _numBattlersOut, annotations = nil)
-    @scene.pbStartScene(@party, helptext, annotations)
+  def initialize_visuals
+    @visuals = UI::PartyVisuals.new(@party, @mode)
   end
 
-  def pbChoosePokemon(helptext = nil)
-    @scene.pbSetHelpText(helptext) if helptext
-    return @scene.pbChoosePokemon
+  #-----------------------------------------------------------------------------
+
+  def pokemon
+    return (index < @party.length) ? @party[index] : nil
   end
 
-  def pbPokemonGiveScreen(item)
-    @scene.pbStartScene(@party, _INTL("Give to which Pokémon?"))
-    pkmnid = @scene.pbChoosePokemon
-    ret = false
-    if pkmnid >= 0
-      ret = pbGiveItemToPokemon(item, @party[pkmnid], self, pkmnid)
+  def cannot_cancel=(value)
+    @visuals.cannot_cancel = value
+  end
+
+  def can_access_storage?
+    return @visuals.can_access_storage?
+  end
+
+  def set_index(new_index)
+    @visuals.set_index(new_index)
+  end
+
+  def set_help_text(text)
+    @visuals.set_help_text(text)
+  end
+
+  def set_able_annotation_proc(use_proc, valid_values, use_annotations)
+    @use_proc = use_proc
+    @valid_values = valid_values
+    @visuals.set_able_annotation_proc(use_proc, valid_values, use_annotations)
+  end
+
+  # Used for extra restrictions on Pokémon when choosing one to trade.
+  def set_able_annotation_proc2(use_proc, valid_values, use_annotations)
+    @use_proc2 = use_proc
+    @valid_values2 = valid_values
+    @visuals.set_able_annotation_proc2(use_proc, valid_values, use_annotations)
+  end
+
+  def set_annotations(annot)
+    @visuals.set_annotations(annot)
+  end
+
+  def clear_annotations
+    @visuals.set_annotations(nil)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:screen_menu, {
+    :menu         => :party_screen_menu,
+    :menu_message => proc { |screen| _INTL("Choose an option.") }
+  })
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:interact_menu, {
+    :menu         => :party_screen_interact,
+    :menu_message => proc { |screen| _INTL("Do what with {1}?", screen.pokemon.name) }
+  })
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:item_menu, {
+    :menu         => :party_screen_interact_item,
+    :menu_message => proc { |screen| _INTL("Do what with an item?") }
+  })
+
+  alias pbShowCommands show_menu
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:summary, {
+    :effect => proc { |screen|
+      summary_mode = [
+        :battle_choose_pokemon, :battle_choose_to_box,
+        :battle_choose_to_revive, :battle_use_item
+      ].include?(screen.mode) ? :in_battle : :normal
+      pbFadeOutInWithUpdate(screen.sprites) do
+        new_index = UI::PokemonSummary.new(screen.party, screen.index, mode: summary_mode).main
+        screen.set_index(new_index)
+        screen.refresh
+      end
+    }
+  })
+  ACTIONS.add(:debug, {
+    :effect => proc { |screen|
+      screen.pokemon_debug_menu(screen.pokemon, screen.index)
+    }
+  })
+  ACTIONS.add(:open_storage, {
+    :effect => proc { |screen|
+      pbFadeOutInWithUpdate(screen.sprites) do
+        UI::PokemonStorage.new($PokemonStorage, mode: :organize).main
+        screen.refresh_party
+        screen.refresh
+      end
+    }
+  })
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:switch_pokemon_start, {
+    :effect => proc { |screen|
+      pbPlayDecisionSE
+      screen.start_switching
+    }
+  })
+  ACTIONS.add(:switch_pokemon_end, {
+    :effect => proc { |screen|
+      screen.switch_pokemon(screen.switch_index, screen.index)
+    }
+  })
+  ACTIONS.add(:switch_pokemon_cancel, {
+    :effect => proc { |screen|
+      pbPlayCancelSE
+      screen.end_switching
+    }
+  })
+  ACTIONS.add(:switch_pokemon_mode, {
+    :effect => proc { |screen|
+      screen.set_sub_mode(:switch_pokemon)
+    }
+  })
+  ACTIONS.add(:clear_sub_mode, {
+    :effect => proc { |screen|
+      pbPlayCancelSE
+      screen.set_sub_mode
+    }
+  })
+
+  def switch_index
+    return @visuals.switch_index
+  end
+
+  def switching?
+    return @visuals.switching?
+  end
+
+  def start_switching(index = nil)
+    @visuals.start_switching(index || @visuals.index)
+  end
+
+  def end_switching
+    @visuals.end_switching
+  end
+
+  def switch_pokemon(index1, index2)
+    if index1 >= 0 && index1 < @party.length &&
+       index2 >= 0 && index2 < @party.length &&
+       index1 != index2
+      @visuals.animate_switch_panels_out(index1, index2)
+      @party[index1], @party[index2] = @party[index2], @party[index1]
+      @visuals.animate_switch_panels_in(index1, index2)
     end
-    pbRefreshSingle(pkmnid)
-    @scene.pbEndScene
+    end_switching
+  end
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:item_use, {
+    :effect => proc { |screen|
+      pkmn = screen.pokemon
+      used_item = nil
+      used = false
+      pbFadeOutInWithUpdate(screen.sprites) do
+        old_last_pocket       = $bag.last_viewed_pocket
+        old_pocket_selections = $bag.last_pocket_selections.clone
+        $bag.reset_last_selections
+        bag_screen = UI::Bag.new($bag, mode: :choose_item)
+        bag_screen.set_filter_proc(proc { |itm|
+          item_data = GameData::Item.get(itm)
+          next false if !pbCanUseItemOnPokemon?(itm)
+          next false if !pbItemHasEffectOnPokemon?(itm, pkmn)
+          if item_data.is_machine?
+            move = item_data.move
+            next false if pkmn.hasMove?(move) || !pkmn.compatible_with_move?(move)
+          end
+          next true
+        })
+        used_item = bag_screen.choose_item
+        if used_item && ItemHandlers.useOpensScreen?(used_item)
+          pbUseItemOnPokemon(used_item, pkmn, bag_screen)
+          screen.refresh
+          used = true
+        end
+        $bag.last_viewed_pocket     = old_last_pocket
+        $bag.last_pocket_selections = old_pocket_selections
+      end
+      if used_item && !used
+        pbUseItemOnPokemon(used_item, pkmn, screen)
+        screen.refresh
+      end
+    }
+  })
+  ACTIONS.add(:item_give, {
+    :effect => proc { |screen|
+      pkmn = screen.pokemon
+      given_item = nil
+      pbFadeOutInWithUpdate(screen.sprites) do
+        old_last_pocket       = $bag.last_viewed_pocket
+        old_pocket_selections = $bag.last_pocket_selections.clone
+        bag_screen = UI::Bag.new($bag, mode: :choose_item)
+        bag_screen.set_filter_proc(proc { |itm| GameData::Item.get(itm).can_hold? })
+        given_item = bag_screen.choose_item
+        $bag.last_viewed_pocket     = old_last_pocket
+        $bag.last_pocket_selections = old_pocket_selections
+      end
+      if given_item
+        pbGiveItemToPokemon(given_item, pkmn, screen, screen.index)
+        screen.refresh
+      end
+    }
+  })
+  ACTIONS.add(:item_take, {
+    :effect => proc { |screen|
+      pkmn = screen.pokemon
+      screen.refresh if pbTakeItemFromPokemon(pkmn, screen)
+    }
+  })
+  ACTIONS.add(:item_move, {
+    :effect => proc { |screen|
+      pbPlayDecisionSE
+      old_pkmn = screen.pokemon
+      old_item = old_pkmn.item
+      old_item_name = old_item.name
+      old_item_portion_name = old_item.portion_name
+      screen.set_help_text(_INTL("Move held item to where?"))
+      old_party_idx = screen.index
+      moved = false
+      loop do
+        screen.start_switching(old_party_idx)
+        new_party_idx = screen.choose_pokemon_core
+        if new_party_idx < 0 || new_party_idx == old_party_idx
+          screen.end_switching
+          break
+        end
+        new_pkmn = screen.party[new_party_idx]
+        if new_pkmn.egg?
+          screen.show_message(_INTL("Eggs can't hold items."))
+          next
+        elsif !new_pkmn.hasItem?
+          new_pkmn.item = old_item
+          old_pkmn.item = nil
+          screen.end_switching
+          screen.show_message(_INTL("{1} was given the {2} to hold.", new_pkmn.name, old_item_portion_name))
+          moved = true
+          break
+        elsif new_pkmn.item.is_mail?
+          screen.show_message(_INTL("{1}'s mail must be removed before giving it an item.", new_pkmn.name))
+          next
+        end
+        # New Pokémon is also holding an item; ask what to do with it
+        new_item = new_pkmn.item
+        new_item_portion_name = new_item.portion_name
+        if new_item_portion_name.starts_with_vowel?
+          screen.show_message(_INTL("{1} is already holding an {2}.", new_pkmn.name, new_item_portion_name) + "\1")
+        else
+          screen.show_message(_INTL("{1} is already holding a {2}.", new_pkmn.name, new_item_portion_name) + "\1")
+        end
+        next if !screen.show_confirm_message(_INTL("Would you like to switch the two items?"))
+        new_pkmn.item = old_item
+        old_pkmn.item = new_item
+        screen.end_switching
+        screen.show_message(_INTL("{1} was given the {2} to hold.", new_pkmn.name, old_item_portion_name) + "\1")
+        screen.show_message(_INTL("{1} was given the {2} to hold.", old_pkmn.name, new_item_portion_name))
+        moved = true
+        break
+      end
+      screen.set_index(old_party_idx) if !moved
+    }
+  })
+  ACTIONS.add(:mail_menu, {
+    :menu         => :party_screen_interact_mail,
+    :menu_message => proc { |screen| _INTL("Do what with the Mail?") }
+  })
+  ACTIONS.add(:item_move_mode, {
+    :effect => proc { |screen|
+      screen.set_sub_mode(:switch_items)
+    }
+  })
+  ACTIONS.add(:mail_read, {
+    :effect => proc { |screen|
+      pbFadeOutInWithUpdate(screen.sprites) do
+        pbDisplayMail(screen.pokemon.mail, screen.pokemon)
+      end
+    }
+  })
+  ACTIONS.add(:mail_take, {
+    :effect => proc { |screen|
+      screen.refresh if pbTakeItemFromPokemon(screen.pokemon, screen)
+    }
+  })
+
+  #-----------------------------------------------------------------------------
+
+  # NOTE: This code adds a number of ACTIONS, one per move usable in the
+  #       overworld. For example:
+  #       ACTIONS.add(:use_FLY), {
+  #         :effect => proc { |screen|
+  #           screen.use_field_move(:FLY)
+  #         }
+  #       })
+  HiddenMoveHandlers.eachHandler do |move_id|
+    eval <<-__END__
+      ACTIONS.add(:use_#{move_id}, {
+        :effect => proc { |screen|
+          screen.use_field_move(:#{move_id})
+        }
+      })
+    __END__
+  end
+  ACTIONS.add(:use_MILKDRINK, {
+    :effect => proc { |screen|
+      screen.use_field_move(:MILKDRINK)
+    }
+  })
+  ACTIONS.add(:use_SOFTBOILED, {
+    :effect => proc { |screen|
+      screen.use_field_move(:SOFTBOILED)
+    }
+  })
+
+  # For Soft-Boiled and Milk Drink.
+  def use_field_move(move_id)
+    pkmn = pokemon
+    move = pkmn.moves.select { |mov| mov.id == move_id }.first
+    move_name = move.name
+    case move_id
+    when :SOFTBOILED, :MILKDRINK
+      heal_amt = [(pkmn.totalhp / 5).floor, 1].max
+      if pkmn.hp <= heal_amt
+        show_message(_INTL("Not enough HP..."))
+        return
+      end
+      old_party_idx = index
+      start_switching(old_party_idx)
+      loop do
+        set_help_text(_INTL("Use on which Pokémon?"))
+        new_party_idx = choose_pokemon_core
+        if new_party_idx < 0 || new_party_idx == old_party_idx
+          end_switching
+          break
+        end
+        new_pkmn = pokemon
+        if new_party_idx == old_party_idx
+          show_message(_INTL("{1} can't use {2} on itself!", pkmn.name, move_name))
+        elsif new_pkmn.egg?
+          show_message(_INTL("{1} can't be used on an Egg!", move_name))
+        elsif new_pkmn.fainted? || new_pkmn.hp == new_pkmn.totalhp
+          show_message(_INTL("{1} can't be used on that Pokémon.", move_name))
+        else
+          pkmn.hp -= heal_amt
+          hp_gain = pbItemRestoreHP(new_pkmn, heal_amt)
+          show_message(_INTL("{1}'s HP was restored by {2} points.", new_pkmn.name, hp_gain))
+          refresh
+        end
+        break if pkmn.hp <= heal_amt
+      end
+      end_switching
+      set_index(old_party_idx)
+    else
+      if pbCanUseHiddenMove?(pkmn, move_id) && pbConfirmUseHiddenMove(pkmn, move_id)
+        if move_id == :FLY
+          pbFadeOutInWithUpdate(sprites) do
+            town_map_screen = UI::TownMap.new(mode: :fly)
+            town_map_screen.main
+            if town_map_screen.result
+              $game_temp.field_move_to_use = move_id
+              $game_temp.field_move_user = pkmn
+              $game_temp.fly_destination = town_map_screen.result
+              silent_end_screen
+            end
+          end
+        else
+          $game_temp.field_move_to_use = move_id
+          $game_temp.field_move_user = pkmn
+          end_screen
+        end
+      end
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    reset_help_text
+  end
+
+  def reset_help_text
+    case @mode
+    when :normal
+      if switching?
+        set_help_text(_INTL("Move to where?"))
+      else
+        case @visuals.sub_mode
+        when :switch_pokemon
+          set_help_text(_INTL("Choose Pokémon to switch."))
+        when :switch_items
+          set_help_text(_INTL("Choose to switch items."))
+        else
+          set_help_text((@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
+        end
+      end
+    when :choose_pokemon, :battle_choose_pokemon
+      if switching?
+        set_help_text(_INTL("Move to where?"))
+      else
+        set_help_text(_INTL("Choose a Pokémon."))
+      end
+    when :use_item, :battle_use_item
+      set_help_text(_INTL("Use on which Pokémon?"))
+    when :teach_pokemon
+      set_help_text(_INTL("Teach which Pokémon?"))
+    when :battle_choose_to_box
+      set_help_text(_INTL("Send which Pokémon to Boxes?"))
+    when :battle_choose_to_revive
+      set_help_text(_INTL("Choose Pokémon to revive."))
+    when :choose_entry_order
+      set_help_text(_INTL("Choose Pokémon and confirm."))
+    end
+  end
+
+  def refresh_party
+    @visuals.refresh_party
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def on_start_main_loop
+    reset_help_text
+  end
+
+  def choose_pokemon
+    start_screen
+    loop do
+      on_start_main_loop
+      chosen_index = choose_pokemon_core
+      if block_given?
+        next if !yield @party[chosen_index], chosen_index
+      end
+      @result = chosen_index
+      break
+    end
+    end_screen
+    return @result
+  end
+
+  def choose_pokemon_core
+    ret = -1
+    loop do
+      command = @visuals.navigate_choose_pokemon
+      if command != :chosen || index < 0 || index >= @party.length
+        ret = -1
+        break
+      end
+      if @use_proc2 || @use_proc22
+        usability = @use_proc&.call(pokemon)
+        if @use_proc2
+          usability2 = @use_proc2.call(pokemon)
+          usability = usability2 if usability.nil? || !@valid_values2.include?(usability2)
+        end
+        if !(@valid_values&.include?(usability) || @valid_values2&.include?(usability))
+          if pokemon.egg?
+            show_message(_INTL("This egg can't be chosen."))
+          else
+            show_message(_INTL("This Pokémon can't be chosen."))
+          end
+          next
+        end
+      end
+      ret = index
+      break
+    end
     return ret
   end
 
-  def pbPokemonGiveMailScreen(mailIndex)
-    @scene.pbStartScene(@party, _INTL("Give to which Pokémon?"))
-    pkmnid = @scene.pbChoosePokemon
-    if pkmnid >= 0
-      pkmn = @party[pkmnid]
-      if pkmn.hasItem? || pkmn.mail
-        pbDisplay(_INTL("This Pokémon is holding an item. It can't hold mail."))
-      elsif pkmn.egg?
-        pbDisplay(_INTL("Eggs can't hold mail."))
-      else
-        pbDisplay(_INTL("Mail was transferred from the Mailbox."))
-        pkmn.mail = $PokemonGlobal.mailbox[mailIndex]
-        pkmn.item = pkmn.mail.item
-        $PokemonGlobal.mailbox.delete_at(mailIndex)
-        pbRefreshSingle(pkmnid)
-      end
-    end
-    @scene.pbEndScene
-  end
-
-  def pbEndScene
-    @scene.pbEndScene
-  end
-
-  def pbUpdate
-    @scene.update
-  end
-
-  def pbHardRefresh
-    @scene.pbHardRefresh
-  end
-
-  def pbRefresh
-    @scene.pbRefresh
-  end
-
-  def pbRefreshSingle(i)
-    @scene.pbRefreshSingle(i)
-  end
-
-  def pbDisplay(text)
-    @scene.pbDisplay(text)
-  end
-
-  def pbConfirm(text)
-    return @scene.pbDisplayConfirm(text)
-  end
-
-  def pbShowCommands(helptext, commands, index = 0)
-    return @scene.pbShowCommands(helptext, commands, index)
-  end
-
-  # Checks for identical species.
-  # Unused.
-  def pbCheckSpecies(array)
-    array.length.times do |i|
-      (i + 1...array.length).each do |j|
-        return false if array[i].species == array[j].species
-      end
-    end
-    return true
-  end
-
-  # Checks for identical held items.
-  # Unused.
-  def pbCheckItems(array)
-    array.length.times do |i|
-      next if !array[i].hasItem?
-      (i + 1...array.length).each do |j|
-        return false if array[i].item == array[j].item
-      end
-    end
-    return true
-  end
-
-  def pbSwitch(oldid, newid)
-    if oldid != newid
-      @scene.pbSwitchBegin(oldid, newid)
-      tmp = @party[oldid]
-      @party[oldid] = @party[newid]
-      @party[newid] = tmp
-      @scene.pbSwitchEnd(oldid, newid)
-    end
-  end
-
-  def pbChooseMove(pokemon, helptext, index = 0)
-    movenames = []
-    pokemon.moves.each do |i|
-      next if !i || !i.id
-      if i.total_pp <= 0
-        movenames.push(_INTL("{1} (PP: ---)", i.name))
-      else
-        movenames.push(_INTL("{1} (PP: {2}/{3})", i.name, i.pp, i.total_pp))
-      end
-    end
-    return @scene.pbShowCommands(helptext, movenames, index)
-  end
-
-  # For after using an evolution stone.
-  def pbRefreshAnnotations(ableProc)
-    return if !@scene.pbHasAnnotations?
-    annot = []
-    @party.each do |pkmn|
-      elig = ableProc.call(pkmn)
-      annot.push((elig) ? _INTL("ABLE") : _INTL("NOT ABLE"))
-    end
-    @scene.pbAnnotate(annot)
-  end
-
-  def pbClearAnnotations
-    @scene.pbAnnotate(nil)
-  end
-
-  def pbPokemonMultipleEntryScreenEx(ruleset)
+  # Used by the Battle Frontier.
+  def choose_pokemon_entry_order(ruleset)
+    return nil if !ruleset.hasValidTeam?(@party)
+    # Setup party panel annotations
     annot = []
     statuses = []
-    ordinals = [_INTL("INELIGIBLE"), _INTL("NOT ENTERED"), _INTL("BANNED")]
-    positions = [_INTL("FIRST"), _INTL("SECOND"), _INTL("THIRD"), _INTL("FOURTH"),
-                 _INTL("FIFTH"), _INTL("SIXTH"), _INTL("SEVENTH"), _INTL("EIGHTH"),
-                 _INTL("NINTH"), _INTL("TENTH"), _INTL("ELEVENTH"), _INTL("TWELFTH")]
+    ordinals = [_INTL("INELIGIBLE"), _INTL("Not Entered"), _INTL("BANNED")]
+    positions = [_INTL("First"), _INTL("Second"), _INTL("Third"), _INTL("Fourth"),
+                 _INTL("Fifth"), _INTL("Sixth"), _INTL("Seventh"), _INTL("Eighth"),
+                 _INTL("Ninth"), _INTL("Tenth"), _INTL("Eleventh"), _INTL("Twelfth")]
     Settings::MAX_PARTY_SIZE.times do |i|
-      if i < positions.length
-        ordinals.push(positions[i])
-      else
-        ordinals.push("#{i + 1}th")
-      end
+      ordinals.push(positions[i] || "#{i + 1}th")
     end
-    return nil if !ruleset.hasValidTeam?(@party)
-    ret = nil
-    addedEntry = false
     @party.length.times do |i|
       statuses[i] = (ruleset.isPokemonValid?(@party[i])) ? 1 : 2
       annot[i] = ordinals[statuses[i]]
     end
-    @scene.pbStartScene(@party, _INTL("Choose Pokémon and confirm."), annot, true)
+    set_annotations(annot)
+    # Main loop
+    start_screen
+    ret = nil
+    added_entry = false   # Whether an entry was added in the previous loop
     loop do
-      realorder = []
+      on_start_main_loop
+      # Get an array of the chosen Pokémon in order
+      real_order = []
       @party.length.times do |i|
         @party.length.times do |j|
-          if statuses[j] == i + 3
-            realorder.push(j)
-            break
+          next if statuses[j] != i + 3
+          real_order.push(j)
+          break
+        end
+      end
+      real_order.length.times { |i| statuses[real_order[i]] = i + 3 }
+      # Refresh annotations
+      @party.length.times { |i| annot[i] = ordinals[statuses[i]] }
+      set_annotations(annot)
+      # Move index to the "Confirm" button if the required number of Pokémon are
+      # now chosen
+      if real_order.length == ruleset.number && added_entry
+        @visuals.set_index(Settings::MAX_PARTY_SIZE)
+      end
+      added_entry = false
+      # Choose a Pokémon or button
+      command = @visuals.navigate_choose_pokemon
+      case command
+      when :chosen
+        commands = {}
+        commands[:enter]     = _INTL("Entry") if (statuses[index] || 0) == 1   # Not entered yet
+        commands[:not_enter] = _INTL("No Entry") if (statuses[index] || 0) > 2   # Already entered
+        commands[:summary]   = _INTL("Summary")
+        commands[:cancel]    = _INTL("Cancel")
+        chosen_command = show_menu(_INTL("Do what with {1}?", pokemon.name), commands)
+        case chosen_command
+        when :enter
+          if real_order.length >= ruleset.number && ruleset.number > 0
+            show_message(_INTL("No more than {1} Pokémon may enter.", ruleset.number))
+          else
+            statuses[index] = real_order.length + 3
+            added_entry = true
+            refresh
           end
+        when :not_enter
+          statuses[index] = 1
+          refresh
+        when :summary
+          perform_action(:summary)
         end
-      end
-      realorder.length.times do |i|
-        statuses[realorder[i]] = i + 3
-      end
-      @party.length.times do |i|
-        annot[i] = ordinals[statuses[i]]
-      end
-      @scene.pbAnnotate(annot)
-      if realorder.length == ruleset.number && addedEntry
-        @scene.pbSelect(Settings::MAX_PARTY_SIZE)
-      end
-      @scene.pbSetHelpText(_INTL("Choose Pokémon and confirm."))
-      pkmnid = @scene.pbChoosePokemon
-      addedEntry = false
-      if pkmnid == Settings::MAX_PARTY_SIZE   # Confirm was chosen
+      when :confirm
         ret = []
-        realorder.each do |i|
-          ret.push(@party[i])
-        end
+        real_order.each { |i| ret.push(@party[i]) }
         error = []
         break if ruleset.isValid?(ret, error)
-        pbDisplay(error[0])
+        show_message(error[0])
         ret = nil
-      end
-      break if pkmnid < 0   # Cancelled
-      cmdEntry   = -1
-      cmdNoEntry = -1
-      cmdSummary = -1
-      commands = []
-      if (statuses[pkmnid] || 0) == 1
-        commands[cmdEntry = commands.length]   = _INTL("Entry")
-      elsif (statuses[pkmnid] || 0) > 2
-        commands[cmdNoEntry = commands.length] = _INTL("No Entry")
-      end
-      pkmn = @party[pkmnid]
-      commands[cmdSummary = commands.length]   = _INTL("Summary")
-      commands[commands.length]                = _INTL("Cancel")
-      command = @scene.pbShowCommands(_INTL("Do what with {1}?", pkmn.name), commands) if pkmn
-      if cmdEntry >= 0 && command == cmdEntry
-        if realorder.length >= ruleset.number && ruleset.number > 0
-          pbDisplay(_INTL("No more than {1} Pokémon may enter.", ruleset.number))
-        else
-          statuses[pkmnid] = realorder.length + 3
-          addedEntry = true
-          pbRefreshSingle(pkmnid)
-        end
-      elsif cmdNoEntry >= 0 && command == cmdNoEntry
-        statuses[pkmnid] = 1
-        pbRefreshSingle(pkmnid)
-      elsif cmdSummary >= 0 && command == cmdSummary
-        @scene.pbSummary(pkmnid) do
-          @scene.pbSetHelpText((@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-        end
-      end
-    end
-    @scene.pbEndScene
-    return ret
-  end
-
-  def pbChooseAblePokemon(ableProc, allowIneligible = false)
-    annot = []
-    eligibility = []
-    @party.each do |pkmn|
-      elig = ableProc.call(pkmn)
-      eligibility.push(elig)
-      annot.push((elig) ? _INTL("ABLE") : _INTL("NOT ABLE"))
-    end
-    ret = -1
-    @scene.pbStartScene(
-      @party,
-      (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."),
-      annot
-    )
-    loop do
-      @scene.pbSetHelpText(
-        (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel.")
-      )
-      pkmnid = @scene.pbChoosePokemon
-      break if pkmnid < 0
-      if !eligibility[pkmnid] && !allowIneligible
-        pbDisplay(_INTL("This Pokémon can't be chosen."))
-      else
-        ret = pkmnid
+      when :quit   # Cancelled
         break
       end
     end
-    @scene.pbEndScene
-    return ret
+    end_screen
+    @result = ret
+    return @result
   end
 
-  def pbChooseTradablePokemon(ableProc, allowIneligible = false)
-    annot = []
-    eligibility = []
-    @party.each do |pkmn|
-      elig = ableProc.call(pkmn)
-      elig = false if pkmn.egg? || pkmn.shadowPokemon? || pkmn.cannot_trade
-      eligibility.push(elig)
-      annot.push((elig) ? _INTL("ABLE") : _INTL("NOT ABLE"))
-    end
-    ret = -1
-    @scene.pbStartScene(
-      @party,
-      (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."),
-      annot
-    )
-    loop do
-      @scene.pbSetHelpText(
-        (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel.")
-      )
-      pkmnid = @scene.pbChoosePokemon
-      break if pkmnid < 0
-      if !eligibility[pkmnid] && !allowIneligible
-        pbDisplay(_INTL("This Pokémon can't be chosen."))
+  def choose_move(pkmn, message)
+    move_names = []
+    pkmn.moves.each do |move|
+      next if !move || !move.id
+      if move.total_pp <= 0
+        move_names.push(_INTL("{1} (PP: ---)", move.name))
       else
-        ret = pkmnid
-        break
+        move_names.push(_INTL("{1} (PP: {2}/{3})", move.name, move.pp, move.total_pp))
       end
     end
-    @scene.pbEndScene
-    return ret
+    return show_menu(message, move_names, align: :vertical)
   end
 
-  def pbPokemonScreen
-    can_access_storage = false
-    if ($player.has_box_link || $bag.has?(:POKEMONBOXLINK)) &&
-       !$game_switches[Settings::DISABLE_BOX_LINK_SWITCH] &&
-       !$game_map.metadata&.has_flag?("DisableBoxLink")
-      can_access_storage = true
-    end
-    @scene.pbStartScene(@party,
-                        (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."),
-                        nil, false, can_access_storage)
-    # Main loop
-    loop do
-      # Choose a Pokémon or cancel or press Action to quick switch
-      @scene.pbSetHelpText((@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-      party_idx = @scene.pbChoosePokemon(false, -1, 1)
-      break if (party_idx.is_a?(Numeric) && party_idx < 0) || (party_idx.is_a?(Array) && party_idx[1] < 0)
-      # Quick switch
-      if party_idx.is_a?(Array) && party_idx[0] == 1   # Switch
-        @scene.pbSetHelpText(_INTL("Move to where?"))
-        old_party_idx = party_idx[1]
-        party_idx = @scene.pbChoosePokemon(true, -1, 2)
-        pbSwitch(old_party_idx, party_idx) if party_idx >= 0 && party_idx != old_party_idx
-        next
-      end
-      # Chose a Pokémon
-      pkmn = @party[party_idx]
-      # Get all commands
-      command_list = []
-      commands = []
-      MenuHandlers.each_available(:party_menu, self, @party, party_idx) do |option, hash, name|
-        command_list.push(name)
-        commands.push(hash)
-      end
-      command_list.push(_INTL("Cancel"))
-      # Add field move commands
-      if !pkmn.egg?
-        insert_index = ($DEBUG) ? 2 : 1
-        pkmn.moves.each_with_index do |move, i|
-          next if !HiddenMoveHandlers.hasHandler(move.id) &&
-                  ![:MILKDRINK, :SOFTBOILED].include?(move.id)
-          command_list.insert(insert_index, [move.name, 1])
-          commands.insert(insert_index, i)
-          insert_index += 1
-        end
-      end
-      # Choose a menu option
-      choice = @scene.pbShowCommands(_INTL("Do what with {1}?", pkmn.name), command_list)
-      next if choice < 0 || choice >= commands.length
-      # Effect of chosen menu option
-      case commands[choice]
-      when Hash   # Option defined via a MenuHandler below
-        commands[choice]["effect"].call(self, @party, party_idx)
-      when Integer   # Hidden move's index
-        move = pkmn.moves[commands[choice]]
-        if [:MILKDRINK, :SOFTBOILED].include?(move.id)
-          amt = [(pkmn.totalhp / 5).floor, 1].max
-          if pkmn.hp <= amt
-            pbDisplay(_INTL("Not enough HP..."))
-            next
-          end
-          @scene.pbSetHelpText(_INTL("Use on which Pokémon?"))
-          old_party_idx = party_idx
-          loop do
-            @scene.pbPreSelect(old_party_idx)
-            party_idx = @scene.pbChoosePokemon(true, party_idx)
-            break if party_idx < 0
-            newpkmn = @party[party_idx]
-            movename = move.name
-            if party_idx == old_party_idx
-              pbDisplay(_INTL("{1} can't use {2} on itself!", pkmn.name, movename))
-            elsif newpkmn.egg?
-              pbDisplay(_INTL("{1} can't be used on an Egg!", movename))
-            elsif newpkmn.fainted? || newpkmn.hp == newpkmn.totalhp
-              pbDisplay(_INTL("{1} can't be used on that Pokémon.", movename))
-            else
-              pkmn.hp -= amt
-              hpgain = pbItemRestoreHP(newpkmn, amt)
-              @scene.pbDisplay(_INTL("{1}'s HP was restored by {2} points.", newpkmn.name, hpgain))
-              pbRefresh
-            end
-            break if pkmn.hp <= amt
-          end
-          @scene.pbSelect(old_party_idx)
-          pbRefresh
-        elsif pbCanUseHiddenMove?(pkmn, move.id)
-          if pbConfirmUseHiddenMove(pkmn, move.id)
-            @scene.pbEndScene
-            if move.id == :FLY
-              scene = PokemonRegionMap_Scene.new(-1, false)
-              screen = PokemonRegionMapScreen.new(scene)
-              ret = screen.pbStartFlyScreen
-              if ret
-                $game_temp.fly_destination = ret
-                return [pkmn, move.id]
-              end
-              @scene.pbStartScene(
-                @party, (@party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel.")
-              )
-              next
-            end
-            return [pkmn, move.id]
-          end
-        end
-      end
-    end
-    @scene.pbEndScene
-    return nil
-  end
+  alias pbChooseMove choose_move
 end
 
 #===============================================================================
-# Party screen menu commands.
-# Note that field moves are inserted into the list of commands after the first
-# command, which is usually "Summary". If playing in Debug mode, they are
-# inserted after the second command instead, which is usually "Debug". See
-# insert_index above if you need to change this.
+# Menu options for choice menus that exist in the party screen.
 #===============================================================================
-MenuHandlers.add(:party_menu, :summary, {
-  "name"      => _INTL("Summary"),
+MenuHandlers.add(:party_screen_menu, :open_storage, {
+  "name"      => _INTL("Access Pokémon Boxes"),
   "order"     => 10,
-  "effect"    => proc { |screen, party, party_idx|
-    screen.scene.pbSummary(party_idx) do
-      screen.scene.pbSetHelpText((party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-    end
-  }
+  "condition" => proc { |screen| next screen.can_access_storage? }
 })
 
-MenuHandlers.add(:party_menu, :debug, {
+MenuHandlers.add(:party_screen_menu, :switch_pokemon_mode, {
+  "name"      => _INTL("Mode: Switch Pokémon"),
+  "order"     => 20,
+  "condition" => proc { |screen| next screen.party.length > 1 }
+})
+
+MenuHandlers.add(:party_screen_menu, :item_move_mode, {
+  "name"      => _INTL("Mode: Switch items"),
+  "order"     => 30,
+  "condition" => proc { |screen| next screen.party.length > 1 }
+})
+
+MenuHandlers.add(:party_screen_menu, :cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
+})
+
+#-------------------------------------------------------------------------------
+
+MenuHandlers.add(:party_screen_interact, :summary, {
+  "name"      => _INTL("Summary"),
+  "order"     => 10
+})
+
+MenuHandlers.add(:party_screen_interact, :debug, {
   "name"      => _INTL("Debug"),
   "order"     => 20,
-  "condition" => proc { |screen, party, party_idx| next $DEBUG },
-  "effect"    => proc { |screen, party, party_idx|
-    screen.pbPokemonDebug(party[party_idx], party_idx)
-  }
+  "condition" => proc { |screen| next $DEBUG }
 })
 
-MenuHandlers.add(:party_menu, :switch, {
-  "name"      => _INTL("Switch"),
-  "order"     => 30,
-  "condition" => proc { |screen, party, party_idx| next party.length > 1 },
-  "effect"    => proc { |screen, party, party_idx|
-    screen.scene.pbSetHelpText(_INTL("Move to where?"))
-    old_party_idx = party_idx
-    party_idx = screen.scene.pbChoosePokemon(true)
-    screen.pbSwitch(old_party_idx, party_idx) if party_idx >= 0 && party_idx != old_party_idx
-  }
-})
-
-MenuHandlers.add(:party_menu, :mail, {
-  "name"      => _INTL("Mail"),
-  "order"     => 40,
-  "condition" => proc { |screen, party, party_idx| next !party[party_idx].egg? && party[party_idx].mail },
-  "effect"    => proc { |screen, party, party_idx|
-    pkmn = party[party_idx]
-    command = screen.scene.pbShowCommands(_INTL("Do what with the mail?"),
-                                          [_INTL("Read"), _INTL("Take"), _INTL("Cancel")])
-    case command
-    when 0   # Read
-      pbFadeOutIn do
-        pbDisplayMail(pkmn.mail, pkmn)
-        screen.scene.pbSetHelpText((party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-      end
-    when 1   # Take
-      if pbTakeItemFromPokemon(pkmn, screen)
-        screen.pbRefreshSingle(party_idx)
-      end
+MenuHandlers.add(:party_screen_interact, :field_moves, {
+  "order"         => 30,
+  "multi_options" => proc { |screen|
+    ret = []
+    next ret if screen.pokemon.egg?
+    screen.pokemon.moves.each do |move|
+      next if !HiddenMoveHandlers.hasHandler(move.id) &&
+              ![:MILKDRINK, :SOFTBOILED].include?(move.id)
+      ret.push([:"use_#{move.id}", "<c3=0050A0,80C0F0>" + move.name + "</c3>"])
     end
+    next ret
   }
 })
 
-MenuHandlers.add(:party_menu, :item, {
+MenuHandlers.add(:party_screen_interact, :switch_pokemon_start, {
+  "name"      => _INTL("Switch"),
+  "order"     => 40,
+  "condition" => proc { |screen| next screen.party.length > 1 }
+})
+
+MenuHandlers.add(:party_screen_interact, :item_menu, {
   "name"      => _INTL("Item"),
   "order"     => 50,
-  "condition" => proc { |screen, party, party_idx| next !party[party_idx].egg? && !party[party_idx].mail },
-  "effect"    => proc { |screen, party, party_idx|
-    # Get all commands
-    command_list = []
-    commands = []
-    MenuHandlers.each_available(:party_menu_item, screen, party, party_idx) do |option, hash, name|
-      command_list.push(name)
-      commands.push(hash)
-    end
-    command_list.push(_INTL("Cancel"))
-    # Choose a menu option
-    choice = screen.scene.pbShowCommands(_INTL("Do what with an item?"), command_list)
-    next if choice < 0 || choice >= commands.length
-    commands[choice]["effect"].call(screen, party, party_idx)
-  }
+  "condition" => proc { |screen| next !screen.pokemon.egg? && !screen.pokemon.mail }
 })
 
-MenuHandlers.add(:party_menu_item, :use, {
+MenuHandlers.add(:party_screen_interact_item, :item_use, {
   "name"      => _INTL("Use"),
-  "order"     => 10,
-  "effect"    => proc { |screen, party, party_idx|
-    pkmn = party[party_idx]
-    item = screen.scene.pbUseItem($bag, pkmn) do
-      screen.scene.pbSetHelpText((party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-    end
-    next if !item
-    pbUseItemOnPokemon(item, pkmn, screen)
-    screen.pbRefreshSingle(party_idx)
-  }
+  "order"     => 10
 })
 
-MenuHandlers.add(:party_menu_item, :give, {
+MenuHandlers.add(:party_screen_interact_item, :item_give, {
   "name"      => _INTL("Give"),
-  "order"     => 20,
-  "effect"    => proc { |screen, party, party_idx|
-    pkmn = party[party_idx]
-    item = screen.scene.pbChooseItem($bag) do
-      screen.scene.pbSetHelpText((party.length > 1) ? _INTL("Choose a Pokémon.") : _INTL("Choose Pokémon or cancel."))
-    end
-    next if !item || !pbGiveItemToPokemon(item, pkmn, screen, party_idx)
-    screen.pbRefreshSingle(party_idx)
-  }
+  "order"     => 20
 })
 
-MenuHandlers.add(:party_menu_item, :take, {
+MenuHandlers.add(:party_screen_interact_item, :item_take, {
   "name"      => _INTL("Take"),
   "order"     => 30,
-  "condition" => proc { |screen, party, party_idx| next party[party_idx].hasItem? },
-  "effect"    => proc { |screen, party, party_idx|
-    pkmn = party[party_idx]
-    next if !pbTakeItemFromPokemon(pkmn, screen)
-    screen.pbRefreshSingle(party_idx)
-  }
+  "condition" => proc { |screen| next screen.pokemon.hasItem? }
 })
 
-MenuHandlers.add(:party_menu_item, :move, {
+MenuHandlers.add(:party_screen_interact_item, :item_move, {
   "name"      => _INTL("Move"),
   "order"     => 40,
-  "condition" => proc { |screen, party, party_idx| next party[party_idx].hasItem? && !party[party_idx].item.is_mail? },
-  "effect"    => proc { |screen, party, party_idx|
-    pkmn = party[party_idx]
-    item = pkmn.item
-    itemname = item.name
-    portionitemname = item.portion_name
-    screen.scene.pbSetHelpText(_INTL("Move {1} to where?", itemname))
-    old_party_idx = party_idx
-    moved = false
-    loop do
-      screen.scene.pbPreSelect(old_party_idx)
-      party_idx = screen.scene.pbChoosePokemon(true, party_idx)
-      break if party_idx < 0
-      newpkmn = party[party_idx]
-      break if party_idx == old_party_idx
-      if newpkmn.egg?
-        screen.pbDisplay(_INTL("Eggs can't hold items."))
-        next
-      elsif !newpkmn.hasItem?
-        newpkmn.item = item
-        pkmn.item = nil
-        screen.scene.pbClearSwitching
-        screen.pbRefresh
-        screen.pbDisplay(_INTL("{1} was given the {2} to hold.", newpkmn.name, portionitemname))
-        moved = true
-        break
-      elsif newpkmn.item.is_mail?
-        screen.pbDisplay(_INTL("{1}'s mail must be removed before giving it an item.", newpkmn.name))
-        next
-      end
-      # New Pokémon is also holding an item; ask what to do with it
-      newitem = newpkmn.item
-      newitemname = newitem.portion_name
-      if newitemname.starts_with_vowel?
-        screen.pbDisplay(_INTL("{1} is already holding an {2}.", newpkmn.name, newitemname) + "\1")
-      else
-        screen.pbDisplay(_INTL("{1} is already holding a {2}.", newpkmn.name, newitemname) + "\1")
-      end
-      next if !screen.pbConfirm(_INTL("Would you like to switch the two items?"))
-      newpkmn.item = item
-      pkmn.item = newitem
-      screen.scene.pbClearSwitching
-      screen.pbRefresh
-      screen.pbDisplay(_INTL("{1} was given the {2} to hold.", newpkmn.name, portionitemname) + "\1")
-      screen.pbDisplay(_INTL("{1} was given the {2} to hold.", pkmn.name, newitemname))
-      moved = true
-      break
-    end
-    screen.scene.pbSelect(old_party_idx) if !moved
-  }
+  "condition" => proc { |screen| next screen.pokemon.hasItem? && !screen.pokemon.item.is_mail? }
+})
+
+MenuHandlers.add(:party_screen_interact_item, :item_cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
+})
+
+MenuHandlers.add(:party_screen_interact, :mail_menu, {
+  "name"      => _INTL("Mail"),
+  "order"     => 50,
+  "condition" => proc { |screen| next !screen.pokemon.egg? && screen.pokemon.mail }
+})
+
+MenuHandlers.add(:party_screen_interact_mail, :mail_read, {
+  "name"      => _INTL("Read"),
+  "order"     => 10
+})
+
+MenuHandlers.add(:party_screen_interact_mail, :mail_take, {
+  "name"      => _INTL("Take"),
+  "order"     => 20
+})
+
+MenuHandlers.add(:party_screen_interact_mail, :mail_cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 30
+})
+
+MenuHandlers.add(:party_screen_interact, :cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
 })
 
 #===============================================================================
-# Open the party screen
+# Open the party screen.
 #===============================================================================
 def pbPokemonScreen
   pbFadeOutIn do
-    sscene = PokemonParty_Scene.new
-    sscreen = PokemonPartyScreen.new(sscene, $player.party)
-    sscreen.pbPokemonScreen
+    UI::Party.new($player.party).main
   end
 end
 
 #===============================================================================
-# Choose a Pokémon in the party
+# Choose a Pokémon in the party.
 #===============================================================================
 # Choose a Pokémon/egg from the party.
-# Stores result in variable _variableNumber_ and the chosen Pokémon's name in
-# variable _nameVarNumber_; result is -1 if no Pokémon was chosen
-def pbChoosePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)
+# Stores result in variable _index_game_var_ and the chosen Pokémon's name in
+# variable _name_game_var_; result is -1 if no Pokémon was chosen
+# _allowIneligible is unused.
+def pbChoosePokemon(index_game_var, name_game_var, able_proc = nil, _allow_ineligible = false)
+  chosen = -1
+  pbFadeOutIn do
+    screen = UI::Party.new($player.party, mode: :choose_pokemon)
+    if able_proc
+      valid_values = [true]
+      use_annotations = {
+        true  => _INTL("Can Choose"),
+        false => _INTL("Cannot Choose")
+      }
+      screen.set_able_annotation_proc(able_proc, valid_values, use_annotations)
+    end
+    chosen = screen.choose_pokemon
+  end
+  pbSet(index_game_var, chosen)
+  pbSet(name_game_var, (chosen >= 0) ? $player.party[chosen].name : "")
+end
+
+def pbChooseNonEggPokemon(index_game_var, name_game_var)
+  pbChoosePokemon(index_game_var, name_game_var, proc { |pkmn| !pkmn.egg? })
+end
+
+def pbChooseAblePokemon(index_game_var, name_game_var)
+  pbChoosePokemon(index_game_var, name_game_var, proc { |pkmn| !pkmn.egg? && pkmn.hp > 0 })
+end
+
+# Same as pbChoosePokemon, but prevents choosing an egg or a Shadow Pokémon or a
+# Pokémon that is marked and untradable.
+def pbChooseTradablePokemon(index_game_var, name_game_var, able_proc = nil, _allow_ineligible = false)
   chosen = 0
   pbFadeOutIn do
-    scene = PokemonParty_Scene.new
-    screen = PokemonPartyScreen.new(scene, $player.party)
-    if ableProc
-      chosen = screen.pbChooseAblePokemon(ableProc, allowIneligible)
-    else
-      screen.pbStartScene(_INTL("Choose a Pokémon."), false)
-      chosen = screen.pbChoosePokemon
-      screen.pbEndScene
-    end
+    screen = UI::Party.new($player.party, mode: :choose_pokemon)
+    valid_values = [true]
+    use_annotations = {
+      true  => _INTL("Can Choose"),
+      false => _INTL("Cannot Choose")
+    }
+    screen.set_able_annotation_proc(able_proc, valid_values, use_annotations) if able_proc
+    able_proc2 = proc { |pkmn| next !pkmn.egg? && !pkmn.shadowPokemon? && !pkmn.cannot_trade }
+    screen.set_able_annotation_proc2(able_proc2, valid_values, use_annotations)
+    chosen = screen.choose_pokemon
   end
-  pbSet(variableNumber, chosen)
-  if chosen >= 0
-    pbSet(nameVarNumber, $player.party[chosen].name)
-  else
-    pbSet(nameVarNumber, "")
-  end
+  pbSet(index_game_var, chosen)
+  pbSet(name_game_var, (chosen >= 0) ? $player.party[chosen].name : "")
 end
 
-def pbChooseNonEggPokemon(variableNumber, nameVarNumber)
-  pbChoosePokemon(variableNumber, nameVarNumber, proc { |pkmn| !pkmn.egg? })
-end
-
-def pbChooseAblePokemon(variableNumber, nameVarNumber)
-  pbChoosePokemon(variableNumber, nameVarNumber, proc { |pkmn| !pkmn.egg? && pkmn.hp > 0 })
-end
-
-# Same as pbChoosePokemon, but prevents choosing an egg or a Shadow Pokémon.
-def pbChooseTradablePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)
-  chosen = 0
-  pbFadeOutIn do
-    scene = PokemonParty_Scene.new
-    screen = PokemonPartyScreen.new(scene, $player.party)
-    if ableProc
-      chosen = screen.pbChooseTradablePokemon(ableProc, allowIneligible)
-    else
-      screen.pbStartScene(_INTL("Choose a Pokémon."), false)
-      chosen = screen.pbChoosePokemon
-      screen.pbEndScene
-    end
-  end
-  pbSet(variableNumber, chosen)
-  if chosen >= 0
-    pbSet(nameVarNumber, $player.party[chosen].name)
-  else
-    pbSet(nameVarNumber, "")
-  end
-end
-
-def pbChoosePokemonForTrade(variableNumber, nameVarNumber, wanted)
+def pbChoosePokemonForTrade(index_game_var, name_game_var, wanted)
   wanted = GameData::Species.get(wanted).species
-  pbChooseTradablePokemon(variableNumber, nameVarNumber, proc { |pkmn|
-    next pkmn.species == wanted
+  pbChooseTradablePokemon(index_game_var, name_game_var, proc { |pkmn|
+    next pkmn.isSpecies?(wanted)
   })
 end

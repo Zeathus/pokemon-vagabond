@@ -1,23 +1,22 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle
-  #=============================================================================
-  # Choosing to use an item
-  #=============================================================================
-  def pbCanUseItemOnPokemon?(item, pkmn, battler, scene, showMessages = true)
+  #-----------------------------------------------------------------------------
+  # Choosing to use an item.
+  #-----------------------------------------------------------------------------
+
+  def pbCanUseItemOnPokemon?(item, pkmn, battler, visuals, showMessages = true)
     if !pkmn || pkmn.egg?
-      scene.pbDisplay(_INTL("It won't have any effect.")) if showMessages
+      visuals.pbDisplay(_INTL("It won't have any effect.")) if showMessages
       return false
     end
     # Embargo
     if battler && battler.effects[PBEffects::Embargo] > 0
       if showMessages
-        scene.pbDisplay(_INTL("Embargo's effect prevents the item's use on {1}!",
-                              battler.pbThis(true)))
+        visuals.pbDisplay(_INTL("Embargo's effect prevents the item's use on {1}!",
+                                battler.pbThis(true)))
       end
-      return false
-    end
-    # Hyper Mode and non-Scents
-    if pkmn.hyper_mode && !GameData::Item.get(item)&.is_scent?
-      scene.pbDisplay(_INTL("It won't have any effect.")) if showMessages
       return false
     end
     return true
@@ -43,9 +42,10 @@ class Battle
     return true
   end
 
-  #=============================================================================
-  # Using an item
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Using an item.
+  #-----------------------------------------------------------------------------
+
   def pbConsumeItemInBag(item, idxBattler)
     return if !item
     return if !GameData::Item.get(item).consumed_after_use?
@@ -55,7 +55,7 @@ class Battle
       end
     else
       items = pbGetOwnerItems(idxBattler)
-      items.delete_at(items.index(item)) if items
+      items&.delete_at(items.index(item))
     end
   end
 
@@ -74,12 +74,24 @@ class Battle
     end
   end
 
-  def pbUseItemMessage(item, trainerName)
-    itemName = GameData::Item.get(item).portion_name
-    if itemName.starts_with_vowel?
-      pbDisplayBrief(_INTL("{1} used an {2}.", trainerName, itemName))
+  def pbUseItemMessage(item, trainer_name, battler = nil)
+    item_data = GameData::Item.get(item)
+    item_name = item_data.portion_name
+    if battler && !battler.allAllies.empty?
+      # Specify which Pokémon the item was used on (only for Pokémon in battle,
+      # because the effects of items used on party Pokémon all mention the
+      # Pokémon's name so it doesn't need specifying here too)
+      if item_name.starts_with_vowel?
+        pbDisplayBrief(_INTL("{1} used an {2} on {3}.", trainer_name, item_name, battler.name))
+      else
+        pbDisplayBrief(_INTL("{1} used a {2} on {3}.", trainer_name, item_name, battler.name))
+      end
     else
-      pbDisplayBrief(_INTL("{1} used a {2}.", trainerName, itemName))
+      if item_name.starts_with_vowel?
+        pbDisplayBrief(_INTL("{1} used an {2}.", trainer_name, item_name))
+      else
+        pbDisplayBrief(_INTL("{1} used a {2}.", trainer_name, item_name))
+      end
     end
   end
 
@@ -90,8 +102,9 @@ class Battle
     pkmn = pbParty(userBattler.index)[idxParty]
     battler = pbFindBattler(idxParty, userBattler.index)
     ch = @choices[userBattler.index]
-    if ItemHandlers.triggerCanUseInBattle(item, pkmn, battler, ch[3], true, self, @scene, false)
-      ItemHandlers.triggerBattleUseOnPokemon(item, pkmn, battler, ch, @scene)
+    if ItemHandlers.triggerCanUseInBattle(item, pkmn, battler, ch[3], true, self, @visuals, false)
+      pbCommonAnimation("UseItemFromBag", battler) if battler
+      ItemHandlers.triggerBattleUseOnPokemon(item, pkmn, battler, ch, @visuals)
       ch[1] = nil   # Delete item from choice
       return
     end
@@ -103,14 +116,16 @@ class Battle
   # Uses an item on a Pokémon in battle that belongs to the trainer.
   def pbUseItemOnBattler(item, idxParty, userBattler)
     trainerName = pbGetOwnerName(userBattler.index)
-    pbUseItemMessage(item, trainerName)
     battler = pbFindBattler(idxParty, userBattler.index)
+    pbUseItemMessage(item, trainerName, battler)
     ch = @choices[userBattler.index]
     if battler
-      if ItemHandlers.triggerCanUseInBattle(item, battler.pokemon, battler, ch[3], true, self, @scene, false)
-        ItemHandlers.triggerBattleUseOnBattler(item, battler, @scene)
+      if ItemHandlers.triggerCanUseInBattle(item, battler.pokemon, battler, ch[3], true, self, @visuals, false)
+        pbCommonAnimation("UseItemFromBag", battler)
+        ItemHandlers.triggerBattleUseOnBattler(item, battler, @visuals)
         ch[1] = nil   # Delete item from choice
-        battler.pbItemOnStatDropped
+        battler.pbItemStatRestoreCheck   # White Herb
+        battler.pbItemOnStatDropped   # Eject Pack
         return
       else
         pbDisplay(_INTL("But it had no effect!"))
@@ -137,7 +152,7 @@ class Battle
     battler = (idxBattler < 0) ? userBattler : @battlers[idxBattler]
     pkmn = battler.pokemon
     ch = @choices[userBattler.index]
-    if ItemHandlers.triggerCanUseInBattle(item, pkmn, battler, ch[3], true, self, @scene, false)
+    if ItemHandlers.triggerCanUseInBattle(item, pkmn, battler, ch[3], true, self, @visuals, false)
       ItemHandlers.triggerUseInBattle(item, battler, self)
       ch[1] = nil   # Delete item from choice
       return

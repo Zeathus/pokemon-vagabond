@@ -11,12 +11,13 @@ class Battle::Move::SleepTarget < Battle::Move
 
   def pbEffectAgainstTarget(user, target)
     return if damagingMove?
-    target.pbSleep
+    target.pbSleep(user)
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
-    target.pbSleep if target.pbCanSleep?(user, false, self)
+    target.pbSleep(user) if target.pbCanSleep?(user, false, self)
   end
 end
 
@@ -91,6 +92,7 @@ class Battle::Move::PoisonTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbPoison(user, nil, @toxic) if target.pbCanPoison?(user, false, self)
   end
@@ -127,6 +129,44 @@ class Battle::Move::PoisonTargetLowerTargetSpeed1 < Battle::Move
 end
 
 #===============================================================================
+# Poisons the target. Removes trapping moves, entry hazards and Leech Seed on
+# user/user's side. (Mortal Spin)
+#===============================================================================
+class Battle::Move::PoisonTargetRemoveUserBindingAndEntryHazards < Battle::Move::PoisonTarget
+  def pbEffectAfterAllHits(user, target)
+    return if user.fainted? || target.damageState.unaffected
+    if user.effects[PBEffects::Trapping] > 0
+      trapMove = GameData::Move.get(user.effects[PBEffects::TrappingMove]).name
+      trapUser = @battle.battlers[user.effects[PBEffects::TrappingUser]]
+      @battle.pbDisplay(_INTL("{1} got free of {2} {3}!", user.pbThis, trapUser.pbOfThis(true), trapMove))
+      user.effects[PBEffects::Trapping]     = 0
+      user.effects[PBEffects::TrappingMove] = nil
+      user.effects[PBEffects::TrappingUser] = -1
+    end
+    if user.effects[PBEffects::LeechSeed] >= 0
+      user.effects[PBEffects::LeechSeed] = -1
+      @battle.pbDisplay(_INTL("{1} shed Leech Seed!", user.pbThis))
+    end
+    if user.pbOwnSide.effects[PBEffects::StealthRock]
+      user.pbOwnSide.effects[PBEffects::StealthRock] = false
+      @battle.pbDisplay(_INTL("{1} blew away stealth rocks!", user.pbThis))
+    end
+    if user.pbOwnSide.effects[PBEffects::Spikes] > 0
+      user.pbOwnSide.effects[PBEffects::Spikes] = 0
+      @battle.pbDisplay(_INTL("{1} blew away spikes!", user.pbThis))
+    end
+    if user.pbOwnSide.effects[PBEffects::ToxicSpikes] > 0
+      user.pbOwnSide.effects[PBEffects::ToxicSpikes] = 0
+      @battle.pbDisplay(_INTL("{1} blew away poison spikes!", user.pbThis))
+    end
+    if user.pbOwnSide.effects[PBEffects::StickyWeb]
+      user.pbOwnSide.effects[PBEffects::StickyWeb] = false
+      @battle.pbDisplay(_INTL("{1} blew away sticky webs!", user.pbThis))
+    end
+  end
+end
+
+#===============================================================================
 # Badly poisons the target. (Poison Fang, Toxic)
 #===============================================================================
 class Battle::Move::BadPoisonTarget < Battle::Move::PoisonTarget
@@ -136,7 +176,7 @@ class Battle::Move::BadPoisonTarget < Battle::Move::PoisonTarget
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
-    return (Settings::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON))
+    return Settings::MORE_TYPE_EFFECTS && statusMove? && user.pbHasType?(:POISON)
   end
 end
 
@@ -157,6 +197,7 @@ class Battle::Move::ParalyzeTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
   end
@@ -181,6 +222,16 @@ class Battle::Move::ParalyzeTargetIfNotTypeImmune < Battle::Move::ParalyzeTarget
 end
 
 #===============================================================================
+# Paralyzes the target. Accuracy perfect in rain. (Wildbolt Storm)
+#===============================================================================
+class Battle::Move::ParalyzeTargetAlwaysHitsInRain < Battle::Move::ParalyzeTarget
+  def pbBaseAccuracy(user, target)
+    return 0 if [:Rain, :HeavyRain].include?(target.effectiveWeather) && !user.hasActiveAbility?(:MEGASOL)
+    return super
+  end
+end
+
+#===============================================================================
 # Paralyzes the target. Accuracy perfect in rain, 50% in sunshine. Hits some
 # semi-invulnerable targets. (Thunder)
 #===============================================================================
@@ -188,6 +239,7 @@ class Battle::Move::ParalyzeTargetAlwaysHitsInRainHitsTargetInSky < Battle::Move
   def hitsFlyingTargets?; return true; end
 
   def pbBaseAccuracy(user, target)
+    return 50 if user.hasActiveAbility?(:MEGASOL)
     case target.effectiveWeather
     when :Sun, :HarshSun
       return 50
@@ -205,6 +257,7 @@ class Battle::Move::ParalyzeFlinchTarget < Battle::Move
   def flinchingMove?; return true; end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     chance = pbAdditionalEffectChance(user, target, 10)
     return if chance == 0
@@ -232,12 +285,23 @@ class Battle::Move::BurnTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbBurn(user) if target.pbCanBurn?(user, false, self)
   end
 
   def pbOverrideSuccessCheckPerHit(user, target)
     return (Supplementals::BURN_TYPE_EFFECT && statusMove? && user.pbHasType?(:FIRE))
+  end
+end
+
+#===============================================================================
+# Burns the target. Accuracy perfect in rain. (Sandsear Storm)
+#===============================================================================
+class Battle::Move::BurnTargetAlwaysHitsInRain < Battle::Move::BurnTarget
+  def pbBaseAccuracy(user, target)
+    return 0 if [:Rain, :HeavyRain].include?(target.effectiveWeather) && !user.hasActiveAbility?(:MEGASOL)
+    return super
   end
 end
 
@@ -258,6 +322,7 @@ class Battle::Move::BurnFlinchTarget < Battle::Move
   def flinchingMove?; return true; end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     chance = pbAdditionalEffectChance(user, target, 10)
     return if chance == 0
@@ -281,12 +346,13 @@ class Battle::Move::FreezeTarget < Battle::Move
 
   def pbEffectAgainstTarget(user, target)
     return if damagingMove?
-    target.pbFreeze
+    target.pbFreeze(user)
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
-    target.pbFreeze if target.pbCanFreeze?(user, false, self)
+    target.pbFreeze(user) if target.pbCanFreeze?(user, false, self)
   end
 end
 
@@ -305,7 +371,7 @@ end
 #===============================================================================
 class Battle::Move::FreezeTargetAlwaysHitsInHail < Battle::Move::FreezeTarget
   def pbBaseAccuracy(user, target)
-    return 0 if target.effectiveWeather == :Hail
+    return 0 if [:Hail, :Snowstorm].include?(target.effectiveWeather) && !user.hasActiveAbility?(:MEGASOL)
     return super
   end
 end
@@ -317,11 +383,12 @@ class Battle::Move::FreezeFlinchTarget < Battle::Move
   def flinchingMove?; return true; end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     chance = pbAdditionalEffectChance(user, target, 10)
     return if chance == 0
     if target.pbCanFreeze?(user, false, self) && @battle.pbRandom(100) < chance
-      target.pbFreeze
+      target.pbFreeze(user)
     end
     target.pbFlinch(user) if @battle.pbRandom(100) < chance
   end
@@ -332,11 +399,27 @@ end
 #===============================================================================
 class Battle::Move::ParalyzeBurnOrFreezeTarget < Battle::Move
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     case @battle.pbRandom(3)
     when 0 then target.pbBurn(user) if target.pbCanBurn?(user, false, self)
-    when 1 then target.pbFreeze if target.pbCanFreeze?(user, false, self)
+    when 1 then target.pbFreeze(user) if target.pbCanFreeze?(user, false, self)
     when 2 then target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
+    end
+  end
+end
+
+#===============================================================================
+# Poisons, paralyzes or puts to sleep the target. (Dire Claw)
+#===============================================================================
+class Battle::Move::PoisonParalyzeOrSleepTarget < Battle::Move
+  def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
+    return if target.damageState.substitute
+    case @battle.pbRandom(3)
+    when 0 then target.pbPoison(user) if target.pbCanPoison?(user, false, self)
+    when 1 then target.pbParalyze(user) if target.pbCanParalyze?(user, false, self)
+    when 2 then target.pbSleep(user) if target.pbCanSleep?(user, false, self)
     end
   end
 end
@@ -365,7 +448,7 @@ class Battle::Move::GiveUserStatusToTarget < Battle::Move
     msg = ""
     case user.status
     when :SLEEP
-      target.pbSleep
+      target.pbSleep(user)
       msg = _INTL("{1} woke up.", user.pbThis)
     when :POISON
       target.pbPoison(user, nil, (user.statusCount < 0))
@@ -377,7 +460,7 @@ class Battle::Move::GiveUserStatusToTarget < Battle::Move
       target.pbParalyze(user)
       msg = _INTL("{1} was cured of paralysis.", user.pbThis)
     when :FROZEN
-      target.pbFreeze
+      target.pbFreeze(user)
       msg = _INTL("{1} was thawed out.", user.pbThis)
     when :FROSTBITE
       target.pbFrostbite(user)
@@ -435,11 +518,7 @@ class Battle::Move::CureUserPartyStatus < Battle::Move
   def worksWithNoTargets?; return true; end
 
   def pbMoveFailed?(user, targets)
-    has_effect = @battle.allSameSideBattlers(user).any? { |b| b.status != :NONE }
-    if !has_effect
-      has_effect = @battle.pbParty(user.index).any? { |pkmn| pkmn&.able? && pkmn.status != :NONE }
-    end
-    if !has_effect
+    if @battle.pbParty(user.index).none? { |pkmn| pkmn&.able? && pkmn.status != :NONE }
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -484,7 +563,7 @@ class Battle::Move::CureUserPartyStatus < Battle::Move
     # Cure all Pokémon in battle on the user's side. For the benefit of the Gen
     # 5 version of this move, to make Pokémon out in battle get cured first.
     if pbTarget(user) == :UserSide
-      @battle.allSameSideBattlers(user).each do |b|
+      @battle.allSameSideBattlers(user, true).each do |b|
         pbAromatherapyHeal(b.pokemon, b) if b.status != :NONE
       end
     end
@@ -515,14 +594,15 @@ end
 class Battle::Move::CureTargetBurn < Battle::Move
   def pbAdditionalEffect(user, target)
     return if target.fainted? || target.damageState.substitute
+    return if !target.affectedByAdditionalEffects?
     return if target.status != :BURN
     target.pbCureStatus
   end
 end
 
 #===============================================================================
-# Safeguards the user's side from being inflicted with status problems.
-# (Safeguard)
+# For 5 rounds, safeguards the user's side from being inflicted with status
+# problems. (Safeguard)
 #===============================================================================
 class Battle::Move::StartUserSideImmunityToInflictedStatus < Battle::Move
   def canSnatch?; return true; end
@@ -553,6 +633,7 @@ class Battle::Move::FlinchTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbFlinch(user)
   end
@@ -588,18 +669,36 @@ class Battle::Move::FlinchTargetFailsIfNotUserFirstTurn < Battle::Move::FlinchTa
 end
 
 #===============================================================================
+# Causes the target to flinch. Fails if the target is not about to use a
+# priority move this turn. (Upper Hand)
+#===============================================================================
+class Battle::Move::FlinchTargetFailsIfTargetNotUsingPriorityMove < Battle::Move::FlinchTarget
+  def pbMoveFailed?(user, targets)
+    failed = true
+    targets.each do |target|
+      failed = false if !target.movedThisRound? && @battle.choices[target.index][4] > 0
+    end
+    if failed
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+end
+
+#===============================================================================
 # Power is doubled if the target is using Bounce, Fly or Sky Drop. Hits some
 # semi-invulnerable targets. May make the target flinch. (Twister)
 #===============================================================================
 class Battle::Move::FlinchTargetDoublePowerIfTargetInSky < Battle::Move::FlinchTarget
   def hitsFlyingTargets?; return true; end
 
-  def pbBaseDamage(baseDmg, user, target)
-    baseDmg *= 2 if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
-                                            "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
-                                            "TwoTurnAttackInvulnerableInSkyTargetCannotAct") ||
-                    target.effects[PBEffects::SkyDrop] >= 0
-    return baseDmg
+  def pbBasePower(base_power, user, target)
+    base_power *= 2 if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
+                                               "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
+                                               "TwoTurnAttackInvulnerableInSkyTargetCannotAct") ||
+                       target.effects[PBEffects::SkyDrop] >= 0
+    return base_power
   end
 end
 
@@ -620,6 +719,7 @@ class Battle::Move::ConfuseTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     return if !target.pbCanConfuse?(user, false, self)
     target.pbConfuse
@@ -634,6 +734,7 @@ class Battle::Move::ConfuseTargetAlwaysHitsInRainHitsTargetInSky < Battle::Move:
   def hitsFlyingTargets?; return true; end
 
   def pbBaseAccuracy(user, target)
+    return 50 if user.hasActiveAbility?(:MEGASOL)
     case target.effectiveWeather
     when :Sun, :HarshSun
       return 50
@@ -641,6 +742,33 @@ class Battle::Move::ConfuseTargetAlwaysHitsInRainHitsTargetInSky < Battle::Move:
       return 0
     end
     return super
+  end
+end
+
+#===============================================================================
+# Confuses the target. If attack misses, user takes crash damage of 1/2 of max
+# HP. (Axe Kick)
+#===============================================================================
+class Battle::Move::ConfuseTargetCrashDamageIfFails < Battle::Move::ConfuseTarget
+  def recoilMove?; return true; end
+
+  def pbCrashDamage(user)
+    return if !user.takesIndirectDamage?
+    @battle.pbDisplay(_INTL("{1} kept going and crashed!", user.pbThis))
+    @battle.visuals.pbDamageAnimation(user)
+    user.pbReduceHP(user.totalhp / 2, false)
+    user.pbItemHPHealCheck
+    user.pbFaint if user.fainted?
+  end
+end
+
+#===============================================================================
+# Confuses the target if the target's stat(s) were raised earlier this turn.
+# (Alluring Voice)
+#===============================================================================
+class Battle::Move::ConfuseTargetIfTargetStatsRaisedThisTurn < Battle::Move::ConfuseTarget
+  def pbAdditionalEffect(user, target)
+    super if target.statsRaisedThisRound
   end
 end
 
@@ -663,6 +791,7 @@ class Battle::Move::AttractTarget < Battle::Move
   end
 
   def pbAdditionalEffect(user, target)
+    return if !target.affectedByAdditionalEffects?
     return if target.damageState.substitute
     target.pbAttract(user) if target.pbCanAttract?(user, false)
   end
@@ -950,6 +1079,27 @@ class Battle::Move::UserLosesFireType < Battle::Move
 end
 
 #===============================================================================
+# User loses their Electric type. Fails if user is not Electric-type.
+# (Double Shock)
+#===============================================================================
+class Battle::Move::UserLosesElectricType < Battle::Move
+  def pbMoveFailed?(user, targets)
+    if !user.pbHasType?(:ELECTRIC)
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectAfterAllHits(user, target)
+    if !user.effects[PBEffects::DoubleShock]
+      user.effects[PBEffects::DoubleShock] = true
+      @battle.pbDisplay(_INTL("{1} used up all its electricity!", user.pbThis))
+    end
+  end
+end
+
+#===============================================================================
 # Target's ability becomes Simple. (Simple Beam)
 #===============================================================================
 class Battle::Move::SetTargetAbilityToSimple < Battle::Move
@@ -964,7 +1114,7 @@ class Battle::Move::SetTargetAbilityToSimple < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    if target.unstoppableAbility? || [:TRUANT, :SIMPLE].include?(target.ability_id)
+    if target.unlosableAbility? || [:SIMPLE, :TRUANT].include?(target.ability_id)
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -998,7 +1148,7 @@ class Battle::Move::SetTargetAbilityToInsomnia < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    if target.unstoppableAbility? || [:TRUANT, :INSOMNIA].include?(target.ability_id)
+    if target.unlosableAbility? || [:INSOMNIA, :TRUANT].include?(target.ability_id)
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -1024,7 +1174,7 @@ class Battle::Move::SetUserAbilityToTargetAbility < Battle::Move
   def ignoresSubstitute?(user); return true; end
 
   def pbMoveFailed?(user, targets)
-    if user.unstoppableAbility?
+    if user.unlosableAbility?
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -1037,7 +1187,7 @@ class Battle::Move::SetUserAbilityToTargetAbility < Battle::Move
       return true
     end
     if target.ungainableAbility? ||
-       [:POWEROFALCHEMY, :RECEIVER, :TRACE, :WONDERGUARD].include?(target.ability_id)
+       [:HADRONENGINE, :ORICHALCUMPULSE].include?(target.ability_id)
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -1049,11 +1199,68 @@ class Battle::Move::SetUserAbilityToTargetAbility < Battle::Move
     oldAbil = user.ability
     user.ability = target.ability
     @battle.pbReplaceAbilitySplash(user)
-    @battle.pbDisplay(_INTL("{1} copied {2}'s {3}!",
-                            user.pbThis, target.pbThis(true), target.abilityName))
+    @battle.pbDisplay(_INTL("{1} copied {2} {3}!",
+                            user.pbThis, target.pbOfThis(true), target.abilityName))
     @battle.pbHideAbilitySplash(user)
     user.pbOnLosingAbility(oldAbil)
     user.pbTriggerAbilityOnGainingIt
+  end
+end
+
+#===============================================================================
+# User and user's allies copy target's ability. (Doodle)
+#===============================================================================
+class Battle::Move::SetUserAndAlliesAbilityToTargetAbility < Battle::Move
+  def ignoresSubstitute?(user); return true; end
+
+  def pbDetermineValidTargets(user)
+    @valid_targets = [user] + user.allAllies
+    @valid_targets.delete_if { |battler| battler.unlosableAbility? }
+  end
+
+  def pbMoveFailed?(user, targets)
+    pbDetermineValidTargets(user)
+    failed = true
+    if @valid_targets.empty?
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbFailsAgainstTarget?(user, target, show_message)
+    if !target.ability
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    @valid_targets.delete_if { |battler| battler.ability_id == target.ability_id }
+    if @valid_targets.empty?
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    if target.ungainableAbility? ||
+       [:HADRONENGINE, :ORICHALCUMPULSE].include?(target.ability_id)
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
+      return true
+    end
+    return false
+  end
+
+  def pbEffectAgainstTarget(user, target)
+    old_abils = []
+    # Change all abilities
+    @valid_targets.each do |battler|
+      old_abils[battler.index] = battler.ability
+      @battle.pbShowAbilitySplash(battler, true, false)
+      battler.ability = target.ability
+      @battle.pbReplaceAbilitySplash(battler)
+      @battle.pbDisplay(_INTL("{1} copied {2} {3}!",
+                              battler.pbThis, target.pbOfThis(true), target.abilityName))
+      @battle.pbHideAbilitySplash(battler)
+    end
+    # Effects after abilities were changed
+    @valid_targets.each { |battler| battler.pbOnLosingAbility(old_abils[battler.index]) }
+    @valid_targets.each { |battler| battler.pbTriggerAbilityOnGainingIt }
   end
 end
 
@@ -1068,8 +1275,7 @@ class Battle::Move::SetTargetAbilityToUserAbility < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
-    if user.ungainableAbility? ||
-       [:POWEROFALCHEMY, :RECEIVER, :TRACE].include?(user.ability_id)
+    if user.ungainableAbility?
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -1077,7 +1283,8 @@ class Battle::Move::SetTargetAbilityToUserAbility < Battle::Move
   end
 
   def pbFailsAgainstTarget?(user, target, show_message)
-    if target.unstoppableAbility? || target.ability == :TRUANT
+    if target.unlosableAbility? ||
+       [:HADRONENGINE, :ORICHALCUMPULSE, :TRUANT].include?(target.ability_id)
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -1107,11 +1314,12 @@ class Battle::Move::UserTargetSwapAbilities < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
-    if user.unstoppableAbility?
+    if user.unlosableAbility?
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
-    if user.ungainableAbility? || user.ability == :WONDERGUARD
+    if user.ungainableAbility? ||
+       [:HADRONENGINE, :ORICHALCUMPULSE].include?(user.ability_id)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
     end
@@ -1124,11 +1332,12 @@ class Battle::Move::UserTargetSwapAbilities < Battle::Move
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
-    if target.unstoppableAbility?
+    if target.unlosableAbility?
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
-    if target.ungainableAbility? || target.ability == :WONDERGUARD
+    if target.ungainableAbility? ||
+       [:HADRONENGINE, :ORICHALCUMPULSE].include?(target.ability_id)
       @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
@@ -1148,7 +1357,7 @@ class Battle::Move::UserTargetSwapAbilities < Battle::Move
       @battle.pbReplaceAbilitySplash(user)
       @battle.pbReplaceAbilitySplash(target)
     end
-    if Battle::Scene::USE_ABILITY_SPLASH
+    if Battle::Visuals::USE_ABILITY_SPLASH
       @battle.pbDisplay(_INTL("{1} swapped Abilities with its target!", user.pbThis))
     else
       @battle.pbDisplay(_INTL("{1} swapped its {2} Ability with its target's {3} Ability!",
@@ -1182,7 +1391,7 @@ class Battle::Move::NegateTargetAbility < Battle::Move
   def pbEffectAgainstTarget(user, target)
     target.effects[PBEffects::GastroAcid] = true
     target.effects[PBEffects::Truant]     = false
-    @battle.pbDisplay(_INTL("{1}'s Ability was suppressed!", target.pbThis))
+    @battle.pbDisplay(_INTL("{1} Ability was suppressed!", target.pbOfThis))
     target.pbOnLosingAbility(target.ability, true)
   end
 end
@@ -1200,7 +1409,7 @@ class Battle::Move::NegateTargetAbilityIfTargetActed < Battle::Move
               @battle.choices[target.index][0] == :Shift) && target.movedThisRound?)
     target.effects[PBEffects::GastroAcid] = true
     target.effects[PBEffects::Truant]     = false
-    @battle.pbDisplay(_INTL("{1}'s Ability was suppressed!", target.pbThis))
+    @battle.pbDisplay(_INTL("{1} Ability was suppressed!", target.pbOfThis))
     target.pbOnLosingAbility(target.ability, true)
   end
 end
@@ -1213,6 +1422,16 @@ class Battle::Move::IgnoreTargetAbility < Battle::Move
   def pbChangeUsageCounters(user, specialUsage)
     super
     @battle.moldBreaker = true if !specialUsage
+  end
+end
+
+#===============================================================================
+# Until the user next acts, attacks against it are certain to hit and do double
+# damage. (Glaive Rush)
+#===============================================================================
+class Battle::Move::UserVulnerableUntilNextAction < Battle::Move
+  def pbEffectAgainstTarget(user, target)
+    user.effects[PBEffects::Vulnerable] = true if !target.damageState.unaffected
   end
 end
 
@@ -1301,6 +1520,7 @@ class Battle::Move::HitsTargetInSkyGroundsTarget < Battle::Move
                                "TwoTurnAttackInvulnerableInSkyParalyzeTarget")   # NOTE: Not Sky Drop.
       target.effects[PBEffects::TwoTurnAttack] = nil
       @battle.pbClearChoice(target.index) if !target.movedThisRound?
+      @battle.visuals.pbForceBattlerInvisibility(target.index, false)
     end
     target.effects[PBEffects::MagnetRise]  = 0
     target.effects[PBEffects::Telekinesis] = 0
@@ -1324,13 +1544,14 @@ class Battle::Move::StartGravity < Battle::Move
   def pbEffectGeneral(user)
     @battle.field.effects[PBEffects::Gravity] = 5
     @battle.pbDisplay(_INTL("Gravity intensified!"))
-    @battle.allBattlers.each do |b|
+    @battle.allBattlers(true).each do |b|
       showMessage = false
       if b.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
                             "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
                             "TwoTurnAttackInvulnerableInSkyTargetCannotAct")
         b.effects[PBEffects::TwoTurnAttack] = nil
         @battle.pbClearChoice(b.index) if !b.movedThisRound?
+        @battle.visuals.pbForceBattlerInvisibility(target.index, false)
         showMessage = true
       end
       if b.effects[PBEffects::MagnetRise] > 0 ||
@@ -1345,6 +1566,18 @@ class Battle::Move::StartGravity < Battle::Move
         @battle.pbDisplay(_INTL("{1} couldn't stay airborne because of gravity!", b.pbThis))
       end
     end
+  end
+end
+
+#===============================================================================
+# The target takes 1/8 of its total HP as damage at the end of the round (or
+# double that if the target is Steel or Water type). (Salt Cure)
+#===============================================================================
+class Battle::Move::StartSaltCureTarget < Battle::Move
+  def pbEffectAgainstTarget(user, target)
+    return if !target.affectedByAdditionalEffects?
+    target.effects[PBEffects::SaltCure] = true
+    @battle.pbDisplay(_INTL("{1} is being salt cured}!", target.pbThis))
   end
 end
 
@@ -1375,6 +1608,6 @@ class Battle::Move::TransformUserIntoTarget < Battle::Move
 
   def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)
     super
-    @battle.scene.pbChangePokemon(user, targets[0].pokemon)
+    @battle.visuals.pbChangePokemon(user, targets[0].pokemon)
   end
 end

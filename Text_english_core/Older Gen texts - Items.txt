@@ -1,0 +1,500 @@
+﻿# To localize this text for a particular language, please
+# translate every second line of this file.
+#-------------------------------
+[ITEM_NAMES]
+Ylw Apricorn
+Ylw Apricorn
+Blu Apricorn
+Blu Apricorn
+Grn Apricorn
+Grn Apricorn
+Pnk Apricorn
+Pnk Apricorn
+Wht Apricorn
+Wht Apricorn
+Blk Apricorn
+Blk Apricorn
+Pretty Wing
+Pretty Wing
+Health Wing
+Health Wing
+Muscle Wing
+Muscle Wing
+Resist Wing
+Resist Wing
+Genius Wing
+Genius Wing
+Clever Wing
+Clever Wing
+Swift Wing
+Swift Wing
+Stick
+Stick
+Up-Grade
+Up-Grade
+TM01
+TM01
+TM02
+TM02
+TM03
+TM03
+TM04
+TM04
+TM05
+TM05
+TM06
+TM06
+TM07
+TM07
+TM08
+TM08
+TM09
+TM09
+TM10
+TM10
+TM11
+TM11
+TM12
+TM12
+TM13
+TM13
+TM14
+TM14
+TM15
+TM15
+TM16
+TM16
+TM17
+TM17
+TM18
+TM18
+TM19
+TM19
+TM20
+TM20
+TM21
+TM21
+TM22
+TM22
+TM23
+TM23
+TM24
+TM24
+TM25
+TM25
+TM26
+TM26
+TM27
+TM27
+TM28
+TM28
+TM29
+TM29
+TM30
+TM30
+TM31
+TM31
+TM32
+TM32
+TM33
+TM33
+TM34
+TM34
+TM35
+TM35
+TM36
+TM36
+TM37
+TM37
+TM38
+TM38
+TM39
+TM39
+TM40
+TM40
+TM41
+TM41
+TM42
+TM42
+TM43
+TM43
+TM44
+TM44
+TM45
+TM45
+TM46
+TM46
+TM47
+TM47
+TM48
+TM48
+TM49
+TM49
+TM50
+TM50
+TM51
+TM51
+TM52
+TM52
+TM53
+TM53
+TM54
+TM54
+TM55
+TM55
+TM56
+TM56
+TM57
+TM57
+TM58
+TM58
+TM59
+TM59
+TM60
+TM60
+TM61
+TM61
+TM62
+TM62
+TM63
+TM63
+TM64
+TM64
+TM65
+TM65
+TM66
+TM66
+TM67
+TM67
+TM68
+TM68
+TM69
+TM69
+TM70
+TM70
+TM71
+TM71
+TM72
+TM72
+TM73
+TM73
+TM74
+TM74
+TM75
+TM75
+TM76
+TM76
+TM77
+TM77
+TM78
+TM78
+TM79
+TM79
+TM80
+TM80
+TM81
+TM81
+TM82
+TM82
+TM83
+TM83
+TM84
+TM84
+TM85
+TM85
+TM86
+TM86
+TM87
+TM87
+TM88
+TM88
+TM89
+TM89
+TM90
+TM90
+TM91
+TM91
+TM92
+TM92
+TM93
+TM93
+TM94
+TM94
+TM95
+TM95
+TM96
+TM96
+TM97
+TM97
+TM98
+TM98
+TM99
+TM99
+#-------------------------------
+[ITEM_NAME_PLURALS]
+Ylw Apricorns
+Ylw Apricorns
+Blu Apricorns
+Blu Apricorns
+Grn Apricorns
+Grn Apricorns
+Pnk Apricorns
+Pnk Apricorns
+Wht Apricorns
+Wht Apricorns
+Blk Apricorns
+Blk Apricorns
+Pretty Wings
+Pretty Wings
+Health Wings
+Health Wings
+Muscle Wings
+Muscle Wings
+Resist Wings
+Resist Wings
+Genius Wings
+Genius Wings
+Clever Wings
+Clever Wings
+Swift Wings
+Swift Wings
+Sticks
+Sticks
+Up-Grades
+Up-Grades
+TM01s
+TM01s
+TM02s
+TM02s
+TM03s
+TM03s
+TM04s
+TM04s
+TM05s
+TM05s
+TM06s
+TM06s
+TM07s
+TM07s
+TM08s
+TM08s
+TM09s
+TM09s
+TM10s
+TM10s
+TM11s
+TM11s
+TM12s
+TM12s
+TM13s
+TM13s
+TM14s
+TM14s
+TM15s
+TM15s
+TM16s
+TM16s
+TM17s
+TM17s
+TM18s
+TM18s
+TM19s
+TM19s
+TM20s
+TM20s
+TM21s
+TM21s
+TM22s
+TM22s
+TM23s
+TM23s
+TM24s
+TM24s
+TM25s
+TM25s
+TM26s
+TM26s
+TM27s
+TM27s
+TM28s
+TM28s
+TM29s
+TM29s
+TM30s
+TM30s
+TM31s
+TM31s
+TM32s
+TM32s
+TM33s
+TM33s
+TM34s
+TM34s
+TM35s
+TM35s
+TM36s
+TM36s
+TM37s
+TM37s
+TM38s
+TM38s
+TM39s
+TM39s
+TM40s
+TM40s
+TM41s
+TM41s
+TM42s
+TM42s
+TM43s
+TM43s
+TM44s
+TM44s
+TM45s
+TM45s
+TM46s
+TM46s
+TM47s
+TM47s
+TM48s
+TM48s
+TM49s
+TM49s
+TM50s
+TM50s
+TM51s
+TM51s
+TM52s
+TM52s
+TM53s
+TM53s
+TM54s
+TM54s
+TM55s
+TM55s
+TM56s
+TM56s
+TM57s
+TM57s
+TM58s
+TM58s
+TM59s
+TM59s
+TM60s
+TM60s
+TM61s
+TM61s
+TM62s
+TM62s
+TM63s
+TM63s
+TM64s
+TM64s
+TM65s
+TM65s
+TM66s
+TM66s
+TM67s
+TM67s
+TM68s
+TM68s
+TM69s
+TM69s
+TM70s
+TM70s
+TM71s
+TM71s
+TM72s
+TM72s
+TM73s
+TM73s
+TM74s
+TM74s
+TM75s
+TM75s
+TM76s
+TM76s
+TM77s
+TM77s
+TM78s
+TM78s
+TM79s
+TM79s
+TM80s
+TM80s
+TM81s
+TM81s
+TM82s
+TM82s
+TM83s
+TM83s
+TM84s
+TM84s
+TM85s
+TM85s
+TM86s
+TM86s
+TM87s
+TM87s
+TM88s
+TM88s
+TM89s
+TM89s
+TM90s
+TM90s
+TM91s
+TM91s
+TM92s
+TM92s
+TM93s
+TM93s
+TM94s
+TM94s
+TM95s
+TM95s
+TM96s
+TM96s
+TM97s
+TM97s
+TM98s
+TM98s
+TM99s
+TM99s
+#-------------------------------
+[ITEM_DESCRIPTIONS]
+A flute made from black glass. It makes wild Pokémon less likely to appear.
+A flute made from black glass. It makes wild Pokémon less likely to appear.
+A flute made from white glass. It makes wild Pokémon more likely to appear.
+A flute made from white glass. It makes wild Pokémon more likely to appear.
+A spray-type medicine for treating wounds. It can be used to restore 50 HP to a Pokémon.
+A spray-type medicine for treating wounds. It can be used to restore 50 HP to a Pokémon.
+A spray-type medicine for treating wounds. It can be used to restore 200 HP to a Pokémon.
+A spray-type medicine for treating wounds. It can be used to restore 200 HP to a Pokémon.
+Mahogany Town's famous candy. It can be used to restore 20 HP to a Pokémon.
+Mahogany Town's famous candy. It can be used to restore 20 HP to a Pokémon.
+Water with high mineral content. It can be used to restore 50 HP to a Pokémon.
+Water with high mineral content. It can be used to restore 50 HP to a Pokémon.
+A highly carbonated soda drink. It can be used to restore 60 HP to a Pokémon.
+A highly carbonated soda drink. It can be used to restore 60 HP to a Pokémon.
+A very sweet and refreshing drink. It can be used to restore 80 HP to a Pokémon.
+A very sweet and refreshing drink. It can be used to restore 80 HP to a Pokémon.
+A very bitter medicinal powder. It can be used to restore 50 HP to a Pokémon.
+A very bitter medicinal powder. It can be used to restore 50 HP to a Pokémon.
+A very bitter medicinal root. It can be used to restore 200 HP to a Pokémon.
+A very bitter medicinal root. It can be used to restore 200 HP to a Pokémon.
+When the holder changes the weather to hail, the hail will persist for longer than usual.
+When the holder changes the weather to hail, the hail will persist for longer than usual.
+A wondrous orb to be held by Latios or Latias. It boosts their Sp. Atk and Sp. Def stats.
+A wondrous orb to be held by Latios or Latias. It boosts their Sp. Atk and Sp. Def stats.
+An item that raises the Attack stat of a Pokémon in battle.
+An item that raises the Attack stat of a Pokémon in battle.
+An item that raises the Defense stat of a Pokémon in battle.
+An item that raises the Defense stat of a Pokémon in battle.
+An item that raises the Sp. Atk stat of a Pokémon in battle.
+An item that raises the Sp. Atk stat of a Pokémon in battle.
+An item that raises the Sp. Def stat of a Pokémon in battle.
+An item that raises the Sp. Def stat of a Pokémon in battle.
+An item that raises the Speed stat of a Pokémon in battle.
+An item that raises the Speed stat of a Pokémon in battle.
+An item that raises a Pokémon's accuracy in battle.
+An item that raises a Pokémon's accuracy in battle.

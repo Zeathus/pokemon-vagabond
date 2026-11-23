@@ -1,5 +1,5 @@
 #===============================================================================
-# Hidden move handlers
+# Hidden move handlers.
 #===============================================================================
 module HiddenMoveHandlers
   CanUseMove     = MoveHandlerHash.new
@@ -12,6 +12,11 @@ module HiddenMoveHandlers
 
   def self.hasHandler(item)
     return !CanUseMove[item].nil? && !UseMove[item].nil?
+  end
+
+  def self.eachHandler
+    ret = CanUseMove.keys & UseMove.keys
+    ret.each { |key| yield key }
   end
 
   # Returns whether move can be used
@@ -64,12 +69,12 @@ def pbCheckHiddenMoveBadge(badge = -1, showmsg = true)
 end
 
 #===============================================================================
-# Hidden move animation
+# Hidden move animation.
 #===============================================================================
 def pbHiddenMoveAnimation(pokemon)
   return false if !pokemon
   viewport = Viewport.new(0, 0, Graphics.width, 0)
-  viewport.z = 99999
+  viewport.z = 99_999
   # Set up sprites
   bg = Sprite.new(viewport)
   bg.bitmap = RPG::Cache.ui("Field move/bg")
@@ -87,7 +92,7 @@ def pbHiddenMoveAnimation(pokemon)
   15.times do |i|
     strobe = BitmapSprite.new(52, 16, viewport)
     strobe.bitmap.blt(0, 0, strobebitmap.bitmap, Rect.new(0, (i % 2) * 16, 52, 16))
-    strobe.z = (i.even? ? 2 : 0)
+    strobe.z = (i.even?) ? 2 : 0
     strobe.visible = false
     strobes.push(strobe)
   end
@@ -171,7 +176,7 @@ def pbHiddenMoveAnimation(pokemon)
 end
 
 #===============================================================================
-# Cut
+# Cut.
 #===============================================================================
 def pbCut
   move = :CUT
@@ -227,7 +232,7 @@ def pbSmashEvent(event)
 end
 
 #===============================================================================
-# Dig
+# Dig.
 #===============================================================================
 HiddenMoveHandlers::CanUseMove.add(:DIG, proc { |move, pkmn, showmsg|
   escape = ($PokemonGlobal.escapePoint rescue nil)
@@ -276,7 +281,7 @@ HiddenMoveHandlers::UseMove.add(:DIG, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Dive
+# Dive.
 #===============================================================================
 def pbDive
   map_metadata = $game_map.metadata
@@ -424,7 +429,7 @@ HiddenMoveHandlers::UseMove.add(:DIVE, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Flash
+# Flash.
 #===============================================================================
 HiddenMoveHandlers::CanUseMove.add(:FLASH, proc { |move, pkmn, showmsg|
   next false if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_FLASH, showmsg)
@@ -456,7 +461,7 @@ HiddenMoveHandlers::UseMove.add(:FLASH, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Fly
+# Fly.
 #===============================================================================
 def pbCanFly?(pkmn = nil, show_messages = false)
   return false if !pbCheckHiddenMoveBadge(Settings::BADGE_FOR_FLY, show_messages)
@@ -521,7 +526,7 @@ HiddenMoveHandlers::UseMove.add(:FLY, proc { |move, pkmn|
 })
 
 #===============================================================================
-# Headbutt
+# Headbutt.
 #===============================================================================
 def pbHeadbuttEffect(event = nil)
   pbSEPlay("Headbutt")
@@ -587,7 +592,7 @@ HiddenMoveHandlers::UseMove.add(:HEADBUTT, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Rock Smash
+# Rock Smash.
 #===============================================================================
 def pbRockSmashRandomEncounter
   if $PokemonEncounters.encounter_triggered?(:RockSmash, false, false)
@@ -637,7 +642,7 @@ HiddenMoveHandlers::UseMove.add(:ROCKSMASH, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Strength
+# Strength.
 #===============================================================================
 def pbStrength
   if $PokemonMap.strengthUsed
@@ -688,7 +693,7 @@ HiddenMoveHandlers::UseMove.add(:STRENGTH, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Surf
+# Surf.
 #===============================================================================
 def pbSurf(confirm = true, edge = false, down = false)
   return false if $game_player.pbFacingEvent
@@ -868,7 +873,7 @@ HiddenMoveHandlers::UseMove.add(:SURF, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Sweet Scent
+# Sweet Scent.
 #===============================================================================
 def pbSweetScent
   if $game_screen.weather_type != :None
@@ -876,7 +881,7 @@ def pbSweetScent
     return
   end
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = 99999
+  viewport.z = 99_999
   viewport.color.red   = 255
   viewport.color.green = 32
   viewport.color.blue  = 32
@@ -914,7 +919,7 @@ HiddenMoveHandlers::UseMove.add(:SWEETSCENT, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Teleport
+# Teleport.
 #===============================================================================
 HiddenMoveHandlers::CanUseMove.add(:TELEPORT, proc { |move, pkmn, showmsg|
   if !$game_map.metadata&.outdoor_map
@@ -971,7 +976,7 @@ HiddenMoveHandlers::UseMove.add(:TELEPORT, proc { |move, pokemon|
 })
 
 #===============================================================================
-# Waterfall
+# Waterfall.
 #===============================================================================
 # Starts the ascending of a waterfall.
 def pbAscendWaterfall

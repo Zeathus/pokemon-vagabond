@@ -1,7 +1,8 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle::Battler
-  #=============================================================================
-  # Effect per hit
-  #=============================================================================
+  # Effect per hit.
   def pbEffectsOnMakingHit(move, user, target)
     if target.damageState.calcDamage > 0 && !target.damageState.substitute
       # Target's ability
@@ -18,12 +19,13 @@ class Battle::Battler
         #       target Cramorant attacking the user) and the ability splash
         #       shouldn't be shown.
         @battle.pbShowAbilitySplash(target)
+        target_form = target.form
         target.pbChangeForm(0, nil)
-        if user.takesIndirectDamage?(Battle::Scene::USE_ABILITY_SPLASH)
-          @battle.scene.pbDamageAnimation(user)
+        if user.takesIndirectDamage?(Battle::Visuals::USE_ABILITY_SPLASH)
+          @battle.visuals.pbDamageAnimation(user)
           user.pbReduceHP(user.totalhp / 4, false)
         end
-        case target.form
+        case target_form
         when 1   # Gulping Form
           user.pbLowerStatStageByAbility(:DEFENSE, 1, target, false)
         when 2   # Gorging Form
@@ -52,12 +54,12 @@ class Battle::Battler
       # Rage
       if target.effects[PBEffects::Rage] && !target.fainted? &&
          target.pbCanRaiseStatStage?(:ATTACK, target)
-        @battle.pbDisplay(_INTL("{1}'s rage is building!", target.pbThis))
+        @battle.pbDisplay(_INTL("{1} rage is building!", target.pbOfThis))
         target.pbRaiseStatStage(:ATTACK, 1, target)
       end
       # Beak Blast
       if target.effects[PBEffects::BeakBlast]
-        PBDebug.log("[Lingering effect] #{target.pbThis}'s Beak Blast")
+        PBDebug.log("[Lingering effect] #{target.pbOfThis} Beak Blast")
         if move.pbContactMove?(user) && user.affectedByContactEffect? &&
            user.pbCanBurn?(target, false, self)
           user.pbBurn(target)
@@ -74,8 +76,8 @@ class Battle::Battler
       # Grudge
       if target.effects[PBEffects::Grudge] && target.fainted?
         user.pbSetPP(move, 0)
-        @battle.pbDisplay(_INTL("{1}'s {2} lost all of its PP due to the grudge!",
-                                user.pbThis, move.name))
+        @battle.pbDisplay(_INTL("{1} {2} lost all of its PP due to the grudge!",
+                                user.pbOfThis, move.name))
       end
       # Destiny Bond (recording that it should apply)
       if target.effects[PBEffects::DestinyBond] && target.fainted? &&
@@ -89,9 +91,7 @@ class Battle::Battler
     end
   end
 
-  #=============================================================================
-  # Effects after all hits (i.e. at end of move usage)
-  #=============================================================================
+  # Effects after all hits (i.e. at end of move usage).
   def pbEffectsAfterMove(user, targets, move, numHits)
     # Defrost
     if move.damagingMove?
@@ -132,33 +132,29 @@ class Battle::Battler
     if !user.fainted? && !user.effects[PBEffects::Transform] &&
        !@battle.pbAllFainted?(user.idxOpposingSide)
       # Greninja - Battle Bond
-      if user.isSpecies?(:GRENINJA) && user.ability == :BATTLEBOND &&
-         !@battle.battleBond[user.index & 1][user.pokemonIndex]
-        numFainted = 0
-        targets.each { |b| numFainted += 1 if b.damageState.fainted }
-        if numFainted > 0 && user.form == 1
-          @battle.battleBond[user.index & 1][user.pokemonIndex] = true
-          @battle.pbDisplay(_INTL("{1} became fully charged due to its bond with its Trainer!", user.pbThis))
-          @battle.pbShowAbilitySplash(user, true)
-          @battle.pbHideAbilitySplash(user)
-          user.pbChangeForm(2, _INTL("{1} became Ash-Greninja!", user.pbThis))
-        end
+      if user.isSpecies?(:GRENINJA) && user.form == 1 &&
+         !Settings::GRENINJA_BATTLE_BOND_RAISES_STATS &&
+         user.ability == :BATTLEBOND && !user.abilityUsedOnce? &&
+         targets.any? { |target| target.damageState.fainted }
+        user.markAbilityUsedOnce
+        @battle.pbDisplay(_INTL("{1} became fully charged due to its bond with its Trainer!", user.pbThis))
+        @battle.pbShowAbilitySplash(user, true)
+        @battle.pbHideAbilitySplash(user)
+        user.pbChangeForm(2, _INTL("{1} became Ash-Greninja!", user.pbThis))
       end
       # Cramorant = Gulp Missile
-      if user.isSpecies?(:CRAMORANT) && user.ability == :GULPMISSILE && user.form == 0 &&
+      if user.isSpecies?(:CRAMORANT) && user.ability == :GULPMISSILE &&
+         user.form == 0 && !user.effects[PBEffects::Transform] &&
          ((move.id == :SURF && numHits > 0) || (move.id == :DIVE && move.chargingTurn))
         # NOTE: Intentionally no ability splash or message here.
         user.pbChangeForm((user.hp > user.totalhp / 2) ? 1 : 2, nil)
       end
     end
     # Room Service
-    if move.function_code == "StartSlowerBattlersActFirst" && @battle.field.effects[PBEffects::TrickRoom] > 0
+    if move.function_code == "StartSlowerBattlersActFirst"
       @battle.allBattlers.each do |b|
-        next if !b.hasActiveItem?(:ROOMSERVICE)
-        next if !b.pbCanLowerStatStage?(:SPEED)
-        @battle.pbCommonAnimation("UseItem", b)
-        b.pbLowerStatStage(:SPEED, 1, nil)
-        b.pbConsumeItem
+        next if !b.itemActive?
+        Battle::ItemEffects.triggerOnTrickRoomStarted(b.item, b, @battle)
       end
     end
     # Consume user's Gem
@@ -180,6 +176,7 @@ class Battle::Battler
     if !switched_battlers.include?(user.index)
       move.pbEndOfMoveUsageEffect(user, targets, numHits, switched_battlers)
     end
+    @battle.checkStatChangeResponses
     # User's ability/item that switches the user out (all negated by Sheer Force)
     if !(user.hasActiveAbility?(:SHEERFORCE) && move.addlEffect > 0)
       pbEffectsAfterMove3(user, targets, move, numHits, switched_battlers)

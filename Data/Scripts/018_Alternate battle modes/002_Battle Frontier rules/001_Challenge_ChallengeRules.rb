@@ -108,8 +108,8 @@ class PokemonChallengeRules
     return self
   end
 
-  def createBattle(scene, trainer1, trainer2)
-    battle = @battletype.pbCreateBattle(scene, trainer1, trainer2)
+  def createBattle(visuals, trainer1, trainer2)
+    battle = @battletype.pbCreateBattle(visuals, trainer1, trainer2)
     @battlerules.each do |p|
       p.setRule(battle)
     end
@@ -118,7 +118,7 @@ class PokemonChallengeRules
 end
 
 #===============================================================================
-# Stadium Cups rules
+# Stadium Cups rules.
 #===============================================================================
 def pbPikaCupRules(double)
   ret = PokemonChallengeRules.new
@@ -213,7 +213,7 @@ def pbStrictLittleCupRules(double)
 end
 
 #===============================================================================
-# Battle Frontier rules
+# Battle Frontier rules.
 #===============================================================================
 def pbBattleTowerRules(double, openlevel)
   ret = PokemonChallengeRules.new
@@ -256,7 +256,7 @@ def pbBattleFactoryRules(double, openlevel)
 end
 
 #===============================================================================
-# Other Interesting Rulesets
+# Other Interesting Rulesets.
 #===============================================================================
 =begin
 # Official Species Restriction

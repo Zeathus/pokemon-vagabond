@@ -2,6 +2,8 @@
 # Evolution screen
 #===============================================================================
 class PokemonEvolutionScene
+  EVOLUTION_BGM = "Evolution"
+
   def self.pbDuplicatePokemon(pkmn, new_species)
     new_pkmn = pkmn.clone
     new_pkmn.species   = new_species
@@ -24,11 +26,11 @@ class PokemonEvolutionScene
     @newspecies = newspecies
     @sprites = {}
     @bgviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @bgviewport.z = 99999
+    @bgviewport.z = 99_999
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @msgviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @msgviewport.z = 99999
+    @msgviewport.z = 99_999
     addBackgroundOrColoredPlane(@sprites, "background", "evolution_bg",
                                 Color.new(248, 248, 248), @bgviewport)
     rsprite1 = PokemonSprite.new(@viewport)
@@ -95,7 +97,7 @@ class PokemonEvolutionScene
       break if System.uptime - timer_start >= 1
     end
     pbMEPlay("Evolution start")
-    pbBGMPlay("Evolution")
+    pbBGMPlay(EVOLUTION_BGM)
     canceled = false
     timer_start = System.uptime
     loop do
@@ -226,7 +228,7 @@ class PokemonEvolutionScene
     moves_to_learn = []
     movelist = @pokemon.getMoveList
     movelist.each do |i|
-      next if i[0] != 0 && i[0] != @pokemon.level   # 0 is "learn upon evolution"
+      next if ![0, @pokemon.level].include?(i[0])   # 0 is "learn upon evolution"
       moves_to_learn.push(i[1])
     end
     # Show Pokédex entry for new species if it hasn't been owned before
@@ -236,9 +238,7 @@ class PokemonEvolutionScene
                        _INTL("{1}'s data was added to the Pokédex.", newspeciesname)) { pbUpdate }
       $player.pokedex.register_last_seen(@pokemon)
       pbFadeOutIn do
-        scene = PokemonPokedexInfo_Scene.new
-        screen = PokemonPokedexInfoScreen.new(scene)
-        screen.pbDexEntry(@pokemon.species)
+        pbShowPokedexEntry(@pokemon.species, true, true)
         @sprites["msgwindow"].text = "" if moves_to_learn.length > 0
         pbEndScreen(false) if moves_to_learn.length == 0
       end

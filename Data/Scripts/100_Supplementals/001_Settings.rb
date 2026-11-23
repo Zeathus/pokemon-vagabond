@@ -1,24 +1,8 @@
 module Supplementals
-  #=============================================================================
-  ### UI ###
-  #=============================================================================
 
-  # Pockets and additional info for the Supplementals Bag screen, featuring favorites
-  def self.bag_pocket_names
-    return [
-      _INTL("Items"),
-      _INTL("Medicine"),
-      _INTL("Poké Balls"),
-      _INTL("Held Items"),
-      _INTL("Favorites"),
-      _INTL("Battle Items"),
-      _INTL("TMs & HMs"),
-      _INTL("Berries"),
-      _INTL("Key Items")
-    ]
-  end
-  BAG_MAX_POCKET_SIZE = [-1, -1, -1, -1, -1, -1, -1, -1, -1]
-  BAG_POCKET_AUTO_SORT = [false, false, false, false, false, false, true, false, false]
+  # If true, you can hold all four diretional keys down at once when pressing F9
+  # to toggle Debug-mode on or off
+  ENABLE_DEBUG_TOGGLE = true
 
   #=============================================================================
   ### OVERWORLD OPTIONS ###

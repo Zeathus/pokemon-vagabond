@@ -1,17 +1,18 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle::Battler
-  #=============================================================================
   # Decide whether the trainer is allowed to tell the Pokémon to use the given
   # move. Called when choosing a command for the round.
   # Also called when processing the Pokémon's action, because these effects also
   # prevent Pokémon action. Relevant because these effects can become active
   # earlier in the same round (after choosing the command but before using the
   # move) or an unusable move may be called by another move such as Metronome.
-  #=============================================================================
   def pbCanChooseMove?(move, commandPhase, showMessages = true, specialUsage = false)
     # Disable
     if @effects[PBEffects::DisableMove] == move.id && !specialUsage
       if showMessages
-        msg = _INTL("{1}'s {2} is disabled!", pbThis, move.name)
+        msg = _INTL("{1} {2} is disabled!", pbOfThis, move.name)
         (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
       end
       return false
@@ -42,7 +43,8 @@ class Battle::Battler
     end
     # Choice Band/Gorilla Tactics
     @effects[PBEffects::ChoiceBand] = nil if !pbHasMove?(@effects[PBEffects::ChoiceBand])
-    if @effects[PBEffects::ChoiceBand] && move.id != @effects[PBEffects::ChoiceBand]
+    if @effects[PBEffects::ChoiceBand] && move.id != @effects[PBEffects::ChoiceBand] &&
+       move.id != @battle.struggle.id
       choiced_move = GameData::Move.try_get(@effects[PBEffects::ChoiceBand])
       if choiced_move
         if hasActiveItem?([:CHOICEBAND, :CHOICESPECS, :CHOICESCARF])
@@ -78,7 +80,7 @@ class Battle::Battler
       return false
     end
     # Imprison
-    if @battle.allOtherSideBattlers(@index).any? { |b| b.effects[PBEffects::Imprison] && b.pbHasMove?(move.id) }
+    if @battle.allOtherSideBattlers(@index, true).any? { |b| b.effects[PBEffects::Imprison] && b.pbHasMove?(move.id) }
       if showMessages
         msg = _INTL("{1} can't use its sealed {2}!", pbThis, move.name)
         (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
@@ -87,7 +89,8 @@ class Battle::Battler
     end
     # Assault Vest (prevents choosing status moves but doesn't prevent
     # executing them)
-    if hasActiveItem?(:ASSAULTVEST) && move.statusMove? && move.function_code != "UseMoveTargetIsAboutToUse" && commandPhase
+    if hasActiveItem?(:ASSAULTVEST) && move.statusMove? &&
+       move.function_code != "UseMoveTargetIsAboutToUse" && commandPhase
       if showMessages
         msg = _INTL("The effects of the {1} prevent status moves from being used!", itemName)
         (commandPhase) ? @battle.pbDisplayPaused(msg) : @battle.pbDisplay(msg)
@@ -107,9 +110,21 @@ class Battle::Battler
     return true
   end
 
-  #=============================================================================
-  # Obedience check
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
+  def pbMaxLevelBadgeObedience
+    ret = 10 * (@battle.pbPlayer.badge_count + 1)
+    ret = GameData::GrowthRate.max_level if @battle.pbPlayer.badge_count >= 8
+    return ret
+  end
+
+  # This is the inverse of the above method.
+  def pbBadgesNeededToObey
+    return 8 if @level > 80
+    return (@level - 1) / 10
+  end
+
+  # Obedience check.
   # Return true if Pokémon continues attacking (although it may have chosen to
   # use a different move in disobedience), or false if attack stops.
   def pbObedienceCheck?(choice)
@@ -119,8 +134,7 @@ class Battle::Battler
     return true if !@battle.pbOwnedByPlayer?(@index)
     disobedient = false
     # Pokémon may be disobedient; calculate if it is
-    badge_level = 10 * (@battle.pbPlayer.badge_count + 1)
-    badge_level = GameData::GrowthRate.max_level if @battle.pbPlayer.badge_count >= 8
+    badge_level = pbMaxLevelBadgeObedience
     if Settings::ANY_HIGH_LEVEL_POKEMON_CAN_DISOBEY ||
        (Settings::FOREIGN_HIGH_LEVEL_POKEMON_CAN_DISOBEY && @pokemon.foreign?(@battle.pbPlayer))
       if @level > badge_level
@@ -183,12 +197,12 @@ class Battle::Battler
     return false
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
   # Check whether the user (self) is able to take action at all.
   # If this returns true, and if PP isn't a problem, the move will be considered
   # to have been used (even if it then fails for whatever reason).
-  #=============================================================================
-  def pbTryUseMove(choice, move, specialUsage, skipAccuracyCheck)
+  def pbTryUseMove(choice, move, specialUsage, skipStatusFailureChecks)
     # Check whether it's possible for self to use the given move
     # NOTE: Encore has already changed the move being used, no need to have a
     #       check for it here.
@@ -213,7 +227,7 @@ class Battle::Battler
       return false
     end
     # Skip checking all applied effects that could make self fail doing something
-    return true if skipAccuracyCheck
+    return true if skipStatusFailureChecks
     # Check status problems and continue their effects/cure them
     case @status
     when :SLEEP
@@ -301,8 +315,13 @@ class Battle::Battler
     # Infatuation
     if @effects[PBEffects::Attract] >= 0
       @battle.pbCommonAnimation("Attract", self)
-      @battle.pbDisplay(_INTL("{1} is in love with {2}!", pbThis,
-                              @battle.battlers[@effects[PBEffects::Attract]].pbThis(true)))
+      if Translation.more_possessive_messages?
+        @battle.pbDisplay(_INTL("{1} is in love with {2}!", pbThis,
+                                @battle.battlers[@effects[PBEffects::Attract]].pbOfThis(true)))
+      else
+        @battle.pbDisplay(_INTL("{1} is in love with {2}!", pbThis,
+                                @battle.battlers[@effects[PBEffects::Attract]].pbThis(true)))
+      end
       if @battle.pbRandom(100) < 50
         @battle.pbDisplay(_INTL("{1} is immobilized by love!", pbThis))
         PBDebug.log("[Move failed] #{pbThis} is immobilized by love")
@@ -313,27 +332,68 @@ class Battle::Battler
     return true
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
   # Initial success check against the target. Done once before the first hit.
   # Includes move-specific failure conditions, protections and type immunities.
-  #=============================================================================
   def pbSuccessCheckAgainstTarget(move, user, target, targets)
     show_message = move.pbShowFailMessages?(targets)
     typeMod = move.pbCalcTypeMod(move.calcType, user, target)
     target.damageState.typeMod = typeMod
-    # Two-turn attacks can't fail here in the charging turn
-    return true if user.effects[PBEffects::TwoTurnAttack]
+    return true if pbSuccessCheckAgainstTarget_ChargingTurnOfTwoTurnAttack?(move, user, target, targets, typeMod, show_message)
+    return true if pbSuccessCheckAgainstTarget_TargetInvulnerable?(move, user, target, targets, typeMod, show_message)
     # Move-specific failures
     if move.pbFailsAgainstTarget?(user, target, show_message)
       PBDebug.log(sprintf("[Move failed] In function code %s's def pbFailsAgainstTarget?", move.function_code))
       return false
     end
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityByEnvironment?(move, user, target, targets, typeMod, show_message)
+    return false if pbSuccessCheckAgainstTarget_TargetProtected?(move, user, target, targets, typeMod, show_message)
+    # Stop checking for general failure conditions in the first turn of Sky Drop
+    return true if user.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSkyTargetCannotAct")
+    return false if pbSuccessCheckAgainstTarget_TargetMagicCoating?(move, user, target, targets, typeMod, show_message)
+    # NOTE: Immunity due to ability is intentionally checked before immunity due
+    #       to type.
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityByAbility?(move, user, target, targets, typeMod, show_message)
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityByType?(move, user, target, targets, typeMod, show_message)
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityByBeingAirborne?(move, user, target, targets, typeMod, show_message)
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityToPowderMoves?(move, user, target, targets, typeMod, show_message)
+    return false if pbSuccessCheckAgainstTarget_TargetImmunityBySubstitute?(move, user, target, targets, typeMod, show_message)
+    return true
+  end
+
+  # true=success, false=continue
+  def pbSuccessCheckAgainstTarget_ChargingTurnOfTwoTurnAttack?(move, user, target, targets, typeMod, show_message)
+    return false if user.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSkyTargetCannotAct")
+    # Two-turn attacks can't fail here in the charging turn
+    return true if user.effects[PBEffects::TwoTurnAttack]
+    return false
+  end
+
+  # true=success, false=continue
+  def pbSuccessCheckAgainstTarget_TargetInvulnerable?(move, user, target, targets, typeMod, show_message)
+    return false if user.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSkyTargetCannotAct")
+    if !pbSuccessCheckAgainstTarget_CanHitSemiInvulnerableTarget?(move, user, target)
+      PBDebug.log("[Move failed] Target is invulnerable")
+      target.damageState.invulnerable = true
+      return true   # Succeeds here but fails in def pbSuccessCheckPerHit
+    end
+    return false
+  end
+
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityByEnvironment?(move, user, target, targets, typeMod, show_message)
     # Immunity to priority moves because of Psychic Terrain
     if @battle.field.terrain == :Psychic && target.affectedByTerrain? && target.opposes?(user) &&
        @battle.choices[user.index][4] > 0   # Move priority saved from pbCalculatePriority
       @battle.pbDisplay(_INTL("{1} surrounds itself with psychic terrain!", target.pbThis)) if show_message
-      return false
+      return true
     end
+    return false
+  end
+
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetProtected?(move, user, target, targets, typeMod, show_message)
     # Crafty Shield
     if target.pbOwnSide.effects[PBEffects::CraftyShield] && user.index != target.index &&
        move.statusMove? && !move.pbTarget(user).targets_all
@@ -343,9 +403,9 @@ class Battle::Battler
       end
       target.damageState.protected = true
       @battle.successStates[user.index].protected = true
-      return false
+      return true
     end
-    if !(user.hasActiveAbility?(:UNSEENFIST) && move.contactMove?)
+    if !(move.pbContactMove?(user) && user.canMakeContactThroughProtection?)
       # Wide Guard
       if target.pbOwnSide.effects[PBEffects::WideGuard] && user.index != target.index &&
          move.pbTarget(user).num_targets > 1 &&
@@ -356,7 +416,7 @@ class Battle::Battler
         end
         target.damageState.protected = true
         @battle.successStates[user.index].protected = true
-        return false
+        return true
       end
       if move.canProtectAgainst?
         # Quick Guard
@@ -368,7 +428,17 @@ class Battle::Battler
           end
           target.damageState.protected = true
           @battle.successStates[user.index].protected = true
-          return false
+          return true
+        end
+        # Mat Block
+        if target.pbOwnSide.effects[PBEffects::MatBlock] && move.damagingMove?
+          if show_message
+            @battle.pbCommonAnimation("KingsShield", target)
+            @battle.pbDisplay(_INTL("{1} was blocked by the kicked-up mat!", move.name))
+          end
+          target.damageState.protected = true
+          @battle.successStates[user.index].protected = true
+          return true
         end
         # Protect
         if target.effects[PBEffects::Protect]
@@ -378,7 +448,7 @@ class Battle::Battler
           end
           target.damageState.protected = true
           @battle.successStates[user.index].protected = true
-          return false
+          return true
         end
         # King's Shield
         if target.effects[PBEffects::KingsShield] && move.damagingMove?
@@ -392,37 +462,7 @@ class Battle::Battler
              user.pbCanLowerStatStage?(:ATTACK, target)
             user.pbLowerStatStage(:ATTACK, (Settings::MECHANICS_GENERATION >= 8) ? 1 : 2, target)
           end
-          return false
-        end
-        # Spiky Shield
-        if target.effects[PBEffects::SpikyShield]
-          if show_message
-            @battle.pbCommonAnimation("SpikyShield", target)
-            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
-          end
-          target.damageState.protected = true
-          @battle.successStates[user.index].protected = true
-          if move.pbContactMove?(user) && user.affectedByContactEffect? && user.takesIndirectDamage?
-            @battle.scene.pbDamageAnimation(user)
-            user.pbReduceHP(user.totalhp / 8, false)
-            @battle.pbDisplay(_INTL("{1} was hurt!", user.pbThis))
-            user.pbItemHPHealCheck
-          end
-          return false
-        end
-        # Baneful Bunker
-        if target.effects[PBEffects::BanefulBunker]
-          if show_message
-            @battle.pbCommonAnimation("BanefulBunker", target)
-            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
-          end
-          target.damageState.protected = true
-          @battle.successStates[user.index].protected = true
-          if move.pbContactMove?(user) && user.affectedByContactEffect? &&
-             user.pbCanPoison?(target, false)
-            user.pbPoison(target)
-          end
-          return false
+          return true
         end
         # Obstruct
         if target.effects[PBEffects::Obstruct] && move.damagingMove?
@@ -436,173 +476,257 @@ class Battle::Battler
              user.pbCanLowerStatStage?(:DEFENSE, target)
             user.pbLowerStatStage(:DEFENSE, 2, target)
           end
-          return false
+          return true
         end
-        # Mat Block
-        if target.pbOwnSide.effects[PBEffects::MatBlock] && move.damagingMove?
-          # NOTE: Confirmed no common animation for this effect.
-          @battle.pbDisplay(_INTL("{1} was blocked by the kicked-up mat!", move.name)) if show_message
+        # Silk Trap
+        if target.effects[PBEffects::SilkTrap] && move.damagingMove?
+          if show_message
+            @battle.pbCommonAnimation("SilkTrap", target)
+            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
+          end
           target.damageState.protected = true
           @battle.successStates[user.index].protected = true
-          return false
+          if move.pbContactMove?(user) && user.affectedByContactEffect? &&
+             user.pbCanLowerStatStage?(:SPEED, target)
+            user.pbLowerStatStage(:SPEED, 1, target)
+          end
+          return true
+        end
+        # Spiky Shield
+        if target.effects[PBEffects::SpikyShield]
+          if show_message
+            @battle.pbCommonAnimation("SpikyShield", target)
+            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
+          end
+          target.damageState.protected = true
+          @battle.successStates[user.index].protected = true
+          if move.pbContactMove?(user) && user.affectedByContactEffect? && user.takesIndirectDamage?
+            @battle.visuals.pbDamageAnimation(user)
+            user.pbReduceHP(user.totalhp / 8, false)
+            @battle.pbDisplay(_INTL("{1} was hurt!", user.pbThis))
+            user.pbItemHPHealCheck
+          end
+          return true
+        end
+        # Baneful Bunker
+        if target.effects[PBEffects::BanefulBunker]
+          if show_message
+            @battle.pbCommonAnimation("BanefulBunker", target)
+            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
+          end
+          target.damageState.protected = true
+          @battle.successStates[user.index].protected = true
+          if move.pbContactMove?(user) && user.affectedByContactEffect? &&
+             user.pbCanPoison?(target, false)
+            user.pbPoison(target)
+          end
+          return true
+        end
+        # Burning Bulwark
+        if target.effects[PBEffects::BurningBulwark]
+          if show_message
+            @battle.pbCommonAnimation("BurningBulwark", target)
+            @battle.pbDisplay(_INTL("{1} protected itself!", target.pbThis))
+          end
+          target.damageState.protected = true
+          @battle.successStates[user.index].protected = true
+          if move.pbContactMove?(user) && user.affectedByContactEffect? &&
+             user.pbCanBurn?(target, false)
+            user.pbBurn(target)
+          end
+          return true
         end
       end
     end
-    # Magic Coat/Magic Bounce
-    if move.statusMove? && move.canMagicCoat? && !target.semiInvulnerable? && target.opposes?(user)
-      if target.effects[PBEffects::MagicCoat]
-        target.damageState.magicCoat = true
-        target.effects[PBEffects::MagicCoat] = false
-        return false
-      end
-      if target.hasActiveAbility?(:MAGICBOUNCE) && !@battle.moldBreaker &&
-         !target.effects[PBEffects::MagicBounce]
-        target.damageState.magicBounce = true
-        target.effects[PBEffects::MagicBounce] = true
-        return false
-      end
+    return false
+  end
+
+  # Magic Coat/Magic Bounce.
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetMagicCoating?(move, user, target, targets, typeMod, show_message)
+    return false if !move.statusMove? || !move.canMagicCoat?
+    return false if target.semiInvulnerable? || !target.opposes?(user)
+    if target.effects[PBEffects::MagicCoat]
+      target.damageState.magicCoat = true
+      target.effects[PBEffects::MagicCoat] = false
+      return true
     end
-    # Immunity because of ability (intentionally before type immunity check)
-    return false if move.pbImmunityByAbility(user, target, show_message)
+    if target.hasActiveAbility?(:MAGICBOUNCE) && !target.beingMoldBroken? &&
+       !target.effects[PBEffects::MagicBounce]
+      target.damageState.magicBounce = true
+      target.effects[PBEffects::MagicBounce] = true
+      return true
+    end
+    return false
+  end
+
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityByAbility?(move, user, target, targets, typeMod, show_message)
+    return move.pbImmunityByAbility(user, target, show_message)
+  end
+
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityByType?(move, user, target, targets, typeMod, show_message)
     # Type immunity
     if move.pbDamagingMove? && Effectiveness.ineffective?(typeMod)
-      PBDebug.log("[Target immune] #{target.pbThis}'s type immunity")
+      PBDebug.log("[Target immune] #{target.pbOfThis} type immunity")
       @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
-      return false
+      return true
     end
-    # Dark-type immunity to moves made faster by Prankster
+    # Dark-type immunity to status moves made faster by Prankster
     if Settings::MECHANICS_GENERATION >= 7 && user.effects[PBEffects::Prankster] &&
        target.pbHasType?(:DARK) && target.opposes?(user)
       PBDebug.log("[Target immune] #{target.pbThis} is Dark-type and immune to Prankster-boosted moves")
       @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
-      return false
+      return true
     end
-    # Airborne-based immunity to Ground moves
-    if move.damagingMove? && move.calcType == :GROUND &&
-       target.airborne? && !move.hitsFlyingTargets?
-      if target.hasActiveAbility?(:LEVITATE) && !@battle.moldBreaker
+    return false
+  end
+
+  # Airborne-based immunity to Ground moves.
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityByBeingAirborne?(move, user, target, targets, typeMod, show_message)
+    return false if move.calcType != :GROUND || !move.damagingMove? || move.hitsFlyingTargets?
+    return false if !target.airborne?
+    # Ability
+    if target.hasAirborneAbility? && !target.beingMoldBroken?
+      if show_message
+        @battle.pbShowAbilitySplash(target)
+        if Battle::Visuals::USE_ABILITY_SPLASH
+          @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis))
+        else
+          @battle.pbDisplay(_INTL("{1} avoided the attack with {2}!", target.pbThis, target.abilityName))
+        end
+        @battle.pbHideAbilitySplash(target)
+      end
+      return true
+    end
+    # Held item
+    if target.hasActiveItem?(:AIRBALLOON)
+      @battle.pbDisplay(_INTL("{1} {2} makes Ground moves miss!", target.pbOfThis, target.itemName)) if show_message
+      return true
+    end
+    # Other lingering effects
+    if target.effects[PBEffects::MagnetRise] > 0
+      @battle.pbDisplay(_INTL("{1} makes Ground moves miss with Magnet Rise!", target.pbThis)) if show_message
+      return true
+    end
+    if target.effects[PBEffects::Telekinesis] > 0
+      @battle.pbDisplay(_INTL("{1} makes Ground moves miss with Telekinesis!", target.pbThis)) if show_message
+      return true
+    end
+    return false
+  end
+
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityToPowderMoves?(move, user, target, targets, typeMod, show_message)
+    return false if !move.powderMove?
+    # Grass type's immunity
+    if target.pbHasType?(:GRASS) && Settings::MORE_TYPE_EFFECTS
+      PBDebug.log("[Target immune] #{target.pbThis} is Grass-type and immune to powder-based moves")
+      @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
+      return true
+    end
+    # Immunity due to abilities and items
+    if Settings::MECHANICS_GENERATION >= 6
+      if target.hasActiveAbility?(:OVERCOAT) && !target.beingMoldBroken?
         if show_message
           @battle.pbShowAbilitySplash(target)
-          if Battle::Scene::USE_ABILITY_SPLASH
-            @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis))
+          if Battle::Visuals::USE_ABILITY_SPLASH
+            @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           else
-            @battle.pbDisplay(_INTL("{1} avoided the attack with {2}!", target.pbThis, target.abilityName))
+            @battle.pbDisplay(_INTL("It doesn't affect {1} because of its {2}.", target.pbThis(true), target.abilityName))
           end
           @battle.pbHideAbilitySplash(target)
         end
-        return false
+        return true
       end
-      if target.hasActiveItem?(:AIRBALLOON)
-        @battle.pbDisplay(_INTL("{1}'s {2} makes Ground moves miss!", target.pbThis, target.itemName)) if show_message
-        return false
-      end
-      if target.effects[PBEffects::MagnetRise] > 0
-        @battle.pbDisplay(_INTL("{1} makes Ground moves miss with Magnet Rise!", target.pbThis)) if show_message
-        return false
-      end
-      if target.effects[PBEffects::Telekinesis] > 0
-        @battle.pbDisplay(_INTL("{1} makes Ground moves miss with Telekinesis!", target.pbThis)) if show_message
-        return false
-      end
-    end
-    # Immunity to powder-based moves
-    if move.powderMove?
-      if target.pbHasType?(:GRASS) && Settings::MORE_TYPE_EFFECTS
-        PBDebug.log("[Target immune] #{target.pbThis} is Grass-type and immune to powder-based moves")
+      if target.hasActiveItem?(:SAFETYGOGGLES)
+        PBDebug.log("[Item triggered] #{target.pbThis} has Safety Goggles and is immune to powder-based moves")
         @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
-        return false
-      end
-      if Settings::MECHANICS_GENERATION >= 6
-        if target.hasActiveAbility?(:OVERCOAT) && !@battle.moldBreaker
-          if show_message
-            @battle.pbShowAbilitySplash(target)
-            if Battle::Scene::USE_ABILITY_SPLASH
-              @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
-            else
-              @battle.pbDisplay(_INTL("It doesn't affect {1} because of its {2}.", target.pbThis(true), target.abilityName))
-            end
-            @battle.pbHideAbilitySplash(target)
-          end
-          return false
-        end
-        if target.hasActiveItem?(:SAFETYGOGGLES)
-          PBDebug.log("[Item triggered] #{target.pbThis} has Safety Goggles and is immune to powder-based moves")
-          @battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true))) if show_message
-          return false
-        end
+        return true
       end
     end
-    # Substitute
-    if target.effects[PBEffects::Substitute] > 0 && move.statusMove? &&
-       !move.ignoresSubstitute?(user) && user.index != target.index
-      PBDebug.log("[Target immune] #{target.pbThis} is protected by its Substitute")
-      @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis(true))) if show_message
-      return false
-    end
-    return true
+    return false
   end
 
-  #=============================================================================
+  # Substitute provides immunity to (most) status moves.
+  # true=failure, false=continue
+  def pbSuccessCheckAgainstTarget_TargetImmunityBySubstitute?(move, user, target, targets, typeMod, show_message)
+    return false if target.effects[PBEffects::Substitute] == 0
+    return false if !move.statusMove? || move.ignoresSubstitute?(user)
+    if user.index != target.index
+      PBDebug.log("[Target immune] #{target.pbThis} is protected by its Substitute")
+      @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis(true))) if show_message
+      return true
+    end
+    return false
+  end
+
+  #-----------------------------------------------------------------------------
+
+  # Returns true if the target is not semi-invulnerable, or if the user can hit
+  # the target even though the target is semi-invulnerable.
+  def pbSuccessCheckAgainstTarget_CanHitSemiInvulnerableTarget?(move, user, target)
+    # Lock-On
+    return true if user.effects[PBEffects::LockOn] > 0 &&
+                   user.effects[PBEffects::LockOnPos] == target.index
+    # Glaive Rush
+    return true if target.effects[PBEffects::Vulnerable]
+    # Toxic
+    return true if move.pbOverrideSuccessCheckPerHit(user, target)
+    # No Guard
+    return true if user.hasActiveAbility?(:NOGUARD) ||
+                   target.hasActiveAbility?(:NOGUARD)
+    # Future Sight
+    return true if @battle.futureSight
+    # Helping Hand
+    return true if move.function_code == "PowerUpAllyMove"
+    # Semi-invulnerable moves
+    if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
+                               "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
+                               "TwoTurnAttackInvulnerableInSkyTargetCannotAct") ||
+       (target.effects[PBEffects::SkyDrop] >= 0 && target.effects[PBEffects::SkyDrop] != user.index)
+      return move.hitsFlyingTargets?
+    elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderground")
+      return move.hitsDiggingTargets?
+    elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderwater")
+      return move.hitsDivingTargets?
+    elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableRemoveProtections")
+      return false
+    end
+    return true   # Target isn't semi-invulnerable
+  end
+
+  #-----------------------------------------------------------------------------
+
   # Per-hit success check against the target.
   # Includes semi-invulnerable move use and accuracy calculation.
-  #=============================================================================
-  def pbSuccessCheckPerHit(move, user, target, skipAccuracyCheck)
+  def pbSuccessCheckPerHit(move, user, target)
     # Two-turn attacks can't fail here in the charging turn
     return true if user.effects[PBEffects::TwoTurnAttack]
     # Lock-On
     return true if user.effects[PBEffects::LockOn] > 0 &&
                    user.effects[PBEffects::LockOnPos] == target.index
+    # Glaive Rush
+    return true if target.effects[PBEffects::Vulnerable]
     # Toxic
     return true if move.pbOverrideSuccessCheckPerHit(user, target)
     # No Guard
-    return true if user.hasActiveAbility?(:NOGUARD) || target.hasActiveAbility?(:NOGUARD)
-    miss = false
-    hitsInvul = false
-    # No Guard
-    hitsInvul = true if user.hasActiveAbility?(:NOGUARD) ||
-                        target.hasActiveAbility?(:NOGUARD)
-    # Future Sight
-    hitsInvul = true if @battle.futureSight
-    # Helping Hand
-    hitsInvul = true if move.function_code == "PowerUpAllyMove"
-    if !hitsInvul
-      # Semi-invulnerable moves
-      if target.effects[PBEffects::TwoTurnAttack]
-        if target.inTwoTurnAttack?("TwoTurnAttackInvulnerableInSky",
-                                   "TwoTurnAttackInvulnerableInSkyParalyzeTarget",
-                                   "TwoTurnAttackInvulnerableInSkyTargetCannotAct")
-          miss = true if !move.hitsFlyingTargets?
-        elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderground")
-          miss = true if !move.hitsDiggingTargets?
-        elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableUnderwater")
-          miss = true if !move.hitsDivingTargets?
-        elsif target.inTwoTurnAttack?("TwoTurnAttackInvulnerableRemoveProtections")
-          miss = true
-        end
-      end
-      if target.effects[PBEffects::SkyDrop] >= 0 &&
-         target.effects[PBEffects::SkyDrop] != user.index && !move.hitsFlyingTargets?
-        miss = true
-      end
-    end
-    if miss
-      target.damageState.invulnerable = true
-      PBDebug.log("[Move failed] Target is semi-invulnerable")
-    else
-      # Called by another move
-      return true if skipAccuracyCheck
-      # Accuracy check
-      return true if move.pbAccuracyCheck(user, target)   # Includes Counter/Mirror Coat
-      PBDebug.log("[Move failed] Failed pbAccuracyCheck")
-    end
+    return true if user.hasActiveAbility?(:NOGUARD) ||
+                   target.hasActiveAbility?(:NOGUARD)
+    # Semi-invulnerable target
+    return false if target.damageState.invulnerable
+    # Accuracy check
+    return true if move.pbAccuracyCheck(user, target)   # Includes Counter/Mirror Coat
+    PBDebug.log("[Move failed] Failed pbAccuracyCheck")
     pbBoss.checkTriggers(@battle, :Miss, target)
-    # Missed
     return false
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
   # Message shown when a move fails the per-hit success check above.
-  #=============================================================================
   def pbMissMessage(move, user, target)
     if target.damageState.affection_missed
       @battle.pbDisplay(_INTL("{1} avoided the move in time with your shout!", target.pbThis))

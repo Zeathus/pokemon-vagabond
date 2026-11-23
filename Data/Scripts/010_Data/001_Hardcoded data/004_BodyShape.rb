@@ -1,20 +1,25 @@
+#===============================================================================
 # NOTE: The order these shapes are registered are the order they are listed in
 #       the Pokédex search screen.
-#       "Graphics/UI/Pokedex/icon_shapes.png" contains icons for these
+#       "Graphics/UI/Pokedex/shapes.png" contains icons for these
 #       shapes.
+#===============================================================================
 module GameData
   class BodyShape
     attr_reader :id
     attr_reader :real_name
-    attr_reader :icon_position   # Where this shape's icon is within icon_shapes.png
+    attr_reader :icon_position   # Where this shape's icon is within shapes.png
 
     DATA = {}
+    ICON_SIZE = [60, 60]
 
     extend ClassMethodsSymbols
     include InstanceMethods
 
     def self.load; end
     def self.save; end
+
+    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id            = hash[:id]
@@ -29,6 +34,8 @@ module GameData
   end
 end
 
+#===============================================================================
+#
 #===============================================================================
 
 GameData::BodyShape.register({

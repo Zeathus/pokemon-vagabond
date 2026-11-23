@@ -54,15 +54,29 @@ class String
   def numeric?
     return !self[/\A[+-]?\d+(?:\.\d+)?\Z/].nil?
   end
+
+  def format_number
+    return self if !numeric?
+    str = self.split(".")
+    tho_separator = '\1' + Translation.thousands_separator
+    str[0] = "0" if str[0].nil?
+    str[0] = str[0].reverse.gsub(/(\d{3})(?=\d)/, tho_separator).reverse
+    if str[1]
+      dec_separator = Translation.decimal_separator
+      return str[0] + dec_separator + str[1]
+    end
+    return str[0]
+  end
 end
 
 #===============================================================================
 # class Numeric
 #===============================================================================
 class Numeric
-  # Turns a number into a string formatted like 12,345,678.
+  # Turns a number into a string formatted like 12,345,678. Some languages use
+  # different characters as the thousands separator.
   def to_s_formatted
-    return self.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse
+    return self.to_s.format_number
   end
 
   def to_word
@@ -72,8 +86,37 @@ class Numeric
            _INTL("twelve"), _INTL("thirteen"), _INTL("fourteen"), _INTL("fifteen"),
            _INTL("sixteen"), _INTL("seventeen"), _INTL("eighteen"), _INTL("nineteen"),
            _INTL("twenty")]
-    return ret[self] if self.is_a?(Integer) && self >= 0 && self <= ret.length
+    return ret[self] if self.is_a?(Integer) && self >= 0 && self <= ret.length - 1
     return self.to_s
+  end
+
+  def to_ordinal
+    ret = [_INTL("zeroth"), _INTL("first"), _INTL("second"), _INTL("third"),
+           _INTL("fourth"), _INTL("fifth"), _INTL("sixth"), _INTL("seventh"),
+           _INTL("eighth"), _INTL("ninth"), _INTL("tenth"), _INTL("eleventh"),
+           _INTL("twelfth"), _INTL("thirteenth"), _INTL("fourteenth"), _INTL("fifteenth"),
+           _INTL("sixteenth"), _INTL("seventeenth"), _INTL("eighteenth"), _INTL("nineteenth"),
+           _INTL("twentieth")]
+    return ret[self] if self.is_a?(Integer) && self >= 0 && self <= ret.length - 1
+    return self.to_ord
+  end
+
+  # Returns "1st", "2nd", "3rd", etc.
+  def to_ord
+    return self.to_s if !self.is_a?(Integer)
+    ret = self.to_s
+    if ((self % 100) / 10) == 1   # 10-19
+      ret += "th"
+    elsif (self % 10) == 1
+      ret += "st"
+    elsif (self % 10) == 2
+      ret += "nd"
+    elsif (self % 10) == 3
+      ret += "rd"
+    else
+      ret += "th"
+    end
+    return ret
   end
 end
 
@@ -187,7 +230,7 @@ class Color
         hex = args.first.to_s(16)
       when String
         try_rgb_format = args.first.split(",")
-        init_original(*try_rgb_format.map(&:to_i)) if try_rgb_format.length.between?(3, 4)
+        return init_original(*try_rgb_format.map(&:to_i)) if try_rgb_format.length.between?(3, 4)
         hex = args.first.delete("#")
       end
       pbPrintException("Wrong type of argument given!") if !hex
@@ -197,8 +240,8 @@ class Color
     when 3
       r, g, b = *args
     end
-    init_original(r, g, b) if r && g && b
-    init_original(*args)
+    return init_original(r, g, b) if r && g && b
+    return init_original(*args)
   end
 
   def self.new_from_rgb(param)
@@ -278,7 +321,7 @@ class Color
     b = self.blue
     yuv = [
       (r * 0.299) + (g * 0.587) + (b * 0.114),
-      (r * -0.1687) + (g * -0.3313) + (b *  0.500) + 0.5,
+      (r * -0.1687) + (g * -0.3313) + (b * 0.500) + 0.5,
       (r * 0.500) + (g * -0.4187) + (b * -0.0813) + 0.5
     ]
     if yuv[0] < 127.5
@@ -330,6 +373,128 @@ class Color
   def self.orange;  return Color.new(255, 155,   0); end
   def self.purple;  return Color.new(155,   0, 255); end
   def self.brown;   return Color.new(112,  72,  32); end
+end
+
+#===============================================================================
+# Tone
+#===============================================================================
+class Tone
+  def self.new_from_rgbg(param)
+    case param.length
+    when 12   # 32-bit hex with +/- for each part
+      return Tone.new(
+        param[0, 3].to_i(16),
+        param[3, 3].to_i(16),
+        param[6, 3].to_i(16),
+        param[9, 3].to_i(16)
+      )
+    end
+    return Tone.new(0, 0, 0, 0)
+  end
+
+  # @return [String] this tone in the format "+RR+GG+BB+GG"
+  def to_rgb32
+    this_red = ((self.red >= 0) ? "+" : "-") + sprintf("%02X", self.red.to_i.abs)
+    this_green = ((self.green >= 0) ? "+" : "-") + sprintf("%02X", self.green.to_i.abs)
+    this_blue = ((self.blue >= 0) ? "+" : "-") + sprintf("%02X", self.blue.to_i.abs)
+    this_gray = ((self.gray >= 0) ? "+" : "-") + sprintf("%02X", self.gray.to_i.abs)
+    return this_red + this_green + this_blue + this_gray
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class Bitmap
+  def outline_rect(x, y, width, height, color, thickness = 1)
+    fill_rect(x, y, width, thickness, color)
+    fill_rect(x, y, thickness, height, color)
+    fill_rect(x, y + height - thickness, width, thickness, color)
+    fill_rect(x + width - thickness, y, thickness, height, color)
+  end
+
+  # Draws a series of concentric outline_rects around the defined area. From
+  # inside to outside, the color of each ring alternates.
+  def border_rect(x, y, width, height, thickness, *colors)
+    thickness.times do |i|
+      col = colors[i % colors.length]
+      outline_rect(x - i - 1, y - i - 1, width + (i * 2) + 2, height + (i * 2) + 2, col)
+    end
+  end
+
+  def fill_diamond(x, y, radius, color)
+    ((radius * 2) + 1).times do |i|
+      height = (i <= radius) ? (i * 2) + 1 : (((radius * 2) - i) * 2) + 1
+      fill_rect(x - radius + i, y - ((height - 1) / 2), 1, height, color)
+    end
+  end
+
+  def draw_interpolation_line(x, y, width, height, gradient, type, color)
+    start_x = x
+    end_x = x + width - 1
+    case type
+    when :linear
+      # NOTE: https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+      start_y = (gradient) ? y + height - 1 : y
+      end_y = (gradient) ? y : y + height - 1
+      dx = end_x - start_x
+      dy = -((end_y - start_y).abs)
+      error = dx + dy
+      draw_x = start_x
+      draw_y = start_y
+      loop do
+        fill_rect(draw_x, draw_y, 1, 1, color)
+        break if draw_x == end_x && draw_y == end_y
+        e2 = 2 * error
+        if e2 >= dy
+          break if draw_x == end_x
+          error += dy
+          draw_x += 1
+        end
+        next if e2 > dx
+        break if draw_y == end_y
+        error += dx
+        draw_y += (gradient) ? -1 : 1
+      end
+    when :ease_in, :ease_out, :ease_both   # Quadratic
+      gradient = !gradient if type == :ease_out
+      start_y = y + height - 1
+      end_y = y
+      # Calculate the positions of the curve segments (assuming positive gradient)
+      points = []
+      width.times do |frame|
+        x = frame / (width - 1).to_f
+        case type
+        when :ease_in
+          y = ((end_y - start_y) * (x**2.5)).round
+          line_height = (frame == 0) ? 1 : [(y - points.last[1]).abs, 1].max
+          points.push([frame, y, line_height])
+        when :ease_out
+          y = ((end_y - start_y) * (x**2.5)).round
+          line_height = (frame == 0) ? 1 : [(y - points.last[1]).abs, 1].max
+          points.push([width - frame - 1, y, line_height])
+        when :ease_both
+          break if frame >= (width + 1) / 2
+          x = [frame / ((width.to_f / 2) - 1).to_f, 1].min
+          y = (((end_y - start_y) / 2.0) * (x**2.5)).round
+          y = -((height - 1) / 2) if y < -((height - 1) / 2)
+          line_height = (frame == 0) ? 1 : [(y - points.last[1]).abs, 1].max
+          points.push([width - frame - 1, (end_y - start_y) - y - line_height + 1, line_height])
+          points.push([frame, y, line_height])
+        end
+      end
+      # Draw curve
+      points.each do |point|
+        if gradient   # Bottom left to top right
+          fill_rect(start_x + point[0], start_y + point[1], 1, point[2], color)
+        else   # Top left to bottom right
+          fill_rect(start_x + point[0], end_y - point[1] - point[2] + 1, 1, point[2], color)
+        end
+      end
+    else
+      raise _INTL("Unknown interpolation type {1}.", type)
+    end
+  end
 end
 
 #===============================================================================
@@ -388,7 +553,7 @@ class << Kernel
 end
 
 def nil_or_empty?(string)
-  return string.nil? || !string.is_a?(String) || string.size == 0
+  return string.nil? || !string.is_a?(String) || string.empty?
 end
 
 #===============================================================================

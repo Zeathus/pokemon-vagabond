@@ -19,7 +19,7 @@ class BerryPlantData
   end
 
   def reset(planting = false)
-    @new_mechanics      = Settings::NEW_BERRY_PLANTS
+    @new_mechanics      = Settings::NEW_BERRY_PLANT_MECHANICS
     @berry_id           = nil
     @mulch_id           = nil if !planting
     @time_alive         = 0
@@ -66,7 +66,7 @@ class BerryPlantData
   end
 
   def moisture_stage
-    return 0 if !@new_mechanics
+    return -1 if !@new_mechanics
     return 2 if @moisture_level > 50
     return 1 if @moisture_level > 0
     return 0
@@ -122,7 +122,7 @@ class BerryPlantData
     # Do replants
     done_replant = false
     loop do
-      stages_this_life = stages_growing + stages_fully_grown - (replanted? ? 1 : 0)
+      stages_this_life = stages_growing + stages_fully_grown - ((replanted?) ? 1 : 0)
       break if new_time_alive < stages_this_life * time_per_stage
       if @replant_count >= max_replants
         reset
@@ -228,7 +228,7 @@ class BerryPlantSprite
     return if !berry_plant
     @old_stage = berry_plant.growth_stage
     @event.character_name = ""
-    update_plant(berry_plant)
+    update_plant(berry_plant, true)
     set_event_graphic(berry_plant, true)   # Set the event's graphic
   end
 
@@ -268,9 +268,9 @@ class BerryPlantSprite
       end
       if berry_plant.new_mechanics && @old_stage != berry_plant.growth_stage &&
          @old_stage > 0 && berry_plant.growth_stage <= GameData::BerryPlant::NUMBER_OF_GROWTH_STAGES + 1
-        spriteset = $scene.spriteset(@map.map_id)
-        spriteset&.addUserAnimation(Settings::PLANT_SPARKLE_ANIMATION_ID,
-                                    @event.x, @event.y, false, 1)
+        @event.animation_id = Settings::PLANT_SPARKLE_ANIMATION_ID
+        @event.animation_height = 1
+        @event.animation_regular_tone = true
       end
     end
     @old_stage = berry_plant.growth_stage
@@ -337,7 +337,7 @@ def pbBerryPlant
       pbMessage(_INTL("The {1} plant is growing bigger.", berry_name))
     else     # X flowering
       this_event.turn_right   # Stop the event turning towards the player
-      if Settings::NEW_BERRY_PLANTS
+      if Settings::NEW_BERRY_PLANT_MECHANICS
         pbMessage(_INTL("This {1} plant is in bloom!", berry_name))
       else
         case berry_plant.watering_count
@@ -361,7 +361,7 @@ def pbBerryPlant
                                        GameData::Item.get(item).name))
       berry_plant.water
       pbMessage("\\se[Water berry plant]" + _INTL("{1} watered the plant.", $player.name) + "\\wtnp[40]")
-      if Settings::NEW_BERRY_PLANTS
+      if Settings::NEW_BERRY_PLANT_MECHANICS
         pbMessage(_INTL("There! All happy!"))
       else
         pbMessage(_INTL("The plant seemed to be delighted."))
@@ -372,7 +372,7 @@ def pbBerryPlant
   end
   # Nothing planted yet
   ask_to_plant = true
-  if Settings::NEW_BERRY_PLANTS
+  if Settings::NEW_BERRY_PLANT_MECHANICS
     # New mechanics
     if berry_plant.mulch_id
       pbMessage(_INTL("{1} has been laid down.", GameData::Item.get(berry_plant.mulch_id).name))
@@ -382,9 +382,14 @@ def pbBerryPlant
       when 0   # Fertilize
         mulch = nil
         pbFadeOutIn do
-          scene = PokemonBag_Scene.new
-          screen = PokemonBagScreen.new(scene, $bag)
-          mulch = screen.pbChooseItemScreen(proc { |item| GameData::Item.get(item).is_mulch? })
+          old_last_pocket       = $bag.last_viewed_pocket
+          old_pocket_selections = $bag.last_pocket_selections.clone
+          $bag.reset_last_selections
+          bag_screen = UI::Bag.new($bag, mode: :choose_item)
+          bag_screen.set_filter_proc(proc { |item| GameData::Item.get(item).is_mulch? })
+          mulch = bag_screen.choose_item
+          $bag.last_viewed_pocket     = old_last_pocket
+          $bag.last_pocket_selections = old_pocket_selections
         end
         return if !mulch
         mulch_data = GameData::Item.get(mulch)
@@ -409,15 +414,20 @@ def pbBerryPlant
   end
   if !ask_to_plant || pbConfirmMessage(_INTL("Want to plant a Berry?"))
     pbFadeOutIn do
-      scene = PokemonBag_Scene.new
-      screen = PokemonBagScreen.new(scene, $bag)
-      berry = screen.pbChooseItemScreen(proc { |item| GameData::Item.get(item).is_berry? })
+      old_last_pocket       = $bag.last_viewed_pocket
+      old_pocket_selections = $bag.last_pocket_selections.clone
+      $bag.reset_last_selections
+      bag_screen = UI::Bag.new($bag, mode: :choose_item)
+      bag_screen.set_filter_proc(proc { |item| GameData::Item.get(item).is_berry? })
+      berry = bag_screen.choose_item
+      $bag.last_viewed_pocket     = old_last_pocket
+      $bag.last_pocket_selections = old_pocket_selections
     end
     if berry
       $stats.berries_planted += 1
       berry_plant.plant(berry)
       $bag.remove(berry)
-      if Settings::NEW_BERRY_PLANTS
+      if Settings::NEW_BERRY_PLANT_MECHANICS
         pbMessage(_INTL("The {1} was planted in the soft, earthy soil.",
                         GameData::Item.get(berry).name))
       elsif GameData::Item.get(berry).name.starts_with_vowel?
@@ -457,10 +467,10 @@ def pbPickBerry(berry, qty = 1)
   else
     pbMessage("\\me[Berry get]" + _INTL("You picked the \\c[1]{1}\\c[0].", berry_name) + "\\wtnp[30]")
   end
-  pocket = berry.pocket
-  pbMessage(_INTL("You put the {1} in\\nyour Bag's <icon=bagPocket{2}>\\c[1]{3}\\c[0] pocket.",
-                  berry_name, pocket, PokemonBag.pocket_names[pocket - 1]) + "\1")
-  if Settings::NEW_BERRY_PLANTS
+  pocket = berry.bag_pocket
+  pbMessage(_INTL("You put the {1} in\nyour Bag's <icon=bagPocket{2}>\\c[1]{3}\\c[0] pocket.",
+                  berry_name, pocket, GameData::BagPocket.get(pocket).name) + "\1")
+  if Settings::NEW_BERRY_PLANT_MECHANICS
     pbMessage(_INTL("The soil returned to its soft and earthy state."))
   else
     pbMessage(_INTL("The soil returned to its soft and loamy state."))

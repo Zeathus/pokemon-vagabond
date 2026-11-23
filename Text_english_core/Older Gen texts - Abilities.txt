@@ -1,0 +1,46 @@
+﻿# To localize this text for a particular language, please
+# translate every second line of this file.
+#-------------------------------
+[ABILITY_DESCRIPTIONS]
+The Pokémon cannot become infatuated.
+The Pokémon cannot become infatuated.
+Having its own tempo means the Pokémon cannot become confused.
+Having its own tempo means the Pokémon cannot become confused.
+The Pokémon's illumination raises the likelihood of meeting wild Pokémon.
+The Pokémon's illumination raises the likelihood of meeting wild Pokémon.
+The Pokémon's force of will prevents it from flinching.
+The Pokémon's force of will prevents it from flinching.
+Hailstorms boost the Pokémon's evasiveness and will not damage it.
+Hailstorms boost the Pokémon's evasiveness and will not damage it.
+All the Pokémon's moves become Normal type.
+All the Pokémon's moves become Normal type.
+The Pokémon can hit Ghost-type targets with any move.
+The Pokémon can hit Ghost-type targets with any move.
+Hailstorms heal the Pokémon a little each turn and will not damage it.
+Hailstorms heal the Pokémon a little each turn and will not damage it.
+When the Pokémon enters a battle, it summons a hailstorm.
+When the Pokémon enters a battle, it summons a hailstorm.
+Upon entering a battle, the Pokémon identifies the item being held by a foe.
+Upon entering a battle, the Pokémon identifies the item being held by a foe.
+Physical damage lowers the Pokémon's Defense stat and raises its Speed stat.
+Physical damage lowers the Pokémon's Defense stat and raises its Speed stat.
+Protects the Pokémon from weather damage.
+Protects the Pokémon from weather damage.
+The Pokémon bypasses its target's safeguards and screens.
+The Pokémon bypasses its target's safeguards and screens.
+The Pokémon cannot become infatuated or fall for taunts.
+The Pokémon cannot become infatuated or fall for taunts.
+The Pokémon changes its type to match that of the move it's about to use.
+The Pokémon changes its type to match that of the move it's about to use.
+The Pokémon's Flying-type moves gain priority and are used faster.
+The Pokémon's Flying-type moves gain priority and are used faster.
+The Pokémon's Speed stat is doubled in a hailstorm.
+The Pokémon's Speed stat is doubled in a hailstorm.
+When the Pokémon defeats a foe, it becomes Ash-Greninja.
+When the Pokémon defeats a foe, it becomes Ash-Greninja.
+When the Pokémon enters a battle, it raises its Attack stat.
+When the Pokémon enters a battle, it raises its Attack stat.
+When the Pokémon enters a battle, it raises its Defense stat.
+When the Pokémon enters a battle, it raises its Defense stat.
+The ice head blocks damage from a physical attack, but breaks. It restores in hail.
+The ice head blocks damage from a physical attack, but breaks. It restores in hail.

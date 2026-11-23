@@ -1,0 +1,48 @@
+﻿# To localize this text for a particular language, please
+# translate every second line of this file.
+#-------------------------------
+[MOVE_NAMES]
+Vice Grip
+Vice Grip
+#-------------------------------
+[MOVE_DESCRIPTIONS]
+The user blows silk from its mouth that binds opposing Pokémon and lowers their Speed stats.
+The user blows silk from its mouth that binds opposing Pokémon and lowers their Speed stats.
+The user slaps down the target's held item, making it unusable for that battle.
+The user slaps down the target's held item, making it unusable for that battle.
+The user charges up to boost the power of the next move it uses if it is Electric-type. This also raises the user's Sp. Def stat.
+The user charges up to boost the power of the next move it uses if it is Electric-type. This also raises the user's Sp. Def stat.
+The user protects itself and its allies from priority moves. Its chance of failing rises if it is used in succession.
+The user protects itself and its allies from priority moves. Its chance of failing rises if it is used in succession.
+If the user is knocked out after using this move, the Pokémon that knocked it out will also faint.
+If the user is knocked out after using this move, the Pokémon that knocked it out will also faint.
+The user releases cotton-like spores that cling to the target. This harshly lowers the target's Speed stat.
+The user releases cotton-like spores that cling to the target. This harshly lowers the target's Speed stat.
+The user covers itself with mud. This weakens Electric-type moves while the user is in the battle.
+The user covers itself with mud. This weakens Electric-type moves while the user is in the battle.
+The target is attacked with a blast of absolute-zero cold. The target faints instantly if this attack hits.
+The target is attacked with a blast of absolute-zero cold. The target faints instantly if this attack hits.
+The user performs a spin attack that can also eliminate the effects of such moves as Bind, Wrap and Leech Seed.
+The user performs a spin attack that can also eliminate the effects of such moves as Bind, Wrap and Leech Seed.
+A unique attack that varies in type and power depending on the Pokémon using it.
+A unique attack that varies in type and power depending on the Pokémon using it.
+The user changes its type to become the same type as a move it knows, chosen at random.
+The user changes its type to become the same type as a move it knows, chosen at random.
+The user releases a scent that lowers opposing Pokémon's evasiveness.
+The user releases a scent that lowers opposing Pokémon's evasiveness.
+The user teleports using a strange power and switches places with one of its allies.
+The user teleports using a strange power and switches places with one of its allies.
+Use it to flee from any wild Pokémon. This can also be used to warp to the last Pokémon Center visited.
+Use it to flee from any wild Pokémon. This can also be used to warp to the last Pokémon Center visited.
+The user and its allies are protected from wide-ranging attacks for one turn. If used in succession, its chances of failing rises.
+The user and its allies are protected from wide-ranging attacks for one turn. If used in succession, its chances of failing rises.
+The user soaks itself with water. The weakens Fire-type moves while the user is in the battle.
+The user soaks itself with water. The weakens Fire-type moves while the user is in the battle.
+When the user knocks out a target with this move, the user's Attack stat is raised sharply.
+When the user knocks out a target with this move, the user's Attack stat is raised sharply.
+All stat changes affecting the target turn topsy-turvy and become the opposite of what they were.
+All stat changes affecting the target turn topsy-turvy and become the opposite of what they were.
+As well as protecting the user from damage, this move also harshly lowers the Attack stat of any attacker that makes direct contact.
+As well as protecting the user from damage, this move also harshly lowers the Attack stat of any attacker that makes direct contact.
+This move reduces damage from physical and special moves for five turns. This can be used only in a hailstorm.
+This move reduces damage from physical and special moves for five turns. This can be used only in a hailstorm.

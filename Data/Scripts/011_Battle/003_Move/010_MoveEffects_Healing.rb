@@ -38,13 +38,17 @@ end
 #===============================================================================
 class Battle::Move::HealUserDependingOnWeather < Battle::Move::HealingMove
   def pbOnStartUse(user, targets)
-    case user.effectiveWeather
-    when :Sun, :HarshSun
+    if user.hasActiveAbility?(:MEGASOL)
       @healAmount = (user.totalhp * 2 / 3.0).round
-    when :None, :StrongWinds
-      @healAmount = (user.totalhp / 2.0).round
     else
-      @healAmount = (user.totalhp / 4.0).round
+      case user.effectiveWeather
+      when :Sun, :HarshSun
+        @healAmount = (user.totalhp * 2 / 3.0).round
+      when :None, :StrongWinds
+        @healAmount = (user.totalhp / 2.0).round
+      else
+        @healAmount = (user.totalhp / 4.0).round
+      end
     end
   end
 
@@ -126,7 +130,7 @@ class Battle::Move::HealUserByTargetAttackLowerTargetAttack1 < Battle::Move
     #       has Contrary and is at +6" check too for symmetry. This move still
     #       works even if the stat stage cannot be changed due to an ability or
     #       other effect.
-    if !@battle.moldBreaker && target.hasActiveAbility?(:CONTRARY)
+    if target.hasActiveAbility?(:CONTRARY) && !target.beingMoldBroken?
       if target.statStageAtMax?(@statDown[0])
         @battle.pbDisplay(_INTL("But it failed!")) if show_message
         return true
@@ -139,13 +143,7 @@ class Battle::Move::HealUserByTargetAttackLowerTargetAttack1 < Battle::Move
   end
 
   def pbEffectAgainstTarget(user, target)
-    # Calculate target's effective attack value
-    max_stage = Battle::Battler::STAT_STAGE_MAXIMUM
-    stageMul = Battle::Battler::STAT_STAGE_MULTIPLIERS
-    stageDiv = Battle::Battler::STAT_STAGE_DIVISORS
-    atk      = target.attack
-    atkStage = target.stages[@statDown[0]] + max_stage
-    healAmt = (atk.to_f * stageMul[atkStage] / stageDiv[atkStage]).floor
+    healAmt = target.stat_with_stages(:ATTACK)
     # Reduce target's Attack stat
     if target.pbCanLowerStatStage?(@statDown[0], user, self)
       target.pbLowerStatStage(@statDown[0], @statDown[1], user)
@@ -153,7 +151,7 @@ class Battle::Move::HealUserByTargetAttackLowerTargetAttack1 < Battle::Move
     # Heal user
     if target.hasActiveAbility?(:LIQUIDOOZE, true)
       @battle.pbShowAbilitySplash(target)
-      user.pbReduceHP(healAmt)
+      user.pbReduceHP(healAmt, false)
       @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", user.pbThis))
       @battle.pbHideAbilitySplash(target)
       user.pbItemHPHealCheck
@@ -193,6 +191,19 @@ class Battle::Move::HealUserByHalfOfDamageDoneIfTargetAsleep < Battle::Move
     end
     return false
   end
+
+  def pbEffectAgainstTarget(user, target)
+    return if target.damageState.hpLost <= 0
+    hpGain = (target.damageState.hpLost / 2.0).round
+    user.pbRecoverHPFromDrain(hpGain, target)
+  end
+end
+
+#===============================================================================
+# User gains half the HP it inflicts as damage. Burns the target. (Matcha Gotcha)
+#===============================================================================
+class Battle::Move::HealUserByHalfOfDamageDoneBurnTarget < Battle::Move::BurnTarget
+  def healingMove?; return Settings::MECHANICS_GENERATION >= 6; end
 
   def pbEffectAgainstTarget(user, target)
     return if target.damageState.hpLost <= 0
@@ -477,19 +488,17 @@ class Battle::Move::UserLosesHalfOfTotalHPExplosive < Battle::Move
   def worksWithNoTargets?; return true; end
 
   def pbMoveFailed?(user, targets)
-    if !@battle.moldBreaker
-      bearer = @battle.pbCheckGlobalAbility(:DAMP)
-      if bearer
-        @battle.pbShowAbilitySplash(bearer)
-        if Battle::Scene::USE_ABILITY_SPLASH
-          @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
-        else
-          @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
-                                  user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
-        end
-        @battle.pbHideAbilitySplash(bearer)
-        return true
+    bearer = @battle.pbCheckGlobalAbility(:DAMP, true)
+    if bearer
+      @battle.pbShowAbilitySplash(bearer)
+      if Battle::Visuals::USE_ABILITY_SPLASH
+        @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
+      else
+        @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3} {4}!",
+                                user.pbThis, @name, bearer.pbOfThis(true), bearer.abilityName))
       end
+      @battle.pbHideAbilitySplash(bearer)
+      return true
     end
     return false
   end
@@ -509,19 +518,17 @@ class Battle::Move::UserFaintsExplosive < Battle::Move
   def pbNumHits(user, targets); return 1;    end
 
   def pbMoveFailed?(user, targets)
-    if !@battle.moldBreaker
-      bearer = @battle.pbCheckGlobalAbility(:DAMP)
-      if bearer
-        @battle.pbShowAbilitySplash(bearer)
-        if Battle::Scene::USE_ABILITY_SPLASH
-          @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
-        else
-          @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3}'s {4}!",
-                                  user.pbThis, @name, bearer.pbThis(true), bearer.abilityName))
-        end
-        @battle.pbHideAbilitySplash(bearer)
-        return true
+    bearer = @battle.pbCheckGlobalAbility(:DAMP, true)
+    if bearer
+      @battle.pbShowAbilitySplash(bearer)
+      if Battle::Visuals::USE_ABILITY_SPLASH
+        @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
+      else
+        @battle.pbDisplay(_INTL("{1} cannot use {2} because of {3} {4}!",
+                                user.pbThis, @name, bearer.pbOfThis(true), bearer.abilityName))
       end
+      @battle.pbHideAbilitySplash(bearer)
+      return true
     end
     return false
   end
@@ -538,9 +545,9 @@ end
 # (Misty Explosion)
 #===============================================================================
 class Battle::Move::UserFaintsPowersUpInMistyTerrainExplosive < Battle::Move::UserFaintsExplosive
-  def pbBaseDamage(baseDmg, user, target)
-    baseDmg = baseDmg * 3 / 2 if @battle.field.terrain == :Misty
-    return baseDmg
+  def pbBasePower(base_power, user, target)
+    base_power = base_power * 3 / 2 if @battle.field.terrain == :Misty
+    return base_power
   end
 end
 
@@ -703,5 +710,48 @@ class Battle::Move::SetAttackerMovePPTo0IfUserFaints < Battle::Move
   def pbEffectGeneral(user)
     user.effects[PBEffects::Grudge] = true
     @battle.pbDisplay(_INTL("{1} wants its target to bear a grudge!", user.pbThis))
+  end
+end
+
+#===============================================================================
+# User revives a fainted Pokémon in their party to 50% HP. (Revival Blessing)
+#===============================================================================
+class Battle::Move::RevivePokemonToHalfHP < Battle::Move
+  def pbMoveFailed?(user, targets)
+    failed = true
+    @battle.eachInTeamFromBattlerIndex(user.index) do |pkmn, party_index|
+      failed = false if pkmn.fainted?
+      break if !failed
+    end
+    if failed
+      @battle.pbDisplay(_INTL("But it failed!"))
+      return true
+    end
+    return false
+  end
+
+  def pbEffectGeneral(user)
+    pkmn = nil
+    if !@battle.controlPlayer && @battle.pbOwnedByPlayer?(user.index)
+      # Player chooses the Pokémon to revive
+      @battle.visuals.pbPartyScreen(user.index, false, 3) do |idxParty, party_screen|
+        pkmn = @battle.pbParty(user.idxOwnSide)[idxParty]
+        if pkmn.egg?
+          party_screen.show_message(_INTL("You can't revive an egg!"))
+          next false
+        elsif !pkmn.fainted?
+          party_screen.show_message(_INTL("This Pokémon cannot be revived."))
+          next false
+        end
+        next true
+      end
+    else
+      # The AI chooses the Pokémon to revive
+      pkmn = @battle.battleAI.choose_pokemon_to_revive(user)
+    end
+    pkmn.hp = (pkmn.totalhp / 2).floor
+    pkmn.hp = 1 if pkmn.hp <= 0
+    pkmn.heal_status
+    @battle.pbDisplay(_INTL("{1} was revived and is ready to fight again!", pkmn.name))
   end
 end

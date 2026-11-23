@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 class TileDrawingHelper
   attr_accessor :tileset
   attr_accessor :autotiles
@@ -81,6 +84,8 @@ class TileDrawingHelper
     return self.new(bmtileset, bmautotiles)
   end
 
+  #-----------------------------------------------------------------------------
+
   def initialize(tileset, autotiles)
     if tileset.mega?
       @tileset = TilemapRenderer::TilesetWrapper.wrapTileset(tileset)
@@ -103,8 +108,8 @@ class TileDrawingHelper
   end
 
   def bltSmallAutotile(bitmap, x, y, cxTile, cyTile, id, frame)
-    return if id >= 384 || frame < 0 || !@autotiles
-    autotile = @autotiles[(id / 48) - 1]
+    return if id >= TilemapRenderer::TILESET_START_ID || frame < 0 || !@autotiles
+    autotile = @autotiles[(id / TilemapRenderer::TILES_PER_AUTOTILE) - 1]
     return if !autotile || autotile.disposed?
     cxTile = [cxTile / 2, 1].max
     cyTile = [cyTile / 2, 1].max
@@ -113,8 +118,8 @@ class TileDrawingHelper
       src_rect = Rect.new(anim, 0, 32, 32)
       bitmap.stretch_blt(Rect.new(x, y, cxTile * 2, cyTile * 2), autotile, src_rect)
     else
-      anim = frame * 96
-      id %= 48
+      anim = frame * 32 * 3   # Frames of a large autotile are 3 tiles wide
+      id %= TilemapRenderer::TILES_PER_AUTOTILE
       tiles = AUTOTILE_PATTERNS[id >> 3][id & 7]
       src = Rect.new(0, 0, 0, 0)
       4.times do |i|
@@ -127,14 +132,15 @@ class TileDrawingHelper
   end
 
   def bltSmallRegularTile(bitmap, x, y, cxTile, cyTile, id)
-    return if id < 384 || !@tileset || @tileset.disposed?
-    rect = Rect.new(((id - 384) % 8) * 32, ((id - 384) / 8) * 32, 32, 32)
+    return if id < TilemapRenderer::TILESET_START_ID || !@tileset || @tileset.disposed?
+    rect = Rect.new(((id - TilemapRenderer::TILESET_START_ID) % TilemapRenderer::TILESET_TILES_PER_ROW) * 32,
+                    ((id - TilemapRenderer::TILESET_START_ID) / TilemapRenderer::TILESET_TILES_PER_ROW) * 32, 32, 32)
     rect = TilemapRenderer::TilesetWrapper.getWrappedRect(rect) if @shouldWrap
     bitmap.stretch_blt(Rect.new(x, y, cxTile, cyTile), @tileset, rect)
   end
 
   def bltSmallTile(bitmap, x, y, cxTile, cyTile, id, frame = 0)
-    if id >= 384
+    if id >= TilemapRenderer::TILESET_START_ID
       bltSmallRegularTile(bitmap, x, y, cxTile, cyTile, id)
     elsif id > 0
       bltSmallAutotile(bitmap, x, y, cxTile, cyTile, id, frame)
@@ -150,7 +156,7 @@ class TileDrawingHelper
   end
 
   def bltTile(bitmap, x, y, id, frame = 0)
-    if id >= 384
+    if id >= TilemapRenderer::TILESET_START_ID
       bltRegularTile(bitmap, x, y, id)
     elsif id > 0
       bltAutotile(bitmap, x, y, id, frame)
@@ -161,29 +167,39 @@ end
 #===============================================================================
 #
 #===============================================================================
-def createMinimap(mapid)
-  map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS)) rescue nil
+def createMapBitmap(map_id, tile_width = Game_Map::TILE_WIDTH, tile_height = Game_Map::TILE_HEIGHT, with_outline = false)
+  map = nil
+  if Game_Map.map_data_exists?(map_id)
+    map = Game_Map.load_map_data(map_id)
+  end
   return Bitmap.new(32, 32) if !map
-  bitmap = Bitmap.new(map.width * 4, map.height * 4)
-  black = Color.black
-  tilesets = $data_tilesets
-  tileset = tilesets[map.tileset_id]
+  bitmap = Bitmap.new(map.width * tile_width, map.height * tile_height)
+  tileset = $data_tilesets[map.tileset_id]
   return bitmap if !tileset
   helper = TileDrawingHelper.fromTileset(tileset)
   map.height.times do |y|
     map.width.times do |x|
-      3.times do |z|
-        id = map.data[x, y, z]
+      map.data.zsize.times do |layer|
+        id = map.data[x, y, layer]
         id = 0 if !id
-        helper.bltSmallTile(bitmap, x * 4, y * 4, 4, 4, id)
+        helper.bltSmallTile(bitmap, x * tile_width, y * tile_height, tile_width, tile_height, id)
       end
     end
   end
-  bitmap.fill_rect(0, 0, bitmap.width, 1, black)
-  bitmap.fill_rect(0, bitmap.height - 1, bitmap.width, 1, black)
-  bitmap.fill_rect(0, 0, 1, bitmap.height, black)
-  bitmap.fill_rect(bitmap.width - 1, 0, 1, bitmap.height, black)
+  if with_outline
+    black = Color.black
+    bitmap.fill_rect(0, 0, bitmap.width, 1, black)
+    bitmap.fill_rect(0, bitmap.height - 1, bitmap.width, 1, black)
+    bitmap.fill_rect(0, 0, 1, bitmap.height, black)
+    bitmap.fill_rect(bitmap.width - 1, 0, 1, bitmap.height, black)
+  end
   return bitmap
+end
+
+# Creates a bitmap of a map, with each tile being 4x4 pixels (0.125x zoom). It
+# has a black outline around it.
+def createMinimap(map_id)
+  return createMapBitmap(map_id, 4, 4, true)
 end
 
 def bltMinimapAutotile(dstBitmap, x, y, srcBitmap, id)
@@ -209,7 +225,7 @@ end
 
 # Unused
 def getPassabilityMinimap(mapid)
-  map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS))
+  map = Game_Map.load_map_data(mapid)
   tileset = $data_tilesets[map.tileset_id]
   minimap = AnimatedBitmap.new("Graphics/UI/minimap_tiles")
   ret = Bitmap.new(map.width * 6, map.height * 6)
@@ -218,13 +234,13 @@ def getPassabilityMinimap(mapid)
   map.width.times do |i|
     map.height.times do |j|
       pass = true
-      [2, 1, 0].each do |z|
-        if !passable?(passages, map.data[i, j, z])
+      (map.data.zsize - 1).downto(0) do |layer|
+        if !passable?(passages, map.data[i, j, layer])
           pass = false
           break
         end
       end
-      passtable[i, j] = pass ? 1 : 0
+      passtable[i, j] = (pass) ? 1 : 0
     end
   end
   neighbors = TileDrawingHelper::NEIGHBORS_TO_AUTOTILE_INDEX

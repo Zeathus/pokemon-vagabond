@@ -1,18 +1,14 @@
 #===============================================================================
 # * Hall of Fame - by FL (Credits will be apreciated)
-#===============================================================================
-#
+#-------------------------------------------------------------------------------
 # This script is for Pokémon Essentials. It makes a recordable Hall of Fame
 # like the Gen 3 games.
-#
-#===============================================================================
-#
+#-------------------------------------------------------------------------------
 # To this scripts works, put it above main, put a 512x384 picture in
 # hallfamebars and a 8x24 background picture in hallfamebg. To call this script,
 # use 'pbHallOfFameEntry'. After you recorder the first entry, you can access
 # the hall teams using a PC. You can also check the player Hall of Fame last
 # number using '$PokemonGlobal.hallOfFameLastNumber'.
-#
 #===============================================================================
 class HallOfFame_Scene
   # When true, all pokémon will be in one line.
@@ -48,7 +44,7 @@ class HallOfFame_Scene
   def pbStartScene
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     # Comment the below line to doesn't use a background
     addBackgroundPlane(@sprites, "bg", "Hall of Fame/bg", @viewport)
     @sprites["hallbars"] = IconSprite.new(@viewport)
@@ -288,9 +284,9 @@ class HallOfFame_Scene
     textPositions = [
       [dexnumber, 32, Graphics.height - 74, :left, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR],
       [pokename, Graphics.width - 192, Graphics.height - 74, :center, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR],
-      [_INTL("Lv. {1}", pokemon.egg? ? "?" : pokemon.level),
+      [_INTL("Lv. {1}", (pokemon.egg?) ? "?" : pokemon.level),
        64, Graphics.height - 42, :left, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR],
-      [_INTL("ID No. {1}", pokemon.egg? ? "?????" : idno),
+      [_INTL("ID No. {1}", (pokemon.egg?) ? "?????" : idno),
        Graphics.width - 192, Graphics.height - 42, :center, TEXT_BASE_COLOR, TEXT_SHADOW_COLOR]
     ]
     if hallNumber > -1
@@ -449,20 +445,6 @@ end
 #===============================================================================
 #
 #===============================================================================
-MenuHandlers.add(:pc_menu, :hall_of_fame, {
-  "name"      => _INTL("Hall of Fame"),
-  "order"     => 40,
-  "condition" => proc { next $PokemonGlobal.hallOfFameLastNumber > 0 },
-  "effect"    => proc { |menu|
-    pbMessage("\\se[PC access]" + _INTL("Accessed the Hall of Fame."))
-    pbHallOfFamePC
-    next false
-  }
-})
-
-#===============================================================================
-#
-#===============================================================================
 class PokemonGlobalMetadata
   attr_writer :hallOfFame
   # Number necessary if hallOfFame array reach in its size limit
@@ -492,3 +474,14 @@ def pbHallOfFamePC
   screen = HallOfFameScreen.new(scene)
   screen.pbStartScreenPC
 end
+
+MenuHandlers.add(:pc_menu, :hall_of_fame, {
+  "name"      => _INTL("Hall of Fame"),
+  "order"     => 40,
+  "condition" => proc { next $PokemonGlobal.hallOfFameLastNumber > 0 },
+  "effect"    => proc { |menu|
+    pbMessage("\\se[PC access]" + _INTL("Accessed the Hall of Fame."))
+    pbHallOfFamePC
+    next false
+  }
+})

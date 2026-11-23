@@ -1,6 +1,6 @@
 #===============================================================================
-# "Voltorb Flip" mini-game
-# By KitsuneKouta
+# "Voltorb Flip" mini-game.
+# By KitsuneKouta.
 #-------------------------------------------------------------------------------
 # Run with:      pbVoltorbFlip
 #===============================================================================
@@ -217,9 +217,18 @@ class VoltorbFlip
       pbMessage(_INTL("You've gathered {1} Coins. You cannot gather any more.", Settings::MAX_COINS.to_s_formatted))
       $player.coins = Settings::MAX_COINS   # As a precaution
       @quit = true
-#    elsif !pbConfirmMessage(_INTL("Play Voltorb Flip Lv. {1}?", @level)) && $player.coins < Settings::MAX_COINS
-#      @quit = true
     else
+      loop do
+        case pbMessage(_INTL("Play Voltorb Flip Lv. {1}?", @level), [_INTL("Play"), _INTL("Game Info"), _INTL("Quit")], 3)
+        when 0 # Play
+          break
+        when 1 # Game Info
+          display_game_info
+        else # Quit
+          @quit = true
+          return
+        end
+      end
       @sprites["curtain"].opacity = 0
       # Erase 0s to prepare to replace with values
       @sprites["numbers"].bitmap.clear
@@ -254,9 +263,42 @@ class VoltorbFlip
     end
   end
 
+  def display_game_info
+    loop do
+      case pbMessage(_INTL("Which set of info?"), [_INTL("How to Play"), _INTL("Hint!"), _INTL("About Memos"), _INTL("Return")], 4)
+      when 0
+        pbMessage(_INTL("Voltorb Flip is a game in which you flip over cards to find numbers hidden beneath them."))
+        pbMessage(_INTL("The cards are hiding the numbers 1 through 3... and Voltorb as well."))
+        pbMessage(_INTL("The first number you flip over will give you that many Coins."))
+        pbMessage(_INTL("From then on, the next number you find will multiply the total amount of Coins you've collected by that number."))
+        pbMessage(_INTL("If it's a 2, your total will be multiplied by \"×2\"."))
+        pbMessage(_INTL("If it's a 3, your total will be multiplied by \"×3\"."))
+        pbMessage(_INTL("But if you flip over a Voltorb, it's game over."))
+        pbMessage(_INTL("When that happens, you'll lose all the Coins you've collected in the current game."))
+        pbMessage(_INTL("If you select \"Quit\", you'll withdraw from the game."))
+        pbMessage(_INTL("If you get to a difficult spot, you might want to end the game early."))
+        pbMessage(_INTL("Once you've found all the hidden 2 and 3 cards, you've cleared the game."))
+        pbMessage(_INTL("Once you've flipped over all these cards, then you'll advance to the next level."))
+        pbMessage(_INTL("As you move up in levels, you will be able to receive more Coins."))
+        pbMessage(_INTL("Do your best!"))
+      when 1
+        pbMessage(_INTL("The numbers at the side of the board give you a clue about the numbers hidden on the backs of the panels."))
+        pbMessage(_INTL("The larger the number, the more likely it is that there are many large numbers hidden in that row or column."))
+        pbMessage(_INTL("In the same way, you can tell how many Voltorb are hidden in the row or column."))
+        pbMessage(_INTL("Consider the hidden number totals and the Voltorb totals carefully as you flip over panels."))
+      when 2
+        pbMessage(_INTL("Use the Action button to mark the cards with a Voltorb symbol."))
+        pbMessage(_INTL("When you have an idea of whether a Voltorb is hidden on the back of a card, mark the card."))
+        pbMessage(_INTL("If you want to remove a mark, mark the card again and it will disappear."))
+      else
+        return
+      end
+    end
+  end
+
   def pbCreateSprites
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @sprites["bg"] = Sprite.new(@viewport)
     @sprites["bg"].bitmap = RPG::Cache.load_bitmap(GRAPHICS_DIRECTORY, _INTL("Voltorb Flip bg"))
     @sprites["text"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
@@ -264,22 +306,22 @@ class VoltorbFlip
     @sprites["level"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     pbSetSystemFont(@sprites["level"].bitmap)
     @sprites["curtain"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @sprites["curtain"].z = 99999
+    @sprites["curtain"].z = 99_999
     @sprites["curtain"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.black)
     @sprites["curtain"].opacity = 0
     @sprites["curtainL"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @sprites["curtainL"].z = 99999
+    @sprites["curtainL"].z = 99_999
     @sprites["curtainL"].x = Graphics.width / 2
     @sprites["curtainL"].angle = -90
     @sprites["curtainL"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height, Color.black)
     @sprites["curtainR"] = BitmapSprite.new(Graphics.width, Graphics.height * 2, @viewport)
-    @sprites["curtainR"].z = 99999
+    @sprites["curtainR"].z = 99_999
     @sprites["curtainR"].x = Graphics.width / 2
     @sprites["curtainR"].bitmap.fill_rect(0, 0, Graphics.width, Graphics.height * 2, Color.black)
     @sprites["cursor"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @sprites["cursor"].z = 99998
+    @sprites["cursor"].z = 99_998
     @sprites["icon"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @sprites["icon"].z = 99997
+    @sprites["icon"].z = 99_997
     @sprites["mark"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     @sprites["memo"] = Sprite.new(@viewport)
     @sprites["memo"].bitmap = RPG::Cache.load_bitmap(GRAPHICS_DIRECTORY, _INTL("memo"))
@@ -290,10 +332,10 @@ class VoltorbFlip
     @sprites["totalCoins"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     @sprites["currentCoins"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
     @sprites["animation"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-    @sprites["animation"].z = 99999
+    @sprites["animation"].z = 99_999
     6.times do |i|
       @sprites[i] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
-      @sprites[i].z = 99996
+      @sprites[i].z = 99_996
       @sprites[i].visible = false
     end
     # Creates images ahead of time for the display-all animation (reduces lag)
@@ -408,10 +450,10 @@ class VoltorbFlip
               if @level > 1
                 # Determine how many levels to reduce by
                 newLevel = @squares.count { |tile| tile[3] && tile[2] > 0 }
-                newLevel = newLevel.clamp(@level, 1)
+                newLevel = newLevel.clamp(1, @level)
                 if newLevel < @level
                   @level = newLevel
-                  pbMessage("\\se[Voltorb Flip level down]" + _INTL("Dropped to Game Lv. {1}!", @level.to_s))
+                  pbMessage("\\se[Voltorb Flip level down]" + _INTL("Dropped to Game Lv. {1}!", @level.to_s) + "\\wtnp[20]")
                 end
               end
               # Update level text
@@ -460,7 +502,7 @@ class VoltorbFlip
         pbMessage("\\me[Voltorb Flip win]" + _INTL("Game clear!") + "\\wtnp[40]")
 #        pbMessage(_INTL("You've found all of the hidden x2 and x3 cards."))
 #        pbMessage(_INTL("This means you've found all the Coins in this game, so the game is now over."))
-        pbMessage("\\se[Voltorb Flip gain coins]" + _INTL("{1} received {2} Coins!", $player.name, @points.to_s_formatted))
+        pbMessage("\\se[Voltorb Flip gain coins]" + _INTL("{1} received {2} Coins!", $player.name, @points.to_s_formatted) + "\\wtnp[10]")
         # Update level text
         @sprites["level"].bitmap.clear
         pbDrawShadowText(@sprites["level"].bitmap, 8, 154, 118, 28, _INTL("Level {1}", @level.to_s),
@@ -479,7 +521,7 @@ class VoltorbFlip
         @sprites["curtain"].opacity = 100
         if @level < 8
           @level += 1
-          pbMessage("\\se[Voltorb Flip level up]" + _INTL("Advanced to Game Lv. {1}!", @level.to_s))
+          pbMessage("\\se[Voltorb Flip level up]" + _INTL("Advanced to Game Lv. {1}!", @level.to_s) + "\\wtnp[10]")
           if @firstRound
 #            pbMessage(_INTL("Congratulations!"))
 #            pbMessage(_INTL("You can receive even more Coins in the next game!"))
@@ -585,7 +627,7 @@ class VoltorbFlip
       @sprites[i].visible = true
       pbWait(0.05) if i < 3
       @sprites[i].bitmap.clear
-      @sprites[i].z = 99997
+      @sprites[i].z = 99_997
     end
     pbSEPlay("Voltorb Flip tile")
     @sprites[5].visible = true

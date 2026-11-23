@@ -13,34 +13,31 @@ def pbGetLegalMoves(species)
   return moves
 end
 
-def pbSafeCopyFile(x, y, z = nil)
-  if FileTest.exist?(x)
-    safetocopy = true
-    filedata = nil
-    if FileTest.exist?(y)
-      different = false
-      if FileTest.size(x) == FileTest.size(y)
-        filedata2 = ""
-        File.open(x, "rb") { |f| filedata  = f.read }
-        File.open(y, "rb") { |f| filedata2 = f.read }
-        different = true if filedata != filedata2
-      else
-        different = true
-      end
-      if different
-        safetocopy = pbConfirmMessage(_INTL("A different file named '{1}' already exists. Overwrite it?", y))
-      else
-        # No need to copy
-        return
-      end
+def pbSafeCopyFile(from_filename, to_filename, actual_to_filename = nil)
+  return if !FileTest.exist?(from_filename)
+  safe_to_copy = true
+  file_data = nil
+  # Check whether to_filename already exists and is identical to from_filename
+  if FileTest.exist?(to_filename)
+    different = false
+    if FileTest.size(from_filename) == FileTest.size(to_filename)
+      file_data2 = ""
+      File.open(from_filename, "rb") { |f| file_data = f.read }
+      File.open(to_filename, "rb") { |f| file_data2 = f.read }
+      different = true if file_data != file_data2
+    else
+      different = true
     end
-    if safetocopy
-      if !filedata
-        File.open(x, "rb") { |f| filedata = f.read }
-      end
-      File.open((z) ? z : y, "wb") { |f| f.write(filedata) }
-    end
+    return if !different   # No need to copy
+    safe_to_copy = pbConfirmMessage(_INTL("A different file named '{1}' already exists. Overwrite it?", to_filename))
   end
+  return if !safe_to_copy
+  # Read the file if it hasn't been already
+  if !file_data
+    File.open(from_filename, "rb") { |f| file_data = f.read }
+  end
+  # Copy the file
+  File.open(actual_to_filename || to_filename, "wb") { |f| f.write(file_data) }
 end
 
 def pbAllocateAnimation(animations, name)
@@ -111,7 +108,7 @@ def pbMapTree
 end
 
 #===============================================================================
-# List all members of a class
+# List all members of a class.
 #===============================================================================
 def pbChooseFromGameDataList(game_data, default = nil)
   if !GameData.const_defined?(game_data.to_sym)
@@ -242,7 +239,7 @@ def pbChooseBallList(defaultMoveID = nil)
 end
 
 #===============================================================================
-# General list methods
+# General list methods.
 #===============================================================================
 def pbCommands2(cmdwindow, commands, cmdIfCancel, defaultindex = -1, noresize = false)
   cmdwindow.commands = commands
@@ -255,7 +252,7 @@ def pbCommands2(cmdwindow, commands, cmdIfCancel, defaultindex = -1, noresize = 
     cmdwindow.width  = Graphics.width / 2
   end
   cmdwindow.height   = Graphics.height if cmdwindow.height > Graphics.height
-  cmdwindow.z        = 99999
+  cmdwindow.z        = 99_999
   cmdwindow.visible  = true
   cmdwindow.active   = true
   command = 0
@@ -292,7 +289,7 @@ def pbCommands3(cmdwindow, commands, cmdIfCancel, defaultindex = -1, noresize = 
     cmdwindow.width  = Graphics.width / 2
   end
   cmdwindow.height   = Graphics.height if cmdwindow.height > Graphics.height
-  cmdwindow.z        = 99999
+  cmdwindow.z        = 99_999
   cmdwindow.visible  = true
   cmdwindow.active   = true
   command = 0
@@ -300,10 +297,7 @@ def pbCommands3(cmdwindow, commands, cmdIfCancel, defaultindex = -1, noresize = 
     Graphics.update
     Input.update
     cmdwindow.update
-    if Input.trigger?(Input::SPECIAL)
-      command = [5, cmdwindow.index]
-      break
-    elsif Input.press?(Input::ACTION)
+    if Input.press?(Input::ACTION)
       if Input.repeat?(Input::UP)
         command = [1, cmdwindow.index]
         break
@@ -386,7 +380,7 @@ def pbCommandsSortable(cmdwindow, commands, cmdIfCancel, defaultindex = -1, sort
   cmdwindow.y        = 0
   cmdwindow.width    = Graphics.width / 2 if cmdwindow.width < Graphics.width / 2
   cmdwindow.height   = Graphics.height
-  cmdwindow.z        = 99999
+  cmdwindow.z        = 99_999
   cmdwindow.active   = true
   command = 0
   loop do

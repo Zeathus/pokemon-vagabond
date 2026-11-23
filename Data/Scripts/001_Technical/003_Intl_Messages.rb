@@ -114,9 +114,8 @@ module Translator
           t += 5
           Graphics.update
         end
-        filename = sprintf("Data/Map%03d.rxdata", id)
-        next if !pbRgssExists?(filename)
-        map = load_data(filename)
+        next if !Game_Map.map_data_exists?(id)
+        map = Game_Map.load_map_data(id)
         items = []
         choices = []
         map.events.each_value do |event|
@@ -124,49 +123,47 @@ module Translator
             t += 5
             Graphics.update
           end
-          begin
-            event.pages.size.times do |i|
-              neednewline = false
+          event.pages.size.times do |i|
+            neednewline = false
+            lastitem = ""
+            event.pages[i].list.size.times do |j|
+              list = event.pages[i].list[j]
+              if neednewline && list.code != 401   # Continuation of 101 Show Text
+                if lastitem != ""
+                  lastitem.gsub!(/([^\.\!\?])\s\s+/) { |m| $1 + " " }
+                  items.push(lastitem)
+                  lastitem = ""
+                end
+                neednewline = false
+              end
+              if list.code == 101   # Show Text
+                lastitem += list.parameters[0].to_s
+                neednewline = true
+              elsif list.code == 102   # Show Choices
+                list.parameters[0].length.times do |k|
+                  choices.push(list.parameters[0][k])
+                end
+                neednewline = false
+              elsif list.code == 401   # Continuation of 101 Show Text
+                lastitem += " " if lastitem != ""
+                lastitem += list.parameters[0].to_s
+                neednewline = true
+              elsif list.code == 355 || list.code == 655   # Script or script continuation line
+                find_translatable_text_from_event_script(items, list.parameters[0])
+              elsif list.code == 111 && list.parameters[0] == 12   # Conditional Branch
+                find_translatable_text_from_event_script(items, list.parameters[1])
+              elsif list.code == 209   # Set Move Route
+                route = list.parameters[1]
+                route.list.size.times do |k|
+                  if route.list[k].code == PBMoveRoute::SCRIPT
+                    find_translatable_text_from_event_script(items, route.list[k].parameters[0])
+                  end
+                end
+              end
+            end
+            if neednewline && lastitem != ""
+              items.push(lastitem)
               lastitem = ""
-              event.pages[i].list.size.times do |j|
-                list = event.pages[i].list[j]
-                if neednewline && list.code != 401   # Continuation of 101 Show Text
-                  if lastitem != ""
-                    lastitem.gsub!(/([^\.\!\?])\s\s+/) { |m| $1 + " " }
-                    items.push(lastitem)
-                    lastitem = ""
-                  end
-                  neednewline = false
-                end
-                if list.code == 101   # Show Text
-                  lastitem += list.parameters[0].to_s
-                  neednewline = true
-                elsif list.code == 102   # Show Choices
-                  list.parameters[0].length.times do |k|
-                    choices.push(list.parameters[0][k])
-                  end
-                  neednewline = false
-                elsif list.code == 401   # Continuation of 101 Show Text
-                  lastitem += " " if lastitem != ""
-                  lastitem += list.parameters[0].to_s
-                  neednewline = true
-                elsif list.code == 355 || list.code == 655   # Script or script continuation line
-                  find_translatable_text_from_event_script(items, list.parameters[0])
-                elsif list.code == 111 && list.parameters[0] == 12   # Conditional Branch
-                  find_translatable_text_from_event_script(items, list.parameters[1])
-                elsif list.code == 209   # Set Move Route
-                  route = list.parameters[1]
-                  route.list.size.times do |k|
-                    if route.list[k].code == PBMoveRoute::SCRIPT
-                      find_translatable_text_from_event_script(items, route.list[k].parameters[0])
-                    end
-                  end
-                end
-              end
-              if neednewline && lastitem != ""
-                items.push(lastitem)
-                lastitem = ""
-              end
             end
           end
         end
@@ -211,15 +208,17 @@ module Translator
     end
   end
 
+  #-----------------------------------------------------------------------------
+
   def normalize_value(value)
     if value[/[\r\n\t\x01]|^[\[\]]/]
       ret = value.dup
       ret.gsub!(/\r/, "<<r>>")
       ret.gsub!(/\n/, "<<n>>")
       ret.gsub!(/\t/, "<<t>>")
-      ret.gsub!(/\[/, "<<[>>")
-      ret.gsub!(/\]/, "<<]>>")
       ret.gsub!(/\x01/, "<<1>>")
+      ret.gsub!(/^\[/, "<<[>>")
+      ret.gsub!(/^\]/, "<<]>>")
       return ret
     end
     return value
@@ -228,12 +227,12 @@ module Translator
   def denormalize_value(value)
     if value[/<<[rnt1\[\]]>>/]
       ret = value.dup
-      ret.gsub!(/<<1>>/, "\1")
       ret.gsub!(/<<r>>/, "\r")
       ret.gsub!(/<<n>>/, "\n")
+      ret.gsub!(/<<t>>/, "\t")
+      ret.gsub!(/<<1>>/, "\1")
       ret.gsub!(/<<\[>>/, "[")
       ret.gsub!(/<<\]>>/, "]")
-      ret.gsub!(/<<t>>/, "\t")
       return ret
     end
     return value
@@ -389,7 +388,8 @@ module Translator
     end
     msg_window.textspeed = MessageConfig.pbSettingToTextSpeed($PokemonSystem.textspeed)
     pbMessageDisplay(msg_window,
-       _INTL("Text files in the folder \"Text_{1}\" were successfully compiled into file \"Data/messages_{2}.dat\".", dir_name, dat_filename))
+                     _INTL("Text files in the folder \"Text_{1}\" were successfully compiled into file \"Data/messages_{2}.dat\".",
+                           dir_name, dat_filename))
     pbMessageDisplay(msg_window, _INTL("You may need to close the game to see any changes to messages."))
     pbDisposeMessageWindow(msg_window)
   end
@@ -487,6 +487,42 @@ class Translation
       return key
     end
     return str
+  end
+
+  def self.imperial_measurements?
+    return System.user_language[3..4] == "US"   # If the user is in the United States
+  end
+
+  def self.month_day_date_format?
+    return System.user_language[3..4] == "US"   # If the user is in the United States
+  end
+
+  def self.thousands_separator
+    return " " if ["fr", "es"].include?(System.user_language[0..1])
+    return "." if ["it", "de"].include?(System.user_language[0..1])
+    return ","
+  end
+
+  def self.decimal_separator
+    return "," if ["fr", "it", "de", "es"].include?(System.user_language[0..1])
+    return "."
+  end
+
+  def self.more_possessive_messages?
+    return false if !Settings::LANGUAGES[$PokemonSystem.language]
+    return ["Français"].include?(Settings::LANGUAGES[$PokemonSystem.language][0])
+  end
+
+  def self.whitespace_separates_words?
+    return true if !Settings::LANGUAGES[$PokemonSystem.language]
+    return false if [
+      "中文",       # Chinese
+      "简体中文",   # Simplified Chinese
+      "繁體中文",   # Traditional Chinese
+      "日本語",     # Japanese
+      "한국어"      # Korean
+    ].include?(Settings::LANGUAGES[$PokemonSystem.language][0])
+    return true
   end
 
   def initialize(filename = nil, delay_load = false)
@@ -709,51 +745,53 @@ module MessageTypes
   POKEMON_NICKNAMES            = 30
   @@messages = Translation.new
 
-  def self.load_default_messages
+  module_function
+
+  def load_default_messages
     @@messages.load_default_messages
   end
 
-  def self.load_message_files(filename)
+  def load_message_files(filename)
     @@messages.load_message_files(filename)
   end
 
-  def self.save_default_messages
+  def save_default_messages
     @@messages.save_default_messages
   end
 
-  def self.setMessages(type, array)
+  def setMessages(type, array)
     @@messages.setMessages(type, array)
   end
 
-  def self.addMessages(type, array)
+  def addMessages(type, array)
     @@messages.addMessages(type, array)
   end
 
-  def self.setMessagesAsHash(type, array)
+  def setMessagesAsHash(type, array)
     @@messages.setMessagesAsHash(type, array)
   end
 
-  def self.addMessagesAsHash(type, array)
+  def addMessagesAsHash(type, array)
     @@messages.addMessagesAsHash(type, array)
   end
 
-  def self.setMapMessagesAsHash(type, array)
+  def setMapMessagesAsHash(type, array)
     @@messages.setMapMessagesAsHash(type, array)
   end
 
-  def self.addMapMessagesAsHash(type, array)
+  def addMapMessagesAsHash(type, array)
     @@messages.addMapMessagesAsHash(type, array)
   end
 
-  def self.get(type, id)
+  def get(type, id)
     return @@messages.get(type, id)
   end
 
-  def self.getFromHash(type, key)
+  def getFromHash(type, key)
     return @@messages.getFromHash(type, key)
   end
 
-  def self.getFromMapHash(type, key)
+  def getFromMapHash(type, key)
     return @@messages.getFromMapHash(type, key)
   end
 end
@@ -773,7 +811,12 @@ end
 # parameters by replacing {1}, {2}, etc. with those placeholders.
 def _INTL(*arg)
   begin
-    string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0])
+    if $player&.female?
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, "[F]" + arg[0])
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0]) if string == "[F]" + arg[0]
+    else
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0])
+    end
   rescue
     string = arg[0]
   end
@@ -789,7 +832,12 @@ end
 # This version acts more like sprintf, supports e.g. {1:d} or {2:s}
 def _ISPRINTF(*arg)
   begin
-    string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0])
+    if $player&.female?
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, "[F]" + arg[0])
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0]) if string == "[F]" + arg[0]
+    else
+      string = MessageTypes.getFromHash(MessageTypes::SCRIPT_TEXTS, arg[0])
+    end
   rescue
     string = arg[0]
   end
@@ -805,7 +853,12 @@ def _I(str, *arg)
 end
 
 def _MAPINTL(mapid, *arg)
-  string = MessageTypes.getFromMapHash(mapid, arg[0])
+  if $player&.female?
+    string = MessageTypes.getFromMapHash(mapid, "[F]" + arg[0])
+    string = MessageTypes.getFromMapHash(mapid, arg[0]) if string == "[F]" + arg[0]
+  else
+    string = MessageTypes.getFromMapHash(mapid, arg[0])
+  end
   string = string.clone
   (1...arg.length).each do |i|
     string.gsub!(/\{#{i}\}/, arg[i].to_s)
@@ -814,7 +867,12 @@ def _MAPINTL(mapid, *arg)
 end
 
 def _MAPISPRINTF(mapid, *arg)
-  string = MessageTypes.getFromMapHash(mapid, arg[0])
+  if $player&.female?
+    string = MessageTypes.getFromMapHash(mapid, "[F]" + arg[0])
+    string = MessageTypes.getFromMapHash(mapid, arg[0]) if string == "[F]" + arg[0]
+  else
+    string = MessageTypes.getFromMapHash(mapid, arg[0])
+  end
   string = string.clone
   (1...arg.length).each do |i|
     string.gsub!(/\{#{i}\:([^\}]+?)\}/) { |m| next sprintf("%" + $1, arg[i]) }

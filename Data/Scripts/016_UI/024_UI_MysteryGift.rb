@@ -1,7 +1,7 @@
 #===============================================================================
-# Mystery Gift system
-# By Maruno
-#===============================================================================
+# Mystery Gift system.
+# By Maruno.
+#-------------------------------------------------------------------------------
 # This url is the location of an example Mystery Gift file.
 # You should change it to your file's url once you upload it.
 #===============================================================================
@@ -60,7 +60,7 @@ def pbEditMysteryGift(type, item, id = 0, giftname = "")
       master = []
       idlist = []
       if FileTest.exist?("MysteryGiftMaster.txt")
-        master = IO.read("MysteryGiftMaster.txt")
+        master = File.read("MysteryGiftMaster.txt")
         master = pbMysteryGiftDecrypt(master)
       end
       master.each do |i|
@@ -102,7 +102,7 @@ def pbCreateMysteryGift(type, item)
   if gift
     begin
       if FileTest.exist?("MysteryGiftMaster.txt")
-        master = IO.read("MysteryGiftMaster.txt")
+        master = File.read("MysteryGiftMaster.txt")
         master = pbMysteryGiftDecrypt(master)
         master.push(gift)
       else
@@ -129,7 +129,7 @@ def pbManageMysteryGifts
     return
   end
   # Load all gifts from the Master file.
-  master = IO.read("MysteryGiftMaster.txt")
+  master = File.read("MysteryGiftMaster.txt")
   master = pbMysteryGiftDecrypt(master)
   if !master || !master.is_a?(Array) || master.length == 0
     pbMessage(_INTL("There are no Mystery Gifts defined."))
@@ -226,7 +226,7 @@ def pbRefreshMGCommands(master, online)
     elsif gift[1] > 0
       itemname = GameData::Item.get(gift[2]).name + sprintf(" x%d", gift[1])
     end
-    ontext = ["[  ]", "[X]"][(online.include?(gift[0])) ? 1 : 0]
+    ontext = ["[  ]", "[Y]"][(online.include?(gift[0])) ? 1 : 0]
     commands.push(_INTL("{1} {2}: {3} ({4})", ontext, gift[0], gift[3], itemname))
   end
   commands.push(_INTL("Export selected to file"))
@@ -241,7 +241,7 @@ end
 def pbDownloadMysteryGift(trainer)
   sprites = {}
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = 99999
+  viewport.z = 99_999
   addBackgroundPlane(sprites, "background", "mysterygift_bg", viewport)
   pbFadeInAndShow(sprites)
   sprites["msgwindow"] = pbCreateMessageWindow
@@ -336,14 +336,8 @@ end
 def pbMysteryGiftDecrypt(gift)
   return [] if nil_or_empty?(gift)
   ret = Marshal.restore(Zlib::Inflate.inflate(gift.unpack("m")[0]))
-  if ret
-    ret.each do |gft|
-      if gft[1] == 0   # Pokémon
-        gft[2] = gft[2]
-      else   # Item
-        gft[2] = GameData::Item.get(gft[2]).id
-      end
-    end
+  ret&.each do |gft|
+    gft[2] = (gft[1] == 0) ? gft[2] : GameData::Item.get(gft[2]).id   # Pokémon : item
   end
   return ret
 end
@@ -388,11 +382,7 @@ def pbReceiveMysteryGift(id)
          $player.has_pokedex && $player.pokedex.species_in_unlocked_dex?(gift[2].species)
         pbMessage(_INTL("{1}'s data was added to the Pokédex.", gift[2].name))
         $player.pokedex.register_last_seen(gift[2])
-        pbFadeOutIn do
-          scene = PokemonPokedexInfo_Scene.new
-          screen = PokemonPokedexInfoScreen.new(scene)
-          screen.pbDexEntry(gift[2].species)
-        end
+        pbShowPokedexEntry(gift[2].species)
       end
       return true
     end

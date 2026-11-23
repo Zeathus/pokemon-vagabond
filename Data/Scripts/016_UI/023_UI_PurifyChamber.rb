@@ -23,7 +23,7 @@ class PokemonGlobalMetadata
 end
 
 #===============================================================================
-# General purpose utilities
+# General purpose utilities.
 #===============================================================================
 def pbDrawGauge(bitmap, rect, color, value, maxValue)
   return if !bitmap
@@ -84,7 +84,7 @@ class PurifyChamberSet
       ret += (PurifyChamberSet.isSuperEffective(@list[i], @list[(i + 1) % @list.length])) ? 1 : 0
     end
     if @list[@facing]
-      ret += PurifyChamberSet.isSuperEffective(@shadow, @list[@facing]) ? 1 : 0
+      ret += (PurifyChamberSet.isSuperEffective(@shadow, @list[@facing])) ? 1 : 0
     end
     return ret + (@list.length / 2)
   end
@@ -100,7 +100,7 @@ class PurifyChamberSet
   end
 
   # Tempo refers to the type advantages of each Pokemon in a certain set in a
-  # clockwise direction. Tempo also depends on the number of Pokemon in the set
+  # clockwise direction. Tempo also depends on the number of Pokemon in the set.
   def tempo
     ret = 0
     @list.length.times do |i|
@@ -124,7 +124,7 @@ class PurifyChamberSet
       @list.insert(index + 1, value)
       @list.compact!
       @facing += 1 if @facing > index && value
-      @facing = [[@facing, @list.length - 1].min, 0].max
+      @facing = @facing.clamp(0, @list.length - 1)
     end
   end
 
@@ -133,7 +133,7 @@ class PurifyChamberSet
     unless value&.shadowPokemon?
       @list[index] = value
       @list.compact!
-      @facing = [[@facing, @list.length - 1].min, 0].max
+      @facing = @facing.clamp(0, @list.length - 1)
     end
   end
 
@@ -449,7 +449,7 @@ class PurifyChamberScreen
           end
           commands.push(_INTL("CANCEL"))
           choice = @scene.pbShowCommands(
-            _INTL("What shall I do with this {1}?", heldpkmn ? heldpkmn.name : curpkmn.name),
+            _INTL("What shall I do with this {1}?", (heldpkmn) ? heldpkmn.name : curpkmn.name),
             commands
           )
           if choice == 0
@@ -524,7 +524,7 @@ class PurifyChamberScreen
         chamber.currentSet = cmd[1]
       when 2   # Choose a Pokemon
         pos = @scene.pbChoosePokemon
-        pkmn = pos ? $PokemonStorage[pos[0], pos[1]] : nil
+        pkmn = (pos) ? $PokemonStorage[pos[0], pos[1]] : nil
         heldpkmn = pkmn if pkmn
       else   # cancel
         if heldpkmn
@@ -548,14 +548,22 @@ class PurifyChamberScreen
   def pbDisplay(msg)
     @scene.pbDisplay(msg)
   end
+  alias show_message pbDisplay
 
   def pbConfirm(msg)
     @scene.pbConfirm(msg)
   end
+  alias show_confirm_message pbConfirm
 
   def pbRefresh
     @scene.pbRefresh
   end
+  alias refresh pbRefresh
+
+  def pbUpdate
+    @scene.pbUpdate
+  end
+  alias update pbUpdate
 
   def pbCheckPurify
     purifiables = []
@@ -800,7 +808,7 @@ class FlowDiagram
       return (angle >= startAngle || angle <= endAngle) &&
              (angle >= 0 && angle <= 360)
     else
-      return (angle >= startAngle && angle <= endAngle)
+      return angle >= startAngle && angle <= endAngle
     end
   end
 
@@ -1040,24 +1048,16 @@ class PurifyChamberSetView < Sprite
 
   def update
     super
-    @__sprites.each do |sprite|
-      sprite&.update
-    end
-    @flows.each do |flow|
-      flow.update
-    end
+    @__sprites.each { |sprite| sprite&.update }
+    @flows.each { |flow| flow.update }
     @directflow.update
     @view.update
     @info.update
   end
 
   def dispose
-    @__sprites.each do |sprite|
-      sprite&.dispose
-    end
-    @flows.each do |flow|
-      flow.dispose
-    end
+    @__sprites.each { |sprite| sprite&.dispose }
+    @flows.each { |flow| flow.dispose }
     @directflow.dispose
     @view.dispose
     @info.dispose
@@ -1090,9 +1090,9 @@ class PurifyChamberScene
   def pbOpenSet(set)
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @viewportmsg = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewportmsg.z = 99999
+    @viewportmsg.z = 99_999
     addBackgroundOrColoredPlane(@sprites, "bg", "purifychamber_bg",
                                 Color.new(64, 48, 96), @viewport)
     @sprites["setwindow"] = Window_PurifyChamberSets.new(
@@ -1180,11 +1180,11 @@ class PurifyChamberScene
           pbPlayCursorSE
           @sprites["setview"].moveCursor(btn)
         end
-        if Input.repeat?(Input::JUMPUP)
+        if Input.repeat?(Input::QUICK_UP)
           nextset = (@sprites["setview"].set == 0) ? PurifyChamber::NUMSETS - 1 : @sprites["setview"].set - 1
           pbPlayCursorSE
           return [1, nextset]
-        elsif Input.repeat?(Input::JUMPDOWN)
+        elsif Input.repeat?(Input::QUICK_DOWN)
           nextset = (@sprites["setview"].set == PurifyChamber::NUMSETS - 1) ? 0 : @sprites["setview"].set + 1
           pbPlayCursorSE
           return [1, nextset]
@@ -1226,15 +1226,13 @@ class PurifyChamberScene
     @sprites["setwindow"].switching = set
     ret = pbChooseSet
     @sprites["setwindow"].switching = -1
-    return ret < 0 ? set : ret
+    return (ret < 0) ? set : ret
   end
 
   def pbSummary(pos, heldpkmn)
     if heldpkmn
       oldsprites = pbFadeOutAndHide(@sprites)
-      scene = PokemonSummary_Scene.new
-      screen = PokemonSummaryScreen.new(scene)
-      screen.pbStartScreen([heldpkmn], 0)
+      UI::PokemonSummary.new(heldpkmn).main
       pbFadeInAndShow(@sprites, oldsprites)
       return
     end
@@ -1251,9 +1249,8 @@ class PurifyChamberScene
     end
     return if party.length == 0
     oldsprites = pbFadeOutAndHide(@sprites)
-    scene = PokemonSummary_Scene.new
-    screen = PokemonSummaryScreen.new(scene)
-    selection = screen.pbStartScreen(party, startindex)
+    screen = UI::PokemonSummary.new(party, startindex).main
+    selection = screen.result
     @sprites["setview"].cursor = indexes[selection]
     pbFadeInAndShow(@sprites, oldsprites)
   end
@@ -1271,12 +1268,13 @@ class PurifyChamberScene
   end
 
   def pbChoosePokemon
-    visible = pbFadeOutAndHide(@sprites)
-    scene = PokemonStorageScene.new
-    screen = PokemonStorageScreen.new(scene, $PokemonStorage)
-    pos = screen.pbChoosePokemon
-    pbRefresh
-    pbFadeInAndShow(@sprites, visible)
+    pos = nil
+    pbFadeOutInWithUpdate(@sprites) do
+      screen = UI::PokemonStorage.new($PokemonStorage, mode: :choose_pokemon)
+      screen.main
+      pos = screen.result
+      pbRefresh
+    end
     return pos
   end
 end
@@ -1296,6 +1294,7 @@ end
 #===============================================================================
 #
 #===============================================================================
+
 MenuHandlers.add(:pc_menu, :purify_chamber, {
   "name"      => _INTL("Purify Chamber"),
   "order"     => 30,

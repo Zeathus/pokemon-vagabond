@@ -1,9 +1,10 @@
 #===============================================================================
-# "Triple Triad" mini-game
-# By Unknown
+# "Triple Triad" mini-game.
+# By Unknown.
 #===============================================================================
+
 #===============================================================================
-# Card class
+# Card class.
 #===============================================================================
 class TriadCard
   attr_reader :species, :form
@@ -94,7 +95,7 @@ class TriadCard
     if type
       typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
       type_number = GameData::Type.get(type).icon_position
-      typerect = Rect.new(0, type_number * 28, 64, 28)
+      typerect = Rect.new(0, type_number * GameData::Type::ICON_SIZE[1], *GameData::Type::ICON_SIZE)
       bitmap.blt(8, 50, typebitmap.bitmap, typerect, 192)
       typebitmap.dispose
     end
@@ -116,7 +117,7 @@ class TriadCard
     bitmap.blt(0, 0, cardbitmap.bitmap, Rect.new(0, 0, cardbitmap.width, cardbitmap.height))
     # Draw type icon
     type_number = GameData::Type.get(@type).icon_position
-    typerect = Rect.new(0, type_number * 28, 64, 28)
+    typerect = Rect.new(0, type_number * GameData::Type::ICON_SIZE[1], *GameData::Type::ICON_SIZE)
     bitmap.blt(8, 50, typebitmap.bitmap, typerect, 192)
     # Draw Pokémon icon
     bitmap.blt(8, 24, iconbitmap.bitmap, Rect.new(0, 0, 64, 64))
@@ -134,7 +135,7 @@ class TriadCard
 end
 
 #===============================================================================
-# Duel screen visuals
+# Duel screen visuals.
 #===============================================================================
 class TriadSquare
   attr_accessor :owner, :card, :type
@@ -159,16 +160,18 @@ class TriadSquare
 end
 
 #===============================================================================
-# Scene class for handling appearance of the screen
+# Scene class for handling appearance of the screen.
 #===============================================================================
 class TriadScene
+  TRIPLE_TRIAD_BGM = "Triple Triad"
+
   def pbStartScene(battle)
     @sprites = {}
     @bitmaps = []
     @battle = battle
     # Allocate viewport
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     addBackgroundPlane(@sprites, "background", "Triple Triad/bg", @viewport)
     @sprites["helpwindow"] = Window_AdvancedTextPokemon.newWithSize(
       "", 0, Graphics.height - 64, Graphics.width, 64, @viewport
@@ -206,7 +209,7 @@ class TriadScene
     @sprites["score"] = Sprite.new(@viewport)
     @sprites["score"].bitmap = Bitmap.new(Graphics.width, Graphics.height)
     pbSetSystemFont(@sprites["score"].bitmap)
-    pbBGMPlay("Triple Triad")
+    pbBGMPlay(TRIPLE_TRIAD_BGM)
     # Fade in all sprites
     pbFadeInAndShow(@sprites) { pbUpdate }
   end
@@ -362,7 +365,7 @@ class TriadScene
       @sprites["opponent#{i}"].x      = 12
       @sprites["opponent#{i}"].y      = 44 + (44 * i)
       @sprites["opponent#{i}"].z      = 2
-      @sprites["opponent#{i}"].bitmap = @battle.openHand ? TriadCard.new(cards[i]).createBitmap(2) : TriadCard.createBack
+      @sprites["opponent#{i}"].bitmap = (@battle.openHand) ? TriadCard.new(cards[i]).createBitmap(2) : TriadCard.createBack
       @opponentCardBitmaps.push(@sprites["opponent#{i}"].bitmap)
       @opponentCardIndexes.push(i)
     end
@@ -587,7 +590,7 @@ class TriadScene
 end
 
 #===============================================================================
-# Duel screen logic
+# Duel screen logic.
 #===============================================================================
 class TriadScreen
   attr_accessor :openHand, :countUnplayedCards
@@ -646,11 +649,11 @@ class TriadScreen
 
   def flipBoard(x, y, attackerParam = nil, recurse = false)
     panels = [x - 1, y, x + 1, y, x, y - 1, x, y + 1]
-    panels[0] = (@wrapAround ? @width - 1 : 0) if panels[0] < 0            # left
-    panels[2] = (@wrapAround ? 0 : @width - 1) if panels[2] > @width - 1     # right
-    panels[5] = (@wrapAround ? @height - 1 : 0) if panels[5] < 0           # top
-    panels[7] = (@wrapAround ? 0 : @height - 1) if panels[7] > @height - 1   # bottom
-    attacker = attackerParam.nil? ? @board[(y * @width) + x] : attackerParam
+    panels[0] = ((@wrapAround) ? @width - 1 : 0) if panels[0] < 0            # left
+    panels[2] = ((@wrapAround) ? 0 : @width - 1) if panels[2] > @width - 1     # right
+    panels[5] = ((@wrapAround) ? @height - 1 : 0) if panels[5] < 0           # top
+    panels[7] = ((@wrapAround) ? 0 : @height - 1) if panels[7] > @height - 1   # bottom
+    attacker = (attackerParam.nil?) ? @board[(y * @width) + x] : attackerParam
     flips = []
     return nil if attackerParam && @board[(y * @width) + x].owner != 0
     return nil if !attacker.card || attacker.owner == 0
@@ -723,7 +726,7 @@ class TriadScreen
       count += item[1]   # Add item count to total count
     end
     @board = []
-    @playerName   = $player ? $player.name : "Trainer"
+    @playerName   = ($player) ? $player.name : "Trainer"
     @opponentName = opponentName
     type_keys = GameData::Type.keys
     (@width * @height).times do |i|
@@ -791,7 +794,7 @@ class TriadScreen
       opponentCards = []
       self.maxCards.times do
         # Choose random card from candidates based on trainer's level
-        index = minLevel + rand(20)
+        index = (minLevel * 20) + rand((maxLevel - minLevel + 1) * 20)
         opponentCards.push(candidates[index][0])
       end
     end
@@ -836,7 +839,7 @@ class TriadScreen
         if scores.length == 0
           @scene.pbDisplay(_INTL("{1} can't move somehow...", @opponentName))
           playerTurn = !playerTurn
-          continue
+          next
         end
         result = scores[rand(scores.length)]
         cardIndex = result[0]
@@ -846,7 +849,7 @@ class TriadScreen
       end
       boardIndex = (position[1] * @width) + position[0]
       board[boardIndex].card  = triadCard
-      board[boardIndex].owner = playerTurn ? 1 : 2
+      board[boardIndex].owner = (playerTurn) ? 1 : 2
       flipBoard(position[0], position[1])
       if playerTurn
         cards.delete_at(cardIndex)
@@ -925,7 +928,7 @@ class TriadScreen
         cardname = GameData::Species.get(card).name
         @scene.pbDisplayPaused(_INTL("Opponent won your {1} card.", cardname))
       when 1   # Keep only cards of your color
-        originalCards.each { |crd| $PokemonGlobal.triads.remove(card) }
+        originalCards.each { |crd| $PokemonGlobal.triads.remove(crd) }
         cards.each { |crd| $PokemonGlobal.triads.add(crd) }
         (@width * @height).times do |i|
           if board[i].owner == 1
@@ -945,7 +948,7 @@ class TriadScreen
 end
 
 #===============================================================================
-# Start duel
+# Start duel.
 #===============================================================================
 def pbCanTriadDuel?
   card_count = $PokemonGlobal.triads.total_cards
@@ -963,7 +966,7 @@ def pbTriadDuel(name, minLevel, maxLevel, rules = nil, oppdeck = nil, prize = ni
 end
 
 #===============================================================================
-# Card storage
+# Card storage.
 #===============================================================================
 class PokemonGlobalMetadata
   attr_writer :triads
@@ -1043,7 +1046,7 @@ class TriadStorage
 end
 
 #===============================================================================
-# Card shop screen
+# Card shop screen.
 #===============================================================================
 def pbBuyTriads
   commands = []
@@ -1064,14 +1067,14 @@ def pbBuyTriads
   # Scroll right before showing screen
   pbScrollMap(4, 3, 5)
   cmdwindow = Window_CommandPokemonEx.newWithSize(realcommands, 0, 0, Graphics.width / 2, Graphics.height)
-  cmdwindow.z = 99999
+  cmdwindow.z = 99_999
   goldwindow = Window_UnformattedTextPokemon.newWithSize(
     _INTL("Money:\n{1}", pbGetGoldString), 0, 0, 32, 32
   )
   goldwindow.resizeToFit(goldwindow.text, Graphics.width)
   goldwindow.x = Graphics.width - goldwindow.width
   goldwindow.y = 0
-  goldwindow.z = 99999
+  goldwindow.z = 99_999
   preview = Sprite.new
   preview.x = (Graphics.width * 3 / 4) - 40
   preview.y = (Graphics.height / 2) - 48
@@ -1125,7 +1128,7 @@ def pbBuyTriads
       $PokemonGlobal.triads.add(item, quantity)
       $player.money -= price
       goldwindow.text = _INTL("Money:\n{1}", pbGetGoldString)
-      pbMessage(_INTL("Here you are! Thank you!") + "\\se[Mart buy item]")
+      pbMessage(_INTL("Here you are! Thank you!") + "\\se[Mart buy item]\\wtnp[20]")
     end
   end
   cmdwindow.dispose
@@ -1154,14 +1157,14 @@ def pbSellTriads
   # Scroll right before showing screen
   pbScrollMap(4, 3, 5)
   cmdwindow = Window_CommandPokemonEx.newWithSize(commands, 0, 0, Graphics.width / 2, Graphics.height)
-  cmdwindow.z = 99999
+  cmdwindow.z = 99_999
   goldwindow = Window_UnformattedTextPokemon.newWithSize(
     _INTL("Money:\n{1}", pbGetGoldString), 0, 0, 32, 32
   )
   goldwindow.resizeToFit(goldwindow.text, Graphics.width)
   goldwindow.x = Graphics.width - goldwindow.width
   goldwindow.y = 0
-  goldwindow.z = 99999
+  goldwindow.z = 99_999
   preview = Sprite.new
   preview.x = (Graphics.width * 3 / 4) - 40
   preview.y = (Graphics.height / 2) - 48
@@ -1219,7 +1222,7 @@ def pbSellTriads
             $player.money += price
             goldwindow.text = _INTL("Money:\n{1}", pbGetGoldString)
             $PokemonGlobal.triads.remove(item, quantity)
-            pbMessage(_INTL("Turned over the {1} card and received ${2}.", itemname, price.to_s_formatted) + "\\se[Mart buy item]")
+            pbMessage(_INTL("Turned over the {1} card and received ${2}.", itemname, price.to_s_formatted) + "\\se[Mart buy item]\\wtnp[20]")
             commands = []
             $PokemonGlobal.triads.length.times do |i|
               item = $PokemonGlobal.triads[i]
@@ -1258,11 +1261,11 @@ def pbTriadList
     return
   end
   cmdwindow = Window_CommandPokemonEx.newWithSize(commands, 0, 0, Graphics.width / 2, Graphics.height)
-  cmdwindow.z = 99999
+  cmdwindow.z = 99_999
   sprite = Sprite.new
   sprite.x = (Graphics.width / 2) + 40
   sprite.y = 48
-  sprite.z = 99999
+  sprite.z = 99_999
   done = false
   lastIndex = -1
   until done
@@ -1289,7 +1292,7 @@ def pbTriadList
 end
 
 #===============================================================================
-# Give the player a particular card
+# Give the player a particular card.
 #===============================================================================
 def pbGiveTriadCard(species, quantity = 1)
   sp = GameData::Species.try_get(species)

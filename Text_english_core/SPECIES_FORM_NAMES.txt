@@ -46,8 +46,8 @@ Male
 Male
 Shield Forme
 Shield Forme
-Small Size
-Small Size
+Small Variety
+Small Variety
 Neutral Mode
 Neutral Mode
 50% Forme
@@ -80,6 +80,24 @@ Hero of Many Battles
 Hero of Many Battles
 Single Strike Style
 Single Strike Style
+Family of Four
+Family of Four
+Green Plumage
+Green Plumage
+Zero Form
+Zero Form
+Curly Form
+Curly Form
+Two-Segment Form
+Two-Segment Form
+Chest Form
+Chest Form
+Counterfeit Form
+Counterfeit Form
+Unremarkable Form
+Unremarkable Form
+Teal Mask
+Teal Mask
 Mega Venusaur
 Mega Venusaur
 Mega Charizard X
@@ -94,30 +112,56 @@ Mega Pidgeot
 Mega Pidgeot
 Alolan
 Alolan
+Mega Raichu X
+Mega Raichu X
+Mega Raichu Y
+Mega Raichu Y
+Mega Clefable
+Mega Clefable
 Galarian
 Galarian
+Hisuian
+Hisuian
 Mega Alakazam
 Mega Alakazam
+Mega Victreebel
+Mega Victreebel
 Mega Slowbro
 Mega Slowbro
 Mega Gengar
 Mega Gengar
 Mega Kangaskhan
 Mega Kangaskhan
+Mega Starmie
+Mega Starmie
 Mega Pinsir
 Mega Pinsir
+Paldean (Combat Breed)
+Paldean (Combat Breed)
+Paldean (Blaze Breed)
+Paldean (Blaze Breed)
+Paldean (Aqua Breed)
+Paldean (Aqua Breed)
 Mega Gyarados
 Mega Gyarados
 Mega Aerodactyl
 Mega Aerodactyl
+Mega Dragonite
+Mega Dragonite
 Mega Mewtwo X
 Mega Mewtwo X
 Mega Mewtwo Y
 Mega Mewtwo Y
+Mega Meganium
+Mega Meganium
+Mega Feraligatr
+Mega Feraligatr
 Spiky-Eared
 Spiky-Eared
 Mega Ampharos
 Mega Ampharos
+Paldean
+Paldean
 B
 B
 C
@@ -178,6 +222,8 @@ Mega Scizor
 Mega Scizor
 Mega Heracross
 Mega Heracross
+Mega Skarmory
+Mega Skarmory
 Mega Houndoom
 Mega Houndoom
 Mega Tyranitar
@@ -214,8 +260,12 @@ Snowy Form
 Snowy Form
 Mega Banette
 Mega Banette
+Mega Chimecho
+Mega Chimecho
 Mega Absol
 Mega Absol
+Mega Absol Z
+Mega Absol Z
 Mega Glalie
 Mega Glalie
 Mega Salamence
@@ -238,6 +288,8 @@ Defense Forme
 Defense Forme
 Speed Forme
 Speed Forme
+Mega Staraptor
+Mega Staraptor
 Sandy Cloak
 Sandy Cloak
 Trash Cloak
@@ -250,12 +302,18 @@ Mega Lopunny
 Mega Lopunny
 Mega Garchomp
 Mega Garchomp
+Mega Garchomp Z
+Mega Garchomp Z
 Mega Lucario
 Mega Lucario
+Mega Lucario Z
+Mega Lucario Z
 Mega Abomasnow
 Mega Abomasnow
 Mega Gallade
 Mega Gallade
+Mega Froslass
+Mega Froslass
 Heat Rotom
 Heat Rotom
 Wash Rotom
@@ -268,6 +326,10 @@ Mow Rotom
 Mow Rotom
 Origin Forme
 Origin Forme
+Mega Heatran
+Mega Heatran
+Mega Darkrai
+Mega Darkrai
 Sky Forme
 Sky Forme
 Fighting Type
@@ -306,22 +368,38 @@ Dark Type
 Dark Type
 Fairy Type
 Fairy Type
+Mega Emboar
+Mega Emboar
+Mega Excadrill
+Mega Excadrill
 Mega Audino
 Mega Audino
+Mega Scolipede
+Mega Scolipede
 Blue-Striped
 Blue-Striped
+White-Striped
+White-Striped
 Zen Mode
 Zen Mode
 Galarian Standard Mode
 Galarian Standard Mode
 Galarian Zen Mode
 Galarian Zen Mode
+Mega Scrafty
+Mega Scrafty
 Summer Form
 Summer Form
 Autumn Form
 Autumn Form
 Winter Form
 Winter Form
+Mega Eelektross
+Mega Eelektross
+Mega Chandelure
+Mega Chandelure
+Mega Golurk
+Mega Golurk
 Therian Forme
 Therian Forme
 White Kyurem
@@ -340,8 +418,14 @@ Chill Drive
 Chill Drive
 Douse Drive
 Douse Drive
+Mega Chesnaught
+Mega Chesnaught
+Mega Delphox
+Mega Delphox
 Ash-Greninja
 Ash-Greninja
+Mega Greninja
+Mega Greninja
 Continental Pattern
 Continental Pattern
 Elegant Pattern
@@ -380,6 +464,8 @@ Fancy Pattern
 Fancy Pattern
 Poké Ball Pattern
 Poké Ball Pattern
+Mega Pyroar
+Mega Pyroar
 Yellow Flower
 Yellow Flower
 Orange Flower
@@ -390,6 +476,8 @@ White Flower
 White Flower
 Eternal Flower
 Eternal Flower
+Mega Floette
+Mega Floette
 Heart Trim
 Heart Trim
 Star Trim
@@ -410,24 +498,38 @@ Pharaoh Trim
 Pharaoh Trim
 Female
 Female
+Mega Meowstic
+Mega Meowstic
 Blade Forme
 Blade Forme
-Average Size
-Average Size
-Large Size
-Large Size
-Super Size
-Super Size
+Mega Malamar
+Mega Malamar
+Mega Barbaracle
+Mega Barbaracle
+Mega Dragalge
+Mega Dragalge
+Mega Hawlucha
+Mega Hawlucha
+Medium Variety
+Medium Variety
+Large Variety
+Large Variety
+Jumbo Variety
+Jumbo Variety
 Active Mode
 Active Mode
 10% Forme
 10% Forme
 Complete Forme
 Complete Forme
+Mega Zygarde
+Mega Zygarde
 Mega Diancie
 Mega Diancie
 Hoopa Unbound
 Hoopa Unbound
+Mega Crabominable
+Mega Crabominable
 Pom-Pom Style
 Pom-Pom Style
 Pa'u Style
@@ -440,6 +542,8 @@ Dusk Form
 Dusk Form
 School Form
 School Form
+Mega Golisopod
+Mega Golisopod
 Type: Fighting
 Type: Fighting
 Type: Flying
@@ -492,6 +596,8 @@ Violet Core
 Violet Core
 Busted Form
 Busted Form
+Mega Drampa
+Mega Drampa
 Dusk Mane
 Dusk Mane
 Dawn Wings
@@ -500,6 +606,12 @@ Ultra Necrozma
 Ultra Necrozma
 Original Color
 Original Color
+Mega Magearna
+Mega Magearna
+Mega Magearna (Original Color)
+Mega Magearna (Original Color)
+Mega Zeraora
+Mega Zeraora
 Gulping Form
 Gulping Form
 Gorging Form
@@ -524,6 +636,8 @@ Caramel Swirl
 Caramel Swirl
 Rainbow Swirl
 Rainbow Swirl
+Mega Falinks
+Mega Falinks
 Noice Face
 Noice Face
 Hangry Mode
@@ -538,3 +652,51 @@ Ice Rider
 Ice Rider
 Shadow Rider
 Shadow Rider
+Bloodmoon Ursaluna
+Bloodmoon Ursaluna
+Therian Form
+Therian Form
+Family of Three
+Family of Three
+Blue Plumage
+Blue Plumage
+Yellow Plumage
+Yellow Plumage
+White Plumage
+White Plumage
+Mega Scovillain
+Mega Scovillain
+Hero Form
+Hero Form
+Mega Glimmora
+Mega Glimmora
+Droopy Form
+Droopy Form
+Stretchy Form
+Stretchy Form
+Mega Tatsugiri (Curly Form)
+Mega Tatsugiri (Curly Form)
+Mega Tatsugiri (Droopy Form)
+Mega Tatsugiri (Droopy Form)
+Mega Tatsugiri (Stretchy Form)
+Mega Tatsugiri (Stretchy Form)
+Three-Segment Form
+Three-Segment Form
+Mega Baxcalibur
+Mega Baxcalibur
+Roaming Form
+Roaming Form
+Artisan Form
+Artisan Form
+Masterpiece Form
+Masterpiece Form
+Wellspring Mask
+Wellspring Mask
+Hearthflame Mask
+Hearthflame Mask
+Cornerstone Mask
+Cornerstone Mask
+Terastal Form
+Terastal Form
+Stellar Form
+Stellar Form

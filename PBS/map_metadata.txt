@@ -5,15 +5,16 @@ Name = Intro
 #-------------------------------
 [002]   # Lappet Town
 Name = Lappet Town
+MapPosition = 0,13,12
 Outdoor = true
 ShowArea = true
-MapPosition = 0,13,12
+LocationSign = Pt town
 BattleBack = field
 #-------------------------------
 [003]   # Player's house
 Name = \PN's house
-HealingSpot = 2,8,8
 MapPosition = 0,13,12
+HealingSpot = 2,8,8
 #-------------------------------
 [004]   # Pokémon Lab
 Name = Pokémon Lab
@@ -21,9 +22,10 @@ MapPosition = 0,13,12
 #-------------------------------
 [005]   # Route 1
 Name = Route 1
+MapPosition = 0,13,11
 Outdoor = true
 ShowArea = true
-MapPosition = 0,13,11
+LocationSign = Pt route
 BattleBack = field
 #-------------------------------
 [006]   # Kurt's house
@@ -32,10 +34,11 @@ MapPosition = 0,13,11
 #-------------------------------
 [007]   # Cedolan City
 Name = Cedolan City
-Outdoor = true
-ShowArea = true
 MapPosition = 0,13,10
 MapSize = 2,11
+Outdoor = true
+ShowArea = true
+LocationSign = Pt city
 #-------------------------------
 [008]   # Daisy's house
 Name = Lappet Town
@@ -43,8 +46,8 @@ MapPosition = 0,13,12
 #-------------------------------
 [009]   # Cedolan City Poké Center
 Name = Cedolan City
-HealingSpot = 8,17,11
 MapPosition = 0,14,10
+HealingSpot = 8,17,11
 #-------------------------------
 [010]   # Cedolan Gym
 Name = Cedolan City
@@ -95,23 +98,25 @@ MapPosition = 0,13,10
 #-------------------------------
 [021]   # Route 2
 Name = Route 2
+MapPosition = 0,14,8
+MapSize = 1,11
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 Weather = Rain,100
-MapPosition = 0,14,8
 BattleBack = field
-MapSize = 1,11
 #-------------------------------
 [023]   # Lerucean Town
 Name = Lerucean Town
+MapPosition = 0,15,8
 Outdoor = true
 ShowArea = true
-MapPosition = 0,15,8
+LocationSign = Pt town
 #-------------------------------
 [024]   # Lerucean Town Poké Center
 Name = Lerucean Town
-HealingSpot = 23,11,15
 MapPosition = 0,15,8
+HealingSpot = 23,11,15
 #-------------------------------
 [025]   # Lerucean Town Mart
 Name = Lerucean Town
@@ -127,16 +132,17 @@ MapPosition = 0,15,8
 #-------------------------------
 [028]   # Natural Park
 Name = Natural Park
+MapPosition = 0,16,8
 Outdoor = true
 ShowArea = true
-MapPosition = 0,16,8
+LocationSign = Pt park
 BattleBack = field
 Flags = MossRock,BugContest
 #-------------------------------
 [029]   # Natural Park Entrance
 Name = Natural Park
-Bicycle = true
 MapPosition = 0,16,8
+Bicycle = true
 Flags = BugContestReception
 #-------------------------------
 [030]   # Natural Park Pavillion
@@ -146,30 +152,34 @@ Flags = BugContestReception
 #-------------------------------
 [031]   # Route 3
 Name = Route 3
+MapPosition = 0,14,6
+MapSize = 2,1101
 Outdoor = true
 ShowArea = true
-MapPosition = 0,14,6
+LocationSign = Pt route
 BattleBack = field
-MapSize = 2,1101
 #-------------------------------
 [034]   # Ice Cave
-Name = Route 3
-Bicycle = true
+Name = Ice Cave
 MapPosition = 0,15,6
+ShowArea = true
+LocationSign = Pt cave
+Bicycle = true
 BattleBack = cave1
 Environment = Cave
 Flags = IceRock
 #-------------------------------
 [035]   # Ingido Plateau outside
 Name = Ingido Plateau
+MapPosition = 0,13,6
 Outdoor = true
 ShowArea = true
-MapPosition = 0,13,6
+LocationSign = Pt route
 #-------------------------------
 [036]   # Pokémon League entrance
 Name = Ingido Plateau
-HealingSpot = 35,17,7
 MapPosition = 0,13,6
+HealingSpot = 35,17,7
 #-------------------------------
 [037]   # Pokémon League room 1
 Name = Ingido Plateau
@@ -184,78 +194,90 @@ Flags = DisableBoxLink
 #-------------------------------
 [039]   # Route 4
 Name = Route 4
+MapPosition = 0,11,6
+MapSize = 2,11
 Outdoor = true
 ShowArea = true
-MapPosition = 0,11,6
+LocationSign = Pt route
 BattleBack = field
-MapSize = 2,11
 #-------------------------------
 [040]   # Route 4 Cycling Road
 Name = Route 4
+MapPosition = 0,11,6
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 BicycleAlways = true
-MapPosition = 0,11,6
 #-------------------------------
 [041]   # Route 5
 Name = Route 5
-Outdoor = true
-ShowArea = true
-BicycleAlways = true
 MapPosition = 0,11,7
 MapSize = 1,111
+Outdoor = true
+ShowArea = true
+LocationSign = Pt route
+BicycleAlways = true
 #-------------------------------
 [044]   # Route 6
 Name = Route 6
+MapPosition = 0,11,10
+MapSize = 2,11
 Outdoor = true
 ShowArea = true
-MapPosition = 0,11,10
+LocationSign = Pt route
 BattleBack = field
-MapSize = 2,11
 #-------------------------------
 [045]   # Route 6 Cycling Road
 Name = Route 6
+MapPosition = 0,11,10
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 BicycleAlways = true
-MapPosition = 0,11,10
 #-------------------------------
 [046]   # Route 4 Cycling Road gate
 Name = Route 4
-Bicycle = true
 MapPosition = 0,12,6
+Bicycle = true
 #-------------------------------
 [047]   # Route 7
 Name = Route 7
+MapPosition = 0,15,10
+MapSize = 2,11
 Outdoor = true
 ShowArea = true
+LocationSign = Pt route
 Weather = Rain,0
-MapPosition = 0,15,10
 BattleBack = rocky
-MapSize = 2,11
 Environment = Rock
 #-------------------------------
 [049]   # Rock Cave 1F
-Name = Route 7
-Bicycle = true
+Name = Rock Cave
 MapPosition = 0,16,10
+ShowArea = true
+LocationSign = Pt cave
+Bicycle = true
 BattleBack = cave1
 Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [050]   # Rock Cave B1F
-Name = Route 7
-Bicycle = true
+Name = Rock Cave
 MapPosition = 0,16,10
+ShowArea = true
+LocationSign = Pt cave
+Bicycle = true
 DarkMap = true
 BattleBack = cave3
 Environment = Cave
 Flags = Magnetic,DistortionWorld
 #-------------------------------
 [051]   # Dungeon
-Name = Route 7
-Bicycle = true
+Name = Rock Cave
 MapPosition = 0,16,10
+ShowArea = true
+LocationSign = Pt cave
+Bicycle = true
 Dungeon = true
 BattleBack = cave2
 Environment = Cave
@@ -263,14 +285,15 @@ Flags = Magnetic,DistortionWorld,ScaleWildEncounterLevels
 #-------------------------------
 [052]   # Battle Frontier
 Name = Battle Frontier
+MapPosition = 0,17,10
 Outdoor = true
 ShowArea = true
-MapPosition = 0,17,10
+LocationSign = Pt city
 #-------------------------------
 [053]   # Battle Frontier Poké Center
 Name = Battle Frontier
-HealingSpot = 52,17,14
 MapPosition = 0,17,10
+HealingSpot = 52,17,14
 #-------------------------------
 [054]   # Battle Frontier Mart
 Name = Battle Frontier
@@ -278,8 +301,8 @@ MapPosition = 0,17,10
 #-------------------------------
 [055]   # Battle Tower
 Name = Battle Frontier
-HealingSpot = 52,30,10
 MapPosition = 0,17,10
+HealingSpot = 52,30,10
 #-------------------------------
 [056]   # Battle Tower arena
 Name = Battle Frontier
@@ -333,9 +356,10 @@ Flags = DisableBoxLink
 #-------------------------------
 [066]   # Safari Zone outside
 Name = Safari Zone
+MapPosition = 0,12,12
 Outdoor = true
 ShowArea = true
-MapPosition = 0,12,12
+LocationSign = Pt route
 BattleBack = field
 #-------------------------------
 [067]   # Safari Zone gate
@@ -344,18 +368,20 @@ MapPosition = 0,12,12
 #-------------------------------
 [068]   # Safari Zone
 Name = Safari Zone
+MapPosition = 0,12,12
 Outdoor = true
 ShowArea = true
-MapPosition = 0,12,12
+LocationSign = Pt forest
 SafariMap = true
 BattleBack = forest
 Environment = Forest
 #-------------------------------
 [069]   # Route 8
 Name = Route 8
+MapPosition = 0,13,13
 Outdoor = true
 ShowArea = true
-MapPosition = 0,13,13
+LocationSign = Pt route
 DiveMap = 70
 BattleBack = field
 #-------------------------------
@@ -371,28 +397,30 @@ MapPosition = 0,13,13
 #-------------------------------
 [072]   # Berth Island
 Name = Berth Island
+MapPosition = 0,18,17
 Outdoor = true
 ShowArea = true
+LocationSign = Pt lake
 Weather = Storm,50
-MapPosition = 0,18,17
 BattleBack = field
 Flags = DistortionWorld
 #-------------------------------
 [073]   # Faraday Island
 Name = Faraday Island
+MapPosition = 0,22,16
 Outdoor = true
 ShowArea = true
-MapPosition = 0,22,16
+LocationSign = Pt lake
 BattleBack = field
 Flags = DistortionWorld
 #-------------------------------
 [074]   # Route 6 Cycling Road gate
 Name = Route 6
-Bicycle = true
 MapPosition = 0,12,10
+Bicycle = true
 #-------------------------------
 [075]   # Tiall Region
 Name = Tiall Region
-Outdoor = true
 MapPosition = 1,13,16
+Outdoor = true
 BattleBack = city

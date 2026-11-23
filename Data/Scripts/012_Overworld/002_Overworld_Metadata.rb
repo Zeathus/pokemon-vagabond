@@ -1,5 +1,5 @@
 #===============================================================================
-# Global metadata not specific to a map.  This class holds field state data that
+# Global metadata not specific to a map. This class holds field state data that
 # span multiple maps.
 #===============================================================================
 class PokemonGlobalMetadata
@@ -10,21 +10,20 @@ class PokemonGlobalMetadata
   attr_accessor :ice_sliding
   attr_accessor :descending_waterfall
   attr_accessor :ascending_waterfall
+  attr_accessor :riding_water_current
   attr_accessor :fishing
   # Player data
   attr_accessor :startTime
   attr_accessor :stepcount
   attr_accessor :pcItemStorage
   attr_accessor :mailbox
-  attr_accessor :phoneNumbers   # Deprecated - to be removed in v22
-  attr_accessor :phoneTime   # Deprecated - to be removed in v22
   attr_accessor :phone
   attr_accessor :partner
   attr_accessor :creditsPlayed
   # Pokédex
-  attr_accessor :pokedexDex      # Dex currently looking at (-1 is National Dex)
   attr_accessor :pokedexIndex    # Last species viewed per Dex
-  attr_accessor :pokedexMode     # Search mode
+  # Town Map
+  attr_accessor :townMapMarkings
   # Day Care
   attr_accessor :day_care
   # Special battle modes
@@ -36,7 +35,7 @@ class PokemonGlobalMetadata
   attr_accessor :eventvars
   # Affecting the map
   attr_accessor :bridge
-  attr_accessor :repel
+  attr_accessor :repel, :repel_item
   attr_accessor :flashUsed
   attr_reader   :encounter_version
   # Map transfers
@@ -63,6 +62,7 @@ class PokemonGlobalMetadata
     @ice_sliding          = false
     @descending_waterfall = false
     @ascending_waterfall  = false
+    @riding_water_current = false
     @fishing              = false
     # Player data
     @startTime            = Time.now
@@ -74,12 +74,12 @@ class PokemonGlobalMetadata
     @creditsPlayed        = false
     # Pokédex
     numRegions            = pbLoadRegionalDexes.length
-    @pokedexDex           = (numRegions == 0) ? -1 : 0
     @pokedexIndex         = []
-    @pokedexMode          = 0
     (numRegions + 1).times do |i|     # National Dex isn't a region, but is included
       @pokedexIndex[i] = 0
     end
+    # Town Map
+    @townMapMarkings      = []
     # Day Care
     @day_care             = DayCare.new
     # Special battle modes
@@ -119,13 +119,13 @@ class PokemonGlobalMetadata
   end
 
   def forced_movement?
-    return @ice_sliding || @descending_waterfall || @ascending_waterfall
+    return @ice_sliding || @descending_waterfall || @ascending_waterfall || @riding_water_current
   end
 end
 
 #===============================================================================
 # This class keeps track of erased and moved events so their position
-# can remain after a game is saved and loaded.  This class also includes
+# can remain after a game is saved and loaded. This class also includes
 # variables that should remain valid only for the current map.
 #===============================================================================
 class PokemonMapMetadata

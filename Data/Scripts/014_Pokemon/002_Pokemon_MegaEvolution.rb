@@ -1,16 +1,17 @@
+#===============================================================================
+#
+#===============================================================================
 class Pokemon
-  #=============================================================================
-  # Mega Evolution
+  #-----------------------------------------------------------------------------
+  # Mega Evolution.
   # NOTE: These are treated as form changes in Essentials.
-  #=============================================================================
+  #-----------------------------------------------------------------------------
   def getMegaForm
     ret = 0
     GameData::Species.each do |data|
       next if data.species != @species || data.unmega_form != form_simple
-      if data.mega_stone && hasItem?(data.mega_stone)
-        ret = data.form
-        break
-      elsif data.mega_move && hasMove?(data.mega_move)
+      if (data.mega_stone && hasItem?(data.mega_stone)) ||
+         (data.mega_move && hasMove?(data.mega_move))
         ret = data.form
         break
       end
@@ -37,8 +38,10 @@ class Pokemon
   end
 
   def makeUnmega
+    was_fainted = fainted?
     unmegaForm = self.getUnmegaForm
     self.form = unmegaForm if unmegaForm >= 0
+    self.hp = 0 if was_fainted
   end
 
   def megaName
@@ -53,10 +56,10 @@ class Pokemon
     return message_number || 0
   end
 
-  #=============================================================================
-  # Primal Reversion
+  #-----------------------------------------------------------------------------
+  # Primal Reversion.
   # NOTE: These are treated as form changes in Essentials.
-  #=============================================================================
+  #-----------------------------------------------------------------------------
   def hasPrimalForm?
     v = MultipleForms.call("getPrimalForm", self)
     return !v.nil?
@@ -73,11 +76,13 @@ class Pokemon
   end
 
   def makeUnprimal
+    was_fainted = fainted?
     v = MultipleForms.call("getUnprimalForm", self)
     if !v.nil?
       self.form = v
     elsif primal?
       self.form = 0
     end
+    self.hp = 0 if was_fainted
   end
 end

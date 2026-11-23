@@ -42,7 +42,7 @@ class Battle::AI
     @trainer = @trainers[(opposes) ? 1 : 0][trainer_index]
     # Find the AI battler for which the action is being chosen
     @user = @battlers[idxBattler]
-    @battlers.each { |b| b.refresh_battler if b }
+    @battlers.each { |b| b&.refresh_battler }
   end
 
   # Choose an action.
@@ -118,30 +118,32 @@ module Battle::AI::Handlers
   AbilityRanking                = AbilityHandlerHash.new
   ItemRanking                   = ItemHandlerHash.new
 
-  def self.move_will_fail?(function_code, *args)
+  module_function
+
+  def move_will_fail?(function_code, *args)
     return MoveFailureCheck.trigger(function_code, *args) || false
   end
 
-  def self.move_will_fail_against_target?(function_code, *args)
+  def move_will_fail_against_target?(function_code, *args)
     return MoveFailureAgainstTargetCheck.trigger(function_code, *args) || false
   end
 
-  def self.apply_move_effect_score(function_code, score, *args)
+  def apply_move_effect_score(function_code, score, *args)
     ret = MoveEffectScore.trigger(function_code, score, *args)
     return (ret.nil?) ? score : ret
   end
 
-  def self.apply_move_effect_against_target_score(function_code, score, *args)
+  def apply_move_effect_against_target_score(function_code, score, *args)
     ret = MoveEffectAgainstTargetScore.trigger(function_code, score, *args)
     return (ret.nil?) ? score : ret
   end
 
-  def self.get_base_power(function_code, power, *args)
+  def get_base_power(function_code, power, *args)
     ret = MoveBasePower.trigger(function_code, power, *args)
     return (ret.nil?) ? power : ret
   end
 
-  def self.apply_general_move_score_modifiers(score, *args)
+  def apply_general_move_score_modifiers(score, *args)
     GeneralMoveScore.each do |id, score_proc|
       new_score = score_proc.call(score, *args)
       score = new_score if new_score
@@ -149,7 +151,7 @@ module Battle::AI::Handlers
     return score
   end
 
-  def self.apply_general_move_against_target_score_modifiers(score, *args)
+  def apply_general_move_against_target_score_modifiers(score, *args)
     GeneralMoveAgainstTargetScore.each do |id, score_proc|
       new_score = score_proc.call(score, *args)
       score = new_score if new_score
@@ -157,7 +159,7 @@ module Battle::AI::Handlers
     return score
   end
 
-  def self.should_switch?(*args)
+  def should_switch?(*args)
     ret = false
     ShouldSwitch.each do |id, switch_proc|
       ret ||= switch_proc.call(*args)
@@ -166,7 +168,7 @@ module Battle::AI::Handlers
     return ret
   end
 
-  def self.should_not_switch?(*args)
+  def should_not_switch?(*args)
     ret = false
     ShouldNotSwitch.each do |id, switch_proc|
       ret ||= switch_proc.call(*args)
@@ -175,12 +177,12 @@ module Battle::AI::Handlers
     return ret
   end
 
-  def self.modify_ability_ranking(ability, score, *args)
+  def modify_ability_ranking(ability, score, *args)
     ret = AbilityRanking.trigger(ability, score, *args)
     return (ret.nil?) ? score : ret
   end
 
-  def self.modify_item_ranking(item, score, *args)
+  def modify_item_ranking(item, score, *args)
     ret = ItemRanking.trigger(item, score, *args)
     return (ret.nil?) ? score : ret
   end

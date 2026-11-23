@@ -38,33 +38,8 @@ end
 #===============================================================================
 #
 #===============================================================================
-def drawSpot(bitmap, spotpattern, x, y, red, green, blue)
-  height = spotpattern.length
-  width  = spotpattern[0].length
-  height.times do |yy|
-    spot = spotpattern[yy]
-    width.times do |xx|
-      next if spot[xx] != 1
-      xOrg = (x + xx) * 2
-      yOrg = (y + yy) * 2
-      color = bitmap.get_pixel(xOrg, yOrg)
-      r = color.red + red
-      g = color.green + green
-      b = color.blue + blue
-      color.red   = [[r, 0].max, 255].min
-      color.green = [[g, 0].max, 255].min
-      color.blue  = [[b, 0].max, 255].min
-      bitmap.set_pixel(xOrg, yOrg, color)
-      bitmap.set_pixel(xOrg + 1, yOrg, color)
-      bitmap.set_pixel(xOrg, yOrg + 1, color)
-      bitmap.set_pixel(xOrg + 1, yOrg + 1, color)
-    end
-  end
-end
-
-def pbSpindaSpots(pkmn, bitmap)
-  # NOTE: These spots are doubled in size when drawing them.
-  spot1 = [
+SPINDA_SPOTS = [
+  [
     [0, 0, 1, 1, 1, 1, 0, 0],
     [0, 1, 1, 1, 1, 1, 1, 0],
     [1, 1, 1, 1, 1, 1, 1, 1],
@@ -74,8 +49,8 @@ def pbSpindaSpots(pkmn, bitmap)
     [1, 1, 1, 1, 1, 1, 1, 1],
     [0, 1, 1, 1, 1, 1, 1, 0],
     [0, 0, 1, 1, 1, 1, 0, 0]
-  ]
-  spot2 = [
+  ],
+  [
     [0, 0, 1, 1, 1, 0, 0],
     [0, 1, 1, 1, 1, 1, 0],
     [1, 1, 1, 1, 1, 1, 1],
@@ -85,8 +60,8 @@ def pbSpindaSpots(pkmn, bitmap)
     [1, 1, 1, 1, 1, 1, 1],
     [0, 1, 1, 1, 1, 1, 0],
     [0, 0, 1, 1, 1, 0, 0]
-  ]
-  spot3 = [
+  ],
+  [
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -100,8 +75,8 @@ def pbSpindaSpots(pkmn, bitmap)
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
     [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0]
-  ]
-  spot4 = [
+  ],
+  [
     [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
     [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -115,6 +90,31 @@ def pbSpindaSpots(pkmn, bitmap)
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
     [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0]
   ]
+]
+
+def drawSpot(bitmap, spotpattern, x, y, red, green, blue)
+  height = spotpattern.length
+  width  = spotpattern[0].length
+  height.times do |yy|
+    spot = spotpattern[yy]
+    width.times do |xx|
+      next if spot[xx] != 1
+      xOrg = (x + xx) * 2
+      yOrg = (y + yy) * 2
+      color = bitmap.get_pixel(xOrg, yOrg)
+      color.red   = (color.red + red).clamp(0, 255)
+      color.green = (color.green + green).clamp(0, 255)
+      color.blue  = (color.blue + blue).clamp(0, 255)
+      bitmap.set_pixel(xOrg, yOrg, color)
+      bitmap.set_pixel(xOrg + 1, yOrg, color)
+      bitmap.set_pixel(xOrg, yOrg + 1, color)
+      bitmap.set_pixel(xOrg + 1, yOrg + 1, color)
+    end
+  end
+end
+
+def pbSpindaSpots(pkmn, bitmap)
+  # NOTE: These spots are doubled in size when drawing them.
   id = pkmn.personalID
   h = (id >> 28) & 15
   g = (id >> 24) & 15
@@ -127,25 +127,31 @@ def pbSpindaSpots(pkmn, bitmap)
   # NOTE: The coordinates below (b + 33, a + 25 and so on) are doubled when
   #       drawing the spot.
   if pkmn.shiny?
-    drawSpot(bitmap, spot1, b + 33, a + 25, -75, -10, -150)
-    drawSpot(bitmap, spot2, d + 21, c + 24, -75, -10, -150)
-    drawSpot(bitmap, spot3, f + 39, e + 7, -75, -10, -150)
-    drawSpot(bitmap, spot4, h + 15, g + 6, -75, -10, -150)
+    drawSpot(bitmap, SPINDA_SPOTS[0], b + 33, a + 25, -75, -10, -150)
+    drawSpot(bitmap, SPINDA_SPOTS[1], d + 21, c + 24, -75, -10, -150)
+    drawSpot(bitmap, SPINDA_SPOTS[2], f + 39, e + 7, -75, -10, -150)
+    drawSpot(bitmap, SPINDA_SPOTS[3], h + 15, g + 6, -75, -10, -150)
   else
-    drawSpot(bitmap, spot1, b + 33, a + 25, 0, -115, -75)
-    drawSpot(bitmap, spot2, d + 21, c + 24, 0, -115, -75)
-    drawSpot(bitmap, spot3, f + 39, e + 7, 0, -115, -75)
-    drawSpot(bitmap, spot4, h + 15, g + 6, 0, -115, -75)
+    drawSpot(bitmap, SPINDA_SPOTS[0], b + 33, a + 25, 0, -115, -75)
+    drawSpot(bitmap, SPINDA_SPOTS[1], d + 21, c + 24, 0, -115, -75)
+    drawSpot(bitmap, SPINDA_SPOTS[2], f + 39, e + 7, 0, -115, -75)
+    drawSpot(bitmap, SPINDA_SPOTS[3], h + 15, g + 6, 0, -115, -75)
   end
 end
 
 #===============================================================================
-# Regular form differences
+# Regular form differences.
 #===============================================================================
 
 MultipleForms.register(:UNOWN, {
   "getFormOnCreation" => proc { |pkmn|
     next rand(28)
+  }
+})
+
+MultipleForms.register(:DUNSPARCE, {
+  "getFormOnCreation" => proc { |pkmn|
+    next (rand(100) == 0) ? 1 : 0   # 99% form 0, 1% form 1
   }
 })
 
@@ -218,24 +224,33 @@ MultipleForms.register(:CHERRIM, {
   }
 })
 
+ROTOM_FORM_MOVES = [
+  :OVERHEAT,    # Heat (microwave oven)
+  :HYDROPUMP,   # Wash (washing machine)
+  :BLIZZARD,    # Frost (refrigerator)
+  :AIRSLASH,    # Fan (electric fan)
+  :LEAFSTORM    # Mow (lawn mower)
+]
+ROTOM_BACKUP_MOVE = :THUNDERSHOCK   # To learn if forgetting the only move Rotom knows
+
 MultipleForms.register(:ROTOM, {
+  "onResetMoves" => proc { |pkmn|
+    # NOTE: This allows for wild alternate form Rotom to have their form-
+    #       specific move by default. It replaces Thunder Shock if known, or the
+    #       first move if not.
+    next if pkmn.form == 0
+    new_move_id = ROTOM_FORM_MOVES[pkmn.form - 1]
+    next if !new_move_id || pkmn.hasMove?(new_move_id)
+    # Find Thunder Shock, or get the first known move
+    move_index = pkmn.moves.index { |move| move.id == ROTOM_BACKUP_MOVE } || 0
+    # Replace Thunder Shock with the form-specific move
+    pkmn.moves[move_index] = Pokemon::Move.new(new_move_id)
+  },
   "onSetForm" => proc { |pkmn, form, oldForm|
-    form_moves = [
-      :OVERHEAT,    # Heat (microwave oven)
-      :HYDROPUMP,   # Wash (washing machine)
-      :BLIZZARD,    # Frost (refrigerator)
-      :AIRSLASH,    # Fan (electric fan)
-      :LEAFSTORM    # Mow (lawn mower)
-    ]
     # Find a known move that should be forgotten
-    old_move_index = -1
-    pkmn.moves.each_with_index do |move, i|
-      next if !form_moves.include?(move.id)
-      old_move_index = i
-      break
-    end
+    old_move_index = pkmn.moves.index { |move| ROTOM_FORM_MOVES.include?(move.id) } || -1
     # Determine which new move to learn (if any)
-    new_move_id = (form > 0) ? form_moves[form - 1] : nil
+    new_move_id = (form > 0) ? ROTOM_FORM_MOVES[form - 1] : nil
     new_move_id = nil if !GameData::Move.exists?(new_move_id)
     if old_move_index != -1
       if pkmn.moves[old_move_index].id == new_move_id
@@ -243,7 +258,7 @@ MultipleForms.register(:ROTOM, {
       end
     end
     if new_move_id.nil? && old_move_index >= 0 && pkmn.numMoves == 1
-      new_move_id = :THUNDERSHOCK
+      new_move_id = ROTOM_BACKUP_MOVE
       new_move_id = nil if !GameData::Move.exists?(new_move_id)
       raise _INTL("Rotom is trying to forget its last move, but there isn't another move to replace it with.") if new_move_id.nil?
     end
@@ -260,7 +275,7 @@ MultipleForms.register(:ROTOM, {
         pkmn.moves[old_move_index].id = new_move_id
         new_move_name = pkmn.moves[old_move_index].name
         pbMessage(_INTL("{1} forgot {2}...", pkmn.name, old_move_name) + "\1")
-        pbMessage("\\se[]" + _INTL("{1} learned {2}!", pkmn.name, new_move_name) + "\\se[Pkmn move learnt]")
+        pbMessage("\\se[]" + _INTL("{1} learned {2}!", pkmn.name, new_move_name) + "\\se[Pkmn move learnt]\\wtnp[30]")
       end
     elsif !new_move_id.nil?
       # Just learn the new move
@@ -269,9 +284,22 @@ MultipleForms.register(:ROTOM, {
   }
 })
 
+MultipleForms.register(:DIALGA, {
+  "getForm" => proc { |pkmn|
+    next (pkmn.hasItem?(:ADAMANTCRYSTAL)) ? 1 : 0
+  }
+})
+
+MultipleForms.register(:PALKIA, {
+  "getForm" => proc { |pkmn|
+    next (pkmn.hasItem?(:LUSTROUSGLOBE)) ? 1 : 0
+  }
+})
+
 MultipleForms.register(:GIRATINA, {
   "getForm" => proc { |pkmn|
-    next 1 if pkmn.hasItem?(:GRISEOUSORB)
+    next 1 if pkmn.hasItem?(:GRISEOUSCORE)
+    next 1 if pkmn.hasItem?(:GRISEOUSORB) && Settings::MECHANICS_GENERATION <= 8
     next 1 if $game_map&.metadata&.has_flag?("DistortionWorld")
     next 0
   }
@@ -315,6 +343,15 @@ MultipleForms.register(:ARCEUS, {
       break if ret > 0
     end
     next ret
+  }
+})
+
+MultipleForms.register(:BASCULIN, {
+  "getForm" => proc { |pkmn|
+    if pkmn.form_simple >= 2
+      next (pkmn.female?) ? 3 : 2
+    end
+    next pkmn.form_simple
   }
 })
 
@@ -438,6 +475,7 @@ MultipleForms.register(:FURFROU, {
 
 MultipleForms.register(:ESPURR, {
   "getForm" => proc { |pkmn|
+    next if pkmn.form_simple >= 2   # Don't change form number if Mega Evolved
     next pkmn.gender
   }
 })
@@ -472,20 +510,66 @@ MultipleForms.register(:XERNEAS, {
 })
 
 MultipleForms.register(:ZYGARDE, {
+  "changePokemonOnMegaEvolving" => proc { |battler, pkmn|
+    next if !GameData::Move.exists?(:NIHILLIGHT)
+    pkmn_move = nil
+    pkmn.moves.each_with_index do |move, i|
+      next if move.id != :COREENFORCER
+      move.id = :NIHILLIGHT
+      pkmn_move = move
+      break
+    end
+    if pkmn_move
+      battler.moves.each_with_index do |move, i|
+        next if move.id != :COREENFORCER
+        battler.moves[i] = Battle::Move.from_pokemon_move(battler.battle, pkmn_move)
+      end
+    end
+  },
   "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
-    next pkmn.form - 2 if pkmn.form >= 2 && (pkmn.fainted? || endBattle)
+    if pkmn.fainted? || endBattle
+      # NOTE: We have to change the Pokémon out of its Mega Evolution form here
+      #       rather than after the battle, because the form it Mega Evolves
+      #       from is a battle-only form that itself needs to be changed at the
+      #       same time. This only applies if the Pokémon was unfainted and Mega
+      #       Evolved at the end of battle; fainting during battle cancels Mega
+      #       Evolution normally.
+      new_form = pkmn.form
+      new_form -= 2 if new_form >= 4   # Mega Evolution
+      new_form -= 2 if new_form >= 2   # Complete Forme
+      next new_form
+    end
+  },
+  "changePokemonOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    if pkmn.fainted? || endBattle
+      pkmn.moves.each { |move| move.id = :COREENFORCER if move.id == :NIHILLIGHT }
+    end
   }
 })
 
 MultipleForms.register(:HOOPA, {
   "getForm" => proc { |pkmn|
-    if !pkmn.time_form_set ||
+    if pkmn.time_form_set &&
        pbGetTimeNow.to_i > pkmn.time_form_set.to_i + (60 * 60 * 24 * 3)   # 3 days
       next 0
     end
   },
   "onSetForm" => proc { |pkmn, form, oldForm|
     pkmn.time_form_set = (form > 0) ? pbGetTimeNow.to_i : nil
+    if Settings::MECHANICS_GENERATION >= 9
+      if form == 0   # Confined
+        old_move = :HYPERSPACEHOLE
+        new_move = :HYPERSPACEFURY
+      elsif form == 1   # Unbound
+        old_move = :HYPERSPACEFURY
+        new_move = :HYPERSPACEHOLE
+      end
+      if GameData::Move.exists?(new_move)
+        pkmn.moves.each_with_index do |move, i|
+          move.id = new_move if move.id == old_move
+        end
+      end
+    end
   }
 })
 
@@ -560,7 +644,7 @@ MultipleForms.register(:MINIOR, {
 
 MultipleForms.register(:MIMIKYU, {
   "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
-    next 0 if pkmn.fainted? || endBattle
+    next 0 if (pkmn.fainted? && Settings::MECHANICS_GENERATION == 7) || endBattle
   }
 })
 
@@ -607,14 +691,14 @@ MultipleForms.register(:TOXEL, {
 
 MultipleForms.copy(:TOXEL, :TOXTRICITY)
 
-MultipleForms.register(:SINISTEA, {
+MultipleForms.register(:POLTEAGEIST, {
   "getFormOnCreation" => proc { |pkmn|
     next 1 if rand(100) < 10   # Antique
     next 0                     # Phony
   }
 })
 
-MultipleForms.copy(:SINISTEA, :POLTEAGEIST)
+MultipleForms.copy(:POLTEAGEIST, :SINISTEA)
 
 # A Milcery will always have the same flavor, but it is randomly chosen.
 MultipleForms.register(:MILCERY, {
@@ -639,7 +723,7 @@ MultipleForms.register(:ALCREMIE, {
 
 MultipleForms.register(:EISCUE, {
   "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
-    next 0 if pkmn.fainted? || endBattle
+    next 0 if (pkmn.fainted? && Settings::MECHANICS_GENERATION == 7) || endBattle
   }
 })
 
@@ -733,42 +817,124 @@ MultipleForms.register(:CALYREX, {
   }
 })
 
+MultipleForms.register(:BASCULEGION, {
+  "getForm" => proc { |pkmn|
+    next (pkmn.female?) ? 3 : 2
+  }
+})
+
+MultipleForms.register(:LECHONK, {
+  "getForm" => proc { |pkmn|
+    next pkmn.gender
+  }
+})
+
+MultipleForms.copy(:LECHONK, :OINKOLOGNE)
+
+MultipleForms.register(:TANDEMAUS, {
+  "getFormOnCreation" => proc { |pkmn|
+    next (rand(100) == 0) ? 1 : 0   # 99% form 0, 1% form 1
+  }
+})
+
+MultipleForms.copy(:TANDEMAUS, :MAUSHOLD)
+
+MultipleForms.register(:SQUAWKABILLY, {
+  "getFormOnCreation" => proc { |pkmn|
+    next rand(4)
+  }
+})
+
+MultipleForms.register(:PALAFIN, {
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    next 0 if endBattle
+    next 1 if pkmn.able? && pkmn.hasAbility?(:ZEROTOHERO) && usedInBattle && !endBattle   # Switched out while unfainted
+    next pkmn.form
+  }
+})
+
+MultipleForms.register(:TATSUGIRI, {
+  "getFormOnCreation" => proc { |pkmn|
+    next rand(3)
+  }
+})
+
+# NOTE: Wild Dudunsparce is always form 0.
+# NOTE: Wild Gimmighoul is always form 0.
+
+MultipleForms.register(:POLTCHAGEIST, {
+  "getFormOnCreation" => proc { |pkmn|
+    next 1 if rand(100) < 10   # Artisan
+    next 0                     # Counterfeit
+  }
+})
+
+MultipleForms.copy(:POLTCHAGEIST, :SINISCHA)
+
+MultipleForms.register(:OGERPON, {
+  "getForm" => proc { |pkmn|
+    next 1 if pkmn.hasItem?(:WELLSPRINGMASK)
+    next 2 if pkmn.hasItem?(:HEARTHFLAMEMASK)
+    next 3 if pkmn.hasItem?(:CORNERSTONEMASK)
+    next 0
+  }
+})
+
+MultipleForms.register(:TERAPAGOS, {
+  "getFormOnLeavingBattle" => proc { |pkmn, battle, usedInBattle, endBattle|
+    next 0 if endBattle || (pkmn.fainted? && pkmn.form >= 2)
+  }
+})
+
 #===============================================================================
-# Regional forms
+# Regional forms.
 # This code is for determining the form of a Pokémon in an egg created at the
 # Day Care, where that Pokémon's species has regional forms. The regional form
 # chosen depends on the region in which the egg was produced (not where it
-# hatches).
+# hatches). The form should have a flag called "EggInRegion_2" where the number
+# is the number of the region in which the egg was produced.
 #===============================================================================
 
-# The code in this proc assumes that the appropriate regional form for a Pokémon
-# is equal to the region's number. This may not be true in your game.
-# Note that this proc only produces a non-zero form number if the species has a
-# defined form with that number, which means it can be used for both Alolan and
-# Galarian forms separately (and for Meowth which has both).
 MultipleForms.register(:RATTATA, {
   "getFormOnEggCreation" => proc { |pkmn|
     if $game_map
       map_pos = $game_map.metadata&.town_map_position
-      next map_pos[0] if map_pos &&
-                         GameData::Species.get_species_form(pkmn.species, map_pos[0]).form == map_pos[0]
+      region_num = map_pos[0]
+      found_form = -1
+      GameData::Species.each_form_for_species(pkmn.species) do |sp_data|
+        sp_data.flags.each do |flag|
+          if flag[/^EggInRegion_(\d+)$/i] && $~[1].to_i == region_num
+            found_form = sp_data.form
+            break
+          end
+        end
+        break if found_form >= 0
+      end
+      next found_form if found_form >= 0
     end
     next 0
   }
 })
 
-MultipleForms.copy(:RATTATA, :SANDSHREW, :VULPIX, :DIGLETT, :MEOWTH, :GEODUDE,
-                   :GRIMER, :PONYTA, :FARFETCHD, :CORSOLA, :ZIGZAGOON,
-                   :DARUMAKA, :YAMASK, :STUNFISK, :SLOWPOKE, :ARTICUNO, :ZAPDOS,
-                   :MOLTRES)
+MultipleForms.copy(
+  # Alolan forms
+  :RATTATA, :SANDSHREW, :VULPIX, :DIGLETT, :MEOWTH, :GEODUDE, :GRIMER,
+  # Galarian forms (excluding Meowth which is above)
+  :PONYTA, :SLOWPOKE, :FARFETCHD, :ARTICUNO, :ZAPDOS, :MOLTRES, :CORSOLA,
+  :ZIGZAGOON, :DARUMAKA, :YAMASK, :STUNFISK,
+  # Hisuian forms
+  :GROWLITHE, :VOLTORB, :QWILFISH, :SNEASEL, :ZORUA,
+  # Paldean forms
+  :TAUROS, :WOOPER
+)
 
 #===============================================================================
-# Regional forms
+# Regional forms.
 # These species don't have visually different regional forms, but they need to
 # evolve into different forms depending on the location where they evolve.
 #===============================================================================
 
-# Alolan forms
+# Alolan forms.
 MultipleForms.register(:PIKACHU, {
   "getForm" => proc { |pkmn|
     next if pkmn.form_simple >= 2
@@ -782,7 +948,7 @@ MultipleForms.register(:PIKACHU, {
 
 MultipleForms.copy(:PIKACHU, :EXEGGCUTE, :CUBONE)
 
-# Galarian forms
+# Galarian forms.
 MultipleForms.register(:KOFFING, {
   "getForm" => proc { |pkmn|
     next if pkmn.form_simple >= 2
@@ -795,3 +961,21 @@ MultipleForms.register(:KOFFING, {
 })
 
 MultipleForms.copy(:KOFFING, :MIMEJR)
+
+# Hisuian forms.
+MultipleForms.register(:QUILAVA, {
+  "getForm" => proc { |pkmn|
+    next if pkmn.form_simple >= 2
+    if $game_map
+      map_pos = $game_map.metadata&.town_map_position
+      next 1 if map_pos && map_pos[0] == 3   # Hisui region
+    end
+    next 0
+  }
+})
+
+MultipleForms.copy(:QUILAVA,
+                   :DEWOTT, :PETILIL, :RUFFLET, :GOOMY, :BERGMITE, :DARTRIX)
+
+# Paldean forms.
+# None!

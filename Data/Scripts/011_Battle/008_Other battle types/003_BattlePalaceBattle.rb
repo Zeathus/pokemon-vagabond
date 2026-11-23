@@ -151,7 +151,7 @@ class BattlePalaceBattle < Battle
     when :CAREFUL, :RASH, :LAX, :SASSY, :MILD, :TIMID
       pbDisplay(_INTL("{1} began growling deeply!", battler.pbThis))
     when :GENTLE, :ADAMANT, :HASTY, :LONELY, :RELAXED, :NAUGHTY
-      pbDisplay(_INTL("A glint appears in {1}'s eyes!", battler.pbThis(true)))
+      pbDisplay(_INTL("A glint appears in {1} eyes!", battler.pbOfThis(true)))
     when :JOLLY, :BOLD, :BRAVE, :CALM, :IMPISH, :MODEST
       pbDisplay(_INTL("{1} is getting into position!", battler.pbThis))
     end
@@ -159,8 +159,8 @@ class BattlePalaceBattle < Battle
 
   def pbEndOfRoundPhase
     super
-    return if @decision != 0
-    allBattlers.each { |b| pbPinchChange(b) }
+    return if decided?
+    allBattlers(true).each { |b| pbPinchChange(b) }
   end
 end
 
@@ -188,8 +188,7 @@ class Battle::AI
     shouldswitch = false
     if thispkmn.effects[PBEffects::PerishSong] == 1
       shouldswitch = true
-    elsif !@battle.pbCanChooseAnyMove?(idxBattler) &&
-          thispkmn.turnCount && thispkmn.turnCount > 5
+    elsif !@battle.pbCanChooseAnyMove?(idxBattler) && thispkmn.turnCount && thispkmn.turnCount > 5
       shouldswitch = true
     else
       hppercent = thispkmn.hp * 100 / thispkmn.totalhp

@@ -11,7 +11,7 @@ NodeLayout = full
 RoomLayout = full
 RoomChance = 70
 ExtraConnections = 2
-FloorPatches = 2,50,25
+FloorPatches = 3,50,40
 FloorDecorations = 50,200
 VoidDecorations = 50,200
 #-------------------------------
@@ -25,6 +25,6 @@ NodeLayout = full
 RoomLayout = full
 RoomChance = 70
 ExtraConnections = 2
-FloorPatches = 3,75,25
+FloorPatches = 4,75,25
 FloorDecorations = 50,200
 VoidDecorations = 50,200

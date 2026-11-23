@@ -1,14 +1,13 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle::Battler
-  #=============================================================================
-  # Get move's user
-  #=============================================================================
-  def pbFindUser(_choice, _move)
-    return self
-  end
+  #-----------------------------------------------------------------------------
+  # Change move's user.
+  #-----------------------------------------------------------------------------
 
   def pbChangeUser(choice, move, user)
     # Snatch
-    move.snatched = false
     if move.statusMove? && move.canSnatch?
       newUser = nil
       strength = 100
@@ -30,9 +29,10 @@ class Battle::Battler
     return user
   end
 
-  #=============================================================================
-  # Get move's default target(s)
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Get move's default target(s).
+  #-----------------------------------------------------------------------------
+
   def pbFindTargets(choice, move, user)
     preTarget = choice[3]   # A target that was already chosen
     targets = []
@@ -90,9 +90,10 @@ class Battle::Battler
     return targets
   end
 
-  #=============================================================================
-  # Redirect attack to another target
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Redirect attack to another target.
+  #-----------------------------------------------------------------------------
+
   def pbChangeTargets(move, user, targets)
     target_data = move.pbTarget(user)
     return targets if @battle.switching   # For Pursuit interrupting a switch
@@ -115,7 +116,7 @@ class Battle::Battler
       strength = b.effects[PBEffects::Spotlight]
     end
     if newTarget
-      PBDebug.log("[Move target changed] #{newTarget.pbThis}'s Spotlight made it the target")
+      PBDebug.log("[Move target changed] #{newTarget.pbOfThis} Spotlight made it the target")
       targets = []
       pbAddTarget(targets, user, newTarget, move, nearOnly)
       return targets
@@ -134,7 +135,7 @@ class Battle::Battler
       strength = b.effects[PBEffects::FollowMe]
     end
     if newTarget
-      PBDebug.log("[Move target changed] #{newTarget.pbThis}'s Follow Me/Rage Powder made it the target")
+      PBDebug.log("[Move target changed] #{newTarget.pbOfThis} Follow Me/Rage Powder made it the target")
       targets = []
       pbAddTarget(targets, user, newTarget, move, nearOnly)
       return targets
@@ -156,7 +157,7 @@ class Battle::Battler
       @battle.pbShowAbilitySplash(b)
       targets.clear
       pbAddTarget(targets, user, b, move, nearOnly)
-      if Battle::Scene::USE_ABILITY_SPLASH
+      if Battle::Visuals::USE_ABILITY_SPLASH
         @battle.pbDisplay(_INTL("{1} took the attack!", b.pbThis))
       else
         @battle.pbDisplay(_INTL("{1} took the attack with its {2}!", b.pbThis, b.abilityName))
@@ -167,13 +168,15 @@ class Battle::Battler
     return targets
   end
 
-  #=============================================================================
-  # Register target
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Register target.
+  #-----------------------------------------------------------------------------
+
   def pbAddTarget(targets, user, target, move, nearOnly = true, allowUser = false)
     return false if !target || (target.fainted? && !move.targetsPosition?)
     return false if !allowUser && target == user
     return false if nearOnly && !user.near?(target) && target != user
+    return false if target.effects[PBEffects::Commanding] >= 0
     targets.each { |b| return true if b.index == target.index }   # Already added
     targets.push(target)
     return true

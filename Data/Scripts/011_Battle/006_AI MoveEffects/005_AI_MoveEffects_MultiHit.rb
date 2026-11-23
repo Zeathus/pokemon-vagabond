@@ -13,7 +13,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitTwoTimes",
     if target.effects[PBEffects::Substitute] > 0 && !move.move.ignoresSubstitute?(user.battler)
       dmg = move.rough_damage
       num_hits = move.move.pbNumHits(user.battler, [target.battler])
-      score += 10 if target.effects[PBEffects::Substitute] < dmg * (num_hits - 1) / num_hits
+      score += 8 if target.effects[PBEffects::Substitute] < dmg * (num_hits - 1) / num_hits
     end
     next score
   }
@@ -30,6 +30,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitTwoTimesPoisonTarget"
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("HitTwoTimes",
        score, move, user, target, ai, battle)
     # Score for poisoning
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     poison_score = Battle::AI::Handlers.apply_move_effect_against_target_score("PoisonTarget",
        0, move, user, target, ai, battle)
     score += poison_score if poison_score != Battle::AI::MOVE_USELESS_SCORE
@@ -48,6 +49,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitTwoTimesFlinchTarget"
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("HitTwoTimes",
        score, move, user, target, ai, battle)
     # Score for flinching
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
        score, move, user, target, ai, battle)
     next score
@@ -68,7 +70,9 @@ Battle::AI::Handlers::MoveBasePower.add("HitTwoTimesTargetThenTargetAlly",
 #===============================================================================
 Battle::AI::Handlers::MoveBasePower.add("HitThreeTimesPowersUpWithEachHit",
   proc { |power, move, user, target, ai, battle|
-    next power * 6   # Hits do x1, x2, x3 ret in turn, for x6 in total
+    next power * 6 if user.has_active_ability?(:SKILLLINK) ||
+                      user.has_active_item?(:LOADEDDICE)   # Hits do x1, x2, x3 ret in turn, for x6 in total
+    next power * 47 / 10   # Average damage dealt
   }
 )
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitThreeTimesPowersUpWithEachHit",
@@ -94,9 +98,23 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("HitTwoTimes",
 #===============================================================================
 #
 #===============================================================================
+Battle::AI::Handlers::MoveBasePower.add("HitTenTimes",
+  proc { |power, move, user, target, ai, battle|
+    next power * 10 if user.has_active_ability?(:SKILLLINK)   # Definitely 10 hits
+    next power * 7 if user.has_active_item?(:LOADEDDICE)      # Average of 4-10 hits
+    next power * 58 / 10   # Average damage dealt
+  }
+)
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("HitTwoTimes",
+                                                        "HitTenTimes")
+
+#===============================================================================
+#
+#===============================================================================
 Battle::AI::Handlers::MoveBasePower.add("HitTwoToFiveTimes",
   proc { |power, move, user, target, ai, battle|
     next power * 5 if user.has_active_ability?(:SKILLLINK)
+    next power * 45 / 10 if user.has_active_item?(:LOADEDDICE)
     next power * 31 / 10   # Average damage dealt
   }
 )
@@ -107,6 +125,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitTwoToFiveTimes",
     if target.effects[PBEffects::Substitute] > 0 && !move.move.ignoresSubstitute?(user.battler)
       dmg = move.rough_damage
       num_hits = (user.has_active_ability?(:SKILLLINK)) ? 5 : 3   # 3 is about average
+      num_hits = 4 if user.has_active_item?(:LOADEDDICE)          # Most likely 4 hits
       score += 10 if target.effects[PBEffects::Substitute] < dmg * (num_hits - 1) / num_hits
     end
     next score
@@ -119,9 +138,10 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("HitTwoToFiveTimes",
 Battle::AI::Handlers::MoveBasePower.add("HitTwoToFiveTimesOrThreeForAshGreninja",
   proc { |power, move, user, target, ai, battle|
     if user.battler.isSpecies?(:GRENINJA) && user.battler.form == 2
-      next move.move.pbBaseDamage(power, user.battler, target.battler) * move.move.pbNumHits(user.battler, [target.battler])
+      next move.move.pbBasePower(power, user.battler, target.battler) * move.move.pbNumHits(user.battler, [target.battler])
     end
     next power * 5 if user.has_active_ability?(:SKILLLINK)
+    next power * 41 / 10 if user.has_active_item?(:LOADEDDICE)
     next power * 31 / 10   # Average damage dealt
   }
 )
@@ -215,7 +235,8 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttack",
       score -= 10 if user.hp < user.totalhp / 2
     end
     # Don't prefer if target has a protecting move
-    if ai.trainer.high_skill? && !(user.has_active_ability?(:UNSEENFIST) && move.move.contactMove?)
+    if ai.trainer.high_skill? &&
+       !(user.can_make_contact_through_protection? && move.move.pbContactMove?(user.battler))
       has_protect_move = false
       if move.pbTarget(user).num_targets > 1 &&
          (Settings::MECHANICS_GENERATION >= 7 || move.damagingMove?)
@@ -225,16 +246,18 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttack",
       end
       if move.move.canProtectAgainst?
         if target.has_move_with_function?("ProtectUser",
-                                          "ProtectUserFromTargetingMovesSpikyShield",
-                                          "ProtectUserBanefulBunker")
+                                          "ProtectUserBanefulBunker",
+                                          "ProtectUserFromTargetingMovesSpikyShield")
           has_protect_move = true
         end
         if move.damagingMove?
           # NOTE: Doesn't check for Mat Block because it only works on its
           #       user's first turn in battle, so it can't be used in response
           #       to this move charging up.
-          if target.has_move_with_function?("ProtectUserFromDamagingMovesKingsShield",
-                                            "ProtectUserFromDamagingMovesObstruct")
+          if target.has_move_with_function?("ProtectUserFromDamagingMovesBurningBulwark",
+                                            "ProtectUserFromDamagingMovesKingsShield",
+                                            "ProtectUserFromDamagingMovesObstruct",
+                                            "ProtectUserFromDamagingMovesSilkTrap")
             has_protect_move = true
           end
         end
@@ -255,13 +278,14 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttack",
 #===============================================================================
 Battle::AI::Handlers::MoveBasePower.add("TwoTurnAttackOneTurnInSun",
   proc { |power, move, user, target, ai, battle|
-    next move.move.pbBaseDamageMultiplier(power, user.battler, target.battler)
+    next move.move.pbBasePowerMultiplier(power, user.battler, target.battler)
   }
 )
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackOneTurnInSun",
   proc { |score, move, user, target, ai, battle|
     # In sunny weather this a 1 turn move, the same as a move with no effect
     next score if [:Sun, :HarshSun].include?(user.battler.effectiveWeather)
+    next score if user.has_active_ability?(:MEGASOL)
     # Score for being a two turn attack
     next Battle::AI::Handlers.apply_move_effect_against_target_score("TwoTurnAttack",
        score, move, user, target, ai, battle)
@@ -278,6 +302,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackParalyzeTar
        score, move, user, target, ai, battle)
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for paralysing
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("ParalyzeTarget",
        score, move, user, target, ai, battle)
     next score
@@ -294,6 +319,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackBurnTarget"
        score, move, user, target, ai, battle)
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for burning
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("BurnTarget",
        score, move, user, target, ai, battle)
     next score
@@ -310,6 +336,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackFlinchTarge
        score, move, user, target, ai, battle)
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for flinching
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
        score, move, user, target, ai, battle)
     next score
@@ -344,7 +371,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackChargeRaise
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for raising the user's stat
     score = Battle::AI::Handlers.apply_move_effect_score("RaiseUserDefense1",
-       score, move, user, ai, battle)
+                                                         score, move, user, ai, battle)
     next score
   }
 )
@@ -360,7 +387,25 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackChargeRaise
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for raising the user's stat
     score = Battle::AI::Handlers.apply_move_effect_score("RaiseUserSpAtk1",
-       score, move, user, ai, battle)
+                                                         score, move, user, ai, battle)
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackOneTurnInRainChargeRaiseUserSpAtk1",
+  proc { |score, move, user, target, ai, battle|
+    # Score for being a two turn attack
+    if ![:Rain, :HeavyRain].include?(user.battler.effectiveWeather) || user.has_active_ability?(:MEGASOL)
+      score = Battle::AI::Handlers.apply_move_effect_against_target_score("TwoTurnAttack",
+         score, move, user, target, ai, battle)
+      next score if score == Battle::AI::MOVE_USELESS_SCORE
+    end
+    # Score for raising the user's stat
+    score = Battle::AI::Handlers.apply_move_effect_score("RaiseUserSpAtk1",
+                                                         score, move, user, ai, battle)
     next score
   }
 )
@@ -438,6 +483,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("TwoTurnAttackInvulnerabl
        score, move, user, target, ai, battle)
     next score if score == Battle::AI::MOVE_USELESS_SCORE
     # Score for paralyzing the target
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     score = Battle::AI::Handlers.apply_move_effect_against_target_score("ParalyzeTarget",
        score, move, user, target, ai, battle)
     next score
@@ -497,7 +543,7 @@ Battle::AI::Handlers::MoveBasePower.add("MultiTurnAttackPowersUpEachTurn",
     #       rounds. It is nearly the average damage this move will do per round,
     #       assuming it hits for 3 rounds (hoping for hits in all 5 rounds is
     #       optimistic).
-    next move.move.pbBaseDamage(power, user.battler, target.battler) * 2
+    next move.move.pbBasePower(power, user.battler, target.battler) * 2
   }
 )
 

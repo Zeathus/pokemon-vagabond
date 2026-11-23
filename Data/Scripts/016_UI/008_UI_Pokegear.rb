@@ -70,7 +70,7 @@ class PokemonPokegear_Scene
     @commands = commands
     @index = 0
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @sprites = {}
     @sprites["background"] = IconSprite.new(0, 0, @viewport)
     if $player.female? && pbResolveBitmap("Graphics/UI/Pokegear/bg_f")
@@ -157,19 +157,19 @@ end
 #===============================================================================
 #
 #===============================================================================
+
 MenuHandlers.add(:pokegear_menu, :map, {
   "name"      => _INTL("Map"),
   "icon_name" => "map",
   "order"     => 10,
   "effect"    => proc { |menu|
     pbFadeOutIn do
-      scene = PokemonRegionMap_Scene.new(-1, false)
-      screen = PokemonRegionMapScreen.new(scene)
-      ret = screen.pbStartScreen
-      if ret
-        $game_temp.fly_destination = ret
+      town_map_screen = UI::TownMap.new
+      town_map_screen.main
+      if town_map_screen.result
+        $game_temp.fly_destination = town_map_screen.result
         menu.dispose
-        next 99999
+        next 99_999
       end
     end
     next $game_temp.fly_destination

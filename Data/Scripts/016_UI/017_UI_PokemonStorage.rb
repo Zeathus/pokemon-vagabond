@@ -1,119 +1,189 @@
 #===============================================================================
-# Pokémon icons
+#
 #===============================================================================
-class PokemonBoxIcon < IconSprite
+class UI::PokemonStorageVisualsSidePane < UI::SpriteContainer
   attr_reader :pokemon
 
-  def initialize(pokemon, viewport = nil)
-    super(0, 0, viewport)
-    @pokemon = pokemon
-    @release_timer_start = nil
+  GRAPHICS_FOLDER = "Storage/"
+  TEXT_COLOR_THEMES = {   # Themes not in DEFAULT_TEXT_COLOR_THEMES
+    :no_item => [Color.new(192, 200, 208), Color.new(212, 216, 220)]
+  }
+  MARK_WIDTH  = 16
+  MARK_HEIGHT = 16
+
+  def initialize(viewport, pokemon_viewport, side_pane_viewport)
+    @pokemon_viewport = pokemon_viewport
+    @side_pane_viewport = side_pane_viewport
+    super(viewport)
+  end
+
+  def initialize_bitmaps
+    @bitmaps[:types]    = AnimatedBitmap.new(UI_FOLDER + _INTL("types"))
+    @bitmaps[:markings] = AnimatedBitmap.new(graphics_folder + "markings")
+    @bitmaps[:numbers]  = AnimatedBitmap.new(graphics_folder + "numbers")
+  end
+
+  def initialize_sprites
+    initialize_pane_bg
+    initialize_pokemon_sprite
+    initialize_overlay
+  end
+
+  def initialize_pane_bg
+    # Background of the side pane (the part behind the Pokémon sprite)
+    add_icon_sprite(:pane_rear_bg, 0, 0, graphics_folder + "overlay_side_pane_bg")
+    record_values(:pane_rear_bg)
+  end
+
+  def initialize_pokemon_sprite
+    # Create a viewport just for the Pokémon sprite, so that large sprites are
+    # cropped and don't spill over onto the rest of the pane.
+    # Pokémon sprite
+    @sprites[:pokemon] = UI::PokemonStorageVisualsMosaicPokemonSprite.new(@pokemon_viewport)
+    @sprites[:pokemon].setOffset(PictureOrigin::CENTER)
+    @sprites[:pokemon].x = @pokemon_viewport.rect.width / 2
+    @sprites[:pokemon].y = @pokemon_viewport.rect.height / 2
+    record_values(:pokemon)
+    mosaic_pokemon_sprite
+  end
+
+  def initialize_overlay
+    # Side pane (the part in front of the Pokémon sprite, which is most of it)
+    add_icon_sprite(:pane_bg, 0, 0, graphics_folder + "overlay_side_pane")
+    @sprites[:pane_bg].viewport = @side_pane_viewport
+    record_values(:pane_bg)
+    # Overlay for the side pane text
+    add_overlay(:overlay, @sprites[:pane_bg].bitmap.width, @sprites[:pane_bg].bitmap.height)
+    @sprites[:overlay].z = 10
+    @sprites[:overlay].viewport = @side_pane_viewport
+    record_values(:overlay)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def y=(value)
+    @y = value
+    @sprites.each_pair do |key, sprite|
+      next if key == :pokemon
+      sprite.y = @y + @sprites_values[key][:y]
+    end
+    @pokemon_viewport.rect.y = value + 80
+  end
+
+  def width
+    return @sprites[:pane_bg].width
+  end
+
+  def pokemon=(value)
+    @pokemon = value
+    @sprites[:pokemon].setPokemonBitmap(@pokemon) if @sprites[:pokemon] && !@sprites[:pokemon].disposed?
     refresh
   end
 
-  def releasing?
-    return !@release_timer_start.nil?
+  def mosaic_pokemon_sprite
+    @sprites[:pokemon].mosaic_duration = 0.25   # In seconds
   end
 
-  def release
-    self.ox = self.src_rect.width / 2    # 32
-    self.oy = self.src_rect.height / 2   # 32
-    self.x += self.src_rect.width / 2    # 32
-    self.y += self.src_rect.height / 2   # 32
-    @release_timer_start = System.uptime
-  end
+  #-----------------------------------------------------------------------------
 
-  def refresh
-    return if !@pokemon
-    #self.setBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
-    self.setCachedBitmap(GameData::Species.icon_filename_from_pokemon(@pokemon))
-    self.src_rect = Rect.new(0, 0, self.bitmap.height, self.bitmap.height)
-  end
-
-  def update
+  def refresh_overlay
     super
-    self.color = Color.new(0, 0, 0, 0)
-    if releasing?
-      time_now = System.uptime
-      self.zoom_x = lerp(1.0, 0.0, 1.5, @release_timer_start, System.uptime)
-      self.zoom_y = self.zoom_x
-      self.opacity = lerp(255, 0, 1.5, @release_timer_start, System.uptime)
-      if self.opacity == 0
-        @release_timer_start = nil
-        dispose
-      end
+    return if @pokemon.nil?
+    draw_name
+    draw_level
+    draw_shiny_icon
+    draw_gender
+    draw_markings
+    draw_type
+    draw_item
+  end
+
+  def draw_name
+    pokemon_name = @pokemon.name
+    pokemon_name = crop_text(pokemon_name, 158)
+    draw_text(pokemon_name, 8, 14, theme: :gray)
+  end
+
+  def draw_level
+    return if @pokemon.egg?
+    draw_image(graphics_folder + _INTL("level"), 8, 48)
+    draw_number_from_image(@bitmaps[:numbers], @pokemon.level, 30, 48)
+  end
+
+  def draw_shiny_icon
+    return if @pokemon.egg?
+    draw_image(UI_FOLDER + "shiny", 106, 46) if @pokemon.shiny?
+  end
+
+  def draw_gender
+    return if @pokemon.egg?
+    if @pokemon.male?
+      draw_text(_INTL("♂"), 150, 44, theme: :male)
+    elsif @pokemon.female?
+      draw_text(_INTL("♀"), 150, 44, theme: :female)
+    end
+  end
+
+  def draw_markings
+    mark_variants = @bitmaps[:markings].bitmap.height / MARK_HEIGHT
+    (@bitmaps[:markings].bitmap.width / MARK_WIDTH).times do |i|
+      draw_image(@bitmaps[:markings], 38 + (i * MARK_WIDTH), 262,
+                 i * MARK_WIDTH, [@pokemon.markings[i] || 0, mark_variants - 1].min * MARK_HEIGHT,
+                 MARK_WIDTH, MARK_HEIGHT)
+    end
+  end
+
+  def draw_type
+    return if @pokemon.egg?
+    @pokemon.types.each_with_index do |type, i|
+      type_number = GameData::Type.get(type).icon_position
+      type_x = (@pokemon.types.length == 1) ? 52 : 18 + ((GameData::Type::ICON_SIZE[0] + 6) * i)
+      draw_image(@bitmaps[:types], type_x, 282,
+                 0, type_number * GameData::Type::ICON_SIZE[1], *GameData::Type::ICON_SIZE)
+    end
+  end
+
+  def draw_item
+    return if @pokemon.egg?
+    if @pokemon.hasItem?
+      item_name = @pokemon.item.name
+      item_name = crop_text(item_name, 166)
+      draw_text(item_name, 86, 316, align: :center, theme: :gray)
+    else
+      draw_text(_INTL("No item"), 86, 316, align: :center, theme: :no_item)
     end
   end
 end
 
 #===============================================================================
-# Pokémon sprite
+# Pokémon sprite.
 #===============================================================================
-class MosaicPokemonSprite < PokemonSprite
+class UI::PokemonStorageVisualsMosaicPokemonSprite < PokemonSprite
   attr_reader :mosaic
+
+  INITIAL_MOSAIC = 10   # Pixellation factor
 
   def initialize(*args)
     super(*args)
     @mosaic = 0
-    @inrefresh = false
-    @mosaicbitmap = nil
-    @mosaicbitmap2 = nil
-    @oldbitmap = self.bitmap
+    @in_refresh = false
+    @mosaic_bitmap = nil
+    @mosaic_bitmap2 = nil
+    @old_bitmap = self.bitmap
   end
 
   def dispose
     super
-    @mosaicbitmap&.dispose
-    @mosaicbitmap = nil
-    @mosaicbitmap2&.dispose
-    @mosaicbitmap2 = nil
+    @mosaic_bitmap&.dispose
+    @mosaic_bitmap = nil
+    @mosaic_bitmap2&.dispose
+    @mosaic_bitmap2 = nil
   end
 
   def bitmap=(value)
     super
-    mosaicRefresh(value)
+    refresh_mosaic(value)
   end
-
-  def mosaic=(value)
-    @mosaic = value
-    @mosaic = 0 if @mosaic < 0
-    mosaicRefresh(@oldbitmap)
-  end
-
-  def mosaicRefresh(bitmap)
-    return if @inrefresh
-    @inrefresh = true
-    @oldbitmap = bitmap
-    if @mosaic <= 0 || !@oldbitmap
-      @mosaicbitmap&.dispose
-      @mosaicbitmap = nil
-      @mosaicbitmap2&.dispose
-      @mosaicbitmap2 = nil
-      self.bitmap = @oldbitmap
-    else
-      newWidth  = [(@oldbitmap.width / @mosaic), 1].max
-      newHeight = [(@oldbitmap.height / @mosaic), 1].max
-      @mosaicbitmap2&.dispose
-      @mosaicbitmap = pbDoEnsureBitmap(@mosaicbitmap, newWidth, newHeight)
-      @mosaicbitmap.clear
-      @mosaicbitmap2 = pbDoEnsureBitmap(@mosaicbitmap2, @oldbitmap.width, @oldbitmap.height)
-      @mosaicbitmap2.clear
-      @mosaicbitmap.stretch_blt(Rect.new(0, 0, newWidth, newHeight), @oldbitmap, @oldbitmap.rect)
-      @mosaicbitmap2.stretch_blt(
-        Rect.new((-@mosaic / 2) + 1, (-@mosaic / 2) + 1, @mosaicbitmap2.width, @mosaicbitmap2.height),
-        @mosaicbitmap, Rect.new(0, 0, newWidth, newHeight)
-      )
-      self.bitmap = @mosaicbitmap2
-    end
-    @inrefresh = false
-  end
-end
-
-#===============================================================================
-#
-#===============================================================================
-class AutoMosaicPokemonSprite < MosaicPokemonSprite
-  INITIAL_MOSAIC = 10   # Pixellation factor
 
   def mosaic=(value)
     @mosaic = value
@@ -127,13 +197,41 @@ class AutoMosaicPokemonSprite < MosaicPokemonSprite
     @mosaic_timer_start = System.uptime if @mosaic_duration > 0
   end
 
+  def refresh_mosaic(bitmap)
+    return if @in_refresh
+    @in_refresh = true
+    @old_bitmap = bitmap
+    if @mosaic <= 0 || !@old_bitmap
+      @mosaic_bitmap&.dispose
+      @mosaic_bitmap = nil
+      @mosaic_bitmap2&.dispose
+      @mosaic_bitmap2 = nil
+      self.bitmap = @old_bitmap
+    else
+      newWidth  = [(@old_bitmap.width / @mosaic), 1].max
+      newHeight = [(@old_bitmap.height / @mosaic), 1].max
+      @mosaic_bitmap2&.dispose
+      @mosaic_bitmap = pbDoEnsureBitmap(@mosaic_bitmap, newWidth, newHeight)
+      @mosaic_bitmap.clear
+      @mosaic_bitmap2 = pbDoEnsureBitmap(@mosaic_bitmap2, @old_bitmap.width, @old_bitmap.height)
+      @mosaic_bitmap2.clear
+      @mosaic_bitmap.stretch_blt(Rect.new(0, 0, newWidth, newHeight), @old_bitmap, @old_bitmap.rect)
+      @mosaic_bitmap2.stretch_blt(
+        Rect.new((-@mosaic / 2) + 1, (-@mosaic / 2) + 1, @mosaic_bitmap2.width, @mosaic_bitmap2.height),
+        @mosaic_bitmap, Rect.new(0, 0, newWidth, newHeight)
+      )
+      self.bitmap = @mosaic_bitmap2
+    end
+    @in_refresh = false
+  end
+
   def update
     super
     if @mosaic_timer_start
       @start_mosaic = INITIAL_MOSAIC if !@start_mosaic || @start_mosaic == 0
       new_mosaic = lerp(@start_mosaic, 0, @mosaic_duration, @mosaic_timer_start, System.uptime).to_i
       self.mosaic = new_mosaic
-      mosaicRefresh(@oldbitmap)
+      refresh_mosaic(@old_bitmap)
       if new_mosaic == 0
         @mosaic_timer_start = nil
         @start_mosaic = nil
@@ -143,1887 +241,2038 @@ class AutoMosaicPokemonSprite < MosaicPokemonSprite
 end
 
 #===============================================================================
-# Cursor
+#
 #===============================================================================
-class PokemonBoxArrow < Sprite
-  attr_accessor :quickswap
+class UI::PokemonStorageVisualsPokemonIcon < PokemonIconSprite
+  OUTLINE_COLOR = Color.new(248, 0, 0)
+  FULL_BORDER   = true   # true = draws the corners
 
-  # Time in seconds for the cursor to move down and back up to grab/drop a
-  # Pokémon.
-  GRAB_TIME = 0.4
-
-  def initialize(viewport = nil)
-    super(viewport)
-    @holding    = false
-    @updating   = false
-    @quickswap  = false
-    @heldpkmn   = nil
-    @handsprite = ChangelingSprite.new(0, 0, viewport)
-    @handsprite.addBitmap("point1", "Graphics/UI/Storage/cursor_point_1")
-    @handsprite.addBitmap("point2", "Graphics/UI/Storage/cursor_point_2")
-    @handsprite.addBitmap("grab", "Graphics/UI/Storage/cursor_grab")
-    @handsprite.addBitmap("fist", "Graphics/UI/Storage/cursor_fist")
-    @handsprite.addBitmap("point1q", "Graphics/UI/Storage/cursor_point_1_q")
-    @handsprite.addBitmap("point2q", "Graphics/UI/Storage/cursor_point_2_q")
-    @handsprite.addBitmap("grabq", "Graphics/UI/Storage/cursor_grab_q")
-    @handsprite.addBitmap("fistq", "Graphics/UI/Storage/cursor_fist_q")
-    @handsprite.changeBitmap("fist")
-    @spriteX = self.x
-    @spriteY = self.y
+  def create_outline_bitmap
+    @selected_bitmap = Bitmap.new(@animBitmap.height + 4, @animBitmap.height + 4)
+    # Copy the icon's bitmap to the new bitmap
+    @selected_bitmap.blt(2, 2, @animBitmap.bitmap, Rect.new(0, 0, @animBitmap.height, @animBitmap.height))
+    # Determine where the outline's pixels go
+    pixels = []
+    size = @animBitmap.height / 2
+    size.times do |j|
+      size.times do |i|
+        pixel = @animBitmap.bitmap.get_pixel(i * 2, j * 2)
+        this_coord = ((j + 1) * (size + 2)) + i + 1
+        pixels[this_coord] = 1 if pixel.alpha == 255   # Visible pixel
+        next if pixels[this_coord] != 1
+        pixels[this_coord - 1] ||= 2
+        pixels[this_coord + 1] = 2
+        pixels[this_coord - size - 2] ||= 2
+        pixels[this_coord + size + 2] = 2
+        if FULL_BORDER
+          pixels[this_coord - size - 2 - 1] ||= 2
+          pixels[this_coord - size - 2 + 1] ||= 2
+          pixels[this_coord + size + 2 - 1] = 2
+          pixels[this_coord + size + 2 + 1] = 2
+        end
+      end
+    end
+    # Draw the outline
+    (size + 2).times do |j|
+      (size + 2).times do |i|
+        if pixels[(j * (size + 2)) + i] == 3
+          @selected_bitmap.fill_rect(i * 2, j * 2, 2, 2, Color.new(255, 255, 0))
+        end
+        next if pixels[(j * (size + 2)) + i] != 2
+        @selected_bitmap.fill_rect(i * 2, j * 2, 2, 2, OUTLINE_COLOR)
+      end
+    end
   end
 
-  def dispose
-    @handsprite.dispose
-    @heldpkmn&.dispose
+  def pokemon=(value)
     super
-  end
-
-  def x=(value)
-    super
-    @handsprite.x = self.x
-    @spriteX = x if !@updating
-    heldPokemon.x = self.x if holding?
-  end
-
-  def y=(value)
-    super
-    @handsprite.y = self.y
-    @spriteY = y if !@updating
-    heldPokemon.y = self.y + 16 if holding?
-  end
-
-  def z=(value)
-    super
-    @handsprite.z = value
-  end
-
-  def visible=(value)
-    super
-    @handsprite.visible = value
-    sprite = heldPokemon
-    sprite.visible = value if sprite
-  end
-
-  def color=(value)
-    super
-    @handsprite.color = value
-    sprite = heldPokemon
-    sprite.color = value if sprite
-  end
-
-  def heldPokemon
-    @heldpkmn = nil if @heldpkmn&.disposed?
-    @holding = false if !@heldpkmn
-    return @heldpkmn
-  end
-
-  def holding?
-    return self.heldPokemon && @holding
-  end
-
-  def grabbing?
-    return !@grabbing_timer_start.nil?
-  end
-
-  def placing?
-    return !@placing_timer_start.nil?
-  end
-
-  def setSprite(sprite)
-    if holding?
-      @heldpkmn = sprite
-      @heldpkmn.viewport = self.viewport if @heldpkmn
-      @heldpkmn.z = 1 if @heldpkmn
-      @holding = false if !@heldpkmn
-      self.z = 2
+    # NOTE: This only matters when refreshing the screen after giving an item to
+    #       a Pokémon (a selected Pokémon). It should remain selected.
+    if @selected_bitmap
+      self.bitmap = @selected_bitmap
+      self.src_rect.width  = @selected_bitmap.width
+      self.src_rect.height = @selected_bitmap.height
+      changeOrigin
     end
   end
 
-  def deleteSprite
-    @holding = false
-    if @heldpkmn
-      @heldpkmn.dispose
-      @heldpkmn = nil
+  def make_selected
+    return if @selected_bitmap
+    create_outline_bitmap
+    self.bitmap = @selected_bitmap
+    self.src_rect.width  = @selected_bitmap.width
+    self.src_rect.height = @selected_bitmap.height
+    changeOrigin
+    self.z += 1
+  end
+
+  def make_not_selected
+    return if !@selected_bitmap
+    @selected_bitmap.dispose
+    @selected_bitmap = nil
+    if @animBitmap
+      self.bitmap = @animBitmap.bitmap
+      self.src_rect.width  = @animBitmap.height
+      self.src_rect.height = @animBitmap.height
+      changeOrigin
     end
+    self.z -= 1
   end
 
-  def grab(sprite)
-    @grabbing_timer_start = System.uptime
-    @heldpkmn = sprite
-    @heldpkmn.viewport = self.viewport
-    @heldpkmn.z = 1
-    self.z = 2
-  end
-
-  def place
-    @placing_timer_start = System.uptime
-  end
-
-  def release
-    @heldpkmn&.release
-  end
-
-  def update
-    @updating = true
-    super
-    heldpkmn = heldPokemon
-    heldpkmn&.update
-    @handsprite.update
-    @holding = false if !heldpkmn
-    if @grabbing_timer_start
-      if System.uptime - @grabbing_timer_start <= GRAB_TIME / 2
-        @handsprite.changeBitmap((@quickswap) ? "grabq" : "grab")
-        self.y = @spriteY + lerp(0, 16, GRAB_TIME / 2, @grabbing_timer_start, System.uptime)
-      else
-        @holding = true
-        @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-        delta_y = lerp(16, 0, GRAB_TIME / 2, @grabbing_timer_start + (GRAB_TIME / 2), System.uptime)
-        self.y = @spriteY + delta_y
-        @grabbing_timer_start = nil if delta_y == 0
-      end
-    elsif @placing_timer_start
-      if System.uptime - @placing_timer_start <= GRAB_TIME / 2
-        @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-        self.y = @spriteY + lerp(0, 16, GRAB_TIME / 2, @placing_timer_start, System.uptime)
-      else
-        @holding = false
-        @heldpkmn = nil
-        @handsprite.changeBitmap((@quickswap) ? "grabq" : "grab")
-        delta_y = lerp(16, 0, GRAB_TIME / 2, @placing_timer_start + (GRAB_TIME / 2), System.uptime)
-        self.y = @spriteY + delta_y
-        @placing_timer_start = nil if delta_y == 0
-      end
-    elsif holding?
-      @handsprite.changeBitmap((@quickswap) ? "fistq" : "fist")
-    else   # Idling
-      self.x = @spriteX
-      self.y = @spriteY
-      if (System.uptime / 0.5).to_i.even?   # Changes every 0.5 seconds
-        @handsprite.changeBitmap((@quickswap) ? "point1q" : "point1")
-      else
-        @handsprite.changeBitmap((@quickswap) ? "point2q" : "point2")
-      end
-    end
-    @updating = false
-  end
+  def update; end   # Don't animate it
 end
 
 #===============================================================================
-# Box
+#
 #===============================================================================
-class PokemonBoxSprite < Sprite
-  attr_accessor :refreshBox
-  attr_accessor :refreshSprites
+class UI::PokemonStorageVisualsBox < UI::SpriteContainer
+  attr_reader :sprites
 
-  def initialize(storage, boxnumber, viewport = nil)
-    super(viewport)
+  GRAPHICS_FOLDER = "Storage/"
+
+  def initialize(storage, box_number, viewport)
     @storage = storage
-    @boxnumber = boxnumber
-    @refreshBox = true
-    @refreshSprites = true
-    @pokemonsprites = []
-    PokemonBox::BOX_SIZE.times do |i|
-      @pokemonsprites[i] = nil
-      pokemon = @storage[boxnumber, i]
-      @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport)
-    end
-    @contents = Bitmap.new(324, 296)
-    self.bitmap = @contents
-    self.x = 184
-    self.y = 18
-    refresh
-  end
-
-  def dispose
-    if !disposed?
-      PokemonBox::BOX_SIZE.times do |i|
-        @pokemonsprites[i]&.dispose
-        @pokemonsprites[i] = nil
-      end
-      @boxbitmap.dispose
-      @contents.dispose
-      super
-    end
-  end
-
-  def x=(value)
-    super
-    refresh
-  end
-
-  def y=(value)
-    super
-    refresh
-  end
-
-  def color=(value)
-    super
-    if @refreshSprites
-      PokemonBox::BOX_SIZE.times do |i|
-        if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
-          @pokemonsprites[i].color = value
-        end
-      end
-    end
-    refresh
-  end
-
-  def visible=(value)
-    super
-    PokemonBox::BOX_SIZE.times do |i|
-      if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
-        @pokemonsprites[i].visible = value
-      end
-    end
-    refresh
-  end
-
-  def getBoxBitmap
-    if !@bg || @bg != @storage[@boxnumber].background
-      curbg = @storage[@boxnumber].background
-      if !curbg || (curbg.is_a?(String) && curbg.length == 0)
-        @bg = @boxnumber % PokemonStorage::BASICWALLPAPERQTY
-      else
-        if curbg.is_a?(String) && curbg[/^box(\d+)$/]
-          curbg = $~[1].to_i
-          @storage[@boxnumber].background = curbg
-        end
-        @bg = curbg
-      end
-      if !@storage.isAvailableWallpaper?(@bg)
-        @bg = @boxnumber % PokemonStorage::BASICWALLPAPERQTY
-        @storage[@boxnumber].background = @bg
-      end
-      @boxbitmap&.dispose
-      @boxbitmap = AnimatedBitmap.new("Graphics/UI/Storage/box_#{@bg}")
-    end
-  end
-
-  def getPokemon(index)
-    return @pokemonsprites[index]
-  end
-
-  def setPokemon(index, sprite)
-    @pokemonsprites[index] = sprite
-    @pokemonsprites[index].refresh
-    refresh
-  end
-
-  def grabPokemon(index, arrow)
-    sprite = @pokemonsprites[index]
-    if sprite
-      arrow.grab(sprite)
-      @pokemonsprites[index] = nil
-      refresh
-    end
-  end
-
-  def deletePokemon(index)
-    @pokemonsprites[index].dispose
-    @pokemonsprites[index] = nil
-    refresh
-  end
-
-  def refresh
-    if @refreshBox
-      boxname = @storage[@boxnumber].name
-      getBoxBitmap
-      @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 324, 296))
-      pbSetSystemFont(@contents)
-      widthval = @contents.text_size(boxname).width
-      xval = 162 - (widthval / 2)
-      pbDrawShadowText(@contents, xval, 14, widthval, 32,
-                       boxname, Color.new(248, 248, 248), Color.new(40, 48, 48))
-      @refreshBox = false
-    end
-    yval = self.y + 30
-    PokemonBox::BOX_HEIGHT.times do |j|
-      xval = self.x + 10
-      PokemonBox::BOX_WIDTH.times do |k|
-        sprite = @pokemonsprites[(j * PokemonBox::BOX_WIDTH) + k]
-        if sprite && !sprite.disposed?
-          sprite.viewport = self.viewport
-          sprite.x = xval
-          sprite.y = yval
-          sprite.z = 1
-        end
-        xval += 48
-      end
-      yval += 48
-    end
-  end
-
-  def update
-    super
-    PokemonBox::BOX_SIZE.times do |i|
-      if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
-        @pokemonsprites[i].update
-      end
-    end
-  end
-end
-
-#===============================================================================
-# Party pop-up panel
-#===============================================================================
-class PokemonBoxPartySprite < Sprite
-  def initialize(party, viewport = nil)
+    @box_number = box_number
     super(viewport)
-    @party = party
-    @boxbitmap = AnimatedBitmap.new("Graphics/UI/Storage/overlay_party")
-    @pokemonsprites = []
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @pokemonsprites[i] = nil
-      pokemon = @party[i]
-      @pokemonsprites[i] = PokemonBoxIcon.new(pokemon, viewport) if pokemon
+  end
+
+  def initialize_sprites
+    initialize_box_background
+    initialize_overlay
+    initialize_pokemon_icons
+  end
+
+  def initialize_box_background
+    set_box_background
+    record_values(:background)
+  end
+
+  def initialize_overlay
+    add_overlay(:overlay, @sprites[:background].bitmap.width, @sprites[:background].bitmap.height)
+    @sprites[:overlay].z = 10
+    record_values(:overlay)
+  end
+
+  def initialize_pokemon_icons
+    PokemonBox::BOX_SIZE.times do |i|
+      @sprites["pokemon_#{i}"] = UI::PokemonStorageVisualsPokemonIcon.new(@storage[@box_number, i], @viewport)
+      @sprites["pokemon_#{i}"].x, @sprites["pokemon_#{i}"].y = pokemon_coords(i)
+      @sprites["pokemon_#{i}"].z = 1
+      @sprites["pokemon_#{i}"].setOffset
+      record_values("pokemon_#{i}")
     end
-    @contents = Bitmap.new(172, 352)
-    self.bitmap = @contents
-    self.x = 182
-    self.y = Graphics.height - 352
-    pbSetSystemFont(self.bitmap)
-    refresh
   end
 
-  def dispose
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @pokemonsprites[i]&.dispose
+  #-----------------------------------------------------------------------------
+
+  def width
+    return @sprites[:background].width
+  end
+
+  def pokemon_coords(index)
+    return 42 + (48 * (index % PokemonBox::BOX_WIDTH)),
+           70 + (48 * (index / PokemonBox::BOX_WIDTH))
+  end
+
+  def pokemon_icon(index)
+    return @sprites["pokemon_#{index}"]
+  end
+
+  def reset_pokemon_icon_position(index)
+    new_coords = pokemon_coords(index)
+    @sprites["pokemon_#{index}"].x = self.x + new_coords[0]
+    @sprites["pokemon_#{index}"].y = self.y + new_coords[1]
+  end
+
+  def set_box_background(wallpaper_number = -1)
+    @sprites[:background]&.dispose
+    add_icon_sprite(:background, self.x, self.y, graphics_folder + box_bitmap(wallpaper_number))
+  end
+
+  def box_bitmap(wallpaper_number = -1)
+    return "box_#{wallpaper_number}" if wallpaper_number >= 0
+    ret = @storage[@box_number].background
+    if !ret.is_a?(Integer) || !@storage.isAvailableWallpaper?(ret)
+      ret = @box_number % PokemonStorage::BASIC_WALLPAPER_COUNT
+      @storage[@box_number].background = ret
     end
-    @boxbitmap.dispose
-    @contents.dispose
-    super
+    return "box_#{ret}"
   end
 
-  def x=(value)
-    super
-    refresh
+  def set_visible_proc(this_proc)
+    @visible_proc = this_proc
+    apply_visible_proc
   end
 
-  def y=(value)
-    super
-    refresh
-  end
-
-  def color=(value)
-    super
-    Settings::MAX_PARTY_SIZE.times do |i|
-      if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
-        @pokemonsprites[i].color = pbSrcOver(@pokemonsprites[i].color, value)
+  def apply_visible_proc
+    PokemonBox::BOX_SIZE.times do |i|
+      if @visible_proc && !@visible_proc.call(@sprites["pokemon_#{i}"].pokemon)
+        @sprites["pokemon_#{i}"].opacity = 96
+      else
+        @sprites["pokemon_#{i}"].opacity = 255
       end
     end
   end
 
-  def visible=(value)
-    super
-    Settings::MAX_PARTY_SIZE.times do |i|
-      if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
-        @pokemonsprites[i].visible = value
-      end
-    end
+  def fade_all_pokemon
+    PokemonBox::BOX_SIZE.times { |i| @sprites["pokemon_#{i}"].opacity = 96 }
   end
 
-  def getPokemon(index)
-    return @pokemonsprites[index]
+  def unfade_all_pokemon
+    apply_visible_proc
   end
 
-  def setPokemon(index, sprite)
-    @pokemonsprites[index] = sprite
-    @pokemonsprites.compact!
-    refresh
-  end
-
-  def grabPokemon(index, arrow)
-    sprite = @pokemonsprites[index]
-    if sprite
-      arrow.grab(sprite)
-      @pokemonsprites.delete_at(index)
-      refresh
-    end
-  end
-
-  def deletePokemon(index)
-    @pokemonsprites[index].dispose
-    @pokemonsprites[index] = nil
-    @pokemonsprites.compact!
-    refresh
-  end
+  #-----------------------------------------------------------------------------
 
   def refresh
-    @contents.blt(0, 0, @boxbitmap.bitmap, Rect.new(0, 0, 172, 352))
-    pbDrawTextPositions(
-      self.bitmap,
-      [[_INTL("Back"), 86, 248, :center, Color.new(248, 248, 248), Color.new(80, 80, 80), :outline]]
-    )
-    xvalues = []   # [18, 90, 18, 90, 18, 90]
-    yvalues = []   # [2, 18, 66, 82, 130, 146]
-    Settings::MAX_PARTY_SIZE.times do |i|
-      xvalues.push(18 + (72 * (i % 2)))
-      yvalues.push(2 + (16 * (i % 2)) + (64 * (i / 2)))
-    end
-    @pokemonsprites.delete_if { |sprite| sprite&.disposed? }
-    @pokemonsprites.each { |sprite| sprite&.refresh }
-    Settings::MAX_PARTY_SIZE.times do |j|
-      sprite = @pokemonsprites[j]
-      next if sprite.nil? || sprite.disposed?
-      sprite.viewport = self.viewport
-      sprite.x = self.x + xvalues[j]
-      sprite.y = self.y + yvalues[j]
-      sprite.z = 1
-    end
+    super
+    set_box_background
+    draw_box_name
+    refresh_existing_pokemon
   end
 
-  def update
-    super
-    Settings::MAX_PARTY_SIZE.times do |i|
-      @pokemonsprites[i].update if @pokemonsprites[i] && !@pokemonsprites[i].disposed?
+  def refresh_box_name
+    draw_box_name
+  end
+
+  def draw_box_name
+    box_name = @storage[@box_number].name
+    box_name = crop_text(box_name, 216)
+    draw_text(box_name, 162, 14, align: :center, theme: :white)
+  end
+
+  def refresh_existing_pokemon
+    PokemonBox::BOX_SIZE.times do |i|
+      @sprites["pokemon_#{i}"].pokemon = @storage[@box_number, i]
     end
   end
 end
 
 #===============================================================================
-# Pokémon storage visuals
+#
 #===============================================================================
-class PokemonStorageScene
-  attr_reader :quickswap
+class UI::PokemonStorageVisualsPartyPanel < UI::SpriteContainer
+  attr_reader :sprites
 
-  MARK_WIDTH  = 16
-  MARK_HEIGHT = 16
+  GRAPHICS_FOLDER = "Storage/"
 
-  def initialize
-    @command = 1
+  def initialize(party, mode, viewport)
+    @party = party
+    @mode = mode
+    super(viewport)
+    refresh
   end
 
-  def pbStartBox(screen, command)
-    @screen = screen
-    @storage = screen.storage
-    @bgviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @bgviewport.z = 99999
-    @boxviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @boxviewport.z = 99999
-    @boxsidesviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @boxsidesviewport.z = 99999
-    @arrowviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @arrowviewport.z = 99999
-    @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
-    @selection = 0
-    @quickswap = false
-    @sprites = {}
-    @choseFromParty = false
-    @command = command
-    addBackgroundPlane(@sprites, "background", "Storage/bg", @bgviewport)
-    @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport)
-    @sprites["boxsides"] = IconSprite.new(0, 0, @boxsidesviewport)
-    @sprites["boxsides"].setBitmap("Graphics/UI/Storage/overlay_main")
-    @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @boxsidesviewport)
-    pbSetSystemFont(@sprites["overlay"].bitmap)
-    @sprites["pokemon"] = AutoMosaicPokemonSprite.new(@boxsidesviewport)
-    @sprites["pokemon"].setOffset(PictureOrigin::CENTER)
-    @sprites["pokemon"].x = 90
-    @sprites["pokemon"].y = 134
-    @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
-    if command != 2   # Drop down tab only on Deposit
-      @sprites["boxparty"].x = 182
-      @sprites["boxparty"].y = Graphics.height
+  def initialize_sprites
+    initialize_panel_background
+    initialize_overlay
+    initialize_pokemon_icons
+  end
+
+  def initialize_panel_background
+    add_icon_sprite(:background, 0, 0, graphics_folder + "overlay_party")
+    record_values(:background)
+  end
+
+  def initialize_overlay
+    add_overlay(:overlay, @sprites[:background].bitmap.width, @sprites[:background].bitmap.height)
+    @sprites[:overlay].z = 10
+    record_values(:overlay)
+  end
+
+  def initialize_pokemon_icons
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon_#{i}"] = UI::PokemonStorageVisualsPokemonIcon.new(@party[i], @viewport)
+      @sprites["pokemon_#{i}"].x, @sprites["pokemon_#{i}"].y = pokemon_coords(i)
+      @sprites["pokemon_#{i}"].z = 1
+      @sprites["pokemon_#{i}"].setOffset
+      record_values("pokemon_#{i}")
     end
-    @markingbitmap = AnimatedBitmap.new("Graphics/UI/Storage/markings")
-    @sprites["markingbg"] = IconSprite.new(292, 68, @boxsidesviewport)
-    @sprites["markingbg"].setBitmap("Graphics/UI/Storage/overlay_marking")
-    @sprites["markingbg"].z = 10
-    @sprites["markingbg"].visible = false
-    @sprites["markingoverlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @boxsidesviewport)
-    @sprites["markingoverlay"].z = 11
-    @sprites["markingoverlay"].visible = false
-    pbSetSystemFont(@sprites["markingoverlay"].bitmap)
-    @sprites["arrow"] = PokemonBoxArrow.new(@arrowviewport)
-    @sprites["arrow"].z += 1
-    if command == 2
-      pbPartySetArrow(@sprites["arrow"], @selection)
-      pbUpdateOverlay(@selection, @storage.party)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def height
+    return @sprites[:background].bitmap.height
+  end
+
+  def pokemon_coords(index)
+    return 50 + (72 * (index % 2)),
+           42 + (16 * (index % 2)) + (64 * (index / 2))
+  end
+
+  def pokemon_icon(index)
+    return @sprites["pokemon_#{index}"]
+  end
+
+  def reset_pokemon_icon_position(index)
+    new_coords = pokemon_coords(index)
+    @sprites["pokemon_#{index}"].x = self.x + new_coords[0]
+    @sprites["pokemon_#{index}"].y = self.y + new_coords[1]
+  end
+
+  def set_visible_proc(this_proc)
+    @visible_proc = this_proc
+    apply_visible_proc
+  end
+
+  def apply_visible_proc
+    Settings::MAX_PARTY_SIZE.times do |i|
+      if @visible_proc && !@visible_proc.call(@sprites["pokemon_#{i}"].pokemon)
+        @sprites["pokemon_#{i}"].opacity = 96
+      else
+        @sprites["pokemon_#{i}"].opacity = 255
+      end
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    draw_button_text
+    refresh_existing_pokemon
+  end
+
+  def draw_button_text
+    text = (@mode == :deposit) ? _INTL("Exit") : _INTL("Back")
+    draw_text(text, 86, 248, align: :center, outline: :outline, theme: :white)
+  end
+
+  def refresh_existing_pokemon
+    Settings::MAX_PARTY_SIZE.times do |i|
+      @sprites["pokemon_#{i}"].pokemon = @party[i]
+    end
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class UI::PokemonStorageVisualsCursor < UI::SpriteContainer
+  attr_reader :quick_swap_mode
+
+  GRAPHICS_FOLDER = "Storage/"
+  BITMAPS = {
+    :point1  => ["cursor_point_1"],
+    :point2  => ["cursor_point_2"],
+    :grab    => ["cursor_grab"],
+    :fist    => ["cursor_fist"],
+    :point1q => ["cursor_point_1_q"],
+    :point2q => ["cursor_point_2_q"],
+    :grabq   => ["cursor_grab_q"],
+    :fistq   => ["cursor_fist_q"]
+  }
+  # Time in seconds for the cursor to move down or back up to grab/drop a
+  # Pokémon.
+  GRAB_TIME = 0.2
+
+  def initialize_sprites
+    initialize_cursor
+    initialize_pokemon_icon
+    initialize_item_icon
+  end
+
+  def initialize_cursor
+    @sprites[:cursor] = ChangelingSprite.new(0, 0, @viewport)
+    BITMAPS.each_pair do |key, data|
+      @sprites[:cursor].add_bitmap(key, graphics_folder + data[0])
+    end
+    @sprites[:cursor].change_bitmap(:fist)
+    record_values(:cursor)
+  end
+
+  def initialize_pokemon_icon
+    @sprites[:pokemon] = UI::PokemonStorageVisualsPokemonIcon.new(nil, @viewport)
+    @sprites[:pokemon].x = 32
+    @sprites[:pokemon].y = 48
+    @sprites[:pokemon].z = -1
+    @sprites[:pokemon].setOffset
+    record_values(:pokemon)
+  end
+
+  def initialize_item_icon
+    @sprites[:item] = ItemIconSprite.new(32, 48, nil, @viewport)
+    @sprites[:item].z = -1
+    @sprites[:item].setOffset
+    @sprites[:item].blankzero = true
+    record_values(:item)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def held_pokemon
+    return @sprites[:pokemon].pokemon
+  end
+
+  def held_pokemon=(value)
+    @sprites[:pokemon].pokemon = value
+  end
+
+  def holding_pokemon?
+    return !held_pokemon.nil?
+  end
+
+  def held_item
+    return @sprites[:item].item
+  end
+
+  def held_item=(value)
+    @sprites[:item].item = value
+  end
+
+  def holding_item?
+    return !held_item.nil?
+  end
+
+  def pokemon_icon
+    return @sprites[:pokemon]
+  end
+
+  def quick_swap_mode=(value)
+    return if @quick_swap_mode == value
+    @quick_swap_mode = value
+    @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :fistq : :fist) if holding_pokemon?
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def animating?
+    return @pick_up_timer_1_start || @pick_up_timer_2_start ||
+           @put_down_timer_1_start || @put_down_timer_2_start
+  end
+
+  def pick_up_animation_1
+    @pick_up_timer_1_start = System.uptime
+    @start_y = self.y
+    @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :grabq : :grab)
+  end
+
+  def pick_up_animation_2
+    @pick_up_timer_2_start = System.uptime
+    @start_y = self.y
+    @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :fistq : :fist)
+  end
+
+  def put_down_animation_1
+    @put_down_timer_1_start = System.uptime
+    @start_y = self.y
+    @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :fistq : :fist)
+  end
+
+  def put_down_animation_2
+    @put_down_timer_2_start = System.uptime
+    @start_y = self.y
+    @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :grabq : :grab)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh_cursor
+    if (System.uptime / 0.5).to_i.even?   # Changes every 0.5 seconds
+      @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :point1q : :point1)
     else
-      pbSetArrow(@sprites["arrow"], @selection)
-      pbUpdateOverlay(@selection)
+      @sprites[:cursor].change_bitmap((@quick_swap_mode) ? :point2q : :point2)
     end
-    pbSetMosaic(@selection)
-    pbSEPlay("PC access")
-    pbFadeInAndShow(@sprites)
   end
 
-  def pbCloseBox
-    pbFadeOutAndHide(@sprites)
-    pbDisposeSpriteHash(@sprites)
-    @markingbitmap&.dispose
-    @boxviewport.dispose
-    @boxsidesviewport.dispose
-    @arrowviewport.dispose
+  def update
+    super
+    if @pick_up_timer_1_start
+      y_offset = lerp(0, 16, GRAB_TIME, @pick_up_timer_1_start, System.uptime)
+      self.y = @start_y + y_offset
+      @pick_up_timer_1_start = nil if y_offset == 16
+    elsif @pick_up_timer_2_start
+      y_offset = lerp(0, -16, GRAB_TIME, @pick_up_timer_2_start, System.uptime)
+      self.y = @start_y + y_offset
+      @pick_up_timer_2_start = nil if y_offset == -16
+    elsif @put_down_timer_1_start
+      y_offset = lerp(0, 16, GRAB_TIME, @put_down_timer_1_start, System.uptime)
+      self.y = @start_y + y_offset
+      @put_down_timer_1_start = nil if y_offset == 16
+    elsif @put_down_timer_2_start
+      y_offset = lerp(0, -16, GRAB_TIME, @put_down_timer_2_start, System.uptime)
+      self.y = @start_y + y_offset
+      @put_down_timer_2_start = nil if y_offset == -16
+    elsif !holding_pokemon? && !holding_item?   # Idling animation
+      refresh_cursor
+    end
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class UI::PokemonStorageVisuals < UI::BaseVisuals
+  # -3 = Exit button
+  # -2 = Party button, or Back button in party panel
+  # -1 = Box name
+  # 0+ = index in box/party
+  attr_reader :index
+  # -1 = party
+  # 0+ = box number
+  attr_reader :box
+
+  GRAPHICS_FOLDER = "Storage/"   # Subfolder in Graphics/UI
+  MARKING_WIDTH   = 16
+  MARKING_HEIGHT  = 16
+
+  def initialize(storage, mode = :normal)
+    @storage = storage
+    @mode    = mode
+    @index   = 0
+    @box     = (@mode == :deposit) ? -1 : @storage.currentBox
+    super()
+    set_index(@index)
   end
 
-  def pbDisplay(message)
-    msgwindow = Window_UnformattedTextPokemon.newWithSize("", 180, 0, Graphics.width - 180, 32)
-    msgwindow.viewport       = @viewport
-    msgwindow.visible        = true
-    msgwindow.letterbyletter = false
-    msgwindow.resizeHeightToFit(message, Graphics.width - 180)
-    msgwindow.text = message
-    pbBottomRight(msgwindow)
-    loop do
-      Graphics.update
-      Input.update
-      if Input.trigger?(Input::BACK) || Input.trigger?(Input::USE)
-        break
-      end
-      msgwindow.update
-      self.update
-    end
-    msgwindow.dispose
-    Input.update
+  def initialize_viewport
+    super
+    @pokemon_viewport = new_viewport(6, 80, 168, 168)   # Coords are relative to top left of side pane graphic
+    @pokemon_viewport.z += 1
+    @side_pane_viewport = new_viewport(0, 0, Graphics.width, Graphics.height)
+    @side_pane_viewport.z += 2
   end
 
-  def pbShowCommands(message, commands, index = 0)
-    ret = -1
-    msgwindow = Window_UnformattedTextPokemon.newWithSize("", 180, 0, Graphics.width - 180, 32)
-    msgwindow.viewport       = @viewport
-    msgwindow.visible        = true
-    msgwindow.letterbyletter = false
-    msgwindow.text           = message
-    msgwindow.resizeHeightToFit(message, Graphics.width - 180)
-    pbBottomRight(msgwindow)
-    cmdwindow = Window_CommandPokemon.new(commands)
-    cmdwindow.viewport = @viewport
-    cmdwindow.visible  = true
-    cmdwindow.resizeToFit(cmdwindow.commands)
-    cmdwindow.height = Graphics.height - msgwindow.height if cmdwindow.height > Graphics.height - msgwindow.height
-    pbBottomRight(cmdwindow)
-    cmdwindow.y -= msgwindow.height
-    cmdwindow.index = index
-    loop do
-      Graphics.update
-      Input.update
-      msgwindow.update
-      cmdwindow.update
-      if Input.trigger?(Input::BACK)
-        ret = -1
-        break
-      elsif Input.trigger?(Input::USE)
-        ret = cmdwindow.index
-        break
-      end
-      self.update
-    end
-    msgwindow.dispose
-    cmdwindow.dispose
-    Input.update
+  def initialize_bitmaps
+    @bitmaps[:markings] = AnimatedBitmap.new(graphics_folder + "markings")
+  end
+
+  def initialize_message_box
+    super
+    @sprites[:speech_box].width = Graphics.width - 180
+  end
+
+  def initialize_sprites
+    initialize_side_pane
+    initialize_box
+    initialize_party_panel
+    initialize_marking_sprites
+    initialize_cursor
+    initialize_buttons
+  end
+
+  def initialize_side_pane
+    @sprites[:side_pane] = UI::PokemonStorageVisualsSidePane.new(@viewport, @pokemon_viewport, @side_pane_viewport)
+    @sprites[:side_pane].y = 16
+    @sprites[:side_pane].z = 100
+  end
+
+  def initialize_box
+    @sprites[:box] = create_box_sprite(@storage.currentBox)
+  end
+
+  def create_box_sprite(box_index)
+    ret = UI::PokemonStorageVisualsBox.new(@storage, box_index, @viewport)
+    ret.x = 184
+    ret.y = 18
+    ret.set_visible_proc(@visible_proc)
+    ret.refresh
     return ret
   end
 
-  def pbSetArrow(arrow, selection)
-    case selection
-    when -1, -4, -5   # Box name, move left, move right
-      arrow.x = 314
-      arrow.y = -24
-    when -2   # Party Pokémon
-      arrow.x = 238
-      arrow.y = 278
-    when -3   # Close Box
-      arrow.x = 414
-      arrow.y = 278
-    else
-      arrow.x = (97 + (24 * (selection % PokemonBox::BOX_WIDTH))) * 2
-      arrow.y = (8 + (24 * (selection / PokemonBox::BOX_WIDTH))) * 2
+  def initialize_party_panel
+    @sprites[:party_panel] = UI::PokemonStorageVisualsPartyPanel.new(@storage.party, @mode, @viewport)
+    @sprites[:party_panel].x = 184
+    @sprites[:party_panel].y = (showing_party_panel?) ? Graphics.height - 352 : Graphics.height
+    @sprites[:party_panel].z = 1100
+  end
+
+  def initialize_marking_sprites
+    # Background image of marking panel
+    add_icon_sprite(:marking_bg, 290, 68, graphics_folder + "overlay_marking")
+    @sprites[:marking_bg].z       = 1900
+    @sprites[:marking_bg].visible = false
+    # Overlay for marking panel
+    add_overlay(:marking_overlay)
+    @sprites[:marking_overlay].z       = 1901
+    @sprites[:marking_overlay].visible = false
+    # Cursor to highlight the currently selected marking option
+    add_icon_sprite(:marking_cursor, 0, 0, graphics_folder + "cursor_marking")
+    @sprites[:marking_cursor].z       = 1902
+    @sprites[:marking_cursor].visible = false
+    @sprites[:marking_cursor].src_rect.height = @sprites[:marking_cursor].bitmap.height / 2
+  end
+
+  def initialize_cursor
+    @sprites[:cursor] = UI::PokemonStorageVisualsCursor.new(@viewport)
+    @sprites[:cursor].z = 1500
+  end
+
+  def initialize_buttons
+    @sprites[:party_button] = IconSprite.new(188, 320, @viewport)
+    @sprites[:party_button].setBitmap(graphics_folder + "overlay_buttons")
+    @sprites[:party_button].src_rect.height = @sprites[:party_button].height / 2
+    @sprites[:party_button].visible = ([:organize, :choose_pokemon].include?(@mode))
+    @sprites[:exit_button] = IconSprite.new(386, 320, @viewport)
+    @sprites[:exit_button].setBitmap(graphics_folder + "overlay_buttons")
+    @sprites[:exit_button].src_rect.y = @sprites[:exit_button].height / 2
+    @sprites[:exit_button].src_rect.height = @sprites[:exit_button].height / 2
+    @sprites[:exit_button].visible = (@mode != :deposit)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def can_access_screen_menu?
+    return @mode == :organize
+  end
+
+  def pokemon
+    return @sprites[:cursor].held_pokemon if holding_pokemon?
+    return slot_pokemon
+  end
+
+  # Returns the Pokémon in the storage space the cursor is over.
+  def slot_pokemon
+    return nil if @index < 0
+    return @storage.party[@index] if @box < 0
+    return @storage[@box][@index]
+  end
+
+  def holding_pokemon?
+    return @sprites[:cursor].holding_pokemon?
+  end
+
+  def pokemon_icon
+    return @sprites[:cursor].pokemon_icon if holding_pokemon?
+    return @sprites[:box].pokemon_icon(@index) if @box >= 0
+    return @sprites[:party_panel].pokemon_icon(@index)
+  end
+
+  def item
+    return @sprites[:cursor].held_item
+  end
+
+  def holding_item?
+    return @sprites[:cursor].holding_item?
+  end
+
+  def showing_party_panel?
+    return @box == -1
+  end
+
+  def set_index(new_index, no_mosaic = false)
+    mosaic_pokemon_sprite if !no_mosaic
+    @index = new_index
+    refresh_on_index_changed(@index)
+  end
+
+  def set_sub_mode(sub_mode = :none)
+    super
+    @sprites[:cursor].quick_swap_mode = (@sub_mode != :none)
+    @visible_proc = nil
+    if @sub_mode == :rearrange_items
+      @visible_proc = proc { |pkmn| pkmn&.hasItem? }
     end
+    @sprites[:box].set_visible_proc(@visible_proc)
+    @sprites[:party_panel].set_visible_proc(@visible_proc)
   end
 
-  def pbChangeSelection(key, selection)
-    case key
-    when Input::UP
-      case selection
-      when -1   # Box name
-        selection = -2
-      when -2   # Party
-        selection = PokemonBox::BOX_SIZE - 1 - (PokemonBox::BOX_WIDTH * 2 / 3)   # 25
-      when -3   # Close Box
-        selection = PokemonBox::BOX_SIZE - (PokemonBox::BOX_WIDTH / 3)   # 28
-      else
-        selection -= PokemonBox::BOX_WIDTH
-        selection = -1 if selection < 0
-      end
-    when Input::DOWN
-      case selection
-      when -1   # Box name
-        selection = PokemonBox::BOX_WIDTH / 3   # 2
-      when -2   # Party
-        selection = -1
-      when -3   # Close Box
-        selection = -1
-      else
-        selection += PokemonBox::BOX_WIDTH
-        if selection >= PokemonBox::BOX_SIZE
-          if selection < PokemonBox::BOX_SIZE + (PokemonBox::BOX_WIDTH / 2)
-            selection = -2   # Party
-          else
-            selection = -3   # Close Box
-          end
-        end
-      end
-    when Input::LEFT
-      if selection == -1   # Box name
-        selection = -4   # Move to previous box
-      elsif selection == -2
-        selection = -3
-      elsif selection == -3
-        selection = -2
-      elsif (selection % PokemonBox::BOX_WIDTH) == 0   # Wrap around
-        selection += PokemonBox::BOX_WIDTH - 1
-      else
-        selection -= 1
-      end
-    when Input::RIGHT
-      if selection == -1   # Box name
-        selection = -5   # Move to next box
-      elsif selection == -2
-        selection = -3
-      elsif selection == -3
-        selection = -2
-      elsif (selection % PokemonBox::BOX_WIDTH) == PokemonBox::BOX_WIDTH - 1   # Wrap around
-        selection -= PokemonBox::BOX_WIDTH - 1
-      else
-        selection += 1
-      end
-    end
-    return selection
+  def select_pokemon
+    pokemon_icon&.make_selected if !holding_pokemon?
   end
 
-  def pbPartySetArrow(arrow, selection)
-    return if selection < 0
-    xvalues = []   # [200, 272, 200, 272, 200, 272, 236]
-    yvalues = []   # [2, 18, 66, 82, 130, 146, 220]
-    Settings::MAX_PARTY_SIZE.times do |i|
-      xvalues.push(200 + (72 * (i % 2)))
-      yvalues.push(2 + (16 * (i % 2)) + (64 * (i / 2)))
-    end
-    xvalues.push(236)
-    yvalues.push(220)
-    arrow.angle = 0
-    arrow.mirror = false
-    arrow.ox = 0
-    arrow.oy = 0
-    arrow.x = xvalues[selection]
-    arrow.y = yvalues[selection]
+  def deselect_pokemon
+    pokemon_icon&.make_not_selected if !holding_pokemon?
   end
 
-  def pbPartyChangeSelection(key, selection)
-    case key
-    when Input::LEFT
-      selection -= 1
-      selection = Settings::MAX_PARTY_SIZE if selection < 0
-    when Input::RIGHT
-      selection += 1
-      selection = 0 if selection > Settings::MAX_PARTY_SIZE
-    when Input::UP
-      if selection == Settings::MAX_PARTY_SIZE
-        selection = Settings::MAX_PARTY_SIZE - 1
-      else
-        selection -= 2
-        selection = Settings::MAX_PARTY_SIZE if selection < 0
-      end
-    when Input::DOWN
-      if selection == Settings::MAX_PARTY_SIZE
-        selection = 0
-      else
-        selection += 2
-        selection = Settings::MAX_PARTY_SIZE if selection > Settings::MAX_PARTY_SIZE
-      end
-    end
-    return selection
-  end
+  #-----------------------------------------------------------------------------
 
-  def pbSelectBoxInternal(_party)
-    selection = @selection
-    pbSetArrow(@sprites["arrow"], selection)
-    pbUpdateOverlay(selection)
-    pbSetMosaic(selection)
-    loop do
-      Graphics.update
-      Input.update
-      key = -1
-      key = Input::DOWN if Input.repeat?(Input::DOWN)
-      key = Input::RIGHT if Input.repeat?(Input::RIGHT)
-      key = Input::LEFT if Input.repeat?(Input::LEFT)
-      key = Input::UP if Input.repeat?(Input::UP)
-      if key >= 0
-        pbPlayCursorSE
-        selection = pbChangeSelection(key, selection)
-        pbSetArrow(@sprites["arrow"], selection)
-        case selection
-        when -4
-          nextbox = (@storage.currentBox + @storage.maxBoxes - 1) % @storage.maxBoxes
-          pbSwitchBoxToLeft(nextbox)
-          @storage.currentBox = nextbox
-        when -5
-          nextbox = (@storage.currentBox + 1) % @storage.maxBoxes
-          pbSwitchBoxToRight(nextbox)
-          @storage.currentBox = nextbox
-        end
-        selection = -1 if [-4, -5].include?(selection)
-        pbUpdateOverlay(selection)
-        pbSetMosaic(selection)
-      end
-      self.update
-      if Input.trigger?(Input::JUMPUP)
-        pbPlayCursorSE
-        nextbox = (@storage.currentBox + @storage.maxBoxes - 1) % @storage.maxBoxes
-        pbSwitchBoxToLeft(nextbox)
-        @storage.currentBox = nextbox
-        pbUpdateOverlay(selection)
-        pbSetMosaic(selection)
-      elsif Input.trigger?(Input::JUMPDOWN)
-        pbPlayCursorSE
-        nextbox = (@storage.currentBox + 1) % @storage.maxBoxes
-        pbSwitchBoxToRight(nextbox)
-        @storage.currentBox = nextbox
-        pbUpdateOverlay(selection)
-        pbSetMosaic(selection)
-      elsif Input.trigger?(Input::SPECIAL)   # Jump to box name
-        if selection != -1
-          pbPlayCursorSE
-          selection = -1
-          pbSetArrow(@sprites["arrow"], selection)
-          pbUpdateOverlay(selection)
-          pbSetMosaic(selection)
-        end
-      elsif Input.trigger?(Input::ACTION) && @command == 0   # Organize only
-        pbPlayDecisionSE
-        pbSetQuickSwap(!@quickswap)
-      elsif Input.trigger?(Input::BACK)
-        @selection = selection
-        return nil
-      elsif Input.trigger?(Input::USE)
-        @selection = selection
-        if selection >= 0
-          return [@storage.currentBox, selection]
-        elsif selection == -1   # Box name
-          return [-4, -1]
-        elsif selection == -2   # Party Pokémon
-          return [-2, -1]
-        elsif selection == -3   # Close Box
-          return [-3, -1]
-        end
-      end
-    end
-  end
-
-  def pbSelectBox(party)
-    return pbSelectBoxInternal(party) if @command == 1   # Withdraw
-    ret = nil
-    loop do
-      ret = pbSelectBoxInternal(party) if !@choseFromParty
-      if @choseFromParty || (ret && ret[0] == -2)   # Party Pokémon
-        if !@choseFromParty
-          pbShowPartyTab
-          @selection = 0
-        end
-        ret = pbSelectPartyInternal(party, false)
-        if ret < 0
-          pbHidePartyTab
-          @selection = -2
-          @choseFromParty = false
-        else
-          @choseFromParty = true
-          return [-1, ret]
-        end
-      else
-        @choseFromParty = false
-        return ret
-      end
-    end
-  end
-
-  def pbSelectPartyInternal(party, depositing)
-    selection = @selection
-    pbPartySetArrow(@sprites["arrow"], selection)
-    pbUpdateOverlay(selection, party)
-    pbSetMosaic(selection)
-    lastsel = 1
-    loop do
-      Graphics.update
-      Input.update
-      key = -1
-      key = Input::DOWN if Input.repeat?(Input::DOWN)
-      key = Input::RIGHT if Input.repeat?(Input::RIGHT)
-      key = Input::LEFT if Input.repeat?(Input::LEFT)
-      key = Input::UP if Input.repeat?(Input::UP)
-      if key >= 0
-        pbPlayCursorSE
-        newselection = pbPartyChangeSelection(key, selection)
-        case newselection
-        when -1
-          return -1 if !depositing
-        when -2
-          selection = lastsel
-        else
-          selection = newselection
-        end
-        pbPartySetArrow(@sprites["arrow"], selection)
-        lastsel = selection if selection > 0
-        pbUpdateOverlay(selection, party)
-        pbSetMosaic(selection)
-      end
-      self.update
-      if Input.trigger?(Input::ACTION) && @command == 0   # Organize only
-        pbPlayDecisionSE
-        pbSetQuickSwap(!@quickswap)
-      elsif Input.trigger?(Input::BACK)
-        @selection = selection
-        return -1
-      elsif Input.trigger?(Input::USE)
-        if selection >= 0 && selection < Settings::MAX_PARTY_SIZE
-          @selection = selection
-          return selection
-        elsif selection == Settings::MAX_PARTY_SIZE   # Close Box
-          @selection = selection
-          return (depositing) ? -3 : -1
-        end
-      end
-    end
-  end
-
-  def pbSelectParty(party)
-    return pbSelectPartyInternal(party, true)
-  end
-
-  def pbChangeBackground(wp)
-    duration = 0.2   # Time in seconds to fade out or fade in
-    @sprites["box"].refreshSprites = false
-    Graphics.update
-    self.update
-    # Fade old background to white
+  def go_to_next_box(new_box_number = -1)
+    @sprites[:side_pane].pokemon = nil if !holding_pokemon?
+    new_box_number = (@storage.currentBox + 1) % @storage.maxBoxes if new_box_number < 0
+    @sprites[:cursor].visible = false
+    # Animate the boxes moving
+    offset_x = @sprites[:box].width + 12
+    start_x = @sprites[:box].x
+    new_box = create_box_sprite(new_box_number)
+    new_box.x = start_x + offset_x
     timer_start = System.uptime
     loop do
-      alpha = lerp(0, 255, duration, timer_start, System.uptime)
-      @sprites["box"].color = Color.new(248, 248, 248, alpha)
+      @sprites[:box].x = lerp(start_x, start_x - offset_x, 0.25, timer_start, System.uptime)
+      new_box.x = @sprites[:box].x + offset_x
+      update
       Graphics.update
-      self.update
-      break if alpha >= 255
+      break if new_box.x == start_x
     end
-    # Fade in new background from white
-    @sprites["box"].refreshBox = true
-    @storage[@storage.currentBox].background = wp
-    timer_start = System.uptime
-    loop do
-      alpha = lerp(255, 0, duration, timer_start, System.uptime)
-      @sprites["box"].color = Color.new(248, 248, 248, alpha)
-      Graphics.update
-      self.update
-      break if alpha <= 0
-    end
-    @sprites["box"].refreshSprites = true
+    @sprites[:box].dispose
+    @sprites[:box] = new_box
     Input.update
+    # Tidy up
+    @sprites[:cursor].visible = true
+    @storage.currentBox = new_box_number
+    @box = new_box_number
+    refresh_side_pane
+    mosaic_pokemon_sprite
   end
 
-  def pbSwitchBoxToRight(new_box_number)
-    start_x = @sprites["box"].x
-    newbox = PokemonBoxSprite.new(@storage, new_box_number, @boxviewport)
-    newbox.x = start_x + 336
+  def go_to_previous_box(new_box_number = -1)
+    @sprites[:side_pane].pokemon = nil if !holding_pokemon?
+    new_box_number = (@storage.currentBox + @storage.maxBoxes - 1) % @storage.maxBoxes if new_box_number < 0
+    @sprites[:cursor].visible = false
+    # Animate the boxes moving
+    offset_x = @sprites[:box].width + 12
+    start_x = @sprites[:box].x
+    new_box = create_box_sprite(new_box_number)
+    new_box.x = start_x - offset_x
     timer_start = System.uptime
     loop do
-      @sprites["box"].x = lerp(start_x, start_x - 336, 0.25, timer_start, System.uptime)
-      newbox.x = @sprites["box"].x + 336
-      self.update
+      @sprites[:box].x = lerp(start_x, start_x + offset_x, 0.25, timer_start, System.uptime)
+      new_box.x = @sprites[:box].x - offset_x
+      update
       Graphics.update
-      break if newbox.x == start_x
+      break if new_box.x == start_x
     end
-    @sprites["box"].dispose
-    @sprites["box"] = newbox
+    @sprites[:box].dispose
+    @sprites[:box] = new_box
     Input.update
+    # Tidy up
+    @sprites[:cursor].visible = true
+    @storage.currentBox = new_box_number
+    @box = new_box_number
+    refresh_side_pane
+    mosaic_pokemon_sprite
   end
 
-  def pbSwitchBoxToLeft(new_box_number)
-    start_x = @sprites["box"].x
-    newbox = PokemonBoxSprite.new(@storage, new_box_number, @boxviewport)
-    newbox.x = start_x - 336
-    timer_start = System.uptime
-    loop do
-      @sprites["box"].x = lerp(start_x, start_x + 336, 0.25, timer_start, System.uptime)
-      newbox.x = @sprites["box"].x - 336
-      self.update
-      Graphics.update
-      break if newbox.x == start_x
-    end
-    @sprites["box"].dispose
-    @sprites["box"] = newbox
-    Input.update
-  end
-
-  def pbJumpToBox(newbox)
-    return if @storage.currentBox == newbox
-    if newbox > @storage.currentBox
-      pbSwitchBoxToRight(newbox)
-    else
-      pbSwitchBoxToLeft(newbox)
-    end
-    @storage.currentBox = newbox
-  end
-
-  def pbSetMosaic(selection)
-    return if @screen.pbHeldPokemon
-    return if @boxForMosaic == @storage.currentBox && @selectionForMosaic == selection
-    @sprites["pokemon"].mosaic_duration = 0.25   # In seconds
-    @boxForMosaic = @storage.currentBox
-    @selectionForMosaic = selection
-  end
-
-  def pbSetQuickSwap(value)
-    @quickswap = value
-    @sprites["arrow"].quickswap = value
-  end
-
-  def pbShowPartyTab
-    @sprites["arrow"].visible = false
-    if !@screen.pbHeldPokemon
-      pbUpdateOverlay(-1)
-      pbSetMosaic(-1)
-    end
+  def show_party_panel
     pbSEPlay("GUI storage show party panel")
-    start_y = @sprites["boxparty"].y   # Graphics.height
+    @sprites[:cursor].visible = false
+    @sprites[:side_pane].pokemon = nil if !holding_pokemon?
+    start_y = @sprites[:party_panel].y   # Graphics.height
     timer_start = System.uptime
     loop do
-      @sprites["boxparty"].y = lerp(start_y, start_y - @sprites["boxparty"].height,
-                                    0.4, timer_start, System.uptime)
-      self.update
+      @sprites[:party_panel].y = lerp(start_y, start_y - @sprites[:party_panel].height,
+                                      0.4, timer_start, System.uptime)
+      update
       Graphics.update
-      break if @sprites["boxparty"].y == start_y - @sprites["boxparty"].height
+      break if @sprites[:party_panel].y == start_y - @sprites[:party_panel].height
     end
     Input.update
-    @sprites["arrow"].visible = true
+    @box = -1
+    set_index(0)
+    mosaic_pokemon_sprite
+    @sprites[:cursor].visible = true
   end
 
-  def pbHidePartyTab
-    @sprites["arrow"].visible = false
-    if !@screen.pbHeldPokemon
-      pbUpdateOverlay(-1)
-      pbSetMosaic(-1)
-    end
+  def hide_party_panel
     pbSEPlay("GUI storage hide party panel")
-    start_y = @sprites["boxparty"].y   # Graphics.height - @sprites["boxparty"].height
+    @sprites[:cursor].visible = false
+    @sprites[:side_pane].pokemon = nil if !holding_pokemon?
+    start_y = @sprites[:party_panel].y   # Graphics.height - @sprites[:party_panel].height
     timer_start = System.uptime
     loop do
-      @sprites["boxparty"].y = lerp(start_y, start_y + @sprites["boxparty"].height,
-                                    0.4, timer_start, System.uptime)
+      @sprites[:party_panel].y = lerp(start_y, start_y + @sprites[:party_panel].height,
+                                      0.4, timer_start, System.uptime)
       self.update
       Graphics.update
-      break if @sprites["boxparty"].y == start_y + @sprites["boxparty"].height
+      break if @sprites[:party_panel].y == start_y + @sprites[:party_panel].height
     end
     Input.update
-    @sprites["arrow"].visible = true
+    @box = @storage.currentBox
+    set_index(-2)   # Party button
+    mosaic_pokemon_sprite
+    @sprites[:cursor].visible = true
   end
 
-  def pbHold(selected)
-    pbSEPlay("GUI storage pick up")
-    if selected[0] == -1
-      @sprites["boxparty"].grabPokemon(selected[1], @sprites["arrow"])
-    else
-      @sprites["box"].grabPokemon(selected[1], @sprites["arrow"])
-    end
-    while @sprites["arrow"].grabbing?
+  #-----------------------------------------------------------------------------
+
+  def animate_cursor(anim_method)
+    @sprites[:cursor].send(anim_method)
+    loop do
       Graphics.update
-      Input.update
-      self.update
+      update_visuals
+      break if !@sprites[:cursor].animating?
     end
   end
 
-  def pbSwap(selected, _heldpoke)
+  def pick_up_pokemon
     pbSEPlay("GUI storage pick up")
-    heldpokesprite = @sprites["arrow"].heldPokemon
-    boxpokesprite = nil
-    if selected[0] == -1
-      boxpokesprite = @sprites["boxparty"].getPokemon(selected[1])
-    else
-      boxpokesprite = @sprites["box"].getPokemon(selected[1])
-    end
-    if selected[0] == -1
-      @sprites["boxparty"].setPokemon(selected[1], heldpokesprite)
-    else
-      @sprites["box"].setPokemon(selected[1], heldpokesprite)
-    end
-    @sprites["arrow"].setSprite(boxpokesprite)
-    @sprites["pokemon"].mosaic_duration = 0.25   # In seconds
-    @boxForMosaic = @storage.currentBox
-    @selectionForMosaic = selected[1]
+    deselect_pokemon
+    # Animate cursor moving down to grab the Pokémon
+    animate_cursor(:pick_up_animation_1)
+    # Move Pokémon to cursor
+    sprite_key = (@box >= 0) ? :box : :party_panel
+    spr = @sprites[sprite_key].pokemon_icon(@index)
+    @sprites[:cursor].held_pokemon = spr.pokemon
+    spr.pokemon = nil
+    @sprites[sprite_key].reset_pokemon_icon_position(@index)
+    # Animate cursor moving back up holding the picked-up Pokémon
+    animate_cursor(:pick_up_animation_2)
+    Input.update
   end
 
-  def pbPlace(selected, _heldpoke)
+  def swap_pokemon
+    pbSEPlay("GUI storage pick up")
+    # Move Pokémon between cursor and slot
+    held_pkmn = pokemon
+    slot_pkmn = slot_pokemon
+    sprite_key = (@box >= 0) ? :box : :party_panel
+    spr = @sprites[sprite_key].pokemon_icon(@index)
+    @sprites[:cursor].held_pokemon = slot_pkmn
+    spr.pokemon = held_pkmn
+    @sprites[sprite_key].reset_pokemon_icon_position(@index)
+    mosaic_pokemon_sprite(true)
+  end
+
+  def put_down_pokemon
     pbSEPlay("GUI storage put down")
-    heldpokesprite = @sprites["arrow"].heldPokemon
-    @sprites["arrow"].place
-    while @sprites["arrow"].placing?
-      Graphics.update
-      Input.update
-      self.update
-    end
-    if selected[0] == -1
-      @sprites["boxparty"].setPokemon(selected[1], heldpokesprite)
-    else
-      @sprites["box"].setPokemon(selected[1], heldpokesprite)
-    end
-    @boxForMosaic = @storage.currentBox
-    @selectionForMosaic = selected[1]
+    # Animate cursor moving down to put down the held Pokémon
+    animate_cursor(:put_down_animation_1)
+    # Move Pokémon to slot
+    sprite_key = (@box >= 0) ? :box : :party_panel
+    spr = @sprites[sprite_key].pokemon_icon(@index)
+    spr.pokemon = @sprites[:cursor].held_pokemon
+    @sprites[:cursor].held_pokemon = nil
+    # Animate cursor moving back up after putting down the held Pokémon
+    animate_cursor(:put_down_animation_2)
+    Input.update
   end
 
-  def pbWithdraw(selected, heldpoke, partyindex)
-    pbHold(selected) if !heldpoke
-    pbShowPartyTab
-    pbPartySetArrow(@sprites["arrow"], partyindex)
-    pbPlace([-1, partyindex], heldpoke)
-    pbHidePartyTab
+  # Called when interacting with a Pokémon in the box. Automatically puts that
+  # Pokemon into the party.
+  def withdraw_pokemon
+    old_index = @index
+    pick_up_pokemon if !holding_pokemon?
+    show_party_panel
+    set_index(@storage.party.length)
+    put_down_pokemon
+    hide_party_panel
+    set_index(old_index)
   end
 
-  def pbStore(selected, heldpoke, destbox, firstfree)
-    if heldpoke
-      if destbox == @storage.currentBox
-        heldpokesprite = @sprites["arrow"].heldPokemon
-        @sprites["box"].setPokemon(firstfree, heldpokesprite)
-        @sprites["arrow"].setSprite(nil)
-      else
-        @sprites["arrow"].deleteSprite
-      end
-    else
-      sprite = @sprites["boxparty"].getPokemon(selected[1])
-      if destbox == @storage.currentBox
-        @sprites["box"].setPokemon(firstfree, sprite)
-        @sprites["boxparty"].setPokemon(selected[1], nil)
-      else
-        @sprites["boxparty"].deletePokemon(selected[1])
-      end
+  # Called when interacting with a Pokémon in the party. Automatically puts that
+  # Pokemon into the box.
+  def store_pokemon(new_box, new_index)
+    pick_up_pokemon if !holding_pokemon?
+    hide_party_panel
+    old_index = @index
+    if new_box != @box
+      pbPlayCursorSE
+      (new_box > @box) ? go_to_next_box(new_box) : go_to_previous_box(new_box)
     end
+    set_index(new_index)
+    put_down_pokemon
+    yield if block_given?
+    refresh_party_panel
+    show_party_panel
   end
 
-  def pbRelease(selected, heldpoke)
-    box = selected[0]
-    index = selected[1]
-    if heldpoke
-      sprite = @sprites["arrow"].heldPokemon
-    elsif box == -1
-      sprite = @sprites["boxparty"].getPokemon(index)
-    else
-      sprite = @sprites["box"].getPokemon(index)
-    end
-    if sprite
-      sprite.release
-      while sprite.releasing?
+  def release_pokemon(skip_anim = false)
+    deselect_pokemon
+    sprite = pokemon_icon
+    if !skip_anim
+      timer_start = System.uptime
+      loop do
         Graphics.update
-        sprite.update
-        self.update
+        update_visuals
+        sprite.zoom_x = lerp(1.0, 0.0, 1.5, timer_start, System.uptime)
+        sprite.zoom_y = sprite.zoom_x
+        sprite.opacity = lerp(255, 0, 1.5, timer_start, System.uptime)
+        break if sprite.opacity == 0
       end
+      Input.update
+      sprite.zoom_x = 1.0
+      sprite.zoom_y = 1.0
+      sprite.opacity = 255
     end
+    sprite.pokemon = nil
   end
 
-  def pbChooseBox(msg)
-    commands = []
+  def mosaic_pokemon_sprite(forced = false)
+    return if !forced && holding_pokemon?
+    @sprites[:side_pane].mosaic_pokemon_sprite if pokemon
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def pick_up_item
+    pbSEPlay("GUI storage pick up")
+    # Animate cursor moving down to grab the item
+    animate_cursor(:pick_up_animation_1)
+    # Move item to cursor
+    @sprites[:cursor].held_item = pokemon.item
+    pokemon.item = nil
+    refresh_side_pane
+    @sprites[:box].set_visible_proc(@visible_proc)
+    @sprites[:party_panel].set_visible_proc(@visible_proc)
+    # Animate cursor moving back up holding the picked-up item
+    animate_cursor(:pick_up_animation_2)
+    Input.update
+  end
+
+  def swap_items
+    pbSEPlay("GUI storage pick up")
+    # Move item from slot Pokémon to cursor
+    @sprites[:cursor].held_item = pokemon.item
+  end
+
+  def put_down_item
+    pbSEPlay("GUI storage put down")
+    # Animate cursor moving down to put down the held item
+    animate_cursor(:put_down_animation_1)
+    # Move item to slot Pokémon
+    pokemon.item = @sprites[:cursor].held_item
+    @sprites[:cursor].held_item = nil
+    refresh_side_pane
+    @sprites[:box].set_visible_proc(@visible_proc)
+    @sprites[:party_panel].set_visible_proc(@visible_proc)
+    # Animate cursor moving back up after putting down the held item
+    animate_cursor(:put_down_animation_2)
+    Input.update
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def choose_box(message, start_box = -1)
+    start_box = @storage.currentBox if start_box < 0
+    commands = {}
     @storage.maxBoxes.times do |i|
       box = @storage[i]
-      if box
-        commands.push(_INTL("{1} ({2}/{3})", box.name, box.nitems, box.length))
+      commands[i] = _INTL("{1} ({2}/{3})", box.name, box.nitems, box.length) if box
+    end
+    return show_menu(message, commands, commands.keys.index(start_box) || 0)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def position_speech_box(text)
+    @sprites[:speech_box].resizeHeightToFit(text, Graphics.width - @sprites[:side_pane].width)
+    pbBottomRight(@sprites[:speech_box])
+  end
+
+  # Replaces the version in class UI::BaseVisuals because the speech box needs
+  # to be positioned differently.
+  def show_choice_message(text, options, index = 0, align: :vertical, cmd_side: :right)
+    ret = -1
+    commands = options
+    commands = options.values if options.is_a?(Hash)
+    @sprites[:speech_box].visible = true
+    @sprites[:speech_box].text    = text
+    using(cmd_window = Window_AdvancedCommandPokemon.new(commands)) do
+      position_speech_box(text)
+      cmd_window.viewport = @viewport
+      cmd_window.z        = @sprites[:speech_box].z + 1
+      pbBottomRight(cmd_window)
+      cmd_window.height   = [cmd_window.height, Graphics.height - @sprites[:speech_box].height].min
+      cmd_window.y        = Graphics.height - @sprites[:speech_box].height - cmd_window.height
+      cmd_window.visible  = !@sprites[:speech_box].busy?
+      cmd_window.index    = index
+      loop do
+        Graphics.update
+        Input.update
+        update_visuals
+        cmd_window.visible = true if !@sprites[:speech_box].busy?
+        cmd_window.update
+        if !@sprites[:speech_box].busy?
+          if Input.trigger?(Input::BACK)
+            pbPlayCancelSE
+            ret = -1
+            break
+          elsif Input.trigger?(Input::USE) && @sprites[:speech_box].resume
+            pbPlayDecisionSE
+            ret = cmd_window.index
+            break
+          end
+        end
       end
     end
-    return pbShowCommands(msg, commands, @storage.currentBox)
-  end
-
-  def pbBoxName(helptext, minchars, maxchars)
-    oldsprites = pbFadeOutAndHide(@sprites)
-    ret = pbEnterBoxName(helptext, minchars, maxchars)
-    @storage[@storage.currentBox].name = ret if ret.length > 0
-    @sprites["box"].refreshBox = true
-    pbRefresh
-    pbFadeInAndShow(@sprites, oldsprites)
-  end
-
-  def pbChooseItem(bag)
-    ret = nil
-    pbFadeOutIn do
-      scene = PokemonBag_Scene.new
-      screen = PokemonBagScreen.new(scene, bag)
-      ret = screen.pbChooseItemScreen(proc { |item| GameData::Item.get(item).can_hold? })
+    @sprites[:speech_box].visible = false
+    if options.is_a?(Hash)
+      ret = (ret < 0) ? nil : options.keys[ret]
     end
     return ret
   end
 
-  def pbSummary(selected, heldpoke)
-    oldsprites = pbFadeOutAndHide(@sprites)
-    scene = PokemonSummary_Scene.new
-    screen = PokemonSummaryScreen.new(scene)
-    if heldpoke
-      screen.pbStartScreen([heldpoke], 0)
-    elsif selected[0] == -1
-      @selection = screen.pbStartScreen(@storage.party, selected[1])
-      pbPartySetArrow(@sprites["arrow"], @selection)
-      pbUpdateOverlay(@selection, @storage.party)
-    else
-      @selection = screen.pbStartScreen(@storage.boxes[selected[0]], selected[1])
-      pbSetArrow(@sprites["arrow"], @selection)
-      pbUpdateOverlay(@selection)
-    end
-    pbFadeInAndShow(@sprites, oldsprites)
-  end
-
-  def pbMarkingSetArrow(arrow, selection)
-    if selection >= 0
-      xvalues = [162, 191, 220, 162, 191, 220, 184, 184]
-      yvalues = [24, 24, 24, 49, 49, 49, 77, 109]
-      arrow.angle = 0
-      arrow.mirror = false
-      arrow.ox = 0
-      arrow.oy = 0
-      arrow.x = xvalues[selection] * 2
-      arrow.y = yvalues[selection] * 2
-    end
-  end
-
-  def pbMarkingChangeSelection(key, selection)
-    case key
-    when Input::LEFT
-      if selection < 6
-        selection -= 1
-        selection += 3 if selection % 3 == 2
-      end
-    when Input::RIGHT
-      if selection < 6
-        selection += 1
-        selection -= 3 if selection % 3 == 0
-      end
-    when Input::UP
-      if selection == 7
-        selection = 6
-      elsif selection == 6
-        selection = 4
-      elsif selection < 3
-        selection = 7
-      else
-        selection -= 3
-      end
-    when Input::DOWN
-      if selection == 7
-        selection = 1
-      elsif selection == 6
-        selection = 7
-      elsif selection >= 3
-        selection = 6
-      else
-        selection += 3
-      end
-    end
-    return selection
-  end
-
-  def pbMark(selected, heldpoke)
-    @sprites["markingbg"].visible      = true
-    @sprites["markingoverlay"].visible = true
-    msg = _INTL("Mark your Pokémon.")
-    msgwindow = Window_UnformattedTextPokemon.newWithSize("", 180, 0, Graphics.width - 180, 32)
-    msgwindow.viewport       = @viewport
-    msgwindow.visible        = true
-    msgwindow.letterbyletter = false
-    msgwindow.text           = msg
-    msgwindow.resizeHeightToFit(msg, Graphics.width - 180)
-    pbBottomRight(msgwindow)
-    base   = Color.new(248, 248, 248)
-    shadow = Color.new(80, 80, 80)
-    pokemon = heldpoke
-    if heldpoke
-      pokemon = heldpoke
-    elsif selected[0] == -1
-      pokemon = @storage.party[selected[1]]
-    else
-      pokemon = @storage.boxes[selected[0]][selected[1]]
-    end
-    markings = pokemon.markings.clone
-    mark_variants = @markingbitmap.bitmap.height / MARK_HEIGHT
-    index = 0
-    redraw = true
-    markrect = Rect.new(0, 0, MARK_WIDTH, MARK_HEIGHT)
-    loop do
-      # Redraw the markings and text
-      if redraw
-        @sprites["markingoverlay"].bitmap.clear
-        (@markingbitmap.bitmap.width / MARK_WIDTH).times do |i|
-          markrect.x = i * MARK_WIDTH
-          markrect.y = [(markings[i] || 0), mark_variants - 1].min * MARK_HEIGHT
-          @sprites["markingoverlay"].bitmap.blt(336 + (58 * (i % 3)), 106 + (50 * (i / 3)),
-                                                @markingbitmap.bitmap, markrect)
+  def choose_box_wallpaper(text, options, index = 0)
+    original_index = index
+    ret = -1
+    commands = options
+    commands = options.values if options.is_a?(Hash)
+    old_letter_by_letter = @sprites[:speech_box].letterbyletter
+    @sprites[:speech_box].letterbyletter = false
+    @sprites[:speech_box].visible = true
+    @sprites[:speech_box].text    = text
+    @sprites[:box].fade_all_pokemon
+    using(cmd_window = Window_AdvancedCommandPokemon.new(commands)) do
+      position_speech_box(text)
+      cmd_window.viewport = @side_pane_viewport
+      cmd_window.z        = 100
+      pbBottomLeft(cmd_window)
+      cmd_window.width    = @sprites[:side_pane].width
+      cmd_window.height   = [cmd_window.height, Graphics.height].min
+      cmd_window.y        = Graphics.height - cmd_window.height
+      cmd_window.visible  = !@sprites[:speech_box].busy?
+      cmd_window.index    = index
+      loop do
+        Graphics.update
+        Input.update
+        update_visuals
+        cmd_window.visible = true if !@sprites[:speech_box].busy?
+        old_index = cmd_window.index
+        cmd_window.update
+        if cmd_window.index != old_index
+          paper_num = (options.is_a?(Hash)) ? options.keys[cmd_window.index] : cmd_window.index
+          @sprites[:box].set_box_background(paper_num)
         end
-        textpos = [
-          [_INTL("OK"), 402, 216, :center, base, shadow, :outline],
-          [_INTL("Cancel"), 402, 280, :center, base, shadow, :outline]
-        ]
-        pbDrawTextPositions(@sprites["markingoverlay"].bitmap, textpos)
-        pbMarkingSetArrow(@sprites["arrow"], index)
-        redraw = false
-      end
-      Graphics.update
-      Input.update
-      key = -1
-      key = Input::DOWN if Input.repeat?(Input::DOWN)
-      key = Input::RIGHT if Input.repeat?(Input::RIGHT)
-      key = Input::LEFT if Input.repeat?(Input::LEFT)
-      key = Input::UP if Input.repeat?(Input::UP)
-      if key >= 0
-        oldindex = index
-        index = pbMarkingChangeSelection(key, index)
-        pbPlayCursorSE if index != oldindex
-        pbMarkingSetArrow(@sprites["arrow"], index)
-      end
-      self.update
-      if Input.trigger?(Input::BACK)
-        pbPlayCancelSE
-        break
-      elsif Input.trigger?(Input::USE)
-        pbPlayDecisionSE
-        case index
-        when 6   # OK
-          pokemon.markings = markings
-          break
-        when 7   # Cancel
-          break
-        else
-          markings[index] = ((markings[index] || 0) + 1) % mark_variants
-          redraw = true
+        if !@sprites[:speech_box].busy?
+          if Input.trigger?(Input::BACK)
+            pbPlayCancelSE
+            ret = -1
+            break
+          elsif Input.trigger?(Input::USE) && @sprites[:speech_box].resume
+            pbPlayDecisionSE
+            ret = cmd_window.index
+            break
+          end
         end
       end
     end
-    @sprites["markingbg"].visible      = false
-    @sprites["markingoverlay"].visible = false
-    msgwindow.dispose
+    if options.is_a?(Hash)
+      ret = (ret < 0) ? nil : options.keys[ret]
+    end
+    @sprites[:speech_box].letterbyletter = old_letter_by_letter
+    @sprites[:speech_box].visible = false
+    @sprites[:box].unfade_all_pokemon
+    @sprites[:box].set_box_background(options.keys[original_index]) if ret.nil?
+    return ret
   end
 
-  def pbRefresh
-    @sprites["box"].refresh
-    @sprites["boxparty"].refresh
+  #-----------------------------------------------------------------------------
+
+  def refresh
+    super
+    refresh_box
+    refresh_side_pane
+    refresh_party_panel
+    refresh_buttons
+    refresh_cursor_position
   end
 
-  def pbHardRefresh
-    oldPartyY = @sprites["boxparty"].y
-    @sprites["box"].dispose
-    @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport)
-    @sprites["boxparty"].dispose
-    @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
-    @sprites["boxparty"].y = oldPartyY
+  def refresh_box
+    @sprites[:box].refresh
   end
 
-  def drawMarkings(bitmap, x, y, _width, _height, markings)
-    mark_variants = @markingbitmap.bitmap.height / MARK_HEIGHT
-    markrect = Rect.new(0, 0, MARK_WIDTH, MARK_HEIGHT)
-    (@markingbitmap.bitmap.width / MARK_WIDTH).times do |i|
-      markrect.x = i * MARK_WIDTH
-      markrect.y = [(markings[i] || 0), mark_variants - 1].min * MARK_HEIGHT
-      bitmap.blt(x + (i * MARK_WIDTH), y, @markingbitmap.bitmap, markrect)
+  def refresh_side_pane
+    return if holding_pokemon?   # Selected Pokémon is always the held one
+    refresh_selected_pokemon
+  end
+
+  def refresh_party_panel
+    @sprites[:party_panel].refresh
+  end
+
+  def refresh_selected_pokemon
+    @sprites[:side_pane].pokemon = pokemon
+  end
+
+  def refresh_buttons
+    if [:organize, :choose_pokemon].include?(@mode)
+      draw_text(_INTL("Party: {1}", @storage.party.length), 270, 334, align: :center, outline: :outline, theme: :white)
+    end
+    if @mode != :deposit
+      draw_text(_INTL("Exit"), 446, 334, align: :center, outline: :outline, theme: :white)
     end
   end
 
-  def pbUpdateOverlay(selection, party = nil)
-    overlay = @sprites["overlay"].bitmap
-    overlay.clear
-    buttonbase = Color.new(248, 248, 248)
-    buttonshadow = Color.new(80, 80, 80)
-    pbDrawTextPositions(
-      overlay,
-      [[_INTL("Party: {1}", (@storage.party.length rescue 0)), 270, 334, :center, buttonbase, buttonshadow, :outline],
-       [_INTL("Exit"), 446, 334, :center, buttonbase, buttonshadow, :outline]]
-    )
-    pokemon = nil
-    if @screen.pbHeldPokemon
-      pokemon = @screen.pbHeldPokemon
-    elsif selection >= 0
-      pokemon = (party) ? party[selection] : @storage[@storage.currentBox, selection]
-    end
-    if !pokemon
-      @sprites["pokemon"].visible = false
+  def refresh_cursor_position
+    if showing_party_panel?
+      if @index < 0   # Back button
+        @sprites[:cursor].x = 236
+        @sprites[:cursor].y = 220
+      else
+        coords = @sprites[:party_panel].pokemon_coords(@index)
+        @sprites[:cursor].x = @sprites[:party_panel].x + coords[0] - 32
+        @sprites[:cursor].y = @sprites[:party_panel].y + coords[1] - 64
+      end
       return
     end
-    @sprites["pokemon"].visible = true
-    base   = Color.new(88, 88, 80)
-    shadow = Color.new(168, 184, 184)
-    nonbase   = Color.new(208, 208, 208)
-    nonshadow = Color.new(224, 224, 224)
-    pokename = pokemon.name
-    textstrings = [
-      [pokename, 10, 14, :left, base, shadow]
-    ]
-    if !pokemon.egg?
-      imagepos = []
-      if pokemon.male?
-        textstrings.push([_INTL("♂"), 148, 14, :left, Color.new(24, 112, 216), Color.new(136, 168, 208)])
-      elsif pokemon.female?
-        textstrings.push([_INTL("♀"), 148, 14, :left, Color.new(248, 56, 32), Color.new(224, 152, 144)])
-      end
-      imagepos.push([_INTL("Graphics/UI/Storage/overlay_lv"), 6, 246])
-      textstrings.push([pokemon.level.to_s, 28, 240, :left, base, shadow])
-      if pokemon.ability
-        textstrings.push([pokemon.ability.name, 86, 312, :center, base, shadow])
-      else
-        textstrings.push([_INTL("No ability"), 86, 312, :center, nonbase, nonshadow])
-      end
-      if pokemon.item
-        textstrings.push([pokemon.item.name, 86, 348, :center, base, shadow])
-      else
-        textstrings.push([_INTL("No item"), 86, 348, :center, nonbase, nonshadow])
-      end
-      imagepos.push(["Graphics/UI/shiny", 156, 198]) if pokemon.shiny?
-      typebitmap = AnimatedBitmap.new(_INTL("Graphics/UI/types"))
-      pokemon.types.each_with_index do |type, i|
-        type_number = GameData::Type.get(type).icon_position
-        type_rect = Rect.new(0, type_number * 28, 64, 28)
-        type_x = (pokemon.types.length == 1) ? 52 : 18 + (70 * i)
-        overlay.blt(type_x, 272, typebitmap.bitmap, type_rect)
-      end
-      drawMarkings(overlay, 70, 240, 128, 20, pokemon.markings)
-      pbDrawImagePositions(overlay, imagepos)
+    case @index
+    when -1   # Box name
+      @sprites[:cursor].x = 314
+      @sprites[:cursor].y = -24
+    when -2   # Party Pokémon button
+      @sprites[:cursor].x = 238
+      @sprites[:cursor].y = 278
+    when -3   # Close Box button
+      @sprites[:cursor].x = 414
+      @sprites[:cursor].y = 278
+    else      # Box space
+      coords = @sprites[:box].pokemon_coords(@index)
+      @sprites[:cursor].x = @sprites[:box].x + coords[0] - 32
+      @sprites[:cursor].y = @sprites[:box].y + coords[1] - 64
     end
-    pbDrawTextPositions(overlay, textstrings)
-    @sprites["pokemon"].setPokemonBitmap(pokemon)
   end
 
-  def update
-    pbUpdateSpriteHash(@sprites)
+  def refresh_on_index_changed(old_index)
+    refresh_cursor_position
+    refresh_side_pane
+  end
+
+  def refresh_markings_cursor
+    case @marking_index
+    when 6   # OK
+      @sprites[:marking_cursor].x = 318
+      @sprites[:marking_cursor].y = 196
+      @sprites[:marking_cursor].src_rect.y = @sprites[:marking_cursor].bitmap.height / 2
+    when 7   # Cancel
+      @sprites[:marking_cursor].x = 318
+      @sprites[:marking_cursor].y = 260
+      @sprites[:marking_cursor].src_rect.y = @sprites[:marking_cursor].bitmap.height / 2
+    else
+      @sprites[:marking_cursor].x = 318 + (58 * (@marking_index % 3))
+      @sprites[:marking_cursor].y = 96 + (50 * (@marking_index / 3))
+      @sprites[:marking_cursor].src_rect.y = 0
+    end
+  end
+
+  def refresh_markings_panel
+    # Set values to use when drawing the markings panel
+    marking_x = 334
+    marking_y = 106
+    marking_spacing_x = 42 + MARKING_WIDTH
+    marking_spacing_y = 34 + MARKING_HEIGHT
+    markings_per_row = 3
+    mark_variants = @bitmaps[:markings].bitmap.height / MARKING_HEIGHT
+    # Clear the bitmap
+    @sprites[:marking_overlay].bitmap.clear
+    # Draw marking icons
+    (@bitmaps[:markings].bitmap.width / MARKING_WIDTH).times do |i|
+      src_x = i * MARKING_WIDTH
+      src_y = [@markings[i] || 0, mark_variants - 1].min * MARKING_HEIGHT
+      draw_image(@bitmaps[:markings],
+                 marking_x + (marking_spacing_x * (i % markings_per_row)),
+                 marking_y + (marking_spacing_y * (i / markings_per_row)),
+                 src_x, src_y, MARKING_WIDTH, MARKING_HEIGHT,
+                 overlay: :marking_overlay)
+    end
+    # Draw text
+    draw_text(_INTL("OK"), 400, 216, align: :center, outline: :outline, theme: :white, overlay: :marking_overlay)
+    draw_text(_INTL("Cancel"), 400, 280, align: :center, outline: :outline, theme: :white, overlay: :marking_overlay)
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def update_input
+    deselect_pokemon
+    # Check for movement to a new Pokémon/button
+    old_index = @index
+    update_cursor_movement
+    if @index != old_index
+      pbPlayCursorSE
+      set_index(@index)
+    end
+    # Check for interaction
+    if Input.trigger?(Input::USE)
+      return update_interaction(Input::USE)
+    elsif Input.trigger?(Input::BACK)
+      return update_interaction(Input::BACK)
+    elsif Input.trigger?(Input::ACTION)
+      return update_interaction(Input::ACTION)
+    elsif Input.repeat?(Input::QUICK_UP)
+      return update_interaction(Input::QUICK_UP)
+    elsif Input.repeat?(Input::QUICK_DOWN)
+      return update_interaction(Input::QUICK_DOWN)
+    end
+    return nil
+  end
+
+  def update_cursor_movement
+    if showing_party_panel?
+      update_cursor_movement_party
+      return
+    end
+    if Input.repeat?(Input::UP)
+      case @index
+      when -1   # Box name
+        @index = (@mode == :withdraw) ? -3 : -2   # Exit button : Party button
+      when -2   # Party button
+        @index = PokemonBox::BOX_SIZE - 1 - (PokemonBox::BOX_WIDTH * 2 / 3)   # 25
+      when -3   # Exit button
+        @index = PokemonBox::BOX_SIZE - (PokemonBox::BOX_WIDTH / 3)   # 28
+      else
+        @index -= PokemonBox::BOX_WIDTH
+        @index = -1 if @index < 0   # Box name
+      end
+    elsif Input.repeat?(Input::DOWN)
+      case @index
+      when -1   # Box name
+        @index = PokemonBox::BOX_WIDTH / 3   # 2
+      when -2, -3     # Party button, Exit button
+        @index = -1   # Box name
+      else
+        @index += PokemonBox::BOX_WIDTH
+        if @index >= PokemonBox::BOX_SIZE
+          if @index < PokemonBox::BOX_SIZE + (PokemonBox::BOX_WIDTH / 2) && @mode != :withdraw
+            @index = -2   # Party button
+          else
+            @index = -3   # Exit button
+          end
+        end
+      end
+    end
+    if Input.repeat?(Input::LEFT)
+      if @index == -1   # Box name
+        pbPlayCursorSE
+        go_to_previous_box
+      elsif @index == -2                    # Party button
+        @index = -3                         # Exit button
+      elsif @index == -3                    # Exit button
+        @index = -2 if @mode != :withdraw   # Party button
+      elsif (@index % PokemonBox::BOX_WIDTH) == 0   # Wrap around
+        @index += PokemonBox::BOX_WIDTH - 1
+      else
+        @index -= 1
+      end
+    elsif Input.repeat?(Input::RIGHT)
+      if @index == -1   # Box name
+        pbPlayCursorSE
+        go_to_next_box
+      elsif @index == -2                    # Party button
+        @index = -3                         # Exit button
+      elsif @index == -3                    # Exit button
+        @index = -2 if @mode != :withdraw   # Party button
+      elsif (@index % PokemonBox::BOX_WIDTH) == PokemonBox::BOX_WIDTH - 1   # Wrap around
+        @index -= PokemonBox::BOX_WIDTH - 1
+      else
+        @index += 1
+      end
+    end
+  end
+
+  # The Back button is at @index -2.
+  def update_cursor_movement_party
+    if Input.repeat?(Input::UP)
+      if @index == -2   # Back button
+        @index = Settings::MAX_PARTY_SIZE - 1
+      else
+        @index -= 2
+        @index = -2 if @index < 0   # Back button
+      end
+    elsif Input.repeat?(Input::DOWN)
+      if @index == -2   # Back button
+        @index = 0
+      else
+        @index += 2
+        @index = -2 if @index >= Settings::MAX_PARTY_SIZE   # Back button
+      end
+    end
+    if Input.repeat?(Input::LEFT)
+      @index -= 1
+      @index = Settings::MAX_PARTY_SIZE - 1 if @index < -2
+      @index = -2 if @index < 0   # Back button
+    elsif Input.repeat?(Input::RIGHT)
+      @index += 1
+      @index = 0 if @index < 0
+      @index = -2 if @index >= Settings::MAX_PARTY_SIZE   # Back button
+    end
+  end
+
+  def update_interaction(input)
+    case input
+    when Input::USE
+      if @index == -1   # Box name
+        pbPlayDecisionSE
+        return :interact_box_name_menu
+      elsif @index == -2   # Party button, or Back button in party panel
+        pbPlayDecisionSE
+        return :exit_screen if @mode == :deposit
+        return (showing_party_panel?) ? :hide_party_panel : :show_party_panel
+      elsif @index == -3   # Exit button
+        pbPlayDecisionSE
+        return :exit_screen
+      elsif pokemon
+        return :rearrange_pokemon if @sub_mode == :rearrange_pokemon
+        return :rearrange_items if @sub_mode == :rearrange_items
+        pbPlayDecisionSE
+        select_pokemon
+        return :interact_menu
+      end
+    when Input::ACTION
+      if can_access_screen_menu?
+        pbPlayDecisionSE
+        return :screen_menu
+      end
+    when Input::BACK
+      pbPlayCancelSE
+      if showing_party_panel?
+        return (@mode == :deposit) ? :exit_screen : :hide_party_panel
+      end
+      return :clear_sub_mode if (@sub_mode || :none) != :none
+      return :exit_screen
+    when Input::QUICK_UP
+      if !showing_party_panel?
+        pbPlayCursorSE
+        go_to_previous_box
+      end
+    when Input::QUICK_DOWN
+      if !showing_party_panel?
+        pbPlayCursorSE
+        go_to_next_box
+      end
+    end
+    return nil
+  end
+
+  #-----------------------------------------------------------------------------
+
+  # NOTE: This is hardcoded to assume there are 6 marks, arranged in a 3x2 grid,
+  #       with an OK and Cancel button below.
+  def update_input_marking
+    # Check for movement to a new option
+    if Input.repeat?(Input::UP)
+      if @marking_index == 7   # Cancel
+        @marking_index = 6
+      elsif @marking_index == 6   # OK
+        @marking_index = 4
+      elsif @marking_index < 3
+        @marking_index = 7
+      else
+        @marking_index -= 3
+      end
+    elsif Input.repeat?(Input::DOWN)
+      if @marking_index == 7   # Cancel
+        @marking_index = 1
+      elsif @marking_index == 6   # OK
+        @marking_index = 7
+      elsif @marking_index >= 3
+        @marking_index = 6
+      else
+        @marking_index += 3
+      end
+    elsif Input.repeat?(Input::LEFT)
+      if @marking_index < 6
+        @marking_index -= 1
+        @marking_index += 3 if (@marking_index % 3) == 2
+      end
+    elsif Input.repeat?(Input::RIGHT)
+      if @marking_index < 6
+        @marking_index += 1
+        @marking_index -= 3 if (@marking_index % 3) == 0
+      end
+    end
+    # Check for interaction
+    if Input.trigger?(Input::USE)
+      pbPlayDecisionSE
+      case @marking_index
+      when 6   # OK
+        return true
+      when 7   # Cancel
+        @marking_index = -1
+        return true
+      else   # Change marking
+        mark_variants = @bitmaps[:markings].bitmap.height / MARKING_HEIGHT
+        @markings[@marking_index] = ((@markings[@marking_index] || 0) + 1) % mark_variants
+        refresh_markings_panel
+      end
+    elsif Input.trigger?(Input::BACK)
+      pbPlayCloseMenuSE
+      @marking_index = -1
+      return true
+    elsif Input.trigger?(Input::ACTION)
+      if @marking_index < 6 && @markings[@marking_index] > 0
+        pbPlayDecisionSE
+        @markings[@marking_index] = 0
+        refresh_markings_panel
+      end
+    end
+    return false
+  end
+
+  def navigate_markings
+    help_text = _INTL("Mark your Pokémon.")
+    help_window = Window_AdvancedTextPokemon.newWithSize(
+      help_text, 180, 0, Graphics.width - 180, 32, @viewport
+    )
+    help_window.z = 2000
+    help_window.setSkin(MessageConfig.pbGetSpeechFrame)
+    help_window.letterbyletter = false
+    help_window.resizeHeightToFit(help_text, Graphics.width - 180)
+    pbBottomRight(help_window)
+    # Setup
+    @sprites[:marking_bg].visible      = true
+    @sprites[:marking_overlay].visible = true
+    @sprites[:marking_cursor].visible  = true
+    @markings = pokemon.markings.clone
+    @marking_index = 0
+    refresh_markings_panel
+    refresh_markings_cursor
+    # Navigate loop
+    loop do
+      Graphics.update
+      Input.update
+      update_visuals
+      old_marking_index = @marking_index
+      break if update_input_marking
+      if @marking_index != old_marking_index
+        pbPlayCursorSE
+        refresh_markings_panel
+        refresh_markings_cursor
+      end
+    end
+    # Clean up
+    @sprites[:marking_bg].visible      = false
+    @sprites[:marking_overlay].visible = false
+    @sprites[:marking_cursor].visible  = false
+    pokemon.markings = @markings if @marking_index >= 0
+    @marking_index = nil
+    help_window.dispose
   end
 end
 
 #===============================================================================
-# Pokémon storage mechanics
+#
 #===============================================================================
-class PokemonStorageScreen
-  attr_reader :scene
+class UI::PokemonStorage < UI::BaseScreen
   attr_reader :storage
-  attr_accessor :heldpkmn
 
-  def initialize(scene, storage)
-    @scene = scene
+  ACTIONS = HandlerHash.new
+
+  # mode is one of:
+  #     :withdraw
+  #     :deposit
+  #     :organize
+  #     :choose_pokemon
+  def initialize(storage, mode: :organize)
     @storage = storage
-    @pbHeldPokemon = nil
+    @mode    = mode
+    super()
   end
 
-  def pbStartScreen(command)
-    $game_temp.in_storage = true
-    @heldpkmn = nil
-    case command
-    when 0   # Organise
-      @scene.pbStartBox(self, command)
-      loop do
-        selected = @scene.pbSelectBox(@storage.party)
-        if selected.nil?
-          if pbHeldPokemon
-            pbDisplay(_INTL("You're holding a Pokémon!"))
-            next
-          end
-          next if pbConfirm(_INTL("Continue Box operations?"))
-          break
-        elsif selected[0] == -3   # Close box
-          if pbHeldPokemon
-            pbDisplay(_INTL("You're holding a Pokémon!"))
-            next
-          end
-          if pbConfirm(_INTL("Exit from the Box?"))
-            pbSEPlay("PC close")
-            break
-          end
-          next
-        elsif selected[0] == -4   # Box name
-          pbBoxCommands
-        else
-          pokemon = @storage[selected[0], selected[1]]
-          heldpoke = pbHeldPokemon
-          next if !pokemon && !heldpoke
-          if @scene.quickswap
-            if @heldpkmn
-              (pokemon) ? pbSwap(selected) : pbPlace(selected)
-            else
-              pbHold(selected)
-            end
-          else
-            commands = []
-            cmdMove     = -1
-            cmdSummary  = -1
-            cmdWithdraw = -1
-            cmdItem     = -1
-            cmdMark     = -1
-            cmdRelease  = -1
-            cmdDebug    = -1
-            if heldpoke
-              helptext = _INTL("{1} is selected.", heldpoke.name)
-              commands[cmdMove = commands.length] = (pokemon) ? _INTL("Shift") : _INTL("Place")
-            elsif pokemon
-              helptext = _INTL("{1} is selected.", pokemon.name)
-              commands[cmdMove = commands.length] = _INTL("Move")
-            end
-            commands[cmdSummary = commands.length]  = _INTL("Summary")
-            commands[cmdWithdraw = commands.length] = (selected[0] == -1) ? _INTL("Store") : _INTL("Withdraw")
-            commands[cmdItem = commands.length]     = _INTL("Item")
-            commands[cmdMark = commands.length]     = _INTL("Mark")
-            commands[cmdRelease = commands.length]  = _INTL("Release")
-            commands[cmdDebug = commands.length]    = _INTL("Debug") if $DEBUG
-            commands[commands.length]               = _INTL("Cancel")
-            command = pbShowCommands(helptext, commands)
-            if cmdMove >= 0 && command == cmdMove   # Move/Shift/Place
-              if @heldpkmn
-                (pokemon) ? pbSwap(selected) : pbPlace(selected)
-              else
-                pbHold(selected)
-              end
-            elsif cmdSummary >= 0 && command == cmdSummary   # Summary
-              pbSummary(selected, @heldpkmn)
-            elsif cmdWithdraw >= 0 && command == cmdWithdraw   # Store/Withdraw
-              (selected[0] == -1) ? pbStore(selected, @heldpkmn) : pbWithdraw(selected, @heldpkmn)
-            elsif cmdItem >= 0 && command == cmdItem   # Item
-              pbItem(selected, @heldpkmn)
-            elsif cmdMark >= 0 && command == cmdMark   # Mark
-              pbMark(selected, @heldpkmn)
-            elsif cmdRelease >= 0 && command == cmdRelease   # Release
-              pbRelease(selected, @heldpkmn)
-            elsif cmdDebug >= 0 && command == cmdDebug   # Debug
-              pbPokemonDebug((@heldpkmn) ? @heldpkmn : pokemon, selected, heldpoke)
-            end
-          end
-        end
-      end
-      @scene.pbCloseBox
-    when 1   # Withdraw
-      @scene.pbStartBox(self, command)
-      loop do
-        selected = @scene.pbSelectBox(@storage.party)
-        if selected.nil?
-          next if pbConfirm(_INTL("Continue Box operations?"))
-          break
-        else
-          case selected[0]
-          when -2   # Party Pokémon
-            pbDisplay(_INTL("Which one will you take?"))
-            next
-          when -3   # Close box
-            if pbConfirm(_INTL("Exit from the Box?"))
-              pbSEPlay("PC close")
-              break
-            end
-            next
-          when -4   # Box name
-            pbBoxCommands
-            next
-          end
-          pokemon = @storage[selected[0], selected[1]]
-          next if !pokemon
-          command = pbShowCommands(_INTL("{1} is selected.", pokemon.name),
-                                   [_INTL("Withdraw"),
-                                    _INTL("Summary"),
-                                    _INTL("Mark"),
-                                    _INTL("Release"),
-                                    _INTL("Cancel")])
-          case command
-          when 0 then pbWithdraw(selected, nil)
-          when 1 then pbSummary(selected, nil)
-          when 2 then pbMark(selected, nil)
-          when 3 then pbRelease(selected, nil)
-          end
-        end
-      end
-      @scene.pbCloseBox
-    when 2   # Deposit
-      @scene.pbStartBox(self, command)
-      loop do
-        selected = @scene.pbSelectParty(@storage.party)
-        if selected == -3   # Close box
-          if pbConfirm(_INTL("Exit from the Box?"))
-            pbSEPlay("PC close")
-            break
-          end
-          next
-        elsif selected < 0
-          next if pbConfirm(_INTL("Continue Box operations?"))
-          break
-        else
-          pokemon = @storage[-1, selected]
-          next if !pokemon
-          command = pbShowCommands(_INTL("{1} is selected.", pokemon.name),
-                                   [_INTL("Store"),
-                                    _INTL("Summary"),
-                                    _INTL("Mark"),
-                                    _INTL("Release"),
-                                    _INTL("Cancel")])
-          case command
-          when 0 then pbStore([-1, selected], nil)
-          when 1 then pbSummary([-1, selected], nil)
-          when 2 then pbMark([-1, selected], nil)
-          when 3 then pbRelease([-1, selected], nil)
-          end
-        end
-      end
-      @scene.pbCloseBox
-    when 3
-      @scene.pbStartBox(self, command)
-      @scene.pbCloseBox
-    end
-    $game_temp.in_storage = false
+  def initialize_visuals
+    @visuals = UI::PokemonStorageVisuals.new(@storage, @mode)
   end
 
-  # For debug purposes.
-  def pbUpdate
-    @scene.update
+  def start_screen
+    pbSEPlay("PC access")
+    super
   end
 
-  # For debug purposes.
-  def pbHardRefresh
-    @scene.pbHardRefresh
+  def end_screen
+    pbSEPlay("PC close")
+    super
   end
 
-  # For debug purposes.
-  def pbRefreshSingle(i)
-    @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil)
-    @scene.pbHardRefresh
-  end
+  #-----------------------------------------------------------------------------
 
-  def pbDisplay(message)
-    @scene.pbDisplay(message)
-  end
-
-  def pbConfirm(str)
-    return pbShowCommands(str, [_INTL("Yes"), _INTL("No")]) == 0
-  end
-
-  def pbShowCommands(msg, commands, index = 0)
-    return @scene.pbShowCommands(msg, commands, index)
-  end
-
-  def pbAble?(pokemon)
-    pokemon && !pokemon.egg? && pokemon.hp > 0
-  end
-
-  def pbAbleCount
-    count = 0
-    @storage.party.each do |p|
-      count += 1 if pbAble?(p)
-    end
-    return count
-  end
-
-  def pbHeldPokemon
-    return @heldpkmn
-  end
-
-  def pbWithdraw(selected, heldpoke)
-    box = selected[0]
-    index = selected[1]
-    raise _INTL("Can't withdraw from party...") if box == -1
-    if @storage.party_full?
-      pbDisplay(_INTL("Your party's full!"))
-      return false
-    end
-    @scene.pbWithdraw(selected, heldpoke, @storage.party.length)
-    if heldpoke
-      @storage.pbMoveCaughtToParty(heldpoke)
-      @heldpkmn = nil
-    else
-      @storage.pbMove(-1, -1, box, index)
-    end
-    @scene.pbRefresh
-    return true
-  end
-
-  def pbStore(selected, heldpoke)
-    box = selected[0]
-    index = selected[1]
-    raise _INTL("Can't deposit from box...") if box != -1
-    if pbAbleCount <= 1 && pbAble?(@storage[box, index]) && !heldpoke
-      pbPlayBuzzerSE
-      pbDisplay(_INTL("That's your last Pokémon!"))
-    elsif heldpoke&.mail
-      pbDisplay(_INTL("Please remove the Mail."))
-    elsif !heldpoke && @storage[box, index].mail
-      pbDisplay(_INTL("Please remove the Mail."))
-    elsif heldpoke&.cannot_store
-      pbDisplay(_INTL("{1} refuses to go into storage!", heldpoke.name))
-    elsif !heldpoke && @storage[box, index].cannot_store
-      pbDisplay(_INTL("{1} refuses to go into storage!", @storage[box, index].name))
-    else
-      loop do
-        destbox = @scene.pbChooseBox(_INTL("Deposit in which Box?"))
-        if destbox >= 0
-          firstfree = @storage.pbFirstFreePos(destbox)
-          if firstfree < 0
-            pbDisplay(_INTL("The Box is full."))
-            next
-          end
-          if heldpoke || selected[0] == -1
-            p = (heldpoke) ? heldpoke : @storage[-1, index]
-            if Settings::HEAL_STORED_POKEMON
-              old_ready_evo = p.ready_to_evolve
-              p.heal
-              p.ready_to_evolve = old_ready_evo
-            end
-          end
-          @scene.pbStore(selected, heldpoke, destbox, firstfree)
-          if heldpoke
-            @storage.pbMoveCaughtToBox(heldpoke, destbox)
-            @heldpkmn = nil
-          else
-            @storage.pbMove(destbox, -1, -1, index)
-          end
-        end
-        break
-      end
-      @scene.pbRefresh
-    end
-  end
-
-  def pbHold(selected)
-    box = selected[0]
-    index = selected[1]
-    if box == -1 && pbAble?(@storage[box, index]) && pbAbleCount <= 1
-      pbPlayBuzzerSE
-      pbDisplay(_INTL("That's your last Pokémon!"))
-      return
-    end
-    @scene.pbHold(selected)
-    @heldpkmn = @storage[box, index]
-    @storage.pbDelete(box, index)
-    @scene.pbRefresh
-  end
-
-  def pbPlace(selected)
-    box = selected[0]
-    index = selected[1]
-    if @storage[box, index]
-      raise _INTL("Position {1},{2} is not empty...", box, index)
-    elsif box != -1
-      if index >= @storage.maxPokemon(box)
-        pbDisplay("Can't place that there.")
-        return
-      elsif @heldpkmn.mail
-        pbDisplay("Please remove the mail.")
-        return
-      elsif @heldpkmn.cannot_store
-        pbDisplay(_INTL("{1} refuses to go into storage!", @heldpkmn.name))
-        return
-      end
-    end
-    if Settings::HEAL_STORED_POKEMON && box >= 0
-      old_ready_evo = @heldpkmn.ready_to_evolve
-      @heldpkmn.heal
-      @heldpkmn.ready_to_evolve = old_ready_evo
-    end
-    @scene.pbPlace(selected, @heldpkmn)
-    @storage[box, index] = @heldpkmn
-    @storage.party.compact! if box == -1
-    @scene.pbRefresh
-    @heldpkmn = nil
-  end
-
-  def pbSwap(selected)
-    box = selected[0]
-    index = selected[1]
-    if !@storage[box, index]
-      raise _INTL("Position {1},{2} is empty...", box, index)
-    end
-    if @heldpkmn.cannot_store && box != -1
-      pbPlayBuzzerSE
-      pbDisplay(_INTL("{1} refuses to go into storage!", @heldpkmn.name))
-      return false
-    elsif box == -1 && pbAble?(@storage[box, index]) && pbAbleCount <= 1 && !pbAble?(@heldpkmn)
-      pbPlayBuzzerSE
-      pbDisplay(_INTL("That's your last Pokémon!"))
-      return false
-    end
-    if box != -1 && @heldpkmn.mail
-      pbDisplay("Please remove the mail.")
-      return false
-    end
-    if Settings::HEAL_STORED_POKEMON && box >= 0
-      old_ready_evo = @heldpkmn.ready_to_evolve
-      @heldpkmn.heal
-      @heldpkmn.ready_to_evolve = old_ready_evo
-    end
-    @scene.pbSwap(selected, @heldpkmn)
-    tmp = @storage[box, index]
-    @storage[box, index] = @heldpkmn
-    @heldpkmn = tmp
-    @scene.pbRefresh
-    return true
-  end
-
-  def pbRelease(selected, heldpoke)
-    box = selected[0]
-    index = selected[1]
-    pokemon = (heldpoke) ? heldpoke : @storage[box, index]
-    return if !pokemon
-    if pokemon.egg?
-      pbDisplay(_INTL("You can't release an Egg."))
-      return false
-    elsif pokemon.mail
-      pbDisplay(_INTL("Please remove the mail."))
-      return false
-    elsif pokemon.cannot_release
-      pbDisplay(_INTL("{1} refuses to leave you!", pokemon.name))
-      return false
-    end
-    if box == -1 && pbAbleCount <= 1 && pbAble?(pokemon) && !heldpoke
-      pbPlayBuzzerSE
-      pbDisplay(_INTL("That's your last Pokémon!"))
-      return
-    end
-    command = pbShowCommands(_INTL("Release this Pokémon?"), [_INTL("No"), _INTL("Yes")])
-    if command == 1
-      if pokemon.item
-        $bag.pbStoreItem(pokemon.item)
-        pbDisplay(_INTL("Returned the held {1} to the Bag.",(pokemon.item.name)))
-      end
-      pkmnname = pokemon.name
-      @scene.pbRelease(selected, heldpoke)
-      if heldpoke
-        @heldpkmn = nil
-      else
-        @storage.pbDelete(box, index)
-      end
-      @scene.pbRefresh
-      pbDisplay(_INTL("{1} was released.", pkmnname))
-      pbDisplay(_INTL("Bye-bye, {1}!", pkmnname))
-      @scene.pbRefresh
-    end
-    return
-  end
-
-  def pbChooseMove(pkmn, helptext, index = 0)
-    movenames = []
-    pkmn.moves.each do |i|
-      if i.total_pp <= 0
-        movenames.push(_INTL("{1} (PP: ---)", i.name))
-      else
-        movenames.push(_INTL("{1} (PP: {2}/{3})", i.name, i.pp, i.total_pp))
-      end
-    end
-    return @scene.pbShowCommands(helptext, movenames, index)
-  end
-
-  def pbSummary(selected, heldpoke)
-    @scene.pbSummary(selected, heldpoke)
-  end
-
-  def pbMark(selected, heldpoke)
-    @scene.pbMark(selected, heldpoke)
-  end
-
-  def pbItem(selected, heldpoke)
-    box = selected[0]
-    index = selected[1]
-    pokemon = (heldpoke) ? heldpoke : @storage[box, index]
-    if pokemon.egg?
-      pbDisplay(_INTL("Eggs can't hold items."))
-      return
-    elsif pokemon.mail
-      pbDisplay(_INTL("Please remove the mail."))
-      return
-    end
-    if pokemon.item
-      itemname = pokemon.item.portion_name
-      if pbConfirm(_INTL("Take the {1}?", itemname))
-        if $bag.add(pokemon.item)
-          pbDisplay(_INTL("Took the {1}.", itemname))
-          pokemon.item = nil
-          @scene.pbHardRefresh
-        else
-          pbDisplay(_INTL("Can't store the {1}.", itemname))
-        end
-      end
-    else
-      item = scene.pbChooseItem($bag)
-      if item
-        itemname = GameData::Item.get(item).name
-        pokemon.item = item
-        $bag.remove(item)
-        pbDisplay(_INTL("{1} is now being held.", itemname))
-        @scene.pbHardRefresh
-      end
-    end
-  end
-
-  def pbBoxCommands
-    commands = [
-      _INTL("Jump"),
-      _INTL("Wallpaper"),
-      _INTL("Name"),
-      _INTL("Cancel")
-    ]
-    command = pbShowCommands(_INTL("What do you want to do?"), commands)
-    case command
-    when 0
-      destbox = @scene.pbChooseBox(_INTL("Jump to which Box?"))
-      @scene.pbJumpToBox(destbox) if destbox >= 0
-    when 1
-      papers = @storage.availableWallpapers
-      index = 0
-      papers[1].length.times do |i|
-        if papers[1][i] == @storage[@storage.currentBox].background
-          index = i
-          break
-        end
-      end
-      wpaper = pbShowCommands(_INTL("Pick the wallpaper."), papers[0], index)
-      @scene.pbChangeBackground(papers[1][wpaper]) if wpaper >= 0
-    when 2
-      @scene.pbBoxName(_INTL("Box name?"), 0, 12)
-    end
-  end
-
-  def pbChoosePokemon(_party = nil)
-    $game_temp.in_storage = true
-    @heldpkmn = nil
-    @scene.pbStartBox(self, 1)
-    retval = nil
-    loop do
-      selected = @scene.pbSelectBox(@storage.party)
-      if selected && selected[0] == -3   # Close box
-        if pbConfirm(_INTL("Exit from the Box?"))
-          pbSEPlay("PC close")
-          break
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:screen_menu, {
+    :menu         => :storage_screen_menu,
+    :menu_message => proc { |screen| _INTL("What do you want to do?") }
+  })
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:interact_menu, {
+    :menu         => :storage_pokemon_interact,
+    :menu_message => proc { |screen| _INTL("Do what with {1}?", screen.pokemon.name) }
+  })
+  # Shows a choice menu using the MenuHandlers options below.
+  ACTIONS.add(:interact_box_name_menu, {
+    :menu         => :storage_box_interact,
+    :menu_message => proc { |screen| _INTL("Choose an option.") }
+  })
+  ACTIONS.add(:clear_sub_mode, {
+    :effect => proc { |screen|
+      if screen.holding_pokemon?
+        screen.show_message(_INTL("You're holding a Pokémon!"))
+        next
+      elsif screen.holding_item?
+        item_name = GameData::Item.get(screen.item).name
+        if screen.show_confirm_message(_INTL("Put the {1} in your Bag?", item_name))
+          $bag.add(screen.item)
+          screen.visuals.sprites[:cursor].held_item = nil
         end
         next
       end
-      if selected.nil?
-        next if pbConfirm(_INTL("Continue Box operations?"))
-        break
-      elsif selected[0] == -4   # Box name
-        pbBoxCommands
+      screen.set_sub_mode
+    }
+  })
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:rearrange_pokemon_mode, {
+    :effect => proc { |screen|
+      if screen.holding_item?
+        screen.show_message(_INTL("You're holding an item!"))
+        next
+      end
+      screen.set_sub_mode(:rearrange_pokemon)
+    }
+  })
+  ACTIONS.add(:rearrange_pokemon, {
+    :effect => proc { |screen|
+      if screen.holding_pokemon?
+        if screen.slot_pokemon
+          screen.perform_action(:swap_pokemon)
+        else
+          screen.perform_action(:put_down_pokemon)
+        end
       else
-        pokemon = @storage[selected[0], selected[1]]
-        next if !pokemon
-        commands = [
-          _INTL("Select"),
-          _INTL("Summary"),
-          _INTL("Withdraw"),
-          _INTL("Item"),
-          _INTL("Mark")
-        ]
-        commands.push(_INTL("Cancel"))
-        commands[2] = _INTL("Store") if selected[0] == -1
-        helptext = _INTL("{1} is selected.", pokemon.name)
-        command = pbShowCommands(helptext, commands)
-        case command
-        when 0   # Select
-          if pokemon
-            retval = selected
-            break
-          end
-        when 1
-          pbSummary(selected, nil)
-        when 2   # Store/Withdraw
-          if selected[0] == -1
-            pbStore(selected, nil)
-          else
-            pbWithdraw(selected, nil)
-          end
-        when 3
-          pbItem(selected, nil)
-        when 4
-          pbMark(selected, nil)
+        screen.perform_action(:pick_up_pokemon)
+      end
+    }
+  })
+  ACTIONS.add(:select_pokemon, {
+    :returns_value => true,
+    :effect        => proc { |screen|
+      if screen.slot_pokemon
+        screen.result = [screen.box, screen.index]
+        next :quit
+      end
+      next nil
+    }
+  })
+  ACTIONS.add(:pick_up_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Tried picking up a Pokémon when holding one.") if screen.holding_pokemon?
+      raise _INTL("Position {1},{2} is empty...", screen.box, screen.index) if !screen.slot_pokemon
+      if screen.box < 0 && screen.slot_pokemon.able? && screen.party_able_count <= 1
+        pbPlayBuzzerSE
+        screen.show_message(_INTL("That's your last Pokémon!"))
+        next
+      end
+      screen.visuals.pick_up_pokemon
+      screen.storage.pbDelete(screen.box, screen.index)
+      screen.refresh
+    }
+  })
+  ACTIONS.add(:swap_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Tried swapping a Pokémon when not holding one.") if !screen.holding_pokemon?
+      raise _INTL("Position {1},{2} is empty...", screen.box, screen.index) if !screen.slot_pokemon
+      held_pkmn = screen.pokemon
+      slot_pkmn = screen.slot_pokemon
+      if screen.box >= 0
+        if screen.index >= screen.storage.maxPokemon(screen.box)
+          screen.show_message("Can't place that there.")
+          next
+        elsif held_pkmn.mail
+          screen.show_message("Please remove the mail.")
+          next
+        elsif held_pkmn.cannot_store
+          screen.show_message(_INTL("{1} refuses to go into storage!", held_pkmn.name))
+          next
+        end
+      elsif screen.box < 0 && slot_pkmn.able? && screen.party_able_count <= 1 && !held_pkmn.able?
+        pbPlayBuzzerSE
+        screen.show_message(_INTL("That's your last Pokémon!"))
+        next
+      end
+      screen.visuals.swap_pokemon
+      screen.storage[screen.box, screen.index] = held_pkmn
+      if Settings::HEAL_STORED_POKEMON && screen.box >= 0
+        old_ready_evo = held_pkmn.ready_to_evolve
+        held_pkmn.heal
+        held_pkmn.ready_to_evolve = old_ready_evo
+      end
+      screen.refresh
+      screen.refresh_selected_pokemon
+    }
+  })
+  ACTIONS.add(:put_down_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Tried placing a Pokémon when not holding one.") if !screen.holding_pokemon?
+      raise _INTL("Position {1},{2} is not empty...", screen.box, screen.index) if screen.slot_pokemon
+      pkmn = screen.pokemon   # The held Pokémon
+      if screen.box >= 0
+        if screen.index >= screen.storage.maxPokemon(screen.box)
+          screen.show_message("Can't place that there.")
+          next
+        elsif pkmn.mail
+          screen.show_message("Please remove the mail.")
+          next
+        elsif pkmn.cannot_store
+          screen.show_message(_INTL("{1} refuses to go into storage!", pkmn.name))
+          next
         end
       end
-    end
-    @scene.pbCloseBox
-    $game_temp.in_storage = false
-    return retval
+      screen.visuals.put_down_pokemon
+      screen.storage[screen.box, screen.index] = pkmn
+      screen.storage.party.compact! if screen.box < 0
+      if Settings::HEAL_STORED_POKEMON && screen.box >= 0
+        old_ready_evo = pkmn.ready_to_evolve
+        pkmn.heal
+        pkmn.ready_to_evolve = old_ready_evo
+      end
+      screen.refresh
+    }
+  })
+  ACTIONS.add(:withdraw_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Can't withdraw from party...") if screen.box < 0
+      if screen.storage.party_full?
+        screen.show_message(_INTL("Your party's full!"))
+        next
+      end
+      was_holding = screen.holding_pokemon?
+      pkmn = screen.pokemon
+      screen.visuals.withdraw_pokemon
+      if was_holding
+        screen.storage.pbMoveCaughtToParty(pkmn)
+      else
+        screen.storage.pbMove(-1, -1, screen.box, screen.index)
+      end
+      screen.refresh
+      screen.refresh_selected_pokemon
+    }
+  })
+  ACTIONS.add(:store_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Can't deposit from box...") if screen.box >= 0
+      was_holding = screen.holding_pokemon?
+      pkmn = screen.pokemon
+      if pkmn.able? && screen.party_able_count <= 1 && !screen.holding_pokemon?
+        pbPlayBuzzerSE
+        screen.show_message(_INTL("That's your last Pokémon!"))
+        next
+      elsif pkmn.mail
+        screen.show_message("Please remove the mail.")
+        next
+      elsif pkmn.cannot_store
+        screen.show_message(_INTL("{1} refuses to go into storage!", pkmn.name))
+        next
+      end
+      old_box = screen.box
+      old_index = screen.index
+      loop do
+        new_box = screen.choose_box(_INTL("Deposit in which Box?"), old_box)
+        break if !new_box
+        new_index = screen.storage.pbFirstFreePos(new_box)
+        if new_index < 0
+          screen.show_message(_INTL("The Box is full."))
+          next
+        end
+        screen.visuals.store_pokemon(new_box, new_index) do
+          if was_holding
+            screen.storage.pbMoveCaughtToBox(pkmn, new_box)
+          else
+            screen.storage.pbMove(new_box, new_index, old_box, old_index)
+          end
+        end
+        screen.refresh
+        screen.refresh_selected_pokemon
+        break
+      end
+    }
+  })
+  ACTIONS.add(:release_pokemon, {
+    :effect => proc { |screen|
+      raise _INTL("Tried releasing a Pokémon when not selecting or holding one.", screen.box, screen.index) if !screen.pokemon
+      pkmn = screen.pokemon
+      if pkmn.egg?
+        screen.show_message(_INTL("You can't release an Egg!"))
+        next
+      elsif pkmn.fused
+        if pkmn.isSpecies?(:CALYREX)
+          screen.show_message(_INTL("You can’t release {1} when it's united with another Pokémon!", pkmn.name))
+        else   # Kyurem, Necrozma
+          screen.show_message(_INTL("You can’t release {1} when it's fused with another Pokémon!", pkmn.name))
+        end
+        next
+      elsif pkmn.mail
+        screen.show_message(_INTL("Please remove the mail."))
+        next
+      elsif pkmn.cannot_release
+        screen.show_message(_INTL("{1} refuses to leave you!", pkmn.name))
+        next
+      elsif screen.box < 0 && pkmn.able? && screen.party_able_count <= 1 && !screen.holding_pokemon?
+        pbPlayBuzzerSE
+        screen.show_message(_INTL("You'll be left without any Pokémon that can battle if you do that!"))
+        next
+      end
+      if screen.show_confirm_serious_message(_INTL("Do you really want to release this Pokémon?"))
+        $bag.add(pkmn.item_id) if pkmn.hasItem?
+        pkmn_name = pkmn.name
+        pkmn_being_held = screen.holding_pokemon?
+        screen.visuals.release_pokemon   # Also deletes the Pokémon if it's held
+        screen.storage.pbDelete(screen.box, screen.index) if !pkmn_being_held
+        screen.refresh
+        if screen.pokemon.item
+          $bag.pbStoreItem(screen.pokemon.item)
+          pbDisplay(_INTL("Returned the held {1} to the Bag.",(screen.pokemon.item.name)))
+        end
+        screen.show_message(_INTL("{1} was released.", pkmn_name))
+        screen.show_message(_INTL("Bye-bye, {1}!", pkmn_name))
+        $stats.pokemon_release_count += 1
+      end
+    }
+  })
+
+  # Returns the "active" Pokémon, i.e. the one that gets interacted with and is
+  # shown in the side pane.
+  def pokemon
+    return @visuals.pokemon
+  end
+
+  def slot_pokemon
+    return @visuals.slot_pokemon
+  end
+
+  # Returns whether the cursor is holding a Pokémon.
+  def holding_pokemon?
+    return @visuals.holding_pokemon?
+  end
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:rearrange_items_mode, {
+    :effect => proc { |screen|
+      if screen.holding_pokemon?
+        screen.show_message(_INTL("You're holding a Pokémon!"))
+        next
+      end
+      screen.set_sub_mode(:rearrange_items)
+    }
+  })
+  ACTIONS.add(:rearrange_items, {
+    :effect => proc { |screen|
+      next if !screen.slot_pokemon
+      if screen.holding_item?
+        if screen.slot_pokemon&.hasItem?
+          screen.perform_action(:swap_items)
+        else
+          screen.perform_action(:put_down_item)
+        end
+      elsif screen.slot_pokemon&.hasItem?
+        screen.perform_action(:pick_up_item)
+      end
+    }
+  })
+  ACTIONS.add(:pick_up_item, {
+    :effect => proc { |screen|
+      next if screen.holding_item? || !screen.slot_pokemon || !screen.slot_pokemon.hasItem?
+      if screen.slot_pokemon.mail
+        screen.show_message("You can't move mail.")
+        next
+      end
+      screen.visuals.pick_up_item
+    }
+  })
+  ACTIONS.add(:swap_items, {
+    :effect => proc { |screen|
+      next if !screen.holding_item? || !screen.slot_pokemon || !screen.slot_pokemon.hasItem?
+      held_item = screen.item
+      slot_pkmn = screen.slot_pokemon
+      if slot_pkmn.mail
+        screen.show_message("You can't move mail.")
+        next
+      end
+      screen.visuals.swap_items
+      slot_pkmn.item = held_item
+      screen.refresh_selected_pokemon
+    }
+  })
+  ACTIONS.add(:put_down_item, {
+    :effect => proc { |screen|
+      next if !screen.holding_item? || !screen.slot_pokemon || screen.slot_pokemon.hasItem?
+      pkmn = screen.slot_pokemon
+      screen.visuals.put_down_item
+    }
+  })
+  ACTIONS.add(:give_or_take_item, {
+    :effect => proc { |screen|
+      pkmn = screen.pokemon
+      if pkmn.egg?
+        screen.show_message(_INTL("Eggs can't hold items."))
+        next
+      elsif pkmn.mail
+        screen.show_message(_INTL("Please remove the mail."))
+        next
+      end
+      # Take an item
+      if pkmn.hasItem?
+        item_name = pkmn.item.portion_name
+        if screen.show_confirm_message(_INTL("Take the {1}?", item_name))
+          if $bag.add(pkmn.item)
+            pkmn.item = nil
+            screen.refresh
+            screen.show_message(_INTL("Took the {1}.", item_name))
+          else
+            screen.show_message(_INTL("Can't store the {1}.", item_name))
+          end
+        end
+        screen.deselect_pokemon
+        next
+      end
+      # Give an item
+      new_item = nil
+      screen.visuals.fade_out
+      old_last_pocket       = $bag.last_viewed_pocket
+      old_pocket_selections = $bag.last_pocket_selections.clone
+      bag_screen = UI::Bag.new($bag, mode: :choose_item)
+      bag_screen.set_filter_proc(proc { |itm| GameData::Item.get(itm).can_hold? })
+      new_item = bag_screen.choose_item
+      $bag.last_viewed_pocket     = old_last_pocket
+      $bag.last_pocket_selections = old_pocket_selections
+      screen.deselect_pokemon if !new_item
+      if new_item
+        item_name = GameData::Item.get(new_item).name
+        pkmn.item = new_item
+        $bag.remove(new_item)
+        screen.refresh
+      end
+      screen.visuals.fade_in
+      if new_item
+        screen.show_message(_INTL("{1} is now being held.", item_name))
+        screen.deselect_pokemon
+      end
+    }
+  })
+
+  def item
+    return @visuals.item
+  end
+
+  def holding_item?
+    return @visuals.holding_item?
+  end
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:jump_to_box, {
+    :effect => proc { |screen|
+      new_box = screen.choose_box(_INTL("Jump to which Box?"))
+      next if !new_box || new_box == screen.box
+      (new_box > screen.box) ? screen.visuals.go_to_next_box(new_box) : screen.visuals.go_to_previous_box(new_box)
+    }
+  })
+  ACTIONS.add(:rename_box, {
+    :effect => proc { |screen|
+      screen.visuals.fade_out
+      ret = pbEnterBoxName(_INTL("Box name?"), 0, 16, screen.storage[screen.storage.currentBox].name)
+      if ret.length > 0
+        screen.storage[screen.storage.currentBox].name = ret
+        screen.refresh_box
+      end
+      screen.visuals.fade_in
+    }
+  })
+  ACTIONS.add(:change_box_wallpaper, {
+    :effect => proc { |screen|
+      papers = screen.storage.availableWallpapers
+      old_paper = screen.storage[screen.storage.currentBox].background
+      index = papers.keys.index(old_paper) || 0
+      new_paper = screen.visuals.choose_box_wallpaper(_INTL("Pick the wallpaper."), papers, index)
+      if new_paper && new_paper != old_paper
+        screen.storage[screen.storage.currentBox].background = new_paper
+        screen.refresh_box
+      end
+    }
+  })
+
+  # -1 is the party, 0+ is a box.
+  def box
+    return @visuals.box
+  end
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:show_party_panel, {
+    :effect => proc { |screen|
+      screen.visuals.show_party_panel
+    }
+  })
+  ACTIONS.add(:hide_party_panel, {
+    :effect => proc { |screen|
+      screen.visuals.hide_party_panel
+    }
+  })
+
+  #-----------------------------------------------------------------------------
+
+  ACTIONS.add(:summary, {
+    :effect => proc { |screen|
+      screen.visuals.fade_out
+      screen.deselect_pokemon
+      if screen.holding_pokemon?
+        UI::PokemonSummary.new(screen.pokemon, 0).main
+      else
+        party = (screen.box >= 0) ? screen.storage[screen.box].pokemon : screen.storage[screen.box]
+        new_index = UI::PokemonSummary.new(party, screen.index).main
+        screen.set_index(new_index, true)
+      end
+      screen.refresh
+      screen.visuals.fade_in
+    }
+  })
+  ACTIONS.add(:mark_pokemon, {
+    :effect => proc { |screen|
+      screen.visuals.navigate_markings
+      screen.deselect_pokemon
+      screen.refresh
+    }
+  })
+  ACTIONS.add(:debug, {
+    :effect => proc { |screen|
+      screen.pokemon_debug_menu(screen.pokemon, [screen.box, screen.index])
+    }
+  })
+  ACTIONS.add(:exit_screen, {
+    :returns_value => true,
+    :effect        => proc { |screen|
+      if screen.holding_pokemon?
+        screen.show_message(_INTL("You're holding a Pokémon!"))
+        next nil
+      elsif screen.holding_item?
+        screen.show_message(_INTL("You're holding an item!"))
+        next nil
+      end
+      next :quit if screen.show_confirm_message(_INTL("Exit from the Box?"))
+      next nil
+    }
+  })
+
+  #-----------------------------------------------------------------------------
+
+  def choose_box(message, start_box = -1)
+    return @visuals.choose_box(message, start_box)
+  end
+
+  def set_index(new_index, no_mosaic = false)
+    @visuals.set_index(new_index, no_mosaic)
+  end
+
+  def party_able_count
+    return @storage.party.count { |pkmn| pkmn.able? }
+  end
+
+  def deselect_pokemon
+    @visuals.deselect_pokemon
+  end
+
+  #-----------------------------------------------------------------------------
+
+  def refresh_selected_pokemon
+    @visuals.refresh_selected_pokemon
+  end
+
+  def refresh_box
+    @visuals.refresh_box
   end
 end
+
+#===============================================================================
+# Menu options for choice menus that exist in the Pokémon storage screen.
+#===============================================================================
+MenuHandlers.add(:storage_screen_menu, :rearrange_pokemon_mode, {
+  "name"      => _INTL("Mode: Switch Pokémon"),
+  "order"     => 10
+})
+
+MenuHandlers.add(:storage_screen_menu, :rearrange_items_mode, {
+  "name"      => _INTL("Mode: Switch items"),
+  "order"     => 20
+})
+
+MenuHandlers.add(:storage_screen_menu, :cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
+})
+
+#-------------------------------------------------------------------------------
+
+# NOTE: This option is first in withdraw mode.
+MenuHandlers.add(:storage_pokemon_interact, :withdraw, {
+  "name"      => _INTL("Withdraw"),
+  "order"     => 10,
+  "condition" => proc { |screen| next screen.mode == :withdraw && screen.box >= 0 },
+  "action"    => :withdraw_pokemon
+})
+
+# NOTE: This option is first in store mode.
+MenuHandlers.add(:storage_pokemon_interact, :store, {
+  "name"      => _INTL("Store"),
+  "order"     => 10,
+  "condition" => proc { |screen| next screen.mode == :deposit && screen.box < 0 },
+  "action"    => :store_pokemon
+})
+
+# NOTE: This option is for when in "choose a Pokémon" mode.
+MenuHandlers.add(:storage_pokemon_interact, :select_pokemon, {
+  "name"      => _INTL("Select"),
+  "order"     => 10,
+  "condition" => proc { |screen| next screen.mode == :choose_pokemon }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :pick_up_pokemon, {
+  "name"      => _INTL("Move"),
+  "order"     => 20,
+  "condition" => proc { |screen| next screen.mode == :organize && !screen.holding_pokemon? }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :swap_pokemon, {
+  "name"      => _INTL("Shift"),
+  "order"     => 20,
+  "condition" => proc { |screen| next screen.mode == :organize && screen.holding_pokemon? && screen.slot_pokemon }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :put_down_pokemon, {
+  "name"      => _INTL("Place"),
+  "order"     => 20,
+  "condition" => proc { |screen| next screen.mode == :organize && screen.holding_pokemon? && !screen.slot_pokemon }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :summary, {
+  "name"      => _INTL("Summary"),
+  "order"     => 30
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :withdraw_pokemon, {
+  "name"      => _INTL("Withdraw"),
+  "order"     => 40,
+  "condition" => proc { |screen| next screen.mode == :organize && screen.box >= 0 }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :store_pokemon, {
+  "name"      => _INTL("Store"),
+  "order"     => 40,
+  "condition" => proc { |screen| next screen.mode == :organize && screen.box < 0 }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :give_or_take_item, {
+  "name"      => _INTL("Item"),
+  "order"     => 50,
+  "condition" => proc { |screen| next screen.mode == :organize }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :mark_pokemon, {
+  "name"      => _INTL("Mark"),
+  "order"     => 60
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :release_pokemon, {
+  "name"      => _INTL("Release"),
+  "order"     => 70,
+  "condition" => proc { |screen| next screen.mode != :choose_pokemon }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :debug, {
+  "name"      => _INTL("Debug"),
+  "order"     => 80,
+  "condition" => proc { |screen| next $DEBUG }
+})
+
+MenuHandlers.add(:storage_pokemon_interact, :cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
+})
+
+#-------------------------------------------------------------------------------
+
+MenuHandlers.add(:storage_box_interact, :jump_to_box, {
+  "name"      => _INTL("Jump to box"),
+  "order"     => 10
+})
+
+MenuHandlers.add(:storage_box_interact, :rename_box, {
+  "name"      => _INTL("Rename box"),
+  "order"     => 20
+})
+
+MenuHandlers.add(:storage_box_interact, :change_box_wallpaper, {
+  "name"      => _INTL("Change wallpaper"),
+  "order"     => 30
+})
+
+MenuHandlers.add(:storage_box_interact, :cancel, {
+  "name"      => _INTL("Cancel"),
+  "order"     => 9999
+})

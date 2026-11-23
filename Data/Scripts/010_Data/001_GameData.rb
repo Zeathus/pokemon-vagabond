@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 module GameData
   #=============================================================================
   # A mixin module for data classes which provides common class methods (called
@@ -236,7 +239,7 @@ module GameData
       ret = nil
       if self.class::SCHEMA.include?(key) && self.respond_to?(self.class::SCHEMA[key][0])
         ret = self.send(self.class::SCHEMA[key][0])
-        ret = nil if ret == false || (ret.is_a?(Array) && ret.length == 0)
+        ret = nil if ret == false || (ret.is_a?(Array) && ret.empty?)
       end
       return ret
     end
@@ -255,7 +258,7 @@ module GameData
   def self.get_all_data_filenames
     ret = []
     self.constants.each do |c|
-      next if !self.const_get(c).is_a?(Class)
+      next if !self.const_get(c).is_a?(Class) || self.const_get(c) == Animation
       next if !self.const_get(c).const_defined?(:DATA_FILENAME)
       if self.const_get(c).const_defined?(:OPTIONAL) && self.const_get(c)::OPTIONAL
         ret.push([self.const_get(c)::DATA_FILENAME, false])

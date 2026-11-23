@@ -42,24 +42,26 @@
 module EventHandlers
   @@events = {}
 
+  module_function
+
   # Add a named callback for the given event.
-  def self.add(event, key, proc)
+  def add(event, key, proc)
     @@events[event] = NamedEvent.new if !@@events.has_key?(event)
     @@events[event].add(key, proc)
   end
 
   # Remove a named callback from the given event.
-  def self.remove(event, key)
+  def remove(event, key)
     @@events[event]&.remove(key)
   end
 
   # Clear all callbacks for the given event.
-  def self.clear(key)
+  def clear(key)
     @@events[key]&.clear
   end
 
   # Trigger all callbacks from an Event if it has been defined.
-  def self.trigger(event, *args)
+  def trigger(event, *args)
     return @@events[event]&.trigger(*args)
   end
 end
@@ -71,34 +73,45 @@ end
 # Menus that use this module are:
 #-------------------------------------------------------------------------------
 # Pause menu
-# Party screen main interact menu
-# Pokégear main menu
-# Options screen
-# PC main menu
+# Party
+# Pokémon summary
+# Bag
+# Pokégear
+# Town Map
+# Main menu (Continue/New Game)
+# Options
+# Pokémon storage
+# PC menus
 # Various debug menus (main, Pokémon, battle, battle Pokémon)
 #===============================================================================
 module MenuHandlers
   @@handlers = {}
 
-  def self.add(menu, option, hash)
+  module_function
+
+  def add(menu, option, hash)
     @@handlers[menu] = HandlerHash.new if !@@handlers.has_key?(menu)
     @@handlers[menu].add(option, hash)
   end
 
-  def self.remove(menu, option)
+  def remove(menu, option)
     @@handlers[menu]&.remove(option)
   end
 
-  def self.clear(menu)
+  def clear(menu)
     @@handlers[menu]&.clear
   end
 
-  def self.each(menu)
+  def get(menu, option)
+    return @@handlers[menu][option]
+  end
+
+  def each(menu)
     return if !@@handlers.has_key?(menu)
     @@handlers[menu].each { |option, hash| yield option, hash }
   end
 
-  def self.each_available(menu, *args)
+  def each_available(menu, *args)
     return if !@@handlers.has_key?(menu)
     options = @@handlers[menu]
     keys = options.keys
@@ -106,8 +119,15 @@ module MenuHandlers
     sorted_keys.each do |option|
       hash = options[option]
       next if hash["condition"] && !hash["condition"].call(*args)
+      if hash["multi_options"]
+        extra_options = hash["multi_options"].call(*args)
+        if extra_options && extra_options.length > 0
+          extra_options.each { |opt| yield opt[0], hash, opt[1] }
+        end
+        next
+      end
       if hash["name"].is_a?(Proc)
-        name = hash["name"].call
+        name = hash["name"].call(*args)
       else
         name = _INTL(hash["name"])
       end
@@ -115,7 +135,7 @@ module MenuHandlers
     end
   end
 
-  def self.call(menu, option, function, *args)
+  def call(menu, option, function, *args)
     option_hash = @@handlers[menu][option]
     return nil if !option_hash || !option_hash[function]
     return option_hash[function].call(*args)

@@ -1,8 +1,8 @@
 #===============================================================================
-# Nicknaming and storing Pokémon
+# Nicknaming and storing Pokémon.
 #===============================================================================
 def pbBoxesFull?
-  return ($player.party_full? && $PokemonStorage.full?)
+  return $player.party_full? && $PokemonStorage.full?
 end
 
 def pbNickname(pkmn)
@@ -43,7 +43,7 @@ def pbNicknameAndStore(pkmn)
 end
 
 #===============================================================================
-# Giving Pokémon to the player (will send to storage if party is full)
+# Giving Pokémon to the player (will send to storage if party is full).
 #===============================================================================
 def pbAddPokemon(pkmn, level = 1, see_form = true)
   return false if !pkmn
@@ -64,11 +64,7 @@ def pbAddPokemon(pkmn, level = 1, see_form = true)
      $player.has_pokedex && $player.pokedex.species_in_unlocked_dex?(pkmn.species)
     pbMessage(_INTL("{1}'s data was added to the Pokédex.", species_name))
     $player.pokedex.register_last_seen(pkmn)
-    pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
-      screen.pbDexEntry(pkmn.species)
-    end
+    pbShowPokedexEntry(pkmn.species)
   end
   # Nickname and add the Pokémon
   pbNicknameAndStore(pkmn)
@@ -91,7 +87,7 @@ def pbAddPokemonSilent(pkmn, level = 1, see_form = true)
 end
 
 #===============================================================================
-# Giving Pokémon/eggs to the player (can only add to party)
+# Giving Pokémon/eggs to the player (can only add to party).
 #===============================================================================
 def pbAddToParty(pkmn, level = 1, see_form = true)
   return false if !pkmn || $player.party_full?
@@ -107,11 +103,7 @@ def pbAddToParty(pkmn, level = 1, see_form = true)
      $player.has_pokedex && $player.pokedex.species_in_unlocked_dex?(pkmn.species)
     pbMessage(_INTL("{1}'s data was added to the Pokédex.", species_name))
     $player.pokedex.register_last_seen(pkmn)
-    pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
-      screen.pbDexEntry(pkmn.species)
-    end
+    pbShowPokedexEntry(pkmn.species)
   end
   # Nickname and add the Pokémon
   pbNicknameAndStore(pkmn)
@@ -148,11 +140,7 @@ def pbAddForeignPokemon(pkmn, level = 1, owner_name = nil, nickname = nil, owner
      $player.has_pokedex && $player.pokedex.species_in_unlocked_dex?(pkmn.species)
     pbMessage(_INTL("The Pokémon's data was added to the Pokédex."))
     $player.pokedex.register_last_seen(pkmn)
-    pbFadeOutIn do
-      scene = PokemonPokedexInfo_Scene.new
-      screen = PokemonPokedexInfoScreen.new(scene)
-      screen.pbDexEntry(pkmn.species)
-    end
+    pbShowPokedexEntry(pkmn.species)
   end
   # Add the Pokémon
   pbStorePokemon(pkmn)
@@ -175,7 +163,7 @@ alias pbAddEgg pbGenerateEgg
 alias pbGenEgg pbGenerateEgg
 
 #===============================================================================
-# Analyse Pokémon in the party
+# Analyse Pokémon in the party.
 #===============================================================================
 # Returns the first unfainted, non-egg Pokémon in the player's party.
 def pbFirstAblePokemon(variable_ID)
@@ -189,7 +177,7 @@ def pbFirstAblePokemon(variable_ID)
 end
 
 #===============================================================================
-# Return a level value based on Pokémon in a party
+# Return a level value based on Pokémon in a party.
 #===============================================================================
 def pbBalancedLevel(party)
   return 1 if party.length == 0
@@ -238,7 +226,7 @@ def pbBalancedLevel(party)
 end
 
 #===============================================================================
-# Calculates a Pokémon's size (in millimeters)
+# Calculates a Pokémon's size (in millimeters).
 #===============================================================================
 def pbSize(pkmn)
   baseheight = pkmn.height
@@ -272,7 +260,7 @@ def pbSize(pkmn)
 end
 
 #===============================================================================
-# Returns true if the given species can be legitimately obtained as an egg
+# Returns true if the given species can be legitimately obtained as an egg.
 #===============================================================================
 def pbHasEgg?(species)
   species_data = GameData::Species.try_get(species)

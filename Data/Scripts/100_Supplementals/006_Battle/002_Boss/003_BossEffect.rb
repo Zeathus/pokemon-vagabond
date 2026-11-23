@@ -340,7 +340,7 @@ class BossEff_WinBattle < BossEffect
     super(trigger)
   end
   def activate(battle, triggerer, target)
-    battle.decision = 1
+    battle.decision = Outcome::WIN
   end
 end
 
@@ -349,7 +349,7 @@ class BossEff_LoseBattle < BossEffect
     super(trigger)
   end
   def activate(battle, triggerer, target)
-    battle.decision = 2
+    battle.decision = Outcome::LOSE
   end
 end
 
@@ -358,7 +358,7 @@ class BossEff_EndBattle < BossEffect
     super(trigger)
   end
   def activate(battle, triggerer, target)
-    battle.decision = 3
+    battle.decision = Outcome::FLEE
   end
 end
 
@@ -501,7 +501,7 @@ class BossEff_Weather < BossEffect
     when @weather
       return false
     end
-    battle.pbStartWeather(target, @weather, true, false, @duration)
+    battle.pbStartWeather(target, @weather, true, false, nil, @duration)
   end
 end
 
@@ -515,7 +515,7 @@ class BossEff_Terrain < BossEffect
     if battle.field.terrain == @terrain
       return false
     end
-    battle.pbStartTerrain(target, @terrain, true, @duration)
+    battle.pbStartTerrain(target, @terrain, true, nil, @duration)
   end
 end
 

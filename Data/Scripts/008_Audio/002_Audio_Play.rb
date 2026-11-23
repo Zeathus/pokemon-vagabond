@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 def pbStringToAudioFile(str)
   if str[/^(.*)\:\s*(\d+)\s*\:\s*(\d+)\s*$/]   # Of the format "XXX: ###: ###"
     file   = $1
@@ -39,7 +42,8 @@ def pbResolveAudioFile(str, volume = nil, pitch = nil)
 end
 
 #===============================================================================
-
+#
+#===============================================================================
 # Plays a BGM file.
 # param -- Either a string showing the filename
 # (relative to Audio/BGM/) or an RPG::AudioFile object.
@@ -89,7 +93,8 @@ def pbBGMStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-
+#
+#===============================================================================
 # Plays an ME file.
 # param -- Either a string showing the filename
 # (relative to Audio/ME/) or an RPG::AudioFile object.
@@ -139,7 +144,8 @@ def pbMEStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-
+#
+#===============================================================================
 # Plays a BGS file.
 # param -- Either a string showing the filename
 # (relative to Audio/BGS/) or an RPG::AudioFile object.
@@ -189,7 +195,8 @@ def pbBGSStop(timeInSeconds = 0.0)
 end
 
 #===============================================================================
-
+#
+#===============================================================================
 # Plays an SE file.
 # param -- Either a string showing the filename
 # (relative to Audio/SE/) or an RPG::AudioFile object.
@@ -232,8 +239,6 @@ def pbSEStop(_timeInSeconds = 0.0)
   end
 end
 
-#===============================================================================
-
 # Plays a sound effect that plays when the player moves the cursor.
 def pbPlayCursorSE
   if !nil_or_empty?($data_system&.cursor_se&.name)
@@ -274,5 +279,24 @@ end
 def pbPlayCloseMenuSE
   if FileTest.audio_exist?("Audio/SE/GUI menu close")
     pbSEPlay("GUI menu close", 80)
+  end
+end
+
+def pbPokemonCryPlay(param, volume = nil, pitch = nil)
+  return if !param
+  param = pbResolveAudioFile(param, volume, pitch)
+  if param.name && param.name != ""
+    if $game_system
+      $game_system.pokemon_cry_play(param)
+      return
+    end
+    if (RPG.const_defined?(:SE) rescue false)
+      b = RPG::SE.new(param.name, param.volume, param.pitch)
+      if b.respond_to?("play")
+        b.play
+        return
+      end
+    end
+    Audio.se_play(canonicalize("Audio/SE/" + param.name), param.volume, param.pitch)
   end
 end

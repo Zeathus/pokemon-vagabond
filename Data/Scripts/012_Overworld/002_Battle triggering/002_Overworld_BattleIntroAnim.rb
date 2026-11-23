@@ -42,7 +42,7 @@ module SpecialBattleIntroAnimations
 end
 
 #===============================================================================
-# Battle intro animation
+# Battle intro animation.
 #===============================================================================
 class Game_Temp
   attr_accessor :transition_animation_data
@@ -59,7 +59,7 @@ end
 def pbBattleAnimation(bgm = nil, battletype = 0, foe = nil)
   $game_temp.in_battle = true
   viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-  viewport.z = 99999
+  viewport.z = 99_999
   # Set up audio
   playingBGS = nil
   playingBGM = nil
@@ -185,7 +185,7 @@ def pbBattleAnimationCore(anim, viewport, location, num_flashes = 2)
   # Play main animation
   Graphics.freeze
   viewport.color = Color.black   # Ensure screen is black
-  Graphics.transition(25, "Graphics/Transitions/" + anim)
+  Graphics.transition(25, anim)
   # Slight pause after animation before starting up the battle scene
   pbWait(0.1)
 end

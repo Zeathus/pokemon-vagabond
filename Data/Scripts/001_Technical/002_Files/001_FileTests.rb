@@ -1,5 +1,5 @@
 #===============================================================================
-#  Reads files of certain format from a directory
+# Reads files of certain format from a directory
 #===============================================================================
 class Dir
   # Reads all files in a directory
@@ -8,7 +8,7 @@ class Dir
     filters = [filters] if !filters.is_a?(Array)
     self.chdir(dir) do
       filters.each do |filter|
-        self.glob(filter) { |f| files.push(full ? (dir + "/" + f) : f) }
+        self.glob(filter) { |f| files.push((full) ? dir + "/" + f : f) }
       end
     end
     return files.sort
@@ -58,7 +58,7 @@ class Dir
       dirs += self.all_dirs(file) if self.safe?(file)
     end
     # returns all found directories
-    return dirs.length > 0 ? (dirs + [dir]) : [dir]
+    return (dirs.length > 0) ? (dirs + [dir]) : [dir]
   end
 
   # Deletes all the files in a directory and all the sub directories (allows for non-empty dirs)
@@ -73,19 +73,6 @@ end
 #===============================================================================
 # Checking for files and directories
 #===============================================================================
-# Works around a problem with FileTest.directory if directory contains accent marks
-# @deprecated This method is slated to be removed in v22.
-def safeIsDirectory?(f)
-  Deprecation.warn_method("safeIsDirectory?(f)", "v22", "FileTest.directory?(f)")
-  return FileTest.directory?(f)
-end
-
-# @deprecated This method is slated to be removed in v22.
-def safeExists?(f)
-  Deprecation.warn_method("safeExists?(f)", "v22", "FileTest.exist?(f)")
-  return FileTest.exist?(f)
-end
-
 # Similar to "Dir.glob", but designed to work around a problem with accessing
 # files if a path contains accent marks.
 # "dir" is the directory path, "wildcard" is the filename pattern to match.
@@ -114,8 +101,8 @@ def pbResolveAudioSE(file)
   return nil
 end
 
-# Finds the real path for an image file.  This includes paths in encrypted
-# archives.  Returns nil if the path can't be found.
+# Finds the real path for an image file. This includes paths in encrypted
+# archives. Returns nil if the path can't be found.
 def pbResolveBitmap(x)
   return nil if !x
   noext = x.gsub(/\.(bmp|png|gif|jpg|jpeg)$/, "")
@@ -134,8 +121,8 @@ def pbResolveBitmap(x)
   return filename
 end
 
-# Finds the real path for an image file.  This includes paths in encrypted
-# archives.  Returns _x_ if the path can't be found.
+# Finds the real path for an image file. This includes paths in encrypted
+# archives. Returns _x_ if the path can't be found.
 def pbBitmapName(x)
   ret = pbResolveBitmap(x)
   return (ret) ? ret : x
@@ -184,7 +171,7 @@ module RTP
   def self.exists?(filename, extensions = [])
     return false if nil_or_empty?(filename)
     eachPathFor(filename) do |path|
-      return true if FileTest.exist?(path)
+      return true if FileTest.exist?(path) && (!extensions || extensions.empty?)
       extensions.each do |ext|
         return true if FileTest.exist?(path + ext)
       end
@@ -334,7 +321,7 @@ end
 
 def pbTryString(x)
   ret = pbGetFileChar(x)
-  return nil_or_empty?(ret) ? nil : x
+  return (nil_or_empty?(ret)) ? nil : x
 end
 
 # Gets the contents of a file. Doesn't check RTP, but does check
@@ -392,7 +379,7 @@ class StringInput
   end
 
   def inspect
-    return "#<#{self.class}:#{@closed ? 'closed' : 'open'},src=#{@string[0, 30].inspect}>"
+    return "#<#{self.class}:#{(@closed) ? 'closed' : 'open'},src=#{@string[0, 30].inspect}>"
   end
 
   def close

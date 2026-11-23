@@ -1,7 +1,11 @@
+#===============================================================================
+#
+#===============================================================================
 class Battle
-  #=============================================================================
-  # Shifting a battler to another position in a battle larger than double
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Shifting a battler to another position in a battle larger than double.
+  #-----------------------------------------------------------------------------
+
   def pbCanShift?(idxBattler)
     return false if pbSideSize(0) <= 2 && pbSideSize(1) <= 2   # Double battle or smaller
     idxOther = -1
@@ -25,9 +29,10 @@ class Battle
     return true
   end
 
-  #=============================================================================
-  # Calling at a battler
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Calling at a battler.
+  #-----------------------------------------------------------------------------
+
   def pbRegisterCall(idxBattler)
     @choices[idxBattler][0] = :Call
     @choices[idxBattler][1] = 0
@@ -36,9 +41,7 @@ class Battle
   end
 
   def pbCall(idxBattler)
-    # Debug ending the battle
-    return if pbDebugRun != 0
-    # Call the battler
+    clearStagesChangeRecords
     battler = @battlers[idxBattler]
     trainerName = pbGetOwnerName(idxBattler)
     pbDisplay(_INTL("{1} called {2}!", trainerName, battler.pbThis(true)))
@@ -55,23 +58,21 @@ class Battle
       battler.pbCureStatus
     elsif battler.pbCanRaiseStatStage?(:ACCURACY, battler)
       battler.pbRaiseStatStage(:ACCURACY, 1, battler)
-      battler.pbItemOnStatDropped
+      battler.pbItemStatRestoreCheck   # White Herb
+      battler.pbItemOnStatDropped   # Eject Pack
     else
       pbDisplay(_INTL("But nothing happened!"))
     end
+    checkStatChangeResponses
   end
 
-  #=============================================================================
-  # Choosing to Mega Evolve a battler
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Choosing to Mega Evolve a battler.
+  #-----------------------------------------------------------------------------
+
   def pbHasMegaRing?(idxBattler)
-    if pbOwnedByPlayer?(idxBattler)
-      @mega_rings.each { |item| return true if $bag.has?(item) }
-    else
-      trainer_items = pbGetOwnerItems(idxBattler)
-      return false if !trainer_items
-      @mega_rings.each { |item| return true if trainer_items.include?(item) }
-    end
+    return true if !pbOwnedByPlayer?(idxBattler)
+    @mega_rings.each { |item| return true if $bag.has?(item) }
     return false
   end
 
@@ -129,9 +130,10 @@ class Battle
     return @megaEvolution[side][owner] == idxBattler
   end
 
-  #=============================================================================
-  # Mega Evolving a battler
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Mega Evolving a battler.
+  #-----------------------------------------------------------------------------
+
   def pbMegaEvolve(idxBattler)
     battler = @battlers[idxBattler]
     return if !battler || !battler.pokemon
@@ -148,15 +150,15 @@ class Battle
     when 1   # Rayquaza
       pbDisplay(_INTL("{1}'s fervent wish has reached {2}!", trainerName, battler.pbThis))
     else
-      pbDisplay(_INTL("{1}'s {2} is reacting to {3}'s {4}!",
-                      battler.pbThis, battler.itemName, trainerName, pbGetMegaRingName(idxBattler)))
+      pbDisplay(_INTL("{1} {2} is reacting to {3}'s {4}!",
+                      battler.pbOfThis, battler.itemName, trainerName, pbGetMegaRingName(idxBattler)))
     end
     pbCommonAnimation("MegaEvolution", battler)
     battler.pokemon.makeMega
     battler.form = battler.pokemon.form
     battler.pbUpdate(true)
-    @scene.pbChangePokemon(battler, battler.pokemon)
-    @scene.pbRefreshOne(idxBattler)
+    @visuals.pbChangePokemon(battler, battler.pokemon)
+    @visuals.pbRefreshOne(idxBattler)
     pbCommonAnimation("MegaEvolution2", battler)
     megaName = battler.pokemon.megaName
     megaName = _INTL("Mega {1}", battler.pokemon.speciesName) if nil_or_empty?(megaName)
@@ -164,6 +166,7 @@ class Battle
     side  = battler.idxOwnSide
     owner = pbGetOwnerIndexFromBattlerIndex(idxBattler)
     @megaEvolution[side][owner] = -2
+    MultipleForms.call("changePokemonOnMegaEvolving", battler, battler.pokemon)
     if battler.isSpecies?(:GENGAR) && battler.mega?
       battler.effects[PBEffects::Telekinesis] = 0
     end
@@ -174,13 +177,15 @@ class Battle
     pbCalculatePriority(false, [idxBattler]) if Settings::RECALCULATE_TURN_ORDER_AFTER_MEGA_EVOLUTION
   end
 
-  #=============================================================================
-  # Primal Reverting a battler
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Primal Reverting a battler.
+  #-----------------------------------------------------------------------------
+
   def pbPrimalReversion(idxBattler)
     battler = @battlers[idxBattler]
     return if !battler || !battler.pokemon || battler.fainted?
     return if !battler.hasPrimal? || battler.primal?
+    $stats.primal_reversion_count += 1 if battler.pbOwnedByPlayer?
     if battler.isSpecies?(:KYOGRE)
       pbCommonAnimation("PrimalKyogre", battler)
     elsif battler.isSpecies?(:GROUDON)
@@ -189,13 +194,13 @@ class Battle
     battler.pokemon.makePrimal
     battler.form = battler.pokemon.form
     battler.pbUpdate(true)
-    @scene.pbChangePokemon(battler, battler.pokemon)
-    @scene.pbRefreshOne(idxBattler)
+    @visuals.pbChangePokemon(battler, battler.pokemon)
+    @visuals.pbRefreshOne(idxBattler)
     if battler.isSpecies?(:KYOGRE)
       pbCommonAnimation("PrimalKyogre2", battler)
     elsif battler.isSpecies?(:GROUDON)
       pbCommonAnimation("PrimalGroudon2", battler)
     end
-    pbDisplay(_INTL("{1}'s Primal Reversion!\nIt reverted to its primal form!", battler.pbThis))
+    pbDisplay(_INTL("{1} Primal Reversion!\nIt reverted to its primal form!", battler.pbOfThis))
   end
 end

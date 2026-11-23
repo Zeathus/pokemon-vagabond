@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 class Sprite_Reflection
   attr_reader :visible
 
@@ -40,6 +43,7 @@ class Sprite_Reflection
   def update
     return if disposed?
     shouldShow = @parent_sprite.visible
+    shouldShow = false if GameData::MapMetadata.try_get(event.map_id)&.no_reflections
     if !shouldShow
       # Just-in-time disposal of sprite
       if @sprite
@@ -63,23 +67,25 @@ class Sprite_Reflection
       @sprite.ox       = width / 2
       @sprite.oy       = (height / 2) - 2   # Hard-coded 2 pixel shift up
       @sprite.oy       -= event.bob_height * 2
-      @sprite.z        = -50   # Still water is -100, map is 0 and above
+      @sprite.z        = @parent_sprite.ground_y - (Graphics.height / 2)
+      @sprite.z        -= 1000   # Still water is -2000, map is 0 and above
       @sprite.z        += 1 if event == $game_player
       @sprite.zoom_x   = @parent_sprite.zoom_x
       if Settings::ANIMATE_REFLECTIONS && !GameData::MapMetadata.try_get(event.map_id)&.still_reflections
-        @sprite.zoom_x   += 0.05 * @sprite.zoom_x * Math.sin(2 * Math::PI * System.uptime)
+        @sprite.zoom_x += 0.05 * @sprite.zoom_x * Math.sin(2 * Math::PI * System.uptime)
       end
       @sprite.zoom_y   = @parent_sprite.zoom_y
       @sprite.angle    = 180.0
       @sprite.mirror   = true
-      @sprite.bitmap   = @parent_sprite.bitmap
+      parent_bitmap    = @parent_sprite.bitmap
+      @sprite.bitmap   = parent_bitmap if @sprite.bitmap != parent_bitmap
       @sprite.tone     = @parent_sprite.tone
       if @height > 0
-        @sprite.color   = Color.new(48, 96, 160, 255)   # Dark still water
+        @sprite.color.set(48, 96, 160, 255)   # Dark still water
         @sprite.opacity = @parent_sprite.opacity
         @sprite.visible = !Settings::TIME_SHADING   # Can't time-tone a colored sprite
       else
-        @sprite.color   = Color.new(224, 224, 224, 96)
+        @sprite.color.set(224, 224, 224, 96)
         @sprite.opacity = @parent_sprite.opacity * 3 / 4
         @sprite.visible = true
       end

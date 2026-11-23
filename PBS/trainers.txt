@@ -88,7 +88,8 @@ Pokemon = COMBUSKEN,19
 [SWIMMER2_F,Ariel]
 LoseText = Washed out!
 Pokemon = STARYU,15
-Pokemon = GOLDEEN,11
+Pokemon = SHELLOS,11
+    Form = 1
 #-------------------------------
 [RIVAL1,Blue]
 LoseText = Not too shabby.

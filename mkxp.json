@@ -1,4 +1,6 @@
 //==============================================================================
+// mkxp.json for Pokémon Essentials
+//==============================================================================
 // Since this is a JSON file, comments are written with // instead of a #. Any
 // backslashes in file paths written in here need to be escaped (i.e. a single
 // backslash becomes a double backslash). If that's too much hassle, you can use
@@ -13,7 +15,7 @@
     // Note that the "Game Title" defined in RPG Maker XP should not have
     // accented characters in it, which is why this property is useful.
     //
-    "windowTitle": "Pokémon Essentials v21.1",
+    "windowTitle": "Pokémon Essentials v22",
 
     // The game window's width and height, in pixels.
     //
@@ -30,27 +32,13 @@
 
     // Enable F1 to open the keybinding menu.
     //
-    // "enableSettings": true,
-
-    // The names of each input, as seen in the F1 keybinding menu. The names
-    // have no other use.
-    //
-    "bindingNames": {
-      "c": "Use",
-      "b": "Back",
-      "a": "Action",
-      "x": "JumpUp",
-      "y": "JumpDown",
-      "z": "Special",
-      "l": "(unused)",
-      "r": "(unused)"
-    },
+    "enableSettings": false,
 
     // The name of this game's save folder. If undefined, the save folder's name
     // will be the "Game Title" as defined in RPG Maker XP. It should not
     // contain any accented characters.
     //
-    // "dataPathApp": "Pokemon Essentials v21",
+    // "dataPathApp": "Pokemon Essentials v22",
 
     // If defined, the game's save folder goes into a folder with this name (in
     // C:\Users\USERNAME\AppData\Roaming). If undefined, the game's save folder
@@ -60,6 +48,17 @@
     // folders for multiple games made by the same company/creator.
     //
     // "dataPathOrg": "PKMN Essentials",
+
+    // Index all accessible assets via their lower case path (emulates Windows
+    // case insensitivity). The game boots up faster if this is false.
+    //
+    "pathCache": false,
+
+
+
+    //==========================================================================
+    // Audio.
+    //==========================================================================
 
     // SoundFont to use for midi playback (via fluidsynth).
     //
@@ -77,13 +76,18 @@
     //
     // "SESourceCount": 6,
 
-    // Index all accessible assets via their lower case path (emulates Windows
-    // case insensitivity).
+    // Activate a "chorus" effect for midi playback.
     //
-    "pathCache": false,
+    // "midiChorus": false,
+
+    // Activate a "reverb" effect for midi playback.
+    //
+    // "midiReverb": false,
+
+
 
     //==========================================================================
-    // Window size, scaling, rendering and frame rate.
+    // Window size and frame rate.
     // You shouldn't need to change any of these.
     //==========================================================================
 
@@ -107,6 +111,30 @@
     //
     // "fixedAspectRatio": true,
 
+    // Sync screen redraws to the monitor refresh rate, to reduce screen
+    // tearing.
+    //
+    "vsync": true,
+
+    // Use a fixed framerate that is approx. equal to the native screen refresh
+    // rate. This is different from "fixedFramerate" because the actual frame
+    // rate is reported back to the game, ensuring correct timers. If the screen
+    // refresh rate cannot be determined, this option is force-disabled. This
+    // option may be force-disabled at build time.
+    //
+    "syncToRefreshrate": true,
+
+    // The game's frame rate, if "syncToRefreshrate" is false.
+    //
+    // "fixedFramerate": 60,
+
+
+
+    //==========================================================================
+    // Rendering and scaling.
+    // You shouldn't need to change any of these.
+    //==========================================================================
+
     // When resizing the game screen to fit the window, whether to scale up the
     // game screen by an integer amount (as large as the current window size
     // allows) before doing any last additional scalings to fill part/all of the
@@ -125,14 +153,67 @@
     //
     // "integerScalingLastMile": true,
 
-    // Whether to apply linear interpolation when the game screen is upscaled.
+    // What kind of smooth interpolation to apply when the game screen is
+    // upscaled.
+    // 0: Nearest-Neighbor (default)
+    // 1: Bilinear
+    // 2: Bicubic
+    // 3: Lanczos3
+    // 4: xBRZ
     //
-    // "smoothScaling": false,
+    // "smoothScaling": 0,
 
-    // Whether to apply Lanczos3 interpolation when the game screen is upscaled
-    // (typically higher quality than the linear smoothScaling).
+    // What kind of smooth interpolation to apply when the game screen is
+    // downscaled.
+    // This has the same possible values and default as smoothScaling.
     //
-    // "lanczos3Scaling": false,
+    // "smoothScalingDown": 0,
+
+    // What kind of smooth interpolation to apply when bitmaps are upscaled.
+    // This has the same possible values and default as smoothScaling.
+    //
+    // "bitmapSmoothScaling": 0,
+
+    // What kind of smooth interpolation to apply when bitmaps are downscaled.
+    // This has the same possible values and default as smoothScaling.
+    //
+    // "bitmapSmoothScalingDown": 0,
+
+    // Whether mipmap interpolation is applied when the game screen or bitmaps
+    // are downscaled. This requires "smoothScalingDown" to be 1 or
+    // "bitmapSmoothScalingDown" to be 1.
+    //
+    // "smoothScalingMipmaps": false,
+
+    // The sharpness factor used when bicubic scaling is applied to something.
+    // A good starting value is 0 to 100, but you may wish to go outside that
+    // value in either direction.
+    //
+    // "bicubicSharpness": 100,
+
+    // The scaling factor for xBRZ interpolation. Set this to at least the ratio
+    // of your window size to the game's native resolution.
+    //
+    // "xbrzScalingFactor": 1.0,
+
+    // Prefer the use of Metal over OpenGL on macOS.
+    // This defaults to false under Intel machines, and true under ARM/Apple
+    // Silicon ones (which merely emulate OpenGL anyway).
+    // Try changing this if you have graphics problems. Metal is far better, but
+    // ANGLE may not initialize correctly on some Intel machines.
+    // On Apple Silicon it's probably better to not touch it. Emulated OpenGL is
+    // buggy, and it will also break things like the Steam overlay.
+    //
+    // "preferMetalRenderer": true,
+
+    // Enable framebuffer blitting if the driver is capable of it. Some drivers
+    // carry buggy implementations of this functionality, so disabling it can be
+    // used as a workaround.
+    // This defaults to false on Windows, and true on other systems.
+    // Force-disabled when smoothScaling or smoothScalingDown isn't
+    // Nearest-Neighbor or Bilinear.
+    //
+    // "enableBlitting": false,
 
     // Workaround for buggy graphics drivers that don't properly synchronize
     // texture access. This is most apparent when text doesn't show up or the
@@ -140,20 +221,37 @@
     //
     "subImageFix": true,
 
-    // Sync screen redraws to the monitor refresh rate, to reduce screen
-    // tearing.
+    // Limit the maximum size (width, height) of most textures mkxp will create
+    // (exceptions are rendering backbuffers and similar).
+    // If set to 0, the hardware maximum is used.
+    // This is useful for recording traces that can be played back on machines
+    // with lower specs.
     //
-    "vsync": true,
+    // "maxTextureSize": 0,
 
-    // Use a fixed framerate that is approx. equal to the native screen refresh
-    // rate. This is different from "fixedFramerate" because the actual frame
-    // rate is reported back to the game, ensuring correct timers. If the screen
-    // refresh rate cannot be determined, this option is force-disabled. This
-    // option may be force-disabled at build time.
-    //
-    "syncToRefreshrate": true,
+    // Controls the algorithm for reporting the height of rendered text.
+    // 0: Nominal (TTF_FontHeight); matches RGSS behavior; may cut off bottoms
+    //    of some characters.
+    // 1: Rendered (TTF_SizeUTF8); deviates from RGSS; may look better.
+    // (default: 0)
+    "fontHeightReporting": 1,
 
-    // The game's frame rate, if "syncToRefreshrate" is false.
+    // A list of fonts to render without alpha blending.
     //
-    // "fixedFramerate": 60,
+    // "solidFonts": [
+    //     "Arial",
+    //     "Times New Roman",
+    // ],
+
+    // Font substitutions allow drop-in replacements of fonts to be used without
+    // changing the RGSS scripts, e.g. providing 'Liberation Sans' when the game
+    // thinks it's using 'Arial'. Font family to be substituted and replacement
+    // family are separated by one sole '>'. Be careful not to include any
+    // spaces.
+    // This is not connected to the built-in font, which is always used when a
+    // non-existing font family is requested by RGSS.
+    //
+    "fontSub": [
+        "Arial>Liberation Sans"
+    ],
 }

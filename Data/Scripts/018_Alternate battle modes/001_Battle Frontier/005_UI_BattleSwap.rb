@@ -9,7 +9,7 @@ class BattleSwapScene
     @rentals = rentals
     @mode = 0   # rental (pick 3 out of 6 initial Pokémon)
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @sprites = {}
     addBackgroundPlane(@sprites, "bg", "rentbg", @viewport)
     @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
@@ -35,7 +35,7 @@ class BattleSwapScene
     @newPokemon = newPokemon
     @mode = 1   # swap (pick 1 out of 3 opponent's Pokémon to take)
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @sprites = {}
     addBackgroundPlane(@sprites, "bg", "swapbg", @viewport)
     @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
@@ -65,7 +65,7 @@ class BattleSwapScene
     @mode = 1
   end
 
-  # End the scene here
+  # End the scene here.
   def pbEndScene
     pbFadeOutAndHide(@sprites) { pbUpdate }
     pbDisposeSpriteHash(@sprites)
@@ -93,7 +93,7 @@ class BattleSwapScene
     return commands
   end
 
-  # Processes the scene
+  # Processes the scene.
   def pbChoosePokemon(canCancel)
     pbActivateWindow(@sprites, "list") do
       loop do
@@ -146,9 +146,8 @@ class BattleSwapScene
 
   def pbSummary(list, index)
     visibleSprites = pbFadeOutAndHide(@sprites) { pbUpdate }
-    scene = PokemonSummary_Scene.new
-    screen = PokemonSummaryScreen.new(scene)
-    @sprites["list"].index = screen.pbStartScreen(list, index)
+    screen = UI::PokemonSummary.new(list, index).main
+    @sprites["list"].index = screen.result
     pbFadeInAndShow(@sprites, visibleSprites) { pbUpdate }
   end
 

@@ -70,11 +70,13 @@ class Pokemon
   # @return [Integer] the map ID where egg was hatched (0 by default)
   attr_accessor :hatched_map
   # Another Pokémon which has been fused with this Pokémon (or nil if there is none).
-  # Currently only used by Kyurem, to record a fused Reshiram or Zekrom.
+  # Currently only used by Kyurem, Necrozma and Calyrex.
   # @return [Pokemon, nil] the Pokémon fused into this one (nil if there is none)
   attr_accessor :fused
   # @return [Integer] this Pokémon's personal ID
   attr_accessor :personalID
+  # A number used by certain species to evolve.
+  attr_writer :evolution_counter
   # Used by Galarian Yamask to remember that it took sufficient damage from a
   # battle and can evolve.
   attr_accessor :ready_to_evolve
@@ -92,7 +94,7 @@ class Pokemon
   # Max EVs that a single stat can have
   EV_STAT_LIMIT = 252
   # Maximum length a Pokémon's nickname can be
-  MAX_NAME_SIZE = 10
+  MAX_NAME_SIZE = 12
   # Maximum number of moves a Pokémon can know at once
   MAX_MOVES     = 4
 
@@ -114,34 +116,44 @@ class Pokemon
     return GameData::Species.get_species_form(@species, form_simple)
   end
 
-  #=============================================================================
-  # Species and form
-  #=============================================================================
+  def evolution_counter
+    @evolution_counter ||= 0
+    return @evolution_counter
+  end
+
+  #-----------------------------------------------------------------------------
+  # Species and form.
+  #-----------------------------------------------------------------------------
 
   # Changes the Pokémon's species and re-calculates its statistics.
   # @param species_id [Symbol, String, GameData::Species] ID of the species to change this Pokémon to
   def species=(species_id)
     new_species_data = GameData::Species.get(species_id)
     return if @species == new_species_data.species
-    @species     = new_species_data.species
+    @species           = new_species_data.species
     default_form = new_species_data.default_form
     if default_form >= 0
-      @form      = default_form
+      @form            = default_form
     elsif new_species_data.form > 0
-      @form      = new_species_data.form
+      @form            = new_species_data.form
     end
-    @forced_form = nil
-    @gender      = nil if singleGendered?
-    @level       = nil   # In case growth rate is different for the new species
-    @ability     = nil
+    @forced_form       = nil
+    @gender            = nil if singleGendered?
+    @level             = nil   # In case growth rate is different for the new species
+    @ability           = nil
+    @evolution_counter = 0   # This counter is species-specific
     calc_stats
   end
 
   # @param check_species [Symbol, String, GameData::Species] ID of the species to check for
   # @return [Boolean] whether this Pokémon is of the specified species
-  def isSpecies?(check_species)
-    return @species == check_species || (GameData::Species.exists?(check_species) &&
-                                        @species == GameData::Species.get(check_species).species)
+  def isSpecies?(*check_species)
+    return true if check_species.include?(@species)
+    check_species.each do |check_sp|
+      return true if GameData::Species.exists?(check_sp) &&
+                     @species == GameData::Species.get(check_sp).species
+    end
+    return false
   end
 
   def form
@@ -183,9 +195,9 @@ class Pokemon
     calc_stats
   end
 
-  #=============================================================================
-  # Level
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Level.
+  #-----------------------------------------------------------------------------
 
   # @return [Integer] this Pokémon's level
   def level
@@ -237,16 +249,18 @@ class Pokemon
     return (@exp - start_exp).to_f / (end_exp - start_exp)
   end
 
-  #=============================================================================
-  # Status
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Status.
+  #-----------------------------------------------------------------------------
 
   # Sets the Pokémon's health.
   # @param value [Integer] new HP value
   def hp=(value)
     @hp = Supplementals::ALLOW_HP_LAYERS ? [0, value].max : value.clamp(0, @totalhp)
-    heal_status if @hp == 0
-    @ready_to_evolve = false if @hp == 0
+    return if @hp > 0
+    heal_status
+    @ready_to_evolve = false
+    @evolution_counter = 0 if isSpecies?(:BASCULIN) || isSpecies?(:YAMASK)
   end
 
   # Sets this Pokémon's status. See {GameData::Status} for all possible status effects.
@@ -305,25 +319,28 @@ class Pokemon
     @ready_to_evolve = false
   end
 
-  #=============================================================================
-  # Types
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Stats.
+  #-----------------------------------------------------------------------------
+  def stat(id)
+    case id
+    when :HP              then return @totalhp
+    when :ATTACK          then return @attack
+    when :DEFENSE         then return @defense
+    when :SPECIAL_ATTACK  then return @spatk
+    when :SPECIAL_DEFENSE then return @spdef
+    when :SPEED           then return @speed
+    end
+    return 0
+  end
+
+  #-----------------------------------------------------------------------------
+  # Types.
+  #-----------------------------------------------------------------------------
 
   # @return [Array<Symbol>] an array of this Pokémon's types
   def types
     return species_data.types.clone
-  end
-
-  # @deprecated This method is slated to be removed in v22.
-  def type1
-    Deprecation.warn_method("type1", "v22", "pkmn.types")
-    return types[0]
-  end
-
-  # @deprecated This method is slated to be removed in v22.
-  def type2
-    Deprecation.warn_method("type2", "v22", "pkmn.types")
-    return types[1] || types[0]
   end
 
   # @param type [Symbol, String, GameData::Type] type to check
@@ -333,9 +350,9 @@ class Pokemon
     return self.types.include?(type)
   end
 
-  #=============================================================================
-  # Gender
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Gender.
+  #-----------------------------------------------------------------------------
 
   # @return [0, 1, 2] this Pokémon's gender (0 = male, 1 = female, 2 = genderless)
   def gender
@@ -382,9 +399,9 @@ class Pokemon
     return species_data.single_gendered?
   end
 
-  #=============================================================================
-  # Shininess
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Shininess.
+  #-----------------------------------------------------------------------------
 
   # @return [Boolean] whether this Pokémon is shiny (differently colored)
   def shiny?
@@ -417,9 +434,9 @@ class Pokemon
     @shiny = true if @super_shiny
   end
 
-  #=============================================================================
-  # Ability
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ability.
+  #-----------------------------------------------------------------------------
 
   # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
   # hidden abilities) as defined for its species/form. An ability may not be
@@ -489,9 +506,9 @@ class Pokemon
     return ret
   end
 
-  #=============================================================================
-  # Nature
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Nature.
+  #-----------------------------------------------------------------------------
 
   # @return [GameData::Nature, nil] a Nature object corresponding to this Pokémon's nature
   def nature
@@ -544,9 +561,9 @@ class Pokemon
     return self.nature == check_nature
   end
 
-  #=============================================================================
-  # Items
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Items.
+  #-----------------------------------------------------------------------------
 
   # @return [GameData::Item, nil] an Item object corresponding to this Pokémon's item
   def item
@@ -563,6 +580,7 @@ class Pokemon
   def item=(value)
     return if value && !GameData::Item.exists?(value)
     @item = (value) ? GameData::Item.get(value).id : value
+    @mail = nil if @item.nil?
   end
 
   # Returns whether this Pokémon is holding an item. If an item id is passed,
@@ -596,11 +614,12 @@ class Pokemon
       raise ArgumentError, _INTL("Invalid value {1} given", mail.inspect)
     end
     @mail = mail
+    @item = mail&.item
   end
 
-  #=============================================================================
-  # Moves
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Moves.
+  #-----------------------------------------------------------------------------
 
   # @return [Integer] the number of moves known by the Pokémon
   def numMoves
@@ -627,7 +646,7 @@ class Pokemon
     # Find all level-up moves that self could have learned
     moveset = self.getMoveList
     knowable_moves = []
-    moveset.each { |m| knowable_moves.push(m[1]) if m[0] <= this_level }
+    moveset.each { |m| knowable_moves.push(m[1]) if m[0] >= 0 && m[0] <= this_level }
     # Remove duplicates (retaining the latest copy of each move)
     knowable_moves = knowable_moves.reverse
     knowable_moves |= []
@@ -639,6 +658,7 @@ class Pokemon
     (first_move_index...knowable_moves.length).each do |i|
       @moves.push(Pokemon::Move.new(knowable_moves[i]))
     end
+    MultipleForms.call("onResetMoves", self)
   end
 
   # Silently learns the given move. Will erase the first known move if it has to.
@@ -647,12 +667,15 @@ class Pokemon
     move_data = GameData::Move.try_get(move_id)
     return if !move_data
     # Check if self already knows the move; if so, move it to the end of the array
+    added = false
     @moves.each_with_index do |m, i|
       next if m.id != move_data.id
       @moves.push(m)
       @moves.delete_at(i)
-      return
+      added = true
+      break
     end
+    return if added
     # Move is not already known; learn it
     @moves.push(Pokemon::Move.new(move_data.id))
     # Delete the first known move if self now knows more moves than it should
@@ -722,9 +745,9 @@ class Pokemon
     return false
   end
 
-  #=============================================================================
-  # Ribbons
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ribbons.
+  #-----------------------------------------------------------------------------
 
   # @return [Integer] the number of ribbons this Pokémon has
   def numRibbons
@@ -783,9 +806,9 @@ class Pokemon
     @ribbons.clear
   end
 
-  #=============================================================================
-  # Pokérus
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Pokérus.
+  #-----------------------------------------------------------------------------
 
   # @return [Integer] the Pokérus infection stage for this Pokémon
   def pokerusStrain
@@ -831,9 +854,9 @@ class Pokemon
     @pokerus -= @pokerus % 16
   end
 
-  #=============================================================================
-  # Ownership, obtained information
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Ownership, obtained information.
+  #-----------------------------------------------------------------------------
 
   # Changes this Pokémon's owner.
   # @param new_owner [Owner] the owner to change to
@@ -870,13 +893,19 @@ class Pokemon
     @timeEggHatched = value.to_i
   end
 
-  #=============================================================================
-  # Other
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Other.
+  #-----------------------------------------------------------------------------
 
   # @return [String] the name of this Pokémon
   def name
-    return (nicknamed?) ? @name : speciesName
+    return @name if nicknamed?
+    ret = speciesName.clone
+    if [:NIDORANfE, :NIDORANmA].include?(@species)
+      ret.gsub!(/♂$/, "")
+      ret.gsub!(/♀$/, "")
+    end
+    return ret
   end
 
   # @param value [String] the nickname of this Pokémon
@@ -888,6 +917,10 @@ class Pokemon
   # @return [Boolean] whether this Pokémon has been nicknamed
   def nicknamed?
     return @name && !@name.empty?
+  end
+
+  def can_change_nickname?
+    return !egg? && !foreign? && !shadowPokemon?
   end
 
   # @return [String] the species name of this Pokémon
@@ -936,6 +969,12 @@ class Pokemon
       gain = [5, 4, 3][happiness_range]
     when "groom"
       gain = [10, 10, 4][happiness_range]
+    when "massage1"
+      gain = 10
+    when "massage2"
+      gain = 20
+    when "massage3"
+      gain = 40
     when "evberry"
       gain = [10, 5, 2][happiness_range]
     when "vitamin"
@@ -958,9 +997,11 @@ class Pokemon
       raise _INTL("Unknown happiness-changing method: {1}", method.to_s)
     end
     if gain > 0
-      gain += 1 if @obtain_map == $game_map.map_id
-      gain += 1 if @poke_ball == :LUXURYBALL
-      gain = (gain * 1.5).floor if hasItem?(:SOOTHEBELL)
+      if !["groom", "massage1", "massage2", "massage3"].include?(method)
+        gain += 1 if @obtain_map == $game_map.map_id
+        gain += 1 if @poke_ball == :LUXURYBALL
+        gain = (gain * 1.5).floor if hasItem?(:SOOTHEBELL)
+      end
       if Settings::APPLY_HAPPINESS_SOFT_CAP && method != "evberry"
         gain = (@happiness >= 179) ? 0 : gain.clamp(0, 179 - @happiness)
       end
@@ -968,14 +1009,25 @@ class Pokemon
     @happiness = (@happiness + gain).clamp(0, 255)
   end
 
-  #=============================================================================
-  # Evolution checks
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Evolution checks.
+  #-----------------------------------------------------------------------------
+
   # Checks whether this Pokemon can evolve because of levelling up.
   # @return [Symbol, nil] the ID of the species to evolve into
   def check_evolution_on_level_up
     return check_evolution_internal do |pkmn, new_species, method, parameter|
       success = GameData::Evolution.get(method).call_level_up(pkmn, parameter)
+      next (success) ? new_species : nil
+    end
+  end
+
+  # Checks whether this Pokemon can evolve because of levelling up in battle.
+  # This also checks call_level_up as above.
+  # @return [Symbol, nil] the ID of the species to evolve into
+  def check_evolution_on_battle_level_up
+    return check_evolution_internal do |pkmn, new_species, method, parameter|
+      success = GameData::Evolution.get(method).call_battle_level_up(pkmn, parameter)
       next (success) ? new_species : nil
     end
   end
@@ -1058,9 +1110,9 @@ class Pokemon
     return false
   end
 
-  #=============================================================================
-  # Stat calculations
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Stat calculations.
+  #-----------------------------------------------------------------------------
 
   # @return [Hash<Integer>] this Pokémon's base stats, a hash with six key/value pairs
   def baseStats
@@ -1105,9 +1157,7 @@ class Pokemon
     nature_mod = {}
     GameData::Stat.each_main { |s| nature_mod[s.id] = 100 }
     this_nature = self.nature_for_stats
-    if this_nature
-      this_nature.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
-    end
+    this_nature&.stat_changes.each { |change| nature_mod[change[0]] += change[1] }
     # Calculate stats
     stats = {}
     GameData::Stat.each_main do |s|
@@ -1127,9 +1177,9 @@ class Pokemon
     @speed   = stats[:SPEED]
   end
 
-  #=============================================================================
-  # Pokémon creation
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Pokémon creation.
+  #-----------------------------------------------------------------------------
 
   # Creates a copy of this Pokémon and returns it.
   # @return [Pokemon] a copy of this Pokémon

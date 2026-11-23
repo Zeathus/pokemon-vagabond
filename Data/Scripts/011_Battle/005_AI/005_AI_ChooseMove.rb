@@ -153,6 +153,7 @@ class Battle::AI
     end
     @battle.moldBreaker = @user.has_mold_breaker?
     @move.set_up(move)
+    @battle.moldBreaker ||= @user.has_active_ability?(:MYCELIUMMIGHT) && @move.statusMove?
   end
 
   # Set some extra class variables for the target being assessed.
@@ -166,6 +167,7 @@ class Battle::AI
         @battle.moldBreaker = @user.has_mold_breaker?
         mov = Battle::Move.from_pokemon_move(@battle, Pokemon::Move.new(@target.battler.lastRegularMoveUsed))
         @move.set_up(mov)
+        @battle.moldBreaker ||= @user.has_active_ability?(:MYCELIUMMIGHT) && @move.statusMove?
       end
     end
   end
@@ -194,22 +196,30 @@ class Battle::AI
   # Returns whether the move will definitely fail against the target (assuming
   # no battle conditions change between now and using the move).
   def pbPredictMoveFailureAgainstTarget
+    calc_type = @move.rough_type
+    typeMod = @move.move.pbCalcTypeMod(calc_type, @user.battler, @target.battler)
     # Move effect-specific checks
     return true if Battle::AI::Handlers.move_will_fail_against_target?(@move.function_code, @move, @user, @target, self, @battle)
     # Immunity to priority moves because of Psychic Terrain
     return true if @battle.field.terrain == :Psychic && @target.battler.affectedByTerrain? &&
                    @target.opposes?(@user) && @move.rough_priority(@user) > 0
     # Immunity because of ability
-    return true if @move.move.pbImmunityByAbility(@user.battler, @target.battler, false)
-    # Immunity because of Dazzling/Queenly Majesty
+    if @target.has_active_ability?(:WONDERGUARD) && !@target.being_mold_broken?
+      # NOTE: The Battle::AbilityEffects::MoveImmunity for Wonder Guard makes
+      #       use of target.damageState.typeMod, which isn't set by the AI, so
+      #       its triggering needs to be checked here instead of via
+      #       pbImmunityByAbility.
+      return true if move.damagingMove? && calc_type && !Effectiveness.super_effective?(typeMod)
+    else
+      return true if @move.move.pbImmunityByAbility(@user.battler, @target.battler, false)
+    end
+    # Immunity because of Dazzling/Queenly Majesty/Armor Tail
     if @move.rough_priority(@user) > 0 && @target.opposes?(@user)
       each_same_side_battler(@target.side) do |b, i|
-        return true if b.has_active_ability?([:DAZZLING, :QUEENLYMAJESTY])
+        return true if b.has_active_ability?([:DAZZLING, :QUEENLYMAJESTY, :ARMORTAIL])
       end
     end
     # Type immunity
-    calc_type = @move.rough_type
-    typeMod = @move.move.pbCalcTypeMod(calc_type, @user.battler, @target.battler)
     return true if @move.move.pbDamagingMove? && Effectiveness.ineffective?(typeMod)
     # Dark-type immunity to moves made faster by Prankster
     return true if Settings::MECHANICS_GENERATION >= 7 && @move.statusMove? &&
@@ -274,7 +284,7 @@ class Battle::AI
       # Modify the score according to the move's effect
       old_score = score
       score = Battle::AI::Handlers.apply_move_effect_score(@move.function_code,
-         score, @move, @user, self, @battle)
+                                                           score, @move, @user, self, @battle)
       PBDebug.log_score_change(score - old_score, "function code modifier (generic)")
       # Modify the score according to various other effects
       score = Battle::AI::Handlers.apply_general_move_score_modifiers(
@@ -303,7 +313,7 @@ class Battle::AI
       # Modify the score according to the move's effect against the target
       old_score = score
       score = Battle::AI::Handlers.apply_move_effect_against_target_score(@move.function_code,
-         MOVE_BASE_SCORE, @move, @user, @target, self, @battle)
+                                                                          score, @move, @user, @target, self, @battle)
       PBDebug.log_score_change(score - old_score, "function code modifier (against target)")
       # Modify the score according to various other effects against the target
       score = Battle::AI::Handlers.apply_general_move_against_target_score_modifiers(
@@ -345,7 +355,7 @@ class Battle::AI
         badMoves = user.can_attack?
         badMoves = true if !badMoves && pbAIRandom(100) < 25
       elsif max_score < MOVE_BASE_SCORE * move_score_threshold && user_battler.turnCount > 2
-        badMoves = true if pbAIRandom(100) < 80
+        badMoves = true if pbAIRandom(100) < 40
       end
       if badMoves
         PBDebug.log_ai("#{@user.name} wants to switch due to terrible moves")

@@ -36,15 +36,24 @@ class Game_Map
   REAL_RES_X  = TILE_WIDTH * X_SUBPIXELS
   REAL_RES_Y  = TILE_HEIGHT * Y_SUBPIXELS
 
+  def self.map_data_exists?(map_id)
+    return pbRgssExists?(pbMapFile(map_id, Supplementals::COMPRESS_MAPS))
+  end
+
+  def self.load_map_data(map_id)
+    return load_data(pbMapFile(map_id, Supplementals::COMPRESS_MAPS)) rescue nil
+  end
+
   def initialize
     @map_id = 0
     @display_x = 0
     @display_y = 0
+    @tile_animations = []
   end
 
   def setup(map_id)
     @map_id = map_id
-    @map = load_data(pbMapFile(map_id, Supplementals::COMPRESS_MAPS))
+    @map = Game_Map.load_map_data(@map_id)
     tileset = $data_tilesets[@map.tileset_id]
     updateTileset
     @fog_ox                  = 0
@@ -59,7 +68,7 @@ class Game_Map
     self.display_x           = 0
     self.display_y           = 0
     @need_refresh            = false
-    EventHandlers.trigger(:on_game_map_setup, map_id, @map, tileset)
+    EventHandlers.trigger(:on_game_map_setup, @map_id, @map, tileset)
     @events                  = {}
     @map.events.each_key do |i|
       @events[i]             = Game_Event.new(@map_id, @map.events[i], self)
@@ -139,9 +148,9 @@ class Game_Map
     return x >= -10 && x <= width + 10 && y >= -10 && y <= height + 10
   end
 
-  def passable?(x, y, d, self_event = nil)
+  def passable?(x, y, dir, self_event = nil)
     return false if !valid?(x, y)
-    bit = (1 << ((d / 2) - 1)) & 0x0f
+    bit = (1 << ((dir / 2) - 1)) & 0x0f
     events.each_value do |event|
       next if event.tile_id <= 0
       next if event == self_event
@@ -153,11 +162,11 @@ class Game_Map
       return false if passage & 0x0f == 0x0f
       return true if @priorities[event.tile_id] == 0
     end
-    return playerPassable?(x, y, d, self_event) if self_event == $game_player
+    return playerPassable?(x, y, dir, self_event) if self_event == $game_player
     # All other events
     newx = x
     newy = y
-    case d
+    case dir
     when 1
       newx -= 1
       newy += 1
@@ -189,14 +198,14 @@ class Game_Map
         break if @passages[facing_tile_id] & 0x0f == 0x0f
       end
     end
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
       next if self_event && self_event.character_name[/boulder/] && terrain.boulder_fillable
       # If already on water, only allow movement to another water tile
       if self_event && terrain.can_surf_freely
-        [2, 1, 0].each do |j|
-          facing_tile_id = data[newx, newy, j]
+        (data.zsize - 1).downto(0) do |layer2|
+          facing_tile_id = data[newx, newy, layer2]
           next if facing_tile_id == 0
           return false if facing_tile_id.nil?
           facing_terrain = GameData::TerrainTag.try_get(@terrain_tags[facing_tile_id])
@@ -210,8 +219,8 @@ class Game_Map
         return false
       elsif self_event && self_event.x == x && self_event.y == y
         # Can't walk onto ledges
-        [2, 1, 0].each do |j|
-          facing_tile_id = data[newx, newy, j]
+        (data.zsize - 1).downto(0) do |layer2|
+          facing_tile_id = data[newx, newy, layer2]
           next if facing_tile_id == 0
           return false if facing_tile_id.nil?
           facing_terrain = GameData::TerrainTag.try_get(@terrain_tags[facing_tile_id])
@@ -229,10 +238,10 @@ class Game_Map
     return true
   end
 
-  def playerPassable?(x, y, d, self_event = nil)
-    bit = (1 << ((d / 2) - 1)) & 0x0f
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+  def playerPassable?(x, y, dir, self_event = nil)
+    bit = (1 << ((dir / 2) - 1)) & 0x0f
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       next if tile_id == 0
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
       passage = @passages[tile_id]
@@ -258,7 +267,7 @@ class Game_Map
 
   # Returns whether the position x,y is fully passable (there is no blocking
   # event there, and the tile is fully passable in all directions).
-  def passableStrict?(x, y, d, self_event = nil)
+  def passableStrict?(x, y, dir, self_event = nil)
     return false if !valid?(x, y)
     events.each_value do |event|
       next if event == self_event || event.tile_id < 0 || event.through
@@ -267,8 +276,8 @@ class Game_Map
       return false if @passages[event.tile_id] & 0x0f != 0
       return true if @priorities[event.tile_id] == 0
     end
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       next if tile_id == 0
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
       next if terrain.ignore_passability
@@ -280,8 +289,8 @@ class Game_Map
   end
 
   def bush?(x, y)
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       next if tile_id == 0
       return false if GameData::TerrainTag.try_get(@terrain_tags[tile_id]).bridge &&
                       $PokemonGlobal.bridge > 0
@@ -291,8 +300,8 @@ class Game_Map
   end
 
   def deepBush?(x, y)
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       next if tile_id == 0
       terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
       return false if terrain.bridge && $PokemonGlobal.bridge > 0
@@ -302,8 +311,8 @@ class Game_Map
   end
 
   def counter?(x, y)
-    [2, 1, 0].each do |i|
-      tile_id = data[x, y, i]
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
       next if tile_id == 0
       passage = @passages[tile_id]
       return true if passage & 0x80 == 0x80
@@ -313,8 +322,8 @@ class Game_Map
 
   def terrain_tag(x, y, countBridge = false)
     if valid?(x, y)
-      [2, 1, 0].each do |i|
-        tile_id = data[x, y, i]
+      (data.zsize - 1).downto(0) do |layer|
+        tile_id = data[x, y, layer]
         next if tile_id == 0
         terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
         next if terrain.id == :None || terrain.ignore_passability
@@ -323,6 +332,20 @@ class Game_Map
       end
     end
     return GameData::TerrainTag.get(:None)
+  end
+
+  def real_map_and_coords_of(x, y)
+    return [self, x, y] if valid?(x, y)
+    return $map_factory&.getNewMap(x, y, @map_id)
+  end
+
+  def each_layer_terrain_tag_at(x, y)
+    (data.zsize - 1).downto(0) do |layer|
+      tile_id = data[x, y, layer]
+      next if tile_id == 0
+      terrain = GameData::TerrainTag.try_get(@terrain_tags[tile_id])
+      break if yield layer, terrain
+    end
   end
 
   # Unused.
@@ -336,8 +359,8 @@ class Game_Map
     return if @display_x == value
     @display_x = value
     if metadata&.snap_edges
-      max_x = (self.width - (Graphics.width.to_f / TILE_WIDTH)) * REAL_RES_X
-      @display_x = [0, [@display_x, max_x].min].max
+      max_x = (self.width * REAL_RES_X) - (Graphics.width * X_SUBPIXELS)
+      @display_x = [[@display_x, max_x].min, 0].max
     end
     $map_factory&.setMapsInRange
   end
@@ -346,8 +369,8 @@ class Game_Map
     return if @display_y == value
     @display_y = value
     if metadata&.snap_edges
-      max_y = (self.height - (Graphics.height.to_f / TILE_HEIGHT)) * REAL_RES_Y
-      @display_y = [0, [@display_y, max_y].min].max
+      max_y = (self.height * REAL_RES_Y) - (Graphics.height * Y_SUBPIXELS)
+      @display_y = [[@display_y, max_y].min, 0].max
     end
     $map_factory&.setMapsInRange
   end
@@ -438,13 +461,17 @@ class Game_Map
     set_tile(x, y, layer, 0)
   end
 
+  # instructions is an array of [frame, tile ID offset]
+  # start_offset is in seconds, not frames
+  def animate_tile(x, y, layer, instructions, timer_start = nil, start_offset = 0, fps = 20)
+    @tile_animations ||= []
+    return if @tile_animations.any? { |anim| anim.affects_tile?(x, y, layer) }
+    @tile_animations.push(TileAnimation.new(self, x, y, layer, instructions, timer_start, start_offset, fps))
+  end
+
   def refresh
-    @events.each_value do |event|
-      event.refresh
-    end
-    @common_events.each_value do |common_event|
-      common_event.refresh
-    end
+    @events.each_value { |event| event.refresh }
+    @common_events.each_value { |common_event| common_event.refresh }
     @need_refresh = false
   end
 
@@ -468,6 +495,11 @@ class Game_Map
       scroll_offset = lerp(0, @scroll_distance_y, duration, @scroll_timer_start, uptime_now)
       self.display_y = @scroll_start_y + (scroll_offset * REAL_RES_Y)
       @scroll_distance_y = 0 if scroll_offset == @scroll_distance_y
+    end
+    # Update tile animations
+    if @tile_animations
+      @tile_animations.each { |anim| anim.update }
+      @tile_animations.delete_if { |anim| anim.disposed? }
     end
     # Only update events that are on-screen
     if !$game_temp.in_menu
@@ -498,6 +530,50 @@ class Game_Map
         @fog_opacity_timer_start = nil
       end
     end
+  end
+end
+
+#===============================================================================
+# Animates 1 tile in 1 layer of a map, by changing its tile ID.
+# instructions is an array of [frame, tile ID offset].
+# start_offset is in seconds, not frames.
+#===============================================================================
+class Game_Map::TileAnimation
+  def initialize(map, x, y, layer, instructions, timer_start = nil, start_offset = 0, fps = 20)
+    @map = map
+    @x = x
+    @y = y
+    @layer = layer
+    @instructions = instructions
+    @timer_start = (timer_start || System.uptime) + start_offset
+    @fps = fps
+    @start_tile_id = @map.data[@x, @y, @layer]
+  end
+
+  def dispose
+    @disposed = true
+  end
+
+  def disposed?
+    return @disposed
+  end
+
+  def affects_tile?(test_x, test_y, test_layer)
+    return test_x == @s && test_y == @y && test_layer == @layer
+  end
+
+  def update
+    return if disposed?
+    time_now = System.uptime
+    return if time_now < @timer_start
+    this_frame = ((time_now - @timer_start) * @fps).to_i
+    @instructions.each_with_index do |instruction, i|
+      next if this_frame < instruction[0]   # Not started
+      next if instruction[2]   # Finished
+      @map.set_tile(@x, @y, @layer, @start_tile_id + instruction[1])
+      instruction[2] = true
+    end
+    dispose if @instructions.none? { |inst| inst[2] != true }
   end
 end
 

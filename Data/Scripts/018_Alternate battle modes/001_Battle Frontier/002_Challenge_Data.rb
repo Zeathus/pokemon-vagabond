@@ -36,17 +36,16 @@ end
 #
 #===============================================================================
 def pbEntryScreen(*arg)
-  retval = false
+  ret_val = false
   pbFadeOutIn do
-    scene = PokemonParty_Scene.new
-    screen = PokemonPartyScreen.new(scene, $player.party)
-    ret = screen.pbPokemonMultipleEntryScreenEx(pbBattleChallenge.rules.ruleset)
+    screen = UI::Party.new($player.party, mode: :choose_entry_order)
+    ret = screen.choose_pokemon_entry_order(pbBattleChallenge.rules.ruleset)
     # Set party
     pbBattleChallenge.setParty(ret) if ret
     # Continue (return true) if Pokémon were chosen
-    retval = (ret && ret.length > 0)
+    ret_val = (ret && ret.length > 0)
   end
-  return retval
+  return ret_val
 end
 
 #===============================================================================
@@ -154,7 +153,7 @@ class PBPokemon
   def initialize(species, item, nature, move1, move2, move3, move4, ev)
     @species = species
     itm = GameData::Item.try_get(item)
-    @item    = itm ? itm.id : nil
+    @item    = itm&.id
     @nature  = nature
     @move1   = move1
     @move2   = move2

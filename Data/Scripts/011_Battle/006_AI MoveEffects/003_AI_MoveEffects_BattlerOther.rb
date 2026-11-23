@@ -15,38 +15,40 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SleepTarget",
     next useless_score if target.faster_than?(user) &&
                           target.has_active_ability?(:HYDRATION) &&
                           [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanSleep?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next useless_score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 15
+      sleep_score = 8
       # Prefer if the user or an ally has a move/ability that is better if the target is asleep
       ai.each_same_side_battler(user.side) do |b, i|
-        score += 5 if b.has_move_with_function?("DoublePowerIfTargetAsleepCureTarget",
-                                                "DoublePowerIfTargetStatusProblem",
-                                                "HealUserByHalfOfDamageDoneIfTargetAsleep",
-                                                "StartDamageTargetEachTurnIfTargetAsleep")
-        score += 10 if b.has_active_ability?(:BADDREAMS)
+        sleep_score += 4 if b.has_move_with_function?("DoublePowerIfTargetAsleepCureTarget",
+                                                      "DoublePowerIfTargetStatusProblem",
+                                                      "HealUserByHalfOfDamageDoneIfTargetAsleep",
+                                                      "StartDamageTargetEachTurnIfTargetAsleep")
+        sleep_score += 8 if b.has_active_ability?(:BADDREAMS)
       end
       # Don't prefer if target benefits from having the sleep status problem
       # NOTE: The target's Guts/Quick Feet will benefit from the target being
       #       asleep, but the target won't (usually) be able to make use of
       #       them, so they're not worth considering.
-      score -= 10 if target.has_active_ability?(:EARLYBIRD)
-      score -= 8 if target.has_active_ability?(:MARVELSCALE)
+      sleep_score -= 5 if target.has_active_ability?(:EARLYBIRD)
+      sleep_score -= 4 if target.has_active_ability?(:MARVELSCALE)
       # Don't prefer if target has a move it can use while asleep
-      score -= 8 if target.check_for_move { |m| m.usableWhenAsleep? }
+      sleep_score -= 4 if target.check_for_move { |m| m.usableWhenAsleep? }
       # Don't prefer if the target can heal itself (or be healed by an ally)
       if target.has_active_ability?(:SHEDSKIN)
-        score -= 8
+        sleep_score -= 5
       elsif target.has_active_ability?(:HYDRATION) &&
             [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
-        score -= 15
+        sleep_score -= 8
       end
       ai.each_same_side_battler(target.side) do |b, i|
-        score -= 8 if i != target.index && b.has_active_ability?(:HEALER)
+        sleep_score -= 5 if i != target.index && b.has_active_ability?(:HEALER)
       end
+      sleep_score = (sleep_score > 0) ? [sleep_score + add_effect, 0].max : [sleep_score - add_effect, 0].min
+      score += sleep_score
     end
     next score
   }
@@ -104,44 +106,47 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("PoisonTarget",
     next useless_score if target.faster_than?(user) &&
                           target.has_active_ability?(:HYDRATION) &&
                           [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanPoison?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next useless_score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 15
-      # Prefer if the target is at high HP
-      if ai.trainer.has_skill_flag?("HPAware")
-        score += 15 * target.hp / target.totalhp
+      poison_score = 8
+      poison_score = 8 * target.hp / target.totalhp if ai.trainer.has_skill_flag?("HPAware")
+      if user.has_active_ability?(:POISONPUPPETEER)
+        poison_score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+           poison_score, move, user, target, ai, battle)
       end
       # Prefer if the user or an ally has a move/ability that is better if the target is poisoned
       ai.each_same_side_battler(user.side) do |b, i|
-        score += 5 if b.has_move_with_function?("DoublePowerIfTargetPoisoned",
-                                                "DoublePowerIfTargetStatusProblem")
-        score += 10 if b.has_active_ability?(:MERCILESS)
+        poison_score += 4 if b.has_move_with_function?("DoublePowerIfTargetPoisoned",
+                                                       "DoublePowerIfTargetStatusProblem")
+        poison_score += 5 if b.has_active_ability?(:MERCILESS)
       end
       # Don't prefer if target benefits from having the poison status problem
-      score -= 8 if target.has_active_ability?([:GUTS, :MARVELSCALE, :QUICKFEET, :TOXICBOOST])
-      score -= 25 if target.has_active_ability?(:POISONHEAL)
-      score -= 20 if target.has_active_ability?(:SYNCHRONIZE) &&
-                     user.battler.pbCanPoisonSynchronize?(target.battler)
-      score -= 5 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
-                                                   "CureUserBurnPoisonParalysis")
-      score -= 15 if target.check_for_move { |m|
+      poison_score -= 5 if target.has_active_ability?([:GUTS, :MARVELSCALE, :QUICKFEET, :TOXICBOOST])
+      poison_score -= 15 if target.has_active_ability?(:POISONHEAL)
+      poison_score -= 15 if target.has_active_ability?(:SYNCHRONIZE) &&
+                            user.battler.pbCanPoisonSynchronize?(target.battler)
+      poison_score -= 4 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
+                                                          "CureUserBurnPoisonParalysis")
+      poison_score -= 8 if target.check_for_move do |m|
         m.function_code == "GiveUserStatusToTarget" && user.battler.pbCanPoison?(target.battler, false, m)
-      }
+      end
       # Don't prefer if the target won't take damage from the poison
-      score -= 20 if !target.battler.takesIndirectDamage?
+      poison_score -= 10 if !target.battler.takesIndirectDamage?
       # Don't prefer if the target can heal itself (or be healed by an ally)
       if target.has_active_ability?(:SHEDSKIN)
-        score -= 8
+        poison_score -= 5
       elsif target.has_active_ability?(:HYDRATION) &&
             [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
-        score -= 15
+        poison_score -= 8
       end
       ai.each_same_side_battler(target.side) do |b, i|
-        score -= 8 if i != target.index && b.has_active_ability?(:HEALER)
+        poison_score -= 5 if i != target.index && b.has_active_ability?(:HEALER)
       end
+      poison_score = (poison_score > 0) ? [poison_score + add_effect, 0].max : [poison_score - add_effect, 0].min
+      score += poison_score
     end
     next score
   }
@@ -160,8 +165,34 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("PoisonTargetLowerTargetS
   proc { |score, move, user, target, ai, battle|
     poison_score = Battle::AI::Handlers.apply_move_effect_against_target_score("PoisonTarget",
        0, move, user, target, ai, battle)
-    score += poison_score if poison_score != Battle::AI::MOVE_USELESS_SCORE
+    if poison_score != Battle::AI::MOVE_USELESS_SCORE
+      score += poison_score
+      if user.has_active_ability?(:POISONPUPPETEER)
+        score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+           score, move, user, target, ai, battle)
+      end
+    end
     score = ai.get_score_for_target_stat_drop(score, target, move.move.statDown, false)
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("PoisonTargetRemoveUserBindingAndEntryHazards",
+  proc { |score, move, user, target, ai, battle|
+    poison_score = Battle::AI::Handlers.apply_move_effect_against_target_score("PoisonTarget",
+       0, move, user, target, ai, battle)
+    if poison_score != Battle::AI::MOVE_USELESS_SCORE
+      score += poison_score
+      if user.has_active_ability?(:POISONPUPPETEER)
+        score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+           score, move, user, target, ai, battle)
+      end
+    end
+    score = Battle::AI::Handlers.apply_move_effect_against_target_score("RemoveUserBindingAndEntryHazards",
+       0, move, user, target, ai, battle)
     next score
   }
 )
@@ -190,46 +221,48 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ParalyzeTarget",
     next useless_score if target.faster_than?(user) &&
                           target.has_active_ability?(:HYDRATION) &&
                           [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanParalyze?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next useless_score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference (because of the chance of full paralysis)
-      score += 10
+      paralyze_score = 8
       # Prefer if the target is faster than the user but will become slower if
       # paralysed
       if target.faster_than?(user)
         user_speed = user.rough_stat(:SPEED)
         target_speed = target.rough_stat(:SPEED)
-        score += 15 if target_speed < user_speed * ((Settings::MECHANICS_GENERATION >= 7) ? 2 : 4)
+        paralyze_score += 8 if target_speed < user_speed * ((Settings::MECHANICS_GENERATION >= 7) ? 2 : 4)
       end
       # Prefer if the target is confused or infatuated, to compound the turn skipping
-      score += 7 if target.effects[PBEffects::Confusion] > 1
-      score += 7 if target.effects[PBEffects::Attract] >= 0
+      paralyze_score += 4 if target.effects[PBEffects::Confusion] > 1
+      paralyze_score += 4 if target.effects[PBEffects::Attract] >= 0
       # Prefer if the user or an ally has a move/ability that is better if the target is paralysed
       ai.each_same_side_battler(user.side) do |b, i|
-        score += 5 if b.has_move_with_function?("DoublePowerIfTargetParalyzedCureTarget",
-                                                "DoublePowerIfTargetStatusProblem")
+        paralyze_score += 4 if b.has_move_with_function?("DoublePowerIfTargetParalyzedCureTarget",
+                                                         "DoublePowerIfTargetStatusProblem")
       end
       # Don't prefer if target benefits from having the paralysis status problem
-      score -= 8 if target.has_active_ability?([:GUTS, :MARVELSCALE, :QUICKFEET])
-      score -= 20 if target.has_active_ability?(:SYNCHRONIZE) &&
-                     user.battler.pbCanParalyzeSynchronize?(target.battler)
-      score -= 5 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
-                                                   "CureUserBurnPoisonParalysis")
-      score -= 15 if target.check_for_move { |m|
+      paralyze_score -= 5 if target.has_active_ability?([:GUTS, :MARVELSCALE, :QUICKFEET])
+      paralyze_score -= 15 if target.has_active_ability?(:SYNCHRONIZE) &&
+                              user.battler.pbCanParalyzeSynchronize?(target.battler)
+      paralyze_score -= 4 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
+                                                            "CureUserBurnPoisonParalysis")
+      paralyze_score -= 8 if target.check_for_move do |m|
         m.function_code == "GiveUserStatusToTarget" && user.battler.pbCanParalyze?(target.battler, false, m)
-      }
+      end
       # Don't prefer if the target can heal itself (or be healed by an ally)
       if target.has_active_ability?(:SHEDSKIN)
-        score -= 8
+        paralyze_score -= 5
       elsif target.has_active_ability?(:HYDRATION) &&
             [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
-        score -= 15
+        paralyze_score -= 8
       end
       ai.each_same_side_battler(target.side) do |b, i|
-        score -= 8 if i != target.index && b.has_active_ability?(:HEALER)
+        paralyze_score -= 5 if i != target.index && b.has_active_ability?(:HEALER)
       end
+      paralyze_score = (paralyze_score > 0) ? [paralyze_score + add_effect, 0].max : [paralyze_score - add_effect, 0].min
+      score += paralyze_score
     end
     next score
   }
@@ -253,6 +286,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("ParalyzeTarget",
 #
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("ParalyzeTarget",
+                                                        "ParalyzeTargetAlwaysHitsInRain",
                                                         "ParalyzeTargetAlwaysHitsInRainHitsTargetInSky")
 
 #===============================================================================
@@ -260,6 +294,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("ParalyzeTarget",
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ParalyzeFlinchTarget",
   proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     paralyze_score = Battle::AI::Handlers.apply_move_effect_against_target_score("ParalyzeTarget",
        0, move, user, target, ai, battle)
     flinch_score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
@@ -290,47 +325,57 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("BurnTarget",
     next useless_score if target.faster_than?(user) &&
                           target.has_active_ability?(:HYDRATION) &&
                           [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanBurn?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next useless_score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 15
+      burn_score = 8
       # Prefer if the target knows any physical moves that will be weaked by a burn
       if !target.has_active_ability?(:GUTS) && target.check_for_move { |m| m.physicalMove? }
-        score += 8
-        score += 8 if !target.check_for_move { |m| m.specialMove? }
+        burn_score += 4
+        burn_score += 4 if !target.check_for_move { |m| m.specialMove? }
       end
       # Prefer if the user or an ally has a move/ability that is better if the target is burned
       ai.each_same_side_battler(user.side) do |b, i|
-        score += 5 if b.has_move_with_function?("DoublePowerIfTargetStatusProblem")
+        burn_score += 4 if b.has_move_with_function?("DoublePowerIfTargetStatusProblem")
       end
       # Don't prefer if target benefits from having the burn status problem
-      score -= 8 if target.has_active_ability?([:FLAREBOOST, :GUTS, :MARVELSCALE, :QUICKFEET])
-      score -= 5 if target.has_active_ability?(:HEATPROOF)
-      score -= 20 if target.has_active_ability?(:SYNCHRONIZE) &&
-                     user.battler.pbCanBurnSynchronize?(target.battler)
-      score -= 5 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
-                                                   "CureUserBurnPoisonParalysis")
-      score -= 15 if target.check_for_move { |m|
+      burn_score -= 4 if target.has_active_ability?([:FLAREBOOST, :GUTS, :MARVELSCALE, :QUICKFEET])
+      burn_score -= 4 if target.has_active_ability?(:HEATPROOF)
+      burn_score -= 15 if target.has_active_ability?(:SYNCHRONIZE) &&
+                          user.battler.pbCanBurnSynchronize?(target.battler)
+      burn_score -= 4 if target.has_move_with_function?("DoublePowerIfUserPoisonedBurnedParalyzed",
+                                                        "CureUserBurnPoisonParalysis")
+      burn_score -= 8 if target.check_for_move do |m|
         m.function_code == "GiveUserStatusToTarget" && user.battler.pbCanBurn?(target.battler, false, m)
-      }
+      end
       # Don't prefer if the target won't take damage from the burn
-      score -= 20 if !target.battler.takesIndirectDamage?
+      burn_score -= 10 if !target.battler.takesIndirectDamage?
       # Don't prefer if the target can heal itself (or be healed by an ally)
       if target.has_active_ability?(:SHEDSKIN)
-        score -= 8
+        burn_score -= 5
       elsif target.has_active_ability?(:HYDRATION) &&
             [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
-        score -= 15
+        burn_score -= 8
       end
       ai.each_same_side_battler(target.side) do |b, i|
-        score -= 8 if i != target.index && b.has_active_ability?(:HEALER)
+        burn_score -= 5 if i != target.index && b.has_active_ability?(:HEALER)
       end
+      burn_score = (burn_score > 0) ? [burn_score + add_effect, 0].max : [burn_score - add_effect, 0].min
+      score += burn_score
     end
     next score
   }
 )
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveFailureAgainstTargetCheck.copy("BurnTarget",
+                                                         "BurnTargetAlwaysHitsInRain")
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("BurnTarget",
+                                                        "BurnTargetAlwaysHitsInRain")
 
 #===============================================================================
 #
@@ -342,6 +387,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("BurnTarget",
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("BurnFlinchTarget",
   proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     burn_score = Battle::AI::Handlers.apply_move_effect_against_target_score("BurnTarget",
        0, move, user, target, ai, battle)
     flinch_score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
@@ -372,33 +418,35 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("FreezeTarget",
     next useless_score if target.faster_than?(user) &&
                           target.has_active_ability?(:HYDRATION) &&
                           [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanFreeze?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next useless_score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 15
+      freeze_score = 8
       # Prefer if the user or an ally has a move/ability that is better if the target is frozen
       ai.each_same_side_battler(user.side) do |b, i|
-        score += 5 if b.has_move_with_function?("DoublePowerIfTargetStatusProblem")
+        freeze_score += 4 if b.has_move_with_function?("DoublePowerIfTargetStatusProblem")
       end
       # Don't prefer if target benefits from having the frozen status problem
       # NOTE: The target's Guts/Quick Feet will benefit from the target being
       #       frozen, but the target won't be able to make use of them, so
       #       they're not worth considering.
-      score -= 8 if target.has_active_ability?(:MARVELSCALE)
+      freeze_score -= 5 if target.has_active_ability?(:MARVELSCALE)
       # Don't prefer if the target knows a move that can thaw it
-      score -= 15 if target.check_for_move { |m| m.thawsUser? }
+      freeze_score -= 8 if target.check_for_move { |m| m.thawsUser? }
       # Don't prefer if the target can heal itself (or be healed by an ally)
       if target.has_active_ability?(:SHEDSKIN)
-        score -= 8
+        freeze_score -= 5
       elsif target.has_active_ability?(:HYDRATION) &&
             [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
-        score -= 15
+        freeze_score -= 8
       end
       ai.each_same_side_battler(target.side) do |b, i|
-        score -= 8 if i != target.index && b.has_active_ability?(:HEALER)
+        freeze_score -= 5 if i != target.index && b.has_active_ability?(:HEALER)
       end
+      freeze_score = (freeze_score > 0) ? [freeze_score + add_effect, 0].max : [freeze_score - add_effect, 0].min
+      score += freeze_score
     end
     next score
   }
@@ -421,6 +469,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("FreezeTarget",
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("FreezeFlinchTarget",
   proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     freeze_score = Battle::AI::Handlers.apply_move_effect_against_target_score("FreezeTarget",
        0, move, user, target, ai, battle)
     flinch_score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
@@ -440,6 +489,8 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("FreezeFlinchTarget",
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ParalyzeBurnOrFreezeTarget",
   proc { |score, move, user, target, ai, battle|
+    next score if target.effects[PBEffects::Substitute] > 0
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     # No score modifier if the status problem will be removed immediately
     next score if target.has_active_item?(:LUMBERRY)
     next score if target.faster_than?(user) &&
@@ -450,6 +501,35 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ParalyzeBurnOrFreezeTarg
       effect_score = Battle::AI::Handlers.apply_move_effect_against_target_score(function_code,
          0, move, user, target, ai, battle)
       score += effect_score / 3 if effect_score != Battle::AI::MOVE_USELESS_SCORE
+    end
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("PoisonParalyzeOrSleepTarget",
+  proc { |score, move, user, target, ai, battle|
+    next score if target.effects[PBEffects::Substitute] > 0
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
+    # No score modifier if the status problem will be removed immediately
+    next score if target.has_active_item?(:LUMBERRY)
+    next score if target.faster_than?(user) &&
+                  target.has_active_ability?(:HYDRATION) &&
+                  [:Rain, :HeavyRain].include?(target.battler.effectiveWeather)
+    # Scores for the possible effects
+    ["PoisonTarget", "ParalyzeTarget", "SleepTarget"].each do |function_code|
+      effect_score = Battle::AI::Handlers.apply_move_effect_against_target_score(function_code,
+         0, move, user, target, ai, battle)
+      if effect_score != Battle::AI::MOVE_USELESS_SCORE
+        score += effect_score / 3
+        if function_code == "PoisonTarget" && user.has_active_ability?(:POISONPUPPETEER)
+          confuse_score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+            0, move, user, target, ai, battle)
+          score += confuse_score / 3 if confuse_score != Battle::AI::MOVE_USELESS_SCORE
+        end
+      end
     end
     next score
   }
@@ -529,14 +609,15 @@ Battle::AI::Handlers::MoveEffectScore.add("CureUserPartyStatus",
 #===============================================================================
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("CureTargetBurn",
   proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     add_effect = move.get_score_change_for_additional_effect(user, target)
     next score if add_effect == -999   # Additional effect will be negated
     if target.status == :BURN
-      score -= add_effect
+      score += add_effect
       if target.wants_status_problem?(:BURN)
-        score += 15
+        score += 10
       else
-        score -= 10
+        score -= 8
       end
     end
     next score
@@ -576,17 +657,19 @@ Battle::AI::Handlers::MoveEffectScore.add("StartUserSideImmunityToInflictedStatu
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("FlinchTarget",
   proc { |score, move, user, target, ai, battle|
     next score if target.faster_than?(user) || target.effects[PBEffects::Substitute] > 0
-    next score if target.has_active_ability?(:INNERFOCUS) && !battle.moldBreaker
+    next score if target.has_active_ability?(:INNERFOCUS) && !target.being_mold_broken?
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     add_effect = move.get_score_change_for_additional_effect(user, target)
     next score if add_effect == -999   # Additional effect will be negated
-    score += add_effect
     # Inherent preference
-    score += 15
+    flinch_score = 8
     # Prefer if the target is paralysed, confused or infatuated, to compound the
     # turn skipping
-    score += 8 if target.status == :PARALYSIS ||
-                  target.effects[PBEffects::Confusion] > 1 ||
-                  target.effects[PBEffects::Attract] >= 0
+    flinch_score += 5 if target.status == :PARALYSIS ||
+                         target.effects[PBEffects::Confusion] > 1 ||
+                         target.effects[PBEffects::Attract] >= 0
+    flinch_score = (flinch_score > 0) ? [flinch_score + add_effect, 0].max : [flinch_score - add_effect, 0].min
+    score += flinch_score
     next score
   }
 )
@@ -611,9 +694,23 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("FlinchTarget",
 #===============================================================================
 #
 #===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("FlinchTargetFailsIfTargetNotUsingPriorityMove",
+  proc { |score, move, user, target, ai, battle|
+    next Battle::AI::MOVE_USELESS_SCORE if !target.check_for_move { |m| m.pbPriority(target.battler) > 0 }
+    score = Battle::AI::Handlers.apply_move_effect_against_target_score("FlinchTarget",
+       score, move, user, target, ai, battle)
+    # Inherent disfavour because target may not use a priority move
+    score -= 8
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
 Battle::AI::Handlers::MoveBasePower.add("FlinchTargetDoublePowerIfTargetInSky",
   proc { |power, move, user, target, ai, battle|
-    next move.move.pbBaseDamage(power, user.battler, target.battler)
+    next move.move.pbBasePower(power, user.battler, target.battler)
   }
 )
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("FlinchTarget",
@@ -631,20 +728,19 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ConfuseTarget",
   proc { |score, move, user, target, ai, battle|
     # No score modifier if the status problem will be removed immediately
     next score if target.has_active_item?(:PERSIMBERRY)
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanConfuse?(user.battler, false, move.move)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 10
-      # Prefer if the target is at high HP
-      if ai.trainer.has_skill_flag?("HPAware")
-        score += 20 * target.hp / target.totalhp
-      end
+      confuse_score = 8
+      confuse_score = 8 * target.hp / target.totalhp if ai.trainer.has_skill_flag?("HPAware")
       # Prefer if the target is paralysed or infatuated, to compound the turn skipping
-      score += 8 if target.status == :PARALYSIS || target.effects[PBEffects::Attract] >= 0
+      confuse_score += 5 if target.status == :PARALYSIS || target.effects[PBEffects::Attract] >= 0
       # Don't prefer if target benefits from being confused
-      score -= 15 if target.has_active_ability?(:TANGLEDFEET)
+      confuse_score -= 8 if target.has_active_ability?(:TANGLEDFEET)
+      confuse_score = (confuse_score > 0) ? [confuse_score + add_effect, 0].max : [confuse_score - add_effect, 0].min
+      score += confuse_score
     end
     next score
   }
@@ -659,6 +755,33 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.copy("ConfuseTarget",
 #===============================================================================
 #
 #===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ConfuseTargetCrashDamageIfFails",
+  proc { |score, move, user, target, ai, battle|
+    # Confuse score
+    score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+       score, move, user, target, ai, battle)
+    # Crash damage score
+    score = Battle::AI::Handlers.apply_move_effect_against_target_score("CrashDamageIfFails",
+       score, move, user, target, ai, battle)
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("ConfuseTargetIfTargetStatsRaisedThisTurn",
+  proc { |score, move, user, target, ai, battle|
+    confuse_score = Battle::AI::Handlers.apply_move_effect_against_target_score("ConfuseTarget",
+       0, move, user, target, ai, battle)
+    score += confuse_score / 3   # Less likely target will raise its stats
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
 Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("AttractTarget",
   proc { |move, user, target, ai, battle|
     next move.statusMove? && !target.battler.pbCanAttract?(user.battler, false)
@@ -666,19 +789,21 @@ Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("AttractTarget",
 )
 Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("AttractTarget",
   proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
     if target.battler.pbCanAttract?(user.battler, false)
       add_effect = move.get_score_change_for_additional_effect(user, target)
       next score if add_effect == -999   # Additional effect will be negated
-      score += add_effect
       # Inherent preference
-      score += 15
+      attract_score = 8
       # Prefer if the target is paralysed or confused, to compound the turn skipping
-      score += 8 if target.status == :PARALYSIS || target.effects[PBEffects::Confusion] > 1
+      attract_score += 5 if target.status == :PARALYSIS || target.effects[PBEffects::Confusion] > 1
       # Don't prefer if the target can infatuate the user because of this move
-      score -= 15 if target.has_active_item?(:DESTINYKNOT) &&
-                     user.battler.pbCanAttract?(target.battler, false)
+      attract_score -= 10 if target.has_active_item?(:DESTINYKNOT) &&
+                             user.battler.pbCanAttract?(target.battler, false)
       # Don't prefer if the user has another way to infatuate the target
-      score -= 15 if move.statusMove? && user.has_active_ability?(:CUTECHARM)
+      attract_score -= 8 if move.statusMove? && user.has_active_ability?(:CUTECHARM)
+      attract_score = (attract_score > 0) ? [attract_score + add_effect, 0].max : [attract_score - add_effect, 0].min
+      score += attract_score
     end
     next score
   }
@@ -938,6 +1063,15 @@ Battle::AI::Handlers::MoveFailureCheck.add("UserLosesFireType",
 #===============================================================================
 #
 #===============================================================================
+Battle::AI::Handlers::MoveFailureCheck.add("UserLosesElectricType",
+  proc { |move, user, ai, battle|
+    next !user.has_type?(:ELECTRIC)
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
 Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("SetTargetAbilityToSimple",
   proc { |move, user, target, ai, battle|
     next true if !GameData::Ability.exists?(:SIMPLE)
@@ -988,7 +1122,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SetTargetAbilityToInsomn
 #===============================================================================
 Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("SetUserAbilityToTargetAbility",
   proc { |move, user, target, ai, battle|
-    next true if user.battler.unstoppableAbility?
+    next true if user.battler.unlosableAbility?
     next move.move.pbFailsAgainstTarget?(user.battler, target.battler, false)
   }
 )
@@ -1001,6 +1135,34 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SetUserAbilityToTargetAb
       score += 5 * [old_ability_rating - new_ability_rating, 3].max
     elsif old_ability_rating < new_ability_rating
       score -= 5 * [new_ability_rating - old_ability_rating, 3].max
+    end
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("SetUserAndAlliesAbilityToTargetAbility",
+  proc { |move, user, target, ai, battle|
+    next true if user.battler.unlosableAbility? &&
+                 user.battler.allAllies.none? { |ally| !ally.unlosableAbility? }
+    move.move.pbDetermineValidTargets(user.battler)
+    next move.move.pbFailsAgainstTarget?(user.battler, target.battler, false)
+  }
+)
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SetUserAndAlliesAbilityToTargetAbility",
+  proc { |score, move, user, target, ai, battle|
+    next Battle::AI::MOVE_USELESS_SCORE if !user.ability_active?
+    ai.each_same_side_battler(user.side) do |battler, i|
+      next if battler.battler.unlosableAbility? || battler.ability_id == target.ability_id
+      old_ability_rating = battler.wants_ability?(battler.ability_id)
+      new_ability_rating = battler.wants_ability?(target.ability_id)
+      if old_ability_rating > new_ability_rating
+        score += 5 * [old_ability_rating - new_ability_rating, 3].max
+      elsif old_ability_rating < new_ability_rating
+        score -= 5 * [new_ability_rating - old_ability_rating, 3].max
+      end
     end
     next score
   }
@@ -1037,8 +1199,8 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("SetTargetAbilityToUserAb
 #===============================================================================
 Battle::AI::Handlers::MoveFailureAgainstTargetCheck.add("UserTargetSwapAbilities",
   proc { |move, user, target, ai, battle|
-    next true if !user.ability || user.battler.unstoppableAbility? ||
-                 user.battler.ungainableAbility? || user.ability_id == :WONDERGUARD
+    next true if !user.ability || user.battler.unlosableAbility? ||
+                 user.battler.ungainableAbility?
     next move.move.pbFailsAgainstTarget?(user.battler, target.battler, false)
   }
 )
@@ -1112,6 +1274,19 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("NegateTargetAbilityIfTar
 #===============================================================================
 #
 #===============================================================================
+Battle::AI::Handlers::MoveEffectScore.add("UserVulnerableUntilNextAction",
+  proc { |score, move, user, ai, battle|
+    # Don't prefer if user is at a low HP (and more likely to be KO'd by the extra damage)
+    if ai.trainer.has_skill_flag?("HPAware")
+      score -= 10 if user.hp < user.totalhp / 2
+    end
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
 Battle::AI::Handlers::MoveFailureCheck.add("StartUserAirborne",
   proc { |move, user, ai, battle|
     next true if user.has_active_item?(:IRONBALL)
@@ -1125,7 +1300,7 @@ Battle::AI::Handlers::MoveEffectScore.add("StartUserAirborne",
   proc { |score, move, user, ai, battle|
     # Move is useless if user is already airborne
     if user.has_type?(:FLYING) ||
-       user.has_active_ability?(:LEVITATE) ||
+       user.has_airborne_ability? ||
        user.has_active_item?(:AIRBALLOON) ||
        user.effects[PBEffects::Telekinesis] > 0
       next Battle::AI::MOVE_USELESS_SCORE
@@ -1158,7 +1333,7 @@ Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("StartTargetAirborneAndAl
   proc { |score, move, user, target, ai, battle|
     # Move is useless if the target is already airborne
     if target.has_type?(:FLYING) ||
-       target.has_active_ability?(:LEVITATE) ||
+       target.has_airborne_ability? ||
        target.has_active_item?(:AIRBALLOON)
       next Battle::AI::MOVE_USELESS_SCORE
     end
@@ -1259,6 +1434,20 @@ Battle::AI::Handlers::MoveEffectScore.add("StartGravity",
                                     "TwoTurnAttackInvulnerableInSkyTargetCannotAct")
         score += (user.opposes?(b)) ? 10 : -10
       end
+    end
+    next score
+  }
+)
+
+#===============================================================================
+#
+#===============================================================================
+Battle::AI::Handlers::MoveEffectAgainstTargetScore.add("StartSaltCureTarget",
+  proc { |score, move, user, target, ai, battle|
+    next score if move.move.addlEffect > 0 && !target.battler.affectedByAdditionalEffects?
+    if !target.effects[PBEffects::SaltCure]
+      score += 8
+      score += 5 if target.has_type?(:STEEL) || target.has_type?(:WATER)
     end
     next score
   }

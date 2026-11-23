@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 module GameData
   class Species
     attr_reader :id
@@ -78,7 +81,7 @@ module GameData
       ret["Happiness"]        = [:happiness,          "u"]
       ret["Abilities"]        = [:abilities,          "*e", :Ability]
       ret["HiddenAbilities"]  = [:hidden_abilities,   "*e", :Ability]
-      ret["Moves"]            = [:moves,              "*ue", nil, :Move]
+      ret["Moves"]            = [:moves,              "*ie", nil, :Move]
       ret["TutorMoves"]       = [:tutor_moves,        "*e", :Move]
       ret["EggMoves"]         = [:egg_moves,          "*e", :Move]
       ret["EggGroups"]        = [:egg_groups,         "*e", :EggGroup]
@@ -167,11 +170,17 @@ module GameData
       DATA.each_value { |species| yield species if species.form == 0 }
     end
 
+    def self.each_form_for_species(this_species)
+      DATA.each_value { |species| yield species if species.species == this_species }
+    end
+
     def self.species_count
       ret = 0
       self.each_species { |species| ret += 1 }
       return ret
     end
+
+    #---------------------------------------------------------------------------
 
     def initialize(hash)
       @id                 = hash[:id]
@@ -265,8 +274,8 @@ module GameData
       return @flags.any? { |f| f.downcase == flag.downcase }
     end
 
-    def apply_metrics_to_sprite(sprite, index, shadow = false)
-      metrics_data = GameData::SpeciesMetrics.get_species_form(@species, @form)
+    def apply_metrics_to_sprite(sprite, index, shadow = false, metrics_data = nil)
+      metrics_data ||= GameData::SpeciesMetrics.get_species_form(@species, @form)
       metrics_data.apply_metrics_to_sprite(sprite, index, shadow)
     end
 
@@ -382,7 +391,9 @@ module GameData
         return 1 if !prevo_data.incense.nil?
         prevo_min_level = prevo_data.minimum_level
         evo_method_data = GameData::Evolution.get(evo[1])
-        return prevo_min_level if evo_method_data.level_up_proc.nil? && evo_method_data.id != :Shedinja
+        return prevo_min_level if evo_method_data.level_up_proc.nil? &&
+                                  evo_method_data.battle_level_up_proc.nil? &&
+                                  evo_method_data.id != :Shedinja
         any_level_up = evo_method_data.any_level_up
         return (any_level_up) ? prevo_min_level + 1 : evo[2]
       end

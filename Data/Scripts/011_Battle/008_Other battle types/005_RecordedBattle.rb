@@ -55,9 +55,6 @@ module RecordedBattleModule
     @properties["party2starts"]    = Marshal.dump(@party2starts)
     @properties["weather"]         = @field.weather
     @properties["weatherDuration"] = @field.weatherDuration
-    @properties["canRun"]          = @canRun
-    @properties["switchStyle"]     = @switchStyle
-    @properties["showAnims"]       = @showAnims
     @properties["items"]           = Marshal.dump(@items)
     @properties["backdrop"]        = @backdrop
     @properties["backdropBase"]    = @backdropBase
@@ -144,7 +141,7 @@ module RecordedBattlePlaybackModule
     RUN     = 3
   end
 
-  def initialize(scene, battle)
+  def initialize(visuals, battle)
     @battletype  = battle[0]
     @properties  = battle[1]
     @rounds      = battle[2]
@@ -153,7 +150,7 @@ module RecordedBattlePlaybackModule
     @roundindex  = -1
     @randomindex = 0
     @switchindex = 0
-    super(scene,
+    super(visuals,
        Marshal.restore(@properties["party1"]),
        Marshal.restore(@properties["party2"]),
        RecordedBattle::PlaybackHelper.pbCreateTrainerInfo(@properties["player"]),
@@ -167,9 +164,6 @@ module RecordedBattlePlaybackModule
     @internalBattle        = @properties["internalBattle"]
     @field.weather         = @properties["weather"]
     @field.weatherDuration = @properties["weatherDuration"]
-    @canRun                = @properties["canRun"]
-    @switchStyle           = @properties["switchStyle"]
-    @showAnims             = @properties["showAnims"]
     @backdrop              = @properties["backdrop"]
     @backdropBase          = @properties["backdropBase"]
     @time                  = @properties["time"]

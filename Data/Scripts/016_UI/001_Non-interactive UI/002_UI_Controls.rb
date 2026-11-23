@@ -6,8 +6,10 @@
 #      pbEventScreen(ButtonEventScene)
 #==============================================================================
 class ButtonEventScene < EventScene
+  FADE_DURATION = 8   # In 1/20 of a second
+
   def initialize(viewport = nil)
-    super
+    super(viewport)
     Graphics.freeze
     @current_screen = 1
     addImage(0, 0, "Graphics/UI/Controls help/bg")
@@ -16,26 +18,24 @@ class ButtonEventScene < EventScene
     @keys = []
     @key_screens = []
 
-    addImageForScreen(1, 44, 122, _INTL("Graphics/UI/Controls help/help_f1"))
-    addImageForScreen(1, 44, 252, _INTL("Graphics/UI/Controls help/help_f8"))
-    addLabelForScreen(1, 134, 84, 352, _INTL("Opens the Key Bindings window, where you can choose which keyboard keys to use for each control."))
-    addLabelForScreen(1, 134, 244, 352, _INTL("Take a screenshot. It is put in the same folder as the save file."))
+    addImageForScreen(1, 16, 96, "Graphics/UI/Controls help/help_arrows")
+    addImageForScreen(1, 48, 258, "Graphics/UI/Controls help/help_use")
+    addLabelForScreen(1, 128, 68, 352, _INTL("Use the direction keys to move the main character. You can also use them to select entries and navigate menus."))
+    addLabelForScreen(1, 128, 228, 352, _INTL("Used to confirm a choice, interact with people and things, and move through text. (Default: Space)"))
 
-    addImageForScreen(2, 16, 158, _INTL("Graphics/UI/Controls help/help_arrows"))
-    addLabelForScreen(2, 134, 100, 352, _INTL("Use the Arrow keys to move the main character.\n\nYou can also use the Arrow keys to select entries and navigate menus."))
+    addImageForScreen(2, 48, 114, "Graphics/UI/Controls help/help_back")
+    addImageForScreen(2, 48, 258, "Graphics/UI/Controls help/help_action")
+    addLabelForScreen(2, 128, 68, 352, _INTL("Used to exit, cancel a choice, and cancel a mode. While moving around, hold to move at a different speed. (Default: Esc)"))
+    addLabelForScreen(2, 128, 228, 352, _INTL("Used to open the Pause Menu. Also has various functions depending on context. (Default: Backspace)"))
 
-    addImageForScreen(3, 16, 90, _INTL("Graphics/UI/Controls help/help_usekey"))
-    addImageForScreen(3, 16, 236, _INTL("Graphics/UI/Controls help/help_backkey"))
-    addLabelForScreen(3, 134, 68, 352, _INTL("Used to confirm a choice, interact with people and things, and move through text. (Default: C)"))
-    addLabelForScreen(3, 134, 196, 352, _INTL("Used to exit, cancel a choice, and cancel a mode. While moving around, hold to move at a different speed. (Default: X)"))
+    addImageForScreen(3, 48, 96, "Graphics/UI/Controls help/help_quick")
+    addImageForScreen(3, 42, 252, "Graphics/UI/Controls help/help_f8")
+    addLabelForScreen(3, 128, 68, 352, _INTL("Used to open the Ready Menu. Also used to move up and down quickly in some menus, or between tabs in some cases. (Default: PgUp/PgDn)"))
+    addLabelForScreen(3, 128, 228, 352, _INTL("Use to take a screenshot. It goes into the \"Screenshots\" folder in the game's folder."))
 
-    addImageForScreen(4, 16, 90, _INTL("Graphics/UI/Controls help/help_actionkey"))
-    addImageForScreen(4, 16, 236, _INTL("Graphics/UI/Controls help/help_specialkey"))
-    addLabelForScreen(4, 134, 68, 352, _INTL("Used to open the Pause Menu. Also has various functions depending on context. (Default: Z)"))
-    addLabelForScreen(4, 134, 196, 352, _INTL("Press to open the Ready Menu, where registered items and available field moves can be used. (Default: D)"))
-
-    set_up_screen(@current_screen)
-    Graphics.transition
+    set_up_screen(@current_screen, true)
+    # NOTE: I don't know why the fade duration needs to be halved for this.
+    Graphics.transition(FADE_DURATION / 2, "")
     # Go to next screen when user presses USE
     onCTrigger.set(method(:pbOnScreenEnd))
   end
@@ -52,12 +52,13 @@ class ButtonEventScene < EventScene
     @picturesprites[@picturesprites.length - 1].opacity = 0
   end
 
-  def set_up_screen(number)
+  def set_up_screen(number, initial = false)
+    dur = (initial) ? 0 : FADE_DURATION
     @label_screens.each_with_index do |screen, i|
-      @labels[i].moveOpacity((screen == number) ? 10 : 0, 10, (screen == number) ? 255 : 0)
+      @labels[i].moveOpacity((screen == number) ? dur : 0, dur, (screen == number) ? 255 : 0)
     end
     @key_screens.each_with_index do |screen, i|
-      @keys[i].moveOpacity((screen == number) ? 10 : 0, 10, (screen == number) ? 255 : 0)
+      @keys[i].moveOpacity((screen == number) ? dur : 0, dur, (screen == number) ? 255 : 0)
     end
     pictureWait   # Update event scene with the changes
   end
@@ -69,7 +70,7 @@ class ButtonEventScene < EventScene
       $game_temp.background_bitmap = Graphics.snap_to_bitmap
       Graphics.freeze
       @viewport.color = Color.black   # Ensure screen is black
-      Graphics.transition(8, "fadetoblack")
+      Graphics.transition(FADE_DURATION, "fadetoblack")
       $game_temp.background_bitmap.dispose
       scene.dispose
     else

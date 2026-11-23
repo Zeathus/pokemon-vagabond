@@ -1,7 +1,5 @@
 #===============================================================================
-# ** Modified Scene_Map class for Pokémon.
-#-------------------------------------------------------------------------------
-#
+# Modified Scene_Map class for Pokémon.
 #===============================================================================
 class Scene_Map
   attr_reader :spritesetGlobal
@@ -57,14 +55,14 @@ class Scene_Map
     playingBGM = $game_system.playing_bgm
     playingBGS = $game_system.playing_bgs
     return if !playingBGM && !playingBGS
-    map = load_data(pbMapFile(mapid, Supplementals::COMPRESS_MAPS))
+    map = Game_Map.load_map_data(mapid)
     if playingBGM && map.autoplay_bgm
       test_filename = map.bgm.name
       test_filename += "_n" if PBDayNight.isNight? && FileTest.audio_exist?("Audio/BGM/" + test_filename + "_n")
       pbBGMFade(0.8) if playingBGM.name != test_filename
     end
     if playingBGS && map.autoplay_bgs && playingBGS.name != map.bgs.name
-      pbBGMFade(0.8)
+      pbBGSFade(0.8)
     end
     Graphics.frame_reset
   end
@@ -100,16 +98,36 @@ class Scene_Map
     Input.update
   end
 
+  def call_interact
+    $game_temp.interact_calling = false
+    triggered = false
+    # Try to trigger an event the player is standing on, and one in front of
+    # the player
+    if !$game_temp.in_mini_update
+      triggered ||= $game_player.check_event_trigger_here([0])
+      triggered ||= $game_player.check_event_trigger_there([0, 2]) if !triggered
+    end
+    # Try to trigger an interaction with a tile
+    if !triggered
+      $game_player.straighten
+      EventHandlers.trigger(:on_player_interact)
+    end
+  end
+
   def call_menu
     return pbDebugSelfSwitches if $DEBUG && Input.press?(Input::CTRL)
     $game_temp.menu_calling = false
     $game_temp.in_menu = true
     $game_player.straighten
     $game_map.update
-    sscene = PokemonPauseMenu_Scene.new
-    sscreen = PokemonPauseMenu.new(sscene)
-    sscreen.pbStartPokemonMenu
+    UI::PauseMenu.new.main
     $game_temp.in_menu = false
+  end
+
+  def call_ready_menu
+    $game_temp.ready_menu_calling = false
+    $game_player.straighten
+    pbUseKeyItem
   end
 
   def call_debug
@@ -135,9 +153,7 @@ class Scene_Map
   end
 
   def updateMaps
-    $map_factory.maps.each do |map|
-      map.update
-    end
+    $map_factory.maps.each { |map| map.update }
     $map_factory.updateMaps(self)
   end
 
@@ -192,62 +208,54 @@ class Scene_Map
       end
     end
     return if $game_temp.message_window_showing
-    if !pbMapInterpreterRunning? && !$PokemonGlobal.forced_movement?
-      if Input.trigger?(Input::USE)
-        $game_temp.interact_calling = true
-      elsif Input.trigger?(Input::ACTION)
-        if !$game_system.menu_disabled && !$game_player.moving?
-          $game_temp.menu_calling = true
-          $game_temp.menu_beep = true
-        end
-      elsif Input.trigger?(Input::SPECIAL)
-        $game_temp.ready_menu_calling = true if !$game_player.moving?
-      elsif Input.press?(Input::F9)
-        if Input.press?(Input::LEFT) && Input.press?(Input::RIGHT) &&
-           Input.press?(Input::DOWN) && Input.press?(Input::UP)
-          $DEBUG = !$DEBUG
-          if $DEBUG
-            pbMessage("DEBUG MODE ENABLED")
-          else
-            pbMessage("debug mode disabled")
-          end
-        elsif $DEBUG
-          $game_temp.debug_calling = true
-        elsif Input.press?(Input::F8) && $DEBUG
-          pbEditMapMetadata($game_map.map_id)
-        end
-      end
-    end
+    update_input if !pbMapInterpreterRunning? && !$PokemonGlobal.forced_movement?
     if !$game_player.moving?
-      if $game_temp.menu_calling
+      if $game_temp.interact_calling
+        call_interact
+      elsif $game_temp.menu_calling
         call_menu
+      elsif $game_temp.ready_menu_calling
+        call_ready_menu
       elsif $game_temp.debug_calling
         call_debug
-      elsif $game_temp.ready_menu_calling
-        $game_temp.ready_menu_calling = false
-        $game_player.straighten
-        pbUseKeyItem
-      elsif $game_temp.interact_calling
-        $game_temp.interact_calling = false
-        triggered = false
-        # Try to trigger an event the player is standing on, and one in front of
-        # the player
-        if !$game_temp.in_mini_update
-          triggered ||= $game_player.check_event_trigger_here([0])
-          triggered ||= $game_player.check_event_trigger_there([0, 2]) if !triggered
+      end
+    end
+  end
+
+  def update_input
+    if Input.trigger?(Input::USE)
+      $game_temp.interact_calling = true
+    elsif Input.trigger?(Input::ACTION)
+      if !$game_system.menu_disabled && !$game_player.moving?
+        $game_temp.menu_calling = true
+        $game_temp.menu_beep = true
+      end
+    elsif Input.trigger?(Input::QUICK_UP) || Input.trigger?(Input::QUICK_DOWN)
+      $game_temp.ready_menu_calling = true if !$game_player.moving?
+      Input.update   # Prevents immediate moving of cursor in Ready Menu
+    elsif Input.press?(Input::F9)
+      if Supplementals::ENABLE_DEBUG_TOGGLE &&
+         Input.press?(Input::LEFT) && Input.press?(Input::RIGHT) &&
+         Input.press?(Input::DOWN) && Input.press?(Input::UP)
+        $DEBUG = !$DEBUG
+        if $DEBUG
+          pbMessage("DEBUG MODE ENABLED")
+        else
+          pbMessage("debug mode disabled")
         end
-        # Try to trigger an interaction with a tile
-        if !triggered
-          $game_player.straighten
-          EventHandlers.trigger(:on_player_interact)
-        end
+      elsif $DEBUG
+        $game_temp.debug_calling = true if $DEBUG
+      elsif Input.press?(Input::F8) && $DEBUG
+        pbEditMapMetadata($game_map.map_id)
       end
     end
   end
 
   def main
     createSpritesets
-    Graphics.transition
+    # NOTE: I don't know why a duration of 4 is needed here to make the fade
+    #       (slightly over) 0.4 seconds.
+    Graphics.transition(4, "")
     loop do
       Graphics.update
       Input.update
@@ -261,7 +269,9 @@ class Scene_Map
       $game_temp.last_uptime_refreshed_play_time = nil
       $game_temp.title_screen_calling = false
       pbBGMFade(1.0)
-      Graphics.transition
+      # NOTE: I don't know why a duration of 4 is needed here to make the fade
+      #       (slightly over) 0.4 seconds.
+      Graphics.transition(4, "")
       Graphics.freeze
     end
   end

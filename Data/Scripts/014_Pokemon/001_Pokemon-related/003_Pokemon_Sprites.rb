@@ -50,7 +50,7 @@ class PokemonSprite < Sprite
     @_iconbitmap&.dispose
     @_iconbitmap = (pokemon) ? GameData::Species.sprite_bitmap_from_pokemon(pokemon, back) : nil
     self.bitmap = (@_iconbitmap) ? @_iconbitmap.bitmap : nil
-    self.color = Color.new(0, 0, 0, 0)
+    self.color.set(0, 0, 0, 0)
     changeOrigin
   end
 
@@ -72,7 +72,8 @@ class PokemonSprite < Sprite
     super
     if @_iconbitmap
       @_iconbitmap.update
-      self.bitmap = @_iconbitmap.bitmap
+      new_bitmap = @_iconbitmap.bitmap
+      self.bitmap = new_bitmap if bitmap != new_bitmap
     end
   end
 end
@@ -124,6 +125,21 @@ class PokemonIconSprite < Sprite
 
   def pokemon=(value)
     @pokemon = value
+    # Check if the bitmap needs to be reloaded
+    new_values = nil
+    if @pokemon
+      new_values = {
+        :species => @pokemon.species,
+        :form    => @pokemon.form,
+        :gender  => @pokemon.gender,
+        :shiny   => @pokemon.shiny?,
+        :shadow  => @pokemon.shadowPokemon?,
+        :egg     => @pokemon.egg?
+      }
+    end
+    return if @pokemon_values == new_values
+    @pokemon_values = new_values
+    # Reload the bitmap
     @animBitmap&.dispose
     @animBitmap = nil
     if !@pokemon
@@ -192,7 +208,8 @@ class PokemonIconSprite < Sprite
     return if !@animBitmap
     super
     @animBitmap.update
-    self.bitmap = @animBitmap.bitmap
+    new_bitmap = @animBitmap.bitmap
+    self.bitmap = @new_bitmap if bitmap != new_bitmap
     # Update animation
     update_frame
     self.src_rect.x = self.src_rect.width * @current_frame
@@ -226,7 +243,7 @@ class PokemonSpeciesIconSprite < Sprite
     @species       = species
     @gender        = 0
     @form          = 0
-    @shiny         = 0
+    @shiny         = false
     @frames_count  = 0
     @current_frame = 0
     refresh
@@ -315,7 +332,8 @@ class PokemonSpeciesIconSprite < Sprite
     return if !@animBitmap
     super
     @animBitmap.update
-    self.bitmap = @animBitmap.bitmap
+    new_bitmap = @animBitmap.bitmap
+    self.bitmap = @new_bitmap if bitmap != new_bitmap
     # Update animation
     update_frame
     self.src_rect.x = self.src_rect.width * @current_frame

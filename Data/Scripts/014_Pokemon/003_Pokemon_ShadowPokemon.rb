@@ -10,18 +10,20 @@ class Pokemon
   attr_accessor :shadow_moves
   attr_accessor :heart_gauge_step_counter
 
-  alias __shadow_expeq exp= unless method_defined?(:__shadow_expeq)
+  alias __shadow__expeq exp= unless method_defined?(:__shadow__expeq)
+
   def exp=(value)
     if shadowPokemon?
       @saved_exp += value - @exp
     else
-      __shadow_expeq(value)
+      __shadow__expeq(value)
     end
   end
 
-  alias __shadow_hpeq hp= unless method_defined?(:__shadow_hpeq)
+  alias __shadow__hpeq hp= unless method_defined?(:__shadow__hpeq)
+
   def hp=(value)
-    __shadow_hpeq(value)
+    __shadow__hpeq(value)
     @hyper_mode = false if @hp <= 0
   end
 
@@ -123,15 +125,11 @@ class Pokemon
     # Retrieve Shadow moveset for this Pokémon
     data = shadow_data
     # Record this Pokémon's Shadow moves
-    if data
-      data.moves.each do |m|
-        @shadow_moves.push(m) if GameData::Move.exists?(m)
-        break if @shadow_moves.length >= MAX_MOVES
-      end
+    data&.moves&.each do |m|
+      @shadow_moves.push(m) if GameData::Move.exists?(m)
+      break if @shadow_moves.length >= MAX_MOVES
     end
-    if @shadow_moves.empty? && GameData::Move.exists?(:SHADOWRUSH)
-      @shadow_moves.push(:SHADOWRUSH)
-    end
+    @shadow_moves.push(:SHADOWRUSH) if @shadow_moves.empty? && GameData::Move.exists?(:SHADOWRUSH)
     # Record this Pokémon's original moves
     if !@shadow_moves.empty?
       @moves.each_with_index { |m, i| @shadow_moves[MAX_MOVES + i] = m.id }
@@ -209,9 +207,9 @@ class Pokemon
     end
   end
 
-  alias __shadow_clone clone unless method_defined?(:__shadow_clone)
+  alias __shadow__clone clone unless method_defined?(:__shadow__clone)
   def clone
-    ret = __shadow_clone
+    ret = __shadow__clone
     if @saved_ev
       GameData::Stat.each_main { |s| ret.saved_ev[s.id] = @saved_ev[s.id] }
     end

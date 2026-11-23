@@ -10,9 +10,7 @@ class Window_CharacterEntry < Window_DrawableCommand
     @charset = charset
     @othercharset = ""
     super(0, 96, 480, 192)
-    colors = getDefaultTextColors(self.windowskin)
-    self.baseColor = colors[0]
-    self.shadowColor = colors[1]
+    self.baseColor, self.shadowColor = getDefaultTextColors(self.windowskin)
     self.columns = XSIZE
     refresh
   end
@@ -69,15 +67,15 @@ end
 #===============================================================================
 class PokemonEntryScene
   @@Characters = [
-    [("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").scan(/./), "[*]"],
-    [("0123456789   !@\#$%^&*()   ~`-_+={}[]   :;'\"<>,.?/   ").scan(/./), "[A]"]
+    ["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".scan(/./), "[*]"],
+    ["0123456789   !@\#$%^&*()   ~`-_+={}[]   :;'\"<>,.?/   ".scan(/./), "[A]"]
   ]
   USEKEYBOARD = true
 
   def pbStartScene(helptext, minlength, maxlength, initialText, subject = 0, pokemon = nil)
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     if USEKEYBOARD
       @sprites["entry"] = Window_TextEntry_Keyboard.new(
         initialText, 0, 0, 400 - 112, 96, helptext, true
@@ -243,7 +241,7 @@ class PokemonEntryScene
   end
 
   def pbEntry
-    return USEKEYBOARD ? pbEntry1 : pbEntry2
+    return (USEKEYBOARD) ? pbEntry1 : pbEntry2
   end
 
   def pbEndScene
@@ -370,7 +368,7 @@ class PokemonEntryScene2
 
   def pbStartScene(helptext, minlength, maxlength, initialText, subject = 0, pokemon = nil)
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @helptext = helptext
     @helper = CharacterEntryHelper.new(initialText)
     # Create bitmaps
@@ -391,8 +389,8 @@ class PokemonEntryScene2
       @bitmaps[@@Characters.length + i] = b
     end
     underline_bitmap = Bitmap.new(24, 6)
-    underline_bitmap.fill_rect(2, 2, 22, 4, Color.new(168, 184, 184))
-    underline_bitmap.fill_rect(0, 0, 22, 4, Color.new(16, 24, 32))
+    underline_bitmap.fill_rect(2, 2, 18, 4, Color.new(168, 184, 184))
+    underline_bitmap.fill_rect(0, 0, 18, 4, Color.new(16, 24, 32))
     @bitmaps.push(underline_bitmap)
     # Create sprites
     @sprites = {}
@@ -430,9 +428,9 @@ class PokemonEntryScene2
         pbSetSystemFont(@sprites["gender"].bitmap)
         textpos = []
         if pokemon.male?
-          textpos.push([_INTL("♂"), 0, 6, :left, Color.new(0, 128, 248), Color.new(168, 184, 184)])
+          textpos.push([_INTL("♂"), 0, 0, :left, Color.new(0, 128, 248), Color.new(168, 184, 184)])
         elsif pokemon.female?
-          textpos.push([_INTL("♀"), 0, 6, :left, Color.new(248, 24, 24), Color.new(168, 184, 184)])
+          textpos.push([_INTL("♀"), 0, 0, :left, Color.new(248, 24, 24), Color.new(168, 184, 184)])
         end
         pbDrawTextPositions(@sprites["gender"].bitmap, textpos)
       end
@@ -463,7 +461,7 @@ class PokemonEntryScene2
     @maxlength = maxlength
     @maxlength.times do |i|
       @sprites["blank#{i}"] = Sprite.new(@viewport)
-      @sprites["blank#{i}"].x = 160 + (24 * i)
+      @sprites["blank#{i}"].x = 138 + (20 * i)
       @sprites["blank#{i}"].bitmap = @bitmaps[@bitmaps.length - 1]
       @blanks[i] = 0
     end
@@ -506,13 +504,13 @@ class PokemonEntryScene2
     bgoverlay.clear
     pbSetSystemFont(bgoverlay)
     textPositions = [
-      [@helptext, 160, 18, :left, Color.new(16, 24, 32), Color.new(168, 184, 184)]
+      [@helptext, 138, 18, :left, Color.new(16, 24, 32), Color.new(168, 184, 184)]
     ]
     chars = @helper.textChars
-    x = 172
+    x = 148
     chars.each do |ch|
       textPositions.push([ch, x, 54, :center, Color.new(16, 24, 32), Color.new(168, 184, 184)])
-      x += 24
+      x += 20
     end
     pbDrawTextPositions(bgoverlay, textPositions)
   end
@@ -670,7 +668,9 @@ class PokemonEntryScene2
       Input.update
       pbUpdate
       next if pbMoveCursor
-      if Input.trigger?(Input::SPECIAL)
+      if Input.trigger?(Input::QUICK_UP)
+        pbChangeTab(@mode - 1)
+      elsif Input.trigger?(Input::QUICK_DOWN)
         pbChangeTab
       elsif Input.trigger?(Input::ACTION)
         @cursorpos = OK
@@ -751,36 +751,40 @@ end
 #===============================================================================
 #
 #===============================================================================
-def pbEnterText(helptext, minlength, maxlength, initialText = "", mode = 0, pokemon = nil, nofadeout = false)
-  ret = ""
+def pbEnterText(helptext, minlength, maxlength, initialText = "", mode = 0, pokemon = nil)
   if ($PokemonSystem.textinput == 1 rescue false)   # Keyboard
-    pbFadeOutIn(99999, nofadeout) do
-      sscene = PokemonEntryScene.new
-      sscreen = PokemonEntry.new(sscene)
-      ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
-    end
+    sscene = PokemonEntryScene.new
   else   # Cursor
-    pbFadeOutIn(99999, nofadeout) do
-      sscene = PokemonEntryScene2.new
-      sscreen = PokemonEntry.new(sscene)
-      ret = sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
-    end
+    sscene = PokemonEntryScene2.new
+  end
+  sscreen = PokemonEntry.new(sscene)
+  return sscreen.pbStartScreen(helptext, minlength, maxlength, initialText, mode, pokemon)
+end
+
+def pbEnterPlayerName(helptext, minlength, maxlength, initialText = "", nofadeout = false)
+  ret = ""
+  pbFadeOutIn(99_999, nofadeout) do
+    ret = pbEnterText(helptext, minlength, maxlength, initialText, 1, nil)
   end
   return ret
 end
 
-def pbEnterPlayerName(helptext, minlength, maxlength, initialText = "", nofadeout = false)
-  return pbEnterText(helptext, minlength, maxlength, initialText, 1, nil, nofadeout)
-end
-
 def pbEnterPokemonName(helptext, minlength, maxlength, initialText = "", pokemon = nil, nofadeout = false)
-  return pbEnterText(helptext, minlength, maxlength, initialText, 2, pokemon, nofadeout)
+  ret = ""
+  pbFadeOutIn(99_999, nofadeout) do
+    ret = pbEnterText(helptext, minlength, maxlength, initialText, 2, pokemon)
+  end
+  return ret
 end
 
 def pbEnterNPCName(helptext, minlength, maxlength, initialText = "", id = 0, nofadeout = false)
-  return pbEnterText(helptext, minlength, maxlength, initialText, 3, id, nofadeout)
+  ret = ""
+  pbFadeOutIn(99_999, nofadeout) do
+    ret = pbEnterText(helptext, minlength, maxlength, initialText, 3, id)
+  end
+  return ret
 end
 
-def pbEnterBoxName(helptext, minlength, maxlength, initialText = "", nofadeout = false)
-  return pbEnterText(helptext, minlength, maxlength, initialText, 4, nil, nofadeout)
+def pbEnterBoxName(helptext, minlength, maxlength, initialText = "")
+  return pbEnterText(helptext, minlength, maxlength, initialText, 4)
 end

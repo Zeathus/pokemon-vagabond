@@ -1,3 +1,6 @@
+#===============================================================================
+#
+#===============================================================================
 module GameData
   class Metadata
     attr_reader :id
@@ -17,7 +20,6 @@ module GameData
     DATA = {}
     DATA_FILENAME = "metadata.dat"
     PBS_BASE_FILENAME = "metadata"
-
     SCHEMA = {
       "SectionName"       => [:id,                   "u"],
       "StartMoney"        => [:start_money,          "u"],
@@ -56,6 +58,8 @@ module GameData
       return DATA[0]
     end
 
+    #---------------------------------------------------------------------------
+
     def initialize(hash)
       @id                   = hash[:id]                 || 0
       @start_money          = hash[:start_money]        || 3000
@@ -75,7 +79,7 @@ module GameData
     # @return [String] the translated name of the Pokémon Storage creator
     def storage_creator
       ret = pbGetMessageFromHash(MessageTypes::STORAGE_CREATOR_NAME, @real_storage_creator)
-      return nil_or_empty?(ret) ? _INTL("Bill") : ret
+      return (nil_or_empty?(ret)) ? _INTL("Bill") : ret
     end
   end
 end

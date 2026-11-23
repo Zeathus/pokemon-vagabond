@@ -15,6 +15,7 @@ class TilemapRenderer
   DISPLAY_TILE_HEIGHT     = Game_Map::TILE_HEIGHT rescue 32
   SOURCE_TILE_WIDTH       = 32
   SOURCE_TILE_HEIGHT      = 32
+  DEFAULT_LAYERS_COUNT    = 3
   ZOOM_X                  = DISPLAY_TILE_WIDTH / SOURCE_TILE_WIDTH
   ZOOM_Y                  = DISPLAY_TILE_HEIGHT / SOURCE_TILE_HEIGHT
   TILESET_TILES_PER_ROW   = 8
@@ -42,6 +43,7 @@ class TilemapRenderer
 #    1 => [["Sand shore"], ["Flowers2"]],
 #    2 => [[], ["Flowers2", "Waterfall", "Waterfall crest", "Waterfall bottom"]],
 #    6 => [["Water rock", "Sea deep"], []]
+    2 => [[], ["Water current north", "Water current west", "Water current east", "Water current south"]]
   }
 
   #=============================================================================
@@ -214,7 +216,7 @@ class TilemapRenderer
         tile.src_rect.x = SOURCE_TILE_WIDTH
         tile.src_rect.y -= SOURCE_TILE_HEIGHT * TILES_PER_AUTOTILE / 2
       end
-      tile.src_rect.x += frame * SOURCE_TILE_WIDTH * (wraps ? 2 : 1)
+      tile.src_rect.x += frame * SOURCE_TILE_WIDTH * ((wraps) ? 2 : 1)
     end
 
     def update
@@ -261,9 +263,8 @@ class TilemapRenderer
     end
   end
 
-  #=============================================================================
-  #
-  #=============================================================================
+  #-----------------------------------------------------------------------------
+
   def initialize(viewport)
     @tilesets               = TilesetBitmaps.new
     @autotiles              = AutotileBitmaps.new
@@ -285,7 +286,7 @@ class TilemapRenderer
     @tiles_horizontal_count.times do |i|
       @tiles[i] = []
       @tiles_vertical_count.times do |j|
-        @tiles[i][j] = Array.new(3) { TileSprite.new(@viewport) }
+        @tiles[i][j] = Array.new(DEFAULT_LAYERS_COUNT) { TileSprite.new(@viewport) }
       end
     end
     @current_map_id         = 0
@@ -322,7 +323,7 @@ class TilemapRenderer
     return @disposed
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
 
   def add_tileset(filename)
     @tilesets.add(filename)
@@ -354,7 +355,7 @@ class TilemapRenderer
     end
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
 
   def refresh
     @need_refresh = true
@@ -430,7 +431,7 @@ class TilemapRenderer
 
   def refresh_tile_z(tile, map, y, layer, tile_id)
     if tile.shows_reflection
-      tile.z = -100
+      tile.z = -2000
     elsif tile.bridge && $PokemonGlobal.bridge > 0
       tile.z = 0
     else
@@ -446,7 +447,7 @@ class TilemapRenderer
     tile.need_refresh = false
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
 
   def check_if_screen_moved
     ret = false
@@ -532,7 +533,7 @@ class TilemapRenderer
     return ret
   end
 
-  #=============================================================================
+  #-----------------------------------------------------------------------------
 
   def update
     # Update tone
@@ -604,8 +605,10 @@ class TilemapRenderer
         tile_x = i + map_display_x_tile
         (start_y..end_y).each do |j|
           tile_y = j + map_display_y_tile
-          @tiles[i][j].each_with_index do |tile, layer|
-            tile_id = map.data[tile_x, tile_y, layer]
+          [map.data.zsize, @tiles[i][j].length].max.times do |layer|
+            @tiles[i][j][layer] ||= TileSprite.new(@viewport)
+            tile = @tiles[i][j][layer]
+            tile_id = map.data[tile_x, tile_y, layer] || 0
             if tile.overhang && @overhang != old_overhang
               tile.need_refresh = true
             end

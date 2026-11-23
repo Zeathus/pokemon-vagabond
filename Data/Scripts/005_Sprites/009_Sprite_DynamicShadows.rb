@@ -15,6 +15,7 @@ class Sprite_Shadow < RPG::Sprite
     @self_opacity = (params.size > 4) ? params[4] : 100
     @distancemax  = (params.size > 3) ? params[3] : 350
     @character    = character
+    self.color.set(0, 0, 0, 255)
     update
   end
 
@@ -36,7 +37,7 @@ class Sprite_Shadow < RPG::Sprite
       @character_name = @character.character_name
       @character_hue  = @character.character_hue
       @chbitmap&.dispose
-      if @tile_id >= 384
+      if @tile_id >= TilemapRenderer::TILESET_START_ID
         @chbitmap = pbGetTileBitmap(@character.map.tileset_name,
                                     @tile_id, @character.character_hue)
         self.src_rect.set(0, 0, 32, 32)
@@ -55,10 +56,11 @@ class Sprite_Shadow < RPG::Sprite
     end
     if @chbitmap.is_a?(AnimatedBitmap)
       @chbitmap.update
-      self.bitmap = @chbitmap.bitmap
+      new_bitmap = @chbitmap.bitmap
     else
-      self.bitmap = @chbitmap
+      new_bitmap = @chbitmap
     end
+    self.bitmap = new_bitmap if bitmap != new_bitmap
     self.visible = !@character.transparent
     if @tile_id == 0
       sx = @character.pattern * @cw
@@ -87,7 +89,6 @@ class Sprite_Shadow < RPG::Sprite
     end
     @deltax = ScreenPosHelper.pbScreenX(@source) - self.x
     @deltay = ScreenPosHelper.pbScreenY(@source) - self.y
-    self.color = Color.black
     @distance = ((@deltax**2) + (@deltay**2))
     self.opacity = @self_opacity * 13_000 / ((@distance * 370 / @distancemax) + 6000)
     self.angle = 57.3 * Math.atan2(@deltax, @deltay)
@@ -135,7 +136,7 @@ class Sprite_Character < RPG::Sprite
       params = XPML_read(map, "Shadow", @character, 4)
       if params
         shadows.each do |shadow|
-          @ombrelist.push(Sprite_Shadow.new(viewport, @character, shadows))
+          @ombrelist.push(Sprite_Shadow.new(viewport, @character, shadow))
         end
       end
     end

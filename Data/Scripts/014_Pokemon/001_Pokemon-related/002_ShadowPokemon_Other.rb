@@ -14,19 +14,19 @@
 #===============================================================================
 # Purify a Shadow Pokémon.
 #===============================================================================
-def pbPurify(pkmn, scene)
+def pbPurify(pkmn, screen)
   return if !pkmn.shadowPokemon? || pkmn.heart_gauge != 0
   $stats.shadow_pokemon_purified += 1
   pkmn.shadow = false
   pkmn.hyper_mode = false
   pkmn.giveRibbon(:NATIONAL)
-  scene.pbDisplay(_INTL("{1} opened the door to its heart!", pkmn.name))
+  screen.show_message(_INTL("{1} opened the door to its heart!", pkmn.name))
   old_moves = []
   pkmn.moves.each { |m| old_moves.push(m.id) }
   pkmn.update_shadow_moves
   pkmn.moves.each_with_index do |m, i|
     next if m.id == old_moves[i]
-    scene.pbDisplay(_INTL("{1} regained the move {2}!", pkmn.name, m.name))
+    screen.show_message(_INTL("{1} regained the move {2}!", pkmn.name, m.name))
   end
   pkmn.record_first_moves
   if pkmn.saved_ev
@@ -39,18 +39,18 @@ def pbPurify(pkmn, scene)
     newlevel = pkmn.growth_rate.level_from_exp(newexp)
     curlevel = pkmn.level
     if newexp != pkmn.exp
-      scene.pbDisplay(_INTL("{1} regained {2} Exp. Points!", pkmn.name, newexp - pkmn.exp))
+      screen.show_message(_INTL("{1} regained {2} Exp. Points!", pkmn.name, newexp - pkmn.exp))
     end
     if newlevel == curlevel
       pkmn.exp = newexp
       pkmn.calc_stats
     else
-      pbChangeLevel(pkmn, newlevel, scene)   # for convenience
+      pbChangeLevel(pkmn, newlevel, screen)   # for convenience
       pkmn.exp = newexp
     end
   end
   if $PokemonSystem.givenicknames == 0 &&
-     scene.pbConfirm(_INTL("Would you like to give a nickname to {1}?", pkmn.speciesName))
+     screen.show_confirm_message(_INTL("Would you like to give a nickname to {1}?", pkmn.speciesName))
     newname = pbEnterPokemonName(_INTL("{1}'s nickname?", pkmn.speciesName),
                                  0, Pokemon::MAX_NAME_SIZE, "", pkmn)
     pkmn.name = newname
@@ -84,7 +84,7 @@ class RelicStoneScene
   def pbStartScene(pokemon)
     @sprites = {}
     @viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
-    @viewport.z = 99999
+    @viewport.z = 99_999
     @pokemon = pokemon
     addBackgroundPlane(@sprites, "bg", "relicstonebg", @viewport)
     @sprites["msgwindow"] = Window_AdvancedTextPokemon.new("")
@@ -111,14 +111,18 @@ class RelicStoneScreen
   def pbDisplay(x)
     @scene.pbDisplay(x)
   end
+  alias show_message pbDisplay
 
   def pbConfirm(x)
     @scene.pbConfirm(x)
   end
+  alias show_confirm_message pbConfirm
 
   def pbUpdate; end
+  alias update pbUpdate
 
   def pbRefresh; end
+  alias refresh pbRefresh
 
   def pbStartScreen(pokemon)
     @scene.pbStartScene(pokemon)
@@ -169,9 +173,10 @@ class Battle
 
   def pbCanUseItemOnPokemon?(item, pkmn, battler, scene, showMessages = true)
     ret = __shadow__pbCanUseItemOnPokemon?(item, pkmn, battler, scene, showMessages)
-    if ret && pkmn.hyper_mode && ![:JOYSCENT, :EXCITESCENT, :VIVIDSCENT].include?(item)
-      scene.pbDisplay(_INTL("This item can't be used on that Pokémon."))
-      return false
+    # Hyper Mode and non-Scents
+    if ret && pkmn.hyper_mode && !GameData::Item.get(item)&.is_scent?
+      scene.pbDisplay(_INTL("It won't have any effect.")) if showMessages
+      ret = false
     end
     return ret
   end
@@ -181,51 +186,92 @@ end
 #
 #===============================================================================
 class Battle::Battler
+  # Chance depends on the Pokémon's nature and their heart stage (0-5, where 0
+  # means ready to be purified and 1-5 are the numbered segment the heart gauge
+  # is currently in).
+  CHANCE_TO_ENTER_HYPER_MODE = {
+    :HARDY   => [25, 50, 70, 70, 70, 30],
+    :LONELY  => [5, 10, 15, 20, 25, 30],
+    :BRAVE   => [5, 10, 20, 30, 40, 50],
+    :ADAMANT => [25, 50, 70, 70, 70, 30],
+    :NAUGHTY => [12, 25, 30, 40, 40, 50],
+    :BOLD    => [5, 10, 20, 30, 40, 50],
+    :DOCILE  => [5, 10, 15, 15, 20, 20],
+    :RELAXED => [25, 50, 70, 70, 70, 30],
+    :IMPISH  => [12, 25, 30, 40, 40, 50],
+    :LAX     => [5, 10, 20, 30, 40, 50],
+    :TIMID   => [5, 10, 15, 20, 25, 30],
+    :HASTY   => [12, 25, 30, 40, 40, 50],
+    :SERIOUS => [5, 10, 15, 15, 20, 20],
+    :JOLLY   => [50, 50, 50, 50, 50, 50],
+    :NAIVE   => [50, 50, 50, 50, 50, 50],
+    :MODEST  => [5, 10, 15, 20, 25, 30],
+    :MILD    => [50, 50, 50, 50, 50, 50],
+    :QUIET   => [5, 10, 15, 15, 20, 20],
+    :BASHFUL => [25, 50, 70, 70, 70, 30],
+    :RASH    => [12, 25, 30, 40, 40, 50],
+    :CALM    => [5, 10, 15, 20, 25, 30],
+    :GENTLE  => [50, 50, 50, 50, 50, 50],
+    :SASSY   => [5, 10, 20, 30, 40, 50],
+    :CAREFUL => [5, 10, 15, 15, 20, 20],
+    :QUIRKY  => [5, 10, 20, 30, 40, 50]
+  }
+
   alias __shadow__pbInitPokemon pbInitPokemon unless method_defined?(:__shadow__pbInitPokemon)
 
   def pbInitPokemon(*arg)
-    self.pokemon.hyper_mode = false if self.pokemonIndex > 0 && inHyperMode?
+    self.pokemon.hyper_mode = false if self.pokemonIndex >= 0 && inHyperMode?
     __shadow__pbInitPokemon(*arg)
-    # Called into battle
-    if shadowPokemon?
-      self.types = [:SHADOW] if GameData::Type.exists?(:SHADOW)
-      self.pokemon.change_heart_gauge("battle") if pbOwnedByPlayer?
-    end
+    self.pokemon.change_heart_gauge("battle") if shadowPokemon? && pbOwnedByPlayer?
   end
 
   def shadowPokemon?
-    p = self.pokemon
-    return p&.shadowPokemon?
+    return self.pokemon&.shadowPokemon?
   end
 
   def inHyperMode?
-    return false if fainted?
-    p = self.pokemon
-    return p&.hyper_mode
+    return !fainted? && self.pokemon&.hyper_mode
   end
 
   def pbHyperMode
     return if fainted? || !shadowPokemon? || inHyperMode? || !pbOwnedByPlayer?
-    p = self.pokemon
-    if @battle.pbRandom(p.heart_gauge) <= p.max_gauge_size / 4
-      p.hyper_mode = true
-      @battle.pbDisplay(_INTL("{1}'s emotions rose to a fever pitch!\nIt entered Hyper Mode!", self.pbThis))
+    pkmn = self.pokemon
+    chance = 50
+    chance = CHANCE_TO_ENTER_HYPER_MODE[pkmn.nature_id][pkmn.heartStage] if CHANCE_TO_ENTER_HYPER_MODE[pkmn.nature_id]
+    if @battle.pbRandom(100) < chance
+      pkmn.hyper_mode = true
+      @battle.pbDisplay(_INTL("{1}'s emotions rose to a fever pitch!\nIt entered Hyper Mode!", pbThis))
     end
   end
 
   def pbHyperModeObedience(move)
     return true if !inHyperMode?
     return true if !move || move.type == :SHADOW
-    return rand(100) < 20
+    return @battle.pbRandom(100) < 20
+  end
+end
+
+#===============================================================================
+#
+#===============================================================================
+class Battle::Move
+  alias __shadow__pbCalcTypeMod pbCalcTypeMod unless method_defined?(:__shadow__pbCalcTypeMod)
+
+  def pbCalcTypeMod(moveType, user, target)
+    if moveType == :SHADOW
+      return Effectiveness::NOT_VERY_EFFECTIVE_MULTIPLIER if target.shadowPokemon?
+      return Effectiveness::SUPER_EFFECTIVE_MULTIPLIER
+    end
+    return __shadow__pbCalcTypeMod(moveType, user, target)
   end
 end
 
 #===============================================================================
 # Shadow item effects.
 #===============================================================================
-def pbRaiseHappinessAndReduceHeart(pkmn, scene, multiplier, show_fail_message = true)
+def pbRaiseHappinessAndReduceHeart(pkmn, screen, multiplier, show_fail_message = true)
   if !pkmn.shadowPokemon? || (pkmn.happiness == 255 && pkmn.heart_gauge == 0)
-    scene.pbDisplay(_INTL("It won't have any effect.")) if show_fail_message
+    screen.pbDisplay(_INTL("It won't have any effect.")) if show_fail_message
     return false
   end
   old_gauge = pkmn.heart_gauge
@@ -233,53 +279,53 @@ def pbRaiseHappinessAndReduceHeart(pkmn, scene, multiplier, show_fail_message = 
   pkmn.changeHappiness("vitamin")
   pkmn.change_heart_gauge("scent", multiplier)
   if pkmn.heart_gauge == old_gauge
-    scene.pbDisplay(_INTL("{1} turned friendly.", pkmn.name))
+    screen.pbDisplay(_INTL("{1} turned friendly.", pkmn.name))
   elsif pkmn.happiness == old_happiness
-    scene.pbDisplay(_INTL("{1} adores you!\nThe door to its heart opened a little.", pkmn.name))
+    screen.pbDisplay(_INTL("{1} adores you!\nThe door to its heart opened a little.", pkmn.name))
     pkmn.check_ready_to_purify
   else
-    scene.pbDisplay(_INTL("{1} turned friendly.\nThe door to its heart opened a little.", pkmn.name))
+    screen.pbDisplay(_INTL("{1} turned friendly.\nThe door to its heart opened a little.", pkmn.name))
     pkmn.check_ready_to_purify
   end
   return true
 end
 
-ItemHandlers::UseOnPokemon.add(:JOYSCENT, proc { |item, qty, pkmn, scene|
+ItemHandlers::UseOnPokemon.add(:JOYSCENT, proc { |item, qty, pkmn, screen|
   ret = false
   if pkmn.hyper_mode
-    scene.pbDisplay(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
+    screen.show_message(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
     pkmn.hyper_mode = false
     ret = true
   end
-  next pbRaiseHappinessAndReduceHeart(pkmn, scene, 1, !ret) || ret
+  next pbRaiseHappinessAndReduceHeart(pkmn, screen, 1, !ret) || ret
 })
 
-ItemHandlers::UseOnPokemon.add(:EXCITESCENT, proc { |item, qty, pkmn, scene|
+ItemHandlers::UseOnPokemon.add(:EXCITESCENT, proc { |item, qty, pkmn, screen|
   ret = false
   if pkmn.hyper_mode
-    scene.pbDisplay(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
+    screen.show_message(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
     pkmn.hyper_mode = false
     ret = true
   end
-  next pbRaiseHappinessAndReduceHeart(pkmn, scene, 2, !ret) || ret
+  next pbRaiseHappinessAndReduceHeart(pkmn, screen, 2, !ret) || ret
 })
 
-ItemHandlers::UseOnPokemon.add(:VIVIDSCENT, proc { |item, qty, pkmn, scene|
+ItemHandlers::UseOnPokemon.add(:VIVIDSCENT, proc { |item, qty, pkmn, screen|
   ret = false
   if pkmn.hyper_mode
-    scene.pbDisplay(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
+    screen.show_message(_INTL("{1} came to its senses from the {2}.", pkmn.name, GameData::Item.get(item).name))
     pkmn.hyper_mode = false
     ret = true
   end
-  next pbRaiseHappinessAndReduceHeart(pkmn, scene, 3, !ret) || ret
+  next pbRaiseHappinessAndReduceHeart(pkmn, screen, 3, !ret) || ret
 })
 
-ItemHandlers::UseOnPokemon.add(:TIMEFLUTE, proc { |item, qty, pkmn, scene|
+ItemHandlers::UseOnPokemon.add(:TIMEFLUTE, proc { |item, qty, pkmn, screen|
   if !pkmn.shadowPokemon? || pkmn.heart_gauge == 0 || pkmn.isSpecies?(:LUGIA)
-    scene.pbDisplay(_INTL("It won't have any effect."))
+    screen.show_message(_INTL("It won't have any effect."))
     next false
   end
-  pbPurify(pkmn, scene)
+  pbPurify(pkmn, screen)
   next true
 })
 
@@ -360,6 +406,9 @@ class Battle::Move::UserLosesHalfHP < Battle::Move::RecoilMove
     # NOTE: This move's recoil is not prevented by Rock Head/Magic Guard.
     amt = pbRecoilDamage(user, target)
     amt = 1 if amt < 1
+    if user.pokemon.isSpecies?(:BASCULIN) && [2, 3].include?(user.pokemon.form)
+      user.pokemon.evolution_counter += amt
+    end
     user.pbReduceHP(amt, false)
     @battle.pbDisplay(_INTL("{1} is damaged by recoil!", user.pbThis))
     user.pbItemHPHealCheck
@@ -417,8 +466,9 @@ end
 #===============================================================================
 #
 #===============================================================================
+
 # Record current heart gauges of Pokémon in party, to see if they drop to zero
-# during battle and need to say they're ready to be purified afterwards
+# during battle and need to say they're ready to be purified afterwards.
 EventHandlers.add(:on_start_battle, :record_party_heart_gauges,
   proc {
     $game_temp.party_heart_gauges_before_battle = []
@@ -429,7 +479,7 @@ EventHandlers.add(:on_start_battle, :record_party_heart_gauges,
 )
 
 EventHandlers.add(:on_end_battle, :check_ready_to_purify,
-  proc { |_decision, _canLose|
+  proc { |_outcome, _canLose|
     $game_temp.party_heart_gauges_before_battle.each_with_index do |value, i|
       pkmn = $player.party[i]
       next if !pkmn || !value || value == 0

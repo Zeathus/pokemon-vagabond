@@ -147,7 +147,7 @@ class PlayerRatingElo
   def winChancePercent
     return @estimatedRating if @estimatedRating
     x = (1 + (10.0**((@rating - 1600.0) / 400.0)))
-    @estimatedRating = (x == 0 ? 1.0 : 1.0 / x)
+    @estimatedRating = (x == 0) ? 1.0 : 1.0 / x
     return @estimatedRating
   end
 
@@ -312,7 +312,7 @@ def pbDecideWinnerEffectiveness(move, otype1, otype2, ability, scores)
   return 0 if data.power == 0
   atype = data.type
   typemod = 1.0
-  if ability != :LEVITATE || data.type != :GROUND
+  if ![:LEVITATE, :EELEVATE].include?(ability) || data.type != :GROUND
     mod1 = Effectiveness.calculate(atype, otype1)
     mod2 = (otype1 == otype2) ? 1.0 : Effectiveness.calculate(atype, otype2)
     if ability == :WONDERGUARD
@@ -364,10 +364,10 @@ def pbDecideWinner(party0, party1, rating0, rating1)
   score0 = pbDecideWinnerScore(party0, party1, rating0)
   score1 = pbDecideWinnerScore(party1, party0, rating1)
   if score0 == score1
-    return 5 if rating0 == rating1
-    return (rating0 > rating1) ? 1 : 2
+    return Battle::Outcome::DRAW if rating0 == rating1
+    return (rating0 > rating1) ? Battle::Outcome::WIN : Battle::Outcome::LOSE
   else
-    return (score0 > score1) ? 1 : 2
+    return (score0 > score1) ? Battle::Outcome::WIN : Battle::Outcome::LOSE
   end
 end
 
@@ -375,7 +375,7 @@ end
 #
 #===============================================================================
 def pbRuledBattle(team1, team2, rule)
-  decision = 0
+  outcome = Battle::Outcome::UNDECIDED
   if rand(100) == 0
     level = rule.ruleset.suggestedLevel
     t_type = GameData::TrainerType.keys.first
@@ -401,12 +401,12 @@ def pbRuledBattle(team1, team2, rule)
       items2[i] = p.item_id
       trainer2.party.push(p)
     end
-    scene = Battle::DebugSceneNoVisuals.new
-    battle = rule.createBattle(scene, trainer1, trainer2)
+    visuals = Battle::DebugNoVisuals.new
+    battle = rule.createBattle(visuals, trainer1, trainer2)
     battle.debug = true
     battle.controlPlayer = true
     battle.internalBattle = false
-    decision = battle.pbStartBattle
+    outcome = battle.pbStartBattle
     team1.team.each_with_index do |p, i|
       next if !p
       p.heal
@@ -422,13 +422,13 @@ def pbRuledBattle(team1, team2, rule)
     party2 = []
     team1.length.times { |i| party1.push(team1[i]) }
     team2.length.times { |i| party2.push(team2[i]) }
-    decision = pbDecideWinner(party1, party2, team1.rating, team2.rating)
+    outcome = pbDecideWinner(party1, party2, team1.rating, team2.rating)
   end
-  case decision
-  when 1   # Team 1 wins
+  case outcome
+  when Battle::Outcome::WIN   # Team 1 wins
     team1.addMatch(team2, 1)
     team2.addMatch(team1, 0)
-  when 2   # Team 2 wins
+  when Battle::Outcome::LOSE   # Team 2 wins
     team1.addMatch(team2, 0)
     team2.addMatch(team1, 1)
   else
